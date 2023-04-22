@@ -1,3 +1,4 @@
+#include "Core/Building/JupiterPCH.h"
 #include "DemoGameApplication.h"
 
 #include <iostream>

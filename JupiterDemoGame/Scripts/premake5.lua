@@ -53,6 +53,9 @@ project "Engine"
         (jupiter_basedir .. "Code/**.cpp"),
     }
 
+    pchheader ("JupiterPCH.h")
+    pchsource (jupiter_basedir .. "Code/Core/Building/JupiterPCH.cpp")
+
     defines
     {
         "JPT_BUILD_DLL",

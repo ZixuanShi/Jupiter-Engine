@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Builds/Macros.h"
+#include "Core/Building/Macros.h"
 
 namespace jpt
 {
