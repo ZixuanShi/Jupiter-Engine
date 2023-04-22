@@ -45,6 +45,7 @@ project "Engine"
     includedirs
     {
         (jupiter_basedir.. "Code"),
+        (jupiter_basedir.. "Code/Core/Building"),       -- only for JupiterPCH
     }
 
     files 

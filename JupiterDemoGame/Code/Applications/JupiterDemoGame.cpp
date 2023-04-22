@@ -5,5 +5,5 @@
 
 jpt::Application* jpt::CreateApplication()
 {
-	return new DemoGameApplication();
+	return JPT_NEW(DemoGameApplication());
 }

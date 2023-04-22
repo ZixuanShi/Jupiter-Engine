@@ -6,7 +6,8 @@ bool DemoGameApplication::Init()
 {
     if (jpt::Application::Init())
     {
-        std::cout << "Hello World Jupiter Demo Game" << std::endl;
+        JPT_LOG("Hello World Jupiter Demo Game");
     }
+
     return true;
 }
