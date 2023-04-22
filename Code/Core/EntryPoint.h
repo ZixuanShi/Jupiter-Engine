@@ -1,6 +1,5 @@
 #pragma once
 #include "Applications/Application.h"
-#include "MemoryManagement/Macros.h"
 
 extern jpt::Application* jpt::CreateApplication();
 

@@ -1,7 +1,6 @@
 #include "Core/Building/JupiterPCH.h"
-#include "DemoGameApplication.h"
 
-#include <iostream>
+#include "DemoGameApplication.h"
 
 bool DemoGameApplication::Init()
 {
