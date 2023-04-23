@@ -4,6 +4,8 @@
 class DemoGameApplication : public jpt::Application
 {
 public:
+	DemoGameApplication();
+
 	virtual bool Init() override final;
 };
 

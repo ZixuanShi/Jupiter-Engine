@@ -13,7 +13,7 @@ namespace jpt
 #endif
 	{
 	}
-		
+
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* message, ...)
 	{
 		ChangeConsoleTextColor(type);

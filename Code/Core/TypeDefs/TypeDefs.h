@@ -4,9 +4,11 @@
 #include <stdint.h>
 
 // Constants
-static constexpr int32_t kInvalidInt = (std::numeric_limits<int32_t>::max)();
-static constexpr float_t kInvalidFloat = (std::numeric_limits<float_t>::max)();
+template <typename Type>
+static constexpr Type kInvalid = (std::numeric_limits<Type>::max)();
 
 // TypeDefs
 using uint8 = uint8_t;
+using uint32 = uint32_t;
+using uint64 = uint64_t;
 using int32 = int32_t;

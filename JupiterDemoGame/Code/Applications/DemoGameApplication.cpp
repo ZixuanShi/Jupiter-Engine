@@ -2,6 +2,11 @@
 
 #include "DemoGameApplication.h"
 
+DemoGameApplication::DemoGameApplication()
+{
+    JPT_LOG("Constructed demo game application");
+}
+
 bool DemoGameApplication::Init()
 {
     if (jpt::Application::Init())

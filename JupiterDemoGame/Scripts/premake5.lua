@@ -24,13 +24,17 @@ workspace "JupiterDemoGame"
         defines 
         { 
             "IS_DEBUG",
-            "JPT_ENABLE_ASSERTS"
+            "JPT_ENABLE_ASSERTS",
+            "JPT_ENABLE_MEMORY_TRACKING",       -- Detecting memory leaks, very slow operations
         }
         buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "IS_RELEASE" }
+        defines 
+        { 
+            "IS_RELEASE"
+        }
         buildoptions "/MD"
         optimize "On"
 

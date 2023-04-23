@@ -2,9 +2,9 @@
 
 namespace jpt
 {
-	#define JPT_LOG(message, ...)     { jpt::Logger::GetInstance()->Log(jpt::Logger::ELogType::Log,     __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_WARNING(message, ...) { jpt::Logger::GetInstance()->Log(jpt::Logger::ELogType::Warning, __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_ERROR(message, ...)   { jpt::Logger::GetInstance()->Log(jpt::Logger::ELogType::Error,   __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_LOG(message, ...)     { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,     __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_WARNING(message, ...) { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning, __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_ERROR(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,   __LINE__, __FILE__, message, __VA_ARGS__); }
 
 	// Singleton logger
 	class JPT_API Logger
@@ -25,7 +25,7 @@ namespace jpt
 		// - format, ...: The message to send
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 
-		static Logger* GetInstance() { return &s_instance; }
+		static Logger& GetInstance() { return s_instance; }
 
 	private:
 		Logger();

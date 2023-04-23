@@ -3,20 +3,21 @@
 
 namespace jpt
 {
-Application* Application::s_instance = nullptr;
+	Application* Application::s_instance = nullptr;
 
-bool Application::Init()
-{
-	JPT_LOG("Hello World Jupiter Engine");
-	return true;
-}
+	bool Application::Init()
+	{
+		JPT_LOG("Hello World Jupiter Engine");
 
-void Application::Update()
-{
+		return true;
+	}
 
-}
+	void Application::Update()
+	{
 
-void Application::Clean()
-{
-}
+	}
+
+	void Application::Clean()
+	{
+	}
 }

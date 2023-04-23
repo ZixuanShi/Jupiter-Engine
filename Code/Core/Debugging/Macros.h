@@ -13,5 +13,5 @@
 		}\
 		assert((succeeded));
 #else
-	#define JPT_ASSERT(succeeded, ...)
+	#define JPT_ASSERT(succeeded, ...) 
 #endif
