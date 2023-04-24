@@ -32,7 +32,7 @@ namespace jpt
 		fullPath = fullPath.substr(fullPath.find("Code") + 5);
 
 		// Log to the terminal and output window
-		std::cout << fullPath << ", line (" << line << "):  \t\t" << messageBuffer << '\n';
+		std::cout << fullPath << ", line (" << line << "):  \t" << messageBuffer << '\n';
 	}
 
 	void Logger::ChangeConsoleTextColor(ELogType type) const

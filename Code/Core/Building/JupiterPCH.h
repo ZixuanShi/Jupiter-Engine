@@ -21,9 +21,5 @@
 #include "Core/Building/Macros.h"
 #include "Core/Algorithms/Hash.h"
 #include "Core/Debugging/Macros.h"
-#include "Core/MemoryManagement/Macros.h"
+#include "Core/MemoryManagement/MemoryTracking.h"
 #include "Core/Logging/Logger.h"
-
-#if JPT_ENABLE_MEMORY_TRACKING
-	//#include "Core/MemoryManagement/MemoryTracking.h"
-#endif

@@ -11,11 +11,10 @@ void jpt::ShutdownMemoryLeakDetector()
 {
 }
 
-void* operator new(size_t size)
+int32* jpt::Test()
 {
-	JPT_LOG("Yes");
-	return malloc(size);
+	JPT_LOG("Hi");
+	return new int32(5);
 }
 
 #endif // JPT_ENABLE_MEMORY_TRACKING
-
