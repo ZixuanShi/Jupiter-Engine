@@ -3,18 +3,14 @@
 
 #if JPT_ENABLE_MEMORY_TRACKING
 
-void jpt::InitMemoryLeakDetector()
+namespace jpt
 {
-}
-
-void jpt::ShutdownMemoryLeakDetector()
-{
-}
-
-int32* jpt::Test()
-{
-	JPT_LOG("Hi");
-	return new int32(5);
+	void InternalCallTrackedDelete(void* pPointer)
+	{
+		//MemoryTracker::GetInstance()->ReduceEntry(pPointer);
+		delete pPointer;
+		pPointer = nullptr;
+	}
 }
 
 #endif // JPT_ENABLE_MEMORY_TRACKING

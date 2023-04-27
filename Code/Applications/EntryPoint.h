@@ -9,10 +9,6 @@ int main(int32 argc, char** argv)
 	JPT_UNUSED(argc);
 	JPT_UNUSED(argv);
 
-#if JPT_ENABLE_MEMORY_TRACKING
-	jpt::InitMemoryLeakDetector();
-#endif
-
 	jpt::Application* pApplication = jpt::CreateApplication();
 	JPT_ASSERT(pApplication, "Application should not be nullptr in main()");
 	if (pApplication->Init())
@@ -23,7 +19,7 @@ int main(int32 argc, char** argv)
 	JPT_DELETE(pApplication);
 
 #if JPT_ENABLE_MEMORY_TRACKING
-	jpt::ShutdownMemoryLeakDetector();
+	//jpt::MemoryTracker::GetInstance()->ShutdownMemoryLeakDetector();
 #endif
 
 	return 0;

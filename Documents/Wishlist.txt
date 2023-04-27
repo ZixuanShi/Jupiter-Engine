@@ -8,3 +8,21 @@ unordered_map
 window
 
 input
+
+
+
+
+Planned:
+- AI
+- Animation
+- Audio
+- Building
+- Cameras
+- Characters
+- Controllers
+- Core
+- Rendering
+- Gameplay
+- Networking
+- UI
+- Tools

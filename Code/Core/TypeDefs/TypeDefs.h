@@ -5,7 +5,13 @@
 
 // Constants
 template <typename Type>
-static constexpr Type kInvalid = (std::numeric_limits<Type>::max)();
+inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();
+
+template <typename Type>
+inline const Type kDefaultValue = static_cast<Type>(0);
+
+template<>
+inline const std::string kDefaultValue<std::string> = "";
 
 // TypeDefs
 using uint8 = uint8_t;

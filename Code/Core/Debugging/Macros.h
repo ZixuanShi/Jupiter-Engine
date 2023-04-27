@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Logging/Logger.h"
+
 #include <assert.h>
 
 // Assert with error message logging if Debug mode, do nothing if not Debugging
