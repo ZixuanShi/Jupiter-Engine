@@ -5,8 +5,16 @@ workspace "JupiterDemoGame"
     local jupiter_basedir = "../../"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves
 
     -- Config
-    configurations { "Debug", "Release" }
-    platforms { "Win64" }
+    configurations 
+    { 
+        "Debug",        -- Debugging
+        "Profiling",    -- Profiling. Same configurations with Release but Profiling code
+        "Release",      -- Relese/Shipping
+    }
+    platforms 
+    { 
+        "Win64",
+    }
     startproject "Game"
 
     -- Paths
@@ -18,6 +26,10 @@ workspace "JupiterDemoGame"
     language "C++"
     cppdialect "C++latest"
     warnings "Extra"
+    flags 
+    {
+        "FatalCompileWarnings",
+    }
 
     -- Global filters
     filter "configurations:Debug"
@@ -27,19 +39,48 @@ workspace "JupiterDemoGame"
             "JPT_ENABLE_ASSERTS",
             "JPT_ENABLE_MEMORY_TRACKING",       -- Detecting memory leaks, very slow operations
         }
-        buildoptions "/MDd"
+        buildoptions 
+        { 
+            "/MDd",
+        }
+        optimize "Debug"
         symbols "On"
+
+    filter "configurations:Profiling"
+        defines 
+        { 
+            "IS_PROFILING"
+        }
+        buildoptions 
+        {
+            "/MD",
+        }
+        optimize "Full"
+        symbols "Off"
+
+    filter "platforms:Win64"
+        defines 
+        { 
+            "IS_PLATFORM_WIN64" 
+        }
 
     filter "configurations:Release"
         defines 
         { 
             "IS_RELEASE"
         }
-        buildoptions "/MD"
-        optimize "On"
+        buildoptions 
+        {
+            "/MD",
+        }
+        optimize "Full"
+        symbols "Off"
 
     filter "platforms:Win64"
-        defines { "IS_PLATFORM_WIN64" }
+        defines 
+        { 
+            "IS_PLATFORM_WIN64" 
+        }
 
 
 -- Jupiter Engine
