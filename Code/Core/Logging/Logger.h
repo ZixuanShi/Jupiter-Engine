@@ -2,19 +2,22 @@
 
 namespace jpt
 {
-	#define JPT_LOG(message, ...)     { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,     __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_WARNING(message, ...) { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning, __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_ERROR(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,   __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_WARNING(message, ...)		{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,	__LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_ERROR(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,		__LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
 
 	// Singleton logger
 	class JPT_API Logger
 	{
 	public:
+		// Value as the text color to print
 		enum class ELogType : uint8
 		{
-			Log,		// Normal message prompt
-			Warning,
-			Error,
+			Log			= 7,	// From Clients
+			SystemInfo	= 3,   // From Engine
+			Warning		= 6,
+			Error		= 4,
 		};
 
 	public:
