@@ -5,12 +5,14 @@
 
 jpt::Application* jpt::CreateApplication()
 {
+	JPT_USE_TIMING_PROFILER("Create Application");
+
 	int32* pInt = JPT_NEW(int32);
 	JPT_WARNING("%i", *pInt);
 	JPT_DELETE(pInt);
 
 	float* pAnother = JPT_NEW_WITH_VALUE(float, 42.056f);
-	JPT_WARNING("%.3f", *pAnother);
+	JPT_ERROR("%.3f", *pAnother);
 	JPT_DELETE(pAnother);
 
 	return JPT_NEW(DemoGameApplication);

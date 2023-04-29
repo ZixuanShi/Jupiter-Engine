@@ -6,12 +6,13 @@
 #include <atomic>
 #include <mutex>
 #include <memory>
+#include <thread>
 #include <string>
 #include <sstream>
 #include <time.h>
+#include <utility>
 #include <unordered_map>
 #include <vector>
-#include <utility>
 
 #if IS_PLATFORM_WIN64
 	#include <Windows.h>
@@ -24,3 +25,5 @@
 #include "Core/Debugging/Macros.h"
 #include "Core/MemoryManagement/MemoryTracking.h"
 #include "Core/Logging/Logger.h"
+#include "Core/Timing/Timer.h"
+#include "Core/Timing/TimeProfiler.h"

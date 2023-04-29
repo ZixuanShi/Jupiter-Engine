@@ -15,12 +15,12 @@ workspace "JupiterDemoGame"
     { 
         "Win64",
     }
-    startproject "Game"
+    startproject ("Game")
 
     -- Paths
-    location "../Visual Studio Files"
+    location  ("../Visual Studio Files")
     targetdir ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    objdir    ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
 
     -- Programming
     language "C++"
@@ -55,8 +55,8 @@ workspace "JupiterDemoGame"
         {
             "/MD",
         }
-        optimize "Full"
-        symbols "Off"
+        optimize "On"
+        symbols "On"
 
     filter "platforms:Win64"
         defines 

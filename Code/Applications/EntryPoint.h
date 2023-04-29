@@ -9,6 +9,8 @@ int main(int32 argc, char** argv)
 	JPT_UNUSED(argc);
 	JPT_UNUSED(argv);
 
+	JPT_USE_TIMING_PROFILER("Running");
+
 	jpt::Application* pApplication = jpt::CreateApplication();
 	JPT_ASSERT(pApplication, "Application should not be nullptr in main()");
 	if (pApplication->Init())
