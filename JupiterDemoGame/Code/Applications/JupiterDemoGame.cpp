@@ -24,6 +24,14 @@ jpt::Application* jpt::CreateApplication()
 	{
 		JPT_LOG("%d", vec[i]);
 	}
+	for (int32 i : vec)
+	{
+		JPT_LOG("%d", i);
+	}
+	for (auto itr = vec.begin(); itr != vec.end(); ++itr)
+	{
+		JPT_LOG("%d", *itr);
+	}
 
 	return JPT_NEW(DemoGameApplication);
 }

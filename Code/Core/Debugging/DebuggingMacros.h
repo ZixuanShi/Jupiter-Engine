@@ -5,6 +5,8 @@
 // - ...:	   Error messages if the succeeded went false
 #ifdef JPT_ENABLE_ASSERTS
 		#include <assert.h>
+		#include "Core/Logging/Logger.h"
+
 		#define JPT_ASSERT(succeeded, ...) \
 		if (!(succeeded))\
 		{\

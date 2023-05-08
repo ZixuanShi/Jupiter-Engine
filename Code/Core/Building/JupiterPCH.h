@@ -22,6 +22,7 @@
 #include "Core/Building/BuildingMacros.h"
 #include "Core/Types/TypeDefs.h"
 #include "Core/Types/String.h"
+#include "Core/Types/Iterator.h"
 #include "Core/DataStructures/Vector.h"
 #include "Core/DataStructures/UnorderedMap.h"
 #include "Core/Algorithms/Hash.h"
