@@ -13,6 +13,7 @@ namespace jpt
 	public:
 		void clear();
 		const char* c_str() const;
+		char* GetBuffer() const;
 
 	private:
 		void CopyString(const char* inString);

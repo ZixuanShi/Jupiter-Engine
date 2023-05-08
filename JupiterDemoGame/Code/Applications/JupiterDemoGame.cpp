@@ -3,8 +3,6 @@
 
 #include "DemoGameApplication.h"
 
-#include <iostream>
-
 jpt::Application* jpt::CreateApplication()
 {
 	JPT_START_TIMING_PROFILER("Create Application");
@@ -19,7 +17,7 @@ jpt::Application* jpt::CreateApplication()
 
 	jpt::string str = "Jupiter Engine";
 	JPT_LOG("%s", str.c_str());
-	std::cout << kInvalidValue<jpt::string>.c_str() << '\n';
+	JPT_LOG("%s", str.GetBuffer());
 
 	return JPT_NEW(DemoGameApplication);
 }

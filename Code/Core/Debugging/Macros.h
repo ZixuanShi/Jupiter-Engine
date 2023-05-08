@@ -1,14 +1,11 @@
 #pragma once
 
-#include "Core/Logging/Logger.h"
-
-#include <assert.h>
-
 // Assert with error message logging if Debug mode, do nothing if not Debugging
 // - suceeded: A boolean expression to assert true
 // - ...:	   Error messages if the succeeded went false
 #ifdef JPT_ENABLE_ASSERTS
-	#define JPT_ASSERT(succeeded, ...) \
+		#include <assert.h>
+		#define JPT_ASSERT(succeeded, ...) \
 		if (!(succeeded))\
 		{\
 			JPT_ERROR(__VA_ARGS__);\

@@ -36,6 +36,11 @@ namespace jpt
 		return m_pBuffer;
 	}
 
+	char* string::GetBuffer() const
+	{
+		return m_pBuffer;
+	}
+
 	void string::CopyString(const char* inString)
 	{
 		m_size = strlen(inString);
