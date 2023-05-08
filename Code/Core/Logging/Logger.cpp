@@ -1,8 +1,6 @@
 #include "JupiterPCH.h"
 #include "Logger.h"
 
-#include <iostream>
-
 namespace jpt
 {
 	Logger Logger::s_instance;

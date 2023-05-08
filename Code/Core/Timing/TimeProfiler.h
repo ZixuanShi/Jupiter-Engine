@@ -6,13 +6,13 @@ namespace jpt
 	// Profiler using time
 	class JPT_API TimeProfiler
 	{
-	public:
-		TimeProfiler(const char* pLabel);
-		~TimeProfiler();
-
 	private:
 		const char* m_pLabel;
 		Timer m_timer;
+
+	public:
+		TimeProfiler(const char* pLabel);
+		~TimeProfiler();
 	};
 
 	// Used for timing a scope if it's profiling config. Example: 

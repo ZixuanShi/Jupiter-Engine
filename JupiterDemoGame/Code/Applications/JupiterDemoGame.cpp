@@ -19,5 +19,11 @@ jpt::Application* jpt::CreateApplication()
 	JPT_LOG("%s", str.c_str());
 	JPT_LOG("%s", str.GetBuffer());
 
+	jpt::vector<int32> vec{1,2,3,4,5};
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		JPT_LOG("%d", vec[i]);
+	}
+
 	return JPT_NEW(DemoGameApplication);
 }

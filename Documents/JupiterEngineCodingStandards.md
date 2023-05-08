@@ -2,6 +2,9 @@
 public:
     TypeDefs
     Structs
+    
+private:
+    Members
 
 public:
     Ctors Dtor
@@ -17,6 +20,3 @@ public:
 
 private:
     Utils
-
-private:
-    Members

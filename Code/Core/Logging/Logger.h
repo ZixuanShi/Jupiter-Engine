@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace jpt
 {
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
@@ -20,6 +22,13 @@ namespace jpt
 			Error		= 4,
 		};
 
+	private:
+		static Logger s_instance;
+
+#if IS_PLATFORM_WIN64
+		HANDLE m_consoleHandle;
+#endif
+
 	public:
 		// Log a message to the terminal window
 		// - type: The type to log. Choose different color to print based on the type
@@ -28,18 +37,21 @@ namespace jpt
 		// - format, ...: The message to send
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 
+		// Templated version of print, where users define the cout operator overloadings
+		template<class... Args>
+		void Print(Args&&... args) const;
+
 		static Logger& GetInstance() { return s_instance; }
 
 	private:
 		Logger();
 
 		void ChangeConsoleTextColor(ELogType type) const;
-
-	private:
-		static Logger s_instance;
-
-#if IS_PLATFORM_WIN64
-		HANDLE m_consoleHandle;
-#endif
 	};
+
+	template<class... Args>
+	void Logger::Print(Args&&... args) const
+	{
+		(std::cout << ... << args) << '\n';
+	}
 }

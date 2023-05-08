@@ -19,11 +19,13 @@
 #endif
 
 // Jupiter
-#include "Core/Building/Macros.h"
+#include "Core/Building/BuildingMacros.h"
 #include "Core/Types/TypeDefs.h"
 #include "Core/Types/String.h"
+#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/UnorderedMap.h"
 #include "Core/Algorithms/Hash.h"
-#include "Core/Debugging/Macros.h"
+#include "Core/Debugging/DebuggingMacros.h"
 #include "Core/MemoryManagement/MemoryOperators.h"
 #include "Core/Logging/Logger.h"
 #include "Core/Timing/Timer.h"

@@ -4,6 +4,10 @@ namespace jpt
 {
 	class JPT_API string
 	{
+	private:
+		char* m_pBuffer;	// The pointer to the buffer representing this string's value
+		size_t m_size;		// How many characters in this string
+
 	public:
 		string();
 		string(const char* inString);
@@ -12,18 +16,11 @@ namespace jpt
 
 	public:
 		void clear();
-		const char* c_str() const;
-		char* GetBuffer() const;
+		const char* c_str() const { return m_pBuffer; }
+		char* GetBuffer() const { return m_pBuffer; }
 
 	private:
 		void CopyString(const char* inString);
-
-	private:
-		// The pointer to the buffer representing this string's value
-		char* m_pBuffer;
-
-		// How many characters in this string
-		size_t m_size;
 	};
 }
 
