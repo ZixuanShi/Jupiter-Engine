@@ -1,5 +1,5 @@
 #include "JupiterPCH.h"
-#include "MemoryTracking.h"
+#include "MemoryOperators.h"
 
 #if JPT_ENABLE_MEMORY_TRACKING
 
@@ -9,6 +9,11 @@ namespace jpt
 	{
 		//MemoryTracker::GetInstance()->ReduceEntry(pPointer);
 		delete pPointer;
+		pPointer = nullptr;
+	}
+	void InternalCallTrackedDeleteArray(void* pPointer)
+	{
+		delete[] pPointer;
 		pPointer = nullptr;
 	}
 }
