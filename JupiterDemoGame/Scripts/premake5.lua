@@ -26,7 +26,7 @@ workspace "JupiterDemoGame"
     language "C++"
     cppdialect "C++latest"
     warnings "Extra"
-    flags 
+    flags
     {
         "FatalCompileWarnings",
     }

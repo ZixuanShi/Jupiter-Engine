@@ -4,10 +4,8 @@
 #ifdef IS_PLATFORM_WIN64
 	#ifdef JPT_BUILD_DLL
 		#define JPT_API __declspec(dllexport)
-		#define JPT_IMP_TEMPLATE
 	#else	
 		#define JPT_API __declspec(dllimport)
-		#define JPT_IMP_TEMPLATE extern
 #endif
 #else
 	#error Jupiter only supports Windows

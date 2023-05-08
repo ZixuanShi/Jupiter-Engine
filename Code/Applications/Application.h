@@ -18,6 +18,4 @@ namespace jpt
 	private:
 		static Application* s_instance;
 	};
-
-	Application* CreateApplication();
 }

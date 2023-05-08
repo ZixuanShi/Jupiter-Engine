@@ -14,8 +14,8 @@ namespace jpt
 		// Value as the text color to print
 		enum class ELogType : uint8
 		{
-			Log			= 7,	// From Clients
-			SystemInfo	= 3,   // From Engine
+			Log			= 7,	// From Client games
+			SystemInfo	= 3,    // From Engine
 			Warning		= 6,
 			Error		= 4,
 		};

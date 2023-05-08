@@ -1,16 +1,13 @@
 #pragma once
 #include "Application.h"
-#include "Core/MemoryManagement/MemoryTracking.h"
 
-extern jpt::Application* jpt::CreateApplication();
-
-int main(int32 argc, char** argv)
+namespace jpt
 {
-	JPT_UNUSED(argc);
-	JPT_UNUSED(argv);
+	extern Application* CreateApplication();
+}
 
-	JPT_USE_TIMING_PROFILER("Running");
-
+int main(/*int32 argc, char** argv*/)
+{
 	jpt::Application* pApplication = jpt::CreateApplication();
 	JPT_ASSERT(pApplication, "Application should not be nullptr in main()");
 	if (pApplication->Init())

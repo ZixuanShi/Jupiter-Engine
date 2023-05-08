@@ -14,7 +14,6 @@
 
 namespace jpt
 {
-
 	// JPT_NEW Macro implementation if JPT_ENABLE_MEMORY_TRACKING is on. This will track the memory we allocated
 	// Should not be directly called, use JPT_NEW() instead, as this will not exist if JPT_ENABLE_MEMORY_TRACKING is off
 	// - template Type: The type of the pointer to return
@@ -30,7 +29,6 @@ namespace jpt
 		//MemoryTracker::GetInstance()->AddEntry(pFileName, lineNum, pPointer);
 		return pPointer;
 	}
-
 	template<typename Type>
 	inline Type* InternalCallTrackedNew(Type&& initialValue, const char* pFileName, int32 lineNum)
 	{

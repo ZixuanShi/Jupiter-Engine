@@ -24,9 +24,9 @@ namespace jpt
 	*	// Work stuff...
 	* }
 	*/
-	#define JPT_USE_TIMING_PROFILER(label) jpt::TimeProfiler profiler(label)
+	#define JPT_START_TIMING_PROFILER(label) jpt::TimeProfiler profiler(label)
 }
 #else
 	// Do nothing if it's not profiling configuration
-	#define JPT_USE_TIMING_PROFILER(label)
+	#define JPT_START_TIMING_PROFILER(label)
 #endif
