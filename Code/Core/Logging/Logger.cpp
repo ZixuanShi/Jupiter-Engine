@@ -15,7 +15,6 @@ namespace jpt
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* message, ...)
 	{
 		ChangeConsoleTextColor(type);
-
 		char messageBuffer[512];
 
 		va_list args;
@@ -28,9 +27,11 @@ namespace jpt
 		// Get valid file path
 		std::string fullPath(file);
 		fullPath = fullPath.substr(fullPath.find("Code") + 5);
+		fullPath += ", line (" + std::to_string(line) + "):  \t" + messageBuffer + "\n";
 
 		// Log to the terminal and output window
-		std::cout << fullPath << ", line (" << line << "):  \t" << messageBuffer << '\n';
+		std::cout << fullPath;
+		::OutputDebugStringA(fullPath.c_str());
 	}
 
 	void Logger::ChangeConsoleTextColor(ELogType type) const
