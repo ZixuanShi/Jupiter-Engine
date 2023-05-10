@@ -9,6 +9,20 @@ namespace jpt
 	{
 	}
 
+	string::string(const jpt::string& other)
+		: m_pBuffer(nullptr)
+		, m_size(0)
+	{
+		CopyString(other.c_str());
+	}
+
+	string& string::operator=(const jpt::string& other)
+	{
+		clear();
+		CopyString(other.c_str());
+		return *this;
+	}
+
 	string::string(const char* inString)
 	{
 		CopyString(inString);

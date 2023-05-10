@@ -10,6 +10,8 @@ namespace jpt
 
 	public:
 		string();
+		string(const jpt::string& other);
+		string& operator=(const jpt::string& other);
 		string(const char* inString);
 		string& operator=(const char* inString);
 		~string();

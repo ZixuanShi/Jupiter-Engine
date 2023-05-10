@@ -81,7 +81,7 @@ namespace jpt
 
 	public:
 		constexpr explicit vector();
-		constexpr explicit vector(const std::initializer_list<ValueType>& initializerList);
+		constexpr explicit vector(std::initializer_list<ValueType> initializerList);
 		constexpr ~vector();
 
 		// Element access
@@ -116,14 +116,22 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	constexpr inline vector<_ValueType>::vector(const std::initializer_list<ValueType>& initializerList)
+	constexpr inline vector<_ValueType>::vector(std::initializer_list<ValueType> initializerList)
 		: m_pBuffer(nullptr)
 		, m_size(initializerList.size())
 		, m_capacity(m_size)
 	{
 		UpdateBufferWithNewCapacity(m_capacity);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer should not be nullptr");
-		memcpy(m_pBuffer, initializerList.begin(), initializerList.size() * sizeof(ValueType));
+
+		size_t i = 0;
+		for (auto itr = initializerList.begin(); itr != initializerList.end(); ++itr)
+		{
+			m_pBuffer[i] = *itr;
+			++i;
+		}
+
+		//memcpy(m_pBuffer, initializerList.begin(), initializerList.size() * sizeof(ValueType));
 	}
 
 	template<class _ValueType>
