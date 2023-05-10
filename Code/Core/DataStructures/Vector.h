@@ -81,7 +81,7 @@ namespace jpt
 
 	public:
 		constexpr explicit vector();
-		constexpr explicit vector(std::initializer_list<ValueType> initializerList);
+		constexpr explicit vector(const std::initializer_list<ValueType>& initializerList);
 		constexpr ~vector();
 
 		// Element access
@@ -116,7 +116,7 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	constexpr inline vector<_ValueType>::vector(std::initializer_list<ValueType> initializerList)
+	constexpr inline vector<_ValueType>::vector(const std::initializer_list<ValueType>& initializerList)
 		: m_pBuffer(nullptr)
 		, m_size(initializerList.size())
 		, m_capacity(m_size)
@@ -130,8 +130,6 @@ namespace jpt
 			m_pBuffer[i] = *itr;
 			++i;
 		}
-
-		//memcpy(m_pBuffer, initializerList.begin(), initializerList.size() * sizeof(ValueType));
 	}
 
 	template<class _ValueType>
@@ -150,8 +148,7 @@ namespace jpt
 	template<class _ValueType>
 	constexpr inline void vector<_ValueType>::UpdateBufferWithNewCapacity(size_t inCapacity)
 	{
-		ValueType* pNewBuffer = JPT_NEW_ARRAY(ValueType, inCapacity);
-
+		ValueType* pNewBuffer = new ValueType[inCapacity];
 		if (m_pBuffer)
 		{
 			memcpy(pNewBuffer, m_pBuffer, m_size * sizeof(ValueType));

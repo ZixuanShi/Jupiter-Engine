@@ -48,7 +48,7 @@ namespace jpt
 	void string::CopyString(const char* inString)
 	{
 		m_size = strlen(inString);
-		m_pBuffer = JPT_NEW_ARRAY(char, m_size + 1);	// +1 for null terminator '\0'
+		m_pBuffer = new char[m_size + 1];	// +1 for null terminator '\0'
 		strcpy_s(m_pBuffer, m_size + 1, inString);
 	}
 }

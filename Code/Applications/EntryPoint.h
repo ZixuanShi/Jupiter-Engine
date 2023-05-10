@@ -17,9 +17,5 @@ int main(/*int32 argc, char** argv*/)
 	pApplication->Clean();
 	JPT_DELETE(pApplication);
 
-#if JPT_ENABLE_MEMORY_TRACKING
-	//jpt::MemoryTracker::GetInstance()->ShutdownMemoryLeakDetector();
-#endif
-
 	return 0;
 }
