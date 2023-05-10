@@ -7,7 +7,6 @@
 #include <mutex>
 #include <memory>
 #include <thread>
-#include <string>
 #include <sstream>
 #include <time.h>
 #include <utility>

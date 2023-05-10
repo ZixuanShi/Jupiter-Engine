@@ -20,9 +20,9 @@ namespace jpt
 
 		// Meant to be virtual
 		vector_iterator& operator++();
-		vector_iterator operator++(int);
+		vector_iterator operator++(int32);
 		vector_iterator& operator--();
-		vector_iterator operator--(int);
+		vector_iterator operator--(int32);
 
 		ValueType& operator[](size_t index) { return *(m_ptr + index); }
 		ValueType* operator->() { return m_ptr; }
@@ -33,7 +33,7 @@ namespace jpt
 
 	template<typename Vector>
 	inline constexpr vector_iterator<Vector>::vector_iterator(ValueType* ptr)
-		: m_ptr{ ptr }
+		: m_ptr(ptr)
 	{
 	}
 
@@ -45,7 +45,7 @@ namespace jpt
 	}
 
 	template<typename Vector>
-	inline vector_iterator<Vector> vector_iterator<Vector>::operator++(int)
+	inline vector_iterator<Vector> vector_iterator<Vector>::operator++(int32)
 	{
 		vector_iterator iterator = *this;
 		++(*this);
@@ -60,7 +60,7 @@ namespace jpt
 	}
 
 	template<typename Vector>
-	inline vector_iterator<Vector> vector_iterator<Vector>::operator--(int)
+	inline vector_iterator<Vector> vector_iterator<Vector>::operator--(int32)
 	{
 		vector_iterator iterator = *this;
 		--(*this);
@@ -149,6 +149,7 @@ namespace jpt
 	constexpr inline void vector<_ValueType>::UpdateBufferWithNewCapacity(size_t inCapacity)
 	{
 		ValueType* pNewBuffer = new ValueType[inCapacity];
+
 		if (m_pBuffer)
 		{
 			memcpy(pNewBuffer, m_pBuffer, m_size * sizeof(ValueType));

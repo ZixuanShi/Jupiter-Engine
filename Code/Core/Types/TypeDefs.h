@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 // If the value is not supported, you need to specialized template it in the corresponding file
-// For example, template<> inline const std::string kDefaultValue<std::string> = "";
 template <typename Type>
 inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();
 

@@ -3,7 +3,7 @@
 
 #include "DemoGameApplication.h"
 
-jpt::Application* jpt::CreateApplication()
+jpt::Application jpt::CreateApplication()
 {
 	JPT_START_TIMING_PROFILER("Create Application");
 
@@ -13,5 +13,5 @@ jpt::Application* jpt::CreateApplication()
 		JPT_LOG("%s", str.c_str());
 	}
 
-	return new DemoGameApplication();
+	return DemoGameApplication();
 }

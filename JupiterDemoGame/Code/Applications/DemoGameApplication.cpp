@@ -4,14 +4,13 @@
 
 DemoGameApplication::DemoGameApplication()
 {
-    JPT_LOG("Constructed demo game application");
 }
 
 bool DemoGameApplication::Init()
 {
-    if (jpt::Application::Init())
+    if (!jpt::Application::Init())
     {
-        JPT_LOG("Hello World Jupiter Demo Game");
+        return false;
     }
 
     return true;

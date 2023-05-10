@@ -26,7 +26,7 @@ namespace jpt
 
 		// Get valid file path
 		std::string fullPath(file);
-		fullPath = fullPath.substr(fullPath.find("Code") + 5);
+		fullPath = fullPath.substr(fullPath.find_last_of("\\") + 1);
 		fullPath += ", line (" + std::to_string(line) + "):  \t" + messageBuffer + "\n";
 
 		// Log to the terminal and output window

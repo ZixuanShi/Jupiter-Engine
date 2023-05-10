@@ -3,19 +3,17 @@
 
 namespace jpt
 {
-	extern Application* CreateApplication();
+	extern Application CreateApplication();
 }
 
-int main(/*int32 argc, char** argv*/)
+int main()
 {
-	jpt::Application* pApplication = jpt::CreateApplication();
-	JPT_ASSERT(pApplication, "Application should not be nullptr in main()");
-	if (pApplication->Init())
+	jpt::Application pApplication = jpt::CreateApplication();
+	if (pApplication.Init())
 	{
-		pApplication->Update();
+		pApplication.Update();
 	}
-	pApplication->Clean();
-	JPT_DELETE(pApplication);
+	pApplication.Clean();
 
 	return 0;
 }

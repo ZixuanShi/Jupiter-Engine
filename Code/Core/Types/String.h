@@ -27,5 +27,3 @@ namespace jpt
 }
 
 inline std::ostream& operator<<(std::ostream& stream, const jpt::string& string);
-template<> inline const jpt::string kInvalidValue<jpt::string> = "Invalid";
-template<> inline const jpt::string kDefaultValue<jpt::string> = "Undefined";

@@ -3,12 +3,8 @@
 
 namespace jpt
 {
-	Application* Application::s_instance = nullptr;
-
 	bool Application::Init()
 	{
-		JPT_LOG("Hello World Jupiter Engine");
-
 		return true;
 	}
 
@@ -19,5 +15,6 @@ namespace jpt
 
 	void Application::Clean()
 	{
+		_CrtDumpMemoryLeaks();
 	}
 }

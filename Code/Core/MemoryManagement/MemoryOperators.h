@@ -3,6 +3,7 @@
 #define JPT_DELETE(pPointer)\
 			delete pPointer;\
 			pPointer = nullptr;
+
 #define JPT_DELETE_ARRAY(pPointer)\
 			delete[] pPointer;\
 			pPointer = nullptr;
@@ -12,6 +13,7 @@
 		{\
 			JPT_DELETE(pPointer);\
 		}
+
 #define JPT_SAFE_DELETE_ARRAY(pPointer)\
 		if (pPointer)\
 		{\

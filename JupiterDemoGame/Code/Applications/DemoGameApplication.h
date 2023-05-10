@@ -1,11 +1,11 @@
 #pragma once
 #include "Applications/Application.h"
 
-class DemoGameApplication : public jpt::Application
+class DemoGameApplication final : public jpt::Application
 {
 public:
 	DemoGameApplication();
 
-	virtual bool Init() override final;
+	virtual bool Init() override;
 };
 

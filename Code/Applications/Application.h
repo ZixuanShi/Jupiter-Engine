@@ -12,10 +12,5 @@ namespace jpt
 		virtual bool Init();
 		virtual void Update();
 		virtual void Clean();
-
-		static Application* GetInstance() { return s_instance; }
-
-	private:
-		static Application* s_instance;
 	};
 }

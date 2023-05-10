@@ -4,8 +4,9 @@
 // - suceeded: A boolean expression to assert true
 // - ...:	   Error messages if the succeeded went false
 #ifdef JPT_ENABLE_ASSERTS
-		#include <assert.h>
 		#include "Core/Logging/Logger.h"
+
+		#include <assert.h>
 
 		#define JPT_ASSERT(succeeded, ...) \
 		if (!(succeeded))\

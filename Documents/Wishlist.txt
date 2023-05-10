@@ -1,9 +1,9 @@
-string_view
-vector
-unordered_map
+string full functionality
 MemLeakDetector
+Enum start/end tostring
+unordered_map
+string_view
 Documents generation
-JPT_LOG to output window
 Profiler generate excel sheet
 
 Graphics Impl
@@ -26,7 +26,7 @@ Planned:
 - Rendering
 - Gameplay
 - Networking
-- UI
+- UIUX
 - Tools
 
 
