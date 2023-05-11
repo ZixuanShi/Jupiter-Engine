@@ -89,18 +89,18 @@ project "Engine"
 
     includedirs
     {
-        (jupiter_basedir.. "Code"),
-        (jupiter_basedir.. "Code/Core/Building"),       -- only for JupiterPCH
+        (jupiter_basedir.. "Source"),
+        (jupiter_basedir.. "Source/Core/Building"),       -- only for JupiterPCH
     }
 
     files 
     {
-        (jupiter_basedir .. "Code/**.h"),
-        (jupiter_basedir .. "Code/**.cpp"),
+        (jupiter_basedir .. "Source/**.h"),
+        (jupiter_basedir .. "Source/**.cpp"),
     }
 
     pchheader ("JupiterPCH.h")
-    pchsource (jupiter_basedir .. "Code/Core/Building/JupiterPCH.cpp")
+    pchsource (jupiter_basedir .. "Source/Core/Building/JupiterPCH.cpp")
 
     defines
     {
@@ -114,8 +114,8 @@ project "Game"
 
     includedirs
     {
-        (jupiter_basedir .. "Code"),
-        ("../Code")
+        (jupiter_basedir .. "Source"),
+        ("../Source")
     }
 
     links
@@ -125,8 +125,8 @@ project "Game"
 
     files
     {
-        "../Code/**.h",
-        "../Code/**.cpp"
+        "../Source/**.h",
+        "../Source/**.cpp"
     }
 
     postbuildcommands
