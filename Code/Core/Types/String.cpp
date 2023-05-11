@@ -10,20 +10,6 @@ namespace jpt
 	{
 	}
 
-	string::string(const jpt::string& other)
-		: m_pBuffer(nullptr)
-		, m_size(other.m_size)
-		, m_capacity(other.m_capacity)
-	{
-		CopyString(other.c_str());
-	}
-
-	string& string::operator=(const jpt::string& other)
-	{
-		CopyString(other.c_str());
-		return *this;
-	}
-
 	string::string(const char* inString)
 		: m_pBuffer(nullptr)
 		, m_size(0)
@@ -32,9 +18,75 @@ namespace jpt
 		CopyString(inString);
 	}
 
+	string::string(const jpt::string& other)
+		: m_pBuffer(nullptr)
+		, m_size(other.m_size)
+		, m_capacity(other.m_capacity)
+	{
+		CopyString(other);
+	}
+
+	string::string(char*&& inString) noexcept
+		: m_pBuffer(inString)
+		, m_size(jpt::strlen(inString))
+		, m_capacity(m_size)
+	{
+		TakeString(std::move(inString));
+	}
+
+	string::string(jpt::string&& other) noexcept
+		: m_pBuffer(other.m_pBuffer)
+		, m_size(other.m_size)
+		, m_capacity(other.m_capacity)
+	{
+		TakeString(std::move(other));
+	}
+
 	string& string::operator=(const char* inString)
 	{
+		if (this->c_str() == inString)
+		{
+			return *this;
+		}
+
+		clear();
 		CopyString(inString);
+		return *this;
+	}
+
+	string& string::operator=(const jpt::string& other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		CopyString(other);
+		return *this;
+	}
+
+	string& string::operator=(char*&& inString) noexcept
+	{
+		if (this->data() == inString)
+		{
+			return *this;
+		}
+
+		clear();
+		TakeString(std::move(inString));
+		return *this;
+	}
+
+	string& string::operator=(jpt::string&& other) noexcept
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		TakeString(std::move(other));
 		return *this;
 	}
 
@@ -176,8 +228,6 @@ namespace jpt
 
 	void string::CopyString(const char* inString)
 	{
-		clear();
-
 		m_size = jpt::strlen(inString);
 		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 
@@ -185,11 +235,31 @@ namespace jpt
 		strcpy_s(m_pBuffer, m_size + 1, inString);
 	}
 
+	void string::CopyString(const jpt::string& inString)
+	{
+		m_size = inString.size();
+		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+
+		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
+		strcpy_s(m_pBuffer, m_size + 1, inString.data());
+	}
+
 	void string::TakeString(char* inString)
 	{
-		m_pBuffer = inString;
-		m_size = jpt::strlen(inString);
+		m_pBuffer  = inString;
+		m_size     = jpt::strlen(inString);
 		m_capacity = m_size;
+	}
+
+	void string::TakeString(jpt::string&& inString)
+	{
+		m_pBuffer  = inString.m_pBuffer;
+		m_size     = inString.m_size;
+		m_capacity = inString.m_capacity;
+
+		inString.m_pBuffer  = nullptr;
+		inString.m_size     = 0;
+		inString.m_capacity = 0;
 	}
 
 	bool string::IsSame(const char* inString) const
@@ -215,7 +285,8 @@ namespace jpt
 
 inline jpt::string operator+(const char* leftString, const jpt::string& rightString)
 {
-	return rightString + leftString;
+	jpt::string left(leftString);
+	return left + rightString;
 }
 
 std::ostream& operator<<(std::ostream& stream, const jpt::string& string)

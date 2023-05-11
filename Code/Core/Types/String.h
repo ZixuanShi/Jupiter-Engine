@@ -16,10 +16,14 @@ namespace jpt
 	public:
 		// Member functions
 		string();
-		string(const jpt::string& other);
-		string& operator=(const jpt::string& other);
 		string(const char* inString);
+		string(const jpt::string& other);
+		string(char*&& inString) noexcept;
+		string(jpt::string&& other) noexcept;
 		string& operator=(const char* inString);
+		string& operator=(const jpt::string& other);
+		string& operator=(char*&& inString) noexcept;
+		string& operator=(jpt::string&& other) noexcept;
 		~string();
 
 	public:
@@ -58,10 +62,12 @@ namespace jpt
 		// Copy the content of inString. Will replace the current buffer entirely.
 		// - inString: The new string to hold in buffer
 		void CopyString(const char* inString);
+		void CopyString(const jpt::string& inString);
 
 		// Take the content of inString. Will assign the buffer to this new string
 		// - inString: The new string to take in buffer
 		void TakeString(char* inString);
+		void TakeString(jpt::string&& inString);
 
 		// Returns: true if this string's value is exactly the same as the inString
 		bool IsSame(const char* inString) const;
