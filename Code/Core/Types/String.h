@@ -8,14 +8,14 @@ namespace jpt
 		static constexpr size_t npos = kInvalidValue<size_t>;
 
 	private:
-		char* m_pBuffer;	// The pointer to the buffer representing this string's value
-		size_t m_size;		// How many characters in this string currently.
-		size_t m_capacity;	// How many characters this string can hold before resizing.
+		char* m_pBuffer   = nullptr;	// The pointer to the buffer representing this string's value
+		size_t m_size     = 0;			// How many characters in this string currently.
+		size_t m_capacity = 0;			// How many characters this string can hold before resizing.
 		static constexpr size_t kCapacityMultiplier = 2;
 
 	public:
 		// Member functions
-		string();
+		string() = default;
 		string(const char* inString);
 		string(const jpt::string& other);
 		string(char*&& inString) noexcept;
