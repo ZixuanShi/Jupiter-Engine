@@ -23,7 +23,6 @@
 #include "Core/Logging/Logger.h"
 #include "Core/Debugging/DebuggingMacros.h"
 #include "Core/MemoryManagement/MemoryOperators.h"
-#include "Core/Types/Iterator.h"
 #include "Core/Types/String.h"
 #include "Core/Algorithms/StringAlgorithms.h"
 #include "Core/DataStructures/Vector.h"
