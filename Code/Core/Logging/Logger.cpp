@@ -25,13 +25,13 @@ namespace jpt
 		va_end(args);
 
 		// Get valid file path
-		std::string fullPath(file);
-		fullPath = fullPath.substr(fullPath.find_last_of("\\") + 1);
-		fullPath += ", line (" + std::to_string(line) + "):  \t" + messageBuffer + "\n";
+		std::string contentToLog(file);
+		contentToLog = contentToLog.substr(contentToLog.find_last_of("\\") + 1);
+		contentToLog += ", line (" + std::to_string(line) + "):  \t" + messageBuffer + "\n";
 
 		// Log to the terminal and output window
-		std::cout << fullPath;
-		::OutputDebugStringA(fullPath.c_str());
+		std::cout << contentToLog;
+		::OutputDebugStringA(contentToLog.c_str());
 	}
 
 	void Logger::ChangeConsoleTextColor(ELogType type) const

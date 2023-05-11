@@ -6,9 +6,11 @@ namespace jpt
 	{
 	private:
 		char* m_pBuffer;	// The pointer to the buffer representing this string's value
-		size_t m_size;		// How many characters in this string
+		size_t m_size;		// How many characters in this string currently
+		size_t m_capacity;	// How many characters this string can hold before resizing
 
 	public:
+		// Member functions
 		string();
 		string(const jpt::string& other);
 		string& operator=(const jpt::string& other);
@@ -17,9 +19,18 @@ namespace jpt
 		~string();
 
 	public:
-		void clear();
+		// Element Access
 		const char* c_str() const { return m_pBuffer; }
-		char* GetBuffer() const { return m_pBuffer; }
+		char* data() const { return m_pBuffer; }
+
+		// Capacity
+
+
+		// Operations
+		void clear();
+		string& append(const char* inString);
+
+		// Search
 
 	private:
 		void CopyString(const char* inString);

@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Core/MemoryManagement/MemoryOperators.h"
-#include "Core/Debugging/DebuggingMacros.h"
-
 namespace jpt
 {
 	template<typename Vector>

@@ -13,5 +13,7 @@ jpt::Application jpt::CreateApplication()
 		JPT_LOG("%s", str.c_str());
 	}
 
+//	jpt::string str = "Test";
+
 	return DemoGameApplication();
 }
