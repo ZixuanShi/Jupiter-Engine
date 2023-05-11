@@ -6,8 +6,8 @@ namespace jpt
 	{
 	private:
 		char* m_pBuffer;	// The pointer to the buffer representing this string's value
-		size_t m_size;		// How many characters in this string currently
-		size_t m_capacity;	// How many characters this string can hold before resizing
+		size_t m_size;		// How many characters in this string currently.
+		size_t m_capacity;	// How many characters this string can hold before resizing.
 
 	public:
 		// Member functions
@@ -24,7 +24,8 @@ namespace jpt
 		char* data() const { return m_pBuffer; }
 
 		// Capacity
-
+		size_t size() const { return m_size; }
+		size_t capacity() const { return m_capacity; }
 
 		// Operations
 		void clear();
@@ -33,8 +34,9 @@ namespace jpt
 		// Search
 
 	private:
+		void UpdateBuffer(size_t inCapacity);
 		void CopyString(const char* inString);
 	};
 }
 
-inline std::ostream& operator<<(std::ostream& stream, const jpt::string& string);
+JPT_API inline std::ostream& operator<<(std::ostream& stream, const jpt::string& string);

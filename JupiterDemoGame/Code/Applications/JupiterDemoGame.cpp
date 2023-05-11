@@ -8,12 +8,14 @@ jpt::Application jpt::CreateApplication()
 	JPT_START_TIMING_PROFILER("Create Application");
 
 	jpt::vector<jpt::string> strings{ "Jupiter Engine", "Zixuan Shi", "Jupiter Technologies" };
-	for (const jpt::string& str : strings)
+	for (jpt::string& str : strings)
 	{
-		JPT_LOG("%s", str.c_str());
+		JPT_LOG("%s, %u, %u", str.c_str(), str.size(), str.capacity());
+		str = jpt::string("Test");
 	}
-
-//	jpt::string str = "Test";
-
+	for (jpt::string& str : strings)
+	{
+		JPT_LOG("%s, %u, %u", str.c_str(), str.size(), str.capacity())
+	}
 	return DemoGameApplication();
 }
