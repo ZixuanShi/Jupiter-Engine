@@ -4,10 +4,17 @@
 
 namespace jpt
 {
+#if !IS_RELEASE
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_WARNING(message, ...)		{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,	__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_ERROR(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,		__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
+#else
+	#define JPT_LOG(message, ...)		
+	#define JPT_WARNING(message, ...)	
+	#define JPT_ERROR(message, ...)		
+	#define JPT_SYSTEM_INFO(message, ...)  
+#endif
 
 	// Singleton logger
 	class JPT_API Logger
