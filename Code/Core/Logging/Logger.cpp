@@ -25,9 +25,9 @@ namespace jpt
 		va_end(args);
 
 		// Get valid file path
-		std::string contentToLog(file);
+		jpt::string contentToLog(file);
 		contentToLog = contentToLog.substr(contentToLog.find_last_of("\\") + 1);
-		contentToLog += ", line (" + std::to_string(line) + "):  \t" + messageBuffer + "\n";
+		contentToLog += ", line (" + jpt::to_string(line) + "):  \t" + messageBuffer + "\n";
 
 		// Log to the terminal and output window
 		std::cout << contentToLog;

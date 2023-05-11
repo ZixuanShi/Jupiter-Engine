@@ -58,7 +58,7 @@ namespace jpt
         // Process each digit
         while (value > 0)
         {
-            int digit = value % base;
+            const int digit = value % base;
 
             // For different base, process differently
             if (digit > 9)

@@ -10,12 +10,14 @@ jpt::Application jpt::CreateApplication()
 	jpt::vector<jpt::string> strings{ "Jupiter Engine", "Zixuan Shi", "Jupiter Technologies" };
 	for (jpt::string& str : strings)
 	{
-		JPT_LOG("%s, %u, %u", str.c_str(), str.size(), str.capacity());
-		str = jpt::string("Test");
+		JPT_LOG("Compare result: %s", str == "Zixuan Shi" ? "true" : "false");
 	}
-	for (jpt::string& str : strings)
-	{
-		JPT_LOG("%s, %u, %u", str.c_str(), str.size(), str.capacity())
-	}
+
+	const jpt::string str1("Test");
+	const jpt::string substr(str1.substr(2,2));
+	
+	JPT_LOG("%s", str1.c_str());
+	JPT_LOG("%s", substr.c_str());
+
 	return DemoGameApplication();
 }

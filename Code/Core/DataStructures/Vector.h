@@ -150,7 +150,7 @@ namespace jpt
 		if (m_pBuffer)
 		{
 			memcpy(pNewBuffer, m_pBuffer, m_size * sizeof(ValueType));
-			JPT_DELETE_ARRAY(m_pBuffer);
+			delete[] m_pBuffer;
 		}
 
 		m_pBuffer = pNewBuffer;
