@@ -15,6 +15,5 @@ namespace jpt
 
 	void Application::Clean()
 	{
-		_CrtDumpMemoryLeaks();
 	}
 }

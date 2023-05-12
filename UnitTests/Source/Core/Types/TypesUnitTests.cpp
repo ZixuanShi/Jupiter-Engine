@@ -1,0 +1,34 @@
+#include "Core/Building/JupiterPCH.h"
+#include "TypesUnitTests.h"
+
+bool UnitTest_String()
+{
+	jpt::string jupiterString("Jupiter Engine");
+	JPT_RUN_UNIT_TEST(jupiterString.size(), 14);
+
+	jpt::string anotherString("Zixuan Shi");
+	JPT_RUN_UNIT_TEST(anotherString.size(), 10);
+
+	jupiterString.append(" appended ");
+	JPT_RUN_UNIT_TEST(jupiterString.size(), 24);
+
+	jupiterString.append(anotherString);
+	JPT_RUN_UNIT_TEST(jupiterString.size(), 34);
+
+	JPT_RUN_UNIT_TEST(jupiterString.find_first_of("ter"), 4);
+	JPT_RUN_UNIT_TEST(jupiterString.find_last_of("Zixuan"), 24);
+	JPT_RUN_UNIT_TEST(jupiterString.find("does not exist"), jpt::string::npos);
+
+	JPT_RUN_UNIT_TEST(jupiterString.substr(8, 6), "Engine");
+
+	jupiterString.clear();
+	JPT_RUN_UNIT_TEST(jupiterString.size(), 0);
+	JPT_RUN_UNIT_TEST(jupiterString.c_str(), nullptr);
+
+	return true;
+}
+
+void RunTypesUnitTests()
+{
+	JPT_RUN_UNIT_TESTS(UnitTest_String);
+}

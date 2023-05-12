@@ -1,8 +1,5 @@
 #pragma once
 
-#include <numeric>
-#include <stdint.h>
-
 // If the value is not supported, you need to specialized template it in the corresponding file
 template <typename Type>
 inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();

@@ -1,16 +1,19 @@
 #pragma once
 #include "Application.h"
 
-extern jpt::Application CreateApplication();
+extern jpt::Application* CreateApplication();
 
 int main()
 {
-	jpt::Application application = CreateApplication();
-	if (application.Init())
+	jpt::Application* pApplication = CreateApplication();
+	if (pApplication->Init())
 	{
-		application.Update();
+		pApplication->Update();
 	}
-	application.Clean();
+	pApplication->Clean();
+	JPT_DELETE(pApplication);
+
+	_CrtDumpMemoryLeaks();
 
 	return 0;
 }

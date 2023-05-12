@@ -3,7 +3,7 @@
 
 #include "DemoGameApplication.h"
 
-jpt::Application CreateApplication()
+jpt::Application* CreateApplication()
 {
 	JPT_START_TIMING_PROFILER("Create Application");
 
@@ -24,5 +24,5 @@ jpt::Application CreateApplication()
 	std::cout << jptStrView2 << '\n';
 	std::cout << jptStrView3 << '\n';
 
-	return DemoGameApplication();
+	return new DemoGameApplication();
 }

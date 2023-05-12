@@ -2,10 +2,6 @@
 
 #include "DemoGameApplication.h"
 
-DemoGameApplication::DemoGameApplication()
-{
-}
-
 bool DemoGameApplication::Init()
 {
     if (!jpt::Application::Init())

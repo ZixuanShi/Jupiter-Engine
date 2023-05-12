@@ -1,7 +1,7 @@
 #pragma once
 #include "Applications/Application.h"
 
-class DemoGameApplication final : public jpt::Application
+class JupiterUnitTestsApplication final : public jpt::Application
 {
 public:
 	virtual bool Init() override;
