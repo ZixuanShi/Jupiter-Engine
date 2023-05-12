@@ -2,7 +2,7 @@
 workspace "JupiterDemoGame"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
-    local jupiter_basedir = "../../"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves
+    local jupiter_basedir = "../../"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
 
     -- Config
     configurations 
