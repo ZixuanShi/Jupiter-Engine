@@ -258,7 +258,7 @@ namespace jpt
 			return false;
 		}
 
-		return memcmp(m_pBuffer, inString, m_size) == 0;
+		return strncmp(m_pBuffer, inString, m_size) == 0;
 	}
 
 	bool string::IsSame(const jpt::string& inString) const
@@ -268,17 +268,17 @@ namespace jpt
 			return false;
 		}
 
-		return memcmp(m_pBuffer, inString.c_str(), m_size) == 0;
+		return strncmp(m_pBuffer, inString.c_str(), m_size) == 0;
 	}
-}
 
-inline jpt::string operator+(const char* leftString, const jpt::string& rightString)
-{
-	return jpt::string(leftString) += rightString;
-}
+	jpt::string operator+(const char* leftString, const jpt::string& rightString)
+	{
+		return jpt::string(leftString) += rightString;
+	}
 
-std::ostream& operator<<(std::ostream& stream, const jpt::string& string)
-{
-	stream << string.c_str();
-	return stream;
+	std::ostream& operator<<(std::ostream& stream, const jpt::string& string)
+	{
+		stream << string.c_str();
+		return stream;
+	}
 }

@@ -24,3 +24,4 @@ using TimeDuration = std::chrono::duration<TimingPrecision>;
 
 // In-house types
 #include "String.h"
+#include "StringView.h"

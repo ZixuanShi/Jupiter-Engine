@@ -54,6 +54,10 @@ namespace jpt
 		bool operator==(const char* inString) const { return IsSame(inString); }
 		bool operator==(const string& inString) const { return IsSame(inString); }
 
+		// Jupiter custom
+		JPT_API friend jpt::string operator+(const char* leftString, const jpt::string& rightString);
+		JPT_API friend std::ostream& operator<<(std::ostream& stream, const jpt::string& string);
+
 	private:
 		// Called when the current buffer is not big enough to hold a new string to join. Update the buffer to a larger size and increase capacity
 		// - inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier
@@ -74,6 +78,3 @@ namespace jpt
 		bool IsSame(const jpt::string& inString) const;
 	};
 }
-
-JPT_API inline jpt::string operator+(const char* leftString, const jpt::string& rightString);
-JPT_API inline std::ostream& operator<<(std::ostream& stream, const jpt::string& string);
