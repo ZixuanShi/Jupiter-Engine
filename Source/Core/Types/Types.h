@@ -21,3 +21,6 @@ using TimingPrecision = double;
 using Clock        = std::chrono::high_resolution_clock;
 using TimePoint    = std::chrono::time_point<Clock>;
 using TimeDuration = std::chrono::duration<TimingPrecision>;
+
+// In-house types
+#include "String.h"

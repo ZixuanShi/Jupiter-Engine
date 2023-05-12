@@ -8,7 +8,7 @@ jpt::Application CreateApplication()
 	JPT_START_TIMING_PROFILER("Create Application");
 
 	// std
-	std::string stdstr(jpt::itoa(123));
+	std::string stdstr(std::to_string(123));
 	JPT_LOG(stdstr.c_str());
 
 	// jpt

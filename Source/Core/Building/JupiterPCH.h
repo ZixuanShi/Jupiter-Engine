@@ -19,13 +19,11 @@
 
 // Jupiter
 #include "Core/Building/BuildingMacros.h"
-#include "Core/Types/TypeDefs.h"
+#include "Core/Types/Types.h"
 #include "Core/Logging/Logger.h"
 #include "Core/Debugging/DebuggingMacros.h"
 #include "Core/MemoryManagement/MemoryOperators.h"
-#include "Core/Types/String.h"
-#include "Core/Algorithms/StringAlgorithms.h"
-#include "Core/DataStructures/Vector.h"
-#include "Core/DataStructures/UnorderedMap.h"
+#include "Core/Algorithms/AlgorithmsHeaders.h"
+#include "Core/DataStructures/DataStructuresHeaders.h"
 #include "Core/Timing/Timer.h"
 #include "Core/Timing/TimeProfiler.h"
