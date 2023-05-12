@@ -28,7 +28,24 @@ bool UnitTest_String()
 	return true;
 }
 
+bool UnitTest_StringView()
+{
+	jpt::string jptStr = "jpt string";
+
+	jpt::string_view jptStrView(jptStr.c_str() + 2, 3);
+	JPT_CHECK_RESULT(jptStrView == "t s");
+
+	jpt::string_view jptStrView2("jpt stringview raw");
+	JPT_CHECK_RESULT(jptStrView2 == "jpt stringview raw");
+
+	jpt::string_view jptStrView3(jptStr);
+	JPT_CHECK_RESULT(jptStrView3 == jptStr);
+
+	return true;
+}
+
 void RunTypesUnitTests()
 {
 	JPT_RUN_UNIT_TESTS(UnitTest_String);
+	JPT_RUN_UNIT_TESTS(UnitTest_StringView);
 }
