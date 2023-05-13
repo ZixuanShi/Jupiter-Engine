@@ -110,6 +110,10 @@ bool UnitTest_Vector()
 	JPT_RUN_UNIT_TEST(copiedStrVector.size(), 2);
 	JPT_RUN_UNIT_TEST(anotherStrVector.size(), 2);
 
+	copiedStrVector.insert(1, "1");
+	copiedStrVector.insert(0, "3");
+	JPT_RUN_UNIT_TEST(copiedStrVector.size(), 4);
+
 	return true;
 }
 

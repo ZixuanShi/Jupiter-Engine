@@ -81,9 +81,9 @@ namespace jpt
 		vector() = default;
 		vector(const std::initializer_list<ValueType>& initializerList);
 		vector(const jpt::vector<ValueType>& other);
-		vector(jpt::vector<ValueType>&& other);
+		vector(jpt::vector<ValueType>&& other) noexcept;
 		vector& operator=(const jpt::vector<ValueType>& other);
-		vector& operator=(jpt::vector<ValueType>&& other);
+		vector& operator=(jpt::vector<ValueType>&& other) noexcept;
 		~vector();
 
 		// Element access
@@ -117,11 +117,24 @@ namespace jpt
 		template<class... Args> void emplace_back(Args&&... value);
 		void pop_back();
 		void erase(size_t index);
+		void insert(size_t index, const ValueType& value);
+		void insert(size_t index, ValueType&& value);
 
 	private:
+		// Create a new data buffer with a new capacity, move the existing data over
+		// - inCapacity: The new buffer's size
 		void UpdateBufferWithNewCapacity(size_t inCapacity);
+		
+		// Copy the data from another vector, create them on heap and point to it
 		void CopyVector(const jpt::vector<ValueType>& other);
+
+		// Takes over ownership of data from another vector
 		void TakeVector(jpt::vector<ValueType>&& other);
+
+		// Shift the elements inside buffer
+		// - index: Where to start shifting
+		// - isToEnd: True if we are shifting from begin to end, false if we are shifting from end to begin
+		void ShiftBuffer(size_t index, bool isToEnd);
 	};
 
 	template<class _ValueType>
@@ -147,7 +160,7 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	inline vector<_ValueType>::vector(jpt::vector<ValueType>&& other)
+	inline vector<_ValueType>::vector(jpt::vector<ValueType>&& other) noexcept
 	{
 		TakeVector(jpt::move(other));
 	}
@@ -166,7 +179,7 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	inline vector<_ValueType>& vector<_ValueType>::operator=(jpt::vector<ValueType>&& other)
+	inline vector<_ValueType>& vector<_ValueType>::operator=(jpt::vector<ValueType>&& other) noexcept
 	{
 		if (this == &other)
 		{
@@ -212,7 +225,7 @@ namespace jpt
 	template<class _ValueType>
 	inline void vector<_ValueType>::push_back(const _ValueType& value)
 	{
-		if (m_size >= m_capacity || !m_pBuffer)
+		if (m_size >= m_capacity)
 		{
 			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
@@ -224,7 +237,7 @@ namespace jpt
 	template<class _ValueType>
 	inline void vector<_ValueType>::push_back(_ValueType&& value)
 	{
-		if (m_size >= m_capacity || !m_pBuffer)
+		if (m_size >= m_capacity)
 		{
 			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
@@ -237,7 +250,7 @@ namespace jpt
 	template<class ...Args>
 	inline void vector<_ValueType>::emplace_back(Args&& ...value)
 	{
-		if (m_size >= m_capacity || !m_pBuffer)
+		if (m_size >= m_capacity)
 		{
 			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
@@ -269,17 +282,39 @@ namespace jpt
 			m_pBuffer[index].~ValueType();
 		}
 
-		if constexpr (std::is_trivially_copyable_v<ValueType>)
+		ShiftBuffer(index, false);
+	}
+
+	template<class _ValueType>
+	inline void vector<_ValueType>::insert(size_t index, const ValueType& value)
+	{
+		JPT_ASSERT(index <= m_size, "Calling insert() with an invalid index");
+
+		if (m_size >= m_capacity)
 		{
-			std::memmove(m_pBuffer + index, m_pBuffer + index + 1, (m_size - index) * sizeof(ValueType));
+			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
-		else
+
+		ShiftBuffer(index, true);
+
+		new(m_pBuffer + index) ValueType(value);
+		++m_size;
+	}
+
+	template<class _ValueType>
+	inline void vector<_ValueType>::insert(size_t index, ValueType&& value)
+	{
+		JPT_ASSERT(index <= m_size, "Calling insert() with an invalid index");
+
+		if (m_size >= m_capacity)
 		{
-			for (size_t i = index; i < m_size; ++i)
-			{
-				m_pBuffer[i] = jpt::move(m_pBuffer[i + 1]);
-			}
+			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
+
+		ShiftBuffer(index, true);
+
+		new(m_pBuffer + index) ValueType(jpt::move(value));
+		++m_size;
 	}
 
 	template<class _ValueType>
@@ -340,5 +375,38 @@ namespace jpt
 		other.m_pBuffer  = nullptr;
 		other.m_size     = 0;
 		other.m_capacity = 0;
+	}
+
+	template<class _ValueType>
+	inline void vector<_ValueType>::ShiftBuffer(size_t index, bool isToEnd)
+	{
+		if (isToEnd)
+		{
+			if constexpr (std::is_trivially_copyable_v<ValueType>)
+			{
+				std::memmove(m_pBuffer + index + 1, m_pBuffer + index, (m_size - index) * sizeof(ValueType));
+			}
+			else
+			{
+				for (size_t i = m_size; i > index; --i)
+				{
+					m_pBuffer[i] = jpt::move(m_pBuffer[i - 1]);
+				}
+			}
+		}
+		else
+		{
+			if constexpr (std::is_trivially_copyable_v<ValueType>)
+			{
+				std::memmove(m_pBuffer + index, m_pBuffer + index + 1, (m_size - index) * sizeof(ValueType));
+			}
+			else
+			{
+				for (size_t i = index; i < m_size; ++i)
+				{
+					m_pBuffer[i] = jpt::move(m_pBuffer[i + 1]);
+				}
+			}
+		}
 	}
 }
