@@ -1,6 +1,7 @@
 string_view
 string full functionality
 Enum start/end tostring
+pair
 unordered_map
 Documents generation
 Profiler generate excel sheet

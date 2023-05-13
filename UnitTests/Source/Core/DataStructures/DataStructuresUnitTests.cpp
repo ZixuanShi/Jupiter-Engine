@@ -1,6 +1,30 @@
 #include "Core/Building/JupiterPCH.h"
 #include "DataStructuresUnitTests.h"
 
+bool UnitTest_Pair()
+{
+	jpt::pair<int32, float> pair1 = jpt::make_pair<int32, float>(1, 1.5f);
+	JPT_RUN_UNIT_TEST(pair1.first, 1);
+	JPT_RUN_UNIT_TEST(pair1.second, 1.5f);
+
+	pair1 = jpt::make_pair<int32, float>(2, 3.5f);
+	JPT_RUN_UNIT_TEST(pair1.first, 2);
+	JPT_RUN_UNIT_TEST(pair1.second, 3.5f);
+
+	jpt::pair<jpt::string, jpt::vector<jpt::string>> pair2 = jpt::make_pair<jpt::string, jpt::vector<jpt::string>>("TestStr", { "TestVecElement1","TestVecElement2" });
+	JPT_RUN_UNIT_TEST(pair2.first, "TestStr");
+	JPT_RUN_UNIT_TEST(pair2.second[0], "TestVecElement1");
+	JPT_RUN_UNIT_TEST(pair2.second[1], "TestVecElement2");
+
+	pair2 = jpt::make_pair<jpt::string, jpt::vector<jpt::string>>("NewTestStr", { "NewTestVecElement1","NewTestVecElement2", "NewTestVecElement3"});
+	JPT_RUN_UNIT_TEST(pair2.first, "NewTestStr");
+	JPT_RUN_UNIT_TEST(pair2.second[0], "NewTestVecElement1");
+	JPT_RUN_UNIT_TEST(pair2.second[1], "NewTestVecElement2");
+	JPT_RUN_UNIT_TEST(pair2.second[2], "NewTestVecElement3");
+
+	return true;
+}
+
 bool UnitTest_Vector()
 {
 	// Primitive Types
@@ -119,5 +143,6 @@ bool UnitTest_Vector()
 
 void RunDataStructuresUnitTests()
 {
+	JPT_RUN_UNIT_TESTS(UnitTest_Pair);
 	JPT_RUN_UNIT_TESTS(UnitTest_Vector);
 }
