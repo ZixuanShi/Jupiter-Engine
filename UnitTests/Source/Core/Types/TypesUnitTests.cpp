@@ -44,8 +44,28 @@ bool UnitTest_StringView()
 	return true;
 }
 
+bool UnitTest_Types()
+{
+	bool result = false;
+
+	result = jpt::IsSameType<int32, float>::Value == false;
+	JPT_CHECK_RESULT(result);
+
+	result = jpt::IsSameType<int32, int32>::Value;
+	JPT_CHECK_RESULT(result);
+
+	result = jpt::IsSameType<jpt::string, const char*>::Value == false;
+	JPT_CHECK_RESULT(result);
+
+	result = jpt::IsSameType<jpt::string, jpt::string>::Value;
+	JPT_CHECK_RESULT(result);
+
+	return true;
+}
+
 void RunTypesUnitTests()
 {
 	JPT_RUN_UNIT_TESTS(UnitTest_String);
 	JPT_RUN_UNIT_TESTS(UnitTest_StringView);
+	JPT_RUN_UNIT_TESTS(UnitTest_Types);
 }

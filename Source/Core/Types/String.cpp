@@ -15,12 +15,12 @@ namespace jpt
 
 	string::string(char*&& inString) noexcept
 	{
-		TakeString(std::move(inString));
+		TakeString(jpt::move(inString));
 	}
 
 	string::string(jpt::string&& other) noexcept
 	{
-		TakeString(std::move(other));
+		TakeString(jpt::move(other));
 	}
 
 	string& string::operator=(const char* inString)
@@ -55,7 +55,7 @@ namespace jpt
 		}
 
 		clear();
-		TakeString(std::move(inString));
+		TakeString(jpt::move(inString));
 		return *this;
 	}
 
@@ -67,7 +67,7 @@ namespace jpt
 		}
 
 		clear();
-		TakeString(std::move(other));
+		TakeString(jpt::move(other));
 		return *this;
 	}
 
@@ -80,6 +80,7 @@ namespace jpt
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 		m_size = 0;
+		m_capacity = 0;
 	}
 
 	void string::append(const char* inString)
