@@ -28,10 +28,17 @@ bool UnitTest_Pair()
 bool UnitTest_Vector()
 {
 	// Primitive Types
+	int32 i = 0;
+
 	jpt::vector<int32> jptVectorInt{ 0,1,2 };
 	JPT_RUN_UNIT_TEST(jptVectorInt.size(), 3);
+	for (jpt::vector<int32>::iterator itr = jptVectorInt.begin(); itr != jptVectorInt.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, i);
+		++i;
+	}
 
-	int32 i = 0;
+	i = 0;
 	for (int32 num : jptVectorInt)
 	{
 		JPT_RUN_UNIT_TEST(num, i);
@@ -83,6 +90,12 @@ bool UnitTest_Vector()
 	// Non-Trivial Objects
 	jpt::vector<jpt::string> jptVectorStr{ "0", "1", "2" };
 	JPT_RUN_UNIT_TEST(jptVectorStr.size(), 3);
+	i = 0;
+	for (jpt::vector<jpt::string>::iterator itr = jptVectorStr.begin(); itr != jptVectorStr.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, jpt::to_string(i));
+		++i;
+	}
 
 	i = 0;
 	for (const jpt::string& str : jptVectorStr)
@@ -141,8 +154,125 @@ bool UnitTest_Vector()
 	return true;
 }
 
+bool UnitTest_list()
+{
+	int32 i = 0;
+
+	// Primitive types
+	jpt::list<int32> intList{ 3,5,7 };
+	intList.insert(1, 4);
+	intList.insert(3, 6);
+	intList.emplace_front(2);
+	intList.push_front(1);
+	intList.push_front(i);	// 0
+	intList.emplace_back(8);
+	intList.push_back(9);
+
+	// 0,1,2,3,4,5,6,7,8,9
+	for (jpt::list<int32>::iterator itr = intList.begin(); itr != intList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, i);
+		++i;
+	}
+
+	intList.pop_front();
+	intList.pop_front();
+	intList.pop_back();
+	intList.pop_back();
+	// 2,3,4,5,6,7
+
+	intList.erase(1);
+	intList.erase(2);
+	intList.erase(3);
+	// 2,4,6
+
+	i = 2;
+	for (jpt::list<int32>::iterator itr = intList.begin(); itr != intList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, i);
+		i += 2;
+	}
+
+	jpt::list<int32> anotherCopiedIntList(intList);
+
+	i = 2;
+	for (jpt::list<int32>::iterator itr = anotherCopiedIntList.begin(); itr != anotherCopiedIntList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, i);
+		i += 2;
+	}
+
+	jpt::list<int32> anotherMovedIntList;
+	anotherMovedIntList = jpt::move(intList);
+
+	i = 2;
+	for (jpt::list<int32>::iterator itr = anotherMovedIntList.begin(); itr != anotherMovedIntList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, i);
+		i += 2;
+	}
+
+	// Non-trivial types
+	i = 0;
+	jpt::list<jpt::string> strList{ "3","5","7" };
+
+	strList.insert(1, "4");
+	strList.insert(3, "6");
+	strList.emplace_front("2");
+	strList.push_front("1");
+	strList.push_front(jpt::to_string(i));	// 0
+	strList.emplace_back(jpt::to_string(8));
+	strList.push_back("9");
+
+	// 0,1,2,3,4,5,6,7,8,9
+	for (jpt::list<jpt::string>::iterator itr = strList.begin(); itr != strList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, jpt::to_string(i));
+		++i;
+	}
+
+	strList.pop_front();
+	strList.pop_front();
+	strList.pop_back();
+	strList.pop_back();
+	// 2,3,4,5,6,7
+
+	strList.erase(1);
+	strList.erase(2);
+	strList.erase(3);
+	// 2,4,6
+
+	i = 2;
+	for (jpt::list<jpt::string>::iterator itr = strList.begin(); itr != strList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, jpt::to_string(i));
+		i += 2;
+	}
+
+	jpt::list<jpt::string> anotherCopiedStrList(strList);
+	i = 2;
+	for (jpt::list<jpt::string>::iterator itr = anotherCopiedStrList.begin(); itr != anotherCopiedStrList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, jpt::to_string(i));
+		i += 2;
+	}
+
+	jpt::list<jpt::string> anotherMovedStrList;
+	anotherMovedStrList = jpt::move(strList);
+
+	i = 2;
+	for (jpt::list<jpt::string>::iterator itr = anotherMovedStrList.begin(); itr != anotherMovedStrList.end(); ++itr)
+	{
+		JPT_RUN_UNIT_TEST(*itr, jpt::to_string(i));
+		i += 2;
+	}
+
+	return true;
+}
+
 void RunDataStructuresUnitTests()
 {
 	JPT_RUN_UNIT_TESTS(UnitTest_Pair);
 	JPT_RUN_UNIT_TESTS(UnitTest_Vector);
+	JPT_RUN_UNIT_TESTS(UnitTest_list);
 }

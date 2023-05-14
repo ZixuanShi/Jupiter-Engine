@@ -11,7 +11,7 @@ namespace jpt
 		using ValueType = _ValueType;
 
 	private:
-
+		// Vector of Linked List as data buffer
 
 	public:
 

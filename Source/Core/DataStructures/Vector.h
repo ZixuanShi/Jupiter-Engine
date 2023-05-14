@@ -2,74 +2,55 @@
 
 namespace jpt
 {
-	template<typename Vector>
-	class vector_iterator
-	{
-	public:
-		using ValueType = typename Vector::ValueType;
-
-	private:
-		ValueType* m_ptr;
-
-	public:
-		// Member functions
-		constexpr vector_iterator(ValueType* ptr);
-
-		// Meant to be virtual
-		vector_iterator& operator++();
-		vector_iterator operator++(int32);
-		vector_iterator& operator--();
-		vector_iterator operator--(int32);
-
-		ValueType& operator[](size_t index) { return *(m_ptr + index); }
-		ValueType* operator->() { return m_ptr; }
-		ValueType& operator*() { return *m_ptr; }
-		bool operator==(const vector_iterator& other) const { return m_ptr == other.m_ptr; }
-		bool operator!=(const vector_iterator& other) const { return m_ptr != other.m_ptr; }
-	};
-
-	template<typename Vector>
-	inline constexpr vector_iterator<Vector>::vector_iterator(ValueType* ptr)
-		: m_ptr(ptr)
-	{
-	}
-
-	template<typename Vector>
-	inline vector_iterator<Vector>& vector_iterator<Vector>::operator++()
-	{
-		m_ptr++;
-		return *this;
-	}
-
-	template<typename Vector>
-	inline vector_iterator<Vector> vector_iterator<Vector>::operator++(int32)
-	{
-		vector_iterator iterator = *this;
-		++(*this);
-		return iterator;
-	}
-
-	template<typename Vector>
-	inline vector_iterator<Vector>& vector_iterator<Vector>::operator--()
-	{
-		m_ptr--;
-		return *this;
-	}
-
-	template<typename Vector>
-	inline vector_iterator<Vector> vector_iterator<Vector>::operator--(int32)
-	{
-		vector_iterator iterator = *this;
-		--(*this);
-		return iterator;
-	}
-
 	template<class _ValueType>
 	class vector
 	{
+	private:
+		template<class VectorType>
+		class vector_iterator
+		{
+		private:
+			_ValueType* m_pPtr = nullptr;
+
+		public:
+			vector_iterator(_ValueType* ptr) : m_pPtr(ptr) {}
+
+			_ValueType& operator[](size_t index) { return *(m_pPtr + index); }
+			_ValueType* operator->() { return m_pPtr; }
+			_ValueType& operator*() { return *m_pPtr; }
+			bool operator==(const vector_iterator& other) const { return m_pPtr == other.m_pPtr; }
+			bool operator!=(const vector_iterator& other) const { return m_pPtr != other.m_pPtr; }
+
+			vector_iterator& operator++()
+			{
+				m_pPtr++;
+				return *this;
+			}
+
+			vector_iterator operator++(int32)
+			{
+				vector_iterator iterator = *this;
+				++(*this);
+				return iterator;
+			}
+
+			vector_iterator& operator--()
+			{
+				m_pPtr--;
+				return *this;
+			}
+
+			vector_iterator operator--(int32)
+			{
+				vector_iterator iterator = *this;
+				--(*this);
+				return iterator;
+			}
+		};
+
 	public:
 		using ValueType = _ValueType;
-		using iterator = vector_iterator<vector<ValueType>>;
+		using iterator  = vector_iterator<vector<ValueType>>;
 
 	private:
 		ValueType* m_pBuffer = nullptr;
@@ -331,6 +312,8 @@ namespace jpt
 			else
 			{
 				JPT_ASSERT(pNewBuffer, "pNewBuffer should be initialized");
+				JPT_ASSERT(m_size <= inCapacity, "m_size should be less than the new capacity");
+
 				for (size_t i = 0; i < m_size; ++i)
 				{
 					pNewBuffer[i] = jpt::move(m_pBuffer[i]);
