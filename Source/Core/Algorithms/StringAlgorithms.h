@@ -31,4 +31,22 @@ namespace jpt
     // https://gist.github.com/underscorediscovery/81308642d0325fd386237cfa3b44785c#file-hash_fnv1a_constexpr-h    
     JPT_API inline constexpr uint32 StringHash32(const char* const str, const uint32 value = 0x811c9dc5) noexcept;
     JPT_API inline constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept;
+
+    template<>
+    struct hash<const char*>
+    {
+        size_t operator()(const char* key)
+        {
+            return jpt::StringHash64(key);
+        }
+    };
+
+    template<>
+    struct hash<jpt::string>
+    {
+        size_t operator()(const jpt::string& key)
+        {
+            return jpt::StringHash64(key.c_str());
+        }
+    };
 }

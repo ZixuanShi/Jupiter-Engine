@@ -22,6 +22,14 @@ bool UnitTest_Pair()
 	JPT_RUN_UNIT_TEST(pair2.second[1], "NewTestVecElement2");
 	JPT_RUN_UNIT_TEST(pair2.second[2], "NewTestVecElement3");
 
+	jpt::list<int32> list{ 0,1,2,3,4 };
+	jpt::vector<jpt::string> vector{ "0","1","2","3","4" };
+	jpt::pair<jpt::list<int32>, jpt::vector<jpt::string>> pair3 = jpt::make_pair<jpt::list<int32>, jpt::vector<jpt::string>>(list, vector);
+	for (int32 num : pair3.first)
+	{
+		JPT_RUN_UNIT_TEST(jpt::to_string(num), pair3.second[num]);
+	}
+
 	return true;
 }
 
@@ -87,6 +95,14 @@ bool UnitTest_Vector()
 	JPT_RUN_UNIT_TEST(copiedIntVector.size(), 2);
 	JPT_RUN_UNIT_TEST(anotherIntVector.size(), 2);
 
+	copiedIntVector.clear();
+
+	copiedIntVector.resize(5);
+	for (int32 num: copiedIntVector)
+	{
+		JPT_RUN_UNIT_TEST(num, 0);
+	}
+
 	// Non-Trivial Objects
 	jpt::vector<jpt::string> jptVectorStr{ "0", "1", "2" };
 	JPT_RUN_UNIT_TEST(jptVectorStr.size(), 3);
@@ -151,10 +167,18 @@ bool UnitTest_Vector()
 	copiedStrVector.insert(0, "3");
 	JPT_RUN_UNIT_TEST(copiedStrVector.size(), 4);
 
+	copiedStrVector.clear();
+
+	copiedStrVector.resize(5, "resized content");
+	for (const jpt::string& str : copiedStrVector)
+	{
+		JPT_RUN_UNIT_TEST(str, "resized content");
+	}
+
 	return true;
 }
 
-bool UnitTest_list()
+bool UnitTest_List()
 {
 	int32 i = 0;
 
@@ -270,9 +294,80 @@ bool UnitTest_list()
 	return true;
 }
 
+bool UnitTest_unordered_map()
+{
+	std::unordered_map<int, char> stdIntCharUnorderedMap;
+	int key = 0;
+
+	stdIntCharUnorderedMap.insert({ 0, 'A' });
+	stdIntCharUnorderedMap[1] = 'C';
+	JPT_CHECK_RESULT(stdIntCharUnorderedMap[0] == 'A');
+	JPT_CHECK_RESULT(stdIntCharUnorderedMap[1] == 'C');
+
+	stdIntCharUnorderedMap[0] = 'B';
+	stdIntCharUnorderedMap[1] = 'D';
+	JPT_CHECK_RESULT(stdIntCharUnorderedMap[0] == 'B');
+	JPT_CHECK_RESULT(stdIntCharUnorderedMap[1] == 'D');
+
+	stdIntCharUnorderedMap[key + 5] = 'E';
+	JPT_CHECK_RESULT(stdIntCharUnorderedMap[key + 5] == 'E');
+
+	JPT_RUN_UNIT_TEST(stdIntCharUnorderedMap.contains(0), true);
+	JPT_RUN_UNIT_TEST(stdIntCharUnorderedMap.contains(4), false);
+
+	if (auto itr = stdIntCharUnorderedMap.find(1); itr != stdIntCharUnorderedMap.end())
+	{
+		JPT_LOG("STD unordered map find(1): %d, %c", itr->first, itr->second);
+	}
+
+	stdIntCharUnorderedMap[6] = '1';
+	stdIntCharUnorderedMap.erase(6);
+
+	for (const auto&[k, v] : stdIntCharUnorderedMap)
+	{
+		JPT_LOG("STD unordered map: %d, %c", k, v);
+	}
+
+	jpt::unordered_map<int, char> jptIntCharUnorderedMap;
+	key = 0;
+
+	jptIntCharUnorderedMap.insert({ 0, 'A' });
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == 'A');
+	jptIntCharUnorderedMap[1] = 'C';
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == 'C');
+
+	jptIntCharUnorderedMap[key] = 'B';
+	jptIntCharUnorderedMap[1] = 'D';
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == 'B');
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == 'D');
+
+	jptIntCharUnorderedMap[key + 5] = 'E';
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[key + 5] == 'E');
+
+	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(0), true);
+	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(4), false);
+
+	jptIntCharUnorderedMap[6] = '1';
+	jptIntCharUnorderedMap.erase(6);
+
+	if (auto itr = jptIntCharUnorderedMap.find(1); itr != jptIntCharUnorderedMap.end())
+	{
+		JPT_LOG("JPT unordered map find(1): %d, %c", itr->first, itr->second);
+	}
+
+	for (const auto& [k, v] : jptIntCharUnorderedMap)
+	{
+		JPT_LOG("JPT unordered map: %d, %c", k, v);
+	}
+
+
+	return true;
+}
+
 void RunDataStructuresUnitTests()
 {
 	JPT_RUN_UNIT_TESTS(UnitTest_Pair);
 	JPT_RUN_UNIT_TESTS(UnitTest_Vector);
-	JPT_RUN_UNIT_TESTS(UnitTest_list);
+	JPT_RUN_UNIT_TESTS(UnitTest_List);
+	JPT_RUN_UNIT_TESTS(UnitTest_unordered_map);
 }

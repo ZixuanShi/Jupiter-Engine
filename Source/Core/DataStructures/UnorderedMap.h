@@ -9,12 +9,209 @@ namespace jpt
 	public:
 		using KeyType = _KeyType;
 		using ValueType = _ValueType;
+		using ItemType = jpt::pair<KeyType, ValueType>;
+		using BucketType = jpt::list<ItemType>;
+		using BucketsType = jpt::vector<BucketType>;	// Vector of Linked List as data buffer. Should be replaced by Vector of Red-Black Tree when it's implemented
 
 	private:
-		// Vector of Linked List as data buffer
+		template<class UnorderedMapType>
+		class unordered_map_iterator
+		{
+		private:
+			BucketsType m_buckets = nullptr;
+			size_t m_bucketIndex = 0;
+			BucketType::iterator m_itemsIterator;
+
+		public:
+			unordered_map_iterator(const BucketsType& pBuckets, size_t bucketIndex, BucketType::iterator iterator)
+				: m_buckets(pBuckets)
+				, m_bucketIndex(bucketIndex)
+				, m_itemsIterator(iterator)
+			{
+				if (m_buckets[m_bucketIndex].empty())
+				{
+					while (m_bucketIndex < m_buckets.size())
+					{
+						++m_bucketIndex;
+
+						if (!m_buckets[m_bucketIndex].empty())
+						{
+							m_itemsIterator = m_buckets[m_bucketIndex].begin();
+							break;
+						}
+					}
+				}
+			}
+
+			UnorderedMapType::ItemType* operator->() { return &m_itemsIterator; }
+			UnorderedMapType::ItemType& operator*() { return *m_itemsIterator; }
+			bool operator==(const unordered_map_iterator& other) const { return m_bucketIndex == other.m_bucketIndex && m_itemsIterator == other.m_itemsIterator; }
+			bool operator!=(const unordered_map_iterator& other) const { return m_bucketIndex != other.m_bucketIndex || m_itemsIterator != other.m_itemsIterator; }
+
+			unordered_map_iterator& operator++()
+			{
+				++m_itemsIterator;
+
+				if (m_itemsIterator != m_buckets[m_bucketIndex].end())
+				{
+					return *this;
+				}
+
+				while (m_bucketIndex < m_buckets.size())
+				{
+					++m_bucketIndex;
+
+					if (!m_buckets[m_bucketIndex].empty())
+					{
+						m_itemsIterator = m_buckets[m_bucketIndex].begin();
+						break;
+					}
+				}
+
+				return *this;
+			}
+		};
 
 	public:
+		using iterator = unordered_map_iterator<unordered_map<KeyType, ValueType>>;
 
+	private:
+		BucketsType m_buckets;
 
+		// Note: The m_buckets.size() will possibly be different than this unordered_map's actual size due to chainning. 
+		// When retrieving the size of this unordered_map, we must use m_size or this->size();
+		size_t m_size = 0;
+
+	public:
+		unordered_map();
+		~unordered_map();
+
+		// Iterators
+		iterator begin() noexcept { return iterator(m_buckets, 0, m_buckets[0].begin()); }
+		const iterator begin() const noexcept { return iterator(m_buckets, 0, m_buckets[0].begin()); }
+		iterator end() noexcept { return iterator(m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
+		const iterator end() const noexcept { return iterator(m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
+
+		// Modifiers
+		void clear();
+		void insert(const ItemType& item);
+		void erase(const KeyType& key);
+
+		// Lookup
+		ValueType& operator[](const KeyType& key);
+		bool contains(const KeyType& key) const;
+		iterator find(const KeyType& key);
+
+	private:
+		size_t GetBucketIndex(const KeyType& key) const;
 	};
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::unordered_map()
+	{
+		static constexpr size_t kInitialBucketSize = 32;
+		m_buckets.resize(kInitialBucketSize);
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::~unordered_map()
+	{
+		clear();
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline void unordered_map<_KeyType, _ValueType>::clear()
+	{
+		m_buckets.clear();
+		m_size = 0;
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline void unordered_map<_KeyType, _ValueType>::insert(const ItemType& item)
+	{
+		const size_t bucketIndex = GetBucketIndex(item.first);
+		m_buckets[bucketIndex].push_back(item);
+		++m_size;
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline void unordered_map<_KeyType, _ValueType>::erase(const KeyType& key)
+	{
+		JPT_ASSERT(contains(key), "Calling erase with a key that doesn't exist");
+
+		const size_t bucketIndex = GetBucketIndex(key);
+		jpt::list<ItemType>& items = m_buckets[bucketIndex];
+
+		size_t i = 0;
+		for (ItemType& item : items)
+		{
+			if (item.first == key)
+			{
+				items.erase(i);
+				break;
+			}
+			++i;
+		}
+
+		--m_size;
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::ValueType& unordered_map<_KeyType, _ValueType>::operator[](const KeyType& key)
+	{
+		const size_t bucketIndex = GetBucketIndex(key);
+		jpt::list<ItemType>& items = m_buckets[bucketIndex];
+
+		for (ItemType& item : items)
+		{
+			if (item.first == key)
+			{
+				return item.second;
+			}
+		}
+
+		this->insert({ key, ValueType() });
+		return this->operator[](key);
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline bool unordered_map<_KeyType, _ValueType>::contains(const KeyType& key) const
+	{
+		const size_t bucketIndex = GetBucketIndex(key);
+		const jpt::list<ItemType>& items = m_buckets[bucketIndex];
+
+		for (const ItemType& item : items)
+		{
+			if (item.first == key)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::iterator unordered_map<_KeyType, _ValueType>::find(const KeyType& key)
+	{
+		const size_t bucketIndex = GetBucketIndex(key);
+		jpt::list<ItemType>& items = m_buckets[bucketIndex];
+
+		for (auto itr = items.begin(); itr != items.end(); ++itr)
+		{
+			if (itr->first == key)
+			{
+				return iterator(m_buckets, bucketIndex, itr);
+			}
+		}
+
+		return end();
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline size_t unordered_map<_KeyType, _ValueType>::GetBucketIndex(const KeyType& key) const
+	{
+		const size_t hashValue = jpt::hash<KeyType>()(key);
+		return hashValue % m_buckets.size();
+	}
 }

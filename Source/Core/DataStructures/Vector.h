@@ -100,6 +100,8 @@ namespace jpt
 		void erase(size_t index);
 		void insert(size_t index, const ValueType& value);
 		void insert(size_t index, ValueType&& value);
+		void resize(size_t count);
+		void resize(size_t count, const ValueType& value);
 
 	private:
 		// Create a new data buffer with a new capacity, move the existing data over
@@ -115,7 +117,8 @@ namespace jpt
 		// Shift the elements inside buffer
 		// - index: Where to start shifting
 		// - isToEnd: True if we are shifting from begin to end, false if we are shifting from end to begin
-		void ShiftBuffer(size_t index, bool isToEnd);
+		// - distance: How far to shift the data in index
+		void ShiftBuffer(size_t index, bool isToEnd, size_t distance = 1);
 	};
 
 	template<class _ValueType>
@@ -299,6 +302,72 @@ namespace jpt
 	}
 
 	template<class _ValueType>
+	inline void vector<_ValueType>::resize(size_t count)
+	{
+		if (count == m_size)
+		{
+			return;
+		}
+
+		// If count is greater than current size, grow the buffer, append default objects
+		if (count > m_size)
+		{
+			if (count > m_capacity)
+			{
+				UpdateBufferWithNewCapacity(count);
+			}
+
+			for (size_t i = m_size; i < count; ++i)
+			{
+				emplace_back();
+			}
+		}
+		// If count is less than current size, reduce the elements to count
+		else
+		{
+			for (size_t i = count; i < m_size; ++i)
+			{
+				pop_back();
+			}
+		}
+
+		m_size = count;
+	}
+
+	template<class _ValueType>
+	inline void vector<_ValueType>::resize(size_t count, const ValueType& value)
+	{
+		if (count == m_size)
+		{
+			return;
+		}
+
+		// If count is greater than current size, grow the buffer, append default objects
+		if (count > m_size)
+		{
+			if (count > m_capacity)
+			{
+				UpdateBufferWithNewCapacity(count);
+			}
+
+			for (size_t i = m_size; i < count; ++i)
+			{
+				emplace_back(value);
+			}
+		}
+		// If count is less than current size, reduce the elements to count
+		else
+		{
+			for (size_t i = count; i < m_size; ++i)
+			{
+				pop_back();
+			}
+		}
+
+		m_size = count;
+	}
+
+	template<class _ValueType>
 	inline void vector<_ValueType>::UpdateBufferWithNewCapacity(size_t inCapacity)
 	{
 		ValueType* pNewBuffer = new ValueType[inCapacity];
@@ -361,33 +430,37 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	inline void vector<_ValueType>::ShiftBuffer(size_t index, bool isToEnd)
+	inline void vector<_ValueType>::ShiftBuffer(size_t index, bool isToEnd, size_t distance/* = 1*/)
 	{
 		if (isToEnd)
 		{
+			JPT_ASSERT(index + distance <= m_size, "Distance went beyond the bound of this vector. Use reserve first");
+
 			if constexpr (std::is_trivially_copyable_v<ValueType>)
 			{
-				std::memmove(m_pBuffer + index + 1, m_pBuffer + index, (m_size - index) * sizeof(ValueType));
+				std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_size - index) * sizeof(ValueType));
 			}
 			else
 			{
 				for (size_t i = m_size; i > index; --i)
 				{
-					m_pBuffer[i] = jpt::move(m_pBuffer[i - 1]);
+					m_pBuffer[i] = jpt::move(m_pBuffer[i - distance]);
 				}
 			}
 		}
 		else
 		{
+			JPT_ASSERT(index - distance >= 0, "Distance went beyond the start of this vector. Use smaller index or distance");
+
 			if constexpr (std::is_trivially_copyable_v<ValueType>)
 			{
-				std::memmove(m_pBuffer + index, m_pBuffer + index + 1, (m_size - index) * sizeof(ValueType));
+				std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_size - index) * sizeof(ValueType));
 			}
 			else
 			{
 				for (size_t i = index; i < m_size; ++i)
 				{
-					m_pBuffer[i] = jpt::move(m_pBuffer[i + 1]);
+					m_pBuffer[i] = jpt::move(m_pBuffer[i + distance]);
 				}
 			}
 		}

@@ -29,6 +29,9 @@ namespace jpt
 		template<class ListType>
 		class list_iterator
 		{
+			template<typename unordered_map_type>
+			friend class unordered_map_iterator;
+
 		private:
 			Node* m_pNode = nullptr;
 
@@ -36,6 +39,7 @@ namespace jpt
 			list_iterator(Node* pNode) : m_pNode(pNode) {}
 
 			_ValueType* operator->() { return &m_pNode->data; }
+			_ValueType* operator&() { return &m_pNode->data; }
 			_ValueType& operator*() { return m_pNode->data; }
 			bool operator==(const list_iterator& other) const { return m_pNode == other.m_pNode; }
 			bool operator!=(const list_iterator& other) const { return m_pNode != other.m_pNode; }
@@ -99,9 +103,9 @@ namespace jpt
 		iterator begin() noexcept { return iterator(m_pHead); }
 		const iterator begin() const noexcept { return iterator(m_pHead); }
 		const iterator cbegin() const noexcept { return iterator(m_pHead); }
-		iterator end() noexcept { return iterator(m_pTail->pNext); }
-		const iterator end() const noexcept { return iterator(m_pTail->pNext); }
-		const iterator cend() const noexcept { return iterator(m_pTail->pNext); }
+		iterator end() noexcept;
+		const iterator end() const noexcept;
+		const iterator cend() const noexcept;
 
 		// Modifiers
 		void clear();
@@ -182,6 +186,39 @@ namespace jpt
 	inline list<_ValueType>::~list()
 	{
 		clear();
+	}
+
+	template<class _ValueType>
+	inline list<_ValueType>::iterator list<_ValueType>::end() noexcept
+	{
+		if (empty())
+		{
+			return iterator(m_pTail);
+		}
+
+		return iterator(m_pTail->pNext);
+	}
+
+	template<class _ValueType>
+	inline const list<_ValueType>::iterator list<_ValueType>::end() const noexcept
+	{
+		if (empty())
+		{
+			return iterator(m_pTail);
+		}
+
+		return iterator(m_pTail->pNext);
+	}
+
+	template<class _ValueType>
+	inline const list<_ValueType>::iterator list<_ValueType>::cend() const noexcept
+	{
+		if (empty())
+		{
+			return iterator(m_pTail);
+		}
+
+		return iterator(m_pTail->pNext);
 	}
 
 	template<class _ValueType>
@@ -302,7 +339,7 @@ namespace jpt
 			m_pTail->pNext = pNewNode;
 			m_pTail = pNewNode;
 		}
-		// Insert in the middle
+		// Insert in the middle. Slower than the other three
 		else
 		{
 			Node* pPrevious = nullptr;
@@ -348,70 +385,48 @@ namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Trying to remove a node at an invalid index");
 
-		// Remove from front
-		if (index == 0)
-		{
-			Node* pNewHead = m_pHead->pNext;
-			pNewHead->pPrevious = nullptr;
+		Node* pNodeToRemove = nullptr;
 
-			JPT_DELETE(m_pHead);
-			m_pHead = pNewHead;
-		}
-		// Back
-		else if (index == m_size)
+		// If index is closer to the head, start from head
+		if (index < (m_size / 2))
 		{
-			Node* pNewTail = m_pTail->pPrevious;
-			pNewTail->pNext = nullptr;
-
-			JPT_DELETE(m_pTail);
-			m_pTail = pNewTail;
+			pNodeToRemove = m_pHead;
+			for (size_t i = 0; i < index; ++i)
+			{
+				pNodeToRemove = pNodeToRemove->pNext;
+			}
 		}
-		// In the middle
+		// If index is closer to the tail, start from tail instead
 		else
 		{
-			Node* pNodeToRemove = nullptr;
+			pNodeToRemove = m_pTail;
+			for (size_t i = m_size - 1; i > index; --i)
+			{
+				pNodeToRemove = pNodeToRemove->pPrevious;
+			}
+		}
 
-			// If index is closer to the head, start from head
-			if (index < (m_size / 2))
-			{
-				pNodeToRemove = m_pHead;
-				for (size_t i = 0; i < index; ++i)
-				{
-					pNodeToRemove = pNodeToRemove->pNext;
-				}
-			}
-			// If index is closer to the tail, start from tail instead
-			else
-			{
-				pNodeToRemove = m_pTail;
-				for (size_t i = m_size - 1; i > index; --i)
-				{
-					pNodeToRemove = pNodeToRemove->pPrevious;
-				}
-			}
+		Node* pPrevious = pNodeToRemove->pPrevious;
+		Node* pNext = pNodeToRemove->pNext;
 
-			Node* pPrevious = pNodeToRemove->pPrevious;
-			Node* pNext = pNodeToRemove->pNext;
+		JPT_DELETE(pNodeToRemove);
 
-			JPT_DELETE(pNodeToRemove);
+		if (pPrevious)
+		{
+			pPrevious->pNext = pNext;
+		}
+		else
+		{
+			m_pHead = pNext;
+		}
 
-			if (pPrevious)
-			{
-				pPrevious->pNext = pNext;
-			}
-			else
-			{
-				m_pHead = pNext;
-			}
-
-			if (pNext)
-			{
-				pNext->pPrevious = pPrevious;
-			}
-			else
-			{
-				m_pTail = pPrevious;
-			}
+		if (pNext)
+		{
+			pNext->pPrevious = pPrevious;
+		}
+		else
+		{
+			m_pTail = pPrevious;
 		}
 
 		--m_size;

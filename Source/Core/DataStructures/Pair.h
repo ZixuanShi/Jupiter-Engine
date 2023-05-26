@@ -15,12 +15,12 @@ namespace jpt
 		pair(pair&&) noexcept = default;
 		pair& operator=(const pair&) = default;
 		pair& operator=(pair&&) noexcept = default;
-		pair(TypeA inFirst, TypeB inSecond);
+		pair(const TypeA& inFirst, const TypeB& inSecond);
 		pair(TypeA&& inFirst, TypeB&& inSecond);
 	};
 
 	template<class TypeA, class TypeB>
-	inline pair<TypeA, TypeB>::pair(TypeA inFirst, TypeB inSecond)
+	inline pair<TypeA, TypeB>::pair(const TypeA& inFirst, const TypeB& inSecond)
 		: first(inFirst)
 		, second(inSecond)
 	{
@@ -34,7 +34,13 @@ namespace jpt
 	}
 
 	template<class TypeA, class TypeB>
-	pair<TypeA, TypeB> make_pair(TypeA inFirst, TypeB inSecond)
+	pair<TypeA, TypeB> make_pair(const TypeA& inFirst, const TypeB& inSecond)
+	{
+		return jpt::pair<TypeA, TypeB>(inFirst, inSecond);
+	}
+
+	template<class TypeA, class TypeB>
+	pair<TypeA, TypeB> make_pair(TypeA&& inFirst, TypeB&& inSecond)
 	{
 		return jpt::pair<TypeA, TypeB>(inFirst, inSecond);
 	}

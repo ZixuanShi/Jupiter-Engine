@@ -1,8 +1,5 @@
-string_view
-string full functionality
+unordered_map find, remove, range based for loop
 Enum start/end tostring
-pair
-unordered_map
 Documents generation
 Profiler generate excel sheet
 
@@ -35,6 +32,7 @@ References:
 - Unreal
 - CryEngine
 - EASTL
-
+- GLM
+- Microsoft DirectX 12 Manual
 
 Questions:

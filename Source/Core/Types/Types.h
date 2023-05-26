@@ -8,7 +8,7 @@ using int32 = int32_t;
 
 namespace jpt
 {
-	// If the value is not supported, you need to specialized template it in the corresponding file
+	// If the value is not supported, you need to specialize template it in the corresponding file
 	template <typename Type>
 	inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();
 	
@@ -22,21 +22,23 @@ namespace jpt
 	using TimeDuration = std::chrono::duration<TimingPrecision>;
 	
 	// Rvalue and Lvalue Utils
-	template<typename T> struct RemoveReference            { using Type = T; };
-	template<typename T> struct RemoveReference<T& >       { using Type = T; };
-	template<typename T> struct RemoveReference<T&&>       { using Type = T; };
-	template<typename T> struct IsLValueReferenceType      { static constexpr bool Value = false; };
-	template<typename T> struct IsLValueReferenceType<T&>  { static constexpr bool Value = true;  };
-	template<typename T> struct IsRValueReferenceType      { static constexpr bool Value = false; };
-	template<typename T> struct IsRValueReferenceType<T&&> { static constexpr bool Value = true;  };
-	
+	template<typename T> struct RemoveReference              { using Type = T; };
+	template<typename T> struct RemoveReference<T&>          { using Type = T; };
+	template<typename T> struct RemoveReference<T&&>         { using Type = T; };
+	template<typename T> struct RemoveConst                  { using Type = T; };
+	template<typename T> struct RemoveConst<const T>         { using Type = T; };
+	//template<typename T> struct RemoveConst<const T&>        { using Type = T&; };
+	//template<typename T> struct RemoveConst<T&&>             { using Type = T&&; };
+	//template<typename T> struct RemoveConst<const T&&>       { using Type = T&&; };
+	template<typename T> struct IsLValueReferenceType        { static constexpr bool Value = false; };
+	template<typename T> struct IsLValueReferenceType<T&>    { static constexpr bool Value = true;  };
+	template<typename T> struct IsRValueReferenceType        { static constexpr bool Value = false; };
+	template<typename T> struct IsRValueReferenceType<T&&>   { static constexpr bool Value = true;  };
+	template<typename T> struct RValueToLValueReference      { using Type = T; };
+	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
+
 	// Same type checking
 	// Example: jpt::IsSameType<int32, float>::Value
 	template<typename A, typename B> struct IsSameType       { static constexpr bool Value = false; };
 	template<typename A>             struct IsSameType<A, A> { static constexpr bool Value = true;  };
 }
-
-
-// In-house types
-#include "String.h"
-#include "StringView.h"
