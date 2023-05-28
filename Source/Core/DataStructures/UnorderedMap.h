@@ -18,25 +18,25 @@ namespace jpt
 		class unordered_map_iterator
 		{
 		private:
-			BucketsType m_buckets = nullptr;
+			BucketsType* m_buckets = nullptr;
 			size_t m_bucketIndex = 0;
 			BucketType::iterator m_itemsIterator;
 
 		public:
-			unordered_map_iterator(const BucketsType& pBuckets, size_t bucketIndex, BucketType::iterator iterator)
+			unordered_map_iterator(BucketsType* pBuckets, size_t bucketIndex, const typename BucketType::iterator& iterator)
 				: m_buckets(pBuckets)
 				, m_bucketIndex(bucketIndex)
 				, m_itemsIterator(iterator)
 			{
-				if (m_buckets[m_bucketIndex].empty())
+				if (m_buckets->at(m_bucketIndex).empty())
 				{
-					while (m_bucketIndex < m_buckets.size())
+					while (m_bucketIndex < m_buckets->size())
 					{
 						++m_bucketIndex;
 
-						if (!m_buckets[m_bucketIndex].empty())
+						if (!m_buckets->at(m_bucketIndex).empty())
 						{
-							m_itemsIterator = m_buckets[m_bucketIndex].begin();
+							m_itemsIterator = m_buckets->at(m_bucketIndex).begin();
 							break;
 						}
 					}
@@ -52,18 +52,18 @@ namespace jpt
 			{
 				++m_itemsIterator;
 
-				if (m_itemsIterator != m_buckets[m_bucketIndex].end())
+				if (m_itemsIterator != m_buckets->at(m_bucketIndex).end())
 				{
 					return *this;
 				}
 
-				while (m_bucketIndex < m_buckets.size())
+				while (m_bucketIndex < m_buckets->size())
 				{
 					++m_bucketIndex;
 
-					if (!m_buckets[m_bucketIndex].empty())
+					if (!m_buckets->at(m_bucketIndex).empty())
 					{
-						m_itemsIterator = m_buckets[m_bucketIndex].begin();
+						m_itemsIterator = m_buckets->at(m_bucketIndex).begin();
 						break;
 					}
 				}
@@ -91,10 +91,10 @@ namespace jpt
 		~unordered_map();
 
 		// Iterators
-		iterator begin() noexcept { return iterator(m_buckets, 0, m_buckets[0].begin()); }
-		const iterator begin() const noexcept { return iterator(m_buckets, 0, m_buckets[0].begin()); }
-		iterator end() noexcept { return iterator(m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
-		const iterator end() const noexcept { return iterator(m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
+		iterator begin() noexcept { return iterator(&m_buckets, 0, m_buckets[0].begin()); }
+		const iterator begin() const noexcept { return iterator(&m_buckets, 0, m_buckets[0].begin()); }
+		iterator end() noexcept { return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
+		const iterator end() const noexcept { return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
 
 		// Modifiers
 		void clear();
@@ -245,7 +245,7 @@ namespace jpt
 		{
 			if (itr->first == key)
 			{
-				return iterator(m_buckets, bucketIndex, itr);
+				return iterator(&m_buckets, bucketIndex, itr);
 			}
 		}
 

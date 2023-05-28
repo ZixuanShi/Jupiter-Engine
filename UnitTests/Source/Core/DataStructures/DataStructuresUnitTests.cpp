@@ -322,13 +322,12 @@ bool UnitTest_unordered_map()
 
 	for (auto& [k, v] : jptIntCharUnorderedMap)
 	{
-		JPT_LOG("%d: %s", k, v.c_str());
 		v = "Test Ref in reference";
 	}
 
-	for (auto& [k, v] : jptIntCharUnorderedMap)
+	for (const auto& [k, v] : jptIntCharUnorderedMap)
 	{
-		JPT_LOG("%d: %s", k, v.c_str());
+		JPT_RUN_UNIT_TEST(v, "Test Ref in reference");
 	}
 
 	return true;

@@ -68,6 +68,8 @@ namespace jpt
 		~vector();
 
 		// Element access
+		ValueType& at(size_t index);
+		const ValueType& at(size_t index) const;
 		ValueType& operator[](size_t index) { return m_pBuffer[index]; }
 		const ValueType& operator[](size_t index) const { return m_pBuffer[index]; }
 		ValueType& back() { return m_pBuffer[m_size - 1]; }
@@ -179,6 +181,20 @@ namespace jpt
 	inline vector<_ValueType>::~vector()
 	{
 		clear();
+	}
+
+	template<class _ValueType>
+	inline _ValueType& vector<_ValueType>::at(size_t index)
+	{
+		JPT_ASSERT(index <= m_size, "index out of bound");
+		return m_pBuffer[index];
+	}
+
+	template<class _ValueType>
+	inline const _ValueType& vector<_ValueType>::at(size_t index) const
+	{
+		JPT_ASSERT(index <= m_size, "index out of bound");
+		return m_pBuffer[index];
 	}
 
 	template<class _ValueType>
