@@ -84,6 +84,10 @@ namespace jpt
 
 	public:
 		unordered_map();
+		unordered_map(const unordered_map& other);
+		unordered_map(unordered_map&& other);
+		unordered_map& operator=(const unordered_map& other);
+		unordered_map& operator=(unordered_map&& other);
 		~unordered_map();
 
 		// Iterators
@@ -104,6 +108,8 @@ namespace jpt
 
 	private:
 		size_t GetBucketIndex(const KeyType& key) const;
+		void CopyMap(const unordered_map& other);
+		void TakeMap(unordered_map&& other);
 	};
 
 	template<class _KeyType, class _ValueType>
@@ -111,6 +117,44 @@ namespace jpt
 	{
 		static constexpr size_t kInitialBucketSize = 32;
 		m_buckets.resize(kInitialBucketSize);
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::unordered_map(const unordered_map& other)
+	{
+		CopyMap(other);
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>::unordered_map(unordered_map&& other)
+	{
+		TakeMap(jpt::move(other));
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>& unordered_map<_KeyType, _ValueType>::operator=(const unordered_map& other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		CopyMap(jpt::move(other));
+		return *this;
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline unordered_map<_KeyType, _ValueType>& unordered_map<_KeyType, _ValueType>::operator=(unordered_map&& other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		TakeMap(jpt::move(other));
+		return *this;
 	}
 
 	template<class _KeyType, class _ValueType>
@@ -213,5 +257,23 @@ namespace jpt
 	{
 		const size_t hashValue = jpt::hash<KeyType>()(key);
 		return hashValue % m_buckets.size();
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline void unordered_map<_KeyType, _ValueType>::CopyMap(const unordered_map& other)
+	{
+		for (const auto& [k, v] : other)
+		{
+			insert({ k, v });
+		}
+	}
+
+	template<class _KeyType, class _ValueType>
+	inline void unordered_map<_KeyType, _ValueType>::TakeMap(unordered_map&& other)
+	{
+		m_buckets = jpt::move(other.m_buckets);
+		m_size = other.m_size;
+
+		other.clear();
 	}
 }

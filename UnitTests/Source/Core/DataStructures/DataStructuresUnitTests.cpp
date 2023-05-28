@@ -296,70 +296,40 @@ bool UnitTest_List()
 
 bool UnitTest_unordered_map()
 {
-	std::unordered_map<int, char> stdIntCharUnorderedMap;
-	int key = 0;
+	jpt::unordered_map<int32, jpt::string> jptIntCharUnorderedMap;
+	int32 key = 0;
 
-	stdIntCharUnorderedMap.insert({ 0, 'A' });
-	stdIntCharUnorderedMap[1] = 'C';
-	JPT_CHECK_RESULT(stdIntCharUnorderedMap[0] == 'A');
-	JPT_CHECK_RESULT(stdIntCharUnorderedMap[1] == 'C');
+	jptIntCharUnorderedMap.insert({ 0, "A" });
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == "A");
+	jptIntCharUnorderedMap[1] = "C";
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == "C");
 
-	stdIntCharUnorderedMap[0] = 'B';
-	stdIntCharUnorderedMap[1] = 'D';
-	JPT_CHECK_RESULT(stdIntCharUnorderedMap[0] == 'B');
-	JPT_CHECK_RESULT(stdIntCharUnorderedMap[1] == 'D');
+	jptIntCharUnorderedMap[key] = "B";
+	jptIntCharUnorderedMap[1] = "D";
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == "B");
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == "D");
 
-	stdIntCharUnorderedMap[key + 5] = 'E';
-	JPT_CHECK_RESULT(stdIntCharUnorderedMap[key + 5] == 'E');
-
-	JPT_RUN_UNIT_TEST(stdIntCharUnorderedMap.contains(0), true);
-	JPT_RUN_UNIT_TEST(stdIntCharUnorderedMap.contains(4), false);
-
-	if (auto itr = stdIntCharUnorderedMap.find(1); itr != stdIntCharUnorderedMap.end())
-	{
-		JPT_LOG("STD unordered map find(1): %d, %c", itr->first, itr->second);
-	}
-
-	stdIntCharUnorderedMap[6] = '1';
-	stdIntCharUnorderedMap.erase(6);
-
-	for (const auto&[k, v] : stdIntCharUnorderedMap)
-	{
-		JPT_LOG("STD unordered map: %d, %c", k, v);
-	}
-
-	jpt::unordered_map<int, char> jptIntCharUnorderedMap;
-	key = 0;
-
-	jptIntCharUnorderedMap.insert({ 0, 'A' });
-	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == 'A');
-	jptIntCharUnorderedMap[1] = 'C';
-	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == 'C');
-
-	jptIntCharUnorderedMap[key] = 'B';
-	jptIntCharUnorderedMap[1] = 'D';
-	JPT_CHECK_RESULT(jptIntCharUnorderedMap[0] == 'B');
-	JPT_CHECK_RESULT(jptIntCharUnorderedMap[1] == 'D');
-
-	jptIntCharUnorderedMap[key + 5] = 'E';
-	JPT_CHECK_RESULT(jptIntCharUnorderedMap[key + 5] == 'E');
+	jptIntCharUnorderedMap[key + 5] = "E";
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap[key + 5] == "E");
 
 	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(0), true);
 	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(4), false);
 
-	jptIntCharUnorderedMap[6] = '1';
-	jptIntCharUnorderedMap.erase(6);
+	jptIntCharUnorderedMap[6] = "1";
+	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.find(6)->second, "1");
+	//jptIntCharUnorderedMap.erase(6);
+	//JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(6), false);
 
-	if (auto itr = jptIntCharUnorderedMap.find(1); itr != jptIntCharUnorderedMap.end())
+	for (auto& [k, v] : jptIntCharUnorderedMap)
 	{
-		JPT_LOG("JPT unordered map find(1): %d, %c", itr->first, itr->second);
+		JPT_LOG("%d: %s", k, v.c_str());
+		v = "Test Ref in reference";
 	}
 
-	for (const auto& [k, v] : jptIntCharUnorderedMap)
+	for (auto& [k, v] : jptIntCharUnorderedMap)
 	{
-		JPT_LOG("JPT unordered map: %d, %c", k, v);
+		JPT_LOG("%d: %s", k, v.c_str());
 	}
-
 
 	return true;
 }

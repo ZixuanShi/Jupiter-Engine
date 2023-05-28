@@ -63,9 +63,15 @@ bool UnitTest_Types()
 	return true;
 }
 
+bool UnitTest_Enum()
+{
+	return true;
+}
+
 void RunTypesUnitTests()
 {
 	JPT_RUN_UNIT_TESTS(UnitTest_String);
 	JPT_RUN_UNIT_TESTS(UnitTest_StringView);
 	JPT_RUN_UNIT_TESTS(UnitTest_Types);
+	JPT_RUN_UNIT_TESTS(UnitTest_Enum);
 }

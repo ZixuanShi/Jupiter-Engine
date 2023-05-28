@@ -15,7 +15,7 @@ namespace jpt
 
 	public:
 		// Member functions
-		string() = default;
+		string();
 		string(const char* inString);
 		string(const jpt::string& other);
 		string(char*&& inString) noexcept;

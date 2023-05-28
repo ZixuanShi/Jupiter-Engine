@@ -3,6 +3,11 @@
 
 namespace jpt
 {
+	string::string()
+	{
+		CopyString("");
+	}
+
 	string::string(const char* inString)
 	{
 		CopyString(inString);
