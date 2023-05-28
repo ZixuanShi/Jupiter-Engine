@@ -15,7 +15,7 @@ namespace jpt
 
 	public:
 		// Member functions
-		string();
+		string() = default;
 		string(const char* inString);
 		string(const jpt::string& other);
 		string(char*&& inString) noexcept;
@@ -34,6 +34,7 @@ namespace jpt
 		// Capacity
 		size_t size() const { return m_size; }
 		size_t capacity() const { return m_capacity; }
+		bool empty() const { return m_size == 0; }
 
 		// Operations
 		void clear();

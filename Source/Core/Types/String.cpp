@@ -3,11 +3,6 @@
 
 namespace jpt
 {
-	string::string()
-	{
-		CopyString("");
-	}
-
 	string::string(const char* inString)
 	{
 		CopyString(inString);
@@ -224,6 +219,11 @@ namespace jpt
 	void string::CopyString(const char* inString)
 	{
 		m_size = jpt::strlen(inString);
+		if (empty())
+		{
+			return;
+		}
+
 		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
@@ -233,6 +233,11 @@ namespace jpt
 	void string::CopyString(const jpt::string& inString)
 	{
 		m_size = inString.size();
+		if (empty())
+		{
+			return;
+		}
+
 		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");

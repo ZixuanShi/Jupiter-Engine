@@ -317,8 +317,8 @@ bool UnitTest_unordered_map()
 
 	jptIntCharUnorderedMap[6] = "1";
 	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.find(6)->second, "1");
-	//jptIntCharUnorderedMap.erase(6);
-	//JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(6), false);
+	jptIntCharUnorderedMap.erase(6);
+	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.contains(6), false);
 
 	for (auto& [k, v] : jptIntCharUnorderedMap)
 	{
