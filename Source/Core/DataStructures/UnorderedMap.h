@@ -7,10 +7,10 @@ namespace jpt
 	class unordered_map
 	{
 	public:
-		using KeyType = _KeyType;
-		using ValueType = _ValueType;
-		using ItemType = jpt::pair<KeyType, ValueType>;
-		using BucketType = jpt::list<ItemType>;
+		using KeyType     = _KeyType;
+		using ValueType   = _ValueType;
+		using ItemType    = jpt::pair<KeyType, ValueType>;
+		using BucketType  = jpt::list<ItemType>;
 		using BucketsType = jpt::vector<BucketType>;	// Vector of Linked List as data buffer. Should be replaced by Vector of Red-Black Tree when it's implemented
 
 	private:
@@ -18,27 +18,37 @@ namespace jpt
 		class unordered_map_iterator
 		{
 		private:
-			BucketsType* m_buckets = nullptr;
+			BucketsType* m_pBuckets = nullptr;
 			size_t m_bucketIndex = 0;
 			BucketType::iterator m_itemsIterator;
 
 		public:
 			unordered_map_iterator(BucketsType* pBuckets, size_t bucketIndex, const typename BucketType::iterator& iterator)
-				: m_buckets(pBuckets)
+				: m_pBuckets(pBuckets)
 				, m_bucketIndex(bucketIndex)
 				, m_itemsIterator(iterator)
 			{
-				if (m_buckets->at(m_bucketIndex).empty())
+				if (!pBuckets)
 				{
-					while (m_bucketIndex < m_buckets->size())
-					{
-						++m_bucketIndex;
+					return;
+				}
 
-						if (!m_buckets->at(m_bucketIndex).empty())
-						{
-							m_itemsIterator = m_buckets->at(m_bucketIndex).begin();
-							break;
-						}
+				if (!m_pBuckets->at(m_bucketIndex).empty())
+				{
+					return;
+				}
+
+				// If the passed in bucketIndex at pBuckets is empty, find the next appropriate one in the map
+				// Increase index until we found an appropriate bucket, or the end of this map
+				while (m_bucketIndex < m_pBuckets->size())
+				{
+					++m_bucketIndex;
+
+					if (!m_pBuckets->at(m_bucketIndex).empty())
+					{
+						// Found a appropriate index, set itemsIterator to its begin() and stop the loop
+						m_itemsIterator = m_pBuckets->at(m_bucketIndex).begin();
+						break;
 					}
 				}
 			}
@@ -52,18 +62,18 @@ namespace jpt
 			{
 				++m_itemsIterator;
 
-				if (m_itemsIterator != m_buckets->at(m_bucketIndex).end())
+				if (m_itemsIterator != m_pBuckets->at(m_bucketIndex).end())
 				{
 					return *this;
 				}
 
-				while (m_bucketIndex < m_buckets->size())
+				while (m_bucketIndex < m_pBuckets->size())
 				{
 					++m_bucketIndex;
 
-					if (!m_buckets->at(m_bucketIndex).empty())
+					if (!m_pBuckets->at(m_bucketIndex).empty())
 					{
-						m_itemsIterator = m_buckets->at(m_bucketIndex).begin();
+						m_itemsIterator = m_pBuckets->at(m_bucketIndex).begin();
 						break;
 					}
 				}
@@ -83,7 +93,7 @@ namespace jpt
 		size_t m_size = 0;
 
 	public:
-		unordered_map();
+		unordered_map() = default;
 		unordered_map(const unordered_map& other);
 		unordered_map(unordered_map&& other);
 		unordered_map& operator=(const unordered_map& other);
@@ -91,10 +101,48 @@ namespace jpt
 		~unordered_map();
 
 		// Iterators
-		iterator begin() noexcept { return iterator(&m_buckets, 0, m_buckets[0].begin()); }
-		const iterator begin() const noexcept { return iterator(&m_buckets, 0, m_buckets[0].begin()); }
-		iterator end() noexcept { return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
-		const iterator end() const noexcept { return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end()); }
+		iterator begin() noexcept
+		{
+			if (empty())
+			{
+				return iterator(nullptr, 0, typename BucketType::iterator(nullptr));
+			}
+
+			return iterator(&m_buckets, 0, m_buckets[0].begin()); 
+		}
+
+		const iterator begin() const noexcept
+		{ 
+			if (empty())
+			{
+				return iterator(nullptr, 0, typename BucketType::iterator(nullptr));
+			}
+
+			return iterator(&m_buckets, 0, m_buckets[0].begin());
+		}
+
+		iterator end() noexcept 
+		{
+			if (empty())
+			{
+				return iterator(nullptr, 0, typename BucketType::iterator(nullptr));
+			}
+
+			return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end());
+		}
+
+		const iterator end() const noexcept 
+		{ 
+			if (empty())
+			{
+				return iterator(nullptr, 0, typename BucketType::iterator(nullptr));
+			}
+
+			return iterator(&m_buckets, m_buckets.size() - 1, m_buckets.back().end()); 
+		}
+
+		// Capacity
+		bool empty() const { return m_size == 0; }
 
 		// Modifiers
 		void clear();
@@ -111,13 +159,6 @@ namespace jpt
 		void CopyMap(const unordered_map& other);
 		void TakeMap(unordered_map&& other);
 	};
-
-	template<class _KeyType, class _ValueType>
-	inline unordered_map<_KeyType, _ValueType>::unordered_map()
-	{
-		static constexpr size_t kInitialBucketSize = 32;
-		m_buckets.resize(kInitialBucketSize);
-	}
 
 	template<class _KeyType, class _ValueType>
 	inline unordered_map<_KeyType, _ValueType>::unordered_map(const unordered_map& other)
@@ -173,6 +214,12 @@ namespace jpt
 	template<class _KeyType, class _ValueType>
 	inline void unordered_map<_KeyType, _ValueType>::insert(const ItemType& item)
 	{
+		static constexpr size_t kInitialBucketSize = 32;
+		if (empty())
+		{
+			m_buckets.resize(kInitialBucketSize);
+		}
+
 		const size_t bucketIndex = GetBucketIndex(item.first);
 		m_buckets[bucketIndex].push_back(item);
 		++m_size;
@@ -203,14 +250,18 @@ namespace jpt
 	template<class _KeyType, class _ValueType>
 	inline unordered_map<_KeyType, _ValueType>::ValueType& unordered_map<_KeyType, _ValueType>::operator[](const KeyType& key)
 	{
-		const size_t bucketIndex = GetBucketIndex(key);
-		jpt::list<ItemType>& items = m_buckets[bucketIndex];
-
-		for (ItemType& item : items)
+		// If the current unordered_map is empty, directly go to insert it below
+		if (!empty())
 		{
-			if (item.first == key)
+			const size_t bucketIndex = GetBucketIndex(key);
+			jpt::list<ItemType>& items = m_buckets[bucketIndex];
+
+			for (ItemType& item : items)
 			{
-				return item.second;
+				if (item.first == key)
+				{
+					return item.second;
+				}
 			}
 		}
 

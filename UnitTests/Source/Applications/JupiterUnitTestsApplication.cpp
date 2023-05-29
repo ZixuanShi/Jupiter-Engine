@@ -7,7 +7,7 @@
 
 bool JupiterUnitTestsApplication::Init()
 {
-    if (!jpt::Application::Init())
+    if (!Super::Init())
     {
         return false;
     }

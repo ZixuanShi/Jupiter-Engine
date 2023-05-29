@@ -15,6 +15,7 @@ workspace "JupiterUnitTests"
     { 
         "Win64",
     }
+
     startproject ("UnitTests")
 
     -- Paths
@@ -77,12 +78,16 @@ workspace "JupiterUnitTests"
         symbols "Off"
 
     filter "platforms:Win64"
+        links
+        {
+            "d3d12",
+            "dxgi",
+        }
         defines 
         { 
             "IS_PLATFORM_WIN64" 
         }
-
-
+        
 -- Jupiter Engine
 project "Engine"
     kind "SharedLib"
@@ -107,10 +112,10 @@ project "Engine"
         "JPT_BUILD_DLL",
     }
 
-
 -- Unit Tests
 project "UnitTests"
-    kind "ConsoleApp"
+    filter "platforms:Win64"
+        kind "WindowedApp"
 
     includedirs
     {

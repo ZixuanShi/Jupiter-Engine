@@ -330,6 +330,12 @@ bool UnitTest_unordered_map()
 		JPT_RUN_UNIT_TEST(v, "Test Ref in reference");
 	}
 
+	jptIntCharUnorderedMap.clear();
+	JPT_CHECK_RESULT(jptIntCharUnorderedMap.empty());
+
+	jptIntCharUnorderedMap[99] = "99";
+	JPT_RUN_UNIT_TEST(jptIntCharUnorderedMap.find(99)->second, "99");
+
 	return true;
 }
 

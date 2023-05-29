@@ -1,5 +1,5 @@
 -- Jupiter workspace
-workspace "JupiterDemoGame"
+workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
     local jupiter_basedir = "../../"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
@@ -15,7 +15,8 @@ workspace "JupiterDemoGame"
     { 
         "Win64",
     }
-    startproject ("Game")
+
+    startproject ("UnitTests")
 
     -- Paths
     location  ("../Visual Studio Files")
@@ -82,7 +83,6 @@ workspace "JupiterDemoGame"
             "IS_PLATFORM_WIN64" 
         }
 
-
 -- Jupiter Engine
 project "Engine"
     kind "SharedLib"
@@ -106,7 +106,6 @@ project "Engine"
     {
         "JPT_BUILD_DLL",
     }
-
 
 -- Demo Game
 project "Game"

@@ -2,6 +2,16 @@
 
 // Jupiter's Pre-compiled header
 
+#if IS_PLATFORM_WIN64
+#include <Windows.h>
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#include <DirectXMath.h>
+#include <wrl.h>
+#include <shellapi.h>
+#include <D3Dcompiler.h>
+#endif
+
 // Standard Library
 #include <atomic>
 #include <mutex>
@@ -10,12 +20,6 @@
 #include <sstream>
 #include <time.h>
 #include <utility>
-#include <unordered_map>
-#include <vector>
-
-#if IS_PLATFORM_WIN64
-	#include <Windows.h>
-#endif
 
 // Jupiter
 #include "Core/Building/BuildingMacros.h"
@@ -26,3 +30,4 @@
 #include "Core/Algorithms/AlgorithmsHeaders.h"
 #include "Core/DataStructures/DataStructuresHeaders.h"
 #include "Core/Timing/TimingHeader.h"
+#include "Core/Helpers/Helpers.h"
