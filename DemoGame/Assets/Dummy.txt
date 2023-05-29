@@ -1,0 +1,5 @@
+This file doesn't do anything except hacky-fix the post build command copy assets.
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	MSB3073	The command "xcopy "C:\Program Files\Jupiter Technologies\Jupiter\JupiterDemoGame\Visual Studio Files\..\Generated\Engine_Win64_Debug_Output\*.dll" "..\Generated\Game_Win64_Debug_Output\"  /d /i /y
+xcopy "C:\Program Files\Jupiter Technologies\Jupiter\JupiterDemoGame\Visual Studio Files\..\Assets" "..\Generated\Game_Win64_Debug_Output\Assets"  /e /s /h /i /y
+:VCEnd" exited with code 4.	Game	C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets	159	
