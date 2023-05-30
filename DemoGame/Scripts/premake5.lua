@@ -116,8 +116,6 @@ project "Engine"
 project "DemoGame"
     filter "platforms:Win64"
         kind "WindowedApp"
-    filter "platforms:not Win64"
-        kind "ConsoleApp"
 
     includedirs
     {
