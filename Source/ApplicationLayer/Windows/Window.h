@@ -34,6 +34,7 @@ namespace jpt
 		virtual void ParseCommandLineArgs(WCHAR* argv[], int32 argc) = 0;
 
 		const WCHAR* GetTitle() const { return m_title.c_str(); }
+		void SetTitle(const wchar_t* newTitle) { m_title = newTitle; }
 		uint32 GetWidth() const { return m_width; }
 		uint32 GetHeight() const { return m_height; }
 		float GetAspectRatio() const { return m_aspectRatio; }

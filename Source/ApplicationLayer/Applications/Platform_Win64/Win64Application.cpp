@@ -10,6 +10,11 @@ namespace jpt
 
 	bool Win64Application::PreInit()
 	{
+		if (!Super::PreInit())
+		{
+			return false;
+		}
+
 		// Parse the command line parameters
 		int32 argc;
 		LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
