@@ -31,13 +31,22 @@ namespace jpt
 		static WindowBase* Create();
 
 		// Parse the command arguments and store into argv[], store the count to argc
-		virtual void ParseCommandLineArgs(WCHAR* argv[], int32 argc) = 0;
+		virtual void ParseCommandLineArgs(wchar_t* argv[], int32 argc) = 0;
 
-		const WCHAR* GetTitle() const { return m_title.c_str(); }
-		void SetTitle(const wchar_t* newTitle) { m_title = newTitle; }
+	public:
+		const wchar_t* GetTitle() const { return m_title.c_str(); }
+		void SetTitle(const wchar_t* title) { m_title = title; }
+
 		uint32 GetWidth() const { return m_width; }
+		void SetWidth(uint32 width) { m_width = width; }
+
 		uint32 GetHeight() const { return m_height; }
+		void SetHeight(uint32 height) { m_height = height; }
+
 		float GetAspectRatio() const { return m_aspectRatio; }
+		void SetAspectRatio(float aspectRatio) { m_aspectRatio = aspectRatio; }
+
 		bool GetUseWarpDevice() const { return m_useWarpDevice; }
+		void SetUseWarpDevice(bool useWarpDevice) { m_useWarpDevice = useWarpDevice; }
 	};
 }
