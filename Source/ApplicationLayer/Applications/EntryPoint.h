@@ -17,7 +17,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 	pApplication->SetHINSTANCE(hInstance);
 	pApplication->SetnCmdShow(nCmdShow);
 
-	if (pApplication->Init())
+	if (pApplication->PreInit() && 
+		pApplication->Init())
 	{
 		pApplication->RunGameLoop();
 	}

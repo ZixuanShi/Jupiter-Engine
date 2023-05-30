@@ -17,6 +17,7 @@ namespace jpt
 		int32 m_nCmdShow = 0;
 
 	public:
+		// Things to do before Init() got called
 		virtual bool PreInit() override;
 		virtual bool Init() override;
 		virtual void RunGameLoop() override;

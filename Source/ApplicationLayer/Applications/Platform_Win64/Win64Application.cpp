@@ -10,6 +10,8 @@ namespace jpt
 
 	bool Win64Application::PreInit()
 	{
+		RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
+
 		// Parse the command line parameters
 		int32 argc;
 		LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -48,10 +50,7 @@ namespace jpt
 
 	bool Win64Application::Init()
 	{
-		if (!Super::Init())
-		{
-			return false;
-		}
+		RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
 
 		ShowWindow(m_hwnd, m_nCmdShow);
 
