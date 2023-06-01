@@ -5,7 +5,7 @@ namespace jpt
 	class WindowBase;
 	class RendererBase;
 
-	// Base class for applications
+	// Base class for applications. It holds window, renderer, audio, collision managers, etc.
 	class JPT_API ApplicationBase
 	{
 	protected:

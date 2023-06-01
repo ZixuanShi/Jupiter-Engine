@@ -20,6 +20,8 @@ Planned:
 - Characters
 - Controllers
 - Core
+- Debugging
+- Profiling
 - Rendering
 - Gameplay
 - Networking

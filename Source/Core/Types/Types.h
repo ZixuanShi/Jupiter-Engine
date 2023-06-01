@@ -1,10 +1,11 @@
 #pragma once
 
 // TypeDefs
-using uint8 = uint8_t;
+using uint8  = uint8_t;
 using uint32 = uint32_t;
 using uint64 = uint64_t;
-using int32 = int32_t;
+using int32  = int32_t;
+using int64  = int64_t;
 
 namespace jpt
 {
@@ -27,9 +28,6 @@ namespace jpt
 	template<typename T> struct RemoveReference<T&&>         { using Type = T; };
 	template<typename T> struct RemoveConst                  { using Type = T; };
 	template<typename T> struct RemoveConst<const T>         { using Type = T; };
-	//template<typename T> struct RemoveConst<const T&>        { using Type = T&; };
-	//template<typename T> struct RemoveConst<T&&>             { using Type = T&&; };
-	//template<typename T> struct RemoveConst<const T&&>       { using Type = T&&; };
 	template<typename T> struct IsLValueReferenceType        { static constexpr bool Value = false; };
 	template<typename T> struct IsLValueReferenceType<T&>    { static constexpr bool Value = true;  };
 	template<typename T> struct IsRValueReferenceType        { static constexpr bool Value = false; };
