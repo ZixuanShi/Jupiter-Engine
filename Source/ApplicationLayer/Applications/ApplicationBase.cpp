@@ -14,8 +14,8 @@ namespace jpt
 
 	bool ApplicationBase::Init()
 	{
-		RETURN_FALSE_IF_LOG(!m_pWindow->Init(), "Failed to Init m_pWindow");
-		RETURN_FALSE_IF_LOG(!m_pRenderer->Init(), "Failed to Init m_pRenderer");
+		JPT_RETURN_FALSE_IF_LOG(!m_pWindow->Init(), "Failed to Init m_pWindow");
+		JPT_RETURN_FALSE_IF_LOG(!m_pRenderer->Init(), "Failed to Init m_pRenderer");
 
 		return true;
 	}
@@ -34,8 +34,8 @@ namespace jpt
 
 	void ApplicationBase::Clean()
 	{
-		CLEAN_THEN_DELETE(m_pRenderer);
-		CLEAN_THEN_DELETE(m_pWindow);
+		JPT_CLEAN_THEN_DELETE(m_pRenderer);
+		JPT_CLEAN_THEN_DELETE(m_pWindow);
 	}
 
 	void ApplicationBase::Render()

@@ -10,7 +10,7 @@ namespace jpt
 
 	bool Win64Application::PreInit()
 	{
-		RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
+		JPT_RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
 
 		// Parse the command line parameters
 		int32 argc;
@@ -50,7 +50,7 @@ namespace jpt
 
 	bool Win64Application::Init()
 	{
-		RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
+		JPT_RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
 
 		ShowWindow(m_hwnd, m_nCmdShow);
 

@@ -10,8 +10,8 @@ namespace jpt
 
 	bool DX12Window::Init()
 	{
-		RETURN_FALSE_IF_LOG(!LoadPipeline(), "Failed loading pipeline");
-		RETURN_FALSE_IF_LOG(!LoadAssets(), "Failed loading assets");
+		JPT_RETURN_FALSE_IF_LOG(!LoadPipeline(), "Failed loading pipeline");
+		JPT_RETURN_FALSE_IF_LOG(!LoadAssets(), "Failed loading assets");
 
 		return true;
 	}
@@ -67,26 +67,26 @@ namespace jpt
 
 		// Create the device
 		ComPtr<IDXGIFactory4> factory;
-		RETURN_FALSE_IF_LOG(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)) != S_OK, "Failed to create DXGIFactory2");
+		JPT_RETURN_FALSE_IF_LOG(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)) != S_OK, "Failed to create DXGIFactory2");
 
 		if (m_useWarpDevice)
 		{
 			ComPtr<IDXGIAdapter> warpAdapter;
-			RETURN_FALSE_IF_LOG(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)) != S_OK, "Failed to enum warp adapt factory"); 
-			RETURN_FALSE_IF_LOG(D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) != S_OK, "Failed to create D3D12 Device");
+			JPT_RETURN_FALSE_IF_LOG(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)) != S_OK, "Failed to enum warp adapt factory"); 
+			JPT_RETURN_FALSE_IF_LOG(D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) != S_OK, "Failed to create D3D12 Device");
 		}
 		else
 		{
 			ComPtr<IDXGIAdapter1> hardwareAdapter;
 			GetHardwareAdapter(factory.Get(), &hardwareAdapter);
-			RETURN_FALSE_IF_LOG(D3D12CreateDevice(hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) != S_OK, "Failed to create D3D12 Device");
+			JPT_RETURN_FALSE_IF_LOG(D3D12CreateDevice(hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) != S_OK, "Failed to create D3D12 Device");
 		}
 
 		// Fill out a command queue description, then create the command queue:
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-		RETURN_FALSE_IF_LOG(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)) != S_OK, "Failed to create Command Queue");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_commandQueue)) != S_OK, "Failed to create Command Queue");
 
 		// Fill out a swapchain description, then create the swap chain
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -98,13 +98,13 @@ namespace jpt
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		swapChainDesc.SampleDesc.Count = 1;
 		ComPtr<IDXGISwapChain1> swapChain;
-		RETURN_FALSE_IF_LOG(factory->CreateSwapChainForHwnd(m_commandQueue.Get(), Win64Application::GetHwnd(), &swapChainDesc, nullptr, nullptr, &swapChain) != S_OK, "Failed to Create SwapChainForHwnd");
+		JPT_RETURN_FALSE_IF_LOG(factory->CreateSwapChainForHwnd(m_commandQueue.Get(), Win64Application::GetHwnd(), &swapChainDesc, nullptr, nullptr, &swapChain) != S_OK, "Failed to Create SwapChainForHwnd");
 
 		// Set support for fullscreen transitions
-		RETURN_FALSE_IF_LOG(factory->MakeWindowAssociation(Win64Application::GetHwnd(), DXGI_MWA_NO_ALT_ENTER) != S_OK, "Can't make window association");
+		JPT_RETURN_FALSE_IF_LOG(factory->MakeWindowAssociation(Win64Application::GetHwnd(), DXGI_MWA_NO_ALT_ENTER) != S_OK, "Can't make window association");
 
 		// Assign member variables
-		RETURN_FALSE_IF_LOG(swapChain.As(&m_swapChain) != S_OK, "Failed to assign swapChain as member");
+		JPT_RETURN_FALSE_IF_LOG(swapChain.As(&m_swapChain) != S_OK, "Failed to assign swapChain as member");
 		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 
 		// Create Descriptor heaps. Describe and create a render target view (RTV) descriptor heap
@@ -112,38 +112,38 @@ namespace jpt
 		rtvHeapDesc.NumDescriptors = kFrameCount;
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		RETURN_FALSE_IF_LOG(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)) != S_OK, "Failed to create Descriptor Heap");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap)) != S_OK, "Failed to create Descriptor Heap");
 		m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 		// Create a RTV for each frame
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
 		for (uint32 i = 0; i < kFrameCount; ++i)
 		{
-			RETURN_FALSE_IF_LOG(m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i])) != S_OK, "Failed to get swap chain buffer at index i");
+			JPT_RETURN_FALSE_IF_LOG(m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i])) != S_OK, "Failed to get swap chain buffer at index i");
 			m_device->CreateRenderTargetView(m_renderTargets[i].Get(), nullptr, rtvHandle);
 			rtvHandle.Offset(1, m_rtvDescriptorSize);
 		}
 
-		RETURN_FALSE_IF_LOG(m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator)) != S_OK, "Failed to create command allocator");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator)) != S_OK, "Failed to create command allocator");
 
 		return true;
 	}
 
 	bool DX12Window::LoadAssets()
 	{
-		RETURN_FALSE_IF_LOG(m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)) != S_OK, "Failed to create command list");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)) != S_OK, "Failed to create command list");
 
 		// Command lists are created in the recording state, but there is nothing
 		// to record yet. The main loop expects it to be closed, so close it now
-		RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when loading assets");
+		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when loading assets");
 
 		// Create synchronization objects
-		RETURN_FALSE_IF_LOG(m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) != S_OK, "Failed to create fence");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) != S_OK, "Failed to create fence");
 		m_fenceValue = 1;
 
 		// Create an event handle to use for frame synchronization
 		m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-		RETURN_FALSE_IF_LOG(m_fenceEvent == nullptr, "Failed to create fence event 0x%lu", GetLastError());
+		JPT_RETURN_FALSE_IF_LOG(m_fenceEvent == nullptr, "Failed to create fence event 0x%lu", GetLastError());
 
 		return true;
 	}
@@ -157,13 +157,13 @@ namespace jpt
 
 		// Signal and increment the fence value
 		const uint64 fence = m_fenceValue;
-		RETURN_FALSE_IF_LOG(m_commandQueue->Signal(m_fence.Get(), fence) != S_OK, "Failed to get fence signal");
+		JPT_RETURN_FALSE_IF_LOG(m_commandQueue->Signal(m_fence.Get(), fence) != S_OK, "Failed to get fence signal");
 		++m_fenceValue;
 
 		// Wait until the previous frame is finished
 		if (m_fence->GetCompletedValue() < fence)
 		{
-			RETURN_FALSE_IF_LOG(m_fence->SetEventOnCompletion(fence, m_fenceEvent) != S_OK, "Failed to set event on completion");
+			JPT_RETURN_FALSE_IF_LOG(m_fence->SetEventOnCompletion(fence, m_fenceEvent) != S_OK, "Failed to set event on completion");
 			WaitForSingleObject(m_fenceEvent, INFINITE);
 		}
 
@@ -237,11 +237,11 @@ namespace jpt
 	{
 		// Command list allocators can only be reset when the associated command lists have finished execution on the GPU
 		// apps should use fences to determine GPU execution progress.
-		RETURN_FALSE_IF_LOG(m_commandAllocator->Reset() != S_OK, "Failed to reset m_command allocator");
+		JPT_RETURN_FALSE_IF_LOG(m_commandAllocator->Reset() != S_OK, "Failed to reset m_command allocator");
 
 		// However, when ExecuteCommandList() is called on a particular command list, 
 		// that command list can then be reset at any time and must be before re-recording.
-		RETURN_FALSE_IF_LOG(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) != S_OK, "Failed to reset command list");
+		JPT_RETURN_FALSE_IF_LOG(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) != S_OK, "Failed to reset command list");
 
 		// Indicate that the back buffer will be used as a render target.
 		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -256,7 +256,7 @@ namespace jpt
 		// Indicate that the back buffer will now be used to present
 		barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 		m_commandList->ResourceBarrier(1, &barrier);
-		RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when done populating");
+		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when done populating");
 
 		return true;
 	}

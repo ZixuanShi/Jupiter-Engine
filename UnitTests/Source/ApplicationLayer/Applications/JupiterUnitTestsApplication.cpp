@@ -10,14 +10,14 @@ bool JupiterUnitTestsApplication::PreInit()
 {
     m_pWindow->SetTitle(L"Jupiter Unit Tests");
 
-    RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
+    JPT_RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
 
     return true;
 }
 
 bool JupiterUnitTestsApplication::Init()
 {
-    RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
+    JPT_RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
 
     RunAlgorithmsUnitTests();
     RunDataStructuresUnitTests();
