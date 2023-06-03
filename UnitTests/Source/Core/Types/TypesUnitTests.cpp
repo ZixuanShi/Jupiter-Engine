@@ -1,4 +1,4 @@
-#include "Core/Building/JupiterPCH.h"
+﻿#include "Core/Building/JupiterPCH.h"
 #include "TypesUnitTests.h"
 
 bool UnitTest_String()
@@ -20,6 +20,33 @@ bool UnitTest_String()
 	JPT_RETURN_FALSE_IF_LOG(jupiterString.find_first_of("does not exist") != jpt::string::npos, "");
 
 	JPT_RETURN_FALSE_IF_LOG(jupiterString.substr(8, 6) != "Engine", "");
+
+	jupiterString.clear();
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 0, "");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.c_str() != nullptr, "");
+
+	return true;
+}
+
+bool UnitTest_WString()
+{
+	jpt::wstring jupiterString(L"木星引擎");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 4, "");
+
+	jpt::wstring anotherString(L"石子渲");
+	JPT_RETURN_FALSE_IF_LOG(anotherString.size() != 3, "");
+
+	jupiterString.append(L" 附加 ");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 8, "");
+
+	jupiterString.append(anotherString);
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 11, "");
+
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.find_first_of(L"引") != 2, "");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.find_first_of(L"子渲") != 9, "");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.find_first_of(L"不存在") != jpt::wstring::npos, "");
+
+	JPT_RETURN_FALSE_IF_LOG(jupiterString.substr(2, 2) != L"引擎", "");
 
 	jupiterString.clear();
 	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 0, "");
@@ -70,8 +97,9 @@ bool UnitTest_Enum()
 
 void RunTypesUnitTests()
 {
-	JPT_RETURN_IF_LOG(!UnitTest_String(), "");
-	JPT_RETURN_IF_LOG(!UnitTest_StringView(), "");
-	JPT_RETURN_IF_LOG(!UnitTest_Types(), "");
-	JPT_RETURN_IF_LOG(!UnitTest_Enum(), "");
+	JPT_RETURN_IF_LOG(!UnitTest_String(), "UnitTest_String() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_WString(), "UnitTest_WString() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_StringView(), "UnitTest_StringView() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Types(), "UnitTest_Types() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Enum(), "UnitTest_Enum() failed");
 }

@@ -34,4 +34,8 @@
 #define JPT_CLEAN_THEN_DELETE(pPointer)\
 	pPointer->Clean();\
 	JPT_DELETE(pPointer);
-	
+
+// __FILE__ but with L"XXX" wide string
+#define WIDE2(x) L##x
+#define WIDE1(x) WIDE2(x)
+#define WFILE WIDE1(__FILE__)

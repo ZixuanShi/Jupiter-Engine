@@ -1,35 +1,40 @@
 #pragma once
 
+#include "Core/Algorithms/AlgorithmsHeaders.h"
+
 namespace jpt
 {
-	class JPT_API string
+	// Jupiter's string implementation
+	// - CharType: coule be char as regular string, or wchar_t as wide string
+	template<typename CharType>
+	class basic_string
 	{
 	public:
 		static constexpr size_t npos = kInvalidValue<size_t>;
 
 	private:
-		char* m_pBuffer   = nullptr;	// The pointer to the buffer representing this string's value
-		size_t m_size     = 0;			// How many characters in this string currently.
-		size_t m_capacity = 0;			// How many characters this string can hold before resizing.
+		CharType* m_pBuffer  = nullptr;	    // The pointer to the buffer representing this string's value
+		size_t m_size        = 0;			// How many characters in this string currently.
+		size_t m_capacity    = 0;			// How many characters this string can hold before resizing.
 		static constexpr size_t kCapacityMultiplier = 2;
 
 	public:
 		// Member functions
-		string() = default;
-		string(const char* inString);
-		string(const jpt::string& other);
-		string(char*&& inString) noexcept;
-		string(jpt::string&& other) noexcept;
-		string& operator=(const char* inString);
-		string& operator=(const jpt::string& other);
-		string& operator=(char*&& inString) noexcept;
-		string& operator=(jpt::string&& other) noexcept;
-		~string();
+		basic_string() = default;
+		basic_string(const CharType* inString);
+		basic_string(const jpt::basic_string<CharType>& other);
+		basic_string(CharType*&& inString) noexcept;
+		basic_string(jpt::basic_string<CharType>&& other) noexcept;
+		basic_string& operator=(const CharType* inString);
+		basic_string& operator=(const jpt::basic_string<CharType>& other);
+		basic_string& operator=(CharType*&& inString) noexcept;
+		basic_string& operator=(jpt::basic_string<CharType>&& other) noexcept;
+		~basic_string();
 
 	public:
 		// Element Access
-		const char* c_str() const { return m_pBuffer; }
-		char* data() const { return m_pBuffer; }
+		const CharType* c_str() const { return m_pBuffer; }
+		CharType* data() const { return m_pBuffer; }
 
 		// Capacity
 		size_t size() const { return m_size; }
@@ -38,26 +43,22 @@ namespace jpt
 
 		// Operations
 		void clear();
-		void append(const char* inString);
-		void append(const string& inString);
-		string& operator+=(const char* inString);
-		string& operator+=(const string& inString);
-		string substr(size_t pos, size_t count = npos) const;
+		void append(const CharType* inString);
+		void append(const basic_string& inString);
+		basic_string& operator+=(const CharType* inString);
+		basic_string& operator+=(const basic_string<CharType>& inString);
+		basic_string substr(size_t pos, size_t count = npos) const;
 
 		// Search
-		size_t find(const char* stringToFind) const;
-		size_t find_first_of(const char* stringToFind) const;
-		size_t find_last_of(const char* stringToFind) const;
+		size_t find(const CharType* stringToFind) const;
+		size_t find_first_of(const CharType* stringToFind) const;
+		size_t find_last_of(const CharType* stringToFind) const;
 
 		// Non-member functions
-		string operator+(const char* inString) const;
-		string operator+(const string& inString) const;
-		bool operator==(const char* inString) const { return IsSame(inString); }
-		bool operator==(const string& inString) const { return IsSame(inString); }
-
-		// Jupiter custom
-		JPT_API friend jpt::string operator+(const char* leftString, const jpt::string& rightString);
-		JPT_API friend std::ostream& operator<<(std::ostream& stream, const jpt::string& string);
+		basic_string operator+(const CharType* inString) const;
+		basic_string operator+(const basic_string<CharType>& inString) const;
+		bool operator==(const CharType* inString) const;
+		bool operator==(const basic_string<CharType>& inString) const;
 
 	private:
 		// Called when the current buffer is not big enough to hold a new string to join. Update the buffer to a larger size and increase capacity
@@ -66,16 +67,472 @@ namespace jpt
 
 		// Copy the content of inString. Will replace the current buffer entirely.
 		// - inString: The new string to hold in buffer
-		void CopyString(const char* inString);
-		void CopyString(const jpt::string& inString);
+		void CopyString(const CharType* inString);
+		void CopyString(const jpt::basic_string<CharType>& inString);
 
 		// Take the content of inString. Will assign the buffer to this new string
 		// - inString: The new string to take in buffer
-		void TakeString(char* inString);
-		void TakeString(jpt::string&& inString);
+		void TakeString(CharType* inString);
+		void TakeString(jpt::basic_string<CharType>&& inString);
+	};
 
-		// Returns: true if this string's value is exactly the same as the inString
-		bool IsSame(const char* inString) const;
-		bool IsSame(const jpt::string& inString) const;
+	template<typename CharType>
+	inline basic_string<CharType>::basic_string(const CharType* inString)
+	{
+		CopyString(inString);
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>::basic_string(const jpt::basic_string<CharType>& other)
+	{
+		CopyString(other);
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>::basic_string(CharType*&& inString) noexcept
+	{
+		TakeString(jpt::move(inString));
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>::basic_string(jpt::basic_string<CharType>&& other) noexcept
+	{
+		TakeString(jpt::move(other));
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator=(const CharType* inString)
+	{
+		if (this->c_str() == inString)
+		{
+			return *this;
+		}
+
+		clear();
+		CopyString(inString);
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator=(const jpt::basic_string<CharType>& other)
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		CopyString(other);
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator=(CharType*&& inString) noexcept
+	{
+		if (this->data() == inString)
+		{
+			return *this;
+		}
+
+		clear();
+		TakeString(jpt::move(inString));
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator=(jpt::basic_string<CharType>&& other) noexcept
+	{
+		if (this == &other)
+		{
+			return *this;
+		}
+
+		clear();
+		TakeString(jpt::move(other));
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>::~basic_string<CharType>()
+	{
+		clear();
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::clear()
+	{
+		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+		m_size = 0;
+		m_capacity = 0;
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::append(const CharType* inString)
+	{
+		size_t inStringSize = 0;
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			inStringSize = jpt::strlen(inString);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			inStringSize = jpt::wcslen(inString);
+		}
+
+		const size_t newSize = m_size + inStringSize;
+
+		if (newSize > m_capacity)
+		{
+			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+		}
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			strcpy_s(m_pBuffer + m_size, inStringSize + sizeof(CharType), inString);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			wcscpy_s(m_pBuffer + m_size, inStringSize + sizeof(CharType), inString);
+		}
+
+		m_size = newSize;
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::append(const basic_string<CharType>& inString)
+	{
+		const size_t newSize = m_size + inString.size();
+
+		if (newSize > m_capacity)
+		{
+			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+		}
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			strcpy_s(m_pBuffer + m_size, inString.size() + sizeof(CharType), inString.c_str());
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			wcscpy_s(m_pBuffer + m_size, inString.size() + sizeof(CharType), inString.c_str());
+		}
+
+		m_size = newSize;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator+=(const CharType* inString)
+	{
+		append(inString);
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType>& basic_string<CharType>::operator+=(const basic_string<CharType>& inString)
+	{
+		append(inString);
+		return *this;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType> basic_string<CharType>::substr(size_t pos, size_t count /*= npos*/) const
+	{
+		if (count == kInvalidValue<size_t>)
+		{
+			count = m_size - pos;
+		}
+
+		JPT_ASSERT((pos + count) <= m_size, "substr cannot exceeds string's bound");
+
+		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			strncpy_s(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			wcsncpy_s(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
+		}
+
+		jpt::basic_string<CharType> result;
+		result.TakeString(subStrBuffer);
+		return result;
+	}
+
+	template<typename CharType>
+	inline size_t basic_string<CharType>::find(const CharType* stringToFind) const
+	{
+		size_t stringToFindSize = 0;
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			stringToFindSize = jpt::strlen(stringToFind);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			stringToFindSize = jpt::wcslen(stringToFind);
+		}
+
+		jpt::basic_string<CharType> current;
+		for (size_t i = 0; i < m_size; ++i)
+		{
+			if ((i + stringToFindSize) > m_size)
+			{
+				return npos;
+			}
+
+			current = substr(i, stringToFindSize);
+			if (current == stringToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
+	}
+
+	template<typename CharType>
+	inline size_t basic_string<CharType>::find_first_of(const CharType* stringToFind) const
+	{
+		return find(stringToFind);
+	}
+
+	template<typename CharType>
+	inline size_t basic_string<CharType>::find_last_of(const CharType* stringToFind) const
+	{
+		size_t stringToFindSize = 0;
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			stringToFindSize = jpt::strlen(stringToFind);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			stringToFindSize = jpt::wcslen(stringToFind);
+		}
+
+		jpt::basic_string<CharType> current;
+		for (size_t i = m_size - 1; i > 0; --i)
+		{
+			if ((i - stringToFindSize) < 0)
+			{
+				return npos;
+			}
+
+			current = substr(i - stringToFindSize, stringToFindSize);
+			if (current == stringToFind)
+			{
+				return i - stringToFindSize;
+			}
+		}
+
+		return npos;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType> basic_string<CharType>::operator+(const CharType* inString) const
+	{
+		basic_string<CharType> str = *this;
+		str.append(inString);
+		return str;
+	}
+
+	template<typename CharType>
+	inline basic_string<CharType> basic_string<CharType>::operator+(const basic_string<CharType>& inString) const
+	{
+		basic_string<CharType> str = *this;
+		str.append(inString.c_str());
+		return str;
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::UpdateBuffer(size_t inCapacity)
+	{
+		CharType* pNewBuffer = new CharType[inCapacity + sizeof(CharType)];
+
+		if (m_pBuffer)
+		{
+			if constexpr (jpt::IsSameType<CharType, char>::Value)
+			{
+				strcpy_s(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
+			}
+			else if (jpt::IsSameType<CharType, wchar_t>::Value)
+			{
+				wcscpy_s(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
+			}
+
+			delete[] m_pBuffer;
+		}
+
+		m_pBuffer = pNewBuffer;
+		m_capacity = inCapacity;
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::CopyString(const CharType* inString)
+	{
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			m_size = jpt::strlen(inString);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			m_size = jpt::wcslen(inString);
+		}
+
+		if (empty())
+		{
+			return;
+		}
+
+		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+
+		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			strcpy_s(m_pBuffer, m_size + sizeof(CharType), inString);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			wcscpy_s(m_pBuffer, m_size + sizeof(CharType), inString);
+		}
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::CopyString(const jpt::basic_string<CharType>& inString)
+	{
+		m_size = inString.size();
+		if (empty())
+		{
+			return;
+		}
+
+		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+
+		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			strcpy_s(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			wcscpy_s(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
+		}
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::TakeString(CharType* inString)
+	{
+		m_pBuffer = inString;
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			m_size = jpt::strlen(inString);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			m_size = jpt::wcslen(inString);
+		}
+		m_capacity = m_size;
+	}
+
+	template<typename CharType>
+	inline void basic_string<CharType>::TakeString(jpt::basic_string<CharType>&& inString)
+	{
+		m_pBuffer = inString.m_pBuffer;
+		m_size = inString.m_size;
+		m_capacity = inString.m_capacity;
+
+		inString.m_pBuffer = nullptr;
+		inString.m_size = 0;
+		inString.m_capacity = 0;
+	}
+
+	template<typename CharType>
+	inline bool basic_string<CharType>::operator==(const CharType* inString) const
+	{
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			if (m_size != jpt::strlen(inString))
+			{
+				return false;
+			}
+			return strncmp(m_pBuffer, inString, m_size) == 0;
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			if (m_size != jpt::wcslen(inString))
+			{
+				return false;
+			}
+			return wcsncmp(m_pBuffer, inString, m_size) == 0;
+		}
+	}
+
+	template<typename CharType>
+	inline bool basic_string<CharType>::operator==(const basic_string<CharType>& inString) const
+	{
+		if (m_size != inString.size())
+		{
+			return false;
+		}
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			return strncmp(m_pBuffer, inString.c_str(), m_size) == 0;
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			return wcsncmp(m_pBuffer, inString.c_str(), m_size) == 0;
+		}
+	}
+
+	using string = basic_string<char>;
+	using wstring = basic_string<wchar_t>;
+
+	template<typename CharType>
+	inline jpt::basic_string<CharType> operator+(const CharType* leftString, const jpt::basic_string<CharType>& rightString)
+	{
+		return jpt::basic_string<CharType>(leftString) += rightString;
+	}
+
+	inline std::ostream& operator<<(std::ostream& stream, const jpt::string& string)
+	{
+		stream << string.c_str();
+		return stream;
+	}
+
+	inline std::wostream& operator<<(std::wostream& stream, const jpt::wstring& string)
+	{
+		stream << string.c_str();
+		return stream;
+	}
+
+	// Converts an input object to string if it has this functionality
+	// Primitive types should be specialized below
+	template<class Type>
+	inline jpt::string to_string(const Type& object)
+	{
+		return object.to_string();
+	}
+	template<>
+	inline jpt::string to_string<int32>(const int32& num)
+	{
+		return jpt::string(jpt::itoa(num));
+	}
+}
+
+namespace std
+{
+	template<>
+	struct hash<jpt::string>
+	{
+		size_t operator()(const jpt::string& key)
+		{
+			return jpt::StringHash64(key.c_str());
+		}
 	};
 }

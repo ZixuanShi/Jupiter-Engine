@@ -1,4 +1,4 @@
-#include "Core/Building/JupiterPCH.h"
+﻿#include "Core/Building/JupiterPCH.h"
 #include "JupiterUnitTestsApplication.h"
 
 #include "ApplicationLayer/Windows/Window.h"
@@ -8,7 +8,7 @@
 
 bool JupiterUnitTestsApplication::PreInit()
 {
-    m_pWindow->SetTitle(L"Jupiter Unit Tests");
+    m_pWindow->SetTitle(L"恭喜木星引擎支持中文");
 
     JPT_RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
 

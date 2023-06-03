@@ -19,6 +19,22 @@ namespace jpt
         return size;
     }
 
+    size_t wcslen(const wchar_t* inString)
+    {
+        if (!inString)
+        {
+            return 0;
+        }
+
+        size_t size = 0;
+        while (inString[size] != L'\0')
+        {
+            ++size;
+        }
+
+        return size;
+    }
+
     char* itoa(int32 value, int32 base)
     {
         // Prepare data

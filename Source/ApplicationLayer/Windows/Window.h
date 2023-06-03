@@ -6,7 +6,7 @@ namespace jpt
 	class WindowBase
 	{
 	protected:
-		std::wstring m_title = L"Jupiter Engine";
+		jpt::wstring m_title = L"Jupiter Engine";
 
 		// Viewport dimensions
 		uint32 m_width = 1280;

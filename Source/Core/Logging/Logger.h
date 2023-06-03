@@ -38,10 +38,14 @@ namespace jpt
 		// - file: The file where we called the log function
 		// - format, ...: The message to send
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
+		void Log(const char* string) { ::OutputDebugStringA(string); }
+		void Log(const wchar_t* wideString) { ::OutputDebugStringW(wideString); }
 
 		// Templated version of print, where users define the cout operator overloadings
 		template<class... Args>
 		void Print(Args&&... args) const;
+		template<class... Args>
+		void PrintW(Args&&... args) const;
 
 		static Logger& GetInstance() { return s_instance; }
 
@@ -55,5 +59,10 @@ namespace jpt
 	void Logger::Print(Args&&... args) const
 	{
 		(std::cout << ... << args) << '\n';
+	}
+	template<class... Args>
+	void Logger::PrintW(Args&&... args) const
+	{
+		(std::wcout << ... << args) << '\n';
 	}
 }

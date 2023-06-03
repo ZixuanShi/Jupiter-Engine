@@ -4,24 +4,12 @@ namespace jpt
 {
     // Returns: The length of inString. aka How many characters in it
     JPT_API inline size_t strlen(const char* inString);
+    JPT_API inline size_t wcslen(const wchar_t* inString);
 
     // Converter from int to string
     // - value: The integer value to convert
     // - base: System of numeration. Octal, decimal, hexadecimal, etc. Default to decimal
     JPT_API inline char* itoa(int32 value, int32 base = 10);
-
-    // Converts an input object to string if it has this functionality
-    // Primitive types should be specialized below
-    template<class Type>
-    inline jpt::string to_string(const Type& object)
-    {
-        return object.to_string();
-    }
-    template<>
-    inline jpt::string to_string<int32>(const int32& num)
-    {
-        return jpt::string(jpt::itoa(num));
-    }
 
     // FNV1a c++11 constexpr compile time hash functions, 32 and 64 bit
     // str should be a null terminated string literal, value should be left out 
@@ -38,15 +26,6 @@ namespace jpt
         size_t operator()(const char* key)
         {
             return jpt::StringHash64(key);
-        }
-    };
-
-    template<>
-    struct hash<jpt::string>
-    {
-        size_t operator()(const jpt::string& key)
-        {
-            return jpt::StringHash64(key.c_str());
         }
     };
 }

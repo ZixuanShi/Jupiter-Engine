@@ -9,6 +9,14 @@ bool UnitTest_strlen()
 	return true;
 }
 
+bool UnitTest_wcslen()
+{
+	JPT_RETURN_FALSE_IF_LOG(jpt::wcslen(L"") != 0, "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::wcslen(L"0") != 1, "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::wcslen(L"12345") != 5, "");
+	return true;
+}
+
 bool UnitTest_itoa()
 {
 	char* itoaResult = jpt::itoa(12345);
@@ -40,6 +48,7 @@ bool UnitTest_to_string()
 void RunAlgorithmsUnitTests()
 {
 	JPT_RETURN_IF_LOG(!UnitTest_strlen(), "UnitTest_strlen failed");
+	JPT_RETURN_IF_LOG(!UnitTest_wcslen(), "UnitTest_wcslen failed");
 	JPT_RETURN_IF_LOG(!UnitTest_itoa(), "UnitTest_itoa failed");
 	JPT_RETURN_IF_LOG(!UnitTest_to_string(), "UnitTest_to_string failed");
 }
