@@ -1,14 +1,17 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
 {
+	/* Gets a duration of time */
 	class JPT_API Timer
 	{	
 	public:
-		// Starts the timer
+		/* Restarts the timer */
 		void Start();
 
-		// Get the time duration from now to when we started the timer
+		/* @return The time duration from now to last time we called Start() */
 		double GetTimeDuration();
 	};
 }

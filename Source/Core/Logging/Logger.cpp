@@ -1,5 +1,9 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #include "JupiterPCH.h"
 #include "Logger.h"
+
+#include <iostream>
 
 namespace jpt
 {
@@ -29,9 +33,22 @@ namespace jpt
 		contentToLog = contentToLog.substr(contentToLog.find_last_of("\\") + 1);
 		contentToLog += ", line (" + jpt::to_string(line) + "):  \t" + messageBuffer + "\n";
 
-		// Log to the terminal and output window
-		std::cout << contentToLog;
+		// Log to the output window
 		::OutputDebugStringA(contentToLog.c_str());
+	}
+
+	void Logger::Log(const char* string)
+	{
+#if IS_PLATFORM_WIN64
+		::OutputDebugStringA(string);
+#endif
+	}
+
+	void Logger::Log(const wchar_t* wideString)
+	{
+#if IS_PLATFORM_WIN64
+		::OutputDebugStringW(wideString);
+#endif
 	}
 
 	void Logger::ChangeConsoleTextColor(ELogType type) const

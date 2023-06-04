@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #include "JupiterPCH.h"
 #include "ApplicationBase.h"
 
@@ -9,6 +11,7 @@ namespace jpt
 	ApplicationBase::ApplicationBase()
 		: m_pWindow(WindowBase::Create())
 		, m_pRenderer(RendererBase::Create())
+		, m_shouldQuit(false)
 	{
 	}
 

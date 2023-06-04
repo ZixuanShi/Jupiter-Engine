@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 // Jupiter's Pre-compiled header

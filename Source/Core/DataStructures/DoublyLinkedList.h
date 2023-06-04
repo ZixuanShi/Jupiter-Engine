@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
@@ -122,16 +124,19 @@ namespace jpt
 		void erase(size_t index);
 
 	private:
-		// Adds a recent created node to this list.
-		// - pNewNode: The new node to add. Should be heap allocated already
-		// - index: The index to add the node. 0 for head. m_size for tail
+		/* Adds a recent created node to this list.
+		  @param pNewNode:	 The new node to add. Should be heap allocated already
+		  @param index:		 The index to add the node. 0 for head. m_size for tail*/
 		void AddNode(Node* pNewNode, size_t index);
 
-		// Remove a node from this list.
-		// - index: The index to remove the node. 0 for head. m_size for tail
+		/* Remove a node from this list.
+		   @param index:		 The index to remove the node. 0 for head. m_size for tail */
 		void RemoveNode(size_t index);
 
+		/* Copy construct every item in another list */
 		void CopyList(const list& other);
+
+		/* Move every item in another list to this one */
 		void TakeList(list&& other);
 	};
 
@@ -370,10 +375,16 @@ namespace jpt
 				}
 			}
 
-			pPrevious->pNext = pNewNode;
+			if (pPrevious)
+			{
+				pPrevious->pNext = pNewNode;
+			}
 			pNewNode->pPrevious = pPrevious;
 
-			pNext->pPrevious = pNewNode;
+			if (pNext)
+			{
+				pNext->pPrevious = pNewNode;
+			}
 			pNewNode->pNext = pNext;
 		}
 

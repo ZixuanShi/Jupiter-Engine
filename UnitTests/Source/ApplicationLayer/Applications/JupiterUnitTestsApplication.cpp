@@ -8,7 +8,7 @@
 
 bool JupiterUnitTestsApplication::PreInit()
 {
-    m_pWindow->SetTitle(L"恭喜木星引擎支持中文");
+    m_pWindow->SetTitle(L"木星引擎 Jupiter Engine");
 
     JPT_RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
 

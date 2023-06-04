@@ -1,9 +1,11 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 #if IS_PROFILING
 namespace jpt
 {
-	// Profiler using time
+	/* Profiler regarding timing. Will log how much time a single function spent */
 	class JPT_API TimeProfiler
 	{
 	private:

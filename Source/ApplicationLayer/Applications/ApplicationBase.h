@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
@@ -5,14 +7,14 @@ namespace jpt
 	class WindowBase;
 	class RendererBase;
 
-	// Base class for applications. It holds window, renderer, audio, collision managers, etc.
+	/* Base abstract class for applications.
+	   It holds window, renderer, audio, collision managers, etc.*/
 	class JPT_API ApplicationBase
 	{
 	protected:
-		WindowBase* m_pWindow = nullptr;
-		RendererBase* m_pRenderer = nullptr;
-
-		bool m_shouldQuit = false;
+		WindowBase* m_pWindow;
+		RendererBase* m_pRenderer;
+		bool m_shouldQuit;
 
 	public:
 		ApplicationBase();

@@ -1,7 +1,10 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
 {
+	/* Equivalent for std::string_view. High Performance viewer for strings */
 	template<typename CharType>
 	class string_view
 	{

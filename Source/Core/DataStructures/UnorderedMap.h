@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
@@ -155,8 +157,13 @@ namespace jpt
 		iterator find(const KeyType& key);
 
 	private:
+		/* @return The index of which bucket this key should locate */
 		size_t GetBucketIndex(const KeyType& key) const;
+
+		/* Copy construct every item in another map */
 		void CopyMap(const unordered_map& other);
+
+		/* Move every item in another map to this one */
 		void TakeMap(unordered_map&& other);
 	};
 

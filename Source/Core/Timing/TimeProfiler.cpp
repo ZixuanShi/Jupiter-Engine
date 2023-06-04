@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #include "JupiterPCH.h"
 #include "TimeProfiler.h"
 
@@ -6,7 +8,6 @@ namespace jpt
 #if IS_PROFILING
 	TimeProfiler::TimeProfiler(const char* pLabel)
 	{
-		//JPT_UNUSED(pLabel);
 		m_pLabel = pLabel;
 		m_timer.Start();
 	}

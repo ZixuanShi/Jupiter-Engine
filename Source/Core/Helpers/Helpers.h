@@ -1,9 +1,11 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
-// If the condition has occured, log an message and return a value
-// - condition: The expression of the operation
-// - returnValue: The value to return if condition occured
-// - message: The message to log if condition occured
+/* If the condition has occured, log an messageand return a value
+	@param condition:	The expression of the operation
+	@param returnValue: The value to return if condition occured
+	@param message:		The message to log if condition occured */
 #define JPT_RETURN_VALUE_IF_LOG(condition, returnValue, message, ...)\
 	if ((condition))\
 	{\
@@ -29,13 +31,13 @@
 #define JPT_RETURN_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, void());
 
-// Helper for clean and delete.
-// - pPointer: Assumed to have Clean() function implemented
+/* Helper for cleanand delete.
+    @param pPointer: Assumed to have Clean() function implemented */
 #define JPT_CLEAN_THEN_DELETE(pPointer)\
 	pPointer->Clean();\
 	JPT_DELETE(pPointer);
 
-// __FILE__ but with L"XXX" wide string
+/* __FILE__ but with L"XXX" wide string */
 #define WIDE2(x) L##x
 #define WIDE1(x) WIDE2(x)
 #define WFILE WIDE1(__FILE__)

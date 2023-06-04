@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 // DLL exporter / importer
@@ -8,7 +10,7 @@
 		#define JPT_API __declspec(dllimport)
 #endif
 #else
-	#error Jupiter only supports Windows
+	#error Jupiter only supports Windows For now
 #endif
 
 // Used for hacky fix unused parameters

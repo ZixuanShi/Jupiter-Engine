@@ -1,14 +1,19 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 namespace jpt
 {
-    // Returns: The length of inString. aka How many characters in it
+    /* @return the input const char* string's size */
     JPT_API inline size_t strlen(const char* inString);
+
+    /* @return the input const wide char* string's size */
     JPT_API inline size_t wcslen(const wchar_t* inString);
 
-    // Converter from int to string
-    // - value: The integer value to convert
-    // - base: System of numeration. Octal, decimal, hexadecimal, etc. Default to decimal
+    /* Convert from int32 to a char pointer holding the integer's value as string literal 
+        @param value:        The value to convert to char*
+        @param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex. 
+        @return A char pointer pointing to the memory where we store the converted number's string literal */
     JPT_API inline char* itoa(int32 value, int32 base = 10);
 
     // FNV1a c++11 constexpr compile time hash functions, 32 and 64 bit

@@ -1,6 +1,6 @@
-#pragma once
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include <iostream>
+#pragma once
 
 namespace jpt
 {
@@ -32,20 +32,14 @@ namespace jpt
 #endif
 
 	public:
-		// Log a message to the terminal window
-		// - type: The type to log. Choose different color to print based on the type
-		// - line: The line where we called the log function
-		// - file: The file where we called the log function
-		// - format, ...: The message to send
+		/* Log a message to the terminal window
+			@param type: The type to log. Choose different color to print based on the type
+			@param line: The line where we called the log function
+			@param file: The file where we called the log function
+			@param format, ...: The message to send*/
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
-		void Log(const char* string) { ::OutputDebugStringA(string); }
-		void Log(const wchar_t* wideString) { ::OutputDebugStringW(wideString); }
-
-		// Templated version of print, where users define the cout operator overloadings
-		template<class... Args>
-		void Print(Args&&... args) const;
-		template<class... Args>
-		void PrintW(Args&&... args) const;
+		void Log(const char* string);
+		void Log(const wchar_t* wideString);
 
 		static Logger& GetInstance() { return s_instance; }
 
@@ -54,15 +48,4 @@ namespace jpt
 
 		void ChangeConsoleTextColor(ELogType type) const;
 	};
-
-	template<class... Args>
-	void Logger::Print(Args&&... args) const
-	{
-		(std::cout << ... << args) << '\n';
-	}
-	template<class... Args>
-	void Logger::PrintW(Args&&... args) const
-	{
-		(std::wcout << ... << args) << '\n';
-	}
 }

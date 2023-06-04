@@ -1,10 +1,12 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 #pragma once
 
 #include "ApplicationLayer/Windows/Window.h"
 
 namespace jpt
 {
-	// Windows 64 window implementation class
+	/* Windows 64 window implementation class */
 	class DX12Window final : public WindowBase
 	{
 	private:
@@ -43,8 +45,8 @@ namespace jpt
 		// Clean
 		bool WaitForPreviousFrame();
 
-		// Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
-		// If no such adapter can be found, *ppAdapter will be set to nullptr.
+		/* Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
+		   If no such adapter can be found, *ppAdapter will be set to nullptr. */
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory, _Outptr_result_maybenull_ IDXGIAdapter1** ppAdapter, bool requestHighPerformanceAdapter = false);
 
 		bool PopulateCommandList();
