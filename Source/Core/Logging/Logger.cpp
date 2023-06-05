@@ -9,11 +9,8 @@ namespace jpt
 {
 	Logger Logger::s_instance;
 
-	void Logger::Log(ELogType type, int32 line, const char* file, const char* message, ...)
+	void Logger::Log(const ELogType& type, int32 line, const char* file, const char* message, ...)
 	{
-		// TODO
-		JPT_UNUSED(type);
-
 		char messageBuffer[512];
 
 		va_list args;
@@ -26,7 +23,8 @@ namespace jpt
 		// Get valid file path
 		jpt::string contentToLog(file);
 		contentToLog = contentToLog.substr(contentToLog.find_last_of("\\") + 1);
-		contentToLog += ", line (" + jpt::to_string(line) + "):  \t" + messageBuffer + "\n";
+		contentToLog += ", line (" + jpt::to_string(line) + "):  \t";
+		contentToLog += "[" + type.ToString() + "] " + messageBuffer + "\n";
 
 		// Log to the output window
 		::OutputDebugStringA(contentToLog.c_str());

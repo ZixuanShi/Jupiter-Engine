@@ -9,10 +9,6 @@
 	#include <assert.h>
 
 	#define JPT_ASSERT(succeeded, ...) \
-		if (!(succeeded))\
-		{\
-			JPT_ERROR(__VA_ARGS__);\
-		}\
 		assert((succeeded));
 
 	#define JPT_STATIC_ASSERT(succeeded, message) \
