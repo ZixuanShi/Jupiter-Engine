@@ -9,16 +9,11 @@ namespace jpt
 {
 	Logger Logger::s_instance;
 
-	Logger::Logger()
-#if IS_PLATFORM_WIN64
-		: m_consoleHandle(GetStdHandle(STD_OUTPUT_HANDLE))
-#endif
-	{
-	}
-
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* message, ...)
 	{
-		ChangeConsoleTextColor(type);
+		// TODO
+		JPT_UNUSED(type);
+
 		char messageBuffer[512];
 
 		va_list args;
@@ -48,22 +43,6 @@ namespace jpt
 	{
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
-#endif
-	}
-
-	void Logger::ChangeConsoleTextColor(ELogType type) const
-	{
-#if IS_PLATFORM_WIN64
-		const uint8 colorIndex = static_cast<uint8>(type);
-
-		switch (type)
-		{
-		case jpt::Logger::ELogType::Log:			SetConsoleTextAttribute(m_consoleHandle, colorIndex);			break;
-		case jpt::Logger::ELogType::Warning:		SetConsoleTextAttribute(m_consoleHandle, colorIndex);			break;
-		case jpt::Logger::ELogType::Error:			SetConsoleTextAttribute(m_consoleHandle, colorIndex);			break;
-		case jpt::Logger::ELogType::SystemInfo:		SetConsoleTextAttribute(m_consoleHandle, colorIndex);			break;
-		default: JPT_ASSERT(false, "Unrecognized log type")			break;
-		}
 #endif
 	}
 }

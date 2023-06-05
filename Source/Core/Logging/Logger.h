@@ -27,10 +27,6 @@ namespace jpt
 	private:
 		static Logger s_instance;
 
-#if IS_PLATFORM_WIN64
-		HANDLE m_consoleHandle;
-#endif
-
 	public:
 		/* Log a message to the terminal window
 			@param type: The type to log. Choose different color to print based on the type
@@ -44,8 +40,6 @@ namespace jpt
 		static Logger& GetInstance() { return s_instance; }
 
 	private:
-		Logger();
-
-		void ChangeConsoleTextColor(ELogType type) const;
+		Logger() = default;
 	};
 }

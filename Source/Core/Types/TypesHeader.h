@@ -5,3 +5,4 @@
 // In-house types
 #include "String.h"
 #include "StringView.h"
+#include "Enum.h"

@@ -252,7 +252,19 @@ namespace jpt
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), m_frameIndex, m_rtvDescriptorSize);
 
 		// Record commands.
-		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		static float red = 0.0f;
+		static bool incflag = true;
+		if (incflag)
+		{
+			red += 0.003f;
+			incflag = (red < 0.8f);
+		}
+		else if (!incflag)
+		{
+			red -= 0.003f;
+			incflag = (red <= 0.0f);
+		}
+		const float clearColor[] = { red, 0.2f, 0.4f, 1.0f };
 		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
 		// Indicate that the back buffer will now be used to present

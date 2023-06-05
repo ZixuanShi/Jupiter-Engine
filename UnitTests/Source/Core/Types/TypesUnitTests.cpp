@@ -59,13 +59,13 @@ bool UnitTest_StringView()
 {
 	jpt::string jptStr = "jpt string";
 
-	jpt::string_view jptStrView(jptStr.c_str() + 2, 3);
+	jpt::basic_string_view jptStrView(jptStr.c_str() + 2, 3);
 	JPT_RETURN_FALSE_IF_LOG(jptStrView != "t s", "");
 
-	jpt::string_view jptStrView2("jpt stringview raw");
+	jpt::basic_string_view jptStrView2("jpt stringview raw");
 	JPT_RETURN_FALSE_IF_LOG(jptStrView2 != "jpt stringview raw", "");
 
-	jpt::string_view jptStrView3(jptStr);
+	jpt::basic_string_view jptStrView3(jptStr);
 	JPT_RETURN_FALSE_IF_LOG(jptStrView3 != jptStr, "");
 
 	return true;
@@ -92,6 +92,47 @@ bool UnitTest_Types()
 
 bool UnitTest_Enum()
 {
+	JPT_ENUM(EFruit,
+		Apple,
+		Banana,
+		Orange,
+		Grape
+		);
+
+	EFruit fruit = EFruit::Apple;
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Apple", "");
+
+	fruit = EFruit::Banana;
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Banana", "");
+
+	fruit = EFruit::Orange;
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Orange", "");
+
+	fruit = EFruit::Grape;
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Grape", "");
+
+	for (EFruit i = EFruit::Start; i < EFruit::End; ++i)
+	{
+		switch (i)
+		{
+		case EFruit::Apple:
+			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Apple", "");
+			break;
+
+		case EFruit::Banana:
+			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Banana", "");
+			break;
+
+		case EFruit::Orange:
+			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Orange", "");
+			break;
+
+		case EFruit::Grape:
+			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Grape", "");
+			break;
+		}
+	}
+
 	return true;
 }
 

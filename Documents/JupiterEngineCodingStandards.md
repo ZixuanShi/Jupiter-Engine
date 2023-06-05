@@ -32,6 +32,8 @@ namespace jpt
                 Clean();
          */
 
+        /* Operator Overloadings */
+
     public:
         /* Public Utils Functions. Examples:
                 OnKeyDown(); 
@@ -66,6 +68,8 @@ Assuming it's a cpp file
 
 namespace jpt
 {
+    /* Local functions only being used in this Cpp file. Prefix with loc */
+
     /* Function implementations */
 }
 
