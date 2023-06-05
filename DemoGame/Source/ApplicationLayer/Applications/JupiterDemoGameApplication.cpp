@@ -1,4 +1,4 @@
-#include "Core/Building/JupiterPCH.h"
+#include "JupiterPCH.h"
 #include "JupiterDemoGameApplication.h"
 
 #include "ApplicationLayer/Windows/Window.h"

@@ -95,7 +95,7 @@ project "Engine"
     includedirs
     {
         (jupiter_basedir.. "Source"),
-        (jupiter_basedir.. "Source/Core/Building"),       -- only for JupiterPCH
+        (jupiter_basedir.. "Source/Core/Building/PreCompiledHeader"),       -- only for JupiterPCH
     }
 
     files 
@@ -105,7 +105,7 @@ project "Engine"
     }
 
     pchheader ("JupiterPCH.h")
-    pchsource (jupiter_basedir .. "Source/Core/Building/JupiterPCH.cpp")
+    pchsource (jupiter_basedir .. "Source/Core/Building/PreCompiledHeader/JupiterPCH.cpp")
 
     defines
     {
@@ -120,6 +120,7 @@ project "UnitTests"
     includedirs
     {
         (jupiter_basedir .. "Source"),
+        (jupiter_basedir.. "Source/Core/Building/PreCompiledHeader"),
         ("../Source")
     }
 

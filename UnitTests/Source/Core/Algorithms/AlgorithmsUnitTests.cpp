@@ -1,4 +1,4 @@
-#include "Core/Building/JupiterPCH.h"
+#include "JupiterPCH.h"
 #include "AlgorithmsUnitTests.h"
 
 bool UnitTest_strlen()

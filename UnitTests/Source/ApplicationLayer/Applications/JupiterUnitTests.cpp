@@ -1,4 +1,4 @@
-#include "Core/Building/JupiterPCH.h"
+#include "JupiterPCH.h"
 #include "ApplicationLayer/Applications/EntryPoint.h"
 
 #include "JupiterUnitTestsApplication.h"
