@@ -1,15 +1,3 @@
-Enum start/end tostring
-Documents generation
-Profiler generate excel sheet
-
-Graphics Impl
-window
-input
-2D
-3D
-
-
-
 Planned:
 - AI
 - Animation
@@ -23,7 +11,7 @@ Planned:
 - Debugging
 - Profiling
 - Rendering
-- Gameplay
+- GameplaySystems
 - Networking
 - UIUX
 - Tools
