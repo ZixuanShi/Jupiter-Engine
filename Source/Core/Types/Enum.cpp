@@ -15,7 +15,7 @@ namespace jpt
 		return c == ',' || c == ' ' || c == '\t';
 	}
 
-	EnumStringInfo::EnumSearchInfo EnumStringInfo::BuildEnumStringInfos(const char* string, EnumStringInfo* infos, int32 start, size_t count)
+	EnumSearchInfo EnumStringInfo::BuildEnumStringInfos(const char* string, EnumStringInfo* infos, int32 start, size_t count)
 	{
 		const EnumSearchInfo searchInfo = { string, infos, start, count };
 		JPT_ASSERT(searchInfo.m_startValue + searchInfo.m_count < ULONGLONG_MAX, "searchInfo exceeds maximum integer value");

@@ -4,6 +4,20 @@
 
 namespace jpt
 {
+	struct EnumStringInfo;
+
+	struct JPT_API EnumSearchInfo
+	{
+		// The whole string for all enum values passed along
+		const char* m_wholeString;
+
+		// String info for each enum value
+		const EnumStringInfo* m_nameParts;
+
+		int32 m_startValue;
+		size_t m_count;
+	};
+
 	/* Used to store the sections of the string that belong to each enum value */
 	struct JPT_API EnumStringInfo
 	{
@@ -14,18 +28,6 @@ namespace jpt
 		size_t m_end = kInvalidValue<uint16>;
 
 		size_t Len() const { return m_end - m_start; }
-
-		struct JPT_API EnumSearchInfo
-		{
-			// The whole string for all enum values passed along
-			const char* m_wholeString;
-
-			// String info for each enum value
-			const EnumStringInfo* m_nameParts;
-
-			int32 m_startValue;
-			size_t m_count;
-		};
 
 		/* Builds Enum search info when creating it
 			@param string:	The string of values got passed in when creating an enum 
@@ -55,6 +57,7 @@ namespace jpt
 	{
 	public:
 		using EnumType = typename EnumInfo::EnumType;
+		static const EnumSearchInfo s_searchInfo;
 
 	private:
 		EnumType m_value;
@@ -78,12 +81,10 @@ namespace jpt
 
 		bool FromString(const char* string);
 		static EnumType EnumFromString(const char* string);
-
-		static const EnumStringInfo::EnumSearchInfo s_searchInfo;
 	};
 
 	template<typename EnumInfo>
-	const EnumStringInfo::EnumSearchInfo Enum<EnumInfo>::s_searchInfo = EnumInfo::GetEnumSearchInfo();
+	const EnumSearchInfo Enum<EnumInfo>::s_searchInfo = EnumInfo::GetEnumSearchInfo();
 
 	template<typename EnumInfo>
 	inline Enum<EnumInfo>::Enum()
@@ -168,7 +169,7 @@ namespace jpt
 			enum EnumType { first = start, Start = start, __VA_ARGS__, End, Count = End - Start }; \
 			\
 		protected:\
-			static inline jpt::EnumStringInfo::EnumSearchInfo GetEnumSearchInfo()\
+			static inline jpt::EnumSearchInfo GetEnumSearchInfo()\
 			{ \
 				static jpt::EnumStringInfo s_enumStringInfos[Count]; \
 				return jpt::EnumStringInfo::BuildEnumStringInfos(#first", "#__VA_ARGS__, s_enumStringInfos, Start, Count); \
