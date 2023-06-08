@@ -101,15 +101,19 @@ bool UnitTest_Enum()
 
 	EFruit fruit = EFruit::Apple;
 	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Apple", "");
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToStringView() != "Apple", "");
 
 	fruit = EFruit::Banana;
 	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Banana", "");
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToStringView() != "Banana", "");
 
 	fruit = EFruit::Orange;
 	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Orange", "");
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToStringView() != "Orange", "");
 
 	fruit = EFruit::Grape;
 	JPT_RETURN_FALSE_IF_LOG(fruit.ToString() != "Grape", "");
+	JPT_RETURN_FALSE_IF_LOG(fruit.ToStringView() != "Grape", "");
 
 	for (EFruit i = EFruit::Start; i < EFruit::End; ++i)
 	{
@@ -117,18 +121,22 @@ bool UnitTest_Enum()
 		{
 		case EFruit::Apple:
 			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Apple", "");
+			JPT_RETURN_FALSE_IF_LOG(i.ToStringView() != "Apple", "");
 			break;
 
 		case EFruit::Banana:
 			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Banana", "");
+			JPT_RETURN_FALSE_IF_LOG(i.ToStringView() != "Banana", "");
 			break;
 
 		case EFruit::Orange:
 			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Orange", "");
+			JPT_RETURN_FALSE_IF_LOG(i.ToStringView() != "Orange", "");
 			break;
 
 		case EFruit::Grape:
 			JPT_RETURN_FALSE_IF_LOG(i.ToString() != "Grape", "");
+			JPT_RETURN_FALSE_IF_LOG(i.ToStringView() != "Grape", "");
 			break;
 		}
 	}
