@@ -21,10 +21,8 @@ namespace jpt
 	/* Used to store the sections of the string that belong to each enum value */
 	struct JPT_API EnumStringInfo
 	{
-		// Index start for an enum value
+		// Index start and end for an enum value
 		size_t m_start = kInvalidValue<uint16>;
-
-		// Index end for an enum value
 		size_t m_end = kInvalidValue<uint16>;
 
 		size_t Len() const { return m_end - m_start; }
