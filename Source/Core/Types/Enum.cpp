@@ -69,7 +69,7 @@ namespace jpt
 		for (size_t i = 0; i < searchInfo.m_count; ++i)
 		{
 			if (len != infos[i].Len() || 
-				strncmp(string, enumString + infos[i].m_start, len) != 0)
+				jpt::strncmp(string, enumString + infos[i].m_start, len) != 0)
 			{
 				continue;
 			}

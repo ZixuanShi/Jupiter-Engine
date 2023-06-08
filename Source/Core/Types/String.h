@@ -462,7 +462,7 @@ namespace jpt
 			{
 				return false;
 			}
-			return strncmp(m_pBuffer, inString, m_size) == 0;
+			return jpt::strncmp(m_pBuffer, inString, m_size) == 0;
 		}
 		else if (jpt::IsSameType<CharType, wchar_t>::Value)
 		{
@@ -470,7 +470,7 @@ namespace jpt
 			{
 				return false;
 			}
-			return wcsncmp(m_pBuffer, inString, m_size) == 0;
+			return jpt::wcsncmp(m_pBuffer, inString, m_size) == 0;
 		}
 	}
 
@@ -484,11 +484,11 @@ namespace jpt
 
 		if constexpr (jpt::IsSameType<CharType, char>::Value)
 		{
-			return strncmp(m_pBuffer, inString.c_str(), m_size) == 0;
+			return jpt::strncmp(m_pBuffer, inString.c_str(), m_size) == 0;
 		}
 		else if (jpt::IsSameType<CharType, wchar_t>::Value)
 		{
-			return wcsncmp(m_pBuffer, inString.c_str(), m_size) == 0;
+			return jpt::wcsncmp(m_pBuffer, inString.c_str(), m_size) == 0;
 		}
 	}
 

@@ -6,8 +6,6 @@ namespace jpt
 {
     /* @return the input const char* string's size */
     JPT_API inline size_t strlen(const char* inString);
-
-    /* @return the input const wide char* string's size */
     JPT_API inline size_t wcslen(const wchar_t* inString);
 
     /* Convert from int32 to a char pointer holding the integer's value as string literal 
@@ -15,6 +13,11 @@ namespace jpt
         @param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex. 
         @return A char pointer pointing to the memory where we store the converted number's string literal */
     JPT_API inline char* itoa(int32 value, int32 base = 10);
+
+    /* Compares two strings from the beginnings to the given size
+        @return 0 if two strings are identical. InvalidValue if not */
+    JPT_API inline int32 strncmp(const char* string1, const char* string2, size_t size);
+    JPT_API inline int32 wcsncmp(const wchar_t* string1, const wchar_t* string2, size_t size);
 
     // FNV1a c++11 constexpr compile time hash functions, 32 and 64 bit
     // str should be a null terminated string literal, value should be left out 

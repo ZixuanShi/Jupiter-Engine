@@ -104,6 +104,30 @@ namespace jpt
         return result;
     }
 
+    int32 strncmp(const char* string1, const char* string2, size_t size)
+    {
+        for (size_t i = 0; i < size; ++i)
+        {
+            if (string1[i] != string2[i])
+            {
+                return kInvalidValue<int32>;
+            }
+        }
+        return 0;
+    }
+
+    int32 wcsncmp(const wchar_t* string1, const wchar_t* string2, size_t size)
+    {
+        for (size_t i = 0; i < size; ++i)
+        {
+            if (string1[i] != string2[i])
+            {
+                return kInvalidValue<int32>;
+            }
+        }
+        return 0;
+    }
+
     constexpr uint32 StringHash32(const char* const str, const uint32 value) noexcept
     {
         return (str[0] == '\0') ? value : StringHash32(&str[1], (value ^ uint32(str[0])) * 0x1000193);
