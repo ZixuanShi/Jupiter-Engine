@@ -2,7 +2,7 @@
 workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
-    local jupiter_basedir = "../../"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
+    local jupiter_basedir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
 
     -- Config
     configurations 
@@ -141,6 +141,6 @@ project "UnitTests"
         "xcopy \"$(SolutionDir)..\\Generated\\Engine_" .. jupiter_outputpath .. "_Output\\*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
 
         -- Assets
-        "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y"
+        "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+        "xcopy \"" .. jupiter_basedir .."Assets\\Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Assets
     }
-
