@@ -22,7 +22,7 @@
 #define JPT_RETURN_FALSE_IF_LOG(condition, message, ...)\
 	JPT_RETURN_VALUE_IF_LOG(condition, false, message, __VA_ARGS__);
 
-#define RETURN_FALSE_IF(condition)\
+#define JPT_RETURN_FALSE_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, false);
 
 #define JPT_RETURN_IF_LOG(condition, message, ...)\
