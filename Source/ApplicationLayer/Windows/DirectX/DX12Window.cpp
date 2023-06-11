@@ -11,6 +11,9 @@ namespace jpt
 
 	bool DX12Window::Init()
 	{
+		m_viewport = { 0.0f,0.0f,static_cast<float>(m_width), static_cast<float>(m_height) };
+		m_scissorRect = { 0,0,static_cast<LONG>(m_width), static_cast<LONG>(m_height) };
+
 		JPT_RETURN_FALSE_IF_LOG(!LoadPipeline(), "Failed loading pipeline");
 		JPT_RETURN_FALSE_IF_LOG(!LoadAssets(), "Failed loading assets");
 
@@ -133,19 +136,129 @@ namespace jpt
 
 	bool DX12Window::LoadAssets()
 	{
-		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)) != S_OK, "Failed to create command list");
+		// Create an empty root signature
+		D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		ComPtr<ID3DBlob> signature;
+		ComPtr<ID3DBlob> error;
+		JPT_RETURN_FALSE_IF_LOG(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error) != S_OK, "Failed to serialize root signature 0x%lu", GetLastError());
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)) != S_OK, "Failed to create root signature 0x%lu", GetLastError());
+
+		// Create the pipeline state, which includes compiling and loading shaders
+		ComPtr<ID3DBlob> vertexShader;
+		ComPtr<ID3DBlob> pixelShader;
+
+#if IS_DEBUG
+		// Enable better shader debugging with the graphics debugging tools
+		const uint32 compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+		const uint32 compileFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+#endif
+
+		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(L"C:\\Program Files\\Jupiter Technologies\\Jupiter Engine\\UnitTests\\Generated\\UnitTests_Win64_Debug_Output\\Assets\\Engine\\Shaders\\BasicShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) != S_OK, "Failed to compile vertexShader 0x%lu", GetLastError());
+		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(L"C:\\Program Files\\Jupiter Technologies\\Jupiter Engine\\UnitTests\\Generated\\UnitTests_Win64_Debug_Output\\Assets\\Engine\\Shaders\\BasicShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) != S_OK, "Failed to compile pixelShader 0x%lu", GetLastError());
+
+		// Define the vertex input layout
+		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,  D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+
+		// Describe and create the graphics pipeline state object (PSO)
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+		psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+		psoDesc.pRootSignature = m_rootSignature.Get();
+		psoDesc.VS = D3D12_SHADER_BYTECODE(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize());
+		psoDesc.PS = D3D12_SHADER_BYTECODE(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize());
+		psoDesc.RasterizerState = D3D12_RASTERIZER_DESC(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, false, D3D12_DEFAULT_DEPTH_BIAS, D3D12_DEFAULT_DEPTH_BIAS_CLAMP, D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS, true, false, false, 0, D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF);
+		D3D12_BLEND_DESC blendDesc;
+		const D3D12_RENDER_TARGET_BLEND_DESC defaultRenderTargetBlendDesc =
+		{
+			FALSE,FALSE,
+			D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD,
+			D3D12_BLEND_ONE, D3D12_BLEND_ZERO, D3D12_BLEND_OP_ADD,
+			D3D12_LOGIC_OP_NOOP,
+			D3D12_COLOR_WRITE_ENABLE_ALL,
+		};
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.IndependentBlendEnable = false;
+		for (UINT i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
+			blendDesc.RenderTarget[i] = defaultRenderTargetBlendDesc;
+		psoDesc.BlendState = blendDesc;
+		psoDesc.DepthStencilState.DepthEnable = false;
+		psoDesc.DepthStencilState.StencilEnable = false;
+		psoDesc.SampleMask = UINT_MAX;
+		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		psoDesc.NumRenderTargets = 1;
+		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		psoDesc.SampleDesc.Count = 1;
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)) != S_OK, "Failed to create graphics pipeline state 0x%lu", GetLastError());
+
+		// Create the command list.
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), m_pipelineState.Get(), IID_PPV_ARGS(&m_commandList)) != S_OK, "Failed to create command list 0x%lu", GetLastError());
 
 		// Command lists are created in the recording state, but there is nothing
 		// to record yet. The main loop expects it to be closed, so close it now
-		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when loading assets");
+		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when loading assets 0x%lu", GetLastError());
+
+		// Create vertex buffer
+		Vertex triangleVertices[] =
+		{
+			{ FVec3( 0.00f,  0.25f * m_aspectRatio, 0.0f), LinearColor(1.0f, 0.0f, 0.0f, 1.0f) },
+			{ FVec3( 0.25f, -0.25f * m_aspectRatio, 0.0f), LinearColor(0.0f, 1.0f, 0.0f, 1.0f) },
+			{ FVec3(-0.25f, -0.25f * m_aspectRatio, 0.0f), LinearColor(0.0f, 0.0f, 1.0f, 1.0f) },
+		};
+		const uint32 vertexBufferSize = sizeof(triangleVertices);
+
+		// Note: using upload heaps to transfer static data like vert buffers is not 
+        // recommended. Every time the GPU needs it, the upload heap will be marshalled 
+        // over. Please read up on Default Heap usage. An upload heap is used here for 
+        // code simplicity and because there are very few verts to actually transfer.
+		D3D12_HEAP_PROPERTIES heapProperties;
+		heapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+		heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+		heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+		heapProperties.CreationNodeMask = 1;
+		heapProperties.VisibleNodeMask = 1;
+
+		D3D12_RESOURCE_DESC desc;
+		desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		desc.Alignment = 0;
+		desc.Width = vertexBufferSize;
+		desc.Height = 1;
+		desc.DepthOrArraySize = 1;
+		desc.MipLevels = 1;
+		desc.Format = DXGI_FORMAT_UNKNOWN;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&m_vertexBuffer)) != S_OK, "Failed to create committed resource 0x%lu", GetLastError());
+		
+		// Copy the triangle data to the vertex buffer
+		uint8* pVertexDataBegin = nullptr;
+		D3D12_RANGE readRange(0, 0);	// We do not intend to read from this resource on the CPU.
+		JPT_RETURN_FALSE_IF_LOG(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)) != S_OK, "Failed to map vertex buffer");
+		std::memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
+		m_vertexBuffer->Unmap(0, nullptr);
+
+		// Initialize the vertex buffer view
+		m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+		m_vertexBufferView.StrideInBytes = sizeof(Vertex);
+		m_vertexBufferView.SizeInBytes = vertexBufferSize;
 
 		// Create synchronization objects
-		JPT_RETURN_FALSE_IF_LOG(m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) != S_OK, "Failed to create fence");
+		JPT_RETURN_FALSE_IF_LOG(m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) != S_OK, "Failed to create fence 0x%lu", GetLastError());
 		m_fenceValue = 1;
 
 		// Create an event handle to use for frame synchronization
 		m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 		JPT_RETURN_FALSE_IF_LOG(m_fenceEvent == nullptr, "Failed to create fence event 0x%lu", GetLastError());
+
+		// Wait for the command list to execute; we are reusing the same command 
+        // list in our main loop but for now, we just want to wait for setup to 
+        // complete before continuing.
+        WaitForPreviousFrame();
 
 		return true;
 	}
@@ -245,10 +358,13 @@ namespace jpt
 		// that command list can then be reset at any time and must be before re-recording.
 		JPT_RETURN_FALSE_IF_LOG(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) != S_OK, "Failed to reset command list");
 
+		// Set necessary state
+		m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+		m_commandList->RSSetViewports(1, &m_viewport);
+		m_commandList->RSSetScissorRects(1, &m_scissorRect);
+
 		// Indicate that the back buffer will be used as a render target.
-		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		D3D12_RESOURCE_BARRIER barrier(D3D12_RESOURCE_BARRIER_TYPE_TRANSITION, D3D12_RESOURCE_BARRIER_FLAG_NONE);
 		barrier.Transition.pResource = m_renderTargets[m_frameIndex].Get();
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -257,6 +373,7 @@ namespace jpt
 
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
 		rtvHandle.ptr = SIZE_T((INT64)rtvHandle.ptr + (INT64)m_frameIndex * (INT64)m_rtvDescriptorSize);
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
 
 		// Record commands.
 		static float red = 0.0f;
@@ -274,10 +391,15 @@ namespace jpt
 		const float clearColor[] = { red, 0.2f, 0.4f, 1.0f };
 		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
+		m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+		m_commandList->DrawInstanced(3, 1, 0, 0);
+
 		// Indicate that the back buffer will now be used to present
-		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		m_commandList->ResourceBarrier(1, &barrier);
+		D3D12_RESOURCE_BARRIER backBuffer = barrier;
+		backBuffer.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		backBuffer.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		m_commandList->ResourceBarrier(1, &backBuffer);
 		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when done populating");
 
 		return true;

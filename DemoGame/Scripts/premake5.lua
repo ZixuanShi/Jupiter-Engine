@@ -82,6 +82,7 @@ workspace "JupiterDemoGame"
         {
             "d3d12",
             "dxgi",
+            "d3dcompiler",
         }
         defines 
         { 

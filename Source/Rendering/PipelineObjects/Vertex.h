@@ -6,7 +6,7 @@ namespace jpt
 {
 	struct Vertex
 	{
-		LinearColor color;
 		FVec3 position;
+		LinearColor color;
 	};
 }
