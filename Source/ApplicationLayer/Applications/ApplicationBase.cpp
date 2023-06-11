@@ -3,7 +3,7 @@
 #include "JupiterPCH.h"
 #include "ApplicationBase.h"
 
-#include "Rendering/RendererBase.h"
+#include "Rendering/Renderers/RendererBase.h"
 #include "ApplicationLayer/Windows/Window.h"
 
 namespace jpt

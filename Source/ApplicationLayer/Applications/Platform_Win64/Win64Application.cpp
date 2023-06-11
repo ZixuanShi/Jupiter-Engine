@@ -4,7 +4,7 @@
 #include "Win64Application.h"
 
 #include "ApplicationLayer/Windows/DirectX/DX12Window.h"
-#include "Rendering/DirectX/DX12Renderer.h"
+#include "Rendering/Renderers/DirectX/DX12Renderer.h"
 
 namespace jpt
 {

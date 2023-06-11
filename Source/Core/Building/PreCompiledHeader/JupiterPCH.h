@@ -30,6 +30,9 @@
 #include "Core/Algorithms/AlgorithmsHeaders.h"
 #include "Core/DataStructures/DataStructuresHeaders.h"
 #include "Core/Types/TypesHeader.h"
+#include "Core/Math/MathHeaders.h"
 #include "Core/Timing/TimingHeader.h"
 #include "Core/Logging/Logger.h"
 #include "Core/Helpers/Helpers.h"
+
+#include "Rendering/PipelineObjects/PipelineObjectsHeaders.h"

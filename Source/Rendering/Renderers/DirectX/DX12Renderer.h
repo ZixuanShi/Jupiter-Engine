@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Rendering/RendererBase.h"
+#include "Rendering/Renderers/RendererBase.h"
 
 namespace jpt
 {
