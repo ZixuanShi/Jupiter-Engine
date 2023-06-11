@@ -3,7 +3,6 @@
 #pragma once
 
 #include "ApplicationLayer/Windows/Window.h"
-#include "DX12HelperStructs.h"
 
 namespace jpt
 {

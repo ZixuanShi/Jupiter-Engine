@@ -4,7 +4,6 @@
 #include "DX12Window.h"
 
 #include "ApplicationLayer/Applications/Platform_Win64/Win64Application.h"
-#include "DX12HelperStructs.h"
 
 namespace jpt
 {
@@ -118,12 +117,13 @@ namespace jpt
 		m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 		// Create a RTV for each frame
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+		
 		for (uint32 i = 0; i < kFrameCount; ++i)
 		{
 			JPT_RETURN_FALSE_IF_LOG(m_swapChain->GetBuffer(i, IID_PPV_ARGS(&m_renderTargets[i])) != S_OK, "Failed to get swap chain buffer at index i");
 			m_device->CreateRenderTargetView(m_renderTargets[i].Get(), nullptr, rtvHandle);
-			rtvHandle.Offset(1, m_rtvDescriptorSize);
+			rtvHandle.ptr = SIZE_T((INT64)rtvHandle.ptr + (INT64)m_rtvDescriptorSize);
 		}
 
 		JPT_RETURN_FALSE_IF_LOG(m_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator)) != S_OK, "Failed to create command allocator");
@@ -246,10 +246,17 @@ namespace jpt
 		JPT_RETURN_FALSE_IF_LOG(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) != S_OK, "Failed to reset command list");
 
 		// Indicate that the back buffer will be used as a render target.
-		CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		D3D12_RESOURCE_BARRIER barrier;
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = m_renderTargets[m_frameIndex].Get();
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		m_commandList->ResourceBarrier(1, &barrier);
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart(), m_frameIndex, m_rtvDescriptorSize);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+		rtvHandle.ptr = SIZE_T((INT64)rtvHandle.ptr + (INT64)m_frameIndex * (INT64)m_rtvDescriptorSize);
 
 		// Record commands.
 		static float red = 0.0f;
@@ -268,7 +275,8 @@ namespace jpt
 		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
 		// Indicate that the back buffer will now be used to present
-		barrier = CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		m_commandList->ResourceBarrier(1, &barrier);
 		JPT_RETURN_FALSE_IF_LOG(m_commandList->Close() != S_OK, "Failed to close command list when done populating");
 
