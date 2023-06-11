@@ -12,6 +12,9 @@
 #include <DirectXMath.h>
 #include <wrl.h>
 #include <shellapi.h>
+	#if IS_DEBUG
+		#include <dxgidebug.h>
+	#endif
 #endif
 
 // Standard Library

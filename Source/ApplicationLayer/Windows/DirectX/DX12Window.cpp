@@ -11,8 +11,8 @@ namespace jpt
 
 	bool DX12Window::Init()
 	{
-		m_viewport = { 0.0f,0.0f,static_cast<float>(m_width), static_cast<float>(m_height) };
-		m_scissorRect = { 0,0,static_cast<LONG>(m_width), static_cast<LONG>(m_height) };
+		m_viewport    = { 0.0f, 0.0f, static_cast<float>(m_width), static_cast<float>(m_height) };
+		m_scissorRect = { 0,    0,    static_cast<LONG>(m_width),  static_cast<LONG>(m_height) };
 
 		JPT_RETURN_FALSE_IF_LOG(!LoadPipeline(), "Failed loading pipeline");
 		JPT_RETURN_FALSE_IF_LOG(!LoadAssets(), "Failed loading assets");
