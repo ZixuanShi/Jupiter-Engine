@@ -178,17 +178,7 @@ namespace jpt
 	template<typename CharType>
 	inline void basic_string<CharType>::append(const CharType* inString)
 	{
-		size_t inStringSize = 0;
-
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			inStringSize = jpt::strlen(inString);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			inStringSize = jpt::wcslen(inString);
-		}
-
+		const size_t inStringSize = GetStrLength(inString);
 		const size_t newSize = m_size + inStringSize;
 
 		if (newSize > m_capacity)
@@ -279,16 +269,7 @@ namespace jpt
 		}
 
 		const basic_string<CharType> replaced(stringToReplace);
-		size_t stringToFindSize = 0;
-
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			stringToFindSize = jpt::strlen(stringToFind);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			stringToFindSize = jpt::wcslen(stringToFind);
-		}
+		const size_t stringToFindSize = GetStrLength(stringToFind);
 
 		size_t foundPos = startIndex;
 		while (true)
@@ -312,16 +293,7 @@ namespace jpt
 	template<typename CharType>
 	inline size_t basic_string<CharType>::find(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
-		size_t stringToFindSize = 0;
-
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			stringToFindSize = jpt::strlen(stringToFind);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			stringToFindSize = jpt::wcslen(stringToFind);
-		}
+		const size_t stringToFindSize = GetStrLength(stringToFind);
 
 		if (endIndex == npos)
 		{
@@ -355,16 +327,7 @@ namespace jpt
 	template<typename CharType>
 	inline size_t basic_string<CharType>::find_last_of(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
-		size_t stringToFindSize = 0;
-
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			stringToFindSize = jpt::strlen(stringToFind);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			stringToFindSize = jpt::wcslen(stringToFind);
-		}
+		const size_t stringToFindSize = GetStrLength(stringToFind);
 		
 		if (endIndex == npos)
 		{
@@ -431,14 +394,7 @@ namespace jpt
 	template<typename CharType>
 	inline void basic_string<CharType>::CopyString(const CharType* inString)
 	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			m_size = jpt::strlen(inString);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			m_size = jpt::wcslen(inString);
-		}
+		m_size = GetStrLength(inString);
 
 		if (empty())
 		{
@@ -486,14 +442,7 @@ namespace jpt
 	inline void basic_string<CharType>::TakeString(CharType* inString)
 	{
 		m_pBuffer = inString;
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			m_size = jpt::strlen(inString);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			m_size = jpt::wcslen(inString);
-		}
+		m_size = GetStrLength(inString);
 		m_capacity = m_size;
 	}
 

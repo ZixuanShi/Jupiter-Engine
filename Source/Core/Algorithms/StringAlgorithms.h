@@ -36,4 +36,19 @@ namespace jpt
             return jpt::StringHash64(key);
         }
     };
+
+    /* Calculate the inString's size
+        @param inString:	Templated const chartype string to check for size. */
+    template<typename CharType>
+    inline size_t GetStrLength(const CharType* inString)
+    {
+        if constexpr (jpt::IsSameType<CharType, char>::Value)
+        {
+            return jpt::strlen(inString);
+        }
+        else if (jpt::IsSameType<CharType, wchar_t>::Value)
+        {
+            return jpt::wcslen(inString);
+        }
+    }
 }
