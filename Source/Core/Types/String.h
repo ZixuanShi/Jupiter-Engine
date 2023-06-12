@@ -51,10 +51,17 @@ namespace jpt
 		basic_string& operator+=(const basic_string<CharType>& inString);
 		basic_string substr(size_t pos, size_t count = npos) const;
 
+		/* Replace the some content of this string with the new given one
+			@param stringToFind:	The string we want to remove and replace 
+			@param stringToReplace:	The string to replace the original data
+			@param startIndex:		The start index to start searching. Default to 0 
+			@param endIndex:		The end index to stop operation. Default to size() */
+		basic_string& replace(const CharType* stringToFind, const CharType* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+
 		// Search
-		size_t find(const CharType* stringToFind) const;
-		size_t find_first_of(const CharType* stringToFind) const;
-		size_t find_last_of(const CharType* stringToFind) const;
+		size_t find(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t find_first_of(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t find_last_of(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		// Non-member functions
 		basic_string operator+(const CharType* inString) const;
@@ -264,7 +271,51 @@ namespace jpt
 	}
 
 	template<typename CharType>
-	inline size_t basic_string<CharType>::find(const CharType* stringToFind) const
+	inline basic_string<CharType>& basic_string<CharType>::replace(const CharType* stringToFind, const CharType* stringToReplace, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/)
+	{
+		if (empty())
+		{
+			return *this;
+		}
+
+		if (endIndex == npos)
+		{
+			endIndex = m_size;
+		}
+
+		const basic_string<CharType> replaced(stringToReplace);
+		size_t stringToFindSize = 0;
+
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			stringToFindSize = jpt::strlen(stringToFind);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			stringToFindSize = jpt::wcslen(stringToFind);
+		}
+
+		size_t foundPos = startIndex;
+		while (true)
+		{
+			foundPos = find(stringToFind, startIndex, endIndex);
+			if (foundPos == npos)
+			{
+				break;
+			}
+
+			const basic_string<CharType> pre = substr(0, foundPos);
+			const basic_string<CharType> suff = substr(foundPos + stringToFindSize);
+
+			*this = pre + replaced + suff;
+			startIndex = foundPos + replaced.size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'
+		}
+
+		return *this;
+	}
+
+	template<typename CharType>
+	inline size_t basic_string<CharType>::find(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
 		size_t stringToFindSize = 0;
 
@@ -277,10 +328,15 @@ namespace jpt
 			stringToFindSize = jpt::wcslen(stringToFind);
 		}
 
-		jpt::basic_string<CharType> current;
-		for (size_t i = 0; i < m_size; ++i)
+		if (endIndex == npos)
 		{
-			if ((i + stringToFindSize) > m_size)
+			endIndex = m_size;
+		}
+
+		jpt::basic_string<CharType> current;
+		for (size_t i = startIndex; i < endIndex; ++i)
+		{
+			if ((i + stringToFindSize) > endIndex)
 			{
 				return npos;
 			}
@@ -296,13 +352,13 @@ namespace jpt
 	}
 
 	template<typename CharType>
-	inline size_t basic_string<CharType>::find_first_of(const CharType* stringToFind) const
+	inline size_t basic_string<CharType>::find_first_of(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
-		return find(stringToFind);
+		return find(stringToFind, startIndex, endIndex);
 	}
 
 	template<typename CharType>
-	inline size_t basic_string<CharType>::find_last_of(const CharType* stringToFind) const
+	inline size_t basic_string<CharType>::find_last_of(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
 		size_t stringToFindSize = 0;
 
@@ -314,11 +370,16 @@ namespace jpt
 		{
 			stringToFindSize = jpt::wcslen(stringToFind);
 		}
+		
+		if (endIndex == npos)
+		{
+			endIndex = m_size;
+		}
 
 		jpt::basic_string<CharType> current;
-		for (size_t i = m_size - 1; i > 0; --i)
+		for (size_t i = endIndex - 1; i > startIndex; --i)
 		{
-			if ((i - stringToFindSize) < 0)
+			if ((i - stringToFindSize) < startIndex)
 			{
 				return npos;
 			}

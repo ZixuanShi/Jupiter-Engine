@@ -25,6 +25,13 @@ bool UnitTest_String()
 	JPT_RETURN_FALSE_IF_LOG(jupiterString.size() != 0, "");
 	JPT_RETURN_FALSE_IF_LOG(jupiterString.c_str() != nullptr, "");
 
+	jupiterString = "Hello World oh my";
+	jupiterString.replace("o", "Xo");
+	JPT_RETURN_FALSE_IF_LOG(jupiterString != "HellXo WXorld Xoh my", "replace() failed");
+
+	jupiterString.replace("Xo", "Xy", 6, 10);
+	JPT_RETURN_FALSE_IF_LOG(jupiterString != "HellXo WXyrld Xoh my", "replace() failed");
+
 	return true;
 }
 
