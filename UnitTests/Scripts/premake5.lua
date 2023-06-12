@@ -2,7 +2,8 @@
 workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
-    local jupiter_basedir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
+    local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
+    local project_name = "UnitTests"
 
     -- Config
     configurations 
@@ -38,7 +39,6 @@ workspace "JupiterUnitTests"
         { 
             "IS_DEBUG",
             "JPT_ENABLE_ASSERTS",
-            "JPT_ENABLE_MEMORY_TRACKING",       -- Detecting memory leaks, very slow operations
         }
         buildoptions 
         { 
@@ -86,7 +86,11 @@ workspace "JupiterUnitTests"
         }
         defines 
         { 
-            "IS_PLATFORM_WIN64" 
+            "IS_PLATFORM_WIN64",
+            ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
+            ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
+            ("JPT_OUTPUT_DIR=R\"($(SolutionDir)..\\Generated\\"..project_name.."_"..jupiter_outputpath.."_Output\\)\""),
+            ("JPT_OUTPUT_DIR_W=LR\"($(SolutionDir)..\\Generated\\"..project_name.."_"..jupiter_outputpath.."_Output\\)\""),
         }
         
 -- Jupiter Engine
@@ -95,18 +99,18 @@ project "Engine"
 
     includedirs
     {
-        (jupiter_basedir.. "Source"),
-        (jupiter_basedir.. "Source/Core/Building/PreCompiledHeader"),       -- only for JupiterPCH
+        (jupiter_dir.. "Source"),
+        (jupiter_dir.. "Source/Core/Building/PreCompiledHeader"),       -- only for JupiterPCH
     }
 
     files 
     {
-        (jupiter_basedir .. "Source/**.h"),
-        (jupiter_basedir .. "Source/**.cpp"),
+        (jupiter_dir .. "Source/**.h"),
+        (jupiter_dir .. "Source/**.cpp"),
     }
 
     pchheader ("JupiterPCH.h")
-    pchsource (jupiter_basedir .. "Source/Core/Building/PreCompiledHeader/JupiterPCH.cpp")
+    pchsource (jupiter_dir .. "Source/Core/Building/PreCompiledHeader/JupiterPCH.cpp")
 
     defines
     {
@@ -120,8 +124,8 @@ project "UnitTests"
 
     includedirs
     {
-        (jupiter_basedir .. "Source"),
-        (jupiter_basedir.. "Source/Core/Building/PreCompiledHeader"),
+        (jupiter_dir .. "Source"),
+        (jupiter_dir.. "Source/Core/Building/PreCompiledHeader"),
         ("../Source")
     }
 
@@ -143,5 +147,5 @@ project "UnitTests"
 
         -- Assets
         "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-        "xcopy \"" .. jupiter_basedir .."Assets\\Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Assets
+        "xcopy \"" .. jupiter_dir .."Assets\\Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Common Assets
     }

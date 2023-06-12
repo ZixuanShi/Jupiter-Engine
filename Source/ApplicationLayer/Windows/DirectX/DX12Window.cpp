@@ -154,8 +154,9 @@ namespace jpt
 		const uint32 compileFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
 #endif
 
-		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(L"C:\\Program Files\\Jupiter Technologies\\Jupiter Engine\\UnitTests\\Generated\\UnitTests_Win64_Debug_Output\\Assets\\Engine\\Shaders\\BasicShader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) != S_OK, "Failed to compile vertexShader 0x%lu", GetLastError());
-		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(L"C:\\Program Files\\Jupiter Technologies\\Jupiter Engine\\UnitTests\\Generated\\UnitTests_Win64_Debug_Output\\Assets\\Engine\\Shaders\\BasicShader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) != S_OK, "Failed to compile pixelShader 0x%lu", GetLastError());
+		const jpt::wstring basicShaderPath = jpt::GetOutputAssetPathW(L"Engine/Shaders/BasicShader.hlsl");
+		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(basicShaderPath.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) != S_OK, "Failed to compile vertexShader 0x%lu", GetLastError());
+		JPT_RETURN_FALSE_IF_LOG(D3DCompileFromFile(basicShaderPath.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) != S_OK, "Failed to compile pixelShader 0x%lu", GetLastError());
 
 		// Define the vertex input layout
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =

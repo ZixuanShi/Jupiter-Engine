@@ -37,5 +37,6 @@
 #include "Core/Timing/TimingHeader.h"
 #include "Core/Logging/Logger.h"
 #include "Core/Helpers/Helpers.h"
+#include "Core/System/SystemHeaders.h"
 
 #include "Rendering/PipelineObjects/PipelineObjectsHeaders.h"

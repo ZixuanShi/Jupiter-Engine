@@ -5,6 +5,7 @@
 #include "Core/Algorithms/AlgorithmsUnitTests.h"
 #include "Core/DataStructures/DataStructuresUnitTests.h"
 #include "Core/Types/TypesUnitTests.h"
+#include "Core/System/SystemUnitTests.h"
 
 bool JupiterUnitTestsApplication::PreInit()
 {
@@ -22,6 +23,7 @@ bool JupiterUnitTestsApplication::Init()
     RunAlgorithmsUnitTests();
     RunDataStructuresUnitTests();
     RunTypesUnitTests();
+    RunSystemUnitTests();
 
     return true;
 }

@@ -41,3 +41,6 @@
 #define WIDE2(x) L##x
 #define WIDE1(x) WIDE2(x)
 #define WFILE WIDE1(__FILE__)
+
+#define COMBINE_STR(A, B)   A##B
+#define WSTRING(cStr) L##cStr
