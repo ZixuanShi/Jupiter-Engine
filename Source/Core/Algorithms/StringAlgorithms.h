@@ -51,4 +51,59 @@ namespace jpt
             return jpt::wcslen(inString);
         }
     }
+
+    template<typename CharType>
+    inline void StrCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource)
+    {
+        if constexpr (jpt::IsSameType<CharType, char>::Value)
+        {
+            strcpy_s(pDestination, sizeInBytes, pSource);
+        }
+        else if (jpt::IsSameType<CharType, wchar_t>::Value)
+        {
+            wcscpy_s(pDestination, sizeInBytes, pSource);
+        }
+    }
+
+    template<typename CharType>
+    inline void StrNCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource, size_t maxCount)
+    {
+        if constexpr (jpt::IsSameType<CharType, char>::Value)
+        {
+            strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
+        }
+        else if (jpt::IsSameType<CharType, wchar_t>::Value)
+        {
+            wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
+        }
+    }
+
+    /* Compare string */
+    template<typename CharType>
+    inline bool StrNCmp(const CharType* pString1, const CharType* pString2, size_t size)
+    {
+        if (GetStrLength(pString1) != GetStrLength(pString2))
+        {
+            return false;
+        }
+
+        if constexpr (jpt::IsSameType<CharType, char>::Value)
+        {
+            return jpt::strncmp(pString1, pString2, size) == 0;
+        }
+        else if (jpt::IsSameType<CharType, wchar_t>::Value)
+        {
+            return jpt::wcsncmp(pString1, pString2, size) == 0;
+        }
+    }
+    template<typename StringType>
+    inline bool StringCmp(const StringType& string1, const StringType& string2, size_t size)
+    {
+        if (string1.size() != string2.size())
+        {
+            return false;
+        }
+
+        return jpt::StrNCmp(string1.c_str(), string2.c_str(), size);
+    }
 }

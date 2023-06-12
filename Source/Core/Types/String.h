@@ -186,14 +186,7 @@ namespace jpt
 			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 		}
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			strcpy_s(m_pBuffer + m_size, inStringSize + sizeof(CharType), inString);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			wcscpy_s(m_pBuffer + m_size, inStringSize + sizeof(CharType), inString);
-		}
+		StrCpy(m_pBuffer + m_size, inStringSize + sizeof(CharType), inString);
 
 		m_size = newSize;
 	}
@@ -208,14 +201,7 @@ namespace jpt
 			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 		}
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			strcpy_s(m_pBuffer + m_size, inString.size() + sizeof(CharType), inString.c_str());
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			wcscpy_s(m_pBuffer + m_size, inString.size() + sizeof(CharType), inString.c_str());
-		}
+		StrCpy(m_pBuffer + m_size, inString.size() + sizeof(CharType), inString.c_str());
 
 		m_size = newSize;
 	}
@@ -246,14 +232,7 @@ namespace jpt
 
 		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			strncpy_s(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			wcsncpy_s(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
-		}
+		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
 
 		jpt::basic_string<CharType> result;
 		result.TakeString(subStrBuffer);
@@ -375,15 +354,7 @@ namespace jpt
 
 		if (m_pBuffer)
 		{
-			if constexpr (jpt::IsSameType<CharType, char>::Value)
-			{
-				strcpy_s(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
-			}
-			else if (jpt::IsSameType<CharType, wchar_t>::Value)
-			{
-				wcscpy_s(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
-			}
-
+			StrCpy(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
 			delete[] m_pBuffer;
 		}
 
@@ -405,14 +376,7 @@ namespace jpt
 
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			strcpy_s(m_pBuffer, m_size + sizeof(CharType), inString);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			wcscpy_s(m_pBuffer, m_size + sizeof(CharType), inString);
-		}
+		StrCpy(m_pBuffer, m_size + sizeof(CharType), inString);
 	}
 
 	template<typename CharType>
@@ -428,14 +392,7 @@ namespace jpt
 
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			strcpy_s(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			wcscpy_s(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
-		}
+		StrCpy(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
 	}
 
 	template<typename CharType>
@@ -461,40 +418,13 @@ namespace jpt
 	template<typename CharType>
 	inline bool basic_string<CharType>::operator==(const CharType* inString) const
 	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			if (m_size != jpt::strlen(inString))
-			{
-				return false;
-			}
-			return jpt::strncmp(m_pBuffer, inString, m_size) == 0;
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			if (m_size != jpt::wcslen(inString))
-			{
-				return false;
-			}
-			return jpt::wcsncmp(m_pBuffer, inString, m_size) == 0;
-		}
+		return StrNCmp(m_pBuffer, inString, m_size);
 	}
 
 	template<typename CharType>
 	inline bool basic_string<CharType>::operator==(const basic_string<CharType>& inString) const
 	{
-		if (m_size != inString.size())
-		{
-			return false;
-		}
-
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			return jpt::strncmp(m_pBuffer, inString.c_str(), m_size) == 0;
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			return jpt::wcsncmp(m_pBuffer, inString.c_str(), m_size) == 0;
-		}
+		return StringCmp(*this, inString, m_size);
 	}
 
 	using string = basic_string<char>;
