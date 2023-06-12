@@ -9,6 +9,11 @@ namespace jpt
 	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_WARNING(message, ...)		{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,	__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_ERROR(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,		__LINE__, __FILE__, message, __VA_ARGS__); }
+#else
+	#define JPT_LOG(message, ...)			
+	#define JPT_SYSTEM_INFO(message, ...)   
+	#define JPT_WARNING(message, ...)		
+	#define JPT_ERROR(message, ...)			
 #endif
 
 	// Singleton logger

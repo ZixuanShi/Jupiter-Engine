@@ -149,9 +149,9 @@ namespace jpt
 
 #if IS_DEBUG
 		// Enable better shader debugging with the graphics debugging tools
-		const uint32 compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+		const uint32 compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_WARNINGS_ARE_ERRORS;
 #else
-		const uint32 compileFlags = D3DCOMPILE_OPTIMIZATION_LEVEL1;
+		const uint32 compileFlags = D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
 
 		const jpt::wstring basicShaderPath = jpt::GetOutputAssetPathW(L"Engine/Shaders/BasicShader.hlsl");
