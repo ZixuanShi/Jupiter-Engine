@@ -89,8 +89,6 @@ workspace "JupiterUnitTests"
             "IS_PLATFORM_WIN64",
             ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
             ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
-            ("JPT_OUTPUT_DIR=R\"($(SolutionDir)..\\Generated\\"..project_name.."_"..jupiter_outputpath.."_Output\\)\""),
-            ("JPT_OUTPUT_DIR_W=LR\"($(SolutionDir)..\\Generated\\"..project_name.."_"..jupiter_outputpath.."_Output\\)\""),
         }
         
 -- Jupiter Engine

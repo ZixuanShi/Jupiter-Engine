@@ -4,15 +4,35 @@
 
 namespace jpt
 {
+	class FilePathUtils
+	{
+	private:
+		static FilePathUtils s_instance;
+
+		jpt::string m_outputAssetsPath;
+		jpt::wstring m_outputAssetsPathW;
+
+	public:
+		static FilePathUtils* GetInstance() { return &s_instance; }
+
+		const jpt::string&  GetOutputAssetsPath()  const { return m_outputAssetsPath; }
+		const jpt::wstring& GetOutputAssetsPathW() const { return m_outputAssetsPathW; }
+
+	private:
+		FilePathUtils();
+	};
+
 	/* Utils for getting files paths */
-	JPT_API jpt::string  GetEngineDir();
-	JPT_API jpt::wstring GetEngineDirW();
-	JPT_API jpt::string  GetOutputDir();
-	JPT_API jpt::wstring GetOutputDirW();
+	JPT_API inline jpt::string  GetEngineDir()  { return JPT_ENGINE_DIR; }
+	JPT_API inline jpt::wstring GetEngineDirW() { return JPT_ENGINE_DIR_W; }
+	JPT_API inline jpt::string  GetOutputDir()  { return FilePathUtils::GetInstance()->GetOutputAssetsPath(); }
+	JPT_API inline jpt::wstring GetOutputDirW() { return FilePathUtils::GetInstance()->GetOutputAssetsPathW(); }
 
 	/* @return	A string of asset's absolute path */
-	JPT_API jpt::string  GetEngineAssetPath(const char* pDetailPath);
-	JPT_API jpt::wstring GetOutputAssetPathW(const wchar_t* pDetailPath);
+	JPT_API inline jpt::string  GetEngineAssetPath(const char* pDetailPath)     { return GetEngineDir()  + "Assets/"  + pDetailPath; }
+	JPT_API inline jpt::wstring GetEngineAssetPathW(const wchar_t* pDetailPath) { return GetEngineDirW() + L"Assets/" + pDetailPath; }
+	JPT_API inline jpt::string  GetOutputAssetPath(const char* pDetailPath)     { return GetOutputDir()  + "Assets/"  + pDetailPath; }
+	JPT_API inline jpt::wstring GetOutputAssetPathW(const wchar_t* pDetailPath) { return GetOutputDirW() + L"Assets/" + pDetailPath; }
 
 	template<class StringType>
 	inline void FixSlashes(StringType& path)

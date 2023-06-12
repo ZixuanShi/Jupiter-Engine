@@ -5,43 +5,42 @@
 
 namespace jpt
 {
-	jpt::string GetEngineDir()
-	{
-		return jpt::string(JPT_ENGINE_DIR);
-	}
+	FilePathUtils FilePathUtils::s_instance;
 
-	jpt::wstring GetEngineDirW()
+	FilePathUtils::FilePathUtils()
 	{
-		return jpt::wstring(JPT_ENGINE_DIR_W);
-	}
+		// String
+		char assetsPath[512];
+		size_t size = GetModuleFileNameA(nullptr, assetsPath, 512);
+		if (size == 0 || size == 512)
+		{
+			// Method failed or path was truncated.
+			throw std::exception();
+		}
 
-	jpt::string GetOutputDir()
-	{
-		return jpt::string(JPT_OUTPUT_DIR);
-	}
+		char* lastSlash = strrchr(assetsPath, '\\');
+		if (lastSlash)
+		{
+			*(lastSlash + 1) = '\0';
+		}
 
-	jpt::wstring GetOutputDirW()
-	{
-		return jpt::wstring(JPT_OUTPUT_DIR_W);
-	}
+		m_outputAssetsPath.CopyString(assetsPath);
 
-	jpt::string GetEngineAssetPath(const char* pDetailPath)
-	{
-		return GetEngineDir() + "Assets/" + pDetailPath;
-	}
+		// Wide String
+		wchar_t assetsPathW[512];
+		size = GetModuleFileNameW(nullptr, assetsPathW, 512);
+		if (size == 0 || size == 512)
+		{
+			// Method failed or path was truncated.
+			throw std::exception();
+		}
 
-	jpt::wstring GetEngineAssetPathW(const wchar_t* pDetailPath)
-	{
-		return GetEngineDirW() + L"Assets/" + pDetailPath;
-	}
+		wchar_t* lastSlashW = wcsrchr(assetsPathW, L'\\');
+		if (lastSlashW)
+		{
+			*(lastSlashW + 1) = L'\0';
+		}
 
-	jpt::string GetOutputAssetPath(const char* pDetailPath)
-	{
-		return GetOutputDir() + "Assets/" + pDetailPath;
-	}
-
-	jpt::wstring GetOutputAssetPathW(const wchar_t* pDetailPath)
-	{
-		return GetOutputDirW() + L"Assets/" + pDetailPath;
+		m_outputAssetsPathW.CopyString(assetsPathW);
 	}
 }

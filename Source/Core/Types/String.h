@@ -69,11 +69,6 @@ namespace jpt
 		bool operator==(const CharType* inString) const;
 		bool operator==(const basic_string<CharType>& inString) const;
 
-	private:
-		/* Called when the current buffer is not big enough to hold a new string to join.Update the buffer to a larger sizeand increase capacity
-			@param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
-		void UpdateBuffer(size_t inCapacity);
-
 		/* Copy the content of inString.Will replace the current buffer entirely.
 			@param inString: The new string to hold in buffer */
 		void CopyString(const CharType* inString);
@@ -83,6 +78,11 @@ namespace jpt
 			@param inString: The new string to take in buffer */
 		void TakeString(CharType* inString);
 		void TakeString(jpt::basic_string<CharType>&& inString);
+
+	private:
+		/* Called when the current buffer is not big enough to hold a new string to join.Update the buffer to a larger sizeand increase capacity
+			@param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
+		void UpdateBuffer(size_t inCapacity);
 	};
 
 	template<typename CharType>
