@@ -51,7 +51,7 @@ namespace jpt
 		basic_string& operator+=(const basic_string<CharType>& inString);
 		basic_string substr(size_t pos, size_t count = npos) const;
 
-		/* Replace the some content of this string with the new given one
+		/* Replace the some content of this string with the new given one within a range
 			@param stringToFind:	The string we want to remove and replace 
 			@param stringToReplace:	The string to replace the original data
 			@param startIndex:		The start index to start searching. Default to 0 
@@ -273,11 +273,6 @@ namespace jpt
 	template<typename CharType>
 	inline basic_string<CharType>& basic_string<CharType>::replace(const CharType* stringToFind, const CharType* stringToReplace, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/)
 	{
-		if (empty())
-		{
-			return *this;
-		}
-
 		if (endIndex == npos)
 		{
 			endIndex = m_size;
