@@ -9,6 +9,13 @@
 
 namespace jpt
 {
+	bool WindowBase::Init()
+	{
+		m_aspectRatio = static_cast<float>(m_width) / static_cast<float>(m_height);
+
+		return true;
+	}
+
 	WindowBase* WindowBase::Create()
 	{
 #if IS_PLATFORM_WIN64

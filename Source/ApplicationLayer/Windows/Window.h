@@ -21,7 +21,7 @@ namespace jpt
 	public:
 		virtual ~WindowBase() = default;
 
-		virtual bool Init() { return true; }
+		virtual bool Init();
 		virtual void Update() {};
 		virtual void Render() {};
 		virtual void Clean() {};

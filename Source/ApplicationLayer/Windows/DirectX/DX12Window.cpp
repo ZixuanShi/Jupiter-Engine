@@ -11,7 +11,9 @@ namespace jpt
 
 	bool DX12Window::Init()
 	{
-		m_viewport    = { 0.0f, 0.0f, static_cast<float>(m_width), static_cast<float>(m_height) };
+		JPT_RETURN_FALSE_IF_LOG(!Super::Init(), "Failed to Init Super Class");
+
+		m_viewport    = { 0.0f, 0.0f, static_cast<float>(m_width), static_cast<float>(m_height), D3D12_MIN_DEPTH, D3D12_MAX_DEPTH };
 		m_scissorRect = { 0,    0,    static_cast<LONG>(m_width),  static_cast<LONG>(m_height) };
 
 		JPT_RETURN_FALSE_IF_LOG(!LoadPipeline(), "Failed loading pipeline");
@@ -171,8 +173,21 @@ namespace jpt
 		psoDesc.pRootSignature = m_rootSignature.Get();
 		psoDesc.VS = D3D12_SHADER_BYTECODE(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize());
 		psoDesc.PS = D3D12_SHADER_BYTECODE(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize());
-		psoDesc.RasterizerState = D3D12_RASTERIZER_DESC(D3D12_FILL_MODE_SOLID, D3D12_CULL_MODE_BACK, false, D3D12_DEFAULT_DEPTH_BIAS, D3D12_DEFAULT_DEPTH_BIAS_CLAMP, D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS, true, false, false, 0, D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF);
+		psoDesc.RasterizerState = D3D12_RASTERIZER_DESC(
+			D3D12_FILL_MODE_SOLID,
+			D3D12_CULL_MODE_BACK, 
+			false, 
+			D3D12_DEFAULT_DEPTH_BIAS, 
+			D3D12_DEFAULT_DEPTH_BIAS_CLAMP, 
+			D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS, 
+			true, 
+			false, 
+			false, 
+			0, 
+			D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF);
 		D3D12_BLEND_DESC blendDesc;
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.IndependentBlendEnable = false;
 		const D3D12_RENDER_TARGET_BLEND_DESC defaultRenderTargetBlendDesc =
 		{
 			FALSE,FALSE,
@@ -181,10 +196,10 @@ namespace jpt
 			D3D12_LOGIC_OP_NOOP,
 			D3D12_COLOR_WRITE_ENABLE_ALL,
 		};
-		blendDesc.AlphaToCoverageEnable = false;
-		blendDesc.IndependentBlendEnable = false;
 		for (UINT i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
+		{
 			blendDesc.RenderTarget[i] = defaultRenderTargetBlendDesc;
+		}
 		psoDesc.BlendState = blendDesc;
 		psoDesc.DepthStencilState.DepthEnable = false;
 		psoDesc.DepthStencilState.StencilEnable = false;
