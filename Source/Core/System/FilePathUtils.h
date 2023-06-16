@@ -2,6 +2,8 @@
 
 #pragma once
 
+#define ENGINE_DIR_W L##ENGINE_DIR
+
 namespace jpt
 {
 	class FilePathUtils
@@ -9,7 +11,7 @@ namespace jpt
 	private:
 		static FilePathUtils s_instance;
 
-		jpt::string m_outputAssetsPath;
+		jpt::string  m_outputAssetsPath;
 		jpt::wstring m_outputAssetsPathW;
 
 	public:

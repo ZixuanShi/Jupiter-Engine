@@ -42,5 +42,3 @@
 		{\
 			JPT_DELETE_ARRAY(pPointer);\
 		}
-
-#define ENGINE_DIR_W L##ENGINE_DIR
