@@ -22,7 +22,7 @@ namespace jpt
 		size_t m_count;
 	};
 
-	/* Builds Enum search info when creating it
+	/** Builds Enum search info when creating it
 		@param rawEnumString:	The string of values got passed in when creating an enum 
 		@param infos:			A static array of enum string infos, with the size of count of this enum's values 
 		@param start:			Starting value. Typically 0
@@ -30,21 +30,21 @@ namespace jpt
 		@return					The search info for this enum category */
 	JPT_API inline EnumSearchInfo BuildEnumStringInfos(const char* rawEnumString, EnumStringInfo* infos, int32 start, size_t count);
 
-	/* Converts an enum value to a jpt::string literal
+	/** Converts an enum value to a jpt::string literal
 		@param value: Enum's value in integer
 		@param searchInfo: Will be generated as static member when creating the enum and been passed in
 		@return		A jpt::string with the enum's value string literal */
 	JPT_API inline jpt::string GetSubString(int32 value, const EnumSearchInfo& searchInfo);
 	JPT_API inline jpt::string_view GetSubStringView(int32 value, const EnumSearchInfo& searchInfo);
 
-	/* Helper for finding the value by it's string literal
+	/** Helper for finding the value by it's string literal
 		@param string:		The enum's literal to find 
 		@param searchInfo:	Auto generated static search info for this enum category
 		@param foundValue:	A reference to retrieve the value of string.
 		@return		true if found the string in this enum. false if not */
 	JPT_API inline bool FindValue(const char* string, const EnumSearchInfo& searchInfo, int32& foundValue);
 
-	/* Typed enum wrapper. Use this struct as the actual enum type. */
+	/** Typed enum wrapper. Use this struct as the actual enum type. */
 	template<typename EnumInfo>
 	class Enum : public EnumInfo
 	{
@@ -153,7 +153,7 @@ namespace jpt
 	}
 }
 
-/* EEnum e = EEnum::Value;
+/** EEnum e = EEnum::Value;
    jpt::string eString = e.ToString(); 
    
    The base class defined 3 default elements:
@@ -174,7 +174,7 @@ namespace jpt
 		}; \
 		typedef jpt::Enum<type##Info> type;
 
-/* Declares an enum class with additional features. Like item to jpt::string literal, indexed with start/end, for loop through. etc
+/** Declares an enum class with additional features. Like item to jpt::string literal, indexed with start/end, for loop through. etc
 	@param enumName: Required as the name of this enum. Example: EFruit 
 	@param first:	 Required as the first value in the enum. Example: Apple
 	@param ...:      Optional. The rest of values to be added to the enum. Examples: Banana, Orange. */

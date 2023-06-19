@@ -4,14 +4,14 @@
 
 namespace jpt
 {
-	/* Gets a duration of time */
+	/** Gets a duration of time */
 	class JPT_API Timer
 	{	
 	public:
-		/* Restarts the timer */
+		/** Restarts the timer */
 		void Start();
 
-		/* @return The time duration from now to last time we called Start() */
+		/** @return The time duration from now to last time we called Start() */
 		double GetTimeDuration();
 	};
 }

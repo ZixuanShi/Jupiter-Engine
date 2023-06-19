@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	/* Equivalent for std::string_view. High Performance viewer for strings */
+	/** Equivalent for std::string_view. High Performance viewer for strings */
 	template<typename CharType>
 	class basic_string_view
 	{
