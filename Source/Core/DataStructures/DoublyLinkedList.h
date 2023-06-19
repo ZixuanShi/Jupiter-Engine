@@ -4,11 +4,12 @@
 
 namespace jpt
 {
+	/** Doubly linked list implementation */
 	template<class _ValueType>
 	class list
 	{
 	private:
-		// The node this linked list is using to store data and the previous/next node
+		/** The node this linked list is using to store data and the previous/next node */
 		struct Node
 		{
 			_ValueType data;
@@ -78,8 +79,8 @@ namespace jpt
 		using iterator  = list_iterator<list<ValueType>>;
 		
 	private:
-		Node* m_pHead = nullptr;	// Start of this linkedlist
-		Node* m_pTail = nullptr;	// End of this linkedlist
+		Node* m_pHead = nullptr; /**< Start of this linkedlist */
+		Node* m_pTail = nullptr; /**< End of this linkedlist */
 		size_t m_size = 0;
 
 	public:
@@ -124,19 +125,19 @@ namespace jpt
 		void erase(size_t index);
 
 	private:
-		/* Adds a recent created node to this list.
-		  @param pNewNode:	 The new node to add. Should be heap allocated already
-		  @param index:		 The index to add the node. 0 for head. m_size for tail*/
+		/** Adds a recent created node to this list.
+		    @param pNewNode:	 The new node to add. Should be heap allocated already
+		    @param index:		 The index to add the node. 0 for head. m_size for tail */
 		void AddNode(Node* pNewNode, size_t index);
 
-		/* Remove a node from this list.
-		   @param index:		 The index to remove the node. 0 for head. m_size for tail */
+		/** Remove a node from this list.
+		    @param index:		 The index to remove the node. 0 for head. m_size for tail */
 		void RemoveNode(size_t index);
 
-		/* Copy construct every item in another list */
+		/** Copy construct every item in another list */
 		void CopyList(const list& other);
 
-		/* Move every item in another list to this one */
+		/** Move every item in another list to this one */
 		void TakeList(list&& other);
 	};
 

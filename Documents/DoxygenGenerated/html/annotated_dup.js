@@ -1,0 +1,45 @@
+var annotated_dup =
+[
+    [ "jpt", "namespacejpt.html", [
+      [ "ApplicationBase", "classjpt_1_1_application_base.html", "classjpt_1_1_application_base" ],
+      [ "basic_string", "classjpt_1_1basic__string.html", "classjpt_1_1basic__string" ],
+      [ "basic_string_view", "classjpt_1_1basic__string__view.html", "classjpt_1_1basic__string__view" ],
+      [ "DX12Renderer", "classjpt_1_1_d_x12_renderer.html", null ],
+      [ "DX12Window", "classjpt_1_1_d_x12_window.html", "classjpt_1_1_d_x12_window" ],
+      [ "Enum", "classjpt_1_1_enum.html", "classjpt_1_1_enum" ],
+      [ "EnumSearchInfo", "structjpt_1_1_enum_search_info.html", "structjpt_1_1_enum_search_info" ],
+      [ "EnumStringInfo", "structjpt_1_1_enum_string_info.html", "structjpt_1_1_enum_string_info" ],
+      [ "FilePathUtils", "classjpt_1_1_file_path_utils.html", "classjpt_1_1_file_path_utils" ],
+      [ "hash", "structjpt_1_1hash.html", "structjpt_1_1hash" ],
+      [ "hash< const char * >", "structjpt_1_1hash_3_01const_01char_01_5_01_4.html", "structjpt_1_1hash_3_01const_01char_01_5_01_4" ],
+      [ "IsLValueReferenceType", "structjpt_1_1_is_l_value_reference_type.html", null ],
+      [ "IsLValueReferenceType< T & >", "structjpt_1_1_is_l_value_reference_type_3_01_t_01_6_01_4.html", null ],
+      [ "IsRValueReferenceType", "structjpt_1_1_is_r_value_reference_type.html", null ],
+      [ "IsRValueReferenceType< T && >", "structjpt_1_1_is_r_value_reference_type_3_01_t_01_6_6_01_4.html", null ],
+      [ "IsSameType", "structjpt_1_1_is_same_type.html", null ],
+      [ "IsSameType< A, A >", "structjpt_1_1_is_same_type_3_01_a_00_01_a_01_4.html", null ],
+      [ "LinearColor", "classjpt_1_1_linear_color.html", "classjpt_1_1_linear_color" ],
+      [ "list", "classjpt_1_1list.html", "classjpt_1_1list" ],
+      [ "Logger", "classjpt_1_1_logger.html", "classjpt_1_1_logger" ],
+      [ "pair", "structjpt_1_1pair.html", "structjpt_1_1pair" ],
+      [ "RemoveConst", "structjpt_1_1_remove_const.html", "structjpt_1_1_remove_const" ],
+      [ "RemoveConst< const T >", "structjpt_1_1_remove_const_3_01const_01_t_01_4.html", "structjpt_1_1_remove_const_3_01const_01_t_01_4" ],
+      [ "RemoveReference", "structjpt_1_1_remove_reference.html", "structjpt_1_1_remove_reference" ],
+      [ "RemoveReference< T & >", "structjpt_1_1_remove_reference_3_01_t_01_6_01_4.html", "structjpt_1_1_remove_reference_3_01_t_01_6_01_4" ],
+      [ "RemoveReference< T && >", "structjpt_1_1_remove_reference_3_01_t_01_6_6_01_4.html", "structjpt_1_1_remove_reference_3_01_t_01_6_6_01_4" ],
+      [ "RendererBase", "classjpt_1_1_renderer_base.html", "classjpt_1_1_renderer_base" ],
+      [ "RValueToLValueReference", "structjpt_1_1_r_value_to_l_value_reference.html", "structjpt_1_1_r_value_to_l_value_reference" ],
+      [ "RValueToLValueReference< T && >", "structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4.html", "structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4" ],
+      [ "Timer", "classjpt_1_1_timer.html", "classjpt_1_1_timer" ],
+      [ "UintColor", "classjpt_1_1_uint_color.html", "classjpt_1_1_uint_color" ],
+      [ "unordered_map", "classjpt_1_1unordered__map.html", "classjpt_1_1unordered__map" ],
+      [ "vector", "classjpt_1_1vector.html", "classjpt_1_1vector" ],
+      [ "Vector3", "classjpt_1_1_vector3.html", "classjpt_1_1_vector3" ],
+      [ "Vertex", "structjpt_1_1_vertex.html", "structjpt_1_1_vertex" ],
+      [ "Win64Application", "classjpt_1_1_win64_application.html", "classjpt_1_1_win64_application" ],
+      [ "WindowBase", "classjpt_1_1_window_base.html", "classjpt_1_1_window_base" ]
+    ] ],
+    [ "std", "namespacestd.html", [
+      [ "hash< jpt::string >", "structstd_1_1hash_3_01jpt_1_1string_01_4.html", "structstd_1_1hash_3_01jpt_1_1string_01_4" ]
+    ] ]
+];

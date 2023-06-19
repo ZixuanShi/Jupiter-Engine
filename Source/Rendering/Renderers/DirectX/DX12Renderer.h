@@ -6,7 +6,7 @@
 
 namespace jpt
 {
-	/* Renderer implementation for DirectX 12 */
+	/** Renderer implementation for DirectX 12 */
 	class JPT_API DX12Renderer : public RendererBase
 	{
 	};

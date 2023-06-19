@@ -16,11 +16,10 @@ namespace jpt
 	#define JPT_ERROR(message, ...)			
 #endif
 
-	// Singleton logger
+	/** Singleton logger */ 
 	class JPT_API Logger
 	{
 	public:
-		// Value as the text color to print
 		JPT_ENUM(ELogType,
 			Log,			// From Client games
 			SystemInfo,		// From Engine
@@ -31,7 +30,7 @@ namespace jpt
 		static Logger s_instance;
 
 	public:
-		/* Log a message to the terminal window
+		/** Log a message to the terminal window
 			@param type: The type to log. Choose different color to print based on the type
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function

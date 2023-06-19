@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	/* Base class for Windows that people see on screen */
+	/** Base class for Windows that people see on screen */
 	class WindowBase
 	{
 	protected:
@@ -30,10 +30,10 @@ namespace jpt
 		virtual void OnKeyDown(uint8) {}
 		virtual void OnKeyUp(uint8) {}
 
-		/* @return  A pointer to a created window based on current platform */
+		/** @return  A pointer to a created window based on current platform */
 		static WindowBase* Create();
 
-		/* Parse the command arguments and store into argv[], store the count to argc 
+		/** Parse the command arguments and store into argv[], store the count to argc 
 			@param argv[]:		The command arguments passed in to this window
 			@param argc:		The count of arguments passed in to this window*/
 		virtual void ParseCommandLineArgs(wchar_t* argv[], int32 argc) = 0;

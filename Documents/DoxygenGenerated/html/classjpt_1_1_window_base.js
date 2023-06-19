@@ -1,0 +1,26 @@
+var classjpt_1_1_window_base =
+[
+    [ "~WindowBase", "classjpt_1_1_window_base.html#ac98fe37866e6ea353fd05cd442166091", null ],
+    [ "Clean", "classjpt_1_1_window_base.html#a5b28cea7c689c653303ea08ca951d412", null ],
+    [ "GetAspectRatio", "classjpt_1_1_window_base.html#afdec497cc6eaef2aa07129880748bc76", null ],
+    [ "GetHeight", "classjpt_1_1_window_base.html#a2a5f0ccd915217f8f3f294fbea41110b", null ],
+    [ "GetTitle", "classjpt_1_1_window_base.html#a47f7860fa93a9101078e911f57cea19c", null ],
+    [ "GetUseWarpDevice", "classjpt_1_1_window_base.html#a1cdd68227f9056aafdb476c8d7ad8ab3", null ],
+    [ "GetWidth", "classjpt_1_1_window_base.html#abc198ac4b98e66f9bc4c15b63d10652a", null ],
+    [ "Init", "classjpt_1_1_window_base.html#ad19e3a66b43e02a568f9252a9eef2387", null ],
+    [ "OnKeyDown", "classjpt_1_1_window_base.html#aeb62c67d5fd8a1231469f7d72aa5d979", null ],
+    [ "OnKeyUp", "classjpt_1_1_window_base.html#afbd9ff19f971da7ccef9dc4de0264de3", null ],
+    [ "ParseCommandLineArgs", "classjpt_1_1_window_base.html#a424f9f783e0de2c05893ed60d1cbd23a", null ],
+    [ "Render", "classjpt_1_1_window_base.html#a49b6ed8bf0913975df132abb1f7042a7", null ],
+    [ "SetAspectRatio", "classjpt_1_1_window_base.html#a9c72616b69b61e2a9a58d839e036f318", null ],
+    [ "SetHeight", "classjpt_1_1_window_base.html#a2ab065e28da623aa2f1c968dd4c30d93", null ],
+    [ "SetTitle", "classjpt_1_1_window_base.html#a308feddeda19d82a47791c48f5268f07", null ],
+    [ "SetUseWarpDevice", "classjpt_1_1_window_base.html#ac0ce5c098f10de6714f828e88172ef4a", null ],
+    [ "SetWidth", "classjpt_1_1_window_base.html#a9cf4e6561f4d4bda0f14d99a86614bad", null ],
+    [ "Update", "classjpt_1_1_window_base.html#a1e6ac852622b2793d69977315df33b73", null ],
+    [ "m_aspectRatio", "classjpt_1_1_window_base.html#a2cf39d799c0bc895f1cbe0a3222afeb3", null ],
+    [ "m_height", "classjpt_1_1_window_base.html#ab7eca0d2f08baa603948f69e2c438944", null ],
+    [ "m_title", "classjpt_1_1_window_base.html#a94984860131945838fcd9deb874cd323", null ],
+    [ "m_useWarpDevice", "classjpt_1_1_window_base.html#aafe1afa4612ac4bb36d8023f4a1d82ef", null ],
+    [ "m_width", "classjpt_1_1_window_base.html#a1850dbdb2bdb02b118284e34226a82a9", null ]
+];

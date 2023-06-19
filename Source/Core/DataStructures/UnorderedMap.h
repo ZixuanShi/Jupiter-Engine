@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	// Hash Table implementatio. Collision handled by Chainning
+	/** Hash Table implementatio.Collision handled by Chainning */
 	template<class _KeyType, class _ValueType>
 	class unordered_map
 	{
@@ -13,7 +13,7 @@ namespace jpt
 		using ValueType   = _ValueType;
 		using ItemType    = jpt::pair<KeyType, ValueType>;
 		using BucketType  = jpt::list<ItemType>;
-		using BucketsType = jpt::vector<BucketType>;	// Vector of Linked List as data buffer. Should be replaced by Vector of Red-Black Tree when it's implemented
+		using BucketsType = jpt::vector<BucketType>;	/**< Vector of Linked List as data buffer.Should be replaced by Vector of Red - Black Tree when it's implemented */
 
 	private:
 		template<class UnorderedMapType>
@@ -157,7 +157,7 @@ namespace jpt
 		iterator find(const KeyType& key);
 
 	private:
-		/* @return The index of which bucket this key should locate */
+		/** @return The index of which bucket this key should locate */
 		size_t GetBucketIndex(const KeyType& key) const;
 
 		/* Copy construct every item in another map */

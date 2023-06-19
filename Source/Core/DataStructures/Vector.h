@@ -4,6 +4,7 @@
 
 namespace jpt
 {
+	/** Dynamically reallocating array when buffer is full */
 	template<class _ValueType>
 	class vector
 	{
@@ -108,17 +109,17 @@ namespace jpt
 		void resize(size_t count, const ValueType& value);
 
 	private:
-		/* Create a new data buffer with a new capacity, move the existing data over
+		/** Create a new data buffer with a new capacity, move the existing data over
 			@param inCapacity: The new buffer's size */
 		void UpdateBufferWithNewCapacity(size_t inCapacity);
 		
-		/* Copy the data from another vector, create them on heapand point to it */
+		/** Copy the data from another vector, create them on heapand point to it */
 		void CopyVector(const jpt::vector<ValueType>& other);
 
-		/* Takes over ownership of data from another vector */
+		/** Takes over ownership of data from another vector */
 		void TakeVector(jpt::vector<ValueType>&& other);
 
-		/* Shift the elements inside buffer
+		/** Shift the elements inside buffer
 			@param index:		Where to start shifting
 			@param isToEnd:		True if we are shifting from begin to end, false if we are shifting from end to begin
 			@param distance:	How far to shift the data in index */

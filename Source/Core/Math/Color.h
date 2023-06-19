@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	/* Color represented by 4 floats for each channel, RGBA order. */
+	/** Color represented by 4 floats for each channel, RGBA order. */
 	class JPT_API LinearColor
 	{
 	public:
@@ -19,7 +19,7 @@ namespace jpt
 		LinearColor(float _r, float _g, float _b, float _a);
 	};
 
-	/* Color represented by 4 8-bit usigned int for each channel, RGBA order. */
+	/** Color represented by 4 8-bit usigned int for each channel, RGBA order. */
 	class JPT_API UintColor
 	{
 	public:

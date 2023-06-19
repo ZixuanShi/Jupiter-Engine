@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	/* Used to store the sections of the string that belong to each enum value */
+	/** Used to store the sections of the string that belong to each enum value */
 	struct JPT_API EnumStringInfo
 	{
 		// Index start and end for an enum value
@@ -16,8 +16,8 @@ namespace jpt
 
 	struct JPT_API EnumSearchInfo
 	{
-		const char* m_rawEnumString;		// The whole string for all enum values passed along
-		const EnumStringInfo* m_nameParts;	// String info for each enum value
+		const char* m_rawEnumString;		/**< The whole string for all enum values passed along */
+		const EnumStringInfo* m_nameParts;	/**< String info for each enum value */
 		int32 m_startValue;
 		size_t m_count;
 	};

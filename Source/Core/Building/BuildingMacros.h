@@ -2,7 +2,7 @@
 
 #pragma once
 
-// DLL exporter / importer
+/** DLL exporter / importer */
 #ifdef IS_PLATFORM_WIN64
 	#ifdef JPT_BUILD_DLL
 		#define JPT_API __declspec(dllexport)
@@ -13,16 +13,16 @@
 	#error Jupiter only supports Windows For now
 #endif
 
-// Used for hacky fix unused parameters
+/** Used for hacky fix unused parameters */
 #define JPT_UNUSED(param) static_cast<void>(param)
 
-// Turn off optimization
+/** Turn off optimization */
 #define JPT_DEOPTIMIZE __pragma(optimize("", off))
 
-// Turn on optimization
+/** Turn on optimization */
 #define JPT_REOPTIMIZE __pragma(optimize("", on))
 
-// Delete from memories
+/** Deleter helpers */
 #define JPT_DELETE(pPointer)\
 			delete pPointer;\
 			pPointer = nullptr;

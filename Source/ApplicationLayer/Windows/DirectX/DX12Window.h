@@ -6,7 +6,7 @@
 
 namespace jpt
 {
-	/* Windows 64 window implementation class */
+	/** Windows 64 window implementation class */
 	class DX12Window final : public WindowBase
 	{
 		using Super = WindowBase;
@@ -54,7 +54,7 @@ namespace jpt
 		// Clean
 		bool WaitForPreviousFrame();
 
-		/* Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
+		/** Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 		   If no such adapter can be found, *ppAdapter will be set to nullptr. */
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory, _Outptr_result_maybenull_ IDXGIAdapter1** ppAdapter, bool requestHighPerformanceAdapter = false);
 

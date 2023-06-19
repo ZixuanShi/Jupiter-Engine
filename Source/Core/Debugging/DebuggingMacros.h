@@ -2,7 +2,7 @@
 
 #pragma once
 
-/* Assert with error message logging if Debug mode, do nothing if not Debugging
+/** Assert with error message logging if Debug mode, do nothing if not Debugging
 	@param suceeded: A boolean expression to assert true
 	@param ...:	     Error messages if the succeeded went false */
 #ifdef JPT_ENABLE_ASSERTS

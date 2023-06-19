@@ -5,7 +5,7 @@
 #if IS_PROFILING
 namespace jpt
 {
-	/* Profiler regarding timing. Will log how much time a single function spent */
+	/** Profiler regarding timing. Will log how much time a single function spent */
 	class JPT_API TimeProfiler
 	{
 	private:
@@ -17,15 +17,14 @@ namespace jpt
 		~TimeProfiler();
 	};
 
-	// Used for timing a scope if it's profiling config. Example: 
-	/*
-	* void Foo()
-	* {
-	*	JPT_USE_TIMING_PROFILER("Foo")
-	* 
-	*	// Work stuff...
-	* }
-	*/
+	/** Used for timing a scope if it's profiling config. Example: 
+		void Foo()
+		{
+			JPT_USE_TIMING_PROFILER("Foo")
+			
+			// Work stuff...
+		}
+		*/
 	#define JPT_START_TIMING_PROFILER(label) jpt::TimeProfiler profiler(label)
 }
 #else

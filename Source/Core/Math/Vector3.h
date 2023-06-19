@@ -4,7 +4,7 @@
 
 namespace jpt
 {
-	/* Jupiter's vector 3d implementation. Templated and supports arithmetic types */
+	/** Jupiter's vector 3d implementation. Templated and supports arithmetic types */
 	template<typename Type>
 	class Vector3
 	{

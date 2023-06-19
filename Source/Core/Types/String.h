@@ -6,8 +6,8 @@
 
 namespace jpt
 {
-	/* Jupiter's string implementation
-	   @param CharType: coule be char as regular string, or wchar_t as wide string */
+	/** Jupiter's string implementation
+	    @param CharType: coule be char as regular string, or wchar_t as wide string */
 	template<typename CharType>
 	class basic_string
 	{

@@ -10,8 +10,8 @@
 
 #include "ApplicationLayer/Applications/ApplicationBase.h"
 
-/* Designed to be implemented in client game C++
-	@return An Application's pointer to run the game*/
+/** Designed to be implemented in client game C++
+	@return An Application's pointer to run the game */
 extern jpt::ApplicationBase* CreateApplication();
 
 #if IS_PLATFORM_WIN64

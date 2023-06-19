@@ -2,7 +2,7 @@
 
 #pragma once
 
-/* If the condition has occured, log an messageand return a value
+/** If the condition has occured, log an messageand return a value
 	@param condition:	The expression of the operation
 	@param returnValue: The value to return if condition occured
 	@param message:		The message to log if condition occured */
@@ -31,13 +31,13 @@
 #define JPT_RETURN_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, void());
 
-/* Helper for cleanand delete.
+/** Helper for cleanand delete.
     @param pPointer: Assumed to have Clean() function implemented */
 #define JPT_CLEAN_THEN_DELETE(pPointer)\
 	pPointer->Clean();\
 	JPT_DELETE(pPointer);
 
-/* __FILE__ but with L"XXX" wide string */
+/** __FILE__ but with L"XXX" wide string */
 #define WIDE2(x) L##x
 #define WIDE1(x) WIDE2(x)
 #define WFILE WIDE1(__FILE__)
