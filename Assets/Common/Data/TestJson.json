@@ -1,0 +1,11 @@
+{
+	"Name": "Jupiter",
+	"Author": "Zixuan",
+	"Version": 0,
+	"IsPromising": true,
+	"Inner": {
+		"InnerString": "HeyYo",
+		"iso_language_code": ["1", "23", "OMG"]
+	},
+	"PI": 3.1415
+}

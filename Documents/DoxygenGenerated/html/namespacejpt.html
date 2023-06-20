@@ -116,6 +116,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_enum_string_info.html">EnumStringInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_file.html">File</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_file_path_utils.html">FilePathUtils</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1hash.html">hash</a></td></tr>
@@ -133,6 +135,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_is_same_type.html">IsSameType</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_is_same_type_3_01_a_00_01_a_01_4.html">IsSameType&lt; A, A &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_json_parser.html">JsonParser</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_linear_color.html">LinearColor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -490,6 +494,16 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Builds <a class="el" href="classjpt_1_1_enum.html">Enum</a> search info when creating it </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rawEnumString</td><td>The string of values got passed in when creating an enum </td></tr>
+    <tr><td class="paramname">infos</td><td>A static array of enum string infos, with the size of count of this enum's values </td></tr>
+    <tr><td class="paramname">start</td><td>Starting value. Typically 0 </td></tr>
+    <tr><td class="paramname">count</td><td>How many values this enum category has </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The search info for this enum category </dd></dl>
 
 </div>
 </div>
@@ -532,6 +546,15 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Helper for finding the value by it's string literal </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">string</td><td>The enum's literal to find </td></tr>
+    <tr><td class="paramname">searchInfo</td><td>Auto generated static search info for this enum category </td></tr>
+    <tr><td class="paramname">foundValue</td><td>A reference to retrieve the value of string. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if found the string in this enum. false if not </dd></dl>
 
 </div>
 </div>
@@ -894,6 +917,14 @@ template&lt;typename CharType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Converts an enum value to a <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> literal </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td><a class="el" href="classjpt_1_1_enum.html">Enum</a>'s value in integer </td></tr>
+    <tr><td class="paramname">searchInfo</td><td>Will be generated as static member when creating the enum and been passed in </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> with the enum's value string literal </dd></dl>
 
 </div>
 </div>

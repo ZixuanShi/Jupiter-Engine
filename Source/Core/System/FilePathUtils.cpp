@@ -5,7 +5,11 @@
 
 namespace jpt
 {
-	FilePathUtils FilePathUtils::s_instance;
+	FilePathUtils& FilePathUtils::GetInstance()
+	{
+		static FilePathUtils s_instance;
+		return s_instance;
+	}
 
 	FilePathUtils::FilePathUtils()
 	{
@@ -42,5 +46,33 @@ namespace jpt
 		}
 
 		m_outputAssetsPathW.CopyString(assetsPathW);
+	}
+	
+	bool ParseFilePath(const char* pFullAbsolutePath, jpt::string& outFolderPath, jpt::string& outName, jpt::string& outExtension)
+	{
+		jpt::string fullAbsolutePath(pFullAbsolutePath);
+		FixSlashes(fullAbsolutePath);
+
+#if IS_PLATFORM_WIN64
+		const size_t lastSlash = fullAbsolutePath.find_last_of("/");
+		if (lastSlash == jpt::string::npos)
+		{
+			JPT_ERROR("Couldn't find the last slash to parse file path");
+			return false;
+		}
+
+		outFolderPath = fullAbsolutePath.substr(0, lastSlash);
+
+		const size_t lastDot = fullAbsolutePath.find_last_of(".");
+		if (lastDot == jpt::string::npos)
+		{
+			JPT_ERROR("Couldn't find the last dot to parse file extension");
+			return false;
+		}
+
+		outName = fullAbsolutePath.substr(lastSlash + 1, lastDot);
+		outExtension = fullAbsolutePath.substr(lastDot);
+#endif
+		return true;
 	}
 }

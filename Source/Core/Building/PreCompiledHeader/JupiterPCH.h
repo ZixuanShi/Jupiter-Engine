@@ -38,5 +38,6 @@
 #include "Core/Logging/Logger.h"
 #include "Core/Helpers/Helpers.h"
 #include "Core/System/SystemHeaders.h"
+#include "Core/DataDriven/DataDrivenHeaders.h"
 
 #include "Rendering/PipelineObjects/PipelineObjectsHeaders.h"

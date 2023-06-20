@@ -16,7 +16,7 @@ namespace jpt
 	#define JPT_ERROR(message, ...)			
 #endif
 
-	/** Singleton logger */ 
+	/** Singleton thread-safe logger for different platforms */ 
 	class JPT_API Logger
 	{
 	public:
@@ -25,9 +25,6 @@ namespace jpt
 			SystemInfo,		// From Engine
 			Warning,
 			Error);
-
-	private:
-		static Logger s_instance;
 
 	public:
 		/** Log a message to the terminal window
@@ -39,7 +36,7 @@ namespace jpt
 		void Log(const char* string);
 		void Log(const wchar_t* wideString);
 
-		static Logger& GetInstance() { return s_instance; }
+		static Logger& GetInstance();
 
 	private:
 		Logger() = default;

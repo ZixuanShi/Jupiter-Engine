@@ -164,6 +164,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Declares an enum class with additional features. Like item to <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> literal, indexed with start/end, for loop through. etc </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enumName</td><td>Required as the name of this enum. Example: EFruit </td></tr>
+    <tr><td class="paramname">first</td><td>Required as the first value in the enum. Example: Apple </td></tr>
+    <tr><td class="paramname">...</td><td>Optional. The rest of values to be added to the enum. Examples: Banana, Orange. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -220,7 +228,9 @@ Functions</h2></td></tr>
 <div class="ttc" id="anamespacejpt_html_a233628e29e43dab7e30d27603e76fc5f"><div class="ttname"><a href="namespacejpt.html#a233628e29e43dab7e30d27603e76fc5f">jpt::BuildEnumStringInfos</a></div><div class="ttdeci">EnumSearchInfo BuildEnumStringInfos(const char *rawEnumString, EnumStringInfo *infos, int32 start, size_t count)</div><div class="ttdef"><b>Definition</b> Enum.cpp:18</div></div>
 <div class="ttc" id="astructjpt_1_1_enum_search_info_html"><div class="ttname"><a href="structjpt_1_1_enum_search_info.html">jpt::EnumSearchInfo</a></div><div class="ttdef"><b>Definition</b> Enum.h:18</div></div>
 <div class="ttc" id="astructjpt_1_1_enum_string_info_html"><div class="ttname"><a href="structjpt_1_1_enum_string_info.html">jpt::EnumStringInfo</a></div><div class="ttdef"><b>Definition</b> Enum.h:9</div></div>
-</div><!-- fragment -->
+</div><!-- fragment --><p>EEnum e = EEnum::Value; <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> eString = e.ToString();</p>
+<p>The base class defined 3 default elements: Enum::Start: The starting value you specified in the macro Enum::End: start + count Enum::Count: The number of elements in the enum (not 1 + the last value) </p>
+
 </div>
 </div>
 </div><!-- contents -->

@@ -8,7 +8,7 @@ var searchData=
   ['getenginedirw_5',['GetEngineDirW',['../namespacejpt.html#a4e39ead799fa386c953d876035000c1f',1,'jpt']]],
   ['getheight_6',['GetHeight',['../classjpt_1_1_window_base.html#a2a5f0ccd915217f8f3f294fbea41110b',1,'jpt::WindowBase']]],
   ['gethwnd_7',['GetHwnd',['../classjpt_1_1_win64_application.html#aea4a8a26ffb6ab11ae04ee4c44f49253',1,'jpt::Win64Application']]],
-  ['getinstance_8',['GetInstance',['../classjpt_1_1_logger.html#aa1f62c4a873c0c3829b4eab4139f3ccf',1,'jpt::Logger::GetInstance()'],['../classjpt_1_1_file_path_utils.html#a488f7f1940e34956c21bce4b00ae41d4',1,'jpt::FilePathUtils::GetInstance()']]],
+  ['getinstance_8',['GetInstance',['../classjpt_1_1_json_parser.html#ab6d2f3fbbd4d4f345518d13967915ef7',1,'jpt::JsonParser::GetInstance()'],['../classjpt_1_1_logger.html#aa1f62c4a873c0c3829b4eab4139f3ccf',1,'jpt::Logger::GetInstance()'],['../classjpt_1_1_file_path_utils.html#a4eddc693bf0a67a912dcc77d77f4fe3e',1,'jpt::FilePathUtils::GetInstance()']]],
   ['getoutputassetpath_9',['GetOutputAssetPath',['../namespacejpt.html#ab58df6463e1df59a4819e41ab93e0041',1,'jpt']]],
   ['getoutputassetpathw_10',['GetOutputAssetPathW',['../namespacejpt.html#ae433732c399d5a8d33742ee816b5deeb',1,'jpt']]],
   ['getoutputassetspath_11',['GetOutputAssetsPath',['../classjpt_1_1_file_path_utils.html#aa7179b938a3e086cb0a2d834f432f435',1,'jpt::FilePathUtils']]],

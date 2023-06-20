@@ -7,8 +7,6 @@
 
 namespace jpt
 {
-	Logger Logger::s_instance;
-
 	void Logger::Log(const ELogType& type, int32 line, const char* file, const char* message, ...)
 	{
 		char messageBuffer[512];
@@ -42,5 +40,11 @@ namespace jpt
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
 #endif
+	}
+
+	Logger& Logger::GetInstance()
+	{
+		static Logger s_logger;
+		return s_logger;
 	}
 }
