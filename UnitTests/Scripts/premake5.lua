@@ -32,7 +32,11 @@ workspace "JupiterUnitTests"
     {
         "FatalCompileWarnings",
     }
-
+    defines
+    {
+        ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
+        ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
+    }
     -- Global filters
     filter "configurations:Debug"
         defines 
@@ -78,19 +82,12 @@ workspace "JupiterUnitTests"
         symbols "off"
 
     filter "platforms:Win64"
-        links
-        {
-            "d3d12",
-            "dxgi",
-            "d3dcompiler",
-        }
         defines 
         { 
             "IS_PLATFORM_WIN64",
-            ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
-            ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
         }
-        
+
+
 -- Jupiter Engine
 project "Engine"
     kind "StaticLib"
@@ -129,7 +126,10 @@ project "UnitTests"
 
     links
     {
-        "Engine.lib"
+        "Engine.lib",
+        "d3d12",
+        "dxgi",
+        "d3dcompiler",
     }
 
     libdirs
