@@ -141,9 +141,9 @@ project "UnitTests"
     postbuildcommands
     {
         -- Engine dll
-        "xcopy \"$(SolutionDir)..\\Generated\\Engine_" .. jupiter_outputpath .. "_Output\\*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
+        "xcopy \"$(SolutionDir)../Generated/Engine_" .. jupiter_outputpath .. "_Output/*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
 
         -- Assets
-        "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-        "xcopy \"" .. jupiter_dir .."Assets\\Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Common Assets
+        "xcopy \"$(SolutionDir)../Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+        "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Common Assets
     }
