@@ -18,11 +18,15 @@ bool UnitTest_FilePathUtils()
 
 bool UnitTest_File()
 {
-	//jpt::File file("C:/Program Files/Jupiter Technologies/Jupiter Engine/UnitTests/Scripts/GenerateProjects.bat");
-	//JPT_RETURN_FALSE_IF_LOG(file.GetFolderPath() != "C:/Program Files/Jupiter Technologies/Jupiter Engine/UnitTests/Scripts/", "");
-	//JPT_RETURN_FALSE_IF_LOG(file.GetName() != "GenerateProjects", "");
-	//JPT_RETURN_FALSE_IF_LOG(file.GetExtension() != "bat", "");
+	jpt::File file("C:/Program Files/Jupiter Technologies/Jupiter Engine/UnitTests/Scripts/GenerateProjects.bat");
+	JPT_RETURN_FALSE_IF_LOG(file.GetFolderPath() != "C:/Program Files/Jupiter Technologies/Jupiter Engine/UnitTests/Scripts/", "");
+	JPT_RETURN_FALSE_IF_LOG(file.GetName() != "GenerateProjects", "");
+	JPT_RETURN_FALSE_IF_LOG(file.GetExtension() != "bat", "");
 
+	file = ("C:/GenerateProjects.bat");
+	JPT_RETURN_FALSE_IF_LOG(file.GetFolderPath() != "C:/", "");
+	JPT_RETURN_FALSE_IF_LOG(file.GetName() != "GenerateProjects", "");
+	JPT_RETURN_FALSE_IF_LOG(file.GetExtension() != "bat", "");
 
 	return true;
 }

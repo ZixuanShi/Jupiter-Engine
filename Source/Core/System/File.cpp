@@ -15,12 +15,12 @@ namespace jpt
 
     jpt::string_view File::GetFolderPath() const
     {
-        return jpt::string_view(m_path.c_str(), m_lastSlashIndex);
+        return jpt::string_view(m_path.c_str(), m_lastSlashIndex + 1);
     }
 
     jpt::string_view File::GetName() const
     {
-        return jpt::string_view(m_path.c_str() + m_lastSlashIndex + 1, m_path.size() - m_dotIndex);
+        return jpt::string_view(m_path.c_str() + m_lastSlashIndex + 1, m_dotIndex - m_lastSlashIndex - 1);
     }
 
     jpt::string_view File::GetExtension() const

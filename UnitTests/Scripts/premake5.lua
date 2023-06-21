@@ -3,7 +3,6 @@ workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
     local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
-    local project_name = "UnitTests"
 
     -- Config
     configurations 
@@ -26,8 +25,9 @@ workspace "JupiterUnitTests"
 
     -- Programming
     language "C++"
-    cppdialect "C++latest"
+    cppdialect "C++20"
     warnings "Extra"
+    staticruntime "on"
     flags
     {
         "FatalCompileWarnings",
@@ -41,8 +41,8 @@ workspace "JupiterUnitTests"
             "JPT_ENABLE_ASSERTS",
         }
         buildoptions 
-        { 
-            "/MDd",
+        {
+            "/MTd",
         }
         optimize "Debug"
         symbols "On"
@@ -54,10 +54,10 @@ workspace "JupiterUnitTests"
         }
         buildoptions 
         {
-            "/MD",
+            "/MT",
         }
-        optimize "On"
-        symbols "On"
+        optimize "on"
+        symbols "on"
 
     filter "platforms:Win64"
         defines 
@@ -72,10 +72,10 @@ workspace "JupiterUnitTests"
         }
         buildoptions 
         {
-            "/MD",
+            "/MT",
         }
         optimize "Full"
-        symbols "Off"
+        symbols "off"
 
     filter "platforms:Win64"
         links
@@ -93,12 +93,12 @@ workspace "JupiterUnitTests"
         
 -- Jupiter Engine
 project "Engine"
-    kind "SharedLib"
+    kind "StaticLib"
 
     includedirs
     {
         (jupiter_dir.. "Source"),
-        (jupiter_dir.. "Source/Core/Building/PreCompiledHeader"),       -- only for JupiterPCH
+        (jupiter_dir.. "Source/Core/Building/PreCompiledHeader"),
     }
 
     files 
@@ -129,7 +129,12 @@ project "UnitTests"
 
     links
     {
-        "Engine"
+        "Engine.lib"
+    }
+
+    libdirs
+    {
+        ("$(SolutionDir)../Generated/Engine_" .. jupiter_outputpath .. "_Output/")
     }
 
     files
@@ -141,7 +146,7 @@ project "UnitTests"
     postbuildcommands
     {
         -- Engine dll
-        "xcopy \"$(SolutionDir)../Generated/Engine_" .. jupiter_outputpath .. "_Output/*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
+        -- "xcopy \"$(SolutionDir)..\\Generated\\Engine_" .. jupiter_outputpath .. "_Output\\*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
 
         -- Assets
         "xcopy \"$(SolutionDir)../Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets

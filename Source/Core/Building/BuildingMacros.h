@@ -3,14 +3,14 @@
 #pragma once
 
 /** DLL exporter / importer */
-#ifdef IS_PLATFORM_WIN64
+#if JPT_IS_DYNAMICALLY_LINK
 	#ifdef JPT_BUILD_DLL
-		#define JPT_API __declspec(dllexport)
+		#define JPT_API  __declspec(dllexport)
 	#else	
 		#define JPT_API __declspec(dllimport)
-#endif
+	#endif
 #else
-	#error Jupiter only supports Windows For now
+	#define JPT_API
 #endif
 
 /** Used for hacky fix unused parameters */
