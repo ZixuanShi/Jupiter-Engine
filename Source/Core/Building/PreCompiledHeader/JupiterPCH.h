@@ -29,10 +29,10 @@
 // Jupiter
 #include "Core/Building/BuildingMacros.h"
 #include "Core/Debugging/DebuggingMacros.h"
-#include "Core/Types/Types.h"
+#include "Core/Misc/TypeDefs.h"
 #include "Core/Algorithms/AlgorithmsHeaders.h"
 #include "Core/DataStructures/DataStructuresHeaders.h"
-#include "Core/Types/TypesHeader.h"
+#include "Core/Misc/MiscHeader.h"
 #include "Core/Math/MathHeaders.h"
 #include "Core/Timing/TimingHeader.h"
 #include "Core/Logging/Logger.h"

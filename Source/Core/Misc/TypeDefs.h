@@ -12,11 +12,8 @@ using int64  = int64_t;
 
 namespace jpt
 {
-	template <typename Type>
-	inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();	/**< If the value is not supported, you need to specialize template it in the corresponding file */
-	
-	template <typename Type>
-	inline const Type kDefaultValue = static_cast<Type>(0);
+	template <typename Type> inline const Type kInvalidValue = (std::numeric_limits<Type>::max)();	/**< If the value is not supported, you need to specialize template it in the corresponding file */
+	template <typename Type> inline const Type kDefaultValue = static_cast<Type>(0);
 	
 	// Timing
 	using TimingPrecision = double;
