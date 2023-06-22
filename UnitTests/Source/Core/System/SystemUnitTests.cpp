@@ -13,10 +13,14 @@ bool UnitTest_FilePathUtils()
 	jpt::wstring dirW = jpt::FixedSlashes(jpt::GetEngineDirW());
 	JPT_RETURN_FALSE_IF_LOG(dirW != L"C:/Program Files/Jupiter Technologies/Jupiter Engine/", "");
 
-	jpt::string s;
-	jpt::string s1;
-	jpt::string s2;
-	jpt::ParseFilePath(dir.c_str(), s, s1, s2);
+	jpt::optional<jpt::PathInfo<>> pathInfo = jpt::ParseFilePath(dir.c_str());
+	JPT_RETURN_FALSE_IF_LOG(!pathInfo.has_value(), "");
+	JPT_RETURN_FALSE_IF_LOG(pathInfo.value().m_folderPath != "C:/Program Files/Jupiter Technologies/Jupiter Engine/Assets/", "");
+	JPT_RETURN_FALSE_IF_LOG(pathInfo.value().m_name != "Dummy", "");
+	JPT_RETURN_FALSE_IF_LOG(pathInfo.value().m_extension != "txt", "");
+
+	pathInfo = jpt::ParseFilePath("Invalid file path on purpose for testing don't worry");
+	JPT_RETURN_FALSE_IF_LOG(pathInfo.has_value(), "");
 
 	return true;
 }

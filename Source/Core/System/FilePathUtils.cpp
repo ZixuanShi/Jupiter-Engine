@@ -47,31 +47,4 @@ namespace jpt
 
 		m_outputAssetsPathW.CopyString(assetsPathW);
 	}
-	
-	bool ParseFilePath(const char* pFullAbsolutePath, jpt::string& outFolderPath, jpt::string& outName, jpt::string& outExtension)
-	{
-		jpt::string fullAbsolutePath(pFullAbsolutePath);
-		FixSlashes(fullAbsolutePath);
-
-		const size_t lastSlash = fullAbsolutePath.find_last_of("/");
-		if (lastSlash == jpt::string::npos)
-		{
-			JPT_ERROR("Couldn't find the last slash to parse file path");
-			return false;
-		}
-
-		outFolderPath = fullAbsolutePath.substr(0, lastSlash + 1);
-
-		const size_t lastDot = fullAbsolutePath.find_last_of(".");
-		if (lastDot == jpt::string::npos)
-		{
-			JPT_ERROR("Couldn't find the last dot to parse file extension");
-			return false;
-		}
-
-		outName = fullAbsolutePath.substr(lastSlash + 1, lastDot - lastSlash - 1);
-		outExtension = fullAbsolutePath.substr(lastDot + 1);
-
-		return true;
-	}
 }
