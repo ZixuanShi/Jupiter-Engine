@@ -4,7 +4,7 @@
 #include "ApplicationLayer/Windows/Window.h"
 #include "Core/Algorithms/AlgorithmsUnitTests.h"
 #include "Core/DataStructures/DataStructuresUnitTests.h"
-#include "Core/Types/TypesUnitTests.h"
+#include "Core/Misc/MiscUnitTests.h"
 #include "Core/System/SystemUnitTests.h"
 
 bool JupiterUnitTestsApplication::PreInit()
@@ -22,7 +22,7 @@ bool JupiterUnitTestsApplication::Init()
 
     RunAlgorithmsUnitTests();
     RunDataStructuresUnitTests();
-    RunTypesUnitTests();
+    RunMiscUnitTests();
     RunSystemUnitTests();
 
     return true;

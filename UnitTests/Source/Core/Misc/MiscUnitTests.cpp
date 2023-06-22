@@ -1,5 +1,5 @@
 ﻿#include "JupiterPCH.h"
-#include "TypesUnitTests.h"
+#include "MiscUnitTests.h"
 
 bool UnitTest_String()
 {
@@ -152,11 +152,37 @@ bool UnitTest_Enum()
 	return true;
 }
 
-void RunTypesUnitTests()
+bool UnitTest_Optional()
 {
-	JPT_RETURN_IF_LOG(!UnitTest_String(), "UnitTest_String() failed");
-	JPT_RETURN_IF_LOG(!UnitTest_WString(), "UnitTest_WString() failed");
+	jpt::optional<int32> intOptional;
+	JPT_RETURN_FALSE_IF_LOG(intOptional.has_value(), "");
+
+	intOptional = 42;
+	JPT_RETURN_FALSE_IF_LOG(!intOptional.has_value(), "");
+	JPT_RETURN_FALSE_IF_LOG(intOptional.value() != 42, "");
+
+	intOptional.reset();
+	JPT_RETURN_FALSE_IF_LOG(intOptional.has_value(), "");
+
+	jpt::optional<jpt::string> stringOptional;
+	JPT_RETURN_FALSE_IF_LOG(stringOptional.has_value(), "");
+
+	stringOptional = "42";
+	JPT_RETURN_FALSE_IF_LOG(!stringOptional.has_value(), "");
+	JPT_RETURN_FALSE_IF_LOG(stringOptional.value() != "42", "");
+
+	stringOptional.reset();
+	JPT_RETURN_FALSE_IF_LOG(stringOptional.has_value(), "");
+
+	return true;
+}
+
+void RunMiscUnitTests()
+{
+	JPT_RETURN_IF_LOG(!UnitTest_String(),     "UnitTest_String() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_WString(),    "UnitTest_WString() failed");
 	JPT_RETURN_IF_LOG(!UnitTest_StringView(), "UnitTest_StringView() failed");
-	JPT_RETURN_IF_LOG(!UnitTest_Types(), "UnitTest_Types() failed");
-	JPT_RETURN_IF_LOG(!UnitTest_Enum(), "UnitTest_Enum() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Types(),      "UnitTest_Types() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Enum(),       "UnitTest_Enum() failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Optional(),   "UnitTest_Optional() failed");
 }
