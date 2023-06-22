@@ -44,7 +44,7 @@ namespace jpt
 	template<class TypeA, class TypeB>
 	pair<TypeA, TypeB> make_pair(TypeA&& inFirst, TypeB&& inSecond)
 	{
-		return jpt::pair<TypeA, TypeB>(inFirst, inSecond);
+		return jpt::pair<TypeA, TypeB>(jpt::move(inFirst), jpt::move(inSecond));
 	}
 }
 
