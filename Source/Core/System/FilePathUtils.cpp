@@ -53,7 +53,6 @@ namespace jpt
 		jpt::string fullAbsolutePath(pFullAbsolutePath);
 		FixSlashes(fullAbsolutePath);
 
-#if IS_PLATFORM_WIN64
 		const size_t lastSlash = fullAbsolutePath.find_last_of("/");
 		if (lastSlash == jpt::string::npos)
 		{
@@ -61,7 +60,7 @@ namespace jpt
 			return false;
 		}
 
-		outFolderPath = fullAbsolutePath.substr(0, lastSlash);
+		outFolderPath = fullAbsolutePath.substr(0, lastSlash + 1);
 
 		const size_t lastDot = fullAbsolutePath.find_last_of(".");
 		if (lastDot == jpt::string::npos)
@@ -70,9 +69,9 @@ namespace jpt
 			return false;
 		}
 
-		outName = fullAbsolutePath.substr(lastSlash + 1, lastDot);
-		outExtension = fullAbsolutePath.substr(lastDot);
-#endif
+		outName = fullAbsolutePath.substr(lastSlash + 1, lastDot - lastSlash - 1);
+		outExtension = fullAbsolutePath.substr(lastDot + 1);
+
 		return true;
 	}
 }

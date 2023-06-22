@@ -26,7 +26,7 @@ namespace jpt
 		@param outName: Name of the file
 		@param outExtension: Extension representing the type of this file
 		@return		true if succeeded, false if anything went wrong during parsing */
-	JPT_API inline bool ParseFilePath(const char* pFullAbsolutePath, jpt::string& outFolderPath, jpt::string& outName, jpt::string& outExtension);
+	JPT_API bool ParseFilePath(const char* pFullAbsolutePath, jpt::string& outFolderPath, jpt::string& outName, jpt::string& outExtension);
 
 	/** @return String for the absolute directory path to Jupiter Engine's root folder */
 	JPT_API inline jpt::string  GetEngineDir()  { return JPT_ENGINE_DIR; }

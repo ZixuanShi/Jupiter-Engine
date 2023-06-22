@@ -13,6 +13,11 @@ bool UnitTest_FilePathUtils()
 	jpt::wstring dirW = jpt::FixedSlashes(jpt::GetEngineDirW());
 	JPT_RETURN_FALSE_IF_LOG(dirW != L"C:/Program Files/Jupiter Technologies/Jupiter Engine/", "");
 
+	jpt::string s;
+	jpt::string s1;
+	jpt::string s2;
+	jpt::ParseFilePath(dir.c_str(), s, s1, s2);
+
 	return true;
 }
 
