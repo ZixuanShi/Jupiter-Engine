@@ -5,9 +5,8 @@
 
 namespace jpt
 {
-	JsonParser& jpt::JsonParser::GetInstance()
+	JsonFile LoadJsonFile(const char* pPath)
 	{
-		static JsonParser s_instance;
-		return s_instance;
+		return JsonFile(pPath);
 	}
 }

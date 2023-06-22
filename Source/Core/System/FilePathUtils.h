@@ -57,7 +57,7 @@ namespace jpt
 
 	/** Information splited from a path */
 	template<typename StringType = jpt::string>
-	struct PathInfo
+	struct JPT_API PathInfo
 	{
 		StringType m_folderPath;	/**< Abosulte path to this file's located folder */
 		StringType m_name;			/**< Name of the file. Excluding extension */
@@ -68,7 +68,7 @@ namespace jpt
 		@param pFullAbsolutePath: The absolute full path to this file on the current system	
 		@return		Optional path object, exist if succeeded */
 	template<typename StringType = jpt::string>
-	JPT_API inline jpt::optional<PathInfo<StringType>> ParseFilePath(const char* pFullAbsolutePath)
+	inline jpt::optional<PathInfo<StringType>> ParseFilePath(const char* pFullAbsolutePath)
 	{
 		PathInfo<StringType> path;
 

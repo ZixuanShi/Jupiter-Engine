@@ -4,14 +4,17 @@
 
 namespace jpt
 {
-	class JPT_API JsonParser
+	class JPT_API JsonFile : public File
 	{
-	public:
-		static JsonParser& GetInstance();
 
-	private:
-		JsonParser() = default;
-		JsonParser(const JsonParser&) = delete;
-		JsonParser& operator=(const JsonParser&) = delete;
 	};
+
+	JPT_API JsonFile LoadJsonFile(const char* pPath);
 }
+
+/*
+- Struct for json file data. optional child inside
+- Load a json file. need file path to it. Store everything to a hash map
+- Get value by name
+- Set value and store it to disk
+*/

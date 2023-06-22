@@ -1,11 +1,13 @@
 {
-	"Name": "Jupiter",
+	"EngineName": "Jupiter",
 	"Author": "Zixuan",
 	"Version": 0,
 	"IsPromising": true,
-	"Inner": {
-		"InnerString": "HeyYo",
+	"Player": 
+	{
+		"Name": "HeyYo",
 		"iso_language_code": ["1", "23", "OMG"]
 	},
 	"PI": 3.1415
+
 }
