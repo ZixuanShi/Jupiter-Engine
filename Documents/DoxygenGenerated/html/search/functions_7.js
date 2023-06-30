@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['init_0',['Init',['../classjpt_1_1_application_base.html#a7dba7a3c2b7fe0f157f47a0e1b4a08f6',1,'jpt::ApplicationBase::Init()'],['../classjpt_1_1_win64_application.html#a70c48bafb4b3bffddd66955dc112547a',1,'jpt::Win64Application::Init()'],['../classjpt_1_1_d_x12_window.html#aaf665704a3366deb49e580a12bb4b918',1,'jpt::DX12Window::Init()'],['../classjpt_1_1_window_base.html#ad19e3a66b43e02a568f9252a9eef2387',1,'jpt::WindowBase::Init()'],['../classjpt_1_1_renderer_base.html#a98352b83ebc5e291db8869c177984c22',1,'jpt::RendererBase::Init()']]],
-  ['insert_1',['insert',['../classjpt_1_1list.html#a8ffcc2ac06411dd6d987017be4b4e6db',1,'jpt::list::insert(size_t index, const ValueType &amp;value)'],['../classjpt_1_1list.html#a7728b61cd79cf23ddb7b7e7914ff5149',1,'jpt::list::insert(size_t index, ValueType &amp;&amp;value)'],['../classjpt_1_1unordered__map.html#a2b1b5c89b37fe713c33327dbbc5a2684',1,'jpt::unordered_map::insert()'],['../classjpt_1_1vector.html#a10a97a53e2032c2a69863471693ae43f',1,'jpt::vector::insert(size_t index, const ValueType &amp;value)'],['../classjpt_1_1vector.html#a2d49ee1bce1dde054f35ef91c6c7054c',1,'jpt::vector::insert(size_t index, ValueType &amp;&amp;value)']]],
-  ['itoa_2',['itoa',['../namespacejpt.html#a2cf20a3f0e9e3cf66172e4586340dc2b',1,'jpt']]]
+  ['has_5fvalue_0',['has_value',['../classjpt_1_1optional.html#aaaf04a225e2d68d30c7f122fd2775b04',1,'jpt::optional']]]
 ];

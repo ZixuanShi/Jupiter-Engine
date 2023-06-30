@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pair_0',['pair',['../structjpt_1_1pair.html',1,'jpt']]]
+  ['optional_0',['optional',['../classjpt_1_1optional.html',1,'jpt']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.7"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Jupiter Engine: C:/Program Files/Jupiter Technologies/Jupiter Engine/Source/Core/Types/StringView.h Source File</title>
+<title>Jupiter Engine: C:/Program Files/Jupiter Technologies/Jupiter Engine/Source/Core/Misc/StringView.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -123,7 +123,7 @@ $(document).ready(function(){initNavTree('_string_view_8h_source.html',''); init
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="classjpt_1_1basic__string__view.html#ac7f44f95c2a510bef015d9af20996065">operator==</a>(<span class="keyword">const</span> <a class="code hl_class" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view&lt;CharType&gt;</a>&amp; inStringView) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="comment">// Jupiter custom</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        JPT_API <span class="keyword">friend</span> std::ostream&amp; <a class="code hl_friend" href="classjpt_1_1basic__string__view.html#a9525fbe23bcd78738801964a686437b3">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> <a class="code hl_class" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view&lt;CharType&gt;</a>&amp; <span class="keywordtype">string</span>);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_define" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <span class="keyword">friend</span> std::ostream&amp; <a class="code hl_friend" href="classjpt_1_1basic__string__view.html#a9525fbe23bcd78738801964a686437b3">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> <a class="code hl_class" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view&lt;CharType&gt;</a>&amp; <span class="keywordtype">string</span>);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    };</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CharType&gt;</div>
@@ -196,14 +196,15 @@ $(document).ready(function(){initNavTree('_string_view_8h_source.html',''); init
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> CharType&gt;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classjpt_1_1basic__string__view.html#a9525fbe23bcd78738801964a686437b3">  104</a></span>    <span class="keyword">inline</span> std::ostream&amp; <a class="code hl_function" href="namespacejpt.html#abaf19eaf5f17612398073d2b01289e40">operator&lt;&lt;</a>(std::ostream&amp; stream, <span class="keyword">const</span> <a class="code hl_class" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view&lt;CharType&gt;</a>&amp; <span class="keywordtype">string</span>)</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    {</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        printf(<span class="stringliteral">&quot;%.*s&quot;</span>, <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a><span class="keyword">&gt;</span>(<span class="keywordtype">string</span>.size()), <span class="keywordtype">string</span>.data());</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        printf(<span class="stringliteral">&quot;%.*s&quot;</span>, <span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a><span class="keyword">&gt;</span>(<span class="keywordtype">string</span>.size()), <span class="keywordtype">string</span>.data());</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">return</span> stream;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="namespacejpt.html#ad0085235ff5d39dfede30179c503c042">  110</a></span>    <span class="keyword">using </span><a class="code hl_class" href="classjpt_1_1basic__string__view.html">string_view</a> = <a class="code hl_class" href="classjpt_1_1basic__string__view.html">basic_string_view&lt;char&gt;</a>;</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="namespacejpt.html#a3ad35628ff57500dd3e3a1a634140598">  111</a></span>    <span class="keyword">using </span><a class="code hl_class" href="classjpt_1_1basic__string__view.html">wstring_view</a> = <a class="code hl_class" href="classjpt_1_1basic__string__view.html">basic_string_view&lt;wchar_t&gt;</a>;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
-<div class="ttc" id="a_types_8h_html_a3271a6f688eb2ba4047a2982ff49919a"><div class="ttname"><a href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a></div><div class="ttdeci">int32_t int32</div><div class="ttdef"><b>Definition</b> Types.h:10</div></div>
+<div class="ttc" id="a_building_macros_8h_html_ac80d7217134ce48ac52913a694c7068f"><div class="ttname"><a href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a></div><div class="ttdeci">#define JPT_API</div><div class="ttdef"><b>Definition</b> BuildingMacros.h:13</div></div>
+<div class="ttc" id="a_type_defs_8h_html_a3271a6f688eb2ba4047a2982ff49919a"><div class="ttname"><a href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a></div><div class="ttdeci">int32_t int32</div><div class="ttdef"><b>Definition</b> TypeDefs.h:10</div></div>
 <div class="ttc" id="aclassjpt_1_1basic__string__view_html"><div class="ttname"><a href="classjpt_1_1basic__string__view.html">jpt::basic_string_view</a></div><div class="ttdef"><b>Definition</b> StringView.h:10</div></div>
 <div class="ttc" id="aclassjpt_1_1basic__string__view_html_a25ff7a94143f868ffd3ba50def95d436"><div class="ttname"><a href="classjpt_1_1basic__string__view.html#a25ff7a94143f868ffd3ba50def95d436">jpt::basic_string_view::data</a></div><div class="ttdeci">const CharType * data() const</div><div class="ttdef"><b>Definition</b> StringView.h:23</div></div>
 <div class="ttc" id="aclassjpt_1_1basic__string__view_html_a4355240f0b55fb77ff669fab12a585a8"><div class="ttname"><a href="classjpt_1_1basic__string__view.html#a4355240f0b55fb77ff669fab12a585a8">jpt::basic_string_view::basic_string_view</a></div><div class="ttdeci">basic_string_view()=delete</div></div>
@@ -217,13 +218,13 @@ $(document).ready(function(){initNavTree('_string_view_8h_source.html',''); init
 <div class="ttc" id="anamespacejpt_html_abfa1a0a97c02dc7a01d06b77daa1ac4e"><div class="ttname"><a href="namespacejpt.html#abfa1a0a97c02dc7a01d06b77daa1ac4e">jpt::strlen</a></div><div class="ttdeci">size_t strlen(const char *inString)</div><div class="ttdef"><b>Definition</b> StringAlgorithms.cpp:8</div></div>
 <div class="ttc" id="anamespacejpt_html_ada8ed5898c6b6e329b21e049a59bde4f"><div class="ttname"><a href="namespacejpt.html#ada8ed5898c6b6e329b21e049a59bde4f">jpt::wcslen</a></div><div class="ttdeci">size_t wcslen(const wchar_t *inString)</div><div class="ttdef"><b>Definition</b> StringAlgorithms.cpp:24</div></div>
 <div class="ttc" id="anamespacejpt_html_adc52545974343cf6511f12bce43079b4"><div class="ttname"><a href="namespacejpt.html#adc52545974343cf6511f12bce43079b4">jpt::strncmp</a></div><div class="ttdeci">int32 strncmp(const char *string1, const char *string2, size_t size)</div><div class="ttdef"><b>Definition</b> StringAlgorithms.cpp:107</div></div>
-<div class="ttc" id="astructjpt_1_1_is_same_type_html"><div class="ttname"><a href="structjpt_1_1_is_same_type.html">jpt::IsSameType</a></div><div class="ttdef"><b>Definition</b> Types.h:42</div></div>
+<div class="ttc" id="astructjpt_1_1_is_same_type_html"><div class="ttname"><a href="structjpt_1_1_is_same_type.html">jpt::IsSameType</a></div><div class="ttdef"><b>Definition</b> TypeDefs.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="dir_b800b5b3f149b8aa913123d02efda8e1.html">Types</a></li><li class="navelem"><a class="el" href="_string_view_8h.html">StringView.h</a></li>
+    <li class="navelem"><a class="el" href="dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="dir_1ad6433457b0067ef8f54a4fa85f5c9a.html">Core</a></li><li class="navelem"><a class="el" href="dir_8782ab92b05364f3adf44873c3d0ff76.html">Misc</a></li><li class="navelem"><a class="el" href="_string_view_8h.html">StringView.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

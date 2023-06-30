@@ -12,8 +12,9 @@ var searchData=
   ['rendererbase_2eh_9',['RendererBase.h',['../_renderer_base_8h.html',1,'']]],
   ['replace_10',['replace',['../classjpt_1_1basic__string.html#a5ef61cfe94e715443a2a17aac416c0f0',1,'jpt::basic_string']]],
   ['reserve_11',['reserve',['../classjpt_1_1vector.html#a80f81e7fb88a852a77b2972cb6d30ace',1,'jpt::vector']]],
-  ['resize_12',['resize',['../classjpt_1_1vector.html#ad020861ebb3d2d95c0c8395d771a86b2',1,'jpt::vector::resize(size_t count)'],['../classjpt_1_1vector.html#aa60668eb7c2d89fefb299bc71ab0c960',1,'jpt::vector::resize(size_t count, const ValueType &amp;value)']]],
-  ['rungameloop_13',['RunGameLoop',['../classjpt_1_1_application_base.html#a2f1df4827aed94fea781dccfa70c8b41',1,'jpt::ApplicationBase::RunGameLoop()'],['../classjpt_1_1_win64_application.html#abcc4ee83e96541320ed4a480e546749b',1,'jpt::Win64Application::RunGameLoop()']]],
-  ['rvaluetolvaluereference_14',['RValueToLValueReference',['../structjpt_1_1_r_value_to_l_value_reference.html',1,'jpt']]],
-  ['rvaluetolvaluereference_3c_20t_20_26_26_20_3e_15',['RValueToLValueReference&lt; T &amp;&amp; &gt;',['../structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4.html',1,'jpt']]]
+  ['reset_12',['reset',['../classjpt_1_1optional.html#acae5e8b3c35541d3bd0bf57046221d57',1,'jpt::optional']]],
+  ['resize_13',['resize',['../classjpt_1_1vector.html#ad020861ebb3d2d95c0c8395d771a86b2',1,'jpt::vector::resize(size_t count)'],['../classjpt_1_1vector.html#aa60668eb7c2d89fefb299bc71ab0c960',1,'jpt::vector::resize(size_t count, const ValueType &amp;value)']]],
+  ['rungameloop_14',['RunGameLoop',['../classjpt_1_1_application_base.html#a2f1df4827aed94fea781dccfa70c8b41',1,'jpt::ApplicationBase::RunGameLoop()'],['../classjpt_1_1_win64_application.html#abcc4ee83e96541320ed4a480e546749b',1,'jpt::Win64Application::RunGameLoop()']]],
+  ['rvaluetolvaluereference_15',['RValueToLValueReference',['../structjpt_1_1_r_value_to_l_value_reference.html',1,'jpt']]],
+  ['rvaluetolvaluereference_3c_20t_20_26_26_20_3e_16',['RValueToLValueReference&lt; T &amp;&amp; &gt;',['../structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4.html',1,'jpt']]]
 ];

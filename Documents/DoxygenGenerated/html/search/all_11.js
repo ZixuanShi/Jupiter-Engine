@@ -18,14 +18,12 @@ var searchData=
   ['stringalgorithms_2ecpp_15',['StringAlgorithms.cpp',['../_string_algorithms_8cpp.html',1,'']]],
   ['stringalgorithms_2eh_16',['StringAlgorithms.h',['../_string_algorithms_8h.html',1,'']]],
   ['stringcmp_17',['StringCmp',['../namespacejpt.html#a12b1fb59d91e98fcbc5a3df23f146e91',1,'jpt']]],
-  ['stringhash32_18',['StringHash32',['../namespacejpt.html#ab2c41bb7ff2cac6bf62f3da19293d3bc',1,'jpt']]],
-  ['stringhash64_19',['StringHash64',['../namespacejpt.html#a4354836a950d391cfd04aa1496d9a7af',1,'jpt']]],
-  ['stringview_2eh_20',['StringView.h',['../_string_view_8h.html',1,'']]],
-  ['strlen_21',['strlen',['../namespacejpt.html#abfa1a0a97c02dc7a01d06b77daa1ac4e',1,'jpt']]],
-  ['strncmp_22',['strncmp',['../namespacejpt.html#adc52545974343cf6511f12bce43079b4',1,'jpt']]],
-  ['strncmp_23',['StrNCmp',['../namespacejpt.html#abb6eaa2ac86cd449a51517ac16bc4861',1,'jpt']]],
-  ['strncpy_24',['StrNCpy',['../namespacejpt.html#a187f9975268a23f60441284364fbc25e',1,'jpt']]],
-  ['substr_25',['substr',['../classjpt_1_1basic__string.html#ade63b3468a4f892e2b9f17eb89d42fa5',1,'jpt::basic_string']]],
-  ['swap_26',['swap',['../namespacejpt.html#a1c97aa9176b5d959dc3a3b3489826c1f',1,'jpt']]],
-  ['systemheaders_2eh_27',['SystemHeaders.h',['../_system_headers_8h.html',1,'']]]
+  ['stringview_2eh_18',['StringView.h',['../_string_view_8h.html',1,'']]],
+  ['strlen_19',['strlen',['../namespacejpt.html#abfa1a0a97c02dc7a01d06b77daa1ac4e',1,'jpt']]],
+  ['strncmp_20',['StrNCmp',['../namespacejpt.html#abb6eaa2ac86cd449a51517ac16bc4861',1,'jpt']]],
+  ['strncmp_21',['strncmp',['../namespacejpt.html#adc52545974343cf6511f12bce43079b4',1,'jpt']]],
+  ['strncpy_22',['StrNCpy',['../namespacejpt.html#a187f9975268a23f60441284364fbc25e',1,'jpt']]],
+  ['substr_23',['substr',['../classjpt_1_1basic__string.html#ade63b3468a4f892e2b9f17eb89d42fa5',1,'jpt::basic_string']]],
+  ['swap_24',['swap',['../namespacejpt.html#a1c97aa9176b5d959dc3a3b3489826c1f',1,'jpt']]],
+  ['systemheaders_2eh_25',['SystemHeaders.h',['../_system_headers_8h.html',1,'']]]
 ];

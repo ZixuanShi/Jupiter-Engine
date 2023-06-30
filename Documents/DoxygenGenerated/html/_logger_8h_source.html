@@ -110,7 +110,7 @@ $(document).ready(function(){initNavTree('_logger_8h_source.html',''); initResiz
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    #define JPT_ERROR(message, ...)         </span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classjpt_1_1_logger.html">   20</a></span>    <span class="keyword">class </span>JPT_API <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classjpt_1_1_logger.html">   20</a></span>    <span class="keyword">class </span><a class="code hl_define" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classjpt_1_1_logger.html#a3b7f7b54c72aebed36c207cec7364bba">   23</a></span>        <a class="code hl_function" href="classjpt_1_1_logger.html#a3b7f7b54c72aebed36c207cec7364bba">JPT_ENUM</a>(ELogType,</div>
@@ -119,24 +119,21 @@ $(document).ready(function(){initNavTree('_logger_8h_source.html',''); initResiz
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            Warning,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            Error);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="keyword">static</span> <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a> s_instance;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> ELogType&amp; type, <a class="code hl_typedef" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> line, <span class="keyword">const</span> <span class="keywordtype">char</span>* file, <span class="keyword">const</span> <span class="keywordtype">char</span>* format, ...);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keywordtype">string</span>);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> <span class="keywordtype">wchar_t</span>* wideString);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classjpt_1_1_logger.html#aa1f62c4a873c0c3829b4eab4139f3ccf">   42</a></span>        <span class="keyword">static</span> <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a>&amp; <a class="code hl_function" href="classjpt_1_1_logger.html#aa1f62c4a873c0c3829b4eab4139f3ccf">GetInstance</a>() { <span class="keywordflow">return</span> s_instance; }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    };</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="ttc" id="a_types_8h_html_a3271a6f688eb2ba4047a2982ff49919a"><div class="ttname"><a href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a></div><div class="ttdeci">int32_t int32</div><div class="ttdef"><b>Definition</b> Types.h:10</div></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> ELogType&amp; type, <a class="code hl_typedef" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> line, <span class="keyword">const</span> <span class="keywordtype">char</span>* file, <span class="keyword">const</span> <span class="keywordtype">char</span>* format, ...);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> <span class="keywordtype">char</span>* <span class="keywordtype">string</span>);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordtype">void</span> Log(<span class="keyword">const</span> <span class="keywordtype">wchar_t</span>* wideString);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">static</span> <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a>&amp; GetInstance();</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <a class="code hl_class" href="classjpt_1_1_logger.html">Logger</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    };</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
+<div class="ttc" id="a_building_macros_8h_html_ac80d7217134ce48ac52913a694c7068f"><div class="ttname"><a href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a></div><div class="ttdeci">#define JPT_API</div><div class="ttdef"><b>Definition</b> BuildingMacros.h:13</div></div>
+<div class="ttc" id="a_type_defs_8h_html_a3271a6f688eb2ba4047a2982ff49919a"><div class="ttname"><a href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a></div><div class="ttdeci">int32_t int32</div><div class="ttdef"><b>Definition</b> TypeDefs.h:10</div></div>
 <div class="ttc" id="aclassjpt_1_1_logger_html"><div class="ttname"><a href="classjpt_1_1_logger.html">jpt::Logger</a></div><div class="ttdef"><b>Definition</b> Logger.h:21</div></div>
 <div class="ttc" id="aclassjpt_1_1_logger_html_a3b7f7b54c72aebed36c207cec7364bba"><div class="ttname"><a href="classjpt_1_1_logger.html#a3b7f7b54c72aebed36c207cec7364bba">jpt::Logger::JPT_ENUM</a></div><div class="ttdeci">JPT_ENUM(ELogType, Log, SystemInfo, Warning, Error)</div></div>
-<div class="ttc" id="aclassjpt_1_1_logger_html_aa1f62c4a873c0c3829b4eab4139f3ccf"><div class="ttname"><a href="classjpt_1_1_logger.html#aa1f62c4a873c0c3829b4eab4139f3ccf">jpt::Logger::GetInstance</a></div><div class="ttdeci">static Logger &amp; GetInstance()</div><div class="ttdef"><b>Definition</b> Logger.h:42</div></div>
 <div class="ttc" id="anamespacejpt_html"><div class="ttname"><a href="namespacejpt.html">jpt</a></div><div class="ttdef"><b>Definition</b> ApplicationBase.cpp:10</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

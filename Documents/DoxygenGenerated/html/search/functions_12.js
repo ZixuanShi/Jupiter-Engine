@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['wcslen_0',['wcslen',['../namespacejpt.html#ada8ed5898c6b6e329b21e049a59bde4f',1,'jpt']]],
-  ['wcsncmp_1',['wcsncmp',['../namespacejpt.html#ab9fba99c352035c1e8e00d62c132ac78',1,'jpt']]],
-  ['windowproc_2',['WindowProc',['../classjpt_1_1_win64_application.html#af3c9ab0c02b2165607c66892e7d51880',1,'jpt::Win64Application']]]
+  ['value_0',['value',['../classjpt_1_1optional.html#a1ba469ec12cb5e301b481d4a5216cd5c',1,'jpt::optional::value() const'],['../classjpt_1_1optional.html#a30017c4528a3a945c071e62cfdaacf65',1,'jpt::optional::value()']]],
+  ['vector_1',['vector',['../classjpt_1_1vector.html#ab0e39e3f253ff7cde6dedc38e12ffbc7',1,'jpt::vector::vector()=default'],['../classjpt_1_1vector.html#ae0f59a527cd4ab5e7eb7b2e2494aa9f6',1,'jpt::vector::vector(const std::initializer_list&lt; ValueType &gt; &amp;initializerList)'],['../classjpt_1_1vector.html#a6f0c0ebe67ec84f85c1accb67faa4f51',1,'jpt::vector::vector(const jpt::vector&lt; ValueType &gt; &amp;other)'],['../classjpt_1_1vector.html#a02e6dfed6ac7adb7524c711aaae81c90',1,'jpt::vector::vector(jpt::vector&lt; ValueType &gt; &amp;&amp;other) noexcept']]],
+  ['vector3_2',['Vector3',['../classjpt_1_1_vector3.html#acd3c0993c3c89048b908e5c4449e68a4',1,'jpt::Vector3::Vector3()=default'],['../classjpt_1_1_vector3.html#ae1c6d356567a1d1117ee9650d8469f5e',1,'jpt::Vector3::Vector3(Type value)'],['../classjpt_1_1_vector3.html#aee33f14a65050aed3a89f44d168d28ba',1,'jpt::Vector3::Vector3(Type _x, Type _y, Type _z)']]]
 ];

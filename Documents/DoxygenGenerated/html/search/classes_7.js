@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jsonparser_0',['JsonParser',['../classjpt_1_1_json_parser.html',1,'jpt']]]
+  ['jsonfile_0',['JsonFile',['../classjpt_1_1_json_file.html',1,'jpt']]]
 ];

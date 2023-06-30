@@ -1,13 +1,30 @@
 {
-	"EngineName": "Jupiter",
+	"Name": "Jupiter",
 	"Author": "Zixuan",
 	"Version": 0,
 	"IsPromising": true,
-	"Player": 
+	"Player1": 
 	{
-		"Name": "HeyYo",
-		"iso_language_code": ["1", "23", "OMG"]
+		"Name": "Jax",
+		"Location": [12, 0, 1],
+		"Health": 352,
+		"Inventory": 
+		{
+			"Stick": 1,
+			"HealthPortion": 2,
+			"Pink" : 1
+		}
+	},
+	"Player2": 
+	{
+		"Name": "Darius",
+		"Location": [-2, -55, 15],
+		"Health": 270,
+		"Inventory": 
+		{
+			"Axe" : 1,
+			"ManaPotion": 5
+		}
 	},
 	"PI": 3.1415
-
 }

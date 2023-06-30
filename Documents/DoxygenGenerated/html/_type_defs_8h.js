@@ -1,0 +1,28 @@
+var _type_defs_8h =
+[
+    [ "jpt::RemoveReference< T >", "structjpt_1_1_remove_reference.html", "structjpt_1_1_remove_reference" ],
+    [ "jpt::RemoveReference< T & >", "structjpt_1_1_remove_reference_3_01_t_01_6_01_4.html", "structjpt_1_1_remove_reference_3_01_t_01_6_01_4" ],
+    [ "jpt::RemoveReference< T && >", "structjpt_1_1_remove_reference_3_01_t_01_6_6_01_4.html", "structjpt_1_1_remove_reference_3_01_t_01_6_6_01_4" ],
+    [ "jpt::RemoveConst< T >", "structjpt_1_1_remove_const.html", "structjpt_1_1_remove_const" ],
+    [ "jpt::RemoveConst< const T >", "structjpt_1_1_remove_const_3_01const_01_t_01_4.html", "structjpt_1_1_remove_const_3_01const_01_t_01_4" ],
+    [ "jpt::IsLValueReferenceType< T >", "structjpt_1_1_is_l_value_reference_type.html", null ],
+    [ "jpt::IsLValueReferenceType< T & >", "structjpt_1_1_is_l_value_reference_type_3_01_t_01_6_01_4.html", null ],
+    [ "jpt::IsRValueReferenceType< T >", "structjpt_1_1_is_r_value_reference_type.html", null ],
+    [ "jpt::IsRValueReferenceType< T && >", "structjpt_1_1_is_r_value_reference_type_3_01_t_01_6_6_01_4.html", null ],
+    [ "jpt::RValueToLValueReference< T >", "structjpt_1_1_r_value_to_l_value_reference.html", "structjpt_1_1_r_value_to_l_value_reference" ],
+    [ "jpt::RValueToLValueReference< T && >", "structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4.html", "structjpt_1_1_r_value_to_l_value_reference_3_01_t_01_6_6_01_4" ],
+    [ "jpt::IsSameType< A, B >", "structjpt_1_1_is_same_type.html", null ],
+    [ "jpt::IsSameType< A, A >", "structjpt_1_1_is_same_type_3_01_a_00_01_a_01_4.html", null ],
+    [ "Clock", "_type_defs_8h.html#a27a945df562aee8f601b121ddf163a8b", null ],
+    [ "int32", "_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a", null ],
+    [ "int64", "_type_defs_8h.html#ad2d958ccdb69773a12a7cb71d87a412e", null ],
+    [ "TimeDuration", "_type_defs_8h.html#a1396dca0eebcab036d29744f63850d0e", null ],
+    [ "TimePoint", "_type_defs_8h.html#a74d807285bc047455765ff2560555184", null ],
+    [ "TimingPrecision", "_type_defs_8h.html#abc6c8048077cfc392444eb2c46eae4cb", null ],
+    [ "uint16", "_type_defs_8h.html#aa720ba8c0d1dcc513c82c51d3f6e9995", null ],
+    [ "uint32", "_type_defs_8h.html#a5522c54735d837fae7d6ba026b858441", null ],
+    [ "uint64", "_type_defs_8h.html#aca0ba831b19773ec091e57f5cf76a1fb", null ],
+    [ "uint8", "_type_defs_8h.html#aa17fc6cc2c9a4ad80e9fcdd3f64320e1", null ],
+    [ "kDefaultValue", "_type_defs_8h.html#a46653f80e58a21ae82ede02fad117c06", null ],
+    [ "kInvalidValue", "_type_defs_8h.html#a0ea24f652936d0ba968fbf5c99496ebc", null ]
+];

@@ -7,12 +7,15 @@ var hierarchy =
     [ "jpt::basic_string< char >", "classjpt_1_1basic__string.html", null ],
     [ "jpt::basic_string< wchar_t >", "classjpt_1_1basic__string.html", null ],
     [ "jpt::basic_string_view< CharType >", "classjpt_1_1basic__string__view.html", null ],
+    [ "jpt::JsonFile::Data", "structjpt_1_1_json_file_1_1_data.html", null ],
     [ "EnumInfo", null, [
       [ "jpt::Enum< EnumInfo >", "classjpt_1_1_enum.html", null ]
     ] ],
     [ "jpt::EnumSearchInfo", "structjpt_1_1_enum_search_info.html", null ],
     [ "jpt::EnumStringInfo", "structjpt_1_1_enum_string_info.html", null ],
-    [ "jpt::File", "classjpt_1_1_file.html", null ],
+    [ "jpt::File", "classjpt_1_1_file.html", [
+      [ "jpt::JsonFile", "classjpt_1_1_json_file.html", null ]
+    ] ],
     [ "jpt::FilePathUtils", "classjpt_1_1_file_path_utils.html", null ],
     [ "jpt::hash< KeyType >", "structjpt_1_1hash.html", null ],
     [ "jpt::hash< const char * >", "structjpt_1_1hash_3_01const_01char_01_5_01_4.html", null ],
@@ -23,11 +26,12 @@ var hierarchy =
     [ "jpt::IsRValueReferenceType< T && >", "structjpt_1_1_is_r_value_reference_type_3_01_t_01_6_6_01_4.html", null ],
     [ "jpt::IsSameType< A, B >", "structjpt_1_1_is_same_type.html", null ],
     [ "jpt::IsSameType< A, A >", "structjpt_1_1_is_same_type_3_01_a_00_01_a_01_4.html", null ],
-    [ "jpt::JsonParser", "classjpt_1_1_json_parser.html", null ],
     [ "jpt::LinearColor", "classjpt_1_1_linear_color.html", null ],
     [ "jpt::list< _ValueType >", "classjpt_1_1list.html", null ],
     [ "jpt::Logger", "classjpt_1_1_logger.html", null ],
+    [ "jpt::optional< _ValueType >", "classjpt_1_1optional.html", null ],
     [ "jpt::pair< TypeA, TypeB >", "structjpt_1_1pair.html", null ],
+    [ "jpt::PathInfo< StringType >", "structjpt_1_1_path_info.html", null ],
     [ "jpt::RemoveConst< T >", "structjpt_1_1_remove_const.html", null ],
     [ "jpt::RemoveConst< const T >", "structjpt_1_1_remove_const_3_01const_01_t_01_4.html", null ],
     [ "jpt::RemoveReference< T >", "structjpt_1_1_remove_reference.html", null ],

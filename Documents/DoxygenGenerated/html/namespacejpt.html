@@ -92,6 +92,7 @@ $(document).ready(function(){initNavTree('namespacejpt.html',''); initResizable(
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">jpt Namespace Reference</div></div>
@@ -136,7 +137,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_is_same_type_3_01_a_00_01_a_01_4.html">IsSameType&lt; A, A &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_json_parser.html">JsonParser</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_json_file.html">JsonFile</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_linear_color.html">LinearColor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,7 +145,11 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_logger.html">Logger</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1optional.html">optional</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1pair.html">pair</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_path_info.html">PathInfo</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjpt_1_1_remove_const.html">RemoveConst</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,7 +188,7 @@ Classes</h2></td></tr>
 Typedefs</h2></td></tr>
 <tr class="memitem:aa01b3376d8d76539757010c278b392c1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aa01b3376d8d76539757010c278b392c1">FVec3</a> = <a class="el" href="classjpt_1_1_vector3.html">Vector3</a>&lt; float &gt;</td></tr>
 <tr class="separator:aa01b3376d8d76539757010c278b392c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdb2eb8de81fb0546bc2a02ca57fd05c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#acdb2eb8de81fb0546bc2a02ca57fd05c">IVec3</a> = <a class="el" href="classjpt_1_1_vector3.html">Vector3</a>&lt; <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &gt;</td></tr>
+<tr class="memitem:acdb2eb8de81fb0546bc2a02ca57fd05c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#acdb2eb8de81fb0546bc2a02ca57fd05c">IVec3</a> = <a class="el" href="classjpt_1_1_vector3.html">Vector3</a>&lt; <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &gt;</td></tr>
 <tr class="separator:acdb2eb8de81fb0546bc2a02ca57fd05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af27e0194c55d40b135b3bdf5d6329b81"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a> = <a class="el" href="classjpt_1_1basic__string.html">basic_string</a>&lt; char &gt;</td></tr>
 <tr class="separator:af27e0194c55d40b135b3bdf5d6329b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,6 +207,14 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a1396dca0eebcab036d29744f63850d0e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a1396dca0eebcab036d29744f63850d0e">TimeDuration</a> = std::chrono::duration&lt; <a class="el" href="namespacejpt.html#abc6c8048077cfc392444eb2c46eae4cb">TimingPrecision</a> &gt;</td></tr>
 <tr class="separator:a1396dca0eebcab036d29744f63850d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a0e72292b9c781a75f9d32f003744267d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a0e72292b9c781a75f9d32f003744267d">EDirectoryType</a> { <a class="el" href="namespacejpt.html#a0e72292b9c781a75f9d32f003744267da7bfa30721c5e726ff17e3f972237a82c">Engine</a> = 1 &lt;&lt; 0
+, <a class="el" href="namespacejpt.html#a0e72292b9c781a75f9d32f003744267da63d72051e901c069f8aa1b32aa0c43bb">Game</a> = 1 &lt;&lt; 1
+, <a class="el" href="namespacejpt.html#a0e72292b9c781a75f9d32f003744267da29c2c02a361c9d7028472e5d92cd4a54">Output</a> = 1 &lt;&lt; 2
+ }</td></tr>
+<tr class="separator:a0e72292b9c781a75f9d32f003744267d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a3ceb8a7d2439a95cfcd084fd979ccee0"><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
@@ -214,16 +227,12 @@ Functions</h2></td></tr>
 <tr class="separator:abfa1a0a97c02dc7a01d06b77daa1ac4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada8ed5898c6b6e329b21e049a59bde4f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ada8ed5898c6b6e329b21e049a59bde4f">wcslen</a> (const wchar_t *inString)</td></tr>
 <tr class="separator:ada8ed5898c6b6e329b21e049a59bde4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf20a3f0e9e3cf66172e4586340dc2b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2cf20a3f0e9e3cf66172e4586340dc2b">itoa</a> (<a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> base)</td></tr>
+<tr class="memitem:a2cf20a3f0e9e3cf66172e4586340dc2b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2cf20a3f0e9e3cf66172e4586340dc2b">itoa</a> (<a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> base)</td></tr>
 <tr class="separator:a2cf20a3f0e9e3cf66172e4586340dc2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc52545974343cf6511f12bce43079b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#adc52545974343cf6511f12bce43079b4">strncmp</a> (const char *string1, const char *string2, size_t size)</td></tr>
+<tr class="memitem:adc52545974343cf6511f12bce43079b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#adc52545974343cf6511f12bce43079b4">strncmp</a> (const char *string1, const char *string2, size_t size)</td></tr>
 <tr class="separator:adc52545974343cf6511f12bce43079b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9fba99c352035c1e8e00d62c132ac78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab9fba99c352035c1e8e00d62c132ac78">wcsncmp</a> (const wchar_t *string1, const wchar_t *string2, size_t size)</td></tr>
+<tr class="memitem:ab9fba99c352035c1e8e00d62c132ac78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab9fba99c352035c1e8e00d62c132ac78">wcsncmp</a> (const wchar_t *string1, const wchar_t *string2, size_t size)</td></tr>
 <tr class="separator:ab9fba99c352035c1e8e00d62c132ac78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2c41bb7ff2cac6bf62f3da19293d3bc"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="_types_8h.html#a5522c54735d837fae7d6ba026b858441">uint32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab2c41bb7ff2cac6bf62f3da19293d3bc">StringHash32</a> (const char *const str, const <a class="el" href="_types_8h.html#a5522c54735d837fae7d6ba026b858441">uint32</a> value) noexcept</td></tr>
-<tr class="separator:ab2c41bb7ff2cac6bf62f3da19293d3bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4354836a950d391cfd04aa1496d9a7af"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="_types_8h.html#aca0ba831b19773ec091e57f5cf76a1fb">uint64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a4354836a950d391cfd04aa1496d9a7af">StringHash64</a> (const char *const str, const <a class="el" href="_types_8h.html#aca0ba831b19773ec091e57f5cf76a1fb">uint64</a> value) noexcept</td></tr>
-<tr class="separator:a4354836a950d391cfd04aa1496d9a7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memTemplParams" colspan="2">template&lt;typename CharType &gt; </td></tr>
 <tr class="memitem:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a3a6ed1f7e254f92ade469d90a7784b03">GetStrLength</a> (const CharType *inString)</td></tr>
 <tr class="separator:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -245,40 +254,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a6145709c8a69e16116b5a8c2bd503533"><td class="memTemplParams" colspan="2">template&lt;class TypeA , class TypeB &gt; </td></tr>
 <tr class="memitem:a6145709c8a69e16116b5a8c2bd503533"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structjpt_1_1pair.html">pair</a>&lt; TypeA, TypeB &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a6145709c8a69e16116b5a8c2bd503533">make_pair</a> (TypeA &amp;&amp;inFirst, TypeB &amp;&amp;inSecond)</td></tr>
 <tr class="separator:a6145709c8a69e16116b5a8c2bd503533"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aa13fce73ee3554cddb34d02f4816f7"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a6aa13fce73ee3554cddb34d02f4816f7">GetEngineDir</a> ()</td></tr>
-<tr class="separator:a6aa13fce73ee3554cddb34d02f4816f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e39ead799fa386c953d876035000c1f"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a4e39ead799fa386c953d876035000c1f">GetEngineDirW</a> ()</td></tr>
-<tr class="separator:a4e39ead799fa386c953d876035000c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48557efa036ad18804949e3944291541"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a48557efa036ad18804949e3944291541">GetOutputDir</a> ()</td></tr>
-<tr class="separator:a48557efa036ad18804949e3944291541"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb5b5a19ad0c0522e459c67b718a68dd"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aeb5b5a19ad0c0522e459c67b718a68dd">GetOutputDirW</a> ()</td></tr>
-<tr class="separator:aeb5b5a19ad0c0522e459c67b718a68dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af83c9c062671b9aa775967a937195d59"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#af83c9c062671b9aa775967a937195d59">GetEngineAssetPath</a> (const char *pDetailPath)</td></tr>
-<tr class="separator:af83c9c062671b9aa775967a937195d59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa78c81d00dc84cbc260100f9116cc51f"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aa78c81d00dc84cbc260100f9116cc51f">GetEngineAssetPathW</a> (const wchar_t *pDetailPath)</td></tr>
-<tr class="separator:aa78c81d00dc84cbc260100f9116cc51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab58df6463e1df59a4819e41ab93e0041"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab58df6463e1df59a4819e41ab93e0041">GetOutputAssetPath</a> (const char *pDetailPath)</td></tr>
-<tr class="separator:ab58df6463e1df59a4819e41ab93e0041"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae433732c399d5a8d33742ee816b5deeb"><td class="memItemLeft" align="right" valign="top">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ae433732c399d5a8d33742ee816b5deeb">GetOutputAssetPathW</a> (const wchar_t *pDetailPath)</td></tr>
-<tr class="separator:ae433732c399d5a8d33742ee816b5deeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3caa50f82a08ad783142e24c9ac430b"><td class="memTemplParams" colspan="2">template&lt;class StringType &gt; </td></tr>
-<tr class="memitem:ac3caa50f82a08ad783142e24c9ac430b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ac3caa50f82a08ad783142e24c9ac430b">FixSlashes</a> (StringType &amp;path)</td></tr>
-<tr class="separator:ac3caa50f82a08ad783142e24c9ac430b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memTemplParams" colspan="2">template&lt;class StringType &gt; </td></tr>
-<tr class="memitem:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memTemplItemLeft" align="right" valign="top">StringType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a8bf2ff847d63c27bf3796580830d7ce5">FixedSlashes</a> (StringType &amp;&amp;path)</td></tr>
-<tr class="separator:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2625f9a31e729d8776660837a5ef0a4d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2625f9a31e729d8776660837a5ef0a4d">locIsValid</a> (char c)</td></tr>
 <tr class="separator:a2625f9a31e729d8776660837a5ef0a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af96aa7cae04a44ddf02d53f7b36648e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#af96aa7cae04a44ddf02d53f7b36648e3">locIsWhiteSpace</a> (char c)</td></tr>
 <tr class="separator:af96aa7cae04a44ddf02d53f7b36648e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a233628e29e43dab7e30d27603e76fc5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a233628e29e43dab7e30d27603e76fc5f">BuildEnumStringInfos</a> (const char *rawEnumString, <a class="el" href="structjpt_1_1_enum_string_info.html">EnumStringInfo</a> *infos, <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> start, size_t count)</td></tr>
+<tr class="memitem:a233628e29e43dab7e30d27603e76fc5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a233628e29e43dab7e30d27603e76fc5f">BuildEnumStringInfos</a> (const char *rawEnumString, <a class="el" href="structjpt_1_1_enum_string_info.html">EnumStringInfo</a> *infos, <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> start, size_t count)</td></tr>
 <tr class="separator:a233628e29e43dab7e30d27603e76fc5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a24e554bbc1d3633a03b83fd052b339"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a4a24e554bbc1d3633a03b83fd052b339">GetSubString</a> (<a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;searchInfo)</td></tr>
+<tr class="memitem:a4a24e554bbc1d3633a03b83fd052b339"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a4a24e554bbc1d3633a03b83fd052b339">GetSubString</a> (<a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;searchInfo)</td></tr>
 <tr class="separator:a4a24e554bbc1d3633a03b83fd052b339"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59ef7d98aafedb4e0415f6a13d9b9578"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#ad0085235ff5d39dfede30179c503c042">jpt::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a59ef7d98aafedb4e0415f6a13d9b9578">GetSubStringView</a> (<a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;searchInfo)</td></tr>
+<tr class="memitem:a59ef7d98aafedb4e0415f6a13d9b9578"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#ad0085235ff5d39dfede30179c503c042">jpt::string_view</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a59ef7d98aafedb4e0415f6a13d9b9578">GetSubStringView</a> (<a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;searchInfo)</td></tr>
 <tr class="separator:a59ef7d98aafedb4e0415f6a13d9b9578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f3ba0091dd638224cc3c11d69197b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5f3ba0091dd638224cc3c11d69197b6f">FindValue</a> (const char *<a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a>, const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;searchInfo, <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;foundValue)</td></tr>
-<tr class="separator:a5f3ba0091dd638224cc3c11d69197b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb7751e604506b1049e769c30878f7f3"><td class="memTemplParams" colspan="2">template&lt;typename CharType &gt; </td></tr>
 <tr class="memitem:aeb7751e604506b1049e769c30878f7f3"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classjpt_1_1basic__string.html">jpt::basic_string</a>&lt; CharType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aeb7751e604506b1049e769c30878f7f3">operator+</a> (const CharType *leftString, const <a class="el" href="classjpt_1_1basic__string.html">jpt::basic_string</a>&lt; CharType &gt; &amp;rightString)</td></tr>
 <tr class="separator:aeb7751e604506b1049e769c30878f7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,22 +275,47 @@ Functions</h2></td></tr>
 <tr class="memitem:abfa1fe394609ca2011083643d1e96b50"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">to_string</a> (const Type &amp;object)</td></tr>
 <tr class="separator:abfa1fe394609ca2011083643d1e96b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5c7d71f002b603a3f65e25a93b43e521">to_string&lt; int32 &gt;</a> (const <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;num)</td></tr>
+<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5c7d71f002b603a3f65e25a93b43e521">to_string&lt; int32 &gt;</a> (const <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;num)</td></tr>
 <tr class="separator:a5c7d71f002b603a3f65e25a93b43e521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab43d126afc91feea1964a52703264c80"><td class="memTemplParams" colspan="2">template&lt;typename CharType &gt; </td></tr>
 <tr class="memitem:ab43d126afc91feea1964a52703264c80"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab43d126afc91feea1964a52703264c80">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view</a>&lt; CharType &gt; &amp;<a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a>)</td></tr>
 <tr class="separator:ab43d126afc91feea1964a52703264c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3caa50f82a08ad783142e24c9ac430b"><td class="memTemplParams" colspan="2">template&lt;class StringType &gt; </td></tr>
+<tr class="memitem:ac3caa50f82a08ad783142e24c9ac430b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ac3caa50f82a08ad783142e24c9ac430b">FixSlashes</a> (StringType &amp;path)</td></tr>
+<tr class="separator:ac3caa50f82a08ad783142e24c9ac430b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memTemplParams" colspan="2">template&lt;class StringType &gt; </td></tr>
+<tr class="memitem:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memTemplItemLeft" align="right" valign="top">StringType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a8bf2ff847d63c27bf3796580830d7ce5">FixedSlashes</a> (StringType &amp;&amp;path)</td></tr>
+<tr class="separator:a8bf2ff847d63c27bf3796580830d7ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae43072e271a26ba907f2b629e8fd3bf8"><td class="memTemplParams" colspan="2">template&lt;typename StringType  = jpt::string&gt; </td></tr>
+<tr class="memitem:ae43072e271a26ba907f2b629e8fd3bf8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classjpt_1_1optional.html">jpt::optional</a>&lt; <a class="el" href="structjpt_1_1_path_info.html">PathInfo</a>&lt; StringType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ae43072e271a26ba907f2b629e8fd3bf8">ParseFilePath</a> (const char *pFullAbsolutePath)</td></tr>
+<tr class="separator:ae43072e271a26ba907f2b629e8fd3bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6aa13fce73ee3554cddb34d02f4816f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a6aa13fce73ee3554cddb34d02f4816f7">GetEngineDir</a> ()</td></tr>
+<tr class="separator:a6aa13fce73ee3554cddb34d02f4816f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e39ead799fa386c953d876035000c1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a4e39ead799fa386c953d876035000c1f">GetEngineDirW</a> ()</td></tr>
+<tr class="separator:a4e39ead799fa386c953d876035000c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48557efa036ad18804949e3944291541"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a48557efa036ad18804949e3944291541">GetOutputDir</a> ()</td></tr>
+<tr class="separator:a48557efa036ad18804949e3944291541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb5b5a19ad0c0522e459c67b718a68dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aeb5b5a19ad0c0522e459c67b718a68dd">GetOutputDirW</a> ()</td></tr>
+<tr class="separator:aeb5b5a19ad0c0522e459c67b718a68dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af83c9c062671b9aa775967a937195d59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#af83c9c062671b9aa775967a937195d59">GetEngineAssetPath</a> (const char *pDetailPath)</td></tr>
+<tr class="separator:af83c9c062671b9aa775967a937195d59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa78c81d00dc84cbc260100f9116cc51f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aa78c81d00dc84cbc260100f9116cc51f">GetEngineAssetPathW</a> (const wchar_t *pDetailPath)</td></tr>
+<tr class="separator:aa78c81d00dc84cbc260100f9116cc51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab58df6463e1df59a4819e41ab93e0041"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab58df6463e1df59a4819e41ab93e0041">GetOutputAssetPath</a> (const char *pDetailPath)</td></tr>
+<tr class="separator:ab58df6463e1df59a4819e41ab93e0041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae433732c399d5a8d33742ee816b5deeb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ae433732c399d5a8d33742ee816b5deeb">GetOutputAssetPathW</a> (const wchar_t *pDetailPath)</td></tr>
+<tr class="separator:ae433732c399d5a8d33742ee816b5deeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aee8ed0b33944756bef84f4a0ac361abf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#a74d807285bc047455765ff2560555184">TimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aee8ed0b33944756bef84f4a0ac361abf">locTimePoint</a></td></tr>
-<tr class="separator:aee8ed0b33944756bef84f4a0ac361abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ea24f652936d0ba968fbf5c99496ebc"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a0ea24f652936d0ba968fbf5c99496ebc"><td class="memTemplItemLeft" align="right" valign="top">const Type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a0ea24f652936d0ba968fbf5c99496ebc">kInvalidValue</a> = (std::numeric_limits&lt;Type&gt;::max)()</td></tr>
 <tr class="separator:a0ea24f652936d0ba968fbf5c99496ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46653f80e58a21ae82ede02fad117c06"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
 <tr class="memitem:a46653f80e58a21ae82ede02fad117c06"><td class="memTemplItemLeft" align="right" valign="top">const Type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a46653f80e58a21ae82ede02fad117c06">kDefaultValue</a> = static_cast&lt;Type&gt;(0)</td></tr>
 <tr class="separator:a46653f80e58a21ae82ede02fad117c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee8ed0b33944756bef84f4a0ac361abf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#a74d807285bc047455765ff2560555184">TimePoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#aee8ed0b33944756bef84f4a0ac361abf">locTimePoint</a></td></tr>
+<tr class="separator:aee8ed0b33944756bef84f4a0ac361abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a27a945df562aee8f601b121ddf163a8b" name="a27a945df562aee8f601b121ddf163a8b"></a>
@@ -343,7 +353,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="namespacejpt.html#acdb2eb8de81fb0546bc2a02ca57fd05c">jpt::IVec3</a> = typedef <a class="el" href="classjpt_1_1_vector3.html">Vector3</a>&lt;<a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&gt;</td>
+          <td class="memname">using <a class="el" href="namespacejpt.html#acdb2eb8de81fb0546bc2a02ca57fd05c">jpt::IVec3</a> = typedef <a class="el" href="classjpt_1_1_vector3.html">Vector3</a>&lt;<a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -448,9 +458,9 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a233628e29e43dab7e30d27603e76fc5f" name="a233628e29e43dab7e30d27603e76fc5f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a233628e29e43dab7e30d27603e76fc5f">&#9670;&#160;</a></span>BuildEnumStringInfos()</h2>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a0e72292b9c781a75f9d32f003744267d" name="a0e72292b9c781a75f9d32f003744267d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e72292b9c781a75f9d32f003744267d">&#9670;&#160;</a></span>EDirectoryType</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -459,7 +469,32 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> jpt::BuildEnumStringInfos </td>
+          <td class="memname">enum class <a class="el" href="namespacejpt.html#a0e72292b9c781a75f9d32f003744267d">jpt::EDirectoryType</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0e72292b9c781a75f9d32f003744267da7bfa30721c5e726ff17e3f972237a82c" name="a0e72292b9c781a75f9d32f003744267da7bfa30721c5e726ff17e3f972237a82c"></a>Engine&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a0e72292b9c781a75f9d32f003744267da63d72051e901c069f8aa1b32aa0c43bb" name="a0e72292b9c781a75f9d32f003744267da63d72051e901c069f8aa1b32aa0c43bb"></a>Game&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a0e72292b9c781a75f9d32f003744267da29c2c02a361c9d7028472e5d92cd4a54" name="a0e72292b9c781a75f9d32f003744267da29c2c02a361c9d7028472e5d92cd4a54"></a>Output&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a233628e29e43dab7e30d27603e76fc5f" name="a233628e29e43dab7e30d27603e76fc5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a233628e29e43dab7e30d27603e76fc5f">&#9670;&#160;</a></span>BuildEnumStringInfos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> jpt::BuildEnumStringInfos </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>rawEnumString</em>, </td>
@@ -473,7 +508,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
           <td class="paramname"><em>start</em>, </td>
         </tr>
         <tr>
@@ -488,11 +523,6 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Builds <a class="el" href="classjpt_1_1_enum.html">Enum</a> search info when creating it </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -504,57 +534,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The search info for this enum category </dd></dl>
-
-</div>
-</div>
-<a id="a5f3ba0091dd638224cc3c11d69197b6f" name="a5f3ba0091dd638224cc3c11d69197b6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f3ba0091dd638224cc3c11d69197b6f">&#9670;&#160;</a></span>FindValue()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">JPT_API bool jpt::FindValue </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>string</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structjpt_1_1_enum_search_info.html">EnumSearchInfo</a> &amp;&#160;</td>
-          <td class="paramname"><em>searchInfo</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;&#160;</td>
-          <td class="paramname"><em>foundValue</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Helper for finding the value by it's string literal </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">string</td><td>The enum's literal to find </td></tr>
-    <tr><td class="paramname">searchInfo</td><td>Auto generated static search info for this enum category </td></tr>
-    <tr><td class="paramname">foundValue</td><td>A reference to retrieve the value of string. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true if found the string in this enum. false if not </dd></dl>
 
 </div>
 </div>
@@ -611,6 +590,7 @@ template&lt;class StringType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Fix slashes in a file path for different platforms </p>
 
 </div>
 </div>
@@ -624,7 +604,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetEngineAssetPath </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetEngineAssetPath </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>pDetailPath</em></td><td>)</td>
@@ -657,7 +637,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetEngineAssetPathW </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetEngineAssetPathW </td>
           <td>(</td>
           <td class="paramtype">const wchar_t *&#160;</td>
           <td class="paramname"><em>pDetailPath</em></td><td>)</td>
@@ -690,7 +670,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetEngineDir </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetEngineDir </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -716,7 +696,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetEngineDirW </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetEngineDirW </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -742,7 +722,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetOutputAssetPath </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetOutputAssetPath </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>pDetailPath</em></td><td>)</td>
@@ -775,7 +755,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetOutputAssetPathW </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetOutputAssetPathW </td>
           <td>(</td>
           <td class="paramtype">const wchar_t *&#160;</td>
           <td class="paramname"><em>pDetailPath</em></td><td>)</td>
@@ -808,7 +788,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetOutputDir </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetOutputDir </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -834,7 +814,7 @@ template&lt;class StringType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetOutputDirW </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> jpt::GetOutputDirW </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -889,14 +869,11 @@ template&lt;typename CharType &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetSubString </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::GetSubString </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
@@ -911,11 +888,6 @@ template&lt;typename CharType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Converts an enum value to a <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> literal </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -933,14 +905,11 @@ template&lt;typename CharType &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="namespacejpt.html#ad0085235ff5d39dfede30179c503c042">jpt::string_view</a> jpt::GetSubStringView </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="namespacejpt.html#ad0085235ff5d39dfede30179c503c042">jpt::string_view</a> jpt::GetSubStringView </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
@@ -955,11 +924,6 @@ template&lt;typename CharType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -969,20 +933,17 @@ template&lt;typename CharType &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API char * jpt::itoa </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> char * jpt::itoa </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
           <td class="paramname"><em>base</em> = <code>10</code>&#160;</td>
         </tr>
         <tr>
@@ -991,11 +952,6 @@ template&lt;typename CharType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Convert from int32 to a char pointer holding the integer's value as string literal </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1273,6 +1229,41 @@ template&lt;typename CharType &gt; </div>
 
 </div>
 </div>
+<a id="ae43072e271a26ba907f2b629e8fd3bf8" name="ae43072e271a26ba907f2b629e8fd3bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae43072e271a26ba907f2b629e8fd3bf8">&#9670;&#160;</a></span>ParseFilePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename StringType  = jpt::string&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classjpt_1_1optional.html">jpt::optional</a>&lt; <a class="el" href="structjpt_1_1_path_info.html">PathInfo</a>&lt; StringType &gt; &gt; jpt::ParseFilePath </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pFullAbsolutePath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Parse a full absolute file path to folder, file name, and extension </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pFullAbsolutePath</td><td>The absolute full path to this file on the current system </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Optional path object, exist if succeeded </dd></dl>
+
+</div>
+</div>
 <a id="ad0f9c2740e8fe80fd28a09b9503a04db" name="ad0f9c2740e8fe80fd28a09b9503a04db"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad0f9c2740e8fe80fd28a09b9503a04db">&#9670;&#160;</a></span>StrCpy()</h2>
 
@@ -1361,103 +1352,20 @@ template&lt;typename StringType &gt; </div>
 
 </div>
 </div>
-<a id="ab2c41bb7ff2cac6bf62f3da19293d3bc" name="ab2c41bb7ff2cac6bf62f3da19293d3bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2c41bb7ff2cac6bf62f3da19293d3bc">&#9670;&#160;</a></span>StringHash32()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">JPT_API constexpr <a class="el" href="_types_8h.html#a5522c54735d837fae7d6ba026b858441">uint32</a> jpt::StringHash32 </td>
-          <td>(</td>
-          <td class="paramtype">const char *const&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="_types_8h.html#a5522c54735d837fae7d6ba026b858441">uint32</a>&#160;</td>
-          <td class="paramname"><em>value</em> = <code>0x811c9dc5</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>FNV1a c++11 constexpr compile time hash functions, 32 and 64 bit code license: public domain or equivalent @str: should be a null terminated string literal, value should be left out e.g hash_32_fnv1a_const("example") </p><dl class="section see"><dt>See also</dt><dd><a href="https://notes.underscorediscovery.com/constexpr-fnv1a/">https://notes.underscorediscovery.com/constexpr-fnv1a/</a> </dd>
-<dd>
-<a href="https://gist.github.com/underscorediscovery/81308642d0325fd386237cfa3b44785c#file-hash_fnv1a_constexpr-h">https://gist.github.com/underscorediscovery/81308642d0325fd386237cfa3b44785c#file-hash_fnv1a_constexpr-h</a> </dd></dl>
-
-</div>
-</div>
-<a id="a4354836a950d391cfd04aa1496d9a7af" name="a4354836a950d391cfd04aa1496d9a7af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4354836a950d391cfd04aa1496d9a7af">&#9670;&#160;</a></span>StringHash64()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">JPT_API constexpr <a class="el" href="_types_8h.html#aca0ba831b19773ec091e57f5cf76a1fb">uint64</a> jpt::StringHash64 </td>
-          <td>(</td>
-          <td class="paramtype">const char *const&#160;</td>
-          <td class="paramname"><em>str</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="_types_8h.html#aca0ba831b19773ec091e57f5cf76a1fb">uint64</a>&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="abfa1a0a97c02dc7a01d06b77daa1ac4e" name="abfa1a0a97c02dc7a01d06b77daa1ac4e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abfa1a0a97c02dc7a01d06b77daa1ac4e">&#9670;&#160;</a></span>strlen()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API size_t jpt::strlen </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> size_t jpt::strlen </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>inString</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>How many characters inside the input const char* string except the null terminator </dd></dl>
 
@@ -1468,12 +1376,9 @@ template&lt;typename StringType &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> jpt::strncmp </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> jpt::strncmp </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>string1</em>, </td>
@@ -1496,11 +1401,6 @@ template&lt;typename StringType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>0 if two strings are identical. InvalidValue if not </dd></dl>
 
@@ -1671,9 +1571,9 @@ template&lt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> <a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">jpt::to_string</a>&lt; <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &gt; </td>
+          <td class="memname"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> <a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">jpt::to_string</a>&lt; <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &gt; </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;&#160;</td>
           <td class="paramname"><em>num</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1692,23 +1592,15 @@ template&lt;&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API size_t jpt::wcslen </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> size_t jpt::wcslen </td>
           <td>(</td>
           <td class="paramtype">const wchar_t *&#160;</td>
           <td class="paramname"><em>inString</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>How many characters inside the input const wide char* string except the null terminator </dd></dl>
 
@@ -1719,12 +1611,9 @@ template&lt;&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JPT_API <a class="el" href="_types_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> jpt::wcsncmp </td>
+          <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> jpt::wcsncmp </td>
           <td>(</td>
           <td class="paramtype">const wchar_t *&#160;</td>
           <td class="paramname"><em>string1</em>, </td>
@@ -1747,11 +1636,6 @@ template&lt;&gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>0 if two wide strings are identical. InvalidValue if not </dd></dl>
 

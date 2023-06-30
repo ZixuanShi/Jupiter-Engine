@@ -12,7 +12,7 @@ var searchData=
   ['window_2eh_9',['Window.h',['../_window_8h.html',1,'']]],
   ['windowbase_10',['WindowBase',['../classjpt_1_1_window_base.html',1,'jpt']]],
   ['windowproc_11',['WindowProc',['../classjpt_1_1_win64_application.html#af3c9ab0c02b2165607c66892e7d51880',1,'jpt::Win64Application']]],
-  ['wstring_12',['wstring',['../namespacejpt.html#a079b9851459d8b7109464b00efec936a',1,'jpt']]],
-  ['wstring_13',['WSTRING',['../_helpers_8cpp.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.cpp'],['../_helpers_8h.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.h']]],
+  ['wstring_12',['WSTRING',['../_helpers_8cpp.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.cpp'],['../_helpers_8h.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.h']]],
+  ['wstring_13',['wstring',['../namespacejpt.html#a079b9851459d8b7109464b00efec936a',1,'jpt']]],
   ['wstring_5fview_14',['wstring_view',['../namespacejpt.html#a3ad35628ff57500dd3e3a1a634140598',1,'jpt']]]
 ];

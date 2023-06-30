@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['timeprofiler_2ecpp_0',['TimeProfiler.cpp',['../_time_profiler_8cpp.html',1,'']]],
-  ['timeprofiler_2eh_1',['TimeProfiler.h',['../_time_profiler_8h.html',1,'']]],
-  ['timer_2ecpp_2',['Timer.cpp',['../_timer_8cpp.html',1,'']]],
-  ['timer_2eh_3',['Timer.h',['../_timer_8h.html',1,'']]],
-  ['timingheader_2eh_4',['TimingHeader.h',['../_timing_header_8h.html',1,'']]],
-  ['types_2eh_5',['Types.h',['../_types_8h.html',1,'']]],
-  ['typesheader_2eh_6',['TypesHeader.h',['../_types_header_8h.html',1,'']]]
+  ['string_2eh_0',['String.h',['../_string_8h.html',1,'']]],
+  ['stringalgorithms_2ecpp_1',['StringAlgorithms.cpp',['../_string_algorithms_8cpp.html',1,'']]],
+  ['stringalgorithms_2eh_2',['StringAlgorithms.h',['../_string_algorithms_8h.html',1,'']]],
+  ['stringview_2eh_3',['StringView.h',['../_string_view_8h.html',1,'']]],
+  ['systemheaders_2eh_4',['SystemHeaders.h',['../_system_headers_8h.html',1,'']]]
 ];
