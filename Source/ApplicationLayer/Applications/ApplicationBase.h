@@ -12,15 +12,14 @@ namespace jpt
 	class JPT_API ApplicationBase
 	{
 	protected:
-		WindowBase* m_pWindow;
-		RendererBase* m_pRenderer;
-		bool m_shouldQuit;
+		WindowBase* m_pWindow = nullptr;
+		RendererBase* m_pRenderer = nullptr;
+		bool m_shouldQuit = false;
 
 	public:
-		ApplicationBase();
 		virtual ~ApplicationBase() = default;
 
-		virtual bool PreInit() { return true; }
+		virtual bool PreInit();
 		virtual bool Init();
 		virtual void RunGameLoop();
 		virtual void Clean();

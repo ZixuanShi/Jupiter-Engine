@@ -10,9 +10,9 @@
 
 bool JupiterUnitTestsApplication::PreInit()
 {
-    m_pWindow->SetTitle(L"木星引擎 Jupiter Engine");
-
     JPT_RETURN_FALSE_IF_LOG(!Super::PreInit(), "Failed Super::PreInit()");
+
+    m_pWindow->SetTitle(L"木星引擎 Jupiter Engine");
 
     return true;
 }

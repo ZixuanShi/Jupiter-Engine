@@ -8,11 +8,15 @@
 
 namespace jpt
 {
-	ApplicationBase::ApplicationBase()
-		: m_pWindow(WindowBase::Create())
-		, m_pRenderer(RendererBase::Create())
-		, m_shouldQuit(false)
+	bool ApplicationBase::PreInit()
 	{
+		m_pWindow = WindowBase::Create();
+		JPT_RETURN_FALSE_IF_LOG(!m_pWindow, "Failed creating window");
+		
+		m_pRenderer = RendererBase::Create();
+		JPT_RETURN_FALSE_IF_LOG(!m_pRenderer, "Failed creating Renderer");
+
+		return true;
 	}
 
 	bool ApplicationBase::Init()
@@ -43,10 +47,11 @@ namespace jpt
 
 	void ApplicationBase::Render()
 	{
-
+		m_pWindow->Render();
 	}
 
 	void ApplicationBase::Update()
 	{
+		m_pWindow->Update();
 	}
 }

@@ -6,15 +6,24 @@
 
 namespace jpt
 {
+	class DX12Window;
+
 	/** Application implementation for Windows 64 */
 	class JPT_API Win64Application : public ApplicationBase
 	{
 	private:
 		using Super = ApplicationBase;
 
+		struct lpParamData
+		{
+			Win64Application* m_pWin64Application = nullptr;
+			DX12Window* m_pDX12Window = nullptr;
+		};
+
 	private:
 		/** The handle to the window(s) created by Jupiter Engine */
 		static HWND m_hwnd;
+		lpParamData m_lpParamData;
 
 		/** The handle to an instance or handle to a module.
 		    The operating system uses this value to identify the executable or EXE when it's loaded in memory. 
@@ -27,7 +36,7 @@ namespace jpt
 	public:
 		virtual bool PreInit() override;
 		virtual bool Init() override;
-		virtual void RunGameLoop() override;
+		virtual void Update() override;
 
 	public:
 		static HWND GetHwnd() { return m_hwnd; }

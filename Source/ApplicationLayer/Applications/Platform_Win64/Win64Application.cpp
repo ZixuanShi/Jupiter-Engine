@@ -24,7 +24,7 @@ namespace jpt
 		WNDCLASSEX windowClass = { 0 };
 		windowClass.cbSize = sizeof(WNDCLASSEX);
 		windowClass.style = CS_HREDRAW | CS_VREDRAW;
-		windowClass.lpfnWndProc = WindowProc;
+		windowClass.lpfnWndProc = &Win64Application::WindowProc;
 		windowClass.hInstance = m_hInstance;
 		windowClass.hCursor = LoadCursor(nullptr, IDC_HAND);
 		windowClass.lpszClassName = L"Jupiter Win64 DX12 Class";
@@ -34,6 +34,7 @@ namespace jpt
 		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 		// Create the window and store a handle to it
+		m_lpParamData = {this, static_cast<DX12Window*>(m_pWindow) };
 		m_hwnd = CreateWindow(
 			windowClass.lpszClassName,
 			m_pWindow->GetTitle(),
@@ -45,7 +46,7 @@ namespace jpt
 			nullptr,        // We have no parent window.
 			nullptr,        // We aren't using menus.
 			m_hInstance,
-			m_pWindow);
+			&m_lpParamData);
 
 		return true;
 	}
@@ -59,29 +60,35 @@ namespace jpt
 		return true;
 	}
 
-	void Win64Application::RunGameLoop()
+	void Win64Application::Update()
 	{
-		MSG msg = {};
+		Super::Update();
 
-		while (msg.message != WM_QUIT)
+		MSG msg = {};
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
 	LRESULT CALLBACK Win64Application::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		DX12Window* pDX12Window = reinterpret_cast<DX12Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		lpParamData* pParamData = reinterpret_cast<lpParamData*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+		Win64Application* pWin64Application = nullptr;
+		DX12Window* pDX12Window = nullptr;
+
+		if (pParamData)
+		{
+			pWin64Application = pParamData->m_pWin64Application;
+			pDX12Window = pParamData->m_pDX12Window;
+		}
 
 		switch (message)
 		{
 		case WM_CREATE:
 		{
-			// Save the DX12Window* passed in to CreateWindow
+			// Save the application and DX12Window* passed in to CreateWindow
 			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
 		}
@@ -102,15 +109,20 @@ namespace jpt
 			return 0;
 
 		case WM_PAINT:
-			if (pDX12Window)
+			if (pWin64Application)
 			{
-				pDX12Window->Update();
-				pDX12Window->Render();
+				pWin64Application->Render();
 			}
+
 			return 0;
 
 		case WM_DESTROY:
 			PostQuitMessage(0);
+			if (pWin64Application)
+			{
+				pWin64Application->m_shouldQuit = true;
+			}
+
 			return 0;
 
 		default:
