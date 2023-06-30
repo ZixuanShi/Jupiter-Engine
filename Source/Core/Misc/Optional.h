@@ -14,7 +14,7 @@ namespace jpt
 
 	private:
 		ValueType m_value;
-		bool m_isValid = false;
+		bool m_hasValue = false;
 
 	public:
 		optional() = default;
@@ -32,10 +32,10 @@ namespace jpt
 		void reset();
 
 		/** @return true if this contains a value. */
-		bool has_value() const { return m_isValid; }
+		bool has_value() const { return m_hasValue; }
 
-		const ValueType& value() const { JPT_ASSERT(m_isValid); return m_value; }
-		ValueType& value() { JPT_ASSERT(m_isValid); return m_value; }
+		const ValueType& value() const { JPT_ASSERT(m_hasValue); return m_value; }
+		ValueType& value() { JPT_ASSERT(m_hasValue); return m_value; }
 
 	private:
 		void Copy(const optional& other);
@@ -45,14 +45,14 @@ namespace jpt
 	template<typename ValueType>
 	inline optional<ValueType>::optional(const ValueType& value)
 		: m_value(value)
-		, m_isValid(true)
+		, m_hasValue(true)
 	{
 	}
 
 	template<typename ValueType>
 	inline optional<ValueType>::optional(ValueType&& value)
 		: m_value(jpt::move(value))
-		, m_isValid(true)
+		, m_hasValue(true)
 	{
 	}
 
@@ -73,7 +73,7 @@ namespace jpt
 	{
 		reset();
 		m_value = value;
-		m_isValid = true;
+		m_hasValue = true;
 		return *this;
 	}
 
@@ -82,7 +82,7 @@ namespace jpt
 	{
 		reset();
 		m_value = jpt::move(value);
-		m_isValid = true;
+		m_hasValue = true;
 		return *this;
 	}
 
@@ -121,7 +121,7 @@ namespace jpt
 	template<typename ValueType>
 	void jpt::optional<ValueType>::reset()
 	{
-		if (!m_isValid)
+		if (!m_hasValue)
 		{
 			return;
 		}
@@ -131,21 +131,21 @@ namespace jpt
 			m_value.~ValueType();
 		}
 
-		m_isValid = false;
+		m_hasValue = false;
 	}
 	
 	template<typename _ValueType>
 	inline void jpt::optional<_ValueType>::Copy(const optional& other)
 	{
 		m_value = other.m_value;
-		m_isValid = other.m_isValid;
+		m_hasValue = other.m_hasValue;
 	}
 
 	template<typename _ValueType>
 	inline void jpt::optional<_ValueType>::Move(optional&& other)
 	{
 		m_value = jpt::move(other.m_value);
-		m_isValid = other.m_isValid;
+		m_hasValue = other.m_hasValue;
 		other.reset();
 	}
 }
