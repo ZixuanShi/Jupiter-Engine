@@ -37,6 +37,7 @@ workspace "JupiterUnitTests"
         ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
         ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
     }
+    
     -- Global filters
     filter "configurations:Debug"
         defines 
