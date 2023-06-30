@@ -149,6 +149,29 @@ bool UnitTest_Enum()
 		}
 	}
 
+	//// Bitwise
+	//JPT_ENUM(ECollisionType,
+	//	NoCollision,
+	//	Trigger         = 1 << 0,   
+	//	Solid           = 1 << 1,
+	//	Dynamic         = 1 << 2,
+	//	Static          = 1 << 3,
+	//	SimulatePhysics = 1 << 4,
+	//	GenerateEvents  = 1 << 5
+	//);
+
+	//ECollisionType collision1 = ECollisionType::Trigger | ECollisionType::Static;
+	//JPT_RETURN_FALSE_IF_LOG(!collision1.Has(ECollisionType::Trigger), "");
+	//JPT_RETURN_FALSE_IF_LOG(!collision1.Has(ECollisionType::Static), "");
+	//JPT_RETURN_FALSE_IF_LOG(collision1.Has(ECollisionType::Dynamic), "");
+
+	//ECollisionType collision2 = ECollisionType::Dynamic;
+	//ECollisionType collision3 = ECollisionType::SimulatePhysics | collision2;
+	//JPT_RETURN_FALSE_IF_LOG(!collision2.Has(ECollisionType::Dynamic), "");
+	//JPT_RETURN_FALSE_IF_LOG(!collision3.Has(ECollisionType::SimulatePhysics), "");
+	//JPT_RETURN_FALSE_IF_LOG(!collision3.Has(collision2), "");
+
+
 	return true;
 }
 

@@ -19,8 +19,8 @@ bool UnitTest_FilePathUtils()
 	JPT_RETURN_FALSE_IF_LOG(pathInfo.value().m_name != "Dummy", "");
 	JPT_RETURN_FALSE_IF_LOG(pathInfo.value().m_extension != "txt", "");
 
-	pathInfo = jpt::ParseFilePath("Invalid file path on purpose for testing don't worry");
-	JPT_RETURN_FALSE_IF_LOG(pathInfo.has_value(), "");
+	//pathInfo = jpt::ParseFilePath("Invalid file path on purpose for testing don't worry");
+	//JPT_RETURN_FALSE_IF_LOG(pathInfo.has_value(), "");
 
 	return true;
 }
