@@ -4,6 +4,14 @@
 
 namespace jpt
 {
+	// The directory types to indicate where to File IO assets
+	enum class EDirectoryType
+	{
+		Engine = 1 << 0,		// ../Jupiter Engine/Assets/
+		Game   = 1 << 1,		// ../<GameProject>/Assets/
+		Output = 1 << 2,		// ../<GameProject>/Generated/<GameProject>_Win64_Debug_Output/Assets
+	};
+
 	class FilePathUtils
 	{
 	private:
@@ -61,7 +69,7 @@ namespace jpt
 	{
 		StringType m_folderPath;	/**< Abosulte path to this file's located folder */
 		StringType m_name;			/**< Name of the file. Excluding extension */
-		StringType m_extension;	/**< Extension representing the type of this file */
+		StringType m_extension;		/**< Extension representing the type of this file */
 	};
 
 	/** Parse a full absolute file path to folder, file name, and extension

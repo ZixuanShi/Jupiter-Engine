@@ -3,7 +3,8 @@
 
 bool UnitTest_Json()
 {
-	jpt::JsonFile jsonFile = jpt::LoadJsonFile("Assets/Engine/Data/TestJson.json");
+	jpt::optional<jpt::JsonFile> jsonFile = jpt::JsonFile::Load("Assets/Data/TestJson.json");
+
 	return true;
 }
 
