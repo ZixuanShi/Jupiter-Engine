@@ -42,6 +42,8 @@ bool UnitTest_to_string()
 	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(12345) != "12345", "");
 	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-12345) != "-12345", "");
 	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-12345) != "-12345", "");
+	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-10.425) != "-10.425", "");
+	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(10.425) != "10.425", "");
 	return true;
 }
 

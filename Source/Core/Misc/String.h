@@ -459,16 +459,21 @@ namespace jpt
 
 	// Converts an input object to string if it has this functionality
 	// Primitive types should be specialized below
-	template<class Type>
-	inline jpt::string to_string(const Type& object)
+	template<typename Type>			
+	inline std::enable_if_t<!std::is_integral_v<Type>, jpt::string> to_string(const Type& object)
 	{
 		return object.to_string();
 	}
-	template<>
-	inline jpt::string to_string<int32>(const int32& num)
+	template<typename Type>
+	inline std::enable_if_t<std::is_integral_v<Type>, jpt::string> to_string(Type num)
 	{
 		return jpt::string(jpt::itoa(num));
 	}
+	//template<typename Type>
+	//inline std::enable_if_t<std::is_floating_point_v<Type>, jpt::string> to_string(Type num)
+	//{
+	//	return jpt::string("To do");
+	//}
 }
 
 namespace std

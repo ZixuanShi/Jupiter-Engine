@@ -10,11 +10,81 @@ namespace jpt
     /** @return How many characters inside the input const wide char* string except the null terminator */
     JPT_API size_t wcslen(const wchar_t* inString);
 
-    /** Convert from int32 to a char pointer holding the integer's value as string literal 
-        @param value:        The value to convert to char*
+    /** Convert from IntegerType to a char pointer holding the integer's value as string literal 
+        @param value:        The IntegerType value to convert to char*
         @param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex. 
         @return A char pointer pointing to the memory where we store the converted number's string literal */
-    JPT_API char* itoa(int32 value, int32 base = 10);
+    template<typename IntegerType>
+    JPT_API inline char* itoa(IntegerType value, int32 base = 10)
+    {
+        // Prepare data
+        bool isNegative = false;	// Whether this value is negative or not
+        char* result = nullptr;		// Final result string to return
+        size_t index = 0;			// The index I'm using for char array, will be used as length of this value and string as well
+
+        // Process 0
+        if (value == 0)
+        {
+            result = new char[2];
+            result[0] = '0';
+            result[1] = '\0';
+            return result;
+        }
+        // Process negative if IntegerType can be signed
+        if constexpr (std::is_signed_v<IntegerType>)
+        {
+            if (value < 0)
+            {
+                isNegative = true;
+                value = -value;
+                ++index;
+            }
+        }
+
+        // Get Value's literal length
+        IntegerType valueCopy = value;
+        while (valueCopy > 0)
+        {
+            valueCopy /= base;
+            ++index;
+        }
+        // Allocate Result string, + 1 for the end terminater
+        result = new char[index + 1];
+
+        // Append string terminator at the end
+        result[index] = '\0';
+        --index;
+
+        // Process each digit
+        while (value > 0)
+        {
+            const int digit = value % base;
+
+            // For different base, process differently
+            if (digit > 9)
+            {
+                result[index] = static_cast<char>(digit - 10) + 'A';
+            }
+            else
+            {
+                result[index] = static_cast<char>(digit + '0');
+            }
+
+            // Update index and cut last digit of value
+            --index;
+            value /= base;
+        }
+
+        // If value was negative, add '-' at the beginning
+        if (isNegative)
+        {
+            result[index] = '-';
+            --index;
+        }
+
+        // Return result
+        return result;
+    }
 
     /** @return 0 if two strings are identical. InvalidValue if not */
     JPT_API int32 strncmp(const char* string1, const char* string2, size_t size);
