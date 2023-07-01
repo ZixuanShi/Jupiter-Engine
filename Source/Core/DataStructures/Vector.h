@@ -100,13 +100,12 @@ namespace jpt
 		void clear();
 		void push_back(const ValueType& value);
 		void push_back(ValueType&& value);
-		template<class... Args> void emplace_back(Args&&... value);
+		template<class... Args> ValueType& emplace_back(Args&&... value);
 		void pop_back();
 		void erase(size_t index);
 		void insert(size_t index, const ValueType& value);
 		void insert(size_t index, ValueType&& value);
-		void resize(size_t count);
-		void resize(size_t count, const ValueType& value);
+		void resize(size_t count, const ValueType& value = ValueType());
 
 	private:
 		/** Create a new data buffer with a new capacity, move the existing data over
@@ -249,17 +248,19 @@ namespace jpt
 		++m_size;
 	}
 
-	template<class _ValueType>
+	template<class ValueType>
 	template<class ...Args>
-	inline void vector<_ValueType>::emplace_back(Args&& ...value)
+	inline vector<ValueType>::ValueType& vector<ValueType>::emplace_back(Args&& ...value)
 	{
 		if (m_size >= m_capacity)
 		{
 			UpdateBufferWithNewCapacity(m_size * kCapacityMultiplier);
 		}
 
-		::new(m_pBuffer + m_size) _ValueType(std::forward<Args>(value)...);
+		::new(m_pBuffer + m_size) ValueType(std::forward<Args>(value)...);
 		++m_size;
+
+		return back();
 	}
 
 	template<class _ValueType>
@@ -321,47 +322,14 @@ namespace jpt
 	}
 
 	template<class _ValueType>
-	inline void vector<_ValueType>::resize(size_t count)
+	inline void vector<_ValueType>::resize(size_t count, const ValueType& value/* = ValueType()*/)
 	{
 		if (count == m_size)
 		{
 			return;
 		}
 
-		// If count is greater than current size, grow the buffer, append default objects
-		if (count > m_size)
-		{
-			if (count > m_capacity)
-			{
-				UpdateBufferWithNewCapacity(count);
-			}
-
-			for (size_t i = m_size; i < count; ++i)
-			{
-				emplace_back();
-			}
-		}
-		// If count is less than current size, reduce the elements to count
-		else
-		{
-			for (size_t i = count; i < m_size; ++i)
-			{
-				pop_back();
-			}
-		}
-
-		m_size = count;
-	}
-
-	template<class _ValueType>
-	inline void vector<_ValueType>::resize(size_t count, const ValueType& value)
-	{
-		if (count == m_size)
-		{
-			return;
-		}
-
-		// If count is greater than current size, grow the buffer, append default objects
+		// If count is greater than current size, grow the buffer, append passed in default objects
 		if (count > m_size)
 		{
 			if (count > m_capacity)
