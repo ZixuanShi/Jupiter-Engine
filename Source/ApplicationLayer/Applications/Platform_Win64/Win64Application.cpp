@@ -34,7 +34,8 @@ namespace jpt
 		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 		// Create the window and store a handle to it
-		m_lpParamData = {this, static_cast<DX12Window*>(m_pWindow) };
+		m_lpParamData.m_pWin64Application = this;
+		m_lpParamData.m_pDX12Window = dynamic_cast<DX12Window*>(m_pWindow);
 		m_hwnd = CreateWindow(
 			windowClass.lpszClassName,
 			m_pWindow->GetTitle(),

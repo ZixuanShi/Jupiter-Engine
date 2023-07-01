@@ -14,6 +14,7 @@ namespace jpt
 	private:
 		using Super = ApplicationBase;
 
+		/** Parameter data passed into created window */
 		struct lpParamData
 		{
 			Win64Application* m_pWin64Application = nullptr;
