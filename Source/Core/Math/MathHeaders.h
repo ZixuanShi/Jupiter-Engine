@@ -4,3 +4,4 @@
 
 #include "Vector3.h"
 #include "Color.h"
+#include "CommonMath.h"
