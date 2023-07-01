@@ -25,5 +25,6 @@ References:
 - EASTL
 - GLM
 - Microsoft DirectX 12 Manual
+- https://github.com/microsoft/DirectXTK12/wiki/Getting-Started
 
 Questions:

@@ -35,6 +35,51 @@ bool UnitTest_Pair()
 	return true;
 }
 
+bool UnitTest_Array()
+{
+	// int32
+	jpt::array<int32, 5> jptInt32Array5{0, 1, 2, 3, 4};
+	JPT_RETURN_FALSE_IF_LOG(jptInt32Array5.size() != 5, "");
+	for (size_t i = 0; i < jptInt32Array5.size(); ++i)
+	{
+		JPT_RETURN_FALSE_IF_LOG(jptInt32Array5[i] != i, "");
+	}
+	int32 num = 0;
+	for (int32 value : jptInt32Array5)
+	{
+		JPT_RETURN_FALSE_IF_LOG(value != num, "");
+		++num;
+	}
+
+	jptInt32Array5.fill(42);
+	for (int32 value : jptInt32Array5)
+	{
+		JPT_RETURN_FALSE_IF_LOG(value != 42, "");
+	}
+
+	// String
+	jpt::array<jpt::string, 5> jptStringArray5{"0", "1", "2", "3", "4"};
+	JPT_RETURN_FALSE_IF_LOG(jptStringArray5.size() != 5, "");
+	for (size_t i = 0; i < jptStringArray5.size(); ++i)
+	{
+		JPT_RETURN_FALSE_IF_LOG(jptStringArray5[i] != jpt::itoa(int32(i)), "");
+	}
+	num = 0;
+	for (const jpt::string& value : jptStringArray5)
+	{
+		JPT_RETURN_FALSE_IF_LOG(value != jpt::itoa(int32(num)), "");
+		++num;
+	}
+
+	jptStringArray5.fill("42");
+	for (const jpt::string& value : jptStringArray5)
+	{
+		JPT_RETURN_FALSE_IF_LOG(value != "42", "");
+	}
+
+	return true;
+}
+
 bool UnitTest_Vector()
 {
 	// Primitive Types
@@ -128,7 +173,9 @@ bool UnitTest_Vector()
 	jptVectorStr.push_back("Test");
 	JPT_RETURN_FALSE_IF_LOG(jptVectorStr[3] != "Test", "");
 
-	jptVectorStr.emplace_back("Jupiter");
+	jpt::string& emplacedStr = jptVectorStr.emplace_back("JupiterMisspelled");
+	JPT_RETURN_FALSE_IF_LOG(emplacedStr != "JupiterMisspelled", "");
+	emplacedStr.replace("Misspelled", "");
 	JPT_RETURN_FALSE_IF_LOG(jptVectorStr[4] != "Jupiter", "");
 
 	jptVectorStr.pop_back();
@@ -344,6 +391,7 @@ bool UnitTest_unordered_map()
 void RunDataStructuresUnitTests()
 {
 	JPT_RETURN_IF_LOG(!UnitTest_Pair(), "UnitTest_Pair failed");
+	JPT_RETURN_IF_LOG(!UnitTest_Array(), "UnitTest_Array failed");
 	JPT_RETURN_IF_LOG(!UnitTest_Vector(), "UnitTest_Vector failed");
 	JPT_RETURN_IF_LOG(!UnitTest_List(), "UnitTest_List failed");
 	JPT_RETURN_IF_LOG(!UnitTest_unordered_map(), "UnitTest_unordered_map failed");
