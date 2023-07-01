@@ -179,8 +179,12 @@ namespace jpt
 	inline void basic_string<CharType>::append(const CharType* inString)
 	{
 		const size_t inStringSize = GetStrLength(inString);
-		const size_t newSize = m_size + inStringSize;
+		if (inStringSize == 0)
+		{
+			return;
+		}
 
+		const size_t newSize = m_size + inStringSize;
 		if (newSize > m_capacity)
 		{
 			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
@@ -194,8 +198,12 @@ namespace jpt
 	template<typename CharType>
 	inline void basic_string<CharType>::append(const basic_string<CharType>& inString)
 	{
-		const size_t newSize = m_size + inString.size();
+		if (inString.empty())
+		{
+			return;
+		}
 
+		const size_t newSize = m_size + inString.size();
 		if (newSize > m_capacity)
 		{
 			UpdateBuffer(newSize * kCapacityMultiplier);		// Reserve some memory storage to append stuff
@@ -230,6 +238,11 @@ namespace jpt
 
 		JPT_ASSERT((pos + count) <= m_size, "substr cannot exceeds string's bound");
 
+		if (count == 0)
+		{
+			return jpt::basic_string<CharType>();
+		}
+
 		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
 
 		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[pos], count);
@@ -263,7 +276,7 @@ namespace jpt
 			const basic_string<CharType> suff = substr(foundPos + stringToFindSize);
 
 			*this = pre + replaced + suff;
-			startIndex = foundPos + replaced.size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'
+			startIndex = foundPos + replaced.size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'		
 		}
 
 		return *this;
@@ -273,11 +286,7 @@ namespace jpt
 	inline size_t basic_string<CharType>::find(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
 		const size_t stringToFindSize = GetStrLength(stringToFind);
-
-		if (endIndex == npos)
-		{
-			endIndex = m_size;
-		}
+		jpt::ClampTo(endIndex, size_t(0), m_size);
 
 		jpt::basic_string<CharType> current;
 		for (size_t i = startIndex; i < endIndex; ++i)
