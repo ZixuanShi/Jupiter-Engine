@@ -62,12 +62,12 @@ bool UnitTest_Array()
 	JPT_RETURN_FALSE_IF_LOG(jptStringArray5.size() != 5, "");
 	for (size_t i = 0; i < jptStringArray5.size(); ++i)
 	{
-		JPT_RETURN_FALSE_IF_LOG(jptStringArray5[i] != jpt::itoa(int32(i)), "");
+		JPT_RETURN_FALSE_IF_LOG(jptStringArray5[i] != jpt::to_string(i), "");
 	}
 	num = 0;
 	for (const jpt::string& value : jptStringArray5)
 	{
-		JPT_RETURN_FALSE_IF_LOG(value != jpt::itoa(int32(num)), "");
+		JPT_RETURN_FALSE_IF_LOG(value != jpt::to_string(num), "");
 		++num;
 	}
 
