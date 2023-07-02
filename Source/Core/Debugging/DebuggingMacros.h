@@ -22,6 +22,8 @@ namespace jpt
 		Example:
 		int a = 10;
 		int b = 11;
+		JPT_ASSERT(a == 9 && b == 10);
+		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10");
 		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10, received %d and %d", a, b);*/
 	#define JPT_ASSERT(expression, ...) \
 		if (!(expression))\
