@@ -131,12 +131,15 @@ Functions</h2></td></tr>
 <tr class="separator:abaf19eaf5f17612398073d2b01289e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3188deb40d28e84060b8934ea8f34ce5"><td class="memItemLeft" align="right" valign="top">std::wostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a3188deb40d28e84060b8934ea8f34ce5">jpt::operator&lt;&lt;</a> (std::wostream &amp;stream, const <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> &amp;<a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a>)</td></tr>
 <tr class="separator:a3188deb40d28e84060b8934ea8f34ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfa1fe394609ca2011083643d1e96b50"><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
-<tr class="memitem:abfa1fe394609ca2011083643d1e96b50"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">jpt::to_string</a> (const Type &amp;object)</td></tr>
-<tr class="separator:abfa1fe394609ca2011083643d1e96b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5c7d71f002b603a3f65e25a93b43e521">jpt::to_string&lt; int32 &gt;</a> (const <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;num)</td></tr>
-<tr class="separator:a5c7d71f002b603a3f65e25a93b43e521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9162a5ebfda93f3b818f93d697ae3174"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a9162a5ebfda93f3b818f93d697ae3174"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!std::is_arithmetic_v&lt; Type &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a9162a5ebfda93f3b818f93d697ae3174">jpt::to_string</a> (const Type &amp;object)</td></tr>
+<tr class="separator:a9162a5ebfda93f3b818f93d697ae3174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38c16616b5f22a50ba25bce85511bd18"><td class="memTemplParams" colspan="2">template&lt;typename IntegerType &gt; </td></tr>
+<tr class="memitem:a38c16616b5f22a50ba25bce85511bd18"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; std::is_integral_v&lt; IntegerType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a38c16616b5f22a50ba25bce85511bd18">jpt::to_string</a> (IntegerType integer)</td></tr>
+<tr class="separator:a38c16616b5f22a50ba25bce85511bd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5624110d44526713c174af6ee6141187"><td class="memTemplParams" colspan="2">template&lt;typename FloatingType &gt; </td></tr>
+<tr class="memitem:a5624110d44526713c174af6ee6141187"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; std::is_floating_point_v&lt; FloatingType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5624110d44526713c174af6ee6141187">jpt::to_string</a> (FloatingType num, size_t precision=2)</td></tr>
+<tr class="separator:a5624110d44526713c174af6ee6141187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

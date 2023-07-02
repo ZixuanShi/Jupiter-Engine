@@ -19,7 +19,7 @@ var classjpt_1_1vector =
     [ "clear", "classjpt_1_1vector.html#a72d9f3bfab8c9fc5b137116c45689eae", null ],
     [ "data", "classjpt_1_1vector.html#a067f4183e8dbe12c30a184983ad3e8f0", null ],
     [ "data", "classjpt_1_1vector.html#a87267dcd67456fc383370e3063f617ec", null ],
-    [ "emplace_back", "classjpt_1_1vector.html#a9fc5b00d0cfe4baee1b9db20ca4bc29c", null ],
+    [ "emplace_back", "classjpt_1_1vector.html#ac6b854c020ab7377c3fbe66a0bacd65e", null ],
     [ "empty", "classjpt_1_1vector.html#ae0944c9d831718da8648e6f7b05418ba", null ],
     [ "end", "classjpt_1_1vector.html#a255a06f6f2499618e5c513faeafe48ce", null ],
     [ "end", "classjpt_1_1vector.html#a6f419562f952c0d2d353be663db261f8", null ],
@@ -36,7 +36,6 @@ var classjpt_1_1vector =
     [ "push_back", "classjpt_1_1vector.html#a39d9b14c856014b62743ac086371affa", null ],
     [ "push_back", "classjpt_1_1vector.html#a4e85bbccd797c5e37634ba5c6dbc0fcf", null ],
     [ "reserve", "classjpt_1_1vector.html#a80f81e7fb88a852a77b2972cb6d30ace", null ],
-    [ "resize", "classjpt_1_1vector.html#ad020861ebb3d2d95c0c8395d771a86b2", null ],
-    [ "resize", "classjpt_1_1vector.html#aa60668eb7c2d89fefb299bc71ab0c960", null ],
+    [ "resize", "classjpt_1_1vector.html#a25f72d6b5ac062a75d3f1ddd3df16c70", null ],
     [ "size", "classjpt_1_1vector.html#a97da6b355d685cf767ac8425ac1ff8da", null ]
 ];

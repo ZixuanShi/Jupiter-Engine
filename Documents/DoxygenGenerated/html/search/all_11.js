@@ -8,7 +8,7 @@ var searchData=
   ['settitle_5',['SetTitle',['../classjpt_1_1_window_base.html#a308feddeda19d82a47791c48f5268f07',1,'jpt::WindowBase']]],
   ['setusewarpdevice_6',['SetUseWarpDevice',['../classjpt_1_1_window_base.html#ac0ce5c098f10de6714f828e88172ef4a',1,'jpt::WindowBase']]],
   ['setwidth_7',['SetWidth',['../classjpt_1_1_window_base.html#a9cf4e6561f4d4bda0f14d99a86614bad',1,'jpt::WindowBase']]],
-  ['size_8',['size',['../classjpt_1_1list.html#aa34880f1c0150ec9453f08a820794c8e',1,'jpt::list::size()'],['../classjpt_1_1vector.html#a97da6b355d685cf767ac8425ac1ff8da',1,'jpt::vector::size()'],['../classjpt_1_1basic__string.html#a4ec0755183130c39b5ab71814070a8f3',1,'jpt::basic_string::size()'],['../classjpt_1_1basic__string__view.html#a6e99a19c9990420f00b60d69fc77f8f6',1,'jpt::basic_string_view::size()']]],
+  ['size_8',['size',['../classjpt_1_1array.html#a472f5af84ba9dd2cd232f4f2b39b325c',1,'jpt::array::size()'],['../classjpt_1_1list.html#aa34880f1c0150ec9453f08a820794c8e',1,'jpt::list::size()'],['../classjpt_1_1vector.html#a97da6b355d685cf767ac8425ac1ff8da',1,'jpt::vector::size()'],['../classjpt_1_1basic__string.html#a4ec0755183130c39b5ab71814070a8f3',1,'jpt::basic_string::size()'],['../classjpt_1_1basic__string__view.html#a6e99a19c9990420f00b60d69fc77f8f6',1,'jpt::basic_string_view::size()']]],
   ['start_9',['Start',['../classjpt_1_1_timer.html#a351d94633edc87185287249418d2e924',1,'jpt::Timer']]],
   ['std_10',['std',['../namespacestd.html',1,'']]],
   ['strcpy_11',['StrCpy',['../namespacejpt.html#ad0f9c2740e8fe80fd28a09b9503a04db',1,'jpt']]],
@@ -25,5 +25,6 @@ var searchData=
   ['strncpy_22',['StrNCpy',['../namespacejpt.html#a187f9975268a23f60441284364fbc25e',1,'jpt']]],
   ['substr_23',['substr',['../classjpt_1_1basic__string.html#ade63b3468a4f892e2b9f17eb89d42fa5',1,'jpt::basic_string']]],
   ['swap_24',['swap',['../namespacejpt.html#a1c97aa9176b5d959dc3a3b3489826c1f',1,'jpt']]],
-  ['systemheaders_2eh_25',['SystemHeaders.h',['../_system_headers_8h.html',1,'']]]
+  ['systemheaders_2eh_25',['SystemHeaders.h',['../_system_headers_8h.html',1,'']]],
+  ['systeminfo_26',['SystemInfo',['../classjpt_1_1_logger.html#ac03610c4f2e6ef51793d6c5d89e65d93a747dbff7cbf77d5d058c04fcde2c4901',1,'jpt::Logger']]]
 ];

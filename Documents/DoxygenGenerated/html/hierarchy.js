@@ -3,6 +3,7 @@ var hierarchy =
     [ "jpt::ApplicationBase", "classjpt_1_1_application_base.html", [
       [ "jpt::Win64Application", "classjpt_1_1_win64_application.html", null ]
     ] ],
+    [ "jpt::array< _ValueType, kSize >", "classjpt_1_1array.html", null ],
     [ "jpt::basic_string< CharType >", "classjpt_1_1basic__string.html", null ],
     [ "jpt::basic_string< char >", "classjpt_1_1basic__string.html", null ],
     [ "jpt::basic_string< wchar_t >", "classjpt_1_1basic__string.html", null ],

@@ -1,20 +1,7 @@
 var searchData=
 [
-  ['setaspectratio_0',['SetAspectRatio',['../classjpt_1_1_window_base.html#a9c72616b69b61e2a9a58d839e036f318',1,'jpt::WindowBase']]],
-  ['setheight_1',['SetHeight',['../classjpt_1_1_window_base.html#a2ab065e28da623aa2f1c968dd4c30d93',1,'jpt::WindowBase']]],
-  ['sethinstance_2',['SetHINSTANCE',['../classjpt_1_1_win64_application.html#a8086cd4922001a2212603685f075d12d',1,'jpt::Win64Application']]],
-  ['setncmdshow_3',['SetnCmdShow',['../classjpt_1_1_win64_application.html#ac5f15109b36b10200c03fd296ce7cff4',1,'jpt::Win64Application']]],
-  ['settitle_4',['SetTitle',['../classjpt_1_1_window_base.html#a308feddeda19d82a47791c48f5268f07',1,'jpt::WindowBase']]],
-  ['setusewarpdevice_5',['SetUseWarpDevice',['../classjpt_1_1_window_base.html#ac0ce5c098f10de6714f828e88172ef4a',1,'jpt::WindowBase']]],
-  ['setwidth_6',['SetWidth',['../classjpt_1_1_window_base.html#a9cf4e6561f4d4bda0f14d99a86614bad',1,'jpt::WindowBase']]],
-  ['size_7',['size',['../classjpt_1_1list.html#aa34880f1c0150ec9453f08a820794c8e',1,'jpt::list::size()'],['../classjpt_1_1vector.html#a97da6b355d685cf767ac8425ac1ff8da',1,'jpt::vector::size()'],['../classjpt_1_1basic__string.html#a4ec0755183130c39b5ab71814070a8f3',1,'jpt::basic_string::size()'],['../classjpt_1_1basic__string__view.html#a6e99a19c9990420f00b60d69fc77f8f6',1,'jpt::basic_string_view::size()']]],
-  ['start_8',['Start',['../classjpt_1_1_timer.html#a351d94633edc87185287249418d2e924',1,'jpt::Timer']]],
-  ['strcpy_9',['StrCpy',['../namespacejpt.html#ad0f9c2740e8fe80fd28a09b9503a04db',1,'jpt']]],
-  ['stringcmp_10',['StringCmp',['../namespacejpt.html#a12b1fb59d91e98fcbc5a3df23f146e91',1,'jpt']]],
-  ['strlen_11',['strlen',['../namespacejpt.html#abfa1a0a97c02dc7a01d06b77daa1ac4e',1,'jpt']]],
-  ['strncmp_12',['StrNCmp',['../namespacejpt.html#abb6eaa2ac86cd449a51517ac16bc4861',1,'jpt']]],
-  ['strncmp_13',['strncmp',['../namespacejpt.html#adc52545974343cf6511f12bce43079b4',1,'jpt']]],
-  ['strncpy_14',['StrNCpy',['../namespacejpt.html#a187f9975268a23f60441284364fbc25e',1,'jpt']]],
-  ['substr_15',['substr',['../classjpt_1_1basic__string.html#ade63b3468a4f892e2b9f17eb89d42fa5',1,'jpt::basic_string']]],
-  ['swap_16',['swap',['../namespacejpt.html#a1c97aa9176b5d959dc3a3b3489826c1f',1,'jpt']]]
+  ['takestring_0',['TakeString',['../classjpt_1_1basic__string.html#a49d86222a798711f612b478f1442b15c',1,'jpt::basic_string::TakeString(CharType *inString)'],['../classjpt_1_1basic__string.html#a3af5194d5a9faee9a2c2a4b703a49a6a',1,'jpt::basic_string::TakeString(jpt::basic_string&lt; CharType &gt; &amp;&amp;inString)']]],
+  ['to_5fstring_1',['to_string',['../namespacejpt.html#a9162a5ebfda93f3b818f93d697ae3174',1,'jpt::to_string(const Type &amp;object)'],['../namespacejpt.html#a38c16616b5f22a50ba25bce85511bd18',1,'jpt::to_string(IntegerType integer)'],['../namespacejpt.html#a5624110d44526713c174af6ee6141187',1,'jpt::to_string(FloatingType num, size_t precision=2)']]],
+  ['tostring_2',['ToString',['../classjpt_1_1_enum.html#adf4011cf42c8e91adb2da793b202ac5c',1,'jpt::Enum::ToString() const'],['../classjpt_1_1_enum.html#a5399bcf703b2ad3ce137d4177f04f334',1,'jpt::Enum::ToString(EnumType value)'],['../classjpt_1_1_enum.html#a52a644e40a94e5d642b6fc045b81e944',1,'jpt::Enum::ToString(int32 value)']]],
+  ['tostringview_3',['ToStringView',['../classjpt_1_1_enum.html#a845a330866bcae89a2f35de3f4e12411',1,'jpt::Enum::ToStringView() const'],['../classjpt_1_1_enum.html#ad7dc0eaf4533c2a924b1470c6ba18c71',1,'jpt::Enum::ToStringView(EnumType value)'],['../classjpt_1_1_enum.html#a398f3a1491253f8197b82d4d38433e1f',1,'jpt::Enum::ToStringView(int32 value)']]]
 ];

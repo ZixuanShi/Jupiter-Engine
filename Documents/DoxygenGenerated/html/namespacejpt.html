@@ -103,6 +103,8 @@ $(document).ready(function(){initNavTree('namespacejpt.html',''); initResizable(
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1_application_base.html">ApplicationBase</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1array.html">array</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1basic__string.html">basic_string</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjpt_1_1basic__string__view.html">basic_string_view</a></td></tr>
@@ -227,12 +229,13 @@ Functions</h2></td></tr>
 <tr class="separator:abfa1a0a97c02dc7a01d06b77daa1ac4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada8ed5898c6b6e329b21e049a59bde4f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ada8ed5898c6b6e329b21e049a59bde4f">wcslen</a> (const wchar_t *inString)</td></tr>
 <tr class="separator:ada8ed5898c6b6e329b21e049a59bde4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf20a3f0e9e3cf66172e4586340dc2b"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2cf20a3f0e9e3cf66172e4586340dc2b">itoa</a> (<a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> value, <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> base)</td></tr>
-<tr class="separator:a2cf20a3f0e9e3cf66172e4586340dc2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc52545974343cf6511f12bce43079b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#adc52545974343cf6511f12bce43079b4">strncmp</a> (const char *string1, const char *string2, size_t size)</td></tr>
 <tr class="separator:adc52545974343cf6511f12bce43079b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9fba99c352035c1e8e00d62c132ac78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab9fba99c352035c1e8e00d62c132ac78">wcsncmp</a> (const wchar_t *string1, const wchar_t *string2, size_t size)</td></tr>
 <tr class="separator:ab9fba99c352035c1e8e00d62c132ac78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1234fca94e05b3a79675e00acd5ff2bf"><td class="memTemplParams" colspan="2">template&lt;typename IntegerType &gt; </td></tr>
+<tr class="memitem:a1234fca94e05b3a79675e00acd5ff2bf"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> char *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a1234fca94e05b3a79675e00acd5ff2bf">itoa</a> (IntegerType value, <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> base=10)</td></tr>
+<tr class="separator:a1234fca94e05b3a79675e00acd5ff2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memTemplParams" colspan="2">template&lt;typename CharType &gt; </td></tr>
 <tr class="memitem:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a3a6ed1f7e254f92ade469d90a7784b03">GetStrLength</a> (const CharType *inString)</td></tr>
 <tr class="separator:a3a6ed1f7e254f92ade469d90a7784b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,6 +257,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a6145709c8a69e16116b5a8c2bd503533"><td class="memTemplParams" colspan="2">template&lt;class TypeA , class TypeB &gt; </td></tr>
 <tr class="memitem:a6145709c8a69e16116b5a8c2bd503533"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structjpt_1_1pair.html">pair</a>&lt; TypeA, TypeB &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a6145709c8a69e16116b5a8c2bd503533">make_pair</a> (TypeA &amp;&amp;inFirst, TypeB &amp;&amp;inSecond)</td></tr>
 <tr class="separator:a6145709c8a69e16116b5a8c2bd503533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e100de132666f0c84f30d70e045248b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2e100de132666f0c84f30d70e045248b">locGetLogStr</a> (const <a class="el" href="classjpt_1_1_logger.html#ac03610c4f2e6ef51793d6c5d89e65d93">Logger::ELogType</a> &amp;type)</td></tr>
+<tr class="separator:a2e100de132666f0c84f30d70e045248b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ddad12f8080db9b22ac5be5ba4f26a3"><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
+<tr class="memitem:a7ddad12f8080db9b22ac5be5ba4f26a3"><td class="memTemplItemLeft" align="right" valign="top">Type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a7ddad12f8080db9b22ac5be5ba4f26a3">GetClamped</a> (const Type &amp;value, const Type &amp;min, const Type &amp;max)</td></tr>
+<tr class="separator:a7ddad12f8080db9b22ac5be5ba4f26a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52454091e8eec28da366aa6e38e0d4c6"><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
+<tr class="memitem:a52454091e8eec28da366aa6e38e0d4c6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a52454091e8eec28da366aa6e38e0d4c6">ClampTo</a> (Type &amp;outValue, const Type &amp;min, const Type &amp;max)</td></tr>
+<tr class="separator:a52454091e8eec28da366aa6e38e0d4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2625f9a31e729d8776660837a5ef0a4d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a2625f9a31e729d8776660837a5ef0a4d">locIsValid</a> (char c)</td></tr>
 <tr class="separator:a2625f9a31e729d8776660837a5ef0a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af96aa7cae04a44ddf02d53f7b36648e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#af96aa7cae04a44ddf02d53f7b36648e3">locIsWhiteSpace</a> (char c)</td></tr>
@@ -271,12 +282,15 @@ Functions</h2></td></tr>
 <tr class="separator:abaf19eaf5f17612398073d2b01289e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3188deb40d28e84060b8934ea8f34ce5"><td class="memItemLeft" align="right" valign="top">std::wostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a3188deb40d28e84060b8934ea8f34ce5">operator&lt;&lt;</a> (std::wostream &amp;stream, const <a class="el" href="namespacejpt.html#a079b9851459d8b7109464b00efec936a">jpt::wstring</a> &amp;<a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a>)</td></tr>
 <tr class="separator:a3188deb40d28e84060b8934ea8f34ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfa1fe394609ca2011083643d1e96b50"><td class="memTemplParams" colspan="2">template&lt;class Type &gt; </td></tr>
-<tr class="memitem:abfa1fe394609ca2011083643d1e96b50"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">to_string</a> (const Type &amp;object)</td></tr>
-<tr class="separator:abfa1fe394609ca2011083643d1e96b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
-<tr class="memitem:a5c7d71f002b603a3f65e25a93b43e521"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5c7d71f002b603a3f65e25a93b43e521">to_string&lt; int32 &gt;</a> (const <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;num)</td></tr>
-<tr class="separator:a5c7d71f002b603a3f65e25a93b43e521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9162a5ebfda93f3b818f93d697ae3174"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; </td></tr>
+<tr class="memitem:a9162a5ebfda93f3b818f93d697ae3174"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!std::is_arithmetic_v&lt; Type &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a9162a5ebfda93f3b818f93d697ae3174">to_string</a> (const Type &amp;object)</td></tr>
+<tr class="separator:a9162a5ebfda93f3b818f93d697ae3174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38c16616b5f22a50ba25bce85511bd18"><td class="memTemplParams" colspan="2">template&lt;typename IntegerType &gt; </td></tr>
+<tr class="memitem:a38c16616b5f22a50ba25bce85511bd18"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; std::is_integral_v&lt; IntegerType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a38c16616b5f22a50ba25bce85511bd18">to_string</a> (IntegerType integer)</td></tr>
+<tr class="separator:a38c16616b5f22a50ba25bce85511bd18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5624110d44526713c174af6ee6141187"><td class="memTemplParams" colspan="2">template&lt;typename FloatingType &gt; </td></tr>
+<tr class="memitem:a5624110d44526713c174af6ee6141187"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; std::is_floating_point_v&lt; FloatingType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#a5624110d44526713c174af6ee6141187">to_string</a> (FloatingType num, size_t precision=2)</td></tr>
+<tr class="separator:a5624110d44526713c174af6ee6141187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab43d126afc91feea1964a52703264c80"><td class="memTemplParams" colspan="2">template&lt;typename CharType &gt; </td></tr>
 <tr class="memitem:ab43d126afc91feea1964a52703264c80"><td class="memTemplItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacejpt.html#ab43d126afc91feea1964a52703264c80">operator&lt;&lt;</a> (std::ostream &amp;stream, const <a class="el" href="classjpt_1_1basic__string__view.html">jpt::basic_string_view</a>&lt; CharType &gt; &amp;<a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">string</a>)</td></tr>
 <tr class="separator:ab43d126afc91feea1964a52703264c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -537,6 +551,48 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a52454091e8eec28da366aa6e38e0d4c6" name="a52454091e8eec28da366aa6e38e0d4c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52454091e8eec28da366aa6e38e0d4c6">&#9670;&#160;</a></span>ClampTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Type &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void jpt::ClampTo </td>
+          <td>(</td>
+          <td class="paramtype">Type &amp;&#160;</td>
+          <td class="paramname"><em>outValue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Type &amp;&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Type &amp;&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">outValue</td><td>Will be changed if less than min or bigger than max </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a8bf2ff847d63c27bf3796580830d7ce5" name="a8bf2ff847d63c27bf3796580830d7ce5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bf2ff847d63c27bf3796580830d7ce5">&#9670;&#160;</a></span>FixedSlashes()</h2>
 
@@ -591,6 +647,43 @@ template&lt;class StringType &gt; </div>
 </table>
 </div><div class="memdoc">
 <p>Fix slashes in a file path for different platforms </p>
+
+</div>
+</div>
+<a id="a7ddad12f8080db9b22ac5be5ba4f26a3" name="a7ddad12f8080db9b22ac5be5ba4f26a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ddad12f8080db9b22ac5be5ba4f26a3">&#9670;&#160;</a></span>GetClamped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Type &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Type jpt::GetClamped </td>
+          <td>(</td>
+          <td class="paramtype">const Type &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Type &amp;&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Type &amp;&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive </dd></dl>
 
 </div>
 </div>
@@ -928,16 +1021,21 @@ template&lt;typename CharType &gt; </div>
 
 </div>
 </div>
-<a id="a2cf20a3f0e9e3cf66172e4586340dc2b" name="a2cf20a3f0e9e3cf66172e4586340dc2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cf20a3f0e9e3cf66172e4586340dc2b">&#9670;&#160;</a></span>itoa()</h2>
+<a id="a1234fca94e05b3a79675e00acd5ff2bf" name="a1234fca94e05b3a79675e00acd5ff2bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1234fca94e05b3a79675e00acd5ff2bf">&#9670;&#160;</a></span>itoa()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename IntegerType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f">JPT_API</a> char * jpt::itoa </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a>&#160;</td>
+          <td class="paramtype">IntegerType&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
@@ -952,15 +1050,38 @@ template&lt;typename CharType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>Convert from int32 to a char pointer holding the integer's value as string literal </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Convert from IntegerType to a char pointer holding the integer's value as string literal </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>The value to convert to char* </td></tr>
+    <tr><td class="paramname">value</td><td>The IntegerType value to convert to char* </td></tr>
     <tr><td class="paramname">base</td><td>The base of the value. Default to decimal as 10. Could be binary, oct, hex. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A char pointer pointing to the memory where we store the converted number's string literal </dd></dl>
+
+</div>
+</div>
+<a id="a2e100de132666f0c84f30d70e045248b" name="a2e100de132666f0c84f30d70e045248b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e100de132666f0c84f30d70e045248b">&#9670;&#160;</a></span>locGetLogStr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * jpt::locGetLogStr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classjpt_1_1_logger.html#ac03610c4f2e6ef51793d6c5d89e65d93">Logger::ELogType</a> &amp;&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1531,19 +1652,19 @@ template&lt;class Type &gt; </div>
 
 </div>
 </div>
-<a id="abfa1fe394609ca2011083643d1e96b50" name="abfa1fe394609ca2011083643d1e96b50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfa1fe394609ca2011083643d1e96b50">&#9670;&#160;</a></span>to_string()</h2>
+<a id="a9162a5ebfda93f3b818f93d697ae3174" name="a9162a5ebfda93f3b818f93d697ae3174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9162a5ebfda93f3b818f93d697ae3174">&#9670;&#160;</a></span>to_string() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Type &gt; </div>
+template&lt;typename Type &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> jpt::to_string </td>
+          <td class="memname">std::enable_if_t&lt;!std::is_arithmetic_v&lt; Type &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt; jpt::to_string </td>
           <td>(</td>
           <td class="paramtype">const Type &amp;&#160;</td>
           <td class="paramname"><em>object</em></td><td>)</td>
@@ -1559,22 +1680,60 @@ template&lt;class Type &gt; </div>
 
 </div>
 </div>
-<a id="a5c7d71f002b603a3f65e25a93b43e521" name="a5c7d71f002b603a3f65e25a93b43e521"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c7d71f002b603a3f65e25a93b43e521">&#9670;&#160;</a></span>to_string&lt; int32 &gt;()</h2>
+<a id="a5624110d44526713c174af6ee6141187" name="a5624110d44526713c174af6ee6141187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5624110d44526713c174af6ee6141187">&#9670;&#160;</a></span>to_string() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;&gt; </div>
+template&lt;typename FloatingType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> <a class="el" href="namespacejpt.html#abfa1fe394609ca2011083643d1e96b50">jpt::to_string</a>&lt; <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &gt; </td>
+          <td class="memname">std::enable_if_t&lt; std::is_floating_point_v&lt; FloatingType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt; jpt::to_string </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a> &amp;&#160;</td>
-          <td class="paramname"><em>num</em></td><td>)</td>
+          <td class="paramtype">FloatingType&#160;</td>
+          <td class="paramname"><em>num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>precision</em> = <code>2</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a38c16616b5f22a50ba25bce85511bd18" name="a38c16616b5f22a50ba25bce85511bd18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38c16616b5f22a50ba25bce85511bd18">&#9670;&#160;</a></span>to_string() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename IntegerType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::enable_if_t&lt; std::is_integral_v&lt; IntegerType &gt;, <a class="el" href="namespacejpt.html#af27e0194c55d40b135b3bdf5d6329b81">jpt::string</a> &gt; jpt::to_string </td>
+          <td>(</td>
+          <td class="paramtype">IntegerType&#160;</td>
+          <td class="paramname"><em>integer</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

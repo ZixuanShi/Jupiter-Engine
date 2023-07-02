@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "jpt", "namespacejpt.html", [
       [ "ApplicationBase", "classjpt_1_1_application_base.html", "classjpt_1_1_application_base" ],
+      [ "array", "classjpt_1_1array.html", "classjpt_1_1array" ],
       [ "basic_string", "classjpt_1_1basic__string.html", "classjpt_1_1basic__string" ],
       [ "basic_string_view", "classjpt_1_1basic__string__view.html", "classjpt_1_1basic__string__view" ],
       [ "DX12Renderer", "classjpt_1_1_d_x12_renderer.html", null ],

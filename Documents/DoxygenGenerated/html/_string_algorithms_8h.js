@@ -2,7 +2,7 @@ var _string_algorithms_8h =
 [
     [ "jpt::hash< const char * >", "structjpt_1_1hash_3_01const_01char_01_5_01_4.html", "structjpt_1_1hash_3_01const_01char_01_5_01_4" ],
     [ "GetStrLength", "_string_algorithms_8h.html#a3a6ed1f7e254f92ade469d90a7784b03", null ],
-    [ "itoa", "_string_algorithms_8h.html#a2cf20a3f0e9e3cf66172e4586340dc2b", null ],
+    [ "itoa", "_string_algorithms_8h.html#a1234fca94e05b3a79675e00acd5ff2bf", null ],
     [ "StrCpy", "_string_algorithms_8h.html#ad0f9c2740e8fe80fd28a09b9503a04db", null ],
     [ "StringCmp", "_string_algorithms_8h.html#a12b1fb59d91e98fcbc5a3df23f146e91", null ],
     [ "strlen", "_string_algorithms_8h.html#abfa1a0a97c02dc7a01d06b77daa1ac4e", null ],

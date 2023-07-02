@@ -96,10 +96,10 @@ $(document).ready(function(){initNavTree('_helpers_8h_source.html',''); initResi
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a22b4baafeb4a7112ea137acb1d947705">    9</a></span><span class="preprocessor">#define JPT_RETURN_VALUE_IF_LOG(condition, returnValue, message, ...)\</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a60f8210edffa652d53887bd80dad88bf">    9</a></span><span class="preprocessor">#define JPT_RETURN_VALUE_IF_LOG(condition, returnValue, ...)\</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">    if ((condition))\</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">    {\</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">        JPT_LOG(message, __VA_ARGS__);\</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">        JPT_LOG(__VA_ARGS__);\</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">        return returnValue;\</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">    }</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
@@ -109,14 +109,14 @@ $(document).ready(function(){initNavTree('_helpers_8h_source.html',''); initResi
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">        return returnValue;\</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    }</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="_helpers_8h.html#aa04f225c51c375a7436e53f5ab3cc92a">   22</a></span><span class="preprocessor">#define JPT_RETURN_FALSE_IF_LOG(condition, message, ...)\</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">    JPT_RETURN_VALUE_IF_LOG(condition, false, message, __VA_ARGS__);</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a8d8150ceee842b1a8fd7672dc0d13ef7">   22</a></span><span class="preprocessor">#define JPT_RETURN_FALSE_IF_LOG(condition, ...)\</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">    JPT_RETURN_VALUE_IF_LOG(condition, false, __VA_ARGS__);</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a0a56bdc92e0b0c37a4e1d122ee71afee">   25</a></span><span class="preprocessor">#define JPT_RETURN_FALSE_IF(condition)\</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">    JPT_RETURN_VALUE_IF(condition, false);</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a63ab52f285454fb38f91a6df1fdab59b">   28</a></span><span class="preprocessor">#define JPT_RETURN_IF_LOG(condition, message, ...)\</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">    JPT_RETURN_VALUE_IF_LOG(condition, void(), message, __VA_ARGS__);</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="_helpers_8h.html#abb1235bf8e9a21305582570fc21703ba">   28</a></span><span class="preprocessor">#define JPT_RETURN_IF_LOG(condition, ...)\</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">    JPT_RETURN_VALUE_IF_LOG(condition, void(), __VA_ARGS__);</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="_helpers_8h.html#ab50321b26533e12ae56a27d7590d70fe">   31</a></span><span class="preprocessor">#define JPT_RETURN_IF(condition)\</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">    JPT_RETURN_VALUE_IF(condition, void());</span></div>
@@ -129,8 +129,10 @@ $(document).ready(function(){initNavTree('_helpers_8h_source.html',''); initResi
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a4f7fa22a26cbb6cb6082a4f849501c25">   42</a></span><span class="preprocessor">#define WIDE1(x) WIDE2(x)</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="_helpers_8h.html#aa46368d8dc5683fc05fde329f4c69532">   43</a></span><span class="preprocessor">#define WFILE WIDE1(__FILE__)</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a0e70c005fe815b81a04b8d84e9c6d638">   45</a></span><span class="preprocessor">#define COMBINE_STR(A, B)   A##B</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a44e54410e49caa51173fc6eefcac941b">   46</a></span><span class="preprocessor">#define WSTRING(cStr) L##cStr</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a0e70c005fe815b81a04b8d84e9c6d638">   46</a></span><span class="preprocessor">#define COMBINE_STR(A, B)   A##B</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="_helpers_8h.html#a44e54410e49caa51173fc6eefcac941b">   47</a></span><span class="preprocessor">#define WSTRING(cStr) L##cStr</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="_helpers_8h.html#aee8baa349926566264430dc3ade47e24">   50</a></span><span class="preprocessor">#define HAS_ARGS(...) (&quot;&quot;</span>#__VA_ARGS__[0] != &#39;\0&#39;)</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

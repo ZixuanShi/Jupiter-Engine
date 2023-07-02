@@ -407,8 +407,8 @@ $(document).ready(function(){initNavTree('_doubly_linked_list_8h_source.html',''
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> _ValueType&gt;</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_class" href="classjpt_1_1list.html">list&lt;_ValueType&gt;::AddNode</a>(Node* pNewNode, <span class="keywordtype">size_t</span> index)</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    {</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <a class="code hl_define" href="_debugging_macros_8h.html#af83a95d639fa41a96b2f8c36aca772a7">JPT_ASSERT</a>(pNewNode, <span class="stringliteral">&quot;Trying to add an invalid node to this list&quot;</span>);</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <a class="code hl_define" href="_debugging_macros_8h.html#af83a95d639fa41a96b2f8c36aca772a7">JPT_ASSERT</a>(index &lt;= m_size, <span class="stringliteral">&quot;Trying to add a node at an invalid index&quot;</span>);</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <a class="code hl_define" href="_debugging_macros_8h.html#ace548ce418714d42acaed29e3f02fbea">JPT_ASSERT</a>(pNewNode, <span class="stringliteral">&quot;Trying to add an invalid node to this list&quot;</span>);</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>        <a class="code hl_define" href="_debugging_macros_8h.html#ace548ce418714d42acaed29e3f02fbea">JPT_ASSERT</a>(index &lt;= m_size, <span class="stringliteral">&quot;Trying to add a node at an invalid index&quot;</span>);</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        <span class="comment">// Empty list</span></div>
 <div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="classjpt_1_1list.html#a4915bc9595d5b319f1e4fb68dbd149d9">empty</a>())</div>
@@ -480,7 +480,7 @@ $(document).ready(function(){initNavTree('_doubly_linked_list_8h_source.html',''
 <div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> _ValueType&gt;</div>
 <div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> list&lt;_ValueType&gt;::RemoveNode(<span class="keywordtype">size_t</span> index)</div>
 <div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    {</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <a class="code hl_define" href="_debugging_macros_8h.html#af83a95d639fa41a96b2f8c36aca772a7">JPT_ASSERT</a>(index &lt;= m_size, <span class="stringliteral">&quot;Trying to remove a node at an invalid index&quot;</span>);</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <a class="code hl_define" href="_debugging_macros_8h.html#ace548ce418714d42acaed29e3f02fbea">JPT_ASSERT</a>(index &lt;= m_size, <span class="stringliteral">&quot;Trying to remove a node at an invalid index&quot;</span>);</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>        Node* pNodeToRemove = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span> </div>
@@ -551,7 +551,7 @@ $(document).ready(function(){initNavTree('_doubly_linked_list_8h_source.html',''
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>    }</div>
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span>}</div>
 <div class="ttc" id="a_building_macros_8h_html_a983f3a50162ecf891dd9698270d5f6d7"><div class="ttname"><a href="_building_macros_8h.html#a983f3a50162ecf891dd9698270d5f6d7">JPT_DELETE</a></div><div class="ttdeci">#define JPT_DELETE(pPointer)</div><div class="ttdef"><b>Definition</b> BuildingMacros.h:26</div></div>
-<div class="ttc" id="a_debugging_macros_8h_html_af83a95d639fa41a96b2f8c36aca772a7"><div class="ttname"><a href="_debugging_macros_8h.html#af83a95d639fa41a96b2f8c36aca772a7">JPT_ASSERT</a></div><div class="ttdeci">#define JPT_ASSERT(succeeded,...)</div><div class="ttdef"><b>Definition</b> DebuggingMacros.h:17</div></div>
+<div class="ttc" id="a_debugging_macros_8h_html_ace548ce418714d42acaed29e3f02fbea"><div class="ttname"><a href="_debugging_macros_8h.html#ace548ce418714d42acaed29e3f02fbea">JPT_ASSERT</a></div><div class="ttdeci">#define JPT_ASSERT(expression,...)</div><div class="ttdef"><b>Definition</b> DebuggingMacros.h:24</div></div>
 <div class="ttc" id="a_type_defs_8h_html_a3271a6f688eb2ba4047a2982ff49919a"><div class="ttname"><a href="_type_defs_8h.html#a3271a6f688eb2ba4047a2982ff49919a">int32</a></div><div class="ttdeci">int32_t int32</div><div class="ttdef"><b>Definition</b> TypeDefs.h:10</div></div>
 <div class="ttc" id="aclassjpt_1_1list_html"><div class="ttname"><a href="classjpt_1_1list.html">jpt::list</a></div><div class="ttdef"><b>Definition</b> DoublyLinkedList.h:10</div></div>
 <div class="ttc" id="aclassjpt_1_1list_html_a0a502ed01969920a405968c80b5635a2"><div class="ttname"><a href="classjpt_1_1list.html#a0a502ed01969920a405968c80b5635a2">jpt::list::back</a></div><div class="ttdeci">ValueType &amp; back()</div><div class="ttdef"><b>Definition</b> DoublyLinkedList.h:98</div></div>
@@ -581,7 +581,7 @@ $(document).ready(function(){initNavTree('_doubly_linked_list_8h_source.html',''
 <div class="ttc" id="aclassjpt_1_1list_html_af4c57673856085e9d8552fd3c254baec"><div class="ttname"><a href="classjpt_1_1list.html#af4c57673856085e9d8552fd3c254baec">jpt::list::emplace_back</a></div><div class="ttdeci">void emplace_back(Args &amp;&amp;... args)</div><div class="ttdef"><b>Definition</b> DoublyLinkedList.h:262</div></div>
 <div class="ttc" id="anamespacejpt_html"><div class="ttname"><a href="namespacejpt.html">jpt</a></div><div class="ttdef"><b>Definition</b> ApplicationBase.cpp:10</div></div>
 <div class="ttc" id="anamespacejpt_html_a3ceb8a7d2439a95cfcd084fd979ccee0"><div class="ttname"><a href="namespacejpt.html#a3ceb8a7d2439a95cfcd084fd979ccee0">jpt::move</a></div><div class="ttdeci">RemoveReference&lt; Type &gt;::Type &amp;&amp; move(Type &amp;&amp;object)</div><div class="ttdef"><b>Definition</b> CommonAlgorithms.h:9</div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition</b> String.h:466</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition</b> String.h:482</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

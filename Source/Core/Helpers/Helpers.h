@@ -38,13 +38,13 @@
 	JPT_DELETE(pPointer);
 
 /** __FILE__ but with L"XXX" wide string */
-#define WIDE2(x) L##x
-#define WIDE1(x) WIDE2(x)
-#define WFILE WIDE1(__FILE__)
+#define JPT_WIDE2(x) L##x
+#define JPT_WIDE1(x) JPT_WIDE2(x)
+#define JPT_WFILE JPT_WIDE1(__FILE__)
 
 /** Converts a const char* to const wchar_t* */
-#define COMBINE_STR(A, B)   A##B
-#define WSTRING(cStr) L##cStr
+#define JPT_COMBINE_STR(A, B)   A##B
+#define JPT_TO_WSTRING(cStr) L##cStr
 
 /** @return true if a macro's variadic arguments is not empty. false if the macro doesn't have optional arguments */
-#define HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')
+#define JPT_HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')

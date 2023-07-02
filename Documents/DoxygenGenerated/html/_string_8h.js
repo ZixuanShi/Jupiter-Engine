@@ -7,6 +7,7 @@ var _string_8h =
     [ "operator+", "_string_8h.html#aeb7751e604506b1049e769c30878f7f3", null ],
     [ "operator<<", "_string_8h.html#abaf19eaf5f17612398073d2b01289e40", null ],
     [ "operator<<", "_string_8h.html#a3188deb40d28e84060b8934ea8f34ce5", null ],
-    [ "to_string", "_string_8h.html#abfa1fe394609ca2011083643d1e96b50", null ],
-    [ "to_string< int32 >", "_string_8h.html#a5c7d71f002b603a3f65e25a93b43e521", null ]
+    [ "to_string", "_string_8h.html#a9162a5ebfda93f3b818f93d697ae3174", null ],
+    [ "to_string", "_string_8h.html#a5624110d44526713c174af6ee6141187", null ],
+    [ "to_string", "_string_8h.html#a38c16616b5f22a50ba25bce85511bd18", null ]
 ];

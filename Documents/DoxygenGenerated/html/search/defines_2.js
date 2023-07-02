@@ -1,7 +1,26 @@
 var searchData=
 [
-  ['wfile_0',['WFILE',['../_helpers_8h.html#aa46368d8dc5683fc05fde329f4c69532',1,'Helpers.h']]],
-  ['wide1_1',['WIDE1',['../_helpers_8h.html#a4f7fa22a26cbb6cb6082a4f849501c25',1,'Helpers.h']]],
-  ['wide2_2',['WIDE2',['../_helpers_8h.html#a8f37c3ef5ebeb9372484022797e78b67',1,'Helpers.h']]],
-  ['wstring_3',['WSTRING',['../_helpers_8cpp.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.cpp'],['../_helpers_8h.html#a44e54410e49caa51173fc6eefcac941b',1,'WSTRING:&#160;Helpers.h']]]
+  ['jpt_5fapi_0',['JPT_API',['../_building_macros_8h.html#ac80d7217134ce48ac52913a694c7068f',1,'BuildingMacros.h']]],
+  ['jpt_5fassert_1',['JPT_ASSERT',['../_debugging_macros_8h.html#ace548ce418714d42acaed29e3f02fbea',1,'DebuggingMacros.h']]],
+  ['jpt_5fclean_5fthen_5fdelete_2',['JPT_CLEAN_THEN_DELETE',['../_helpers_8h.html#a335f25bc6ee17843a4da7d8d96e2a179',1,'Helpers.h']]],
+  ['jpt_5fdelete_3',['JPT_DELETE',['../_building_macros_8h.html#a983f3a50162ecf891dd9698270d5f6d7',1,'BuildingMacros.h']]],
+  ['jpt_5fdelete_5farray_4',['JPT_DELETE_ARRAY',['../_building_macros_8h.html#aa82fa18aedf253ed398e56cbcded0570',1,'BuildingMacros.h']]],
+  ['jpt_5fdeoptimize_5',['JPT_DEOPTIMIZE',['../_building_macros_8h.html#abe958b31d1207f70ea09334d19b3ed58',1,'BuildingMacros.h']]],
+  ['jpt_5fenum_6',['JPT_ENUM',['../_enum_8h.html#a4d1a63971b7f221dbd55b1fca5ed7cb8',1,'Enum.h']]],
+  ['jpt_5fenum_5fwith_5fstart_7',['JPT_ENUM_WITH_START',['../_enum_8h.html#a238ffdb97e9f41accca01f652482987b',1,'Enum.h']]],
+  ['jpt_5ferror_8',['JPT_ERROR',['../_logger_8h.html#ad912549f2aaa75b2ecb084f98cf072e2',1,'Logger.h']]],
+  ['jpt_5flog_9',['JPT_LOG',['../_logger_8h.html#aada0ac055d6d1fc70ebd21ab61eaa393',1,'Logger.h']]],
+  ['jpt_5freoptimize_10',['JPT_REOPTIMIZE',['../_building_macros_8h.html#a8cfd3486fff534e6b9adc4ed6934a145',1,'BuildingMacros.h']]],
+  ['jpt_5freturn_5ffalse_5fif_11',['JPT_RETURN_FALSE_IF',['../_helpers_8h.html#a0a56bdc92e0b0c37a4e1d122ee71afee',1,'Helpers.h']]],
+  ['jpt_5freturn_5ffalse_5fif_5flog_12',['JPT_RETURN_FALSE_IF_LOG',['../_helpers_8h.html#a8d8150ceee842b1a8fd7672dc0d13ef7',1,'Helpers.h']]],
+  ['jpt_5freturn_5fif_13',['JPT_RETURN_IF',['../_helpers_8h.html#ab50321b26533e12ae56a27d7590d70fe',1,'Helpers.h']]],
+  ['jpt_5freturn_5fif_5flog_14',['JPT_RETURN_IF_LOG',['../_helpers_8h.html#abb1235bf8e9a21305582570fc21703ba',1,'Helpers.h']]],
+  ['jpt_5freturn_5fvalue_5fif_15',['JPT_RETURN_VALUE_IF',['../_helpers_8h.html#ade5334c4adaf1819e21f9d536a616359',1,'Helpers.h']]],
+  ['jpt_5freturn_5fvalue_5fif_5flog_16',['JPT_RETURN_VALUE_IF_LOG',['../_helpers_8h.html#a60f8210edffa652d53887bd80dad88bf',1,'Helpers.h']]],
+  ['jpt_5fsafe_5fdelete_17',['JPT_SAFE_DELETE',['../_building_macros_8h.html#a4977cc7b83a8bf9c99dd0f32b3c3bbd7',1,'BuildingMacros.h']]],
+  ['jpt_5fsafe_5fdelete_5farray_18',['JPT_SAFE_DELETE_ARRAY',['../_building_macros_8h.html#a31301916bc40c96cd542c3dc623e27c3',1,'BuildingMacros.h']]],
+  ['jpt_5fstart_5ftiming_5fprofiler_19',['JPT_START_TIMING_PROFILER',['../_time_profiler_8h.html#ad7974485a2e512ab663cd10ffb57a913',1,'TimeProfiler.h']]],
+  ['jpt_5fsystem_5finfo_20',['JPT_SYSTEM_INFO',['../_logger_8h.html#a95c3fe3b02ca8680d90b5f8c95154cfe',1,'Logger.h']]],
+  ['jpt_5funused_21',['JPT_UNUSED',['../_building_macros_8h.html#aacffb073c775f4ffb5a3c8c9acefa0c6',1,'BuildingMacros.h']]],
+  ['jpt_5fwarning_22',['JPT_WARNING',['../_logger_8h.html#ac24ceb67d6f775807b975af8a508b99d',1,'Logger.h']]]
 ];
