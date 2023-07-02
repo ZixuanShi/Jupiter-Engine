@@ -20,11 +20,13 @@ namespace jpt
 	class JPT_API Logger
 	{
 	public:
-		JPT_ENUM(ELogType,
+		enum class ELogType
+		{
 			Log,			// From Client games
 			SystemInfo,		// From Engine
 			Warning,
-			Error);
+			Error
+		};
 
 	public:
 		/** Log a message to the terminal window

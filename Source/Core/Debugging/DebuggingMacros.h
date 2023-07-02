@@ -2,18 +2,18 @@
 
 #pragma once
 
-/** Assert with error message logging if Debug mode, do nothing if not Debugging
-	@param suceeded: A boolean expression to assert true
-	@param ...:	     Error messages if the succeeded went false */
 #ifdef JPT_ENABLE_ASSERTS
-	#include <assert.h>
 
-	#define JPT_ASSERT(succeeded, ...) \
-		assert((succeeded));
+	/** Assert with error message logging if Debug mode, do nothing if not Debugging
+		@param expression: A boolean expression to assert true
+		@param ...:	       Error messages if the expression went false */
+	#define JPT_ASSERT(expression, ...) \
+		if (!(expression))\
+		{\
+			JPT_ERROR("Assertion Failed: ", __VA_ARGS__);\
+			__debugbreak();\
+		}
 
-	#define JPT_STATIC_ASSERT(succeeded, message) \
-		static_assert(succeeded, message);
 #else
-	#define JPT_ASSERT(succeeded, ...) 
-	#define JPT_STATIC_ASSERT(succeeded, message) 
+	#define JPT_ASSERT(expression, ...) 
 #endif

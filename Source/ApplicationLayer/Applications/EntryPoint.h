@@ -28,7 +28,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 
-	jpt::Win64Application* pApplication = static_cast<jpt::Win64Application*>(CreateApplication());
+	jpt::Win64Application* pApplication = dynamic_cast<jpt::Win64Application*>(CreateApplication());
 	pApplication->SetHINSTANCE(hInstance);
 	pApplication->SetnCmdShow(nCmdShow);
 

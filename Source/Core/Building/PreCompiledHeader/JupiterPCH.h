@@ -27,15 +27,15 @@
 #include <utility>
 
 // Jupiter
-#include "Core/Building/BuildingMacros.h"
-#include "Core/Debugging/DebuggingMacros.h"
 #include "Core/Misc/TypeDefs.h"
+#include "Core/Building/BuildingMacros.h"
+#include "Core/Logging/Logger.h"
+#include "Core/Debugging/DebuggingMacros.h"
 #include "Core/Math/MathHeaders.h"
 #include "Core/Algorithms/AlgorithmsHeaders.h"
 #include "Core/DataStructures/DataStructuresHeaders.h"
 #include "Core/Misc/MiscHeader.h"
 #include "Core/Timing/TimingHeader.h"
-#include "Core/Logging/Logger.h"
 #include "Core/Helpers/Helpers.h"
 #include "Core/System/SystemHeaders.h"
 #include "Core/DataDriven/DataDrivenHeaders.h"
