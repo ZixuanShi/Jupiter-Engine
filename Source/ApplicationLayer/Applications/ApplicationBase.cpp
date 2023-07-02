@@ -33,7 +33,6 @@ namespace jpt
 		{
 			// TODO: Delta Time
 			// TODO: Process input
-			
 			Update();
 			Render();
 		}

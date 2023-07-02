@@ -19,14 +19,14 @@ namespace jpt
 		}
 	}
 
-	void Logger::Log(const ELogType& type, int32 line, const char* file, const char* message, ...)
+	void Logger::Log(const ELogType& type, int32 line, const char* file, const char* format, ...)
 	{
 		char messageBuffer[512];
 
 		va_list args;
-		va_start(args, message);
+		va_start(args, format);
 
-		vsprintf_s(messageBuffer, message, args);
+		vsprintf_s(messageBuffer, format, args);
 
 		va_end(args);
 
