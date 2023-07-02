@@ -26,14 +26,7 @@ namespace jpt
 	#define JPT_ASSERT(expression, ...) \
 		if (!(expression))\
 		{\
-			if (JPT_HAS_ARGS(#__VA_ARGS__))\
-			{\
-				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-			}\
-			else\
-			{\
-				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression);\
-			}\
+			jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
 			__debugbreak();\
 		}
 #else
