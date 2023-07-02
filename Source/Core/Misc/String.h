@@ -465,12 +465,12 @@ namespace jpt
 		return object.to_string();
 	}
 	template<typename IntegerType>
-	inline std::enable_if_t<std::is_integral_v<IntegerType>, jpt::string> to_string(IntegerType integer)
+	inline jpt::enable_if_t<std::is_integral_v<IntegerType>, jpt::string> to_string(IntegerType integer)
 	{
 		return jpt::string(jpt::itoa(integer));
 	}
 	template<typename FloatingType>
-	inline std::enable_if_t<std::is_floating_point_v<FloatingType>, jpt::string> to_string(FloatingType num, size_t precision = 2)
+	inline jpt::enable_if_t<std::is_floating_point_v<FloatingType>, jpt::string> to_string(FloatingType num, size_t precision = 2)
 	{
 		JPT_UNUSED(num);
 		JPT_UNUSED(precision);

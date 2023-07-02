@@ -38,4 +38,9 @@ namespace jpt
 	// Example: jpt::IsSameType<int32, float>::Value
 	template<typename A, typename B> struct IsSameType       { static constexpr bool Value = false; };
 	template<typename A>             struct IsSameType<A, A> { static constexpr bool Value = true;  };
+
+	// enable_if implementation
+	template<bool kCondition, typename ReturnType = void> struct enable_if {};
+	template<typename _ReturnType>	                      struct enable_if<true, _ReturnType> { using ReturnType = _ReturnType; };
+	template<bool kCondition, typename ReturnType = void> using enable_if_t = enable_if<kCondition, ReturnType>::ReturnType;
 }
