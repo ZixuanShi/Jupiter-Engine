@@ -7,6 +7,7 @@
 #include "Core/Misc/MiscUnitTests.h"
 #include "Core/System/SystemUnitTests.h"
 #include "Core/DataDriven/DataDrivenUnitTests.h"
+#include "Core/Math/MathUnitTests.h"
 
 bool JupiterUnitTestsApplication::PreInit()
 {
@@ -26,6 +27,7 @@ bool JupiterUnitTestsApplication::Init()
     RunMiscUnitTests();
     RunSystemUnitTests();
     RunDataDrivenUnitTests();
+    RunMathUnitTests();
 
     return true;
 }
