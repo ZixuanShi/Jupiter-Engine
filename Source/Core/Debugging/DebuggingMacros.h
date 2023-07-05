@@ -12,8 +12,8 @@ namespace jpt
 		@param expression: Stringified assert condition.
 		@param format:     Optional. Used to append additional debug info if there's any provided. Follow printf format
 		@param ... :       Optional. Variadic arguments to append to assertion. */
-	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...);
-	void OnAssertionFailed(int32 line, const char* file, const char* expression);
+	JPT_API void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...);
+	JPT_API void OnAssertionFailed(int32 line, const char* file, const char* expression);
 
 	/** Assert with error message logging if Debug mode, do nothing if not Debugging
 		@param expression: A boolean expression to assert true
@@ -26,11 +26,14 @@ namespace jpt
 		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10");
 		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10, received %d and %d", a, b);*/
 	#define JPT_ASSERT(expression, ...) \
-		if (!(expression))\
+		do\
 		{\
-			jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-			__debugbreak();\
-		}
+			if (!(expression))\
+			{\
+				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
+				__debugbreak();\
+			}\
+		} while(false)
 #else
 	#define JPT_ASSERT(expression, ...) 
 #endif
