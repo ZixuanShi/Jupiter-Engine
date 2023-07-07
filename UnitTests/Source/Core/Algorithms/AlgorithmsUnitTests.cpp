@@ -19,15 +19,15 @@ bool UnitTest_wcslen()
 
 bool UnitTest_itoa()
 {
-	char* itoaResult = jpt::itoa(12345);
+	char* itoaResult = jpt::IntegerToCStr(12345);
 	JPT_RETURN_FALSE_IF_LOG(strcmp(itoaResult, "12345") != 0, "");
 	delete[] itoaResult;
 
-	itoaResult = jpt::itoa(-12345);
+	itoaResult = jpt::IntegerToCStr(-12345);
 	JPT_RETURN_FALSE_IF_LOG(strcmp(itoaResult, "-12345") != 0, "");
 	delete[] itoaResult;
 
-	itoaResult = jpt::itoa(0);
+	itoaResult = jpt::IntegerToCStr(0);
 	JPT_RETURN_FALSE_IF_LOG(strcmp(itoaResult, "0") != 0, "");
 	delete[] itoaResult;
 
@@ -36,16 +36,25 @@ bool UnitTest_itoa()
 
 bool UnitTest_to_string()
 {
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(0) != jpt::string("0"), "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(0) != "0", "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(12345) != jpt::string("12345"), "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(12345) != "12345", "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-12345) != "-12345", "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-12345) != "-12345", "");
-	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-10.42556f) != "-10.42", "");
-	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(-10.42556, 5) != "-10.42556", "");
-	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(10.42556) != "10.42", "");
-	//JPT_RETURN_FALSE_IF_LOG(jpt::to_string(10.42556, 5) != "10.42556", "");
+	// Integer
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0) != jpt::string("0"), "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0) != "0", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(12345) != jpt::string("12345"), "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(12345) != "12345", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-12345) != "-12345", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-12345) != "-12345", "");
+
+	// Float
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0.0f) != "0.000", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-0.0f) != "-0.000", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0.01f) != "0.010", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0.012) != "0.012", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(0.01232522352f) != "0.012", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-0.01f) != "-0.010", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-0.012) != "-0.012", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(-0.01232522352) != "-0.012", "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::ToString(114514.0) != "114514.000", "");
+
 	return true;
 }
 

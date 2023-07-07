@@ -29,7 +29,7 @@ bool UnitTest_Pair()
 	jpt::pair<jpt::list<int32>, jpt::vector<jpt::string>> pair3 = jpt::make_pair<jpt::list<int32>, jpt::vector<jpt::string>>(list, vector);
 	for (int32 num : pair3.first)
 	{
-		JPT_RETURN_FALSE_IF_LOG(jpt::to_string(num) != pair3.second[num], "making pair of list int32 and vector of string failed");
+		JPT_RETURN_FALSE_IF_LOG(jpt::ToString(num) != pair3.second[num], "making pair of list int32 and vector of string failed");
 	}
 
 	return true;
@@ -62,12 +62,12 @@ bool UnitTest_Array()
 	JPT_RETURN_FALSE_IF_LOG(jptStringArray5.size() != 5, "");
 	for (size_t i = 0; i < jptStringArray5.size(); ++i)
 	{
-		JPT_RETURN_FALSE_IF_LOG(jptStringArray5[i] != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(jptStringArray5[i] != jpt::ToString(i), "");
 	}
 	num = 0;
 	for (const jpt::string& value : jptStringArray5)
 	{
-		JPT_RETURN_FALSE_IF_LOG(value != jpt::to_string(num), "");
+		JPT_RETURN_FALSE_IF_LOG(value != jpt::ToString(num), "");
 		++num;
 	}
 
@@ -156,14 +156,14 @@ bool UnitTest_Vector()
 	i = 0;
 	for (jpt::vector<jpt::string>::iterator itr = jptVectorStr.begin(); itr != jptVectorStr.end(); ++itr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::ToString(i), "");
 		++i;
 	}
 
 	i = 0;
 	for (const jpt::string& str : jptVectorStr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(str != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(str != jpt::ToString(i), "");
 		++i;
 	}
 
@@ -192,7 +192,7 @@ bool UnitTest_Vector()
 	i = 0;
 	for (const jpt::string& str : anotherStrVector)
 	{
-		JPT_RETURN_FALSE_IF_LOG(str != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(str != jpt::ToString(i), "");
 		++i;
 	}
 
@@ -293,14 +293,14 @@ bool UnitTest_List()
 	strList.insert(3, "6");
 	strList.emplace_front("2");
 	strList.push_front("1");
-	strList.push_front(jpt::to_string(i));	// 0
-	strList.emplace_back(jpt::to_string(8));
+	strList.push_front(jpt::ToString(i));	// 0
+	strList.emplace_back(jpt::ToString(8));
 	strList.push_back("9");
 
 	// 0,1,2,3,4,5,6,7,8,9
 	for (jpt::list<jpt::string>::iterator itr = strList.begin(); itr != strList.end(); ++itr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::ToString(i), "");
 		++i;
 	}
 
@@ -318,7 +318,7 @@ bool UnitTest_List()
 	i = 2;
 	for (jpt::list<jpt::string>::iterator itr = strList.begin(); itr != strList.end(); ++itr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::ToString(i), "");
 		i += 2;
 	}
 
@@ -326,7 +326,7 @@ bool UnitTest_List()
 	i = 2;
 	for (jpt::list<jpt::string>::iterator itr = anotherCopiedStrList.begin(); itr != anotherCopiedStrList.end(); ++itr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::ToString(i), "");
 		i += 2;
 	}
 
@@ -336,7 +336,7 @@ bool UnitTest_List()
 	i = 2;
 	for (jpt::list<jpt::string>::iterator itr = anotherMovedStrList.begin(); itr != anotherMovedStrList.end(); ++itr)
 	{
-		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::to_string(i), "");
+		JPT_RETURN_FALSE_IF_LOG(*itr != jpt::ToString(i), "");
 		i += 2;
 	}
 

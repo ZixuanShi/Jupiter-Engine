@@ -460,21 +460,19 @@ namespace jpt
 	// Converts an input object to string if it has this functionality
 	// Primitive types should be specialized below
 	template<typename Type>			
-	inline std::enable_if_t<!std::is_arithmetic_v<Type>, jpt::string> to_string(const Type& object)
+	inline std::enable_if_t<!std::is_arithmetic_v<Type>, jpt::string> ToString(const Type& object)
 	{
 		return object.to_string();
 	}
 	template<typename IntegerType>
-	inline jpt::enable_if_t<std::is_integral_v<IntegerType>, jpt::string> to_string(IntegerType integer)
+	inline jpt::enable_if_t<std::is_integral_v<IntegerType>, jpt::string> ToString(IntegerType integer)
 	{
-		return jpt::string(jpt::itoa(integer));
+		return jpt::string(jpt::IntegerToCStr(integer));
 	}
 	template<typename FloatingType>
-	inline jpt::enable_if_t<std::is_floating_point_v<FloatingType>, jpt::string> to_string(FloatingType num, size_t precision = 2)
+	inline jpt::enable_if_t<std::is_floating_point_v<FloatingType>, jpt::string> ToString(FloatingType value)
 	{
-		JPT_UNUSED(num);
-		JPT_UNUSED(precision);
-		return jpt::string("To do");
+		return jpt::string(jpt::FloatingToCStr(value));
 	}
 }
 

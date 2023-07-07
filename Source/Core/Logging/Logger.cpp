@@ -33,7 +33,7 @@ namespace jpt
 		// Get valid file path
 		jpt::string contentToLog(file);
 		contentToLog = contentToLog.substr(contentToLog.find_last_of("\\") + 1);
-		contentToLog += ", line (" + jpt::to_string(line) + "):  \t" + "[" + locGetLogStr(type) + "] " + messageBuffer + "\n";
+		contentToLog += ", line (" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] " + messageBuffer + "\n";
 
 		// Log to the output window
 		::OutputDebugStringA(contentToLog.c_str());

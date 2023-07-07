@@ -15,7 +15,7 @@ namespace jpt
         @param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex. 
         @return A char pointer pointing to the memory where we store the converted number's string literal */
     template<typename IntegerType>
-    JPT_API inline char* itoa(IntegerType value, int32 base = 10)
+    inline char* IntegerToCStr(IntegerType value, int32 base = 10)
     {
         // Prepare data
         bool isNegative = false;	// Whether this value is negative or not
@@ -84,6 +84,15 @@ namespace jpt
 
         // Return result
         return result;
+    }
+
+    template<typename FloatingType>
+    inline char* FloatingToCStr(FloatingType value)
+    {
+        char* buffer = new char[32];
+        char format[5] = "%.3f";
+        snprintf(buffer, 32, format, value);
+        return buffer;
     }
 
     /** @return 0 if two strings are identical. InvalidValue if not */
