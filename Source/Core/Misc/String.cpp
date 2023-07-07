@@ -1,7 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "JupiterPCH.h"
-#include "StringAlgorithms.h"
+#include "String.h"
 
 namespace jpt
 {
@@ -61,4 +61,3 @@ namespace jpt
         return 0;
     }
 }
-
