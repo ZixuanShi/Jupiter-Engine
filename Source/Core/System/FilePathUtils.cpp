@@ -47,4 +47,25 @@ namespace jpt
 
 		m_outputAssetsPathW.CopyString(assetsPathW);
 	}
+
+	jpt::string GetFullPathFromDirectory(EAssetDirectoryType directoryType, const char* pPath)
+	{
+		switch (directoryType)
+		{
+		case jpt::EAssetDirectoryType::Engine:	return GetEngineDir() + pPath;
+		case jpt::EAssetDirectoryType::Project: return GetProjectDir() + pPath;
+		case jpt::EAssetDirectoryType::Output:  return GetOutputDir() + pPath;
+		default: JPT_ASSERT(false);			return "Unresolved";
+		}
+	}
+	jpt::wstring GetFullPathFromDirectoryW(EAssetDirectoryType directoryType, const wchar_t* pPath)
+	{
+		switch (directoryType)
+		{
+		case jpt::EAssetDirectoryType::Engine:	return GetEngineDirW() + pPath;
+		case jpt::EAssetDirectoryType::Project: return GetProjectDirW() + pPath;
+		case jpt::EAssetDirectoryType::Output:  return GetOutputDirW() + pPath;
+		default: JPT_ASSERT(false);			return L"Unresolved";
+		}
+	}
 }

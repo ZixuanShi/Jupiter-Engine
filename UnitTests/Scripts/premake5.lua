@@ -3,6 +3,7 @@ workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
     local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
+    local project_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/Unitests/"   -- Needs to be changed if the Game Project moves.
 
     -- Config
     configurations 
@@ -36,6 +37,8 @@ workspace "JupiterUnitTests"
     {
         ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
         ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
+        ("JPT_PROJECT_DIR=\""..project_dir .. "\""),
+        ("JPT_PROJECT_DIR_W=L\""..project_dir .. "\""),
     }
 
     -- Global filters
@@ -151,5 +154,5 @@ project "UnitTests"
 
         -- Assets
         "xcopy \"$(SolutionDir)../Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-        "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Engine\"  /e /s /h /i /y",    -- Engine Common Assets
+        "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
     }

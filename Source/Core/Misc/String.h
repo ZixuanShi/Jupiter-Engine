@@ -642,7 +642,6 @@ namespace jpt
 	}
 
 	// Converts an input object to string if it has this functionality
-	// Primitive types should be specialized below
 	template<typename Type>			
 	inline std::enable_if_t<!std::is_arithmetic_v<Type>, jpt::string> ToString(const Type& object)
 	{

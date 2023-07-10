@@ -1,10 +1,12 @@
 #include "JupiterPCH.h"
 #include "DataDrivenUnitTests.h"
 
+#include "Core/DataDriven/JsonParser.h"
+
 bool UnitTest_Json()
 {
-	jpt::optional<jpt::JsonFile> jsonFile = jpt::JsonFile::Load("Assets/Data/TestJson.json");
-
+	jpt::optional<jpt::JsonFile> jsonFile = jpt::JsonFile::Load(jpt::EAssetDirectoryType::Engine, "Assets/Common/Data/TestJson.json");
+	
 	return true;
 }
 

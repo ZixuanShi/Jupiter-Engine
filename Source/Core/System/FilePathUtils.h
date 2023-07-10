@@ -5,12 +5,15 @@
 namespace jpt
 {
 	// The directory types to indicate where to File IO assets
-	enum class EDirectoryType
+	enum class EAssetDirectoryType
 	{
-		Engine = 1 << 0,		// ../Jupiter Engine/Assets/
-		Game   = 1 << 1,		// ../<GameProject>/Assets/
-		Output = 1 << 2,		// ../<GameProject>/Generated/<GameProject>_Win64_Debug_Output/Assets
+		Engine  = 1 << 0,		// ../Jupiter Engine/Assets/
+		Project = 1 << 1,		// ../<GameProject>/Assets/
+		Output  = 1 << 2,		// ../<GameProject>/Generated/<GameProject>_Win64_Debug_Output/Assets
 	};
+
+	JPT_API jpt::string GetFullPathFromDirectory(EAssetDirectoryType directoryType, const char* pPath);
+	JPT_API jpt::wstring GetFullPathFromDirectoryW(EAssetDirectoryType directoryType, const wchar_t* pPath);
 
 	class FilePathUtils
 	{
@@ -111,6 +114,12 @@ namespace jpt
 	/** @return Wide string for the absolute directory path to Jupiter Engine's root folder */
 	JPT_API inline jpt::wstring GetEngineDirW() { return JPT_ENGINE_DIR_W; }
 
+	/** @return String for the absolute directory path to the client project's folder */
+	JPT_API inline jpt::string  GetProjectDir() { return JPT_PROJECT_DIR; }
+
+	/** @return Wide string for the absolute directory path to the client project's folder */
+	JPT_API inline jpt::wstring GetProjectDirW() { return JPT_PROJECT_DIR_W; }
+
 	/** @return String for the absolute directory path to the client project's output folder */
 	JPT_API inline jpt::string  GetOutputDir()  { return FilePathUtils::GetInstance().GetOutputAssetsPath(); }
 
@@ -124,6 +133,14 @@ namespace jpt
 	/** @param pDetailPath: Additional path after engine's Assets folder could be any file or asset, like "Common/Shaders/BasicShader.hlsl"
 		@return Wide string for the absolute directory path to Jupiter Engine's Assets folder */
 	JPT_API inline jpt::wstring GetEngineAssetPathW(const wchar_t* pDetailPath) { return GetEngineDirW() + L"Assets/" + pDetailPath; }
+
+	/** @param pDetailPath: Additional path after client project's Assets folder could be any file or asset, like "Common/Shaders/BasicShader.hlsl"
+		@return String for the absolute directory path to client project's output Assets folder */
+	JPT_API inline jpt::string  GetProjectAssetPath(const char* pDetailPath) { return GetProjectDir() + "Assets/" + pDetailPath; }
+
+	/** @param pDetailPath: Additional path after client project's Assets folder could be any file or asset, like "Common/Shaders/BasicShader.hlsl"
+		@return Wide string for the absolute directory path to client project's output Assets folder */
+	JPT_API inline jpt::wstring GetProjectAssetPathW(const wchar_t* pDetailPath) { return GetProjectDirW() + L"Assets/" + pDetailPath; }
 
 	/** @param pDetailPath: Additional path after client project's output Assets folder could be any file or asset, like "Common/Shaders/BasicShader.hlsl"
 		@return String for the absolute directory path to client project's output Assets folder */

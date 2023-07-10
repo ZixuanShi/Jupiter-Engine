@@ -14,7 +14,8 @@ namespace jpt
 
 	public:
 		/**  */
-		static jpt::optional<JsonFile> Load(const char* pPath);
+		static jpt::optional<JsonFile> Load(EAssetDirectoryType directoryType, const char* pRelativePath);
+		static jpt::optional<JsonFile> Load(const char* pAbsolutePath);
 	};
 }
 
