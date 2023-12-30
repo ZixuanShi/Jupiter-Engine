@@ -1,0 +1,10 @@
+{
+	"Name": "Jupiter",
+	"Author": "Zixuan",
+	"Version1": 114514,
+	"Version2": -114514,
+	"IsPromising": true,
+	"TestFloat":4.21,
+	"TestFloat2":-4.21,
+	"TestArray":[true, "Jupiter", 114514, -11.4514]
+}
