@@ -6,5 +6,5 @@ export module jpt.CoreMinimalModules;
 
 namespace jpt
 {
-
+	
 }
