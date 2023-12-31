@@ -2,9 +2,13 @@
 
 module;
 
-export module jpt.CoreMinimalModules;
+export module jpt.CoreModules;
 
 // Add any desired basic modules below
-export import jpt.Concepts;
+
+// Building
+export import jpt.CoreConcepts;
 export import jpt.TypeDefs;
 
+// Misc
+//export import jpt.Logger;

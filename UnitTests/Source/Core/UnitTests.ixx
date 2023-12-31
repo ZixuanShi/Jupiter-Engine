@@ -4,4 +4,4 @@ module;
 
 export module jpt.UnitTests;
 
-export import jpt.CoreMinimalModules;
+export import jpt.CoreModules;

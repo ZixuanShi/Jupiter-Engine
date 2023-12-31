@@ -5,7 +5,7 @@ module;
 #include <type_traits>
 #include <iostream>
 
-export module jpt.Concepts;
+export module jpt.CoreConcepts;
 
 export namespace jpt
 {
