@@ -1,9 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.TypeDefs;
+module;
 
-import <type_traits>;
-import <limits>;
+#include <type_traits>
+#include <limits>
+
+export module jpt.TypeDefs;
 
 export using uint8  = uint8_t;
 export using uint16 = uint16_t;
