@@ -1,12 +1,14 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
+module;
+
+export module jpt.ApplicationBase;
 
 namespace jpt
 {
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
-	class ApplicationBase
+	export class ApplicationBase
 	{
 	public:
 		virtual ~ApplicationBase() = default;
@@ -19,4 +21,18 @@ namespace jpt
 			@return An Application's reference to the client project. */
 		static ApplicationBase& GetInstance();
 	};
+
+	bool ApplicationBase::Init()
+	{
+		return true;
+	}
+
+	void ApplicationBase::Update()
+	{
+	}
+
+	void ApplicationBase::Clean()
+	{
+
+	}
 }

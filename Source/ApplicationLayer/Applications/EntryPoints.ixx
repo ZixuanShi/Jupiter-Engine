@@ -12,9 +12,9 @@ module;
 	#include <Windows.h>
 #endif
 
-#include "ApplicationBase.h"
-
 export module jpt.EntryPoints;
+
+export import jpt.ApplicationBase;
 
 #if IS_PLATFORM_WIN64
 

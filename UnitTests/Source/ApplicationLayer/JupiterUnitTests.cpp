@@ -1,13 +1,12 @@
 #include "Core/Building/CoreMinimalMacros.h"
 
-#include "JupiterUnitTestsApplication.h"
-
 #if IS_PLATFORM_WIN64
 	#include <Windows.h>
 #endif
 
 import jpt.EntryPoints;
 import jpt.UnitTests;
+import jpt.UnitTestsApplication;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
