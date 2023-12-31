@@ -3,8 +3,8 @@
 module;
 
 #include <iostream>
-#include <Windows.h>
 #include <string>
+#include <Windows.h>
 
 export module jpt.CoreMinimalModules;
 

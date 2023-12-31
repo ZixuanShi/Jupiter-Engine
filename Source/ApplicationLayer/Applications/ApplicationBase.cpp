@@ -1,8 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "ApplicationBase.h"
-#include <iostream>
-
 
 import jpt.CoreMinimalModules;
 

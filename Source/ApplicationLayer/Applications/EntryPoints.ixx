@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
+module;
 
 #if IS_DEBUG
 	#define _CRTDBG_MAP_ALLOC
@@ -9,14 +9,18 @@
 #endif
 
 #if IS_PLATFORM_WIN64
+	#include <Windows.h>
+#endif
 
 #include "ApplicationBase.h"
-#include <Windows.h>
-//#include "ApplicationLayer/Applications/Platform_Win64/Win64Application.h"
+
+export module jpt.EntryPoints;
+
+#if IS_PLATFORM_WIN64
 
 namespace jpt
 {
-	int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
+	export int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
 	{
 #if IS_DEBUG
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

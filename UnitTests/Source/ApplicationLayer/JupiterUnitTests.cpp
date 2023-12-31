@@ -1,10 +1,13 @@
-#include "ApplicationLayer/Applications/EntryPoints.h"
+#include "Core/Building/CoreMinimalMacros.h"
 
 #include "JupiterUnitTestsApplication.h"
-#include "Core/Building/BuildingMacros.h"
 
-import jpt.CoreMinimalModules;
-import JupiterUnitTestsModules;
+#if IS_PLATFORM_WIN64
+	#include <Windows.h>
+#endif
+
+import jpt.EntryPoints;
+import jpt.UnitTests;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
@@ -19,15 +22,12 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	jpt::Foo::PrintNumber();
-	const int n = GetUnitTestsCount();
-	JPT_IGNORE(n);
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
+#endif
 
+/** Default Main Function */
 int main()
 {
 	return jpt::MainImplWin64(nullptr, nullptr, nullptr, 0);
 }
-
-#endif

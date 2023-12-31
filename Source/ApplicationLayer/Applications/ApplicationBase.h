@@ -15,8 +15,8 @@ namespace jpt
 		virtual void Update();
 		virtual void Clean();
 
-		/** Designed to be implemented in client game C++
-			@return An Application's pointer to run the game */
+		/** Designed to be implemented in client project's application
+			@return An Application's reference to the client project. */
 		static ApplicationBase& GetInstance();
 	};
 }

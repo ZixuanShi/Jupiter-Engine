@@ -35,7 +35,6 @@ workspace "JupiterUnitTests"
         ("JPT_PROJECT_DIR=\""..project_dir .. "\""),
         ("JPT_PROJECT_DIR_W=L\""..project_dir .. "\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
-        --("JPT_IGNORE(param)=static_cast<void>(param)"),
     }
 
     -- Global filters
