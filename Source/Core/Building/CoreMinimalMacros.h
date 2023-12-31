@@ -61,14 +61,14 @@
 #define JPT_RETURN_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, void());
 
-	/** Helper for cleanand delete.
-		@param pPointer: Assumed to have Clean() function implemented */
+/** Helper for clean and delete.
+	@param pPointer: Assumed to have Clean() function implemented */
 #define JPT_CLEAN_THEN_DELETE(pPointer)\
 	pPointer->Clean();\
 	JPT_DELETE(pPointer);
 
-		/** Helper for safe cleanand delete.
-			@param pPointer: Assumed to have Clean() function implemented */
+/** Helper for safe cleanand delete.
+	@param pPointer: Assumed to have Clean() function implemented */
 #define JPT_SAFE_CLEAN_THEN_DELETE(pPointer)\
 	if(pPointer)\
 	{\
@@ -76,7 +76,7 @@
 	}\
 	JPT_SAFE_DELETE(pPointer);
 
-			/** __FILE__ but with L"XXX" wide string */
+/** __FILE__ but with L"XXX" wide string */
 #define JPT_WIDE2(x) L##x
 #define JPT_WIDE1(x) JPT_WIDE2(x)
 #define JPT_WFILE JPT_WIDE1(__FILE__)
@@ -90,10 +90,10 @@
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/
 #define JPT_HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')
 
-	/** @return Count of a plain array.
-		@example:
-		int intArray[12];
-		int intArrayCount = JPT_ARRAY_COUNT(intArray); */
+/** @return Count of a plain array.
+	@example:
+	int intArray[12];
+	int intArrayCount = JPT_ARRAY_COUNT(intArray); */
 template <typename Type, unsigned int Number>
 char(&ArrayCountHelper(const Type(&)[Number]))[Number + 1];
 #define JPT_ARRAY_COUNT( inArray ) (sizeof(ArrayCountHelper(inArray)) - 1)
