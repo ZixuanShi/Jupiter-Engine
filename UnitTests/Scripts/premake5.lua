@@ -35,6 +35,7 @@ workspace "JupiterUnitTests"
         ("JPT_PROJECT_DIR=\""..project_dir .. "\""),
         ("JPT_PROJECT_DIR_W=L\""..project_dir .. "\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
+        --("JPT_IGNORE(param)=static_cast<void>(param)"),
     }
 
     -- Global filters
@@ -95,7 +96,7 @@ project "Engine"
     includedirs
     {
         (jupiter_dir .. "Source"),
-        (jupiter_dir .. "Source/Core/Building/CoreMinimal"),
+        --(jupiter_dir .. "Source/Core/Building/CoreMinimal"),
     }
 
     files 
@@ -113,14 +114,17 @@ project "UnitTests"
     includedirs
     {
         (jupiter_dir .. "Source"),
-        (jupiter_dir .. "Source/Core/Building/CoreMinimal"),
+        --(jupiter_dir .. "Source/Core/Building/CoreMinimal"),
         ("../Source")
     }
 
     links
     {
+        -- Engine's functions, classes, and modules
         "Engine.lib",
         "Engine",
+
+        -- DirectX 12
         "d3d12",
         "dxgi",
         "d3dcompiler",
@@ -140,10 +144,6 @@ project "UnitTests"
 
     postbuildcommands
     {
-        -- Engine dll
-        -- "xcopy \"$(SolutionDir)..\\Generated\\Engine_" .. jupiter_outputpath .. "_Output\\*.dll\"" .. " \"$(OutDir)\"  /d /i /y",
-
-        -- Assets
         "xcopy \"$(SolutionDir)../Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
         "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
     }

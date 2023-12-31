@@ -1,6 +1,7 @@
 #include "ApplicationLayer/Applications/EntryPoints.h"
 
 #include "JupiterUnitTestsApplication.h"
+#include "Core/Building/BuildingMacros.h"
 
 import jpt.CoreMinimalModules;
 import JupiterUnitTestsModules;
@@ -20,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, in
 {
 	jpt::Foo::PrintNumber();
 	const int n = GetUnitTestsCount();
-	static_cast<void>(n);
+	JPT_IGNORE(n);
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 
