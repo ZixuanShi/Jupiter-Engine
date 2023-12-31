@@ -25,7 +25,7 @@ workspace "JupiterUnitTests"
 
     -- Programming
     language "C++"
-    cppdialect "C++20"
+    cppdialect "C++latest"
     warnings "Extra"
     staticruntime "on"
     defines
@@ -87,7 +87,7 @@ workspace "JupiterUnitTests"
             "IS_PLATFORM_WIN64",
         }
 
-
+        
 -- Jupiter Engine
 project "Engine"
     kind "StaticLib"
@@ -120,6 +120,7 @@ project "UnitTests"
     links
     {
         "Engine.lib",
+        "Engine",
         "d3d12",
         "dxgi",
         "d3dcompiler",

@@ -2,6 +2,9 @@
 
 #include "JupiterUnitTestsApplication.h"
 
+import jpt.CoreMinimalModules;
+import JupiterUnitTestsModules;
+
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 {
@@ -15,7 +18,15 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	return jpt::MainImpl(hInstance, hPrevInstance, lPStr, nCmdShow);
+	jpt::Foo::PrintNumber();
+	const int n = GetUnitTestsCount();
+	static_cast<void>(n);
+	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
+}
+
+int main()
+{
+	return jpt::MainImplWin64(nullptr, nullptr, nullptr, 0);
 }
 
 #endif

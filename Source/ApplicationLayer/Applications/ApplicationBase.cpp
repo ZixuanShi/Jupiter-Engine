@@ -1,6 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "ApplicationBase.h"
+#include <iostream>
+
+
+import jpt.CoreMinimalModules;
 
 namespace jpt
 {
@@ -15,5 +19,6 @@ namespace jpt
 	
 	void ApplicationBase::Clean()
 	{
+		Foo::PrintNumber();
 	}
 }
