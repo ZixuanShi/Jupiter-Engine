@@ -2,6 +2,7 @@
 
 import jpt.EntryPoints;
 import jpt.UnitTestsApplication;
+import jpt.CoreMinimalModules;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()

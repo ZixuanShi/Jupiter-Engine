@@ -4,7 +4,6 @@ module;
 
 export module jpt.CoreMinimalModules;
 
-namespace jpt
-{
-	
-}
+// Add any desired basic modules below
+export import jpt.TypeDefs;
+
