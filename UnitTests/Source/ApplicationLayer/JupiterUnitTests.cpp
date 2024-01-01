@@ -1,8 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+#include "Core/Building/Headers.h"
+
 import jpt.EntryPoints;
 import jpt.UnitTestsApplication;
-import jpt.CoreModules;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()

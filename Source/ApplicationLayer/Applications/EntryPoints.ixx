@@ -14,13 +14,14 @@ module;
 
 export module jpt.EntryPoints;
 
+// TODO: When Win64Application is implemented, do conditional import for application
 export import jpt.ApplicationBase;
 
 #if IS_PLATFORM_WIN64
 
-namespace jpt
+export namespace jpt
 {
-	export int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
+	int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
 	{
 #if IS_DEBUG
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
