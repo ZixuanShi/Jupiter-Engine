@@ -14,4 +14,6 @@ export import jpt.TypeDefs;
 // Memory Managing
 export import jpt.Allocator;
 
-// Misc
+// Strings
+export import jpt.StringUtils;
+export import jpt.String;
