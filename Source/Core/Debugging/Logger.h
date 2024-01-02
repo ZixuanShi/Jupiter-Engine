@@ -36,7 +36,7 @@ namespace jpt
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function
 			@param format, ...: The message to send*/
-		void Log(ELogType type,  /*CurrentTime,*/ int32 line, const char* file, const char* format, ...);
+		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(const char* string);
 		void Log(const wchar_t* wideString);
 
