@@ -5,5 +5,6 @@
 // Building
 #include "Macros.h"
 
-// Misc
+// Debugging
+#include "Core/Debugging/Assert.h"
 #include "Core/Debugging/Logger.h"
