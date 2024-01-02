@@ -6,4 +6,4 @@
 #include "Macros.h"
 
 // Misc
-#include "Core/Misc/Logger.h"
+#include "Core/Debugging/Logger.h"
