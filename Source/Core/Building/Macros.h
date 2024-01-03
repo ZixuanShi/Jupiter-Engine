@@ -99,5 +99,5 @@ char(&ArrayCountHelper(const Type(&)[Number]))[Number + 1];
 #define JPT_ARRAY_COUNT( inArray ) (sizeof(ArrayCountHelper(inArray)) - 1)
 
 /** Compile time outputs an error containing the argument value
-	@example: CT_PRINT(sizeof(int)); will output char [4] */
+	@example: JPT_CT_PRINT(sizeof(int)); will output char [4] */
 #define JPT_CT_PRINT( X ) { char JPT_CT_PRINT_TRICK[(X)]; CT_PRINT_TRICK = 1; }

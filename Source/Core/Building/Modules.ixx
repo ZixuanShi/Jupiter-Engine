@@ -8,8 +8,10 @@
 export module jpt.CoreModules;
 
 // Building
-export import jpt.CoreConcepts;
+export import jpt.Concepts;
 export import jpt.TypeDefs;
+export import jpt.Utilities;
+export import jpt.Constants;
 
 // Memory Managing
 export import jpt.Allocator;

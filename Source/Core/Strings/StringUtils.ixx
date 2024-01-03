@@ -11,7 +11,8 @@ module;
 export module jpt.StringUtils;
 
 import jpt.TypeDefs;
-import jpt.CoreConcepts;
+import jpt.Concepts;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -243,4 +244,13 @@ export namespace jpt
 			return jpt::wcsncmp(string1.ConstBuffer(), string2.ConstBuffer(), size) == 0;
 		}
 	}
+
+	template<>
+	struct hash<const char*>
+	{
+		size_t operator()(const char* key)
+		{
+			return jpt::StringHash64(key);
+		}
+	};
 }

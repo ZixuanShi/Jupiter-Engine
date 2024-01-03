@@ -5,7 +5,9 @@ module;
 #include <type_traits>
 #include <iostream>
 
-export module jpt.CoreConcepts;
+export module jpt.Concepts;
+
+import jpt.Constants;
 
 export namespace jpt
 {
@@ -19,7 +21,7 @@ export namespace jpt
 	concept Floating = std::is_floating_point_v<Type>;
 
 	template<typename Type>
-	concept Copiable = std::is_copy_constructible_v<Type> && std::is_copy_assignable_v<Type>;
+	concept Copyable = std::is_copy_constructible_v<Type> && std::is_copy_assignable_v<Type>;
 
 	template<typename Type>
 	concept Movable = std::is_move_constructible_v<Type> && std::is_move_assignable_v<Type>;
@@ -29,9 +31,18 @@ export namespace jpt
 	{
 		left < right;
 		left > right;
-		left <= right;
-		left >= right;
 	};
+
+	/** Avoid copy-constructing when comparing non-trivially copiable objects */
+	template<typename Type>
+	concept ComparableNonTrivial = Comparable<Type> && 
+	                               !std::is_trivially_copy_constructible_v<Type> ||
+	                               sizeof(Type) > kLargeClassSize;
+
+	template<typename Type>
+	concept ComparableTrivial = Comparable<Type> &&
+		                        std::is_trivially_copy_constructible_v<Type> &&
+		                        sizeof(Type) <= kLargeClassSize;
 
 	template<typename Type>
 	concept EnabledToString = requires(const Type& object) { object.ToString(); };
