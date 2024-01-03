@@ -4,6 +4,7 @@ module;
 
 #include "Core/Debugging/Assert.h"
 
+#include <string.h>
 #include <stdio.h>
 #include <type_traits>
 
@@ -53,7 +54,7 @@ export namespace jpt
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
 	template<Integral Type>
-	char* IntegerToCString(Type value, int32 base = 10)
+	char* IntegerToCStr(Type value, int32 base = 10)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
@@ -125,7 +126,7 @@ export namespace jpt
 	}
 
 	template<Floating Type>
-	char* FloatingToCString(Type value)
+	char* FloatingToCStr(Type value)
 	{
 		char* buffer = new char[32];
 		char format[5] = "%.3f";
@@ -208,7 +209,7 @@ export namespace jpt
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
 	template<typename CharType>
-	bool CStringNCmp(const CharType* pString1, const CharType* pString2, size_t size)
+	bool StrNCmp(const CharType* pString1, const CharType* pString2, size_t size)
 	{
 		if (GetStrLength(pString1) != GetStrLength(pString2))
 		{
@@ -235,11 +236,11 @@ export namespace jpt
 
 		if constexpr (jpt::IsSameType<StringType::CharType, char>::Value)
 		{
-			return jpt::strncmp(string1.c_str(), string2.c_str(), size) == 0;
+			return jpt::strncmp(string1.GetBuffer(), string2.GetBuffer(), size) == 0;
 		}
 		else if (jpt::IsSameType<StringType::CharType, wchar_t>::Value)
 		{
-			return jpt::wcsncmp(string1.c_str(), string2.c_str(), size) == 0;
+			return jpt::wcsncmp(string1.GetBuffer(), string2.GetBuffer(), size) == 0;
 		}
 	}
 }
