@@ -34,12 +34,12 @@ namespace jpt
 	public:
 		BasicString() = default;
 		BasicString(const CharType* CString);
-		BasicString(const BasicString<CharType>& string);
+		BasicString(const BasicString<CharType>& otherString);
 		~BasicString();
 
 		// Element Access
-		const CharType* GetBuffer() const { return m_pBuffer; }
-		CharType* GetData() const { return m_pBuffer; }
+		const CharType* ConstBuffer() const { return m_pBuffer; }
+		CharType* Buffer() const { return m_pBuffer; }
 		CharType& operator[](size_t index) { return m_pBuffer[index]; }
 		const CharType& operator[](size_t index) const { return m_pBuffer[index]; }
 		CharType& Back() { return m_pBuffer[m_size - 1]; }
@@ -57,7 +57,7 @@ namespace jpt
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
 		void CopyCString(const CharType* inCString);
-		void CopyString(const CharType* inString);
+		void CopyString(const BasicString<CharType>& otherString);
 
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
@@ -72,9 +72,9 @@ namespace jpt
 	}
 
 	template<typename _CharType, class _AllocatorType>
-	BasicString<_CharType, _AllocatorType>::BasicString(const BasicString<CharType>& string)
+	BasicString<_CharType, _AllocatorType>::BasicString(const BasicString<CharType>& otherString)
 	{
-		CopyString(string);
+		CopyString(otherString);
 	}
 
 	template<typename _CharType, class _AllocatorType>
@@ -106,9 +106,9 @@ namespace jpt
 	}
 
 	template<typename _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::CopyString(const CharType* inString)
+	void BasicString<_CharType, _AllocatorType>::CopyString(const BasicString<CharType>& otherString)
 	{
-		m_size = inString.size();
+		m_size = otherString.size();
 		if (empty())
 		{
 			return;
@@ -116,7 +116,7 @@ namespace jpt
 
 		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
-		StrCpy(m_pBuffer, m_size + sizeof(CharType), inString.c_str());
+		StrCpy(m_pBuffer, m_size + sizeof(CharType), otherString.ConstBuffer());
 	}
 
 	template<typename _CharType, class _AllocatorType>

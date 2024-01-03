@@ -236,11 +236,11 @@ export namespace jpt
 
 		if constexpr (jpt::IsSameType<StringType::CharType, char>::Value)
 		{
-			return jpt::strncmp(string1.GetBuffer(), string2.GetBuffer(), size) == 0;
+			return jpt::strncmp(string1.ConstBuffer(), string2.ConstBuffer(), size) == 0;
 		}
 		else if (jpt::IsSameType<StringType::CharType, wchar_t>::Value)
 		{
-			return jpt::wcsncmp(string1.GetBuffer(), string2.GetBuffer(), size) == 0;
+			return jpt::wcsncmp(string1.ConstBuffer(), string2.ConstBuffer(), size) == 0;
 		}
 	}
 }

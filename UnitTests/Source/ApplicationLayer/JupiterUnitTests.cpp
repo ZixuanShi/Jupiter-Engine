@@ -21,6 +21,7 @@ _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
 	jpt::String str("Jupiter Engine");
+	jpt::String anotherStr(str);
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
