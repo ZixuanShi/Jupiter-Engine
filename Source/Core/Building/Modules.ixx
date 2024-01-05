@@ -19,3 +19,6 @@ export import jpt.Allocator;
 // Strings
 export import jpt.StringUtils;
 export import jpt.String;
+
+// Timing
+export import jpt.TimingUtils;
