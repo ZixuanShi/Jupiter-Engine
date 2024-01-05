@@ -6,6 +6,8 @@ module;
 
 export module jpt.TimingUtils;
 
+import jpt.String;
+
 export namespace jpt
 {
 	// Concepts
@@ -38,5 +40,18 @@ export namespace jpt
 	{
 		const TimePoint<Clock> currentTimePoint = SteadyClock::now();
 		return GetSecondsBetween(start, currentTimePoint);
+	}
+
+	String ToString(const TimePoint<SystemClock>& timePoint)
+	{
+		std::time_t time = SystemClock::to_time_t(timePoint);
+		std::tm t;
+		localtime_s(&t, &time);
+		char buffer[32];
+		strftime(buffer, sizeof(buffer), "%m/%d/%Y %X", &t);
+
+		jpt::String timeString;
+		timeString.CopyString(buffer);
+		return timeString;
 	}
 }

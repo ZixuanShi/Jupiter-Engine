@@ -11,6 +11,7 @@
 #endif
 
 import jpt.String;
+import jpt.TimingUtils;
 
 namespace jpt
 {
@@ -35,16 +36,26 @@ namespace jpt
 		vsprintf_s(messageBuffer, format, args);
 		va_end(args);
 
-		jpt::String messageStr;
-		messageStr.CopyCString(messageBuffer);
+		const String messageStr(messageBuffer);
+		const String fileStr(file);
 
-		jpt::String contentToLog(file);
-		//contentToLog = jpt::ToString(SystemClock::now()) + ". " + contentToLog.SubStr(contentToLog.find_last_of("\\") + 1);	// Only get the cpp file name. Get rid of previous folders
-		//contentToLog += ", line (" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";	// Add line number and log type
-		//contentToLog += messageStr + "\n";	// Content message
+		String contentToLog;
+		contentToLog.Reserve(256);
+
+		// Time
+		contentToLog += jpt::ToString(SystemClock::now()) + ". ";
+
+		// C++ file name. Get rid of previous folders
+		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
+
+		// line number and log type
+		contentToLog += ", line (" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
+
+		// Content message
+		contentToLog += messageStr + "\n";
 
 		// Log to the output window
-		::OutputDebugStringA(contentToLog.ConstBuffer());
+		Log(contentToLog.ConstBuffer());
 	}
 
 	void Logger::Log(const char* string)

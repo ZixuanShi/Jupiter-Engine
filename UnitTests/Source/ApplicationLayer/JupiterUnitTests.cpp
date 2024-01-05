@@ -20,8 +20,7 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	jpt::String str("Jupiter Engine");
-	jpt::String another = str.SubStr(3, 7);
+	JPT_LOG("Hello World %s!", "Jupiter Engine");
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }

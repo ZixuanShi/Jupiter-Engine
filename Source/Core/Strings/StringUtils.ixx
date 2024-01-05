@@ -230,7 +230,7 @@ export namespace jpt
 	template<typename StringType>
 	bool StringCmp(const StringType& string1, const StringType& string2, size_t size)
 	{
-		if (string1.size() != string2.size())
+		if (string1.Size() != string2.Size())
 		{
 			return false;
 		}

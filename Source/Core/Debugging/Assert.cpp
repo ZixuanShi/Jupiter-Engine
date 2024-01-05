@@ -4,22 +4,22 @@
 
 #include "Logger.h"
 
+#include <stdio.h>
 #include <stdarg.h>
 
-// TODO: Replace with jpt string when finished
-#include <string>
+import jpt.String;
 
 namespace jpt
 {
 #if JPT_ENABLE_ASSERTS
 	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...)
 	{
-		std::string message = "Assertion Failed: ";
-		message.append(expression);
+		jpt::String message = "Assertion Failed: ";
+		message.Append(expression);
 
 		if (format)
 		{
-			message.append(", ");
+			message.Append(", ");
 
 			char messageBuffer[512];
 
@@ -30,10 +30,10 @@ namespace jpt
 
 			va_end(args);
 
-			message.append(messageBuffer);
+			message.Append(messageBuffer);
 		}
 
-		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error, line, file, message.c_str());
+		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error, line, file, message.ConstBuffer());
 	}
 
 	void OnAssertionFailed(int32 line, const char* file, const char* expression)

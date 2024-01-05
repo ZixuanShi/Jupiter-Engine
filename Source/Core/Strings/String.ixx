@@ -11,6 +11,7 @@ import jpt.Allocator;
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.StringUtils;
+import jpt.Math;
 
 namespace jpt
 {
@@ -56,6 +57,16 @@ namespace jpt
 		size_t Capacity() const { return m_capacity; }
 		bool IsEmpty() const { return m_size == 0; }
 
+		/** Searching. Returns npos if not found */
+		size_t Find(CharType charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t Find(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t FindFirstOf(CharType charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t FindFirstOf(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t FindLastOf(CharType charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t FindLastOf(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		bool operator==(const CharType* otherString) const;
+		bool operator==(const BasicString<CharType>& otherString) const;
+
 		/* Deallocate the memory that this string holds */
 		void Clear();
 
@@ -73,11 +84,11 @@ namespace jpt
 		void Reserve(size_t capacity);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
-		void CopyCString(const CharType* inCString, size_t size = npos);
+		void CopyString(const CharType* inCString, size_t size = npos);
 		void CopyString(const BasicString<CharType>& otherString);
 
 		/* Move the content of string. Will take ownership of the passed in string */
-		void MoveCString(CharType* inCString, size_t size = npos);
+		void MoveString(CharType* inCString, size_t size = npos);
 		void MoveString(BasicString<CharType>&& otherString);
 
 	private:
@@ -91,7 +102,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>::BasicString(const CharType* CString)
 	{
-		CopyCString(CString);
+		CopyString(CString);
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
@@ -112,7 +123,7 @@ namespace jpt
 		if (ConstBuffer() != CString)
 		{
 			Clear();
-			CopyCString(CString);
+			CopyString(CString);
 		}
 
 		return *this;
@@ -149,6 +160,120 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::Find(CharType charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	{
+		ClampTo(endIndex, size_t(0), m_size);
+
+		for (size_t i = startIndex; i < endIndex; ++i)
+		{
+			if ((i + 1) > endIndex)
+			{
+				return npos;
+			}
+
+			if (m_pBuffer[i] == charToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::Find(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	{
+		const size_t stringToFindSize = GetStrLength(stringToFind);
+		ClampTo(endIndex, size_t(0), m_size);
+
+		BasicString<CharType> current;
+		for (size_t i = startIndex; i < endIndex; ++i)
+		{
+			if ((i + stringToFindSize) > endIndex)
+			{
+				return npos;
+			}
+
+			current = SubStr(i, stringToFindSize);
+			if (current == stringToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::FindFirstOf(CharType charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	{
+		return Find(charToFind, startIndex, endIndex);
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::FindFirstOf(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	{
+		return Find(stringToFind, startIndex, endIndex);
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::FindLastOf(CharType charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	{
+		ClampTo(endIndex, size_t(0), m_size);
+
+		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
+		{
+			if (i < static_cast<int64>(startIndex))
+			{
+				return npos;
+			}
+
+			if (m_pBuffer[i] == charToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	size_t BasicString<_CharType, _AllocatorType>::FindLastOf(const CharType* stringToFind, size_t startIndex, size_t endIndex) const
+	{
+		const size_t stringToFindSize = GetStrLength(stringToFind);
+		ClampTo(endIndex, size_t(0), m_size);
+
+		BasicString<CharType> current;
+		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
+		{
+			if ((i - stringToFindSize) < startIndex)
+			{
+				return npos;
+			}
+
+			current = SubStr(i - stringToFindSize, stringToFindSize);
+			if (current == stringToFind)
+			{
+				return i - stringToFindSize;
+			}
+		}
+
+		return npos;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	bool BasicString<_CharType, _AllocatorType>::operator==(const CharType* otherString) const
+	{
+		return StrNCmp(m_pBuffer, otherString, m_size);
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	bool BasicString<_CharType, _AllocatorType>::operator==(const BasicString<CharType>& otherString) const
+	{
+		return StringCmp(*this, otherString, m_size);
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::Clear()
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
@@ -175,7 +300,7 @@ namespace jpt
 		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[index], count);
 
 		jpt::BasicString<CharType> result;
-		result.MoveCString(subStrBuffer, count);
+		result.MoveString(subStrBuffer, count);
 		return result;
 	}
 
@@ -228,7 +353,7 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::CopyCString(const CharType* inCString, size_t size /* = npos*/)
+	void BasicString<_CharType, _AllocatorType>::CopyString(const CharType* inCString, size_t size /* = npos*/)
 	{
 		m_size = (size == npos) ? GetStrLength(inCString) : size;
 		if (IsEmpty())
@@ -256,7 +381,7 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::MoveCString(CharType* inCString, size_t size /* = npos*/)
+	void BasicString<_CharType, _AllocatorType>::MoveString(CharType* inCString, size_t size /* = npos*/)
 	{
 		m_pBuffer  = inCString;
 		m_size     = (size == npos) ? GetStrLength(inCString) : size;
@@ -309,4 +434,33 @@ export namespace jpt
 {
 	using String  = BasicString<char>;
 	using WString = BasicString<wchar_t>;	// Wide string
+
+	template<typename CharType>
+	BasicString<CharType> operator+(const CharType* leftString, const BasicString<CharType>& rightString)
+	{
+		return jpt::BasicString<CharType>(leftString) += rightString;
+	}
+
+	// Converts an input object to string if it has this functionality
+	template<EnabledToString Type>
+	String ToString(const Type& object)
+	{
+		return object.ToString();
+	}
+	template<Integral Type>
+	String ToString(Type integer)
+	{
+		char* integerCString = IntegerToCStr(integer);
+		String integerString;
+		integerString.MoveString(move(integerCString));
+		return integerString;
+	}
+	template<Floating Type>
+	String ToString(Type value)
+	{
+		char* floatCString = FloatingToCStr(value);
+		String floatString;
+		floatString.MoveString(move(floatCString));
+		return floatString;
+	}
 }

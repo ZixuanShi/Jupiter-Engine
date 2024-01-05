@@ -46,28 +46,4 @@ export namespace jpt
 			return std::hash<KeyType>()(key);
 		}
 	};
-
-	template<ComparableTrivial Type>
-	Type min(Type a, Type b)
-	{
-		return (a < b) ? a : b;
-	}
-
-	template<ComparableNonTrivial Type>
-	const Type& min(const Type& a, const Type& b)
-	{
-		return (a < b) ? a : b;
-	}
-
-	template<ComparableTrivial Type>
-	Type max(Type a, Type b)
-	{
-		return (a > b) ? a : b;
-	}
-
-	template<ComparableNonTrivial Type>
-	const Type& max(const Type& a, const Type& b)
-	{
-		return (a > b) ? a : b;
-	}
 }
