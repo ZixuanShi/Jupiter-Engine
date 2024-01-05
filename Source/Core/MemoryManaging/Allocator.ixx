@@ -8,6 +8,8 @@ module;
 
 export module jpt.Allocator;
 
+import jpt.Utilities;
+
 export namespace jpt
 {
 	/** Allocate and deallocate memory for objects. 
@@ -96,7 +98,7 @@ export namespace jpt
 		size_t i = 0;
 		for (auto itr = pValues.begin(); itr != pValues.end(); ++itr)
 		{
-			pArray[i] = *itr;
+			pArray[i] = move(*itr);
 			++i;
 		}
 

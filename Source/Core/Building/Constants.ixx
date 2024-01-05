@@ -6,6 +6,6 @@ export module jpt.Constants;
 
 export namespace jpt
 {
-	/** Any class over 16 bytes will be considered large, and may trigger optimizations */
-	constexpr size_t kLargeClassSize = 16;
+	/** Any data sizeof(Type) larger than this will be considered large, and may trigger optimizations */
+	constexpr size_t kLargeDataSize = 16;
 }

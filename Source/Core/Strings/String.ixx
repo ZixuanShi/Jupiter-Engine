@@ -9,6 +9,7 @@ export module jpt.String;
 
 import jpt.Allocator;
 import jpt.TypeDefs;
+import jpt.Concepts;
 import jpt.StringUtils;
 
 namespace jpt
@@ -16,25 +17,28 @@ namespace jpt
 	/** Resizing multiplier for capacity */
 	static constexpr size_t kCapacityMultiplier = 2;
 
-	template<typename _CharType, class _AllocatorType = Allocator<_CharType>>
+	template<StringLiteral _CharType, class _AllocatorType = Allocator<_CharType>>
 	class BasicString
 	{
 	public:
-		using CharType	    = _CharType;
+		using CharType = _CharType;
 		using AllocatorType = _AllocatorType;
 
-	public:
 		static constexpr size_t npos = kInvalidValue<size_t>;
 
 	private:
-		CharType* m_pBuffer = nullptr;	/**< The pointer to the buffer representing this string's value */
-		size_t m_size       = 0;		/**< How many characters in this string currently */
-		size_t m_capacity   = 0;		/**< How many characters this string can hold before resizing */
+		CharType* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
+		size_t m_size = 0;              /**< How many characters in this string currently */
+		size_t m_capacity = 0;          /**< How many characters this string can hold before resizing */
 
 	public:
 		BasicString() = default;
 		BasicString(const CharType* CString);
 		BasicString(const BasicString<CharType>& otherString);
+		BasicString(BasicString<CharType>&& otherString) noexcept;
+		BasicString& operator=(const CharType* CString);
+		BasicString& operator=(const BasicString<CharType>& otherString);
+		BasicString& operator=(BasicString<CharType>&& otherString) noexcept;
 		~BasicString();
 
 		// Element Access
@@ -48,78 +52,230 @@ namespace jpt
 		const CharType& Front() const { return m_pBuffer[0]; }
 
 		// Capacity
-		size_t size() const { return m_size; }
-		size_t capacity() const { return m_capacity; }
-		bool empty() const { return m_size == 0; }
+		size_t Size() const { return m_size; }
+		size_t Capacity() const { return m_capacity; }
+		bool IsEmpty() const { return m_size == 0; }
 
 		/* Deallocate the memory that this string holds */
-		void Destroy();
+		void Clear();
+
+		BasicString SubStr(size_t index, size_t count = npos) const;
+
+		/** Appends a new string to the end of buffer */
+		void Append(const CharType* CString, size_t size = npos);
+		void Append(const BasicString<CharType>& otherString);
+		BasicString& operator+=(const CharType* CString) { Append(CString); return *this; }
+		BasicString& operator+=(const BasicString<CharType>& otherString) { Append(otherString); return *this; }
+		BasicString operator+(const CharType* CString) const;
+		BasicString operator+(const BasicString<CharType>& otherString) const;
+
+		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
+		void Reserve(size_t capacity);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
-		void CopyCString(const CharType* inCString);
+		void CopyCString(const CharType* inCString, size_t size = npos);
 		void CopyString(const BasicString<CharType>& otherString);
+
+		/* Move the content of string. Will take ownership of the passed in string */
+		void MoveCString(CharType* inCString, size_t size = npos);
+		void MoveString(BasicString<CharType>&& otherString);
 
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
-			@param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
+		   @param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
 		void UpdateBuffer(size_t inCapacity);
+
+		void InsertStringAt(size_t index, size_t size, const CharType* CString);
 	};
 
-	template<typename _CharType, class _AllocatorType>
+	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>::BasicString(const CharType* CString)
 	{
 		CopyCString(CString);
 	}
 
-	template<typename _CharType, class _AllocatorType>
+	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>::BasicString(const BasicString<CharType>& otherString)
 	{
 		CopyString(otherString);
 	}
 
-	template<typename _CharType, class _AllocatorType>
-	BasicString<_CharType, _AllocatorType>::~BasicString()
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>::BasicString(BasicString<CharType>&& otherString) noexcept
 	{
-		Destroy();
+		MoveString(jpt::move(otherString));
 	}
 
-	template<typename _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::Destroy()
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(const CharType* CString)
+	{
+		if (ConstBuffer() != CString)
+		{
+			Clear();
+			CopyCString(CString);
+		}
+
+		return *this;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(const BasicString<CharType>& otherString)
+	{
+		if (*this != otherString)
+		{
+			Clear();
+			CopyString(otherString);
+		}
+
+		return *this;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(BasicString<CharType>&& otherString) noexcept
+	{
+		if (*this != otherString)
+		{
+			Clear();
+			MoveString(jpt::move(otherString));
+		}
+
+		return *this;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>::~BasicString()
+	{
+		Clear();
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::Clear()
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 		m_size = 0;
 		m_capacity = 0;
 	}
 
-	template<typename _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::CopyCString(const CharType* inCString)
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType> BasicString<_CharType, _AllocatorType>::SubStr(size_t index, size_t count /*= npos*/) const
 	{
-		m_size = GetStrLength(inCString);
-		if (empty())
+		if (count == npos)
+		{
+			count = m_size - index;
+		}
+
+		JPT_ASSERT((index + count) <= m_size, "SubStr cannot exceeds string's bound");
+		
+		if (count == 0)
+		{
+			return jpt::BasicString<CharType>();
+		}
+
+		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
+		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[index], count);
+
+		jpt::BasicString<CharType> result;
+		result.MoveCString(subStrBuffer, count);
+		return result;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::Append(const CharType* CString, size_t size /* = npos*/)
+	{
+		const size_t CStringSize = (size == npos) ? GetStrLength(CString) : size;
+		if (CStringSize == 0)
 		{
 			return;
 		}
 
-		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+		InsertStringAt(m_size, CStringSize, CString);
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::Append(const BasicString<CharType>& otherString)
+	{
+		if (otherString.IsEmpty())
+		{
+			return;
+		}
+
+		InsertStringAt(m_size, otherString.m_size, otherString.ConstBuffer());
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType> BasicString<_CharType, _AllocatorType>::operator+(const CharType* CString) const
+	{
+		BasicString<CharType> str = *this;
+		str.Append(CString);
+		return str;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType> BasicString<_CharType, _AllocatorType>::operator+(const BasicString<CharType>& otherString) const
+	{
+		BasicString<CharType> str = *this;
+		str.Append(otherString);
+		return str;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::Reserve(size_t capacity)
+	{
+		if (capacity > m_capacity)
+		{
+			UpdateBuffer(capacity);
+		}
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::CopyCString(const CharType* inCString, size_t size /* = npos*/)
+	{
+		m_size = (size == npos) ? GetStrLength(inCString) : size;
+		if (IsEmpty())
+		{
+			return;
+		}
+
+		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 		StrCpy(m_pBuffer, m_size + sizeof(CharType), inCString);
 	}
 
-	template<typename _CharType, class _AllocatorType>
+	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::CopyString(const BasicString<CharType>& otherString)
 	{
-		m_size = otherString.size();
-		if (empty())
+		m_size = otherString.m_size;
+		if (IsEmpty())
 		{
 			return;
 		}
 
-		UpdateBuffer(m_size * kCapacityMultiplier);		// Reserve some memory storage to append stuff
+		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 		StrCpy(m_pBuffer, m_size + sizeof(CharType), otherString.ConstBuffer());
 	}
 
-	template<typename _CharType, class _AllocatorType>
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::MoveCString(CharType* inCString, size_t size /* = npos*/)
+	{
+		m_pBuffer  = inCString;
+		m_size     = (size == npos) ? GetStrLength(inCString) : size;
+		m_capacity = m_size;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::MoveString(BasicString<CharType>&& otherString)
+	{
+		m_pBuffer  = otherString.m_pBuffer;
+		m_size     = otherString.m_size;
+		m_capacity = otherString.m_capacity;
+
+		otherString.m_pBuffer  = nullptr;
+		otherString.m_size     = 0;
+		otherString.m_capacity = 0;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::UpdateBuffer(size_t inCapacity)
 	{
 		CharType* pNewBuffer = new CharType[inCapacity + sizeof(CharType)];
@@ -133,10 +289,24 @@ namespace jpt
 		m_pBuffer = pNewBuffer;
 		m_capacity = inCapacity;
 	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	void BasicString<_CharType, _AllocatorType>::InsertStringAt(size_t index, size_t size, const CharType* CString)
+	{
+		const size_t newSize = m_size + size;
+		if (newSize > m_capacity)
+		{
+			UpdateBuffer(newSize);
+		}
+
+		StrCpy(m_pBuffer + index, size + sizeof(CharType), CString);
+
+		m_size = newSize;
+	}
 }
 
 export namespace jpt
 {
-	using String = BasicString<char>;
-	using WString = BasicString<wchar_t>;
+	using String  = BasicString<char>;
+	using WString = BasicString<wchar_t>;	// Wide string
 }

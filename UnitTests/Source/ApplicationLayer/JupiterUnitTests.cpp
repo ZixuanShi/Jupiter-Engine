@@ -12,8 +12,6 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 	return s_instance;
 }
 
-#include <string>
-
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
 
@@ -23,30 +21,8 @@ _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
 	jpt::String str("Jupiter Engine");
-	jpt::String anotherStr(str);
-
-	struct Foo
-	{
-		std::string m_data;
-
-		Foo() = default;
-		Foo(const std::string& data) : m_data(data) {}
-
-		bool operator<(const Foo& other) const { return m_data < other.m_data; }
-		bool operator>(const Foo& other) const { return m_data > other.m_data; }
-	};
-
-	Foo f1, f2;
-
-	jpt::max(1,3);
-	Foo f3 = jpt::max(f1, f2);
+	jpt::String another = str.SubStr(3, 7);
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 #endif
-
-/** Default Main Function */
-int main()
-{
-	return jpt::MainImplWin64(nullptr, nullptr, nullptr, 0);
-}

@@ -167,7 +167,7 @@ export namespace jpt
 	constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept { return (str[0] == '\0') ? value : StringHash64(&str[1], (value ^ uint64(str[0])) * 0x100000001b3); }
 
 	/**	@return const CharType* string' string to check for size.'s size */
-	template<typename CharType>
+	template<StringLiteral CharType>
 	size_t GetStrLength(const CharType* string)
 	{
 		if constexpr (jpt::IsSameType<CharType, char>::Value)
@@ -181,7 +181,7 @@ export namespace jpt
 	}
 
 	/**	Copies data from destination to source with the given size */
-	template<typename CharType>
+	template<StringLiteral CharType>
 	void StrCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource)
 	{
 		if constexpr (jpt::IsSameType<CharType, char>::Value)
@@ -195,7 +195,7 @@ export namespace jpt
 	}
 
 	/**	Copies data from destination to source with the given size and max count */
-	template<typename CharType>
+	template<StringLiteral CharType>
 	void StrNCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource, size_t maxCount)
 	{
 		if constexpr (jpt::IsSameType<CharType, char>::Value)
@@ -209,7 +209,7 @@ export namespace jpt
 	}
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
-	template<typename CharType>
+	template<StringLiteral CharType>
 	bool StrNCmp(const CharType* pString1, const CharType* pString2, size_t size)
 	{
 		if (GetStrLength(pString1) != GetStrLength(pString2))

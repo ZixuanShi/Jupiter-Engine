@@ -39,6 +39,15 @@ export namespace jpt
 	template<typename A, typename B> struct IsSameType       { static constexpr bool Value = false; };
 	template<typename A>             struct IsSameType<A, A> { static constexpr bool Value = true; };
 
+	/** @return true if the Type is within any of the passed ...Types
+		@example:
+				int foo = 42;
+				double bar = 42.0;
+				jpt::IsAnyOf<decltype(foo), float, char, int>; // true	
+				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
+	template<typename Type, typename ...Types>     
+	constexpr bool IsAnyOf = (IsSameType<Type, Types>::Value || ...);
+
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};
 	template<typename _ReturnType>                        struct enable_if<true, _ReturnType> { using ReturnType = _ReturnType; };

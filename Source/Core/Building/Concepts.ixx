@@ -8,6 +8,7 @@ module;
 export module jpt.Concepts;
 
 import jpt.Constants;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
@@ -19,6 +20,9 @@ export namespace jpt
 
 	template<typename Type>
 	concept Floating = std::is_floating_point_v<Type>;
+
+	template<typename Type>
+	concept StringLiteral = IsSameType<Type, char>::Value || IsSameType<Type, wchar_t>::Value;
 
 	template<typename Type>
 	concept Copyable = std::is_copy_constructible_v<Type> && std::is_copy_assignable_v<Type>;
@@ -35,14 +39,14 @@ export namespace jpt
 
 	/** Avoid copy-constructing when comparing non-trivially copiable objects */
 	template<typename Type>
-	concept ComparableNonTrivial = Comparable<Type> && 
-	                               !std::is_trivially_copy_constructible_v<Type> ||
-	                               sizeof(Type) > kLargeClassSize;
-
-	template<typename Type>
 	concept ComparableTrivial = Comparable<Type> &&
 		                        std::is_trivially_copy_constructible_v<Type> &&
-		                        sizeof(Type) <= kLargeClassSize;
+		                        sizeof(Type) <= kLargeDataSize;
+
+	template<typename Type>
+	concept ComparableNonTrivial = Comparable<Type> && 
+	                               !std::is_trivially_copy_constructible_v<Type> ||
+	                               sizeof(Type) > kLargeDataSize;
 
 	template<typename Type>
 	concept EnabledToString = requires(const Type& object) { object.ToString(); };
