@@ -296,7 +296,7 @@ namespace jpt
 			return jpt::BasicString<CharType>();
 		}
 
-		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
+		CharType* subStrBuffer = AllocatorType::Allocate(count + 1);
 		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[index], count);
 
 		jpt::BasicString<CharType> result;
@@ -403,12 +403,12 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::UpdateBuffer(size_t inCapacity)
 	{
-		CharType* pNewBuffer = new CharType[inCapacity + sizeof(CharType)];
+		CharType* pNewBuffer = AllocatorType::AllocateArray(inCapacity + 1);
 
 		if (m_pBuffer)
 		{
 			StrCpy(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
-			delete[] m_pBuffer;
+			AllocatorType::DeallocateArray(m_pBuffer);
 		}
 
 		m_pBuffer = pNewBuffer;
