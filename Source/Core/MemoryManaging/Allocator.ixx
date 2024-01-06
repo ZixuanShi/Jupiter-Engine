@@ -38,7 +38,6 @@ export namespace jpt
 			@param values		An pointer to an array for each allocated objects initializing value. */
 		static Type* AllocateMultiWithValue(size_t count, const Type* pValues);
 		static Type* AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues);
-		static Type* AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues);
 
 		static Type* AllocateArray(size_t count = 1);
 
@@ -87,21 +86,6 @@ export namespace jpt
 		for (auto itr = pValues.begin(); itr != pValues.end(); ++itr)
 		{
 			pArray[i] = *itr;
-			++i;
-		}
-
-		return pArray;
-	}
-
-	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues)
-	{
-		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
-
-		size_t i = 0;
-		for (auto itr = pValues.begin(); itr != pValues.end(); ++itr)
-		{
-			pArray[i] = move(*itr);
 			++i;
 		}
 
