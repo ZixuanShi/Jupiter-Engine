@@ -28,6 +28,18 @@ bool UnitTest_ToCStr()
 	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(integerCStr, "-114514", 7), "");
 	delete integerCStr;
 
+	int32 num = jpt::CStrToInteger("114514", 6);
+	JPT_RETURN_FALSE_IF_LOG(num != 114514, "");
+
+	num = jpt::CStrToInteger("-114514", 7);
+	JPT_RETURN_FALSE_IF_LOG(num != -114514, "");
+
+	float f = jpt::CStrToFloat("114514.114514", 13);
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreValuesClose(f, 114514.114514f), "");
+
+	f = jpt::CStrToFloat ("-114514.114514", 14);
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreValuesClose(f, -114514.114514f), "");
+
 	const char* floatingCStr = jpt::FloatingToCStr(-114514.114f);
 	//JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(floatingCStr, "-114514.114", 11), "");	// Not stable
 	delete floatingCStr;

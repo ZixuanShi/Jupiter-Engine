@@ -70,6 +70,14 @@ namespace jpt
 		/* Deallocate the memory that this string holds */
 		void Clear();
 
+		/* Replace the some content of this string with the new given one within a range
+			@param stringToFind:	The string we want to remove and replace
+			@param stringToReplace:	The string to replace the original data
+			@param startIndex:		The start index to start searching. Default to 0
+			@param endIndex:		The end index to stop operation. Default to size() */
+		BasicString& Replace(const CharType* stringToFind, const CharType* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+
+		/** @return		A sub string within the given range at index and length */
 		BasicString SubStr(size_t index, size_t count = npos) const;
 
 		/** Appends a new string to the end of buffer */
@@ -90,6 +98,17 @@ namespace jpt
 		/* Move the content of string. Will take ownership of the passed in string */
 		void MoveString(CharType* inCString, size_t size = npos);
 		void MoveString(BasicString<CharType>&& otherString);
+
+		/** @return An integer associated with this string
+			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front */
+		template<Integral NumType = int32>
+		NumType ToInt() const { return CStrToInteger(m_pBuffer, m_size); }
+
+		/** @return A float associated with this string
+			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front or the percision dot
+			@note	Will ignore the 'f' is there's any */
+		template<Floating NumType = float>
+		NumType ToFloat() const { return CStrToFloat(m_pBuffer, m_size); }
 
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
@@ -120,7 +139,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(const CharType* CString)
 	{
-		if (ConstBuffer() != CString)
+		if (!AreStringsSame(m_pBuffer, CString, m_size))
 		{
 			Clear();
 			CopyString(CString);
@@ -279,6 +298,36 @@ namespace jpt
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 		m_size = 0;
 		m_capacity = 0;
+	}
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::Replace(const CharType* stringToFind, const CharType* stringToReplace, size_t startIndex, size_t endIndex)
+	{
+		if (endIndex == npos)
+		{
+			endIndex = m_size;
+		}
+
+		const BasicString<CharType> replaced(stringToReplace);
+		const size_t stringToFindSize = GetStrLength(stringToFind);
+
+		size_t foundPos = startIndex;
+		while (true)
+		{
+			foundPos = Find(stringToFind, startIndex, endIndex);
+			if (foundPos == npos)
+			{
+				break;
+			}
+
+			const BasicString<CharType> pre = SubStr(0, foundPos);
+			const BasicString<CharType> suff = SubStr(foundPos + stringToFindSize);
+
+			*this = pre + replaced + suff;
+			startIndex = foundPos + replaced.Size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'		
+		}
+
+		return *this;
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>

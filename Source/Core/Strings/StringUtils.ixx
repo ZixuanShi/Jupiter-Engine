@@ -14,6 +14,7 @@ import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.Utilities;
 import jpt.Allocator;
+import jpt.Math;
 
 export namespace jpt
 {
@@ -49,6 +50,20 @@ export namespace jpt
 		}
 
 		return size;
+	}
+
+	/**	@return const CharType* string' string to check for size.'s size */
+	template<StringLiteral CharType>
+	size_t GetStrLength(const CharType* string)
+	{
+		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		{
+			return strlen(string);
+		}
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		{
+			return wcslen(string);
+		}
 	}
 
 	/** Convert from IntegerType to a char pointer holding the integer's value as string literal
@@ -127,6 +142,40 @@ export namespace jpt
 		return result;
 	}
 
+	/** @return Integral number converted from pBuffer */
+	template<Integral NumType = int32, StringLiteral CharType>
+	NumType CStrToInteger(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
+	{
+		size = (size == kInvalidValue<size_t>) ? GetStrLength(pBuffer) : size;
+		NumType result = 0;
+		bool isNegative = false;
+
+		for (size_t i = 0; i < size; ++i)
+		{
+			const CharType c = pBuffer[i];
+
+			// Negative
+			if (c == '-')
+			{
+				isNegative = true;
+				continue;
+			}
+
+			// Parse number
+			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
+			const uint8 number = c - static_cast<CharType>('0');
+			result *= 10;
+			result += number;
+		}
+
+		if (isNegative)
+		{
+			result *= -1;
+		}
+
+		return result;
+	}
+
 	template<Floating Type>
 	char* FloatingToCStr(Type value)
 	{
@@ -136,50 +185,76 @@ export namespace jpt
 		return buffer;
 	}
 
-	/** @return 0 if two strings are identical. kInvalidValue<int32> if not */
-	bool AreCStringsSame(const char* string1, const char* string2, size_t size)
+	/** @note	Will ignore the 'f' is there's any */
+	template<Floating NumType = float, StringLiteral CharType>
+	NumType CStrToFloat(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
-		for (size_t i = 0; i < size; ++i)
-		{
-			if (string1[i] != string2[i])
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+		// Parse two integral parts of the precision dot, then combine them
 
-	/** @return 0 if two wide strings are identical. kInvalidValue<int32> if not */
-	bool AreWStringsSame(const wchar_t* string1, const wchar_t* string2, size_t size)
-	{
+		size = (size == kInvalidValue<size_t>) ? GetStrLength(pBuffer) : size;
+		NumType integer = 0;		// Left of precision
+		NumType floatingNum = 0;	// Right of precision
+		size_t precisionIndex = kInvalidValue<size_t>;
+		bool isNegative = false;
+
 		for (size_t i = 0; i < size; ++i)
 		{
-			if (string1[i] != string2[i])
+			const CharType c = pBuffer[i];
+
+			// Negative
+			if (c == '-')
 			{
-				return false;
+				isNegative = true;
+				continue;
+			}
+
+			// Precision dot
+			if (c == '.')
+			{
+				precisionIndex = i;
+				continue;
+			}
+
+			// Num
+			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
+			const uint8 number = c - static_cast<CharType>('0');
+
+			if (precisionIndex == kInvalidValue<size_t>)
+			{
+				integer *= static_cast<NumType>(10);
+				integer += number;
+			}
+			else
+			{
+				floatingNum *= static_cast<NumType>(10);
+				floatingNum += number;
 			}
 		}
-		return true;
+
+		// Make floating number part eligible
+		uint32 floatCopy = static_cast<int32>(floatingNum);
+		uint32 divider = 1;
+		while (floatCopy > 0)
+		{
+			floatCopy /= 10;
+			divider *= 10;
+		}
+		floatingNum /= divider;
+
+		// Combine two parts and process negative if it is
+		NumType result = integer + floatingNum;
+		if (isNegative)
+		{
+			result *= static_cast<NumType>(-1);
+		}
+
+		return result;
 	}
 
 	/** constexpr compile time hash functions, 32 and 64 bit
 		@str: should be a null terminated string literal */
 	constexpr uint32 StringHash32(const char* const str, const uint32 value = 0x811c9dc5)         noexcept { return (str[0] == '\0') ? value : StringHash32(&str[1], (value ^ uint32(str[0])) * 0x1000193); }
 	constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept { return (str[0] == '\0') ? value : StringHash64(&str[1], (value ^ uint64(str[0])) * 0x100000001b3); }
-
-	/**	@return const CharType* string' string to check for size.'s size */
-	template<StringLiteral CharType>
-	size_t GetStrLength(const CharType* string)
-	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			return strlen(string);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			return wcslen(string);
-		}
-	}
 
 	/**	Copies data from destination to source with the given size */
 	template<StringLiteral CharType>
@@ -211,39 +286,48 @@ export namespace jpt
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
 	template<StringLiteral CharType>
-	bool AreStringsSame(const CharType* pString1, const CharType* pString2, size_t size)
+	bool AreStringsSame(const CharType* pString1, const CharType* pString2, size_t size = kInvalidValue<size_t>)
 	{
-		if (GetStrLength(pString1) != GetStrLength(pString2))
+		const size_t string1Length = GetStrLength(pString1);
+		const size_t string2Length = GetStrLength(pString2);
+
+		if (string1Length != string2Length)
 		{
 			return false;
 		}
 
-		if constexpr (IsSameType<CharType, char>::Value)
+		size = (size == kInvalidValue<size_t>) ? Min(string1Length, string2Length) : size;
+
+		for (size_t i = 0; i < size; ++i)
 		{
-			return AreCStringsSame(pString1, pString2, size);
+			if (pString1[i] != pString2[i])
+			{
+				return false;
+			}
 		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			return AreWStringsSame(pString1, pString2, size);
-		}
+
+		return true;
 	}
 	
 	template<typename StringType>
-	bool AreStringsSame(const StringType& string1, const StringType& string2, size_t size)
+	bool AreStringsSame(const StringType& string1, const StringType& string2, size_t size = kInvalidValue<size_t>)
 	{
 		if (string1.Size() != string2.Size())
 		{
 			return false;
 		}
 
-		if constexpr (IsSameType<StringType::CharType, char>::Value)
+		size = (size == kInvalidValue<size_t>) ? Min(string1.Size(), string2.Size()) : size;
+
+		for (size_t i = 0; i < size; ++i)
 		{
-			return AreCStringsSame(string1.ConstBuffer(), string2.ConstBuffer(), size);
+			if (string1[i] != string2[i])
+			{
+				return false;
+			}
 		}
-		else if (IsSameType<StringType::CharType, wchar_t>::Value)
-		{
-			return AreWStringsSame(string1.ConstBuffer(), string2.ConstBuffer(), size);
-		}
+
+		return true;
 	}
 
 	template<>

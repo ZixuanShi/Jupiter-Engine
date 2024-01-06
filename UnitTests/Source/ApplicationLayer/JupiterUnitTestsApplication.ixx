@@ -9,10 +9,16 @@ export module jpt.UnitTestsApplication;
 import jpt.CoreModules;
 import jpt.ApplicationBase;
 
+// Math
 import MathUnitTests;
 import RandomNumberGeneratorUnitTests;
+
+// Memory Managing
 import AllocatorUnitTests;
+
+// Strings
 import StringUtilsUnitTests;
+import StringUnitTests;
 
 export class JupiterUnitTestsApplication final : public jpt::ApplicationBase
 {
@@ -46,4 +52,5 @@ void JupiterUnitTestsApplication::RunUnitTests_Core() const
 
 	// Strings
 	RunStringUtilsUnitTests();
+	RunStringUnitTests();
 }
