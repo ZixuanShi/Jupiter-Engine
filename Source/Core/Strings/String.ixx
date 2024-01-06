@@ -264,13 +264,13 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	bool BasicString<_CharType, _AllocatorType>::operator==(const CharType* otherString) const
 	{
-		return StrNCmp(m_pBuffer, otherString, m_size);
+		return AreStringsSame(m_pBuffer, otherString, m_size);
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
 	bool BasicString<_CharType, _AllocatorType>::operator==(const BasicString<CharType>& otherString) const
 	{
-		return StringCmp(*this, otherString, m_size);
+		return AreStringsSame(*this, otherString, m_size);
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>

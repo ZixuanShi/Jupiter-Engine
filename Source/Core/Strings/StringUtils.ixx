@@ -13,6 +13,7 @@ export module jpt.StringUtils;
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.Utilities;
+import jpt.Allocator;
 
 export namespace jpt
 {
@@ -65,7 +66,7 @@ export namespace jpt
 		// Process 0
 		if (value == 0)
 		{
-			result = new char[2];
+			result = Allocator<char>::AllocateArray(2);
 			result[0] = '0';
 			result[1] = '\0';
 			return result;
@@ -89,7 +90,7 @@ export namespace jpt
 			++index;
 		}
 		// Allocate Result string, + 1 for the end terminater
-		result = new char[index + 1];
+		result = Allocator<char>::AllocateArray(index + 1);
 
 		// Append string terminator at the end
 		result[index] = '\0';
@@ -136,29 +137,29 @@ export namespace jpt
 	}
 
 	/** @return 0 if two strings are identical. kInvalidValue<int32> if not */
-	int32 strncmp(const char* string1, const char* string2, size_t size)
+	bool AreCStringsSame(const char* string1, const char* string2, size_t size)
 	{
 		for (size_t i = 0; i < size; ++i)
 		{
 			if (string1[i] != string2[i])
 			{
-				return kInvalidValue<int32>;
+				return false;
 			}
 		}
-		return 0;
+		return true;
 	}
 
 	/** @return 0 if two wide strings are identical. kInvalidValue<int32> if not */
-	int32 wcsncmp(const wchar_t* string1, const wchar_t* string2, size_t size)
+	bool AreWStringsSame(const wchar_t* string1, const wchar_t* string2, size_t size)
 	{
 		for (size_t i = 0; i < size; ++i)
 		{
 			if (string1[i] != string2[i])
 			{
-				return kInvalidValue<int32>;
+				return false;
 			}
 		}
-		return 0;
+		return true;
 	}
 
 	/** constexpr compile time hash functions, 32 and 64 bit
@@ -172,11 +173,11 @@ export namespace jpt
 	{
 		if constexpr (jpt::IsSameType<CharType, char>::Value)
 		{
-			return jpt::strlen(string);
+			return strlen(string);
 		}
 		else if (jpt::IsSameType<CharType, wchar_t>::Value)
 		{
-			return jpt::wcslen(string);
+			return wcslen(string);
 		}
 	}
 
@@ -184,11 +185,11 @@ export namespace jpt
 	template<StringLiteral CharType>
 	void StrCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource)
 	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>::Value)
 		{
 			strcpy_s(pDestination, sizeInBytes, pSource);
 		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		else if (IsSameType<CharType, wchar_t>::Value)
 		{
 			wcscpy_s(pDestination, sizeInBytes, pSource);
 		}
@@ -198,11 +199,11 @@ export namespace jpt
 	template<StringLiteral CharType>
 	void StrNCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource, size_t maxCount)
 	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>::Value)
 		{
 			strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
+		else if (IsSameType<CharType, wchar_t>::Value)
 		{
 			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
@@ -210,38 +211,38 @@ export namespace jpt
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
 	template<StringLiteral CharType>
-	bool StrNCmp(const CharType* pString1, const CharType* pString2, size_t size)
+	bool AreStringsSame(const CharType* pString1, const CharType* pString2, size_t size)
 	{
 		if (GetStrLength(pString1) != GetStrLength(pString2))
 		{
 			return false;
 		}
 
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>::Value)
 		{
-			return jpt::strncmp(pString1, pString2, size) == 0;
+			return AreCStringsSame(pString1, pString2, size);
 		}
 		else if (jpt::IsSameType<CharType, wchar_t>::Value)
 		{
-			return jpt::wcsncmp(pString1, pString2, size) == 0;
+			return AreWStringsSame(pString1, pString2, size);
 		}
 	}
 	
 	template<typename StringType>
-	bool StringCmp(const StringType& string1, const StringType& string2, size_t size)
+	bool AreStringsSame(const StringType& string1, const StringType& string2, size_t size)
 	{
 		if (string1.Size() != string2.Size())
 		{
 			return false;
 		}
 
-		if constexpr (jpt::IsSameType<StringType::CharType, char>::Value)
+		if constexpr (IsSameType<StringType::CharType, char>::Value)
 		{
-			return jpt::strncmp(string1.ConstBuffer(), string2.ConstBuffer(), size) == 0;
+			return AreCStringsSame(string1.ConstBuffer(), string2.ConstBuffer(), size);
 		}
-		else if (jpt::IsSameType<StringType::CharType, wchar_t>::Value)
+		else if (IsSameType<StringType::CharType, wchar_t>::Value)
 		{
-			return jpt::wcsncmp(string1.ConstBuffer(), string2.ConstBuffer(), size) == 0;
+			return AreWStringsSame(string1.ConstBuffer(), string2.ConstBuffer(), size);
 		}
 	}
 

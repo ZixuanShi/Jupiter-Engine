@@ -54,5 +54,4 @@ export void RunRandomNumberGeneratorUnitTests()
 {
 	JPT_LOG_IF(!UnitTest_GenerateRandomNumbers(), "UnitTest_GenerateRandomNumbers Failed");
 	JPT_LOG_IF(!UnitTest_FixedSeedGenerateRandomNumbers(), "UnitTest_FixedSeedGenerateRandomNumbers Failed");
-
 }

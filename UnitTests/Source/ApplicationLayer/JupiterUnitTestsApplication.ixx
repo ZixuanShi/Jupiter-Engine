@@ -12,6 +12,7 @@ import jpt.ApplicationBase;
 import MathUnitTests;
 import RandomNumberGeneratorUnitTests;
 import AllocatorUnitTests;
+import StringUtilsUnitTests;
 
 export class JupiterUnitTestsApplication final : public jpt::ApplicationBase
 {
@@ -42,4 +43,7 @@ void JupiterUnitTestsApplication::RunUnitTests_Core() const
 
 	// Memory Managing
 	RunAllocatorUnitTests();
+
+	// Strings
+	RunStringUtilsUnitTests();
 }
