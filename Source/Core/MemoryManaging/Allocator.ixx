@@ -28,23 +28,26 @@ export namespace jpt
 	public:
 		/** Allocates plain heap memory for desired amount of memory for <Type>
 			@param count		How many <Type> objects to allocate */
-		Type* Allocate(size_t count = 0) const;
+		static Type* Allocate(size_t count = 1);
 
 		/** Allocates heap memory for one <Type>, with initializing value */
-		Type* AllocateWithValue(Type data) const;
+		static Type* AllocateWithValue(Type data);
 
 		/** Allocates heap memory for desired amount of memory for <Type> with init values
 			@param count		How many <Type> objects to allocate 
 			@param values		An pointer to an array for each allocated objects initializing value. */
-		Type* AllocateMultiWithValue(size_t count, Type* pValues) const;
-		Type* AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues) const;
-		Type* AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues) const;
+		static Type* AllocateMultiWithValue(size_t count, const Type* pValues);
+		static Type* AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues);
+		static Type* AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues);
+
+		static Type* AllocateArray(size_t count = 1);
 
 		/** Deallocate memory for the passed in pointer */
-		void Deallocate(Type* pPointer) const;
+		static void Deallocate(Type* pPointer);
+		static void DeallocateArray(Type* pArray);
 
-		void Construct(Type* pPointer, const Type& object) const;
-		void Destroy(Type* pPointer) const;
+		static void Construct(Type* pPointer, const Type& object);
+		static void Destruct(Type* pPointer);
 
 		template<class OtherType>
 		bool operator==(const Allocator<OtherType>&) const noexcept;
@@ -54,13 +57,13 @@ export namespace jpt
 	};
 
 	template<typename Type>
-	Type* Allocator<Type>::Allocate(size_t count /* = 0 */ ) const
+	Type* Allocator<Type>::Allocate(size_t count /* = 1 */ )
 	{
 		return static_cast<Type*>(::operator new(count * sizeof(Type)));
 	}
 
 	template<typename Type>
-	Type* Allocator<Type>::AllocateWithValue(Type data) const
+	Type* Allocator<Type>::AllocateWithValue(Type data)
 	{
 		Type* pPointer = static_cast<Type*>(::operator new(sizeof(Type)));
 		*pPointer = data;
@@ -68,7 +71,7 @@ export namespace jpt
 	}
 
 	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, Type* pValues) const
+	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, const Type* pValues)
 	{
 		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
 		std::memcpy(pArray, pValues, count * sizeof(Type));
@@ -76,7 +79,7 @@ export namespace jpt
 	}
 
 	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues) const
+	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues)
 	{
 		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
 
@@ -91,7 +94,7 @@ export namespace jpt
 	}
 
 	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues) const
+	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, std::initializer_list<Type>&& pValues)
 	{
 		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
 
@@ -106,19 +109,31 @@ export namespace jpt
 	}
 
 	template<typename Type>
-	void Allocator<Type>::Deallocate(Type* pPointer) const
+	Type* Allocator<Type>::AllocateArray(size_t count /* = 1 */)
+	{
+		return static_cast<Type*>(::operator new[](count * sizeof(Type)));
+	}
+
+	template<typename Type>
+	void Allocator<Type>::Deallocate(Type* pPointer)
 	{
 		::operator delete(pPointer);
 	}
 
 	template<typename Type>
-	void Allocator<Type>::Construct(Type* pPointer, const Type& object) const
+	void Allocator<Type>::DeallocateArray(Type* pArray)
+	{
+		::operator delete[](pArray);
+	}
+
+	template<typename Type>
+	void Allocator<Type>::Construct(Type* pPointer, const Type& object)
 	{
 		new(pPointer) Type(object);
 	}
 
 	template<typename Type>
-	void Allocator<Type>::Destroy(Type* pPointer) const
+	void Allocator<Type>::Destruct(Type* pPointer)
 	{
 		pPointer->~Type();
 	}
