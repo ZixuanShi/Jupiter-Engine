@@ -29,17 +29,16 @@ export namespace jpt
 		/** Allocates plain heap memory for desired amount of memory for <Type>
 			@param count		How many <Type> objects to allocate */
 		static Type* Allocate(size_t count = 1);
+		static Type* AllocateArray(size_t count = 1);
 
 		/** Allocates heap memory for one <Type>, with initializing value */
-		static Type* AllocateWithValue(Type data);
+		static Type* AllocateWithValue(const Type& data);
 
 		/** Allocates heap memory for desired amount of memory for <Type> with init values
 			@param count		How many <Type> objects to allocate 
 			@param values		An pointer to an array for each allocated objects initializing value. */
 		static Type* AllocateMultiWithValue(size_t count, const Type* pValues);
 		static Type* AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues);
-
-		static Type* AllocateArray(size_t count = 1);
 
 		/** Deallocate memory for the passed in pointer */
 		static void Deallocate(Type* pPointer);
@@ -62,7 +61,7 @@ export namespace jpt
 	}
 
 	template<typename Type>
-	Type* Allocator<Type>::AllocateWithValue(Type data)
+	Type* Allocator<Type>::AllocateWithValue(const Type& data)
 	{
 		Type* pPointer = static_cast<Type*>(::operator new(sizeof(Type)));
 		*pPointer = data;
