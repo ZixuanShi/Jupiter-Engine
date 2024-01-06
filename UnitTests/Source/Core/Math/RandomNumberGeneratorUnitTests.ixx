@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 module;
 
 #include "Core/Building/Headers.h"

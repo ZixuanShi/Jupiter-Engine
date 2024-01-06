@@ -9,8 +9,9 @@ export module jpt.UnitTestsApplication;
 import jpt.CoreModules;
 import jpt.ApplicationBase;
 
-import AllocatorUnitTests;
+import MathUnitTests;
 import RandomNumberGeneratorUnitTests;
+import AllocatorUnitTests;
 
 export class JupiterUnitTestsApplication final : public jpt::ApplicationBase
 {
@@ -36,6 +37,7 @@ bool JupiterUnitTestsApplication::Init()
 void JupiterUnitTestsApplication::RunUnitTests_Core() const
 {
 	// Math
+	RunMathUnitTests();
 	RunRandomNumberGeneratorUnitTests();
 
 	// Memory Managing

@@ -61,6 +61,12 @@ export namespace jpt
 	}
 
 	template<typename Type>
+	Type* Allocator<Type>::AllocateArray(size_t count /* = 1 */)
+	{
+		return static_cast<Type*>(::operator new[](count * sizeof(Type)));
+	}
+
+	template<typename Type>
 	Type* Allocator<Type>::AllocateWithValue(const Type& data)
 	{
 		Type* pPointer = static_cast<Type*>(::operator new(sizeof(Type)));
@@ -89,12 +95,6 @@ export namespace jpt
 		}
 
 		return pArray;
-	}
-
-	template<typename Type>
-	Type* Allocator<Type>::AllocateArray(size_t count /* = 1 */)
-	{
-		return static_cast<Type*>(::operator new[](count * sizeof(Type)));
 	}
 
 	template<typename Type>
