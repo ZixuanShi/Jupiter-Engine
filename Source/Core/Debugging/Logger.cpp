@@ -49,7 +49,7 @@ namespace jpt
 		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
 
 		// line number and log type
-		contentToLog += ", line (" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
+		contentToLog += ", line " + jpt::ToString(line) + ":  \t" + "[" + locGetLogStr(type) + "] ";
 
 		// Content message
 		contentToLog += messageStr + "\n";
