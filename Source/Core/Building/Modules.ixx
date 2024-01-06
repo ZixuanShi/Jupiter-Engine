@@ -15,6 +15,7 @@ export import jpt.Constants;
 
 // Math
 export import jpt.Math;
+export import jpt.RandomNumberGenerator;
 
 // Memory Managing
 export import jpt.Allocator;

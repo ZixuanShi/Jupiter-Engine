@@ -3,6 +3,7 @@
 #pragma once
 
 import jpt.TypeDefs;
+import jpt.Concepts;
 
 namespace jpt
 {
@@ -39,6 +40,7 @@ namespace jpt
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(const char* string);
 		void Log(const wchar_t* wideString);
+		template<EnabledToString Type> void Log(const Type& object) { Log(object.ToString()); }
 
 		static Logger& GetInstance();
 
