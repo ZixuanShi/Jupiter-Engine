@@ -61,6 +61,12 @@
 #define JPT_RETURN_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, void());
 
+#define JPT_LOG_IF(condition, ...)\
+	if ((condition))\
+	{\
+		JPT_LOG(__VA_ARGS__);\
+	}
+
 /** Helper for clean and delete.
 	@param pPointer: Assumed to have Clean() function implemented */
 #define JPT_CLEAN_THEN_DELETE(pPointer)\

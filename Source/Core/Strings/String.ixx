@@ -296,7 +296,7 @@ namespace jpt
 			return jpt::BasicString<CharType>();
 		}
 
-		CharType* subStrBuffer = new CharType[count + sizeof(CharType)];
+		CharType* subStrBuffer = AllocatorType::AllocateArray(count + sizeof(CharType));
 		StrNCpy(subStrBuffer, count + sizeof(CharType), &m_pBuffer[index], count);
 
 		jpt::BasicString<CharType> result;
@@ -403,12 +403,12 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::UpdateBuffer(size_t inCapacity)
 	{
-		CharType* pNewBuffer = new CharType[inCapacity + sizeof(CharType)];
+		CharType* pNewBuffer = AllocatorType::AllocateArray(inCapacity + sizeof(CharType));
 
 		if (m_pBuffer)
 		{
 			StrCpy(pNewBuffer, m_size + sizeof(CharType), m_pBuffer);
-			delete[] m_pBuffer;
+			AllocatorType::DeallocateArray(m_pBuffer);
 		}
 
 		m_pBuffer = pNewBuffer;
@@ -441,12 +441,12 @@ export namespace jpt
 		return jpt::BasicString<CharType>(leftString) += rightString;
 	}
 
-	// Converts an input object to string if it has this functionality
 	template<EnabledToString Type>
 	String ToString(const Type& object)
 	{
 		return object.ToString();
 	}
+
 	template<Integral Type>
 	String ToString(Type integer)
 	{
@@ -455,6 +455,7 @@ export namespace jpt
 		integerString.MoveString(move(integerCString));
 		return integerString;
 	}
+
 	template<Floating Type>
 	String ToString(Type value)
 	{
