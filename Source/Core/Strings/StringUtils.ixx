@@ -152,11 +152,11 @@ export namespace jpt
 		CharType* buffer = new CharType[32];
 		const CharType* format = JPT_GET_PROPER_STRING(CharType, %.3f);
 
-		if constexpr (IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>)
 		{
 			snprintf(buffer, 32, format, value);
 		}
-		else if (IsSameType<CharType, wchar_t>::Value)
+		else if (IsSameType<CharType, wchar_t>)
 		{
 			swprintf(buffer, 32, format, value);
 		}
@@ -239,11 +239,11 @@ export namespace jpt
 	template<StringLiteral CharType>
 	void StrCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource)
 	{
-		if constexpr (IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>)
 		{
 			strcpy_s(pDestination, sizeInBytes, pSource);
 		}
-		else if (IsSameType<CharType, wchar_t>::Value)
+		else if (IsSameType<CharType, wchar_t>)
 		{
 			wcscpy_s(pDestination, sizeInBytes, pSource);
 		}
@@ -253,11 +253,11 @@ export namespace jpt
 	template<StringLiteral CharType>
 	void StrNCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource, size_t maxCount)
 	{
-		if constexpr (IsSameType<CharType, char>::Value)
+		if constexpr (IsSameType<CharType, char>)
 		{
 			strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
-		else if (IsSameType<CharType, wchar_t>::Value)
+		else if (IsSameType<CharType, wchar_t>)
 		{
 			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}

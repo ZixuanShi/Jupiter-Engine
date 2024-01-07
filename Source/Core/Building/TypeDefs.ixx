@@ -35,9 +35,9 @@ export namespace jpt
 	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
 
 	// Same type checking
-	// Example: jpt::IsSameType<int32, float>::Value
-	template<typename A, typename B> struct IsSameType       { static constexpr bool Value = false; };
-	template<typename A>             struct IsSameType<A, A> { static constexpr bool Value = true; };
+	// Example: jpt::IsSameType<int32, float>
+	template<typename A, typename B> constexpr bool IsSameType       = false;
+	template<typename A>             constexpr bool IsSameType<A, A> = true;
 
 	/** @return true if the Type is within any of the passed ...Types
 		@example:
@@ -46,7 +46,7 @@ export namespace jpt
 				jpt::IsAnyOf<decltype(foo), float, char, int>; // true	
 				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
 	template<typename Type, typename ...Types>     
-	constexpr bool IsAnyOf = (IsSameType<Type, Types>::Value || ...);
+	constexpr bool IsAnyOf = (IsSameType<Type, Types> || ...);
 
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};

@@ -20,6 +20,9 @@ import AllocatorUnitTests;
 import StringUtilsUnitTests;
 import StringUnitTests;
 
+// Timing
+import TimingUtilsUnitTests;
+
 export class JupiterUnitTestsApplication final : public jpt::ApplicationBase
 {
 private:
@@ -29,28 +32,33 @@ public:
 	virtual bool Init() override final;
 
 private:
-	virtual void RunUnitTests_Core() const;
+	bool RunUnitTests_Core() const;
 };
 
 bool JupiterUnitTestsApplication::Init()
 {
-	JPT_RETURN_FALSE_IF_LOG(!Super::Init(), "Failed Super::Init()");
+	JPT_RETURN_FALSE_IF_ERROR(!Super::Init(), "Failed Super::Init()");
 
-	RunUnitTests_Core();
+	JPT_LOG_IF(RunUnitTests_Core(), "Core Unit Tests succeeded");
 
 	return true;
 }
 
-void JupiterUnitTestsApplication::RunUnitTests_Core() const
+bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 {
 	// Math
-	RunMathUnitTests();
-	RunRandomNumberGeneratorUnitTests();
+	JPT_RETURN_FALSE_IF_ERROR(!RunMathUnitTests(), "Math Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunRandomNumberGeneratorUnitTests(), "Random Number Generator Tests Failed");
 
 	// Memory Managing
-	RunAllocatorUnitTests();
+	JPT_RETURN_FALSE_IF_ERROR(!RunAllocatorUnitTests(), "Allocator Tests Failed");
 
 	// Strings
-	RunStringUtilsUnitTests();
-	RunStringUnitTests();
+	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunStringUnitTests(), "String Tests Failed");
+
+	// Timing
+	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUtilsUnitTests(), "TimingUtils Tests Failed");
+
+	return true;
 }

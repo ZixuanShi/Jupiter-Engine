@@ -39,10 +39,10 @@ import jpt.Concepts;
 	@param condition:	The expression of the operation
 	@param returnValue: The value to return if condition occured
 	@param message:		The message to log if condition occured */
-#define JPT_RETURN_VALUE_IF_LOG(condition, returnValue, ...)\
+#define JPT_RETURN_VALUE_IF_ERROR(condition, returnValue, ...)\
 	if ((condition))\
 	{\
-		JPT_LOG(__VA_ARGS__);\
+		JPT_ERROR(__VA_ARGS__);\
 		return returnValue;\
 	}
 
@@ -52,17 +52,23 @@ import jpt.Concepts;
 		return returnValue;\
 	}
 
-#define JPT_RETURN_FALSE_IF_LOG(condition, ...)\
-	JPT_RETURN_VALUE_IF_LOG(condition, false, __VA_ARGS__);
+#define JPT_RETURN_FALSE_IF_ERROR(condition, ...)\
+	JPT_RETURN_VALUE_IF_ERROR(condition, false, __VA_ARGS__);
 
 #define JPT_RETURN_FALSE_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, false);
 
-#define JPT_RETURN_IF_LOG(condition, ...)\
-	JPT_RETURN_VALUE_IF_LOG(condition, void(), __VA_ARGS__);
+#define JPT_RETURN_IF_ERROR(condition, ...)\
+	JPT_RETURN_VALUE_IF_ERROR(condition, void(), __VA_ARGS__);
 
 #define JPT_RETURN_IF(condition)\
 	JPT_RETURN_VALUE_IF(condition, void());
+
+#define JPT_ERROR_IF(condition, ...)\
+	if ((condition))\
+	{\
+		JPT_ERROR(__VA_ARGS__);\
+	}
 
 #define JPT_LOG_IF(condition, ...)\
 	if ((condition))\
@@ -105,11 +111,11 @@ namespace jpt_private
 	[]() -> const CharType* \
 	{\
 		const CharType* pString = nullptr; \
-		if constexpr (jpt::IsSameType<CharType, char>::Value)\
+		if constexpr (jpt::IsSameType<CharType, char>)\
 		{\
 			jpt_private::locGetProperStrHelper(pString, #SourceStr);\
 		}\
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)\
+		else if (jpt::IsSameType<CharType, wchar_t>)\
 		{\
 			jpt_private::locGetProperStrHelper(pString, JPT_TO_WSTRING(#SourceStr));\
 		}\

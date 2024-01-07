@@ -21,7 +21,7 @@ export namespace jpt
 		using CastType = typename RemoveReference<Type>::Type;
 
 		static_assert(IsLValueReferenceType<Type>::Value, "jpt::move called on an lvalue");
-		static_assert(!jpt::IsSameType<CastType&, const CastType&>::Value, "jpt::move called on a const object");
+		static_assert(!jpt::IsSameType<CastType&, const CastType&>, "jpt::move called on a const object");
 
 		return static_cast<CastType&&>(object);
 	}

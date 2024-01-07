@@ -22,7 +22,7 @@ export namespace jpt
 	concept Floating = std::is_floating_point_v<Type>;
 
 	template<typename Type>
-	concept StringLiteral = IsSameType<Type, char>::Value || IsSameType<Type, wchar_t>::Value;
+	concept StringLiteral = IsSameType<Type, char> || IsSameType<Type, wchar_t>;
 
 	template<typename Type>
 	concept Copyable = std::is_copy_constructible_v<Type> && std::is_copy_assignable_v<Type>;

@@ -22,7 +22,7 @@ export namespace jpt
 	using SystemClock = std::chrono::system_clock;				/**< Regular system-wide realtime clock. Use for simulating real-life time like day/night shifting*/
 	using HighResolutionClock = std::chrono::high_resolution_clock;		/**< The clock with the shortest tick period and highest precision available. */
 
-	/**< Represents a point in time.It is implemented as if it stores a value of type Duration indicating the time interval from the start of the Clock's epoch. */
+	/**< Represents a point in time. It is implemented as if it stores a value of type Duration indicating the time interval from the start of the Clock's epoch. */
 	template<ClockType Clock>
 	using TimePoint = std::chrono::time_point<Clock>;
 
