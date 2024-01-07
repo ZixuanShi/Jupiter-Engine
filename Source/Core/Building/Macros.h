@@ -2,6 +2,9 @@
 
 #pragma once
 
+import jpt.TypeDefs;
+import jpt.Concepts;
+
 /** Used for hacky fix unused parameters */
 #define JPT_IGNORE(param) static_cast<void>(param)
 
@@ -82,14 +85,36 @@
 	}\
 	JPT_SAFE_DELETE(pPointer);
 
-/** __FILE__ but with L"XXX" wide string */
-#define JPT_WIDE2(x) L##x
-#define JPT_WIDE1(x) JPT_WIDE2(x)
-#define JPT_WFILE JPT_WIDE1(__FILE__)
+/** Combines two strings */
+#define JPT_COMBINE_STR(A, B)   A##B
 
 /** Converts a const char* to const wchar_t* */
-#define JPT_COMBINE_STR(A, B)   A##B
 #define JPT_TO_WSTRING(cStr) L##cStr
+
+namespace jpt_private
+{
+	template<jpt::StringLiteral CharType>
+	void locGetProperStrHelper(auto& string, const CharType* pStringToAssgin) { string = pStringToAssgin; }
+}
+
+/** This solves the issue when dealing with templated string class functions and raw string literals involved
+	@return   C-Style string for different Char Type but contains the input string literals.
+	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
+	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
+#define JPT_GET_PROPER_STRING(CharType, SourceStr)\
+	[]() -> const CharType* \
+	{\
+		const CharType* pString = nullptr; \
+		if constexpr (jpt::IsSameType<CharType, char>::Value)\
+		{\
+			jpt_private::locGetProperStrHelper(pString, #SourceStr);\
+		}\
+		else if (jpt::IsSameType<CharType, wchar_t>::Value)\
+		{\
+			jpt_private::locGetProperStrHelper(pString, JPT_TO_WSTRING(#SourceStr));\
+		}\
+		return pString; \
+	}()
 
 /** @return true if a macro's variadic arguments is not empty. false if the macro doesn't have optional arguments
 	@example:

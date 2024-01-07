@@ -8,60 +8,71 @@ export module StringUtilsUnitTests;
 
 import jpt.CoreModules;
 
+template<class StringType>
 bool UnitTest_StringLen()
 {
-	JPT_RETURN_FALSE_IF_LOG(jpt::GetStrLength("Jupiter Engine") != 14, "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::GetStrLength("Zixuan Shi") != 10, "");
+	using CharType = StringType::CharType;
 
-	JPT_RETURN_FALSE_IF_LOG(jpt::GetStrLength(L"Jupiter Engine") != 14, "");
-	JPT_RETURN_FALSE_IF_LOG(jpt::GetStrLength(L"Zixuan Shi") != 10, "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::GetCStrLength(JPT_GET_PROPER_STRING(CharType, Jupiter Engine)) != 14, "");
+	JPT_RETURN_FALSE_IF_LOG(jpt::GetCStrLength(JPT_GET_PROPER_STRING(CharType, Zixuan Shi)) != 10, "");
 	return true;
 }
 
+template<class StringType>
 bool UnitTest_ToCStr()
 {
-	const char* integerCStr = jpt::IntegerToCStr(114514);
-	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(integerCStr, "114514", 6), "");
+	using CharType = StringType::CharType;
+
+	const CharType* integerCStr = jpt::IntegerToCStr<CharType>(114514);
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(CharType, 114514), 6), "");
 	delete integerCStr;
 
-	integerCStr = jpt::IntegerToCStr(-114514);
-	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(integerCStr, "-114514", 7), "");
+	integerCStr = jpt::IntegerToCStr<CharType>(-114514);
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(CharType, -114514), 7), "");
 	delete integerCStr;
 
-	int32 num = jpt::CStrToInteger("114514", 6);
+	int32 num = jpt::CStrToInteger<CharType>(JPT_GET_PROPER_STRING(CharType, 114514), 6);
 	JPT_RETURN_FALSE_IF_LOG(num != 114514, "");
 
-	num = jpt::CStrToInteger("-114514", 7);
+	num = jpt::CStrToInteger<CharType>(JPT_GET_PROPER_STRING(CharType, -114514), 7);
 	JPT_RETURN_FALSE_IF_LOG(num != -114514, "");
 
-	float f = jpt::CStrToFloat("114514.114514", 13);
+	float f = jpt::CStrToFloat<CharType>(JPT_GET_PROPER_STRING(CharType, 114514.114514), 13);
 	JPT_RETURN_FALSE_IF_LOG(!jpt::AreValuesClose(f, 114514.114514f), "");
 
-	f = jpt::CStrToFloat ("-114514.114514", 14);
+	f = jpt::CStrToFloat<CharType>(JPT_GET_PROPER_STRING(CharType, -114514.114514), 14);
 	JPT_RETURN_FALSE_IF_LOG(!jpt::AreValuesClose(f, -114514.114514f), "");
 
-	const char* floatingCStr = jpt::FloatingToCStr(-114514.114f);
+	const CharType* floatingCStr = jpt::FloatingToCStr<CharType>(-114514.114f);
 	//JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(floatingCStr, "-114514.114", 11), "");	// Not stable
 	delete floatingCStr;
 
 	return true;
 }
 
+template<class StringType>
 bool UnitTest_StrCpy()
 {
-	char buffer[256];
-	jpt::StrCpy(buffer, 15, "Jupiter Engine");
-	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(buffer, "Jupiter Engine", 14), "");
+	using CharType = StringType::CharType;
 
-	jpt::StrNCpy(buffer, 15, "Jupiter Engine", 10);
-	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(buffer, "Jupiter En", 10), "");
+	CharType buffer[256];
+	jpt::StrCpy<CharType>(buffer, 15, JPT_GET_PROPER_STRING(CharType, Jupiter Engine));
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharType, Jupiter Engine), 14), "");
+
+	jpt::StrNCpy<CharType>(buffer, 15, JPT_GET_PROPER_STRING(CharType, Jupiter Engine), 10);
+	JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharType, Jupiter En), 10), "");
 
 	return true;
 }
 
 export void RunStringUtilsUnitTests()
 {
-	JPT_LOG_IF(!UnitTest_StringLen(), "UnitTest_StringLen Failed");
-	JPT_LOG_IF(!UnitTest_ToCStr(), "UnitTest_ToCStr Failed");
-	JPT_LOG_IF(!UnitTest_StrCpy(), "UnitTest_ToCStr Failed");
+	JPT_LOG_IF(!UnitTest_StringLen<jpt::String>(), "UnitTest_StringLen Failed");
+	JPT_LOG_IF(!UnitTest_StringLen<jpt::WString>(), "UnitTest_StringLen Failed");
+
+	JPT_LOG_IF(!UnitTest_ToCStr<jpt::String>(), "UnitTest_ToCStr Failed");
+	JPT_LOG_IF(!UnitTest_ToCStr<jpt::WString>(), "UnitTest_ToCStr Failed");
+
+	JPT_LOG_IF(!UnitTest_StrCpy<jpt::String>(), "UnitTest_ToCStr Failed");
+	JPT_LOG_IF(!UnitTest_StrCpy<jpt::WString>(), "UnitTest_ToCStr Failed");
 }

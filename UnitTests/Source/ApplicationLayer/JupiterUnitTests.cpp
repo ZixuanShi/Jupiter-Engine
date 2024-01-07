@@ -2,9 +2,9 @@
 
 #include "Core/Building/Headers.h"
 
+import jpt.CoreModules;
 import jpt.EntryPoints;
 import jpt.UnitTestsApplication;
-import jpt.CoreModules;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()

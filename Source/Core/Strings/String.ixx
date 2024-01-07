@@ -34,6 +34,7 @@ namespace jpt
 
 	public:
 		BasicString() = default;
+		BasicString(const CharType* CString, size_t size);
 		BasicString(const CharType* CString);
 		BasicString(const BasicString<CharType>& otherString);
 		BasicString(BasicString<CharType>&& otherString) noexcept;
@@ -81,7 +82,8 @@ namespace jpt
 		BasicString SubStr(size_t index, size_t count = npos) const;
 
 		/** Appends a new string to the end of buffer */
-		void Append(const CharType* CString, size_t size = npos);
+		void Append(const CharType* CString, size_t newStringSize);
+		void Append(const CharType* CString) { Append(CString, GetCStrLength(CString)); }
 		void Append(const BasicString<CharType>& otherString);
 		BasicString& operator+=(const CharType* CString) { Append(CString); return *this; }
 		BasicString& operator+=(const BasicString<CharType>& otherString) { Append(otherString); return *this; }
@@ -92,11 +94,13 @@ namespace jpt
 		void Reserve(size_t capacity);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
-		void CopyString(const CharType* inCString, size_t size = npos);
+		void CopyString(const CharType* inCString, size_t size);
+		void CopyString(const CharType* inCString) { CopyString(inCString, GetCStrLength(inCString)); }
 		void CopyString(const BasicString<CharType>& otherString);
 
 		/* Move the content of string. Will take ownership of the passed in string */
-		void MoveString(CharType* inCString, size_t size = npos);
+		void MoveString(CharType* inCString, size_t size);
+		void MoveString(CharType* inCString) { MoveString(inCString, GetCStrLength(inCString)); }
 		void MoveString(BasicString<CharType>&& otherString);
 
 		/** @return An integer associated with this string
@@ -117,6 +121,12 @@ namespace jpt
 
 		void InsertStringAt(size_t index, size_t size, const CharType* CString);
 	};
+
+	template<StringLiteral _CharType, class _AllocatorType>
+	BasicString<_CharType, _AllocatorType>::BasicString(const CharType* CString, size_t size)
+	{
+		CopyString(CString, size);
+	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>::BasicString(const CharType* CString)
@@ -151,7 +161,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(const BasicString<CharType>& otherString)
 	{
-		if (*this != otherString)
+		if (this != &otherString)
 		{
 			Clear();
 			CopyString(otherString);
@@ -163,7 +173,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>& BasicString<_CharType, _AllocatorType>::operator=(BasicString<CharType>&& otherString) noexcept
 	{
-		if (*this != otherString)
+		if (this != &otherString)
 		{
 			Clear();
 			MoveString(jpt::move(otherString));
@@ -259,7 +269,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	size_t BasicString<_CharType, _AllocatorType>::FindLastOf(const CharType* stringToFind, size_t startIndex, size_t endIndex) const
 	{
-		const size_t stringToFindSize = GetStrLength(stringToFind);
+		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, size_t(0), m_size);
 
 		BasicString<CharType> current;
@@ -354,25 +364,16 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::Append(const CharType* CString, size_t size /* = npos*/)
+	void BasicString<_CharType, _AllocatorType>::Append(const CharType* CString, size_t newStringSize)
 	{
-		const size_t CStringSize = (size == npos) ? GetStrLength(CString) : size;
-		if (CStringSize == 0)
-		{
-			return;
-		}
-
-		InsertStringAt(m_size, CStringSize, CString);
+		JPT_RETURN_IF(newStringSize == 0);
+		InsertStringAt(m_size, newStringSize, CString);
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
 	void BasicString<_CharType, _AllocatorType>::Append(const BasicString<CharType>& otherString)
 	{
-		if (otherString.IsEmpty())
-		{
-			return;
-		}
-
+		JPT_RETURN_IF(otherString.IsEmpty());
 		InsertStringAt(m_size, otherString.m_size, otherString.ConstBuffer());
 	}
 
@@ -402,13 +403,10 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::CopyString(const CharType* inCString, size_t size /* = npos*/)
+	void BasicString<_CharType, _AllocatorType>::CopyString(const CharType* inCString, size_t size)
 	{
-		m_size = (size == npos) ? GetStrLength(inCString) : size;
-		if (IsEmpty())
-		{
-			return;
-		}
+		m_size = size;
+		JPT_RETURN_IF(IsEmpty());
 
 		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
@@ -419,10 +417,7 @@ namespace jpt
 	void BasicString<_CharType, _AllocatorType>::CopyString(const BasicString<CharType>& otherString)
 	{
 		m_size = otherString.m_size;
-		if (IsEmpty())
-		{
-			return;
-		}
+		JPT_RETURN_IF(IsEmpty());
 
 		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
@@ -430,10 +425,10 @@ namespace jpt
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
-	void BasicString<_CharType, _AllocatorType>::MoveString(CharType* inCString, size_t size /* = npos*/)
+	void BasicString<_CharType, _AllocatorType>::MoveString(CharType* inCString, size_t size)
 	{
 		m_pBuffer  = inCString;
-		m_size     = (size == npos) ? GetStrLength(inCString) : size;
+		m_size     = size;
 		m_capacity = m_size;
 	}
 
@@ -496,20 +491,22 @@ export namespace jpt
 		return object.ToString();
 	}
 
-	template<Integral Type>
-	String ToString(Type integer)
+	template<class StringType = jpt::String, Integral Type>
+	StringType ToString(Type integer)
 	{
-		char* integerCString = IntegerToCStr(integer);
-		String integerString;
+		using CharType = StringType::CharType;
+		CharType* integerCString = IntegerToCStr(integer);
+		StringType integerString;
 		integerString.MoveString(move(integerCString));
 		return integerString;
 	}
 
-	template<Floating Type>
-	String ToString(Type value)
+	template<class StringType = jpt::String, Floating Type>
+	StringType ToString(Type value)
 	{
-		char* floatCString = FloatingToCStr(value);
-		String floatString;
+		using CharType = StringType::CharType;
+		CharType* floatCString = FloatingToCStr(value);
+		StringType floatString;
 		floatString.MoveString(move(floatCString));
 		return floatString;
 	}

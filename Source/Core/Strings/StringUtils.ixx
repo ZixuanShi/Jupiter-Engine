@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Debugging/Assert.h"
+#include "Core/Building/Headers.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -18,8 +18,9 @@ import jpt.Math;
 
 export namespace jpt
 {
-	/** @return How many characters inside the input const char* string except the null terminator */
-	size_t strlen(const char* string)
+	/**	@return const CharType* string' string to check for size.'s size */
+	template<StringLiteral CharType>
+	size_t GetCStrLength(const CharType* string)
 	{
 		if (!string)
 		{
@@ -35,59 +36,28 @@ export namespace jpt
 		return size;
 	}
 
-	/** @return How many characters inside the input const wide char* string except the null terminator */
-	size_t wcslen(const wchar_t* string)
-	{
-		if (!string)
-		{
-			return 0;
-		}
-
-		size_t size = 0;
-		while (string[size] != L'\0')
-		{
-			++size;
-		}
-
-		return size;
-	}
-
-	/**	@return const CharType* string' string to check for size.'s size */
-	template<StringLiteral CharType>
-	size_t GetStrLength(const CharType* string)
-	{
-		if constexpr (jpt::IsSameType<CharType, char>::Value)
-		{
-			return strlen(string);
-		}
-		else if (jpt::IsSameType<CharType, wchar_t>::Value)
-		{
-			return wcslen(string);
-		}
-	}
-
 	/** Convert from IntegerType to a char pointer holding the integer's value as string literal
 		@param value:        The IntegerType value to convert to char*
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
-	template<Integral Type>
-	char* IntegerToCStr(Type value, int32 base = 10)
+	template<StringLiteral CharType = char, Integral IntegerType = int32>
+	CharType* IntegerToCStr(IntegerType value, int32 base = 10)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
-		char* result = nullptr;		// Final result string to return
+		CharType* result = nullptr;	// Final result string to return
 		size_t index = 0;			// The index I'm using for char array, will be used as length of this value and string as well
 
 		// Process 0
 		if (value == 0)
 		{
-			result = Allocator<char>::AllocateArray(2);
+			result = Allocator<CharType>::AllocateArray(2);
 			result[0] = '0';
 			result[1] = '\0';
 			return result;
 		}
 		// Process negative if IntegerType can be signed
-		if constexpr (std::is_signed_v<Type>)
+		if constexpr (std::is_signed_v<IntegerType>)
 		{
 			if (value < 0)
 			{
@@ -98,14 +68,14 @@ export namespace jpt
 		}
 
 		// Get Value's literal length
-		Type valueCopy = value;
+		IntegerType valueCopy = value;
 		while (valueCopy > 0)
 		{
 			valueCopy /= base;
 			++index;
 		}
 		// Allocate Result string, + 1 for the end terminater
-		result = Allocator<char>::AllocateArray(index + 1);
+		result = Allocator<CharType>::AllocateArray(index + 1);
 
 		// Append string terminator at the end
 		result[index] = '\0';
@@ -143,10 +113,10 @@ export namespace jpt
 	}
 
 	/** @return Integral number converted from pBuffer */
-	template<Integral NumType = int32, StringLiteral CharType>
+	template<StringLiteral CharType = char, Integral NumType = int32>
 	NumType CStrToInteger(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
-		size = (size == kInvalidValue<size_t>) ? GetStrLength(pBuffer) : size;
+		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
 		NumType result = 0;
 		bool isNegative = false;
 
@@ -163,7 +133,7 @@ export namespace jpt
 
 			// Parse number
 			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const uint8 number = c - static_cast<CharType>('0');
+			const int32 number = c - static_cast<CharType>('0');
 			result *= 10;
 			result += number;
 		}
@@ -176,22 +146,31 @@ export namespace jpt
 		return result;
 	}
 
-	template<Floating Type>
-	char* FloatingToCStr(Type value)
+	template<StringLiteral CharType = char, Floating Type>
+	CharType* FloatingToCStr(Type value)
 	{
-		char* buffer = new char[32];
-		char format[5] = "%.3f";
-		snprintf(buffer, 32, format, value);
+		CharType* buffer = new CharType[32];
+		const CharType* format = JPT_GET_PROPER_STRING(CharType, %.3f);
+
+		if constexpr (IsSameType<CharType, char>::Value)
+		{
+			snprintf(buffer, 32, format, value);
+		}
+		else if (IsSameType<CharType, wchar_t>::Value)
+		{
+			swprintf(buffer, 32, format, value);
+		}
+
 		return buffer;
 	}
 
 	/** @note	Will ignore the 'f' is there's any */
-	template<Floating NumType = float, StringLiteral CharType>
+	template<StringLiteral CharType = char, Floating NumType = float>
 	NumType CStrToFloat(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
 		// Parse two integral parts of the precision dot, then combine them
 
-		size = (size == kInvalidValue<size_t>) ? GetStrLength(pBuffer) : size;
+		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
 		NumType integer = 0;		// Left of precision
 		NumType floatingNum = 0;	// Right of precision
 		size_t precisionIndex = kInvalidValue<size_t>;
@@ -217,7 +196,7 @@ export namespace jpt
 
 			// Num
 			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const uint8 number = c - static_cast<CharType>('0');
+			const int32 number = c - static_cast<CharType>('0');
 
 			if (precisionIndex == kInvalidValue<size_t>)
 			{
@@ -288,8 +267,8 @@ export namespace jpt
 	template<StringLiteral CharType>
 	bool AreStringsSame(const CharType* pString1, const CharType* pString2, size_t size = kInvalidValue<size_t>)
 	{
-		const size_t string1Length = GetStrLength(pString1);
-		const size_t string2Length = GetStrLength(pString2);
+		const size_t string1Length = GetCStrLength(pString1);
+		const size_t string2Length = GetCStrLength(pString2);
 
 		if (string1Length != string2Length)
 		{
@@ -308,7 +287,7 @@ export namespace jpt
 
 		return true;
 	}
-	
+
 	template<typename StringType>
 	bool AreStringsSame(const StringType& string1, const StringType& string2, size_t size = kInvalidValue<size_t>)
 	{
