@@ -146,7 +146,7 @@ export namespace jpt
 		return result;
 	}
 
-	template<StringLiteral CharType = char, Floating Type>
+	template<StringLiteral CharType = char, Floating Type = float>
 	CharType* FloatingToCStr(Type value)
 	{
 		CharType* buffer = new CharType[32];

@@ -113,6 +113,10 @@ namespace jpt_private
 		{\
 			jpt_private::locGetProperStrHelper(pString, JPT_TO_WSTRING(#SourceStr));\
 		}\
+		else\
+		{\
+			JPT_ASSERT(false, "Unsupported CharType");\
+		}\
 		return pString; \
 	}()
 

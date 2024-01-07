@@ -65,6 +65,8 @@ namespace jpt
 		size_t FindFirstOf(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		size_t FindLastOf(CharType charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		size_t FindLastOf(const CharType* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		
+		/** Comparing */
 		bool operator==(const CharType* otherString) const;
 		bool operator==(const BasicString<CharType>& otherString) const;
 
@@ -212,7 +214,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	size_t BasicString<_CharType, _AllocatorType>::Find(const CharType* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
-		const size_t stringToFindSize = GetStrLength(stringToFind);
+		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, size_t(0), m_size);
 
 		BasicString<CharType> current;
@@ -319,7 +321,7 @@ namespace jpt
 		}
 
 		const BasicString<CharType> replaced(stringToReplace);
-		const size_t stringToFindSize = GetStrLength(stringToFind);
+		const size_t stringToFindSize = GetCStrLength(stringToFind);
 
 		size_t foundPos = startIndex;
 		while (true)
@@ -495,7 +497,7 @@ export namespace jpt
 	StringType ToString(Type integer)
 	{
 		using CharType = StringType::CharType;
-		CharType* integerCString = IntegerToCStr(integer);
+		CharType* integerCString = IntegerToCStr<CharType>(integer);
 		StringType integerString;
 		integerString.MoveString(move(integerCString));
 		return integerString;
@@ -505,7 +507,7 @@ export namespace jpt
 	StringType ToString(Type value)
 	{
 		using CharType = StringType::CharType;
-		CharType* floatCString = FloatingToCStr(value);
+		CharType* floatCString = FloatingToCStr<CharType>(value);
 		StringType floatString;
 		floatString.MoveString(move(floatCString));
 		return floatString;
