@@ -91,7 +91,7 @@ bool UnitTest_MovingString()
 	StringType sourceStr(JPT_GET_PROPER_STRING(CharType, Jupiter Engine));
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
 
-	StringType movedStr(jpt::move(sourceStr));
+	StringType movedStr(jpt::Move(sourceStr));
 	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sourceStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr.ConstBuffer() != nullptr, "");
@@ -100,7 +100,7 @@ bool UnitTest_MovingString()
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
 	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
 
-	movedStr = jpt::move(sourceStr);
+	movedStr = jpt::Move(sourceStr);
 	JPT_RETURN_FALSE_IF_ERROR(!sourceStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr.ConstBuffer() != nullptr, "");
 	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
@@ -108,7 +108,7 @@ bool UnitTest_MovingString()
 	movedStr += JPT_GET_PROPER_STRING(CharType, Further Testing);
 	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
 
-	sourceStr.MoveString(jpt::move(movedStr));
+	sourceStr.MoveString(jpt::Move(movedStr));
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
 	JPT_RETURN_FALSE_IF_ERROR(!movedStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(movedStr.ConstBuffer() != nullptr, "");

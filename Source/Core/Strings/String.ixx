@@ -145,7 +145,7 @@ namespace jpt
 	template<StringLiteral _CharType, class _AllocatorType>
 	BasicString<_CharType, _AllocatorType>::BasicString(BasicString<CharType>&& otherString) noexcept
 	{
-		MoveString(jpt::move(otherString));
+		MoveString(jpt::Move(otherString));
 	}
 
 	template<StringLiteral _CharType, class _AllocatorType>
@@ -178,7 +178,7 @@ namespace jpt
 		if (this != &otherString)
 		{
 			Clear();
-			MoveString(jpt::move(otherString));
+			MoveString(jpt::Move(otherString));
 		}
 
 		return *this;
@@ -499,7 +499,7 @@ export namespace jpt
 		using CharType = StringType::CharType;
 		CharType* integerCString = IntegerToCStr<CharType>(integer);
 		StringType integerString;
-		integerString.MoveString(move(integerCString));
+		integerString.MoveString(Move(integerCString));
 		return integerString;
 	}
 
@@ -507,9 +507,9 @@ export namespace jpt
 	StringType ToString(Type value)
 	{
 		using CharType = StringType::CharType;
-		CharType* floatCString = FloatingToCStr<CharType>(value);
+		CharType* floatCString = FloatToCStr<CharType>(value);
 		StringType floatString;
-		floatString.MoveString(move(floatCString));
+		floatString.MoveString(Move(floatCString));
 		return floatString;
 	}
 }

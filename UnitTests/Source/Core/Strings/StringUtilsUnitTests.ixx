@@ -43,7 +43,7 @@ bool UnitTest_ToCStr()
 	f = jpt::CStrToFloat<CharType>(JPT_GET_PROPER_STRING(CharType, -114514.114514), 14);
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreValuesClose(f, -114514.114514f), "");
 
-	const CharType* floatingCStr = jpt::FloatingToCStr<CharType>(-114514.114f);
+	const CharType* floatingCStr = jpt::FloatToCStr<CharType>(-114514.114f);
 	//JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(floatingCStr, "-114514.114", 11), "");	// Not stable
 	delete floatingCStr;
 

@@ -147,7 +147,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharType = char, Floating Type = float>
-	CharType* FloatingToCStr(Type value)
+	CharType* FloatToCStr(Type value)
 	{
 		CharType* buffer = new CharType[32];
 		const CharType* format = JPT_GET_PROPER_STRING(CharType, %.3f);
