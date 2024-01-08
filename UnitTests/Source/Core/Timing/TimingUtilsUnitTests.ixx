@@ -18,8 +18,12 @@ bool UnitTest_TimingUtils()
 	//data.hour = 5;
 	//data.minute = 0;
 	//data.second = 30;
-
 	//jpt::TimePoint timePoint(data);
+
+
+	// timePoint = SystemClock::now();	// SystemClock::now() contains current TimePointParam
+
+
 
 	return true;
 }

@@ -27,12 +27,13 @@ export namespace jpt
 	template<typename T> struct RemoveReference<T&&>         { using Type = T; };
 	template<typename T> struct RemoveConst                  { using Type = T; };
 	template<typename T> struct RemoveConst<const T>         { using Type = T; };
-	template<typename T> struct IsLValueReferenceType        { static constexpr bool Value = false; };
-	template<typename T> struct IsLValueReferenceType<T&>    { static constexpr bool Value = true; };
-	template<typename T> struct IsRValueReferenceType        { static constexpr bool Value = false; };
-	template<typename T> struct IsRValueReferenceType<T&&>   { static constexpr bool Value = true; };
 	template<typename T> struct RValueToLValueReference      { using Type = T; };
 	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
+
+	template<typename T> constexpr bool IsLValueReferenceType      = false;
+	template<typename T> constexpr bool IsLValueReferenceType<T&>  = true;
+	template<typename T> constexpr bool IsRValueReferenceType      = false;
+	template<typename T> constexpr bool IsRValueReferenceType<T&&> = true;
 
 	// Same type checking
 	// Example: jpt::IsSameType<int32, float>
