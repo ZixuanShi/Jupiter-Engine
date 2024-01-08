@@ -99,29 +99,29 @@ import jpt.Concepts;
 
 namespace jpt_private
 {
-	template<jpt::StringLiteral CharType>
-	void locGetProperStrHelper(auto& string, const CharType* pStringToAssgin) { string = pStringToAssgin; }
+	template<jpt::StringLiteral CharT>
+	void locGetProperStrHelper(auto& string, const CharT* pStringToAssgin) { string = pStringToAssgin; }
 }
 
 /** This solves the issue when dealing with templated string class functions and raw string literals involved
 	@return   C-Style string for different Char Type but contains the input string literals.
 	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
 	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
-#define JPT_GET_PROPER_STRING(CharType, SourceStr)\
-	[]() -> const CharType* \
+#define JPT_GET_PROPER_STRING(CharT, SourceStr)\
+	[]() -> const CharT* \
 	{\
-		const CharType* pString = nullptr; \
-		if constexpr (jpt::IsSameType<CharType, char>)\
+		const CharT* pString = nullptr; \
+		if constexpr (jpt::IsSameType<CharT, char>)\
 		{\
 			jpt_private::locGetProperStrHelper(pString, #SourceStr);\
 		}\
-		else if (jpt::IsSameType<CharType, wchar_t>)\
+		else if (jpt::IsSameType<CharT, wchar_t>)\
 		{\
 			jpt_private::locGetProperStrHelper(pString, JPT_TO_WSTRING(#SourceStr));\
 		}\
 		else\
 		{\
-			JPT_ASSERT(false, "Unsupported CharType");\
+			JPT_ASSERT(false, "Unsupported CharT");\
 		}\
 		return pString; \
 	}()
@@ -135,8 +135,8 @@ namespace jpt_private
 	@example:
 	int intArray[12];
 	int intArrayCount = JPT_ARRAY_COUNT(intArray); */
-template <typename Type, unsigned int Number>
-char(&ArrayCountHelper(const Type(&)[Number]))[Number + 1];
+template <typename T, unsigned int Number>
+char(&ArrayCountHelper(const T(&)[Number]))[Number + 1];
 #define JPT_ARRAY_COUNT( inArray ) (sizeof(ArrayCountHelper(inArray)) - 1)
 
 /** Compile time outputs an error containing the argument value

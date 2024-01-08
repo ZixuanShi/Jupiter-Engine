@@ -18,9 +18,9 @@ import jpt.Math;
 
 export namespace jpt
 {
-	/**	@return const CharType* string' string to check for size.'s size */
-	template<StringLiteral CharType>
-	size_t GetCStrLength(const CharType* string)
+	/**	@return const CharT* string' string to check for size.'s size */
+	template<StringLiteral CharT>
+	size_t GetCStrLength(const CharT* string)
 	{
 		if (!string)
 		{
@@ -40,24 +40,24 @@ export namespace jpt
 		@param value:        The IntegerType value to convert to char*
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
-	template<StringLiteral CharType = char, Integral IntegerType = int32>
-	CharType* IntegerToCStr(IntegerType value, int32 base = 10)
+	template<StringLiteral CharT = char, Integral IntT = int32>
+	CharT* IntegerToCStr(IntT value, int32 base = 10)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
-		CharType* result = nullptr;	// Final result string to return
+		CharT* result = nullptr;	// Final result string to return
 		size_t index = 0;			// The index I'm using for char array, will be used as length of this value and string as well
 
 		// Process 0
 		if (value == 0)
 		{
-			result = Allocator<CharType>::AllocateArray(2);
+			result = Allocator<CharT>::AllocateArray(2);
 			result[0] = '0';
 			result[1] = '\0';
 			return result;
 		}
 		// Process negative if IntegerType can be signed
-		if constexpr (std::is_signed_v<IntegerType>)
+		if constexpr (std::is_signed_v<IntT>)
 		{
 			if (value < 0)
 			{
@@ -68,14 +68,14 @@ export namespace jpt
 		}
 
 		// Get Value's literal length
-		IntegerType valueCopy = value;
+		IntT valueCopy = value;
 		while (valueCopy > 0)
 		{
 			valueCopy /= base;
 			++index;
 		}
 		// Allocate Result string, + 1 for the end terminater
-		result = Allocator<CharType>::AllocateArray(index + 1);
+		result = Allocator<CharT>::AllocateArray(index + 1);
 
 		// Append string terminator at the end
 		result[index] = '\0';
@@ -113,16 +113,16 @@ export namespace jpt
 	}
 
 	/** @return Integral number converted from pBuffer */
-	template<StringLiteral CharType = char, Integral NumType = int32>
-	NumType CStrToInteger(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
+	template<StringLiteral CharT = char, Integral IntT = int32>
+	IntT CStrToInteger(const CharT* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
 		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
-		NumType result = 0;
+		IntT result = 0;
 		bool isNegative = false;
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			const CharType c = pBuffer[i];
+			const CharT c = pBuffer[i];
 
 			// Negative
 			if (c == '-')
@@ -133,7 +133,7 @@ export namespace jpt
 
 			// Parse number
 			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const int32 number = c - static_cast<CharType>('0');
+			const int32 number = c - static_cast<CharT>('0');
 			result *= 10;
 			result += number;
 		}
@@ -146,17 +146,17 @@ export namespace jpt
 		return result;
 	}
 
-	template<StringLiteral CharType = char, Floating Type = float>
-	CharType* FloatToCStr(Type value)
+	template<StringLiteral CharT = char, Floating FloatT = float>
+	CharT* FloatToCStr(FloatT value)
 	{
-		CharType* buffer = new CharType[32];
-		const CharType* format = JPT_GET_PROPER_STRING(CharType, %.3f);
+		CharT* buffer = new CharT[32];
+		const CharT* format = JPT_GET_PROPER_STRING(CharT, %.3f);
 
-		if constexpr (IsSameType<CharType, char>)
+		if constexpr (IsSameType<CharT, char>)
 		{
 			snprintf(buffer, 32, format, value);
 		}
-		else if (IsSameType<CharType, wchar_t>)
+		else if (IsSameType<CharT, wchar_t>)
 		{
 			swprintf(buffer, 32, format, value);
 		}
@@ -165,20 +165,20 @@ export namespace jpt
 	}
 
 	/** @note	Will ignore the 'f' is there's any */
-	template<StringLiteral CharType = char, Floating NumType = float>
-	NumType CStrToFloat(const CharType* pBuffer, size_t size = kInvalidValue<size_t>)
+	template<StringLiteral CharT = char, Floating FloatT = float>
+	FloatT CStrToFloat(const CharT* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
 		// Parse two integral parts of the precision dot, then combine them
 
 		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
-		NumType integer = 0;		// Left of precision
-		NumType floatingNum = 0;	// Right of precision
+		FloatT integer = 0;		// Left of precision
+		FloatT floatingNum = 0;	// Right of precision
 		size_t precisionIndex = kInvalidValue<size_t>;
 		bool isNegative = false;
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			const CharType c = pBuffer[i];
+			const CharT c = pBuffer[i];
 
 			// Negative
 			if (c == '-')
@@ -196,16 +196,16 @@ export namespace jpt
 
 			// Num
 			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const int32 number = c - static_cast<CharType>('0');
+			const int32 number = c - static_cast<CharT>('0');
 
 			if (precisionIndex == kInvalidValue<size_t>)
 			{
-				integer *= static_cast<NumType>(10);
+				integer *= static_cast<FloatT>(10);
 				integer += number;
 			}
 			else
 			{
-				floatingNum *= static_cast<NumType>(10);
+				floatingNum *= static_cast<FloatT>(10);
 				floatingNum += number;
 			}
 		}
@@ -221,10 +221,10 @@ export namespace jpt
 		floatingNum /= divider;
 
 		// Combine two parts and process negative if it is
-		NumType result = integer + floatingNum;
+		FloatT result = integer + floatingNum;
 		if (isNegative)
 		{
-			result *= static_cast<NumType>(-1);
+			result *= static_cast<FloatT>(-1);
 		}
 
 		return result;
@@ -236,36 +236,36 @@ export namespace jpt
 	constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept { return (str[0] == '\0') ? value : StringHash64(&str[1], (value ^ uint64(str[0])) * 0x100000001b3); }
 
 	/**	Copies data from destination to source with the given size */
-	template<StringLiteral CharType>
-	void StrCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource)
+	template<StringLiteral CharT>
+	void StrCpy(CharT* pDestination, size_t sizeInBytes, const CharT* pSource)
 	{
-		if constexpr (IsSameType<CharType, char>)
+		if constexpr (IsSameType<CharT, char>)
 		{
 			strcpy_s(pDestination, sizeInBytes, pSource);
 		}
-		else if (IsSameType<CharType, wchar_t>)
+		else if (IsSameType<CharT, wchar_t>)
 		{
 			wcscpy_s(pDestination, sizeInBytes, pSource);
 		}
 	}
 
 	/**	Copies data from destination to source with the given size and max count */
-	template<StringLiteral CharType>
-	void StrNCpy(CharType* pDestination, size_t sizeInBytes, const CharType* pSource, size_t maxCount)
+	template<StringLiteral CharT>
+	void StrNCpy(CharT* pDestination, size_t sizeInBytes, const CharT* pSource, size_t maxCount)
 	{
-		if constexpr (IsSameType<CharType, char>)
+		if constexpr (IsSameType<CharT, char>)
 		{
 			strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
-		else if (IsSameType<CharType, wchar_t>)
+		else if (IsSameType<CharT, wchar_t>)
 		{
 			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
 	}
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
-	template<StringLiteral CharType>
-	bool AreStringsSame(const CharType* pString1, const CharType* pString2, size_t size = kInvalidValue<size_t>)
+	template<StringLiteral CharT>
+	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t size = kInvalidValue<size_t>)
 	{
 		const size_t string1Length = GetCStrLength(pString1);
 		const size_t string2Length = GetCStrLength(pString2);
@@ -288,8 +288,8 @@ export namespace jpt
 		return true;
 	}
 
-	template<typename StringType>
-	bool AreStringsSame(const StringType& string1, const StringType& string2, size_t size = kInvalidValue<size_t>)
+	template<typename StringT>
+	bool AreStringsSame(const StringT& string1, const StringT& string2, size_t size = kInvalidValue<size_t>)
 	{
 		if (string1.Size() != string2.Size())
 		{

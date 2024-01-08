@@ -47,16 +47,16 @@ namespace jpt
 		constexpr void operator()(T* pPtr) const { delete[] pPtr; }
 	};
 
-	export template<typename Type, class Deleter = DefaultDelete<Type>>
+	export template<typename T, class Deleter = DefaultDelete<T>>
 	class UniquePtr
 	{
 	private:
-		Type* m_pPtr = nullptr;	/**< The pointer this UniquePtr is going to guard */
+		T* m_pPtr = nullptr;	/**< The pointer this UniquePtr is going to guard */
 		int32* m_pRefCount = nullptr;
 
 	public:
 		constexpr UniquePtr() noexcept = default;
-		constexpr UniquePtr(Type* pPtr) noexcept;
+		constexpr UniquePtr(T* pPtr) noexcept;
 
 		constexpr UniquePtr(const UniquePtr&) = delete;
 		UniquePtr& operator=(const UniquePtr&) = delete;
@@ -68,21 +68,21 @@ namespace jpt
 	/** Constructs a non-array type T. The arguments args are passed to the constructor of T. 
 		This overload participates in overload resolution only if T is not an array type. 
 		The function is equivalent to: UniquePtr<T>(new T(std::forward<Args>(args)...)) */
-	export template<typename Type, class... Args>
-	[[nodiscard]] constexpr UniquePtr<Type> MakeUnique(Args&&...args)
+	export template<typename T, class... Args>
+	[[nodiscard]] constexpr UniquePtr<T> MakeUnique(Args&&...args)
 	{
-		return UniquePtr<Type>(new Type(jpt::Forward<Args>(args)...));
+		return UniquePtr<T>(new T(jpt::Forward<Args>(args)...));
 	}
 
-	template<typename Type, class Deleter>
-	constexpr UniquePtr<Type, Deleter>::UniquePtr(Type* pPtr) noexcept
+	template<typename T, class Deleter>
+	constexpr UniquePtr<T, Deleter>::UniquePtr(T* pPtr) noexcept
 		: m_pPtr(pPtr)
 		, m_pRefCount(new int32(1))
 	{
 	}
 
-	template<typename Type, class Deleter>
-	UniquePtr<Type, Deleter>::~UniquePtr()
+	template<typename T, class Deleter>
+	UniquePtr<T, Deleter>::~UniquePtr()
 	{
 		--*m_pRefCount;
 		if (*m_pRefCount < 1)

@@ -26,13 +26,13 @@ export namespace jpt
 		/** @return		a random number from min to max inclusive
 			@param min	Minimum value inclusive
 			@param max	Maximum value inclusive	*/
-		template<Integral Type = uint32>
-		Type RandInRange(Type min, Type max);
+		template<Integral IntT = uint32>
+		IntT RandInRange(IntT min, IntT max);
 
 		/** @return		a random integral value within max range
 			@param max	Largest possible value (inclusive) */
-		template<Integral Type = uint32>
-		Type RandInMax(Type max = (std::numeric_limits<Type>::max)());
+		template<Integral IntT = uint32>
+		IntT RandInMax(IntT max = (std::numeric_limits<IntT>::max)());
 
 		/** @return		a random floating point from 0 to 1 inclusive */
 		template<Floating Type = float>
@@ -57,8 +57,8 @@ export namespace jpt
 	private:
 		/** xorshift128+ algorithm from https://en.wikipedia.org/wiki/Xorshift
 			@template Type	The result will be in this Type	 */
-		template<Integral Type>
-		Type XOrShift128Plus();
+		template<Integral IntT>
+		IntT XOrShift128Plus();
 	};
 
 	RNG::RNG(uint64 seed /* = unsigned(time(nullptr))*/)
@@ -113,21 +113,21 @@ export namespace jpt
 		return globalRng;
 	}
 
-	template<Integral Type>
-	Type RNG::RandInRange(Type min, Type max)
+	template<Integral IntT>
+	IntT RNG::RandInRange(IntT min, IntT max)
 	{
 		uint64 mod = (uint64)max - (uint64)min + 1;
-		return XOrShift128Plus<Type>() % mod + min;
+		return XOrShift128Plus<IntT>() % mod + min;
 	}
 
-	template<Integral Type>
-	Type RNG::RandInMax(Type max /* = (std::numeric_limits<Type>::max)()*/)
+	template<Integral IntT>
+	IntT RNG::RandInMax(IntT max /* = (std::numeric_limits<IntT>::max)()*/)
 	{
-		return RandInRange<Type>(0, max);
+		return RandInRange<IntT>(0, max);
 	}
 
-	template<Integral Type>
-	Type RNG::XOrShift128Plus()
+	template<Integral IntT>
+	IntT RNG::XOrShift128Plus()
 	{
 		uint64 T = m_seeds[0];
 		const uint64 S = m_seeds[1];
@@ -139,6 +139,6 @@ export namespace jpt
 		T ^= S ^ (S >> 26);	// c
 
 		m_seeds[1] = T;
-		return Type(T + S);
+		return IntT(T + S);
 	}
 }

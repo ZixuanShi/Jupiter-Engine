@@ -8,190 +8,190 @@ export module StringUnitTests;
 
 import jpt.CoreModules;
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_DefaultStringConstructing()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType defaultStr;
+	StringT defaultStr;
 	JPT_RETURN_FALSE_IF_ERROR(!defaultStr.IsEmpty(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharType, ), 0), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharType, ), 0), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
 	
 	defaultStr.Reserve(30);
 	JPT_RETURN_FALSE_IF_ERROR(defaultStr.Capacity() != 30, "");
 	JPT_RETURN_FALSE_IF_ERROR(!defaultStr.IsEmpty(), "");
 
-	defaultStr.Append(JPT_GET_PROPER_STRING(CharType, Jupiter Engine), 14);
-	defaultStr.Append(JPT_GET_PROPER_STRING(CharType, Zixuan), 6);
+	defaultStr.Append(JPT_GET_PROPER_STRING(CharT, Jupiter Engine), 14);
+	defaultStr.Append(JPT_GET_PROPER_STRING(CharT, Zixuan), 6);
 	JPT_RETURN_FALSE_IF_ERROR(defaultStr.Capacity() != 30, "");
-	JPT_RETURN_FALSE_IF_ERROR(defaultStr != JPT_GET_PROPER_STRING(CharType, Jupiter EngineZixuan), "");
+	JPT_RETURN_FALSE_IF_ERROR(defaultStr != JPT_GET_PROPER_STRING(CharT, Jupiter EngineZixuan), "");
 
-	defaultStr.Append(JPT_GET_PROPER_STRING(CharType, Testing Buffer Resizing), 24);
+	defaultStr.Append(JPT_GET_PROPER_STRING(CharT, Testing Buffer Resizing), 24);
 	JPT_RETURN_FALSE_IF_ERROR(defaultStr.Capacity() != 44, "");
 	JPT_RETURN_FALSE_IF_ERROR(defaultStr.Size() != 44, "");
-	JPT_RETURN_FALSE_IF_ERROR(defaultStr != JPT_GET_PROPER_STRING(CharType, Jupiter EngineZixuanTesting Buffer Resizing), "");
+	JPT_RETURN_FALSE_IF_ERROR(defaultStr != JPT_GET_PROPER_STRING(CharT, Jupiter EngineZixuanTesting Buffer Resizing), "");
 
 	defaultStr.Clear();
 	JPT_RETURN_FALSE_IF_ERROR(!defaultStr.IsEmpty(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharType, ), 0), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharType, ), 0), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_ConvertingString()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType numberStr(JPT_GET_PROPER_STRING(CharType, 114514));
+	StringT numberStr(JPT_GET_PROPER_STRING(CharT, 114514));
 	JPT_RETURN_FALSE_IF_ERROR(numberStr.ToInt() != 114514, "");
 
-	numberStr = JPT_GET_PROPER_STRING(CharType, 114514.114514);
+	numberStr = JPT_GET_PROPER_STRING(CharT, 114514.114514);
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreValuesClose(numberStr.ToFloat(), 114514.114514f), "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_CopyingString()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType sourceStr(JPT_GET_PROPER_STRING(CharType, Jupiter Engine));
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	StringT sourceStr(JPT_GET_PROPER_STRING(CharT, Jupiter Engine));
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 
-	StringType copiedStr(sourceStr);
-	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	StringT copiedStr(sourceStr);
+	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != copiedStr, "");
 
-	sourceStr = JPT_GET_PROPER_STRING(CharType, Reassigned String);
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
-	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	sourceStr = JPT_GET_PROPER_STRING(CharT, Reassigned String);
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Reassigned String), "");
+	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 
 	copiedStr = sourceStr;
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
-	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Reassigned String), "");
+	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharT, Reassigned String), "");
 
-	copiedStr += JPT_GET_PROPER_STRING(CharType, Further Testing);
-	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
+	copiedStr += JPT_GET_PROPER_STRING(CharT, Further Testing);
+	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(CharT, Reassigned StringFurther Testing), "");
 
 	sourceStr.CopyString(copiedStr);
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Reassigned StringFurther Testing), "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_MovingString()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType sourceStr(JPT_GET_PROPER_STRING(CharType, Jupiter Engine));
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	StringT sourceStr(JPT_GET_PROPER_STRING(CharT, Jupiter Engine));
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 
-	StringType movedStr(jpt::Move(sourceStr));
-	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	StringT movedStr(jpt::Move(sourceStr));
+	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sourceStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr.ConstBuffer() != nullptr, "");
 
-	sourceStr = JPT_GET_PROPER_STRING(CharType, Reassigned String); 
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
-	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Jupiter Engine), "");
+	sourceStr = JPT_GET_PROPER_STRING(CharT, Reassigned String); 
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Reassigned String), "");
+	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharT, Jupiter Engine), "");
 
 	movedStr = jpt::Move(sourceStr);
 	JPT_RETURN_FALSE_IF_ERROR(!sourceStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr.ConstBuffer() != nullptr, "");
-	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Reassigned String), "");
+	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharT, Reassigned String), "");
 
-	movedStr += JPT_GET_PROPER_STRING(CharType, Further Testing);
-	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
+	movedStr += JPT_GET_PROPER_STRING(CharT, Further Testing);
+	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(CharT, Reassigned StringFurther Testing), "");
 
 	sourceStr.MoveString(jpt::Move(movedStr));
-	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharType, Reassigned StringFurther Testing), "");
+	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(CharT, Reassigned StringFurther Testing), "");
 	JPT_RETURN_FALSE_IF_ERROR(!movedStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(movedStr.ConstBuffer() != nullptr, "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_SubStr()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType sourceStr(JPT_GET_PROPER_STRING(CharType, Jupiter Engine));
-	StringType subStr;
+	StringT sourceStr(JPT_GET_PROPER_STRING(CharT, Jupiter Engine));
+	StringT subStr;
 
 	subStr = sourceStr.SubStr(0, 7);
-	JPT_RETURN_FALSE_IF_ERROR(subStr != JPT_GET_PROPER_STRING(CharType, Jupiter), "");
+	JPT_RETURN_FALSE_IF_ERROR(subStr != JPT_GET_PROPER_STRING(CharT, Jupiter), "");
 
 	subStr = sourceStr.SubStr(8, 6);
-	JPT_RETURN_FALSE_IF_ERROR(subStr != JPT_GET_PROPER_STRING(CharType, Engine), "");
+	JPT_RETURN_FALSE_IF_ERROR(subStr != JPT_GET_PROPER_STRING(CharT, Engine), "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_ToString()
 {
-	using CharType = StringType::CharType;
+	using CharT = StringT::CharT;
 
-	StringType string = jpt::ToString<StringType>(114151);
-	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharType, 114151), "");
+	StringT string = jpt::ToString<StringT>(114151);
+	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharT, 114151), "");
 
-	string = jpt::ToString<StringType>(114151.114);
-	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharType, 114151.114), "");
+	string = jpt::ToString<StringT>(114151.114);
+	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharT, 114151.114), "");
 
 	// TODO [zshi]: Add containers, vector, and matrix when finished
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_StringFinding()
 {
-	using CharType = StringType::CharType;
-	StringType string(JPT_GET_PROPER_STRING(CharType, This is a test string for Jupiter Engine's jpt::BasicString'));
+	using CharT = StringT::CharT;
+	StringT string(JPT_GET_PROPER_STRING(CharT, This is a test string for Jupiter Engine's jpt::BasicString'));
 
-	size_t isPosition = string.Find(JPT_GET_PROPER_STRING(CharType, is));
+	size_t isPosition = string.Find(JPT_GET_PROPER_STRING(CharT, is));
 	JPT_RETURN_FALSE_IF_ERROR(isPosition != 2, "");
 
-	size_t ePosition = string.Find(JPT_GET_PROPER_STRING(CharType, e), 20);
+	size_t ePosition = string.Find(JPT_GET_PROPER_STRING(CharT, e), 20);
 	JPT_RETURN_FALSE_IF_ERROR(ePosition != 31, "");
 
-	size_t lastIsPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharType, is));
+	size_t lastIsPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharT, is));
 	JPT_RETURN_FALSE_IF_ERROR(lastIsPosition != 5, "");
 
-	size_t lastEPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharType, e));
+	size_t lastEPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharT, e));
 	JPT_RETURN_FALSE_IF_ERROR(lastEPosition != 39, "");
 
-	size_t last20EPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharType, e), 20, 33);
+	size_t last20EPosition = string.FindLastOf(JPT_GET_PROPER_STRING(CharT, e), 20, 33);
 	JPT_RETURN_FALSE_IF_ERROR(last20EPosition != 31, "");
 
-	size_t noExistString = string.Find(JPT_GET_PROPER_STRING(CharType, Doesnt Exist String));
-	JPT_RETURN_FALSE_IF_ERROR(noExistString != StringType::npos, "");
+	size_t noExistString = string.Find(JPT_GET_PROPER_STRING(CharT, Doesnt Exist String));
+	JPT_RETURN_FALSE_IF_ERROR(noExistString != StringT::npos, "");
 
 	return true;
 }
 
-template<class StringType>
+template<class StringT>
 bool UnitTest_StringReplace()
 {
-	using CharType = StringType::CharType;
-	StringType string(JPT_GET_PROPER_STRING(CharType, This is a test string for Jupiter Engine jpt::BasicString));
+	using CharT = StringT::CharT;
+	StringT string(JPT_GET_PROPER_STRING(CharT, This is a test string for Jupiter Engine jpt::BasicString));
 
-	string.Replace(JPT_GET_PROPER_STRING(CharType, e), JPT_GET_PROPER_STRING(CharType, LOL));
-	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharType, This is a tLOLst string for JupitLOLr EnginLOL jpt::BasicString), "");
+	string.Replace(JPT_GET_PROPER_STRING(CharT, e), JPT_GET_PROPER_STRING(CharT, LOL));
+	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharT, This is a tLOLst string for JupitLOLr EnginLOL jpt::BasicString), "");
 						
-	string = JPT_GET_PROPER_STRING(CharType, This is a test string for Jupiter Engine jpt::BasicString);
-	string.Replace(JPT_GET_PROPER_STRING(CharType, e), JPT_GET_PROPER_STRING(CharType, LOL), 20, 42);
-	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharType, This is a test string for JupitLOLr EnginLOL jpt::BasicString), "");
+	string = JPT_GET_PROPER_STRING(CharT, This is a test string for Jupiter Engine jpt::BasicString);
+	string.Replace(JPT_GET_PROPER_STRING(CharT, e), JPT_GET_PROPER_STRING(CharT, LOL), 20, 42);
+	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharT, This is a test string for JupitLOLr EnginLOL jpt::BasicString), "");
 
-	string = JPT_GET_PROPER_STRING(CharType, This is a test string for Jupiter Engine jpt::BasicString);
-	string.Replace(JPT_GET_PROPER_STRING(CharType, e), JPT_GET_PROPER_STRING(CharType, LOL), 20, 32);
-	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharType, This is a test string for JupitLOLr Engine jpt::BasicString), "");
+	string = JPT_GET_PROPER_STRING(CharT, This is a test string for Jupiter Engine jpt::BasicString);
+	string.Replace(JPT_GET_PROPER_STRING(CharT, e), JPT_GET_PROPER_STRING(CharT, LOL), 20, 32);
+	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(CharT, This is a test string for JupitLOLr Engine jpt::BasicString), "");
 
 	return true;
 }

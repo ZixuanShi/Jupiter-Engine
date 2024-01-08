@@ -11,10 +11,10 @@ import jpt.String;
 export namespace jpt
 {
 	// Concepts
-	template<class Type>
-	concept ClockType = std::chrono::is_clock_v<Type>;
+	template<class T>
+	concept ClockT = std::chrono::is_clock_v<T>;
 
-	// TypeDefs
+	// TDefs
 	using TimingPrecision = double;
 	using TimeDuration = std::chrono::duration<TimingPrecision>; /**< Duration between two TimePoints */
 
@@ -22,12 +22,12 @@ export namespace jpt
 	using SystemClock = std::chrono::system_clock;				/**< Regular system-wide realtime clock. Use for simulating real-life time like day/night shifting*/
 	using HighResolutionClock = std::chrono::high_resolution_clock;		/**< The clock with the shortest tick period and highest precision available. */
 
-	/**< Represents a point in time. It is implemented as if it stores a value of type Duration indicating the time interval from the start of the Clock's epoch. */
-	template<ClockType Clock>
+	/**< Represents a point in time. It is implemented as if it stores a value of T Duration indicating the time interval from the start of the Clock's epoch. */
+	template<ClockT Clock>
 	using TimePoint = std::chrono::time_point<Clock>;
 
 	/** @return Duration in seconds between two time points from start to end */
-	template<ClockType Clock>
+	template<ClockT Clock>
 	TimingPrecision GetSecondsBetween(const TimePoint<Clock>& start, const TimePoint<Clock>& end)
 	{
 		const TimeDuration duration = std::chrono::duration_cast<TimeDuration>(end - start);
@@ -35,7 +35,7 @@ export namespace jpt
 	}
 
 	/** @return Duration in seconds between two time points from start to now */
-	template<ClockType Clock>
+	template<ClockT Clock>
 	TimingPrecision GetSecondsFrom(const TimePoint<Clock>& start)
 	{
 		const TimePoint<Clock> currentTimePoint = SteadyClock::now();

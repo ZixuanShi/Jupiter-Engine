@@ -16,76 +16,76 @@ export namespace jpt
 		@see https://www.codeproject.com/Articles/4795/C-Standard-Allocator-An-Introduction-and-Implement
 		@see https://learn.microsoft.com/en-us/cpp/standard-library/allocators?view=msvc-170#writing-your-own-allocator-c11 
 		@see https://www.geeksforgeeks.org/stdallocator-in-cpp-with-examples */
-	template<typename Type>
+	template<typename T>
 	class Allocator
 	{
 	public:
 		Allocator() = default;
 
-		template<class OtherType>
-		Allocator(const Allocator<OtherType>& other) noexcept {}
+		template<class OtherT>
+		Allocator(const Allocator<OtherT>& other) noexcept {}
 
 	public:
 		/** Allocates plain heap memory for desired amount of memory for <Type>
 			@param count		How many <Type> objects to allocate */
-		static Type* Allocate(size_t count = 1);
-		static Type* AllocateArray(size_t count = 1);
+		static T* Allocate(size_t count = 1);
+		static T* AllocateArray(size_t count = 1);
 
 		/** Allocates heap memory for one <Type>, with initializing value */
-		static Type* AllocateWithValue(const Type& data);
+		static T* AllocateWithValue(const T& data);
 
 		/** Allocates heap memory for desired amount of memory for <Type> with init values
 			@param count		How many <Type> objects to allocate 
 			@param values		An pointer to an array for each allocated objects initializing value. */
-		static Type* AllocateMultiWithValue(size_t count, const Type* pValues);
-		static Type* AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues);
+		static T* AllocateMultiWithValue(size_t count, const T* pValues);
+		static T* AllocateMultiWithValue(size_t count, const std::initializer_list<T>& pValues);
 
 		/** Deallocate memory for the passed in pointer */
-		static void Deallocate(Type* pPointer);
-		static void DeallocateArray(Type* pArray);
+		static void Deallocate(T* pPointer);
+		static void DeallocateArray(T* pArray);
 
-		static void Construct(Type* pPointer, const Type& object);
-		static void Destruct(Type* pPointer);
+		static void Construct(T* pPointer, const T& object);
+		static void Destruct(T* pPointer);
 
-		template<class OtherType>
-		bool operator==(const Allocator<OtherType>&) const noexcept;
+		template<class OtherT>
+		bool operator==(const Allocator<OtherT>&) const noexcept;
 
-		template<class OtherType>
-		bool operator!=(const Allocator<OtherType>&) const noexcept;
+		template<class OtherT>
+		bool operator!=(const Allocator<OtherT>&) const noexcept;
 	};
 
-	template<typename Type>
-	Type* Allocator<Type>::Allocate(size_t count /* = 1 */ )
+	template<typename T>
+	T* Allocator<T>::Allocate(size_t count /* = 1 */ )
 	{
-		return static_cast<Type*>(::operator new(count * sizeof(Type)));
+		return static_cast<T*>(::operator new(count * sizeof(T)));
 	}
 
-	template<typename Type>
-	Type* Allocator<Type>::AllocateArray(size_t count /* = 1 */)
+	template<typename T>
+	T* Allocator<T>::AllocateArray(size_t count /* = 1 */)
 	{
-		return static_cast<Type*>(::operator new[](count * sizeof(Type)));
+		return static_cast<T*>(::operator new[](count * sizeof(T)));
 	}
 
-	template<typename Type>
-	Type* Allocator<Type>::AllocateWithValue(const Type& data)
+	template<typename T>
+	T* Allocator<T>::AllocateWithValue(const T& data)
 	{
-		Type* pPointer = static_cast<Type*>(::operator new(sizeof(Type)));
+		T* pPointer = static_cast<T*>(::operator new(sizeof(T)));
 		*pPointer = data;
 		return pPointer;
 	}
 
-	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, const Type* pValues)
+	template<typename T>
+	T* Allocator<T>::AllocateMultiWithValue(size_t count, const T* pValues)
 	{
-		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
-		std::memcpy(pArray, pValues, count * sizeof(Type));
+		T* pArray = static_cast<T*>(::operator new(count * sizeof(T)));
+		std::memcpy(pArray, pValues, count * sizeof(T));
 		return pArray;
 	}
 
-	template<typename Type>
-	Type* Allocator<Type>::AllocateMultiWithValue(size_t count, const std::initializer_list<Type>& pValues)
+	template<typename T>
+	T* Allocator<T>::AllocateMultiWithValue(size_t count, const std::initializer_list<T>& pValues)
 	{
-		Type* pArray = static_cast<Type*>(::operator new(count * sizeof(Type)));
+		T* pArray = static_cast<T*>(::operator new(count * sizeof(T)));
 
 		size_t i = 0;
 		for (auto itr = pValues.begin(); itr != pValues.end(); ++itr)
@@ -97,40 +97,40 @@ export namespace jpt
 		return pArray;
 	}
 
-	template<typename Type>
-	void Allocator<Type>::Deallocate(Type* pPointer)
+	template<typename T>
+	void Allocator<T>::Deallocate(T* pPointer)
 	{
 		::operator delete(pPointer);
 	}
 
-	template<typename Type>
-	void Allocator<Type>::DeallocateArray(Type* pArray)
+	template<typename T>
+	void Allocator<T>::DeallocateArray(T* pArray)
 	{
 		::operator delete[](pArray);
 	}
 
-	template<typename Type>
-	void Allocator<Type>::Construct(Type* pPointer, const Type& object)
+	template<typename T>
+	void Allocator<T>::Construct(T* pPointer, const T& object)
 	{
-		new(pPointer) Type(object);
+		new(pPointer) T(object);
 	}
 
-	template<typename Type>
-	void Allocator<Type>::Destruct(Type* pPointer)
+	template<typename T>
+	void Allocator<T>::Destruct(T* pPointer)
 	{
 		pPointer->~Type();
 	}
 
-	template<typename Type>
+	template<typename T>
 	template<class OtherType>
-	bool Allocator<Type>::operator==(const Allocator<OtherType>&) const noexcept
+	bool Allocator<T>::operator==(const Allocator<OtherType>&) const noexcept
 	{
 		return true;
 	}
 
-	template<typename Type>
+	template<typename T>
 	template<class OtherType>
-	bool Allocator<Type>::operator!=(const Allocator<OtherType>&) const noexcept
+	bool Allocator<T>::operator!=(const Allocator<OtherType>&) const noexcept
 	{
 		return false;
 	}

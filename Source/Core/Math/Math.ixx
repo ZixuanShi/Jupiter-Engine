@@ -10,8 +10,8 @@ import jpt.Utilities;
 export namespace jpt
 {
 	/** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
-	template<ComparableTrivial Type>
-	Type GetClamped(Type value, Type min, Type max)
+	template<ComparableTrivial T>
+	T GetClamped(T value, T min, T max)
 	{
 		if (value < min)
 		{
@@ -23,8 +23,8 @@ export namespace jpt
 		}
 		return value;
 	}
-	template<ComparableNonTrivial Type>
-	Type GetClamped(const Type& value, const Type& min, const Type& max)
+	template<ComparableNonTrivial T>
+	T GetClamped(const T& value, const T& min, const T& max)
 	{
 		if (value < min)
 		{
@@ -39,8 +39,8 @@ export namespace jpt
 
 	/** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
 		@param outValue:	Will be changed if less than min or bigger than max */
-	template<ComparableNonTrivial Type>
-	void ClampTo(Type& outValue, const Type& min, const Type& max)
+	template<ComparableTrivial T>
+	void ClampTo(T& outValue, T min, T max)
 	{
 		if (outValue < min)
 		{
@@ -51,8 +51,8 @@ export namespace jpt
 			outValue = max;
 		}
 	}
-	template<ComparableTrivial Type>
-	void ClampTo(Type& outValue, Type min, Type max)
+	template<ComparableNonTrivial T>
+	void ClampTo(T& outValue, const T& min, const T& max)
 	{
 		if (outValue < min)
 		{
@@ -65,106 +65,106 @@ export namespace jpt
 	}
 
 	/** @return The absolute value of input arithmetic parameter */
-	template<Numeric Type>
-	constexpr Type GetAbs(Type value)
+	template<Numeric NumT>
+	constexpr NumT GetAbs(NumT value)
 	{
-		return (value >= static_cast<Type>(0) ? value : -value);
+		return (value >= static_cast<NumT>(0) ? value : -value);
 	}
 
 	/** @return true if two values are close enough */
-	template<Integral Type>
-	bool AreValuesClose(Type A, Type B)
+	template<Integral IntT>
+	bool AreValuesClose(IntT A, IntT B)
 	{
 		return A == B;
 	}
 
-	template<Floating Type>
-	bool AreValuesClose(Type A, Type B, Type tolerance = static_cast<Type>(0.000001))
+	template<Floating FloatT>
+	bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
 	{
 		return jpt::GetAbs(A - B) < tolerance;
 	}
 
-	template<ComparableTrivial Type>
-	Type Min(Type a, Type b)
+	template<ComparableTrivial T>
+	T Min(T a, T b)
 	{
 		return (a < b) ? a : b;
 	}
 
-	template<ComparableTrivial Type>
-	Type Min(Type a, Type b, Type c)
+	template<ComparableTrivial T>
+	T Min(T a, T b, T c)
 	{
-		Type temp = Min(a, b);
+		T temp = Min(a, b);
 		return Min(temp, c);
 	}
 
-	template<ComparableTrivial Type>
-	Type Min(Type a, Type b, Type c, Type d)
+	template<ComparableTrivial T>
+	T Min(T a, T b, T c, T d)
 	{
-		Type temp1 = Min(a, b);
-		Type temp2 = Min(c, d);
+		T temp1 = Min(a, b);
+		T temp2 = Min(c, d);
 		return Min(temp1, temp2);
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Min(const Type& a, const Type& b)
+	template<ComparableNonTrivial T>
+	T Min(const T& a, const T& b)
 	{
 		return (a < b) ? a : b;
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Min(const Type& a, const Type& b, const Type& c)
+	template<ComparableNonTrivial T>
+	T Min(const T& a, const T& b, const T& c)
 	{
-		Type temp = Min(a, b);
+		T temp = Min(a, b);
 		return Min(temp, c);
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Min(const Type& a, const Type& b, const Type& c, const Type& d)
+	template<ComparableNonTrivial T>
+	T Min(const T& a, const T& b, const T& c, const T& d)
 	{
-		Type temp1 = Min(a, b);
-		Type temp2 = Min(c, d);
+		T temp1 = Min(a, b);
+		T temp2 = Min(c, d);
 		return Min(temp1, temp2);
 	}
 
-	template<ComparableTrivial Type>
-	Type Max(Type a, Type b)
+	template<ComparableTrivial T>
+	T Max(T a, T b)
 	{
 		return (a > b) ? a : b;
 	}
 
-	template<ComparableTrivial Type>
-	Type Max(Type a, Type b, Type c)
+	template<ComparableTrivial T>
+	T Max(T a, T b, T c)
 	{
-		Type temp = Max(a, b);
+		T temp = Max(a, b);
 		return Max(temp, c);
 	}
 
-	template<ComparableTrivial Type>
-	Type Max(Type a, Type b, Type c, Type d)
+	template<ComparableTrivial T>
+	T Max(T a, T b, T c, T d)
 	{
-		Type temp1 = Max(a, b);
-		Type temp2 = Max(c, d);
+		T temp1 = Max(a, b);
+		T temp2 = Max(c, d);
 		return Max(temp1, temp2);
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Max(const Type& a, const Type& b)
+	template<ComparableNonTrivial T>
+	T Max(const T& a, const T& b)
 	{
 		return (a > b) ? a : b;
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Max(const Type& a, const Type& b, const Type& c)
+	template<ComparableNonTrivial T>
+	T Max(const T& a, const T& b, const T& c)
 	{
-		Type temp = Max(a, b);
+		T temp = Max(a, b);
 		return Max(temp, c);
 	}
 
-	template<ComparableNonTrivial Type>
-	Type Max(const Type& a, const Type& b, const Type& c, const Type& d)
+	template<ComparableNonTrivial T>
+	T Max(const T& a, const T& b, const T& c, const T& d)
 	{
-		Type temp1 = Max(a, b);
-		Type temp2 = Max(c, d);
+		T temp1 = Max(a, b);
+		T temp2 = Max(c, d);
 		return Max(temp1, temp2);
 	}
 }
