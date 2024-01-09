@@ -9,6 +9,9 @@ export module jpt.UnitTestsApplication;
 import jpt.CoreModules;
 import jpt.ApplicationBase;
 
+// Building
+import UtilitiesUnitTests;
+
 // Math
 import MathUnitTests;
 import RandomNumberGeneratorUnitTests;
@@ -47,6 +50,9 @@ bool JupiterUnitTestsApplication::Init()
 
 bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 {
+	// Building
+	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
+
 	// Math
 	JPT_RETURN_FALSE_IF_ERROR(!RunMathUnitTests(), "Math Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunRandomNumberGeneratorUnitTests(), "Random Number Generator Tests Failed");

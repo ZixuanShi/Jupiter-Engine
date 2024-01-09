@@ -14,13 +14,13 @@ bool UnitTest_UniquePtr_Char()
 {
 	auto deleter = [](char* pCharPtr)
 		{
-			JPT_LOG("Deleted a char %c", *pCharPtr);
+			//JPT_LOG("Deleted a char %c", *pCharPtr);
 			delete pCharPtr;
 		};
 
 	auto deleter2 = [](char* pCharPtr)
 		{
-			JPT_LOG("Another Deleted a char %c", *pCharPtr);
+			//JPT_LOG("Another Deleted a char %c", *pCharPtr);
 			delete pCharPtr;
 		};
 

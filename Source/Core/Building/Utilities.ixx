@@ -15,7 +15,7 @@ import jpt.TypeDefs;
 export namespace jpt
 {
 	/** Equivalent of std::move. Returns a rvalue of the object */
-	template<class T>
+	template<Movable T>
 	typename RemoveReference<T>::Type&& Move(T&& object)
 	{
 		using CastT = typename RemoveReference<T>::Type;

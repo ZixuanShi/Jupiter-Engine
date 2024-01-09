@@ -132,11 +132,8 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			DataT* pOldPtr = m_pPtr;
-			m_pPtr = other.m_pPtr;
+			Reset(other.m_pPtr);
 			other.m_pPtr = nullptr;
-
-			m_deleter(pOldPtr);
 			m_deleter = Move(other.GetDeleter());
 		}
 
@@ -149,9 +146,8 @@ export namespace jpt
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
 		{
-			DataT* pOldPtr = m_pPtr;
+			m_deleter(m_pPtr);
 			m_pPtr = pPtr;
-			m_deleter(pOldPtr);
 		}
 	}
 
