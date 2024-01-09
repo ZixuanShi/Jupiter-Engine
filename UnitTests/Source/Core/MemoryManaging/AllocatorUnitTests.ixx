@@ -8,48 +8,48 @@ export module AllocatorUnitTests;
 
 import jpt.CoreModules;
 
-template<jpt::Numeric TestT>
+template<jpt::Numeric NumT>
 bool UnitTest_AllocatorTrivialType()
 {
 	// Single
-	TestT* pSingle = jpt::Allocator<TestT>::Allocate();
+	NumT* pSingle = jpt::Allocator<NumT>::Allocate();
 	JPT_RETURN_FALSE_IF_ERROR(pSingle == nullptr, "jpt::Allocator<TestType>::Allocate() returned a nullptr");
-	jpt::Allocator<TestT>::Deallocate(pSingle);
+	jpt::Allocator<NumT>::Deallocate(pSingle);
 
 	// Single with value
-	TestT* pSingleWithValue = jpt::Allocator<TestT>::AllocateWithValue(static_cast<TestT>(42));
+	NumT* pSingleWithValue = jpt::Allocator<NumT>::AllocateWithValue(static_cast<NumT>(42));
 	JPT_RETURN_FALSE_IF_ERROR(pSingleWithValue == nullptr, "jpt::Allocator<int>::AllocateWithValue(42) returned a nullptr");
-	JPT_RETURN_FALSE_IF_ERROR(*pSingleWithValue != static_cast<TestT>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
-	jpt::Allocator<TestT>::Deallocate(pSingleWithValue);
+	JPT_RETURN_FALSE_IF_ERROR(*pSingleWithValue != static_cast<NumT>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
+	jpt::Allocator<NumT>::Deallocate(pSingleWithValue);
 
 	// Multi
-	TestT* pMulti = jpt::Allocator<TestT>::Allocate(10);
+	NumT* pMulti = jpt::Allocator<NumT>::Allocate(10);
 	JPT_RETURN_FALSE_IF_ERROR(pMulti == nullptr, "jpt::Allocator<TestType>::Allocate(10) returned a nullptr");
-	jpt::Allocator<TestT>::Deallocate(pMulti);
+	jpt::Allocator<NumT>::Deallocate(pMulti);
 
 	// Array
 	constexpr size_t kArraySize = 10'000;
-	TestT* pArray = jpt::Allocator<TestT>::AllocateArray(kArraySize);
+	NumT* pArray = jpt::Allocator<NumT>::AllocateArray(kArraySize);
 	JPT_RETURN_FALSE_IF_ERROR(pArray == nullptr, "jpt::Allocator<TestType>::AllocateArray(kArraySize) returned a nullptr");
 
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
-		pArray[i] = static_cast<TestT>(i);
+		pArray[i] = static_cast<NumT>(i);
 	}
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
-		JPT_RETURN_FALSE_IF_ERROR(pArray[i] != static_cast<TestT>(i), "jpt::Allocator<TestType>::AllocateArray(kArraySize) doesn't write data correctly");
+		JPT_RETURN_FALSE_IF_ERROR(pArray[i] != static_cast<NumT>(i), "jpt::Allocator<TestType>::AllocateArray(kArraySize) doesn't write data correctly");
 	}
-	jpt::Allocator<TestT>::DeallocateArray(pArray);
+	jpt::Allocator<NumT>::DeallocateArray(pArray);
 
 	// Multi with value initializer list
-	TestT* pMultiWithValue = jpt::Allocator<TestT>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 });
+	NumT* pMultiWithValue = jpt::Allocator<NumT>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 });
 	JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue == nullptr, "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) returned a nullptr");
 	for (size_t i = 0; i < 10; ++i)
 	{
-		JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue[i] != static_cast<TestT>(i), "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) doesn't write data correctly");
+		JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue[i] != static_cast<NumT>(i), "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) doesn't write data correctly");
 	}
-	jpt::Allocator<TestT>::Deallocate(pMultiWithValue);
+	jpt::Allocator<NumT>::Deallocate(pMultiWithValue);
 
 	return true;
 }

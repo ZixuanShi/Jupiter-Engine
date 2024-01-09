@@ -121,7 +121,8 @@ namespace jpt
 		   @param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
 		void UpdateBuffer(size_t inCapacity);
 
-		void InsertStringAt(size_t index, size_t size, const CharT* CString);
+		/** Inserts a C-String at the index by the given size */
+		void InsertStringAt(const CharT* CString, size_t index, size_t size);
 	};
 
 	template<StringLiteral CharT, class AllocatorT>
@@ -369,14 +370,14 @@ namespace jpt
 	void BasicString<CharT, AllocatorT>::Append(const CharT* CString, size_t newStringSize)
 	{
 		JPT_RETURN_IF(newStringSize == 0);
-		InsertStringAt(m_size, newStringSize, CString);
+		InsertStringAt(CString, m_size, newStringSize);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
 	void BasicString<CharT, AllocatorT>::Append(const BasicString<CharT>& otherString)
 	{
 		JPT_RETURN_IF(otherString.IsEmpty());
-		InsertStringAt(m_size, otherString.m_size, otherString.ConstBuffer());
+		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
@@ -462,7 +463,7 @@ namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::InsertStringAt(size_t index, size_t size, const CharT* CString)
+	void BasicString<CharT, AllocatorT>::InsertStringAt(const CharT* CString, size_t index, size_t size)
 	{
 		const size_t newSize = m_size + size;
 		if (newSize > m_capacity)

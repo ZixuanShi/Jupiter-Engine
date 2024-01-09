@@ -15,25 +15,25 @@ import jpt.TypeDefs;
 export namespace jpt
 {
 	/** Equivalent of std::move. Returns a rvalue of the object */
-	template<Movable Type>
-	typename RemoveReference<Type>::Type&& Move(Type&& object)
+	template<class T>
+	typename RemoveReference<T>::Type&& Move(T&& object)
 	{
-		using CastType = typename RemoveReference<Type>::Type;
+		using CastT = typename RemoveReference<T>::Type;
 
-		static_assert(IsLValueReferenceType<Type>, "jpt::move called on an lvalue");
-		static_assert(!jpt::IsSameType<CastType&, const CastType&>, "jpt::move called on a const object");
+		static_assert(IsLValueReferenceType<T>, "jpt::move called on an lvalue");
+		static_assert(!IsSameType<CastT&, const CastT&>, "jpt::move called on a const object");
 
-		return static_cast<CastType&&>(object);
+		return static_cast<CastT&&>(object);
 	}
 
 	/** Equivalent of std::forward. Return a reference to an rvalue reference. */
-	template<typename T>
+	template<class T>
 	T&& Forward(typename RemoveReference<T>::Type& obj)
 	{
 		return static_cast<T&&>(obj);
 	}
 
-	template<typename T>
+	template<class T>
 	T&& Forward(typename RemoveReference<T>::Type&& obj)
 	{
 		static_assert(!IsLValueReferenceType<T>, "Bad forward call");
@@ -41,23 +41,23 @@ export namespace jpt
 	}
 
 	/** Equivalent for std::swap. Swaps the value of two items */
-	template<Movable Type>
-	void Swap(Type& a, Type& b)
+	template<Movable T>
+	void Swap(T& a, T& b)
 	{
-		Type temp = jpt::Move(b);
+		T temp = jpt::Move(b);
 		b = jpt::Move(a);
 		a = jpt::Move(temp);
 	}
 
 	/** Equivalent for std::hash. Calculate the key's hash value */
-	template<class KeyType>
+	template<class KeyT>
 	struct hash
 	{
 		/** Example: jpt::hash<jpt::string>()(key) */
-		size_t operator()(const KeyType& key)
+		size_t operator()(const KeyT& key)
 		{
 			// TODO: Write my own std::hash
-			return std::hash<KeyType>()(key);
+			return std::hash<KeyT>()(key);
 		}
 	};
 }
