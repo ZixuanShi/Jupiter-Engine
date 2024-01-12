@@ -4,8 +4,6 @@ module;
 
 #include "Core/Building/Headers.h"
 
-#include <type_traits>
-
 export module jpt.UniquePtr;
 
 import jpt.TypeDefs;
