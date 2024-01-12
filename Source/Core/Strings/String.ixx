@@ -513,4 +513,21 @@ export namespace jpt
 		floatString.MoveString(Move(floatCString));
 		return floatString;
 	}
+
+	template<class StringT = jpt::String>
+	StringT ToString(bool value)
+	{
+		using CharT = StringT::CharT;
+
+		StringT boolStr;
+		if (value)
+		{
+			boolStr = JPT_GET_PROPER_STRING(CharT, true);
+		}
+		else
+		{
+			boolStr = JPT_GET_PROPER_STRING(CharT, false);
+		}
+		return boolStr;
+	}
 }
