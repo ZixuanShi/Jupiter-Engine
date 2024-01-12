@@ -530,4 +530,9 @@ export namespace jpt
 		}
 		return boolStr;
 	}
+
+	String ToString(char c)
+	{
+		return String(&c);
+	}
 }

@@ -31,7 +31,7 @@ export namespace jpt
 	concept Movable = std::is_move_constructible_v<T>;
 
 	template<typename T>
-	concept Primitive = std::is_fundamental_v<T>;
+	concept Primitive = std::is_fundamental_v<T> || StringLiteral<T>;
 
 	template<typename T>
 	concept Trivial = std::is_trivially_constructible_v<T> &&
@@ -58,7 +58,7 @@ export namespace jpt
 	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
 
 	template<typename T>
-	concept EnabledToString = requires(T object) { object.ToString(); };
+	concept EnabledToString = !Primitive<T> && requires(const T& object) { object.ToString(); };
 
 	template<typename T>
 	concept EnabledCout = requires(T object) { std::cout << object; };

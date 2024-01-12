@@ -2,7 +2,8 @@
 
 module;
 
-#include "Core/Building/Headers.h"
+#include "Core/Debugging/Assert.h"
+#include "Core/Building/Macros.h"
 
 #include <string.h>
 #include <stdio.h>
