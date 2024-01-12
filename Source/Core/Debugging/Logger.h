@@ -4,9 +4,8 @@
 
 import jpt.TypeDefs;
 import jpt.Concepts;
+import jpt.String;
 
-namespace jpt
-{
 #if IS_DEBUG
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
@@ -19,6 +18,9 @@ namespace jpt
 	#define JPT_ERROR(message, ...)			
 #endif
 
+#if IS_DEBUG
+namespace jpt
+{
 	/** Singleton thread-safe logger for different platforms */ 
 	class Logger
 	{
@@ -37,17 +39,17 @@ namespace jpt
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function
 			@param message, ...: Templated message to send */
-		template<typename MessageT>
-		void Log(ELogType type, int32 line, const char* file, MessageT message, ...);
-
-		template<EnabledToString ToStringT>
-		void Log(ELogType type, int32 line, const char* file, ToStringT obj, ...)
+		template<DisabledToString MessageT>
+		void Log(ELogType type, int32 line, const char* file, MessageT message, ...)
 		{
-			Log(type, line, file, obj.ToString().ConstBuffer());
+			ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
 		}
-
-		void Log(const char* string);
-		void Log(const wchar_t* wideString);
+		template<EnabledToString ToStringT>
+		void Log(ELogType type, int32 line, const char* file, const ToStringT& obj, ...)
+		{
+			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
+		}
+		void Log(ELogType type, int32 line, const char* file, const char* message, ...);
 
 		static Logger& GetInstance();
 
@@ -55,5 +57,8 @@ namespace jpt
 		Logger() = default;
 
 		void ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage);
+		void PrintToConsole(const char* string);
+		void PrintToConsole(const wchar_t* wideString);
 	};
 }
+#endif

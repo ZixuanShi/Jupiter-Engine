@@ -48,7 +48,6 @@ workspace "JupiterUnitTests"
         defines 
         { 
             "IS_DEBUG",
-            "JPT_ENABLE_ASSERTS",
         }
         buildoptions 
         {

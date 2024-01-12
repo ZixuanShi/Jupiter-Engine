@@ -6,7 +6,7 @@ import jpt.TypeDefs;
 
 namespace jpt
 {
-#if JPT_ENABLE_ASSERTS
+#if IS_DEBUG
 
 	/** Implementation when an assertion has failed
 		@param line:	   Line of the file caused assertion fail

@@ -2,6 +2,8 @@
 
 #include "Logger.h"
 
+#if IS_DEBUG
+
 #include "Core/Building/Macros.h"
 #include "Assert.h"
 
@@ -28,13 +30,6 @@ namespace jpt
 		}
 	}
 
-	template<typename MessageT>
-	void Logger::Log(ELogType type, int32 line, const char* file, MessageT message, ...)
-	{
-		ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
-	}
-
-	template<>
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		// Parse info from parameters by format
@@ -47,14 +42,14 @@ namespace jpt
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
-	void Logger::Log(const char* string)
+	void Logger::PrintToConsole(const char* string)
 	{
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringA(string);
 #endif
 	}
 
-	void Logger::Log(const wchar_t* wideString)
+	void Logger::PrintToConsole(const wchar_t* wideString)
 	{
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
@@ -88,12 +83,8 @@ namespace jpt
 		contentToLog += "\n";
 
 		// Log to the output window
-		Log(contentToLog.ConstBuffer());
+		PrintToConsole(contentToLog.ConstBuffer());
 	}
-
-	template void Logger::Log<int32>(ELogType type, int32 line, const char* file, int32 message, ...);
-	template void Logger::Log<float>(ELogType type, int32 line, const char* file, float message, ...);
-	template void Logger::Log<double>(ELogType type, int32 line, const char* file, double message, ...);
-	template void Logger::Log<bool>(ELogType type, int32 line, const char* file, bool message, ...);
-	template void Logger::Log<char>(ELogType type, int32 line, const char* file, char message, ...);
 }
+
+#endif

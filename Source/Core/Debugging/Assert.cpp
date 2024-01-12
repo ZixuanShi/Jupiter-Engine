@@ -11,7 +11,7 @@ import jpt.String;
 
 namespace jpt
 {
-#if JPT_ENABLE_ASSERTS
+#if IS_DEBUG
 	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...)
 	{
 		jpt::String message = "Assertion Failed: ";

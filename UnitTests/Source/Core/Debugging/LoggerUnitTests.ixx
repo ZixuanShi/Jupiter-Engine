@@ -1,4 +1,4 @@
-// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
 
@@ -35,6 +35,9 @@ bool UnitTest_Logger_Data()
 	JPT_LOG("%s", foo.ToString().ConstBuffer());
 
 	JPT_RETURN_FALSE_IF_ERROR(jpt::ToString(foo) != "I am a Foo object", "");
+
+	JPT_LOG("I'm genius");
+	JPT_LOG(L"木星引擎");
 
 	return true;
 }

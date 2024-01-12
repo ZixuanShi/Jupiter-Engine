@@ -2,9 +2,6 @@
 
 #pragma once
 
-import jpt.TypeDefs;
-import jpt.Concepts;
-
 /** Used for hacky fix unused parameters */
 #define JPT_IGNORE(param) static_cast<void>(param)
 
