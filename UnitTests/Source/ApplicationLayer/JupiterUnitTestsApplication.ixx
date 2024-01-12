@@ -12,6 +12,9 @@ import jpt.ApplicationBase;
 // Building
 import UtilitiesUnitTests;
 
+// Debugging
+import LoggerUnitTests;
+
 // Math
 import MathUnitTests;
 import RandomNumberGeneratorUnitTests;
@@ -52,6 +55,9 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 {
 	// Building
 	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
+
+	// Debugging
+	JPT_RETURN_FALSE_IF_ERROR(!RunLoggerUnitTests(), "Logger Unit Tests Failed");
 
 	// Math
 	JPT_RETURN_FALSE_IF_ERROR(!RunMathUnitTests(), "Math Unit Tests Failed");

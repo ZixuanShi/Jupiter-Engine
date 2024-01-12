@@ -2,6 +2,7 @@
 
 #include "Logger.h"
 
+#include "Core/Building/Macros.h"
 #include "Assert.h"
 
 #include <stdio.h>
@@ -27,6 +28,19 @@ namespace jpt
 		}
 	}
 
+	template<typename MessageT>
+	void Logger::Log(ELogType type, int32 line, const char* file, MessageT message, ...)
+	{
+		ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
+	}
+
+	template<>
+	void Logger::Log(ELogType type, int32 line, const char* file, char message, ...)
+	{
+		ProcessMessage(type, line, file, &message);
+	}
+
+	template<>
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		// Parse info from parameters by format
@@ -36,26 +50,7 @@ namespace jpt
 		vsprintf_s(messageBuffer, format, args);
 		va_end(args);
 
-		const String messageStr(messageBuffer);
-		const String fileStr(file);
-
-		String contentToLog;
-		contentToLog.Reserve(256);
-
-		// Time
-		contentToLog += jpt::ToString(SystemClock::now()) + ". ";
-
-		// C++ file name. Get rid of previous folders
-		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
-
-		// line number and log type
-		contentToLog += ", line " + jpt::ToString(line) + ":  \t" + "[" + locGetLogStr(type) + "] ";
-
-		// Content message
-		contentToLog += messageStr + "\n";
-
-		// Log to the output window
-		Log(contentToLog.ConstBuffer());
+		ProcessMessage(type, line, file, messageBuffer);
 	}
 
 	void Logger::Log(const char* string)
@@ -77,4 +72,34 @@ namespace jpt
 		static Logger s_logger;
 		return s_logger;
 	}
+
+	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
+	{
+		const String fileStr(file);
+
+		String contentToLog;
+		contentToLog.Reserve(256);
+
+		// Time
+		contentToLog += jpt::ToString(SystemClock::now()) + ". ";
+
+		// C++ file name. Get rid of previous folders
+		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
+
+		// line number and log type
+		contentToLog += ", line " + jpt::ToString(line) + ":  \t" + "[" + locGetLogStr(type) + "] ";
+
+		// Content message
+		contentToLog += pMessage;
+		contentToLog += "\n";
+
+		// Log to the output window
+		Log(contentToLog.ConstBuffer());
+	}
+
+	template void Logger::Log<int32>(ELogType type, int32 line, const char* file, int32 message, ...);
+	template void Logger::Log<float>(ELogType type, int32 line, const char* file, float message, ...);
+	template void Logger::Log<double>(ELogType type, int32 line, const char* file, double message, ...);
+	template void Logger::Log<bool>(ELogType type, int32 line, const char* file, bool message, ...);
+	template void Logger::Log<char>(ELogType type, int32 line, const char* file, char message, ...);
 }

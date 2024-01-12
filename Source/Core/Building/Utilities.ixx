@@ -18,7 +18,7 @@ export namespace jpt
 	template<Movable T>
 	typename RemoveReference<T>::Type&& Move(T&& object)
 	{
-		using CastT = typename RemoveReference<T>::Type;
+		using CastT = RemoveReference<T>::Type;
 
 		static_assert(IsLValueReferenceType<T>, "jpt::move called on an lvalue");
 		static_assert(!IsSameType<CastT&, const CastT&>, "jpt::move called on a const object");

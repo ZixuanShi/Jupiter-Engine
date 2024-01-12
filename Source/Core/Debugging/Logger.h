@@ -7,7 +7,7 @@ import jpt.Concepts;
 
 namespace jpt
 {
-#if !IS_RELEASE
+#if IS_DEBUG
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_WARNING(message, ...)		{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,	__LINE__, __FILE__, message, __VA_ARGS__); }
@@ -32,19 +32,28 @@ namespace jpt
 		};
 
 	public:
-		/** Log a message to the terminal window
+		/** Logs a message to the terminal window
 			@param type: The type to log. Choose different color to print based on the type
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function
-			@param format, ...: The message to send*/
-		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
+			@param message, ...: Templated message to send */
+		template<typename MessageT>
+		void Log(ELogType type, int32 line, const char* file, MessageT message, ...);
+
+		template<EnabledToString ToStringT>
+		void Log(ELogType type, int32 line, const char* file, ToStringT obj, ...)
+		{
+			Log(type, line, file, obj.ToString().ConstBuffer());
+		}
+
 		void Log(const char* string);
 		void Log(const wchar_t* wideString);
-		template<EnabledToString T> void Log(const T& object) { Log(object.ToString()); }
 
 		static Logger& GetInstance();
 
 	private:
 		Logger() = default;
+
+		void ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage);
 	};
 }

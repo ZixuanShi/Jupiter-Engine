@@ -94,17 +94,11 @@ import jpt.Concepts;
 /** Combines two strings */
 #define JPT_COMBINE_STR(A, B)   A##B
 
-/** Converts a const char* to const wchar_t* */
+/** Converts a const char* to const wchar_t* by prefixing 'L' */
 #define JPT_TO_WSTRING(cStr) L##cStr
 
-namespace jpt_private
-{
-	template<jpt::StringLiteral CharT>
-	void locGetProperStrHelper(auto& string, const CharT* pStringToAssgin) { string = pStringToAssgin; }
-}
-
-/** This solves the issue when dealing with templated string class functions and raw string literals involved
-	@return   C-Style string for different Char Type but contains the input string literals.
+/** This solves the issue when dealing with templated string class functions with raw string literals involved. No Heap Memory Allocation at all
+	@return   C-Style string for different Char Type but contains the exact input string literals.
 	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
 	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
 #define JPT_GET_PROPER_STRING(CharT, SourceStr)\
@@ -113,17 +107,17 @@ namespace jpt_private
 		const CharT* pString = nullptr; \
 		if constexpr (jpt::IsSameType<CharT, char>)\
 		{\
-			jpt_private::locGetProperStrHelper(pString, #SourceStr);\
+			pString = #SourceStr;\
 		}\
 		else if (jpt::IsSameType<CharT, wchar_t>)\
 		{\
-			jpt_private::locGetProperStrHelper(pString, JPT_TO_WSTRING(#SourceStr));\
+			pString = JPT_TO_WSTRING(#SourceStr);\
 		}\
 		else\
 		{\
 			JPT_ASSERT(false, "Unsupported CharT");\
 		}\
-		return pString; \
+		return pString;\
 	}()
 
 /** @return true if a macro's variadic arguments is not empty. false if the macro doesn't have optional arguments

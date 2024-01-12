@@ -41,7 +41,7 @@ export namespace jpt
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
 	template<StringLiteral CharT = char, Integral IntT = int32>
-	CharT* IntegerToCStr(IntT value, int32 base = 10)
+	CharT* IntegerToCStr(IntT value, IntT base = 10)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
