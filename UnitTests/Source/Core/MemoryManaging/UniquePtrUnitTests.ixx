@@ -57,6 +57,14 @@ bool UnitTest_UniquePtr_Char()
 	jpt::UniquePtr<char, decltype(deleter)> other  = jpt::UniquePtr<char, decltype(deleter)>(new char('B'), deleter);
 	source = jpt::Move(other);
 
+	jpt::UniquePtr<char[]> charArray(jpt::Allocator<char>::AllocateArray(10, {'A', 'B', 'C', 'A'}));
+	//JPT_LOG("%c", charArray.Get()[0]);
+	//JPT_LOG("%c", charArray.Get()[1]);
+	//JPT_LOG("%c", charArray.Get()[2]);
+	//JPT_LOG("%c", charArray.Get()[3]);
+	//JPT_LOG("%c", charArray.Get()[4]);
+	//JPT_LOG("%c", charArray.Get()[5]);
+
 	return true;
 }
 
