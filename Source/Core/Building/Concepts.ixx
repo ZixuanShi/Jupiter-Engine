@@ -31,7 +31,20 @@ export namespace jpt
 	concept Movable = std::is_move_constructible_v<T>;
 
 	template<typename T>
-	concept Comparable = requires(const T& left, const T& right)
+	concept Primitive = std::is_fundamental_v<T>;
+
+	template<typename T>
+	concept Trivial = std::is_trivially_constructible_v<T> &&
+					  std::is_trivially_copy_constructible_v<T> &&
+					  sizeof(T) <= kLargeDataSize;
+
+	template<typename T>
+	concept NonTrivial = !std::is_trivially_constructible_v<T> ||
+		                 !std::is_trivially_copy_constructible_v<T> ||
+		                 sizeof(T) > kLargeDataSize;
+
+	template<typename T>
+	concept Comparable = requires(T left, T right)
 	{
 		left < right;
 		left > right;
@@ -39,18 +52,14 @@ export namespace jpt
 
 	/** Avoid copy-constructing when comparing non-trivially copiable objects */
 	template<typename T>
-	concept ComparableTrivial = Comparable<T> &&
-		                        std::is_trivially_copy_constructible_v<T> &&
-		                        sizeof(T) <= kLargeDataSize;
+	concept ComparableTrivial = Comparable<T> && Trivial<T>;
 
 	template<typename T>
-	concept ComparableNonTrivial = Comparable<T> &&
-	                               !std::is_trivially_copy_constructible_v<T> ||
-	                               sizeof(T) > kLargeDataSize;
+	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
 
 	template<typename T>
-	concept EnabledToString = requires(const T& object) { object.ToString(); };
+	concept EnabledToString = requires(T object) { object.ToString(); };
 
 	template<typename T>
-	concept EnabledCout = requires(const T& object) { std::cout << object; };
+	concept EnabledCout = requires(T object) { std::cout << object; };
 }
