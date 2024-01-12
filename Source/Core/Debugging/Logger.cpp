@@ -35,12 +35,6 @@ namespace jpt
 	}
 
 	template<>
-	void Logger::Log(ELogType type, int32 line, const char* file, char message, ...)
-	{
-		ProcessMessage(type, line, file, &message);
-	}
-
-	template<>
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		// Parse info from parameters by format
