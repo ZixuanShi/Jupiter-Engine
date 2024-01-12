@@ -479,8 +479,17 @@ namespace jpt
 
 export namespace jpt
 {
-	using String  = BasicString<char>;
+	using String = BasicString<char>;
 	using WString = BasicString<wchar_t>;	// Wide string
+
+	template<typename T>
+	concept BasicStringType = IsSameType<T, String> || IsSameType<T, WString>;
+
+	template<typename T>
+	concept CanBeStringed = Integral<T> || Floating<T> || IsSameType<T, bool> || IsSameType<T, char>;
+
+	template<typename T>
+	concept DisabledBuiltInToString = Primitive<T> || !EnabledToString<T> && CanBeStringed<T>;
 
 	template<typename CharT>
 	BasicString<CharT> operator+(const CharT* leftString, const BasicString<CharT>& rightString)
@@ -488,13 +497,15 @@ export namespace jpt
 		return jpt::BasicString<CharT>(leftString) += rightString;
 	}
 
+	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>
 	String ToString(const T& object)
 	{
 		return object.ToString();
 	}
 
-	template<class StringT = jpt::String, Integral IntT>
+	// int, uint
+	template<BasicStringType StringT = jpt::String, Integral IntT>
 	StringT ToString(IntT integer)
 	{
 		using CharT = StringT::CharT;
@@ -504,7 +515,8 @@ export namespace jpt
 		return integerString;
 	}
 
-	template<class StringT = jpt::String, Floating FloatT>
+	// float, double
+	template<BasicStringType StringT = jpt::String, Floating FloatT>
 	StringT ToString(FloatT value)
 	{
 		using CharT = StringT::CharT;
@@ -514,7 +526,8 @@ export namespace jpt
 		return floatString;
 	}
 
-	template<class StringT = jpt::String>
+	// bool
+	template<BasicStringType StringT = jpt::String>
 	StringT ToString(bool value)
 	{
 		using CharT = StringT::CharT;
@@ -531,8 +544,13 @@ export namespace jpt
 		return boolStr;
 	}
 
+	// char
 	String ToString(char c)
 	{
 		return String(&c);
+	}
+	WString ToString(wchar_t c)
+	{
+		return WString(&c);
 	}
 }
