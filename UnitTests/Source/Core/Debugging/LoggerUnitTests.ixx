@@ -43,7 +43,7 @@ bool UnitTest_Logger_Data()
 
 export bool RunLoggerUnitTests()
 {
-	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Logger_Data(), "UnitTest_Logger_Data Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Logger_Data(), "UnitTest_Logger_Data Failed");
 
 	return true;
 }

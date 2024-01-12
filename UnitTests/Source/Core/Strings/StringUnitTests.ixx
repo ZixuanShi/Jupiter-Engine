@@ -37,10 +37,14 @@ bool UnitTest_DefaultStringConstructing()
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
 
-	//defaultStr.Append('A');
-	//defaultStr += 'A';
-	//defaultStr += 'A';
-	//JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, AAA), 0), "");
+	defaultStr.Reserve(20);
+	for (int32 i = 0; i < 10; ++i)
+	{
+		defaultStr.Append('C');
+		defaultStr += 'A';
+	}
+
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, CACACACACACACACACACA), 0), "");
 
 	return true;
 }

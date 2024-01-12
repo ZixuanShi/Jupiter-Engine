@@ -58,7 +58,7 @@ export namespace jpt
 	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
 
 	template<typename T>
-	concept EnabledToString = !Primitive<T> && requires(T object) { object.ToString(); };
+	concept EnabledToString = requires(T object) { object.ToString(); };
 
 	template<typename T>
 	concept EnabledCout = requires(T object) { std::cout << object; };

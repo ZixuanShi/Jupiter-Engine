@@ -36,6 +36,7 @@ namespace jpt
 		BasicString() = default;
 		BasicString(const CharT* CString, size_t size);
 		BasicString(const CharT* CString);
+		BasicString(CharT c);
 		BasicString(const BasicString<CharT>& otherString);
 		BasicString(BasicString<CharT>&& otherString) noexcept;
 		BasicString& operator=(const CharT* CString);
@@ -87,8 +88,10 @@ namespace jpt
 		void Append(const CharT* CString, size_t newStringSize);
 		void Append(const CharT* CString) { Append(CString, GetCStrLength(CString)); }
 		void Append(const BasicString<CharT>& otherString);
+		void Append(CharT c);
 		BasicString& operator+=(const CharT* CString) { Append(CString); return *this; }
 		BasicString& operator+=(const BasicString<CharT>& otherString) { Append(otherString); return *this; }
+		BasicString& operator+=(CharT c) { Append(c); return *this; }
 		BasicString operator+(const CharT* CString) const;
 		BasicString operator+(const BasicString<CharT>& otherString) const;
 
@@ -135,6 +138,15 @@ namespace jpt
 	BasicString<CharT, AllocatorT>::BasicString(const CharT* CString)
 	{
 		CopyString(CString);
+	}
+
+	template<StringLiteral _CharT, class _AllocatorT>
+	BasicString<_CharT, _AllocatorT>::BasicString(CharT c)
+	{
+		CharT* cString = AllocatorT::AllocateArray(2);
+		cString[0] = c;
+		cString[1] = '\0';
+		MoveString(cString, 1);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
@@ -378,6 +390,16 @@ namespace jpt
 	{
 		JPT_RETURN_IF(otherString.IsEmpty());
 		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
+	}
+
+	template<StringLiteral _CharT, class _AllocatorT>
+	void BasicString<_CharT, _AllocatorT>::Append(CharT c)
+	{
+		CharT* cString = AllocatorT::AllocateArray(2);
+		cString[0] = c;
+		cString[1] = '\0';
+		InsertStringAt(cString, m_size, 1);
+		AllocatorT::DeallocateArray(cString);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>

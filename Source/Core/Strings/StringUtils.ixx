@@ -19,7 +19,7 @@ import jpt.Math;
 
 export namespace jpt
 {
-	/**	@return const CharT* string' string to check for size.'s size */
+	/**	@return const CharT* string' string to check for size.'s size. Excluding '\0' */
 	template<StringLiteral CharT>
 	size_t GetCStrLength(const CharT* string)
 	{
