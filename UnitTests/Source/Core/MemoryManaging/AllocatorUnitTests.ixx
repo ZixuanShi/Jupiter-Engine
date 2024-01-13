@@ -43,7 +43,7 @@ bool UnitTest_AllocatorTrivialType()
 	jpt::Allocator<NumT>::DeallocateArray(pArray);
 
 	// Multi with value initializer list
-	NumT* pMultiWithValue = jpt::Allocator<NumT>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 });
+	NumT* pMultiWithValue = jpt::Allocator<NumT>::AllocateArray(10, { 0,1,2,3,4,5,6,7,8,9 });
 	JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue == nullptr, "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) returned a nullptr");
 	for (size_t i = 0; i < 10; ++i)
 	{

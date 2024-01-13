@@ -508,10 +508,7 @@ export namespace jpt
 	concept BasicStringType = IsSameType<T, String> || IsSameType<T, WString>;
 
 	template<typename T>
-	concept CanBeStringed = Integral<T> || Floating<T> || IsSameType<T, bool> || IsSameType<T, char>;
-
-	template<typename T>
-	concept DisabledBuiltInToString = Primitive<T> || !EnabledToString<T> && CanBeStringed<T>;
+	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;	// Add any additional primitive types if implemented later
 
 	template<typename CharT>
 	BasicString<CharT> operator+(const CharT* leftString, const BasicString<CharT>& rightString)
@@ -567,12 +564,9 @@ export namespace jpt
 	}
 
 	// char
-	String ToString(char c)
+	template<BasicStringType StringT = jpt::String>
+	StringT ToString(typename StringT::CharT c)
 	{
-		return String(&c);
-	}
-	WString ToString(wchar_t c)
-	{
-		return WString(&c);
+		return StringT(c);
 	}
 }
