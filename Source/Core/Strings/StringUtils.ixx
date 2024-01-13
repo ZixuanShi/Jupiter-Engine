@@ -3,7 +3,7 @@
 module;
 
 #include "Debugging/Assert.h"
-#include "Core/Building/Macros.h"
+#include "Core/Minimals/Macros.h"
 
 #include <string.h>
 #include <stdio.h>

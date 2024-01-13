@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Building/Headers.h"
+#include "Core/Minimals/Headers.h"
 
 export module StringUtilsUnitTests;
 

@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Building/Macros.h"
+#include "Core/Minimals/Macros.h"
 #include "Debugging/Assert.h"
 
 export module jpt.String;
