@@ -53,7 +53,7 @@ bool UnitTest_SharedPtr_Class()
 
 	struct B
 	{
-		jpt::SharedPtr<A> m_a;
+		jpt::WeakPtr<A> m_a;
 	};
 
 	jpt::SharedPtr<A> a(new A);

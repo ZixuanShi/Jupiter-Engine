@@ -21,6 +21,7 @@ export import jpt.RandomNumberGenerator;
 export import jpt.Allocator;
 export import jpt.SharedPtr;
 export import jpt.UniquePtr;
+export import jpt.WeakPtr;
 
 // Strings
 export import jpt.StringUtils;

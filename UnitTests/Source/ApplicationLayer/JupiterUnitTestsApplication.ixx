@@ -23,6 +23,7 @@ import RandomNumberGeneratorUnitTests;
 import AllocatorUnitTests;
 import SharedPtrUnitTests;
 import UniquePtrUnitTests;
+import WeakPtrUnitTests;
 
 // Strings
 import StringUtilsUnitTests;
@@ -68,6 +69,7 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 	JPT_RETURN_FALSE_IF_ERROR(!RunAllocatorUnitTests(), "Allocator Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunSharedPtrUnitTests(), "SharedPtr Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUniquePtrUnitTests(), "UniquePtr Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunWeakPtrUnitTests(), "WeakPtr Tests Failed");
 
 	// Strings
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");

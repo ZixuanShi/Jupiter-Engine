@@ -10,30 +10,37 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt_private.Deleter;
 
-export namespace jpt
+namespace jpt
 {
+	template<typename DataT>
+	class WeakPtr;
+
 	/** Retains shared ownership of an object through a pointer. Several shared_ptr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
 		- the last remaining shared_ptr owning the object is destroyed;
 		- the last remaining shared_ptr owning the object is assigned another pointer via operator= or Reset(). */
-	template<typename DataT>
+	export template<typename DataT>
 	class SharedPtr
 	{
+		friend class WeakPtr<DataT>;
+
 	private:
 		DataT* m_pPtr = nullptr;
 		int32* m_pRefCount = nullptr;
+		//DeleterT m_deleter;
 
 	public:
 		constexpr SharedPtr() noexcept = default;
 		explicit SharedPtr(DataT* pPtr) noexcept;
 		SharedPtr(const SharedPtr& other);
 		SharedPtr(SharedPtr&& other) noexcept;
+		SharedPtr(const WeakPtr<DataT>& weakPtr);
 		SharedPtr& operator=(const SharedPtr& other);
 		SharedPtr& operator=(SharedPtr&& other) noexcept;
 		~SharedPtr();
 
 		/** Replaces the managed object with the new pPtr */
 		template<typename DeleterT = jpt_private::DefaultDelete<DataT>>
-		void Reset(DataT* pPtr = nullptr, DeleterT deleter = DeleterT());
+		void Reset(DataT* pPtr = nullptr, const DeleterT& deleter = DeleterT());
 
 		/** @return		Pointer to the managed object or nullptr if no object is owned */
 		DataT* Get() const noexcept { return m_pPtr; }
@@ -50,7 +57,7 @@ export namespace jpt
 		constexpr operator bool() const noexcept { return IsValid(); }
 	};
 
-	template<typename DataT, class... Args>
+	export template<typename DataT, class... Args>
 	[[nodiscard]] SharedPtr<DataT> MakeShared(Args&&... args)
 	{
 		return SharedPtr<DataT>(new DataT(jpt::Forward<Args>(args)...));
@@ -78,6 +85,14 @@ export namespace jpt
 	{
 		other.m_pPtr = nullptr;
 		other.m_pRefCount = nullptr;
+	}
+
+	template<typename DataT>
+	SharedPtr<DataT>::SharedPtr(const WeakPtr<DataT>& weakPtr)
+		: m_pPtr(weakPtr.m_pPtr)
+		, m_pRefCount(weakPtr.m_pRefCount)
+	{
+		++m_pRefCount;
 	}
 
 	template<typename DataT>
@@ -117,7 +132,7 @@ export namespace jpt
 
 	template<typename DataT>
 	template<typename DeleterT>
-	void SharedPtr<DataT>::Reset(DataT* pPtr, DeleterT deleter)
+	void SharedPtr<DataT>::Reset(DataT* pPtr, const DeleterT& deleter)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
