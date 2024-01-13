@@ -4,8 +4,6 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-#include <memory>
-
 export module UniquePtrUnitTests;
 
 import jpt.CoreModules;

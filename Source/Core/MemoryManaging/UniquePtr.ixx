@@ -8,6 +8,7 @@ import jpt_private.Deleter;
 
 export namespace jpt
 {
+	/** Owns and manages another object through a pointer and disposes of that object when the unique_ptr goes out of scope. */
 	export template<typename DataT, class DeleterT = jpt_private::DefaultDelete<DataT>>
 	class UniquePtr
 	{
@@ -17,7 +18,7 @@ export namespace jpt
 
 	public:
 		constexpr UniquePtr() noexcept = default;
-		constexpr UniquePtr(DataT* pPtr) noexcept;
+		explicit UniquePtr(DataT* pPtr) noexcept;
 		constexpr UniquePtr(DataT* pPtr, const DeleterT& deleter) noexcept;
 		constexpr UniquePtr(UniquePtr&& other) noexcept;
 		UniquePtr& operator=(UniquePtr<DataT, DeleterT>&& other) noexcept;
@@ -66,7 +67,7 @@ export namespace jpt
 	}
 
 	template<typename DataT, class DeleterT>
-	constexpr UniquePtr<DataT, DeleterT>::UniquePtr(DataT* pPtr) noexcept
+	UniquePtr<DataT, DeleterT>::UniquePtr(DataT* pPtr) noexcept
 		: m_pPtr(pPtr)
 	{
 	}

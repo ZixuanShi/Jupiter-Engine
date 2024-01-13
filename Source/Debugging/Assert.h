@@ -2,11 +2,12 @@
 
 #pragma once
 
+#if IS_DEBUG
+
 import jpt.TypeDefs;
 
 namespace jpt
 {
-#if IS_DEBUG
 
 	/** Implementation when an assertion has failed
 		@param line:	   Line of the file caused assertion fail
@@ -36,7 +37,7 @@ namespace jpt
 				__debugbreak();\
 			}\
 		} while(false)
-#else
-#define JPT_ASSERT(expression, ...) 
-#endif
 }
+#else
+	#define JPT_ASSERT(expression, ...) 
+#endif

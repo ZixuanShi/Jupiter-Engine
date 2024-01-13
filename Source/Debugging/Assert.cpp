@@ -1,5 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+#if IS_DEBUG
+
 #include "Assert.h"
 
 #include "Logger.h"
@@ -11,7 +13,6 @@ import jpt.String;
 
 namespace jpt
 {
-#if IS_DEBUG
 	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...)
 	{
 		jpt::String message = "Assertion Failed: ";
@@ -40,5 +41,5 @@ namespace jpt
 	{
 		OnAssertionFailed(line, file, expression, nullptr);
 	}
-#endif
 }
+#endif

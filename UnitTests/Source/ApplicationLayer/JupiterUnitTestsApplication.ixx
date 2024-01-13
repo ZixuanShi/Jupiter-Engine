@@ -21,6 +21,7 @@ import RandomNumberGeneratorUnitTests;
 
 // Memory Managing
 import AllocatorUnitTests;
+import SharedPtrUnitTests;
 import UniquePtrUnitTests;
 
 // Strings
@@ -65,6 +66,7 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 
 	// Memory Managing
 	JPT_RETURN_FALSE_IF_ERROR(!RunAllocatorUnitTests(), "Allocator Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunSharedPtrUnitTests(), "SharedPtr Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUniquePtrUnitTests(), "UniquePtr Tests Failed");
 
 	// Strings

@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Logger.h"
-
 #if IS_DEBUG
+
+#include "Logger.h"
 
 #include "Core/Minimals/Macros.h"
 #include "Assert.h"
