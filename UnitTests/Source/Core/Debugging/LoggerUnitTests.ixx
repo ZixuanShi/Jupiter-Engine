@@ -19,6 +19,7 @@ bool UnitTest_Logger_Data()
 	JPT_LOG(false);
 	JPT_LOG(true);
 	JPT_LOG('C');
+	JPT_LOG('a');
 	JPT_LOG("I'm genius");
 
 	class Foo

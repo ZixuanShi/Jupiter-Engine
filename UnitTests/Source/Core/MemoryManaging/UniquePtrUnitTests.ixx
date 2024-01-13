@@ -56,25 +56,126 @@ bool UnitTest_UniquePtr_Char()
 	jpt::UniquePtr<char, decltype(deleter)> source = jpt::UniquePtr<char, decltype(deleter)>(new char('A'), deleter);
 	jpt::UniquePtr<char, decltype(deleter)> other  = jpt::UniquePtr<char, decltype(deleter)>(new char('B'), deleter);
 	source = jpt::Move(other);
+	JPT_RETURN_FALSE_IF_ERROR(*source != 'B', "");
 
 	jpt::UniquePtr<char[]> charArray(jpt::Allocator<char>::AllocateArray(10, {'A', 'B', 'C', 'A'}));
-	//JPT_LOG("%c", charArray.Get()[0]);
-	//JPT_LOG("%c", charArray.Get()[1]);
-	//JPT_LOG("%c", charArray.Get()[2]);
-	//JPT_LOG("%c", charArray.Get()[3]);
-	//JPT_LOG("%c", charArray.Get()[4]);
-	//JPT_LOG("%c", charArray.Get()[5]);
+	//JPT_LOG(charArray.Get()[0]);
+	//JPT_LOG(charArray.Get()[1]);
+	//JPT_LOG(charArray.Get()[2]);
+	//JPT_LOG(charArray.Get()[3]);
+	//JPT_LOG(charArray.Get()[4]);
+	//JPT_LOG(charArray.Get()[5]);
 
 	return true;
 }
 
 bool UnitTest_UniquePtr_Int()
 {
+	auto deleter = [](int32* pint32Ptr)
+		{
+			//JPT_LOG("Deleted a int32 %d", *pint32Ptr);
+			delete pint32Ptr;
+		};
+
+	auto deleter2 = [](int32* pint32Ptr)
+		{
+			//JPT_LOG("Another Deleted a int32 %d", *pint32Ptr);
+			delete pint32Ptr;
+		};
+
+	jpt::UniquePtr<int32> uniqueint32 = jpt::MakeUnique<int32>(42);
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueint32.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueint32, "");
+	JPT_RETURN_FALSE_IF_ERROR(*uniqueint32 != 42, "");
+
+	uniqueint32.Reset(new int32(42));
+	JPT_RETURN_FALSE_IF_ERROR(*uniqueint32 != 42, "");
+
+	int32* c = uniqueint32.Release();
+	JPT_RETURN_FALSE_IF_ERROR(uniqueint32, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueint32.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(*c != 42, "");
+	delete c;
+
+	jpt::UniquePtr<int32, decltype(deleter)> customDeleterUniquePtr = jpt::UniquePtr<int32, decltype(deleter)>(new int32(42), deleter);
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(*customDeleterUniquePtr != 42, "");
+
+	customDeleterUniquePtr.Reset(new int32(42));
+	JPT_RETURN_FALSE_IF_ERROR(*customDeleterUniquePtr != 42, "");
+
+	jpt::UniquePtr<int32, decltype(deleter2)> otherCustomDeleterUniquePtr = jpt::UniquePtr<int32, decltype(deleter2)>(new int32(42), deleter2);
+
+	otherCustomDeleterUniquePtr.GetDeleter()(customDeleterUniquePtr.Release());
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(*otherCustomDeleterUniquePtr != 42, "");
+
+	jpt::UniquePtr<int32, decltype(deleter)> source = jpt::UniquePtr<int32, decltype(deleter)>(new int32(105), deleter);
+	jpt::UniquePtr<int32, decltype(deleter)> other = jpt::UniquePtr<int32, decltype(deleter)>(new int32(101), deleter);
+	source = jpt::Move(other);
+
+	jpt::UniquePtr<int32[]> int32Array(jpt::Allocator<int32>::AllocateArray(10, { 1, 2, 3, 4 }));
+	//JPT_LOG(int32Array.Get()[0]);
+	//JPT_LOG(int32Array.Get()[1]);
+	//JPT_LOG(int32Array.Get()[2]);
+	//JPT_LOG(int32Array.Get()[3]);
+	//JPT_LOG(int32Array.Get()[4]);
+	//JPT_LOG(int32Array.Get()[5]);
+
 	return true;
 }
 
 bool UnitTest_UniquePtr_String()
 {
+	using String = jpt::String;
+
+	auto deleter = [](String* pStringPtr)
+		{
+			//JPT_LOG("Deleted a String %s", pStringPtr->ConstBuffer());
+			delete pStringPtr;
+		};
+
+	auto deleter2 = [](String* pStringPtr)
+		{
+			//JPT_LOG("Another Deleted a String %s", pStringPtr->ConstBuffer());
+			delete pStringPtr;
+		};
+
+	jpt::UniquePtr<String> uniqueString = jpt::MakeUnique<String>("Jupiter");
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueString.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueString, "");
+	JPT_RETURN_FALSE_IF_ERROR(*uniqueString != "Jupiter", "");
+
+	uniqueString.Reset(new String("Engine"));
+	JPT_RETURN_FALSE_IF_ERROR(*uniqueString != "Engine", "");
+
+	String* c = uniqueString.Release();
+	JPT_RETURN_FALSE_IF_ERROR(uniqueString, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueString.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(*c != "Engine", "");
+	delete c;
+
+	jpt::UniquePtr<String, decltype(deleter)> customDeleterUniquePtr = jpt::UniquePtr<String, decltype(deleter)>(new String("Jupiter"), deleter);
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(*customDeleterUniquePtr != "Jupiter", "");
+
+	customDeleterUniquePtr.Reset(new String("Engine"));
+	JPT_RETURN_FALSE_IF_ERROR(*customDeleterUniquePtr != "Engine", "");
+
+	jpt::UniquePtr<String, decltype(deleter2)> otherCustomDeleterUniquePtr = jpt::UniquePtr<String, decltype(deleter2)>(new String("Engine"), deleter2);
+
+	otherCustomDeleterUniquePtr.GetDeleter()(customDeleterUniquePtr.Release());
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(*otherCustomDeleterUniquePtr != "Engine", "");
+
+	jpt::UniquePtr<String, decltype(deleter)> source = jpt::UniquePtr<String, decltype(deleter)>(new String("105"), deleter);
+	jpt::UniquePtr<String, decltype(deleter)> other = jpt::UniquePtr<String, decltype(deleter)>(new String("101"), deleter);
+	source = jpt::Move(other);
+
 	return true;
 }
 
@@ -87,23 +188,76 @@ bool UnitTest_UniquePtr_Class()
 
 		Foo() = default;
 		Foo(int32 left, char right) : m_left(left), m_right(right) {}
+
+		jpt::String ToString() const 
+		{
+			jpt::String result;
+			result += jpt::ToString(m_left);
+			result += ' ';
+			result += jpt::ToString(m_right);
+			return result;
+		}
 	};
 
-	class Bar
-	{
-		jpt::UniquePtr<Foo> m_pFoo;
-	};
+	auto deleter = [](Foo* pFooPtr)
+		{
+			//JPT_LOG("Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
+			delete pFooPtr;
+		};
 
-	{
-		std::unique_ptr<Foo> pFoo = std::make_unique<Foo>(10, 'H');
-		pFoo->m_left;
-		pFoo->m_right;
-	}
+	auto deleter2 = [](Foo* pFooPtr)
+		{
+			//JPT_LOG("Another Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
+			delete pFooPtr;
+		};
 
-	{
-		jpt::UniquePtr<Foo> pFoo = jpt::MakeUnique<Foo>(10, 'H');
+	jpt::UniquePtr<Foo> uniqueFoo = jpt::MakeUnique<Foo>(42, 'C');
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueFoo.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!uniqueFoo, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo->m_left != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo->m_right != 'C', "");
 
-	}
+	uniqueFoo.Reset(new Foo(41, 'D'));
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo->m_left != 41, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo->m_right != 'D', "");
+
+	Foo* c = uniqueFoo.Release();
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo, "");
+	JPT_RETURN_FALSE_IF_ERROR(uniqueFoo.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(c->m_left != 41, "");
+	JPT_RETURN_FALSE_IF_ERROR(c->m_right != 'D', "");
+	delete c;
+
+	jpt::UniquePtr<Foo, decltype(deleter)> customDeleterUniquePtr = jpt::UniquePtr<Foo, decltype(deleter)>(new Foo(42, 'C'), deleter);
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr->m_left != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr->m_right != 'C', "");
+
+	customDeleterUniquePtr.Reset(new Foo(42, 'C'));
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr->m_left != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr->m_right != 'C', "");
+
+	jpt::UniquePtr<Foo, decltype(deleter2)> otherCustomDeleterUniquePtr = jpt::UniquePtr<Foo, decltype(deleter2)>(new Foo(42, 'C'), deleter2);
+
+	otherCustomDeleterUniquePtr.GetDeleter()(customDeleterUniquePtr.Release());
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr, "");
+	JPT_RETURN_FALSE_IF_ERROR(customDeleterUniquePtr.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(otherCustomDeleterUniquePtr->m_left != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(otherCustomDeleterUniquePtr->m_right != 'C', "");
+
+	jpt::UniquePtr<Foo, decltype(deleter)> source = jpt::UniquePtr<Foo, decltype(deleter)>(new Foo(42, 'a'), deleter);
+	jpt::UniquePtr<Foo, decltype(deleter)> other = jpt::UniquePtr<Foo, decltype(deleter)>(new Foo(43, 'c'), deleter);
+	source = jpt::Move(other);
+
+	jpt::UniquePtr<Foo[]> FooArray(jpt::Allocator<Foo>::AllocateArray(10, { {1, 'a'}, {2, 'b'}, {3, 'c'}, {4, 'd'} }));
+	//JPT_LOG(FooArray.Get()[0]);
+	//JPT_LOG(FooArray.Get()[1]);
+	//JPT_LOG(FooArray.Get()[2]);
+	//JPT_LOG(FooArray.Get()[3]);
+	//JPT_LOG(FooArray.Get()[4]);
+	//JPT_LOG(FooArray.Get()[5]);
+
 	return true;
 }
 

@@ -34,12 +34,6 @@ export namespace jpt
 		/** Allocates heap memory for one <Type>, with initializing value */
 		static T* AllocateWithValue(const T& data);
 
-		/** Allocates heap memory for desired amount of memory for <Type> with init values
-			@param count		How many <Type> objects to allocate 
-			@param values		An pointer to an array for each allocated objects initializing value. */
-		static T* AllocateMultiWithValue(size_t count, const T* pValues);
-		static T* AllocateMultiWithValue(size_t count, const std::initializer_list<T>& values);
-
 		/** Deallocate memory for the passed in pointer */
 		static void Deallocate(T* pPointer);
 		static void DeallocateArray(T* pArray);
@@ -81,29 +75,6 @@ export namespace jpt
 		T* pPointer = static_cast<T*>(::operator new(sizeof(T)));
 		*pPointer = data;
 		return pPointer;
-	}
-
-	template<typename T>
-	T* Allocator<T>::AllocateMultiWithValue(size_t count, const T* pValues)
-	{
-		T* pArray = static_cast<T*>(::operator new(count * sizeof(T)));
-		std::memcpy(pArray, pValues, count * sizeof(T));
-		return pArray;
-	}
-
-	template<typename T>
-	T* Allocator<T>::AllocateMultiWithValue(size_t count, const std::initializer_list<T>& values)
-	{
-		T* pArray = static_cast<T*>(::operator new(count * sizeof(T)));
-
-		size_t i = 0;
-		for (auto itr = values.begin(); itr != values.end(); ++itr)
-		{
-			pArray[i] = *itr;
-			++i;
-		}
-
-		return pArray;
 	}
 
 	template<typename T>
