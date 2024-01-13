@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Debugging/Assert.h"
+#include "Debugging/Assert.h"
 
 #include <time.h>
 #include <limits>

@@ -6,5 +6,5 @@
 #include "Macros.h"
 
 // Debugging
-#include "Core/Debugging/Assert.h"
-#include "Core/Debugging/Logger.h"
+#include "Debugging/Assert.h"
+#include "Debugging/Logger.h"
