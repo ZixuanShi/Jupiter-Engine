@@ -6,23 +6,23 @@ module;
 
 #include <memory>
 
-export module SharedPtrUnitTests;
+export module StrongPtrUnitTests;
 
 import jpt.CoreModules;
 
-bool UnitTest_SharedPtr_Char()
+bool UnitTest_StrongPtr_Char()
 {
-	jpt::SharedPtr<char> sharedCharPtr1 = jpt::MakeShared<char>('C');
+	jpt::StrongPtr<char> sharedCharPtr1 = jpt::MakeShared<char>('C');
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1.IsValid(), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1, "");
 	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr1 != 'C', "");
 	
-	jpt::SharedPtr<char> sharedCharPtr2 = sharedCharPtr1;
+	jpt::StrongPtr<char> sharedCharPtr2 = sharedCharPtr1;
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr2.IsValid(), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr2, "");
 	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr2 != 'C', "");
 
-	jpt::SharedPtr<char> sharedCharPtr3 = sharedCharPtr1;
+	jpt::StrongPtr<char> sharedCharPtr3 = sharedCharPtr1;
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3.IsValid(), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3, "");
 	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr3 != 'C', "");
@@ -43,13 +43,13 @@ bool UnitTest_SharedPtr_Char()
 	return true;
 }
 
-bool UnitTest_SharedPtr_Class()
+bool UnitTest_StrongPtr_Class()
 {
 	struct Bar;
 
 	struct Foo
 	{
-		jpt::SharedPtr<Bar> m_bar;
+		jpt::StrongPtr<Bar> m_bar;
 	};
 
 	struct Bar
@@ -57,8 +57,8 @@ bool UnitTest_SharedPtr_Class()
 		jpt::WeakPtr<Foo> m_foo;
 	};
 
-	jpt::SharedPtr<Foo> foo(new Foo);
-	jpt::SharedPtr<Bar> bar(new Bar);
+	jpt::StrongPtr<Foo> foo(new Foo);
+	jpt::StrongPtr<Bar> bar(new Bar);
 
 	foo->m_bar = bar;
 	bar->m_foo = foo;
@@ -66,7 +66,7 @@ bool UnitTest_SharedPtr_Class()
 	return true;
 }
 
-bool UnitTest_SharedPtr_Class2()
+bool UnitTest_StrongPtr_Class2()
 {
 	struct Bar;
 	
@@ -76,11 +76,11 @@ bool UnitTest_SharedPtr_Class2()
 	};
 	struct Bar
 	{
-		jpt::SharedPtr<Foo> m_foo;
+		jpt::StrongPtr<Foo> m_foo;
 	};
 
-	jpt::SharedPtr<Foo> foo(new Foo);
-	jpt::SharedPtr<Bar> bar(new Bar);
+	jpt::StrongPtr<Foo> foo(new Foo);
+	jpt::StrongPtr<Bar> bar(new Bar);
 
 	foo->m_bar = bar;
 	bar->m_foo = foo;
@@ -89,8 +89,8 @@ bool UnitTest_SharedPtr_Class2()
 
 	jpt::WeakPtr<Foo> weakFoo;
 	jpt::WeakPtr<Foo> weakFoo2;
-	jpt::SharedPtr<Foo> sharedFoo1(new Foo);
-	jpt::SharedPtr<Foo> sharedFoo2(new Foo);
+	jpt::StrongPtr<Foo> sharedFoo1(new Foo);
+	jpt::StrongPtr<Foo> sharedFoo2(new Foo);
 	weakFoo = sharedFoo1;
 	weakFoo = sharedFoo2;
 	weakFoo = weakFoo2;
@@ -100,11 +100,11 @@ bool UnitTest_SharedPtr_Class2()
 	return true;
 }
 
-export bool RunSharedPtrUnitTests()
+export bool RunStrongPtrUnitTests()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_SharedPtr_Char(), "UnitTest_UniquePtr_Char Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_SharedPtr_Class(), "UnitTest_SharedPtr_Class Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_SharedPtr_Class2(), "UnitTest_SharedPtr_Class2 Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Char(), "UnitTest_UniquePtr_Char Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Class(), "UnitTest_StrongPtr_Class Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Class2(), "UnitTest_StrongPtr_Class2 Failed");
 
 	return true;
 }

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Macros.h"
 
-export module jpt.SharedPtr;
+export module jpt.StrongPtr;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
@@ -16,11 +16,11 @@ namespace jpt
 	template<typename DataT>
 	class WeakPtr;
 
-	/** Retains shared ownership of an object through a pointer. Several shared_ptr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
-		- the last remaining shared_ptr owning the object is destroyed;
-		- the last remaining shared_ptr owning the object is assigned another pointer via operator= or Reset(). */
+	/** Retains shared ownership of an object through a pointer. Several StrongPtr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
+		- the last remaining StrongPtr owning the object is destroyed;
+		- the last remaining StrongPtr owning the object is assigned another pointer via operator= or Reset(). */
 	export template<typename DataT>
-	class SharedPtr
+	class StrongPtr
 	{
 		friend class WeakPtr<DataT>;
 
@@ -29,13 +29,13 @@ namespace jpt
 		jpt_private::ReferenceCounter* m_pRefCount = nullptr;
 
 	public:
-		constexpr SharedPtr() noexcept = default;
-		explicit SharedPtr(DataT* pPtr) noexcept;
-		SharedPtr(const SharedPtr& other);
-		SharedPtr(SharedPtr&& other) noexcept;
-		SharedPtr& operator=(const SharedPtr& other);
-		SharedPtr& operator=(SharedPtr&& other) noexcept;
-		~SharedPtr();
+		constexpr StrongPtr() noexcept = default;
+		explicit StrongPtr(DataT* pPtr) noexcept;
+		StrongPtr(const StrongPtr& other);
+		StrongPtr(StrongPtr&& other) noexcept;
+		StrongPtr& operator=(const StrongPtr& other);
+		StrongPtr& operator=(StrongPtr&& other) noexcept;
+		~StrongPtr();
 
 		/** Replaces the managed object with the new pPtr */
 		template<typename DeleterT = jpt_private::DefaultDelete<DataT>>
@@ -44,7 +44,7 @@ namespace jpt
 		/** @return		Pointer to the managed object or nullptr if no object is owned */
 		DataT* Get() const noexcept { return m_pPtr; }
 
-		/** @returns    number of SharedPtr objects referring to the same managed object */
+		/** @returns    number of StrongPtr objects referring to the same managed object */
 		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
 
 		/** @return		Reference or pointer to the managed object */
@@ -57,20 +57,20 @@ namespace jpt
 	};
 
 	export template<typename DataT, class... Args>
-	[[nodiscard]] SharedPtr<DataT> MakeShared(Args&&... args)
+	[[nodiscard]] StrongPtr<DataT> MakeShared(Args&&... args)
 	{
-		return SharedPtr<DataT>(new DataT(jpt::Forward<Args>(args)...));
+		return StrongPtr<DataT>(new DataT(jpt::Forward<Args>(args)...));
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>::SharedPtr(DataT* pPtr) noexcept
+	StrongPtr<DataT>::StrongPtr(DataT* pPtr) noexcept
 		: m_pPtr(pPtr)
 		, m_pRefCount(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>::SharedPtr(const SharedPtr& other)
+	StrongPtr<DataT>::StrongPtr(const StrongPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCount(other.m_pRefCount)
 	{
@@ -81,7 +81,7 @@ namespace jpt
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>::SharedPtr(SharedPtr&& other) noexcept
+	StrongPtr<DataT>::StrongPtr(StrongPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCount(other.m_pRefCount)
 	{
@@ -90,7 +90,7 @@ namespace jpt
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>& SharedPtr<DataT>::operator=(const SharedPtr& other)
+	StrongPtr<DataT>& StrongPtr<DataT>::operator=(const StrongPtr& other)
 	{
 		if (this != &other)
 		{
@@ -112,7 +112,7 @@ namespace jpt
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>& SharedPtr<DataT>::operator=(SharedPtr&& other) noexcept
+	StrongPtr<DataT>& StrongPtr<DataT>::operator=(StrongPtr&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -127,14 +127,14 @@ namespace jpt
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT>::~SharedPtr()
+	StrongPtr<DataT>::~StrongPtr()
 	{
 		Reset(nullptr);
 	}
 
 	template<typename DataT>
 	template<typename DeleterT>
-	void SharedPtr<DataT>::Reset(DataT* pPtr, const DeleterT& deleter)
+	void StrongPtr<DataT>::Reset(DataT* pPtr, const DeleterT& deleter)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)

@@ -63,13 +63,13 @@ bool UnitTests_WeakPtr_Class()
 	JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 0, "");
 
 	{
-		jpt::SharedPtr<Foo> fooShared1 = jpt::MakeShared<Foo>(42, 'C');
+		jpt::StrongPtr<Foo> fooShared1 = jpt::MakeShared<Foo>(42, 'C');
 		fooWeak = fooShared1;
 
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 1, "");
 
-		jpt::SharedPtr<Foo> fooShared2 = fooWeak.Lock();
+		jpt::StrongPtr<Foo> fooShared2 = fooWeak.Lock();
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 2, "");
 		JPT_RETURN_FALSE_IF_ERROR(fooShared2.GetRefCount() != 2, "");

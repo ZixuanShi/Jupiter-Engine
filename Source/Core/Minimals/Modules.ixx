@@ -19,7 +19,7 @@ export import jpt.RandomNumberGenerator;
 
 // Memory Managing
 export import jpt.Allocator;
-export import jpt.SharedPtr;
+export import jpt.StrongPtr;
 export import jpt.UniquePtr;
 export import jpt.WeakPtr;
 

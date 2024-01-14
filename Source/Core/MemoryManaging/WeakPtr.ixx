@@ -12,10 +12,10 @@ import jpt_private.ReferenceCounter;
 export namespace jpt
 {
 	template<typename DataT>
-	class SharedPtr;
+	class StrongPtr;
 
-	/** Holds a non-owning ("weak") reference to an object that is managed by jpt::SharedPtr.
-		It must be converted to jpt::SharedPtr in order to access the referenced object */
+	/** Holds a non-owning ("weak") reference to an object that is managed by jpt::StrongPtr.
+		It must be converted to jpt::StrongPtr in order to access the referenced object */
 	template<typename DataT>
 	class WeakPtr
 	{
@@ -27,23 +27,23 @@ export namespace jpt
 		constexpr WeakPtr() noexcept = default;
 		WeakPtr(const WeakPtr& other);
 		WeakPtr(WeakPtr&& other) noexcept;
-		WeakPtr(const SharedPtr<DataT>& shared);
+		WeakPtr(const StrongPtr<DataT>& shared);
 		WeakPtr& operator=(const WeakPtr& other);
-		WeakPtr& operator=(const SharedPtr<DataT>& shared);
+		WeakPtr& operator=(const StrongPtr<DataT>& shared);
 		WeakPtr& operator=(WeakPtr&& other) noexcept;
 		~WeakPtr();
 
 		/** Releases the ownership of the managed object */
 		void Reset();
 
-		/** @return		number of SharedPtr objects referring to the same managed object */
+		/** @return		number of StrongPtr objects referring to the same managed object */
 		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
 		bool IsExpired() const { return m_pRefCount ? GetRefCount() == 0 : true; }
 
 		/** @return		a shared_ptr that manages the referenced object */
-		SharedPtr<DataT> Lock() const;
+		StrongPtr<DataT> Lock() const;
 	};
 
 	template<typename DataT>
@@ -89,7 +89,7 @@ export namespace jpt
 	}
 
 	template<typename DataT>
-	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const SharedPtr<DataT>& shared)
+	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const StrongPtr<DataT>& shared)
 	{
 		if (m_pRefCount && m_pRefCount->HasAnyWeakRef())
 		{
@@ -123,7 +123,7 @@ export namespace jpt
 	}
 
 	template<typename DataT>
-	WeakPtr<DataT>::WeakPtr(const SharedPtr<DataT>& shared)
+	WeakPtr<DataT>::WeakPtr(const StrongPtr<DataT>& shared)
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCount(shared.m_pRefCount)
 	{
@@ -155,18 +155,18 @@ export namespace jpt
 	}
 
 	template<typename DataT>
-	SharedPtr<DataT> WeakPtr<DataT>::Lock() const
+	StrongPtr<DataT> WeakPtr<DataT>::Lock() const
 	{
 		if (m_pPtr && m_pRefCount)
 		{
 			m_pRefCount->IncrementStrongRef();
 
-			SharedPtr<DataT> shared;
+			StrongPtr<DataT> shared;
 			shared.m_pPtr = m_pPtr;
 			shared.m_pRefCount = m_pRefCount;
 			return shared;
 		}
 
-		return SharedPtr<DataT>();
+		return StrongPtr<DataT>();
 	}
 }

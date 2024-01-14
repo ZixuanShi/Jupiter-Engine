@@ -21,7 +21,7 @@ import RandomNumberGeneratorUnitTests;
 
 // Memory Managing
 import AllocatorUnitTests;
-import SharedPtrUnitTests;
+import StrongPtrUnitTests;
 import UniquePtrUnitTests;
 import WeakPtrUnitTests;
 
@@ -67,7 +67,7 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 
 	// Memory Managing
 	JPT_RETURN_FALSE_IF_ERROR(!RunAllocatorUnitTests(), "Allocator Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunSharedPtrUnitTests(), "SharedPtr Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunStrongPtrUnitTests(), "StrongPtr Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUniquePtrUnitTests(), "UniquePtr Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunWeakPtrUnitTests(), "WeakPtr Tests Failed");
 
