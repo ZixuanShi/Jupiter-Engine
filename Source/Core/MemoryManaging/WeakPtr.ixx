@@ -21,7 +21,7 @@ export namespace jpt
 	{
 	private:
 		DataT* m_pPtr = nullptr;
-		jpt_private::ReferenceCounter* m_pRefCount = nullptr;
+		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
 
 	public:
 		constexpr WeakPtr() noexcept = default;
@@ -34,36 +34,39 @@ export namespace jpt
 		~WeakPtr();
 
 		/** Releases the ownership of the managed object */
-		void Reset();
+		void Reset() { Reset(nullptr); }
 
 		/** @return		number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
+		int32 GetRefCount() const { return m_pRefCounter ? m_pRefCounter->GetSharedRefs() : 0; }
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
-		bool IsExpired() const { return m_pRefCount ? GetRefCount() == 0 : true; }
+		bool IsExpired() const { return m_pRefCounter ? GetRefCount() == 0 : true; }
 
 		/** @return		a shared_ptr that manages the referenced object */
 		StrongPtr<DataT> Lock() const;
+
+	private:
+		void Reset(DataT* pPtr);
 	};
 
 	template<typename DataT>
 	WeakPtr<DataT>::WeakPtr(const WeakPtr& other)
 		: m_pPtr(other.m_pPtr)
-		, m_pRefCount(other.m_pRefCount)
+		, m_pRefCounter(other.m_pRefCounter)
 	{
-		if (m_pRefCount)
+		if (m_pRefCounter)
 		{
-			m_pRefCount->IncrementWeakRef();
+			m_pRefCounter->IncrementWeakRef();
 		}
 	}
 
 	template<typename DataT>
 	WeakPtr<DataT>::WeakPtr(WeakPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
-		, m_pRefCount(other.m_pRefCount)
+		, m_pRefCounter(other.m_pRefCounter)
 	{
 		other.m_pPtr = nullptr;
-		other.m_pRefCount = nullptr;
+		other.m_pRefCounter = nullptr;
 	}
 
 	template<typename DataT>
@@ -71,14 +74,12 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			Reset();
+			Reset(other.m_pPtr);
+			m_pRefCounter = other.m_pRefCounter;
 
-			m_pPtr = other.m_pPtr;
-			m_pRefCount = other.m_pRefCount;
-
-			if (m_pPtr)
+			if (m_pRefCounter)
 			{
-				m_pRefCount->IncrementWeakRef();
+				m_pRefCounter->IncrementWeakRef();
 			}
 		}
 
@@ -88,14 +89,12 @@ export namespace jpt
 	template<typename DataT>
 	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const StrongPtr<DataT>& shared)
 	{
-		Reset();
+		Reset(shared.m_pPtr);
+		m_pRefCounter = shared.m_pRefCounter;
 
-		m_pPtr = shared.m_pPtr;
-		m_pRefCount = shared.m_pRefCount;
-
-		if (m_pRefCount)
+		if (m_pRefCounter)
 		{
-			m_pRefCount->IncrementWeakRef();
+			m_pRefCounter->IncrementWeakRef();
 		}
 
 		return *this;
@@ -107,10 +106,10 @@ export namespace jpt
 		if (this != &other)
 		{
 			m_pPtr = other.m_pPtr;
-			m_pRefCount = other.m_pRefCount;
+			m_pRefCounter = other.m_pRefCounter;
 
 			other.m_pPtr = nullptr;
-			other.m_pRefCount = nullptr;
+			other.m_pRefCounter = nullptr;
 		}
 
 		return *this;
@@ -119,48 +118,48 @@ export namespace jpt
 	template<typename DataT>
 	WeakPtr<DataT>::WeakPtr(const StrongPtr<DataT>& shared)
 		: m_pPtr(shared.m_pPtr)
-		, m_pRefCount(shared.m_pRefCount)
+		, m_pRefCounter(shared.m_pRefCount)
 	{
-		if (m_pRefCount)
+		if (m_pRefCounter)
 		{
-			m_pRefCount->IncrementWeakRef();
+			m_pRefCounter->IncrementWeakRef();
 		}
 	}
 
 	template<typename DataT>
 	WeakPtr<DataT>::~WeakPtr()
 	{
-		Reset();
-	}
-
-	template<typename DataT>
-	void WeakPtr<DataT>::Reset()
-	{
-		m_pPtr = nullptr;
-		
-		if (m_pRefCount)
-		{
-			m_pRefCount->DecrementWeakRef();
-			if (!m_pRefCount->HasAnyRef())
-			{
-				JPT_DELETE(m_pRefCount);
-			}
-		}
+		Reset(nullptr);
 	}
 
 	template<typename DataT>
 	StrongPtr<DataT> WeakPtr<DataT>::Lock() const
 	{
-		if (m_pPtr && m_pRefCount)
+		if (m_pPtr && m_pRefCounter)
 		{
-			m_pRefCount->IncrementStrongRef();
+			m_pRefCounter->IncrementStrongRef();
 
 			StrongPtr<DataT> shared;
 			shared.m_pPtr = m_pPtr;
-			shared.m_pRefCount = m_pRefCount;
+			shared.m_pRefCounter = m_pRefCounter;
 			return shared;
 		}
 
 		return StrongPtr<DataT>();
+	}
+
+	template<typename DataT>
+	void WeakPtr<DataT>::Reset(DataT* pPtr)
+	{
+		m_pPtr = pPtr;
+
+		if (m_pRefCounter)
+		{
+			m_pRefCounter->DecrementWeakRef();
+			if (!m_pRefCounter->HasAnyRef())
+			{
+				JPT_DELETE(m_pRefCounter);
+			}
+		}
 	}
 }

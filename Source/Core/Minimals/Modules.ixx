@@ -24,8 +24,9 @@ export import jpt.UniquePtr;
 export import jpt.WeakPtr;
 
 // Strings
-export import jpt.StringUtils;
 export import jpt.String;
+export import jpt.StringUtils;
+export import jpt.StringView;
 
 // Timing
 export import jpt.TimingUtils;

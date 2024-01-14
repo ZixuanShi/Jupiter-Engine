@@ -26,7 +26,7 @@ namespace jpt
 
 	private:
 		DataT* m_pPtr = nullptr;
-		jpt_private::ReferenceCounter* m_pRefCount = nullptr;
+		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
 
 	public:
 		constexpr StrongPtr() noexcept = default;
@@ -45,7 +45,7 @@ namespace jpt
 		DataT* Get() const noexcept { return m_pPtr; }
 
 		/** @returns    number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
+		int32 GetRefCount() const { return m_pRefCounter ? m_pRefCounter->GetSharedRefs() : 0; }
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr DataT& operator*() const noexcept { return *Get(); }
@@ -65,28 +65,28 @@ namespace jpt
 	template<typename DataT>
 	StrongPtr<DataT>::StrongPtr(DataT* pPtr) noexcept
 		: m_pPtr(pPtr)
-		, m_pRefCount(new jpt_private::ReferenceCounter(1, 0))
+		, m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
 	template<typename DataT>
 	StrongPtr<DataT>::StrongPtr(const StrongPtr& other)
 		: m_pPtr(other.m_pPtr)
-		, m_pRefCount(other.m_pRefCount)
+		, m_pRefCounter(other.m_pRefCounter)
 	{
-		if (m_pRefCount)
+		if (m_pRefCounter)
 		{
-			m_pRefCount->IncrementStrongRef();
+			m_pRefCounter->IncrementStrongRef();
 		}
 	}
 
 	template<typename DataT>
 	StrongPtr<DataT>::StrongPtr(StrongPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
-		, m_pRefCount(other.m_pRefCount)
+		, m_pRefCounter(other.m_pRefCounter)
 	{
 		other.m_pPtr = nullptr;
-		other.m_pRefCount = nullptr;
+		other.m_pRefCounter = nullptr;
 	}
 
 	template<typename DataT>
@@ -94,17 +94,17 @@ namespace jpt
 	{
 		if (this != &other)
 		{
-			if (m_pRefCount && m_pRefCount->HasAnySharedRef())
+			if (m_pRefCounter && m_pRefCounter->HasAnySharedRef())
 			{
-				m_pRefCount->DecrementStrongRef();
+				m_pRefCounter->DecrementStrongRef();
 			}
 
 			m_pPtr = other.m_pPtr;
-			m_pRefCount = other.m_pRefCount;
+			m_pRefCounter = other.m_pRefCounter;
 
-			if (m_pRefCount)
+			if (m_pRefCounter)
 			{
-				m_pRefCount->IncrementStrongRef();
+				m_pRefCounter->IncrementStrongRef();
 			}
 		}
 
@@ -117,10 +117,10 @@ namespace jpt
 		if (this != &other)
 		{
 			m_pPtr = other.m_pPtr;
-			m_pRefCount = other.m_pRefCount;
+			m_pRefCounter = other.m_pRefCounter;
 
 			other.m_pPtr = nullptr;
-			other.m_pRefCount = nullptr;
+			other.m_pRefCounter = nullptr;
 		}
 
 		return *this;
@@ -139,14 +139,14 @@ namespace jpt
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
 		{
-			m_pRefCount->DecrementStrongRef();
+			m_pRefCounter->DecrementStrongRef();
 
-			if (!m_pRefCount->HasAnyRef())
+			if (!m_pRefCounter->HasAnyRef())
 			{
-				JPT_DELETE(m_pRefCount);
+				JPT_DELETE(m_pRefCounter);
 			}
 
-			if (!m_pRefCount || !m_pRefCount->HasAnySharedRef())
+			if (!m_pRefCounter || !m_pRefCounter->HasAnySharedRef())
 			{
 				deleter(m_pPtr);
 			}
@@ -155,7 +155,7 @@ namespace jpt
 
 			if (m_pPtr)
 			{
-				m_pRefCount = new jpt_private::ReferenceCounter(1, 0);
+				m_pRefCounter = new jpt_private::ReferenceCounter(1, 0);
 			}
 		}
 	}

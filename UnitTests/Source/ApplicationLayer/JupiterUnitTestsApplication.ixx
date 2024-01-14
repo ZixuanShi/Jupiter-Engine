@@ -28,6 +28,7 @@ import WeakPtrUnitTests;
 // Strings
 import StringUtilsUnitTests;
 import StringUnitTests;
+import StringViewUnitTests;
 
 // Timing
 import TimingUtilsUnitTests;
@@ -72,8 +73,9 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 	JPT_RETURN_FALSE_IF_ERROR(!RunWeakPtrUnitTests(), "WeakPtr Tests Failed");
 
 	// Strings
-	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringUnitTests(), "String Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunStringViewUnitTests(), "StringView Tests Failed");
 
 	// Timing
 	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUtilsUnitTests(), "TimingUtils Tests Failed");
