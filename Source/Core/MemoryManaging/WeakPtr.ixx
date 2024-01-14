@@ -27,9 +27,10 @@ export namespace jpt
 		constexpr WeakPtr() noexcept = default;
 		WeakPtr(const WeakPtr& other);
 		WeakPtr(WeakPtr&& other) noexcept;
-		WeakPtr& operator=(const WeakPtr& other);
-		WeakPtr& operator=(WeakPtr&& other) noexcept;
 		WeakPtr(const SharedPtr<DataT>& shared);
+		WeakPtr& operator=(const WeakPtr& other);
+		WeakPtr& operator=(const SharedPtr<DataT>& shared);
+		WeakPtr& operator=(WeakPtr&& other) noexcept;
 		~WeakPtr();
 
 		/** Releases the ownership of the managed object */
@@ -50,7 +51,10 @@ export namespace jpt
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCount(other.m_pRefCount)
 	{
-		m_pRefCount->IncrementWeakRef();
+		if (m_pRefCount)
+		{
+			m_pRefCount->IncrementWeakRef();
+		}
 	}
 
 	template<typename DataT>
@@ -67,8 +71,36 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
+			if (m_pRefCount && m_pRefCount->HasAnyWeakRef())
+			{
+				m_pRefCount->DecrementWeakRef();
+			}
+
 			m_pPtr = other.m_pPtr;
 			m_pRefCount = other.m_pRefCount;
+
+			if (m_pPtr)
+			{
+				m_pRefCount->IncrementWeakRef();
+			}
+		}
+
+		return *this;
+	}
+
+	template<typename DataT>
+	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const SharedPtr<DataT>& shared)
+	{
+		if (m_pRefCount && m_pRefCount->HasAnyWeakRef())
+		{
+			m_pRefCount->DecrementWeakRef();
+		}
+
+		m_pPtr = shared.m_pPtr;
+		m_pRefCount = shared.m_pRefCount;
+
+		if (m_pRefCount)
+		{
 			m_pRefCount->IncrementWeakRef();
 		}
 
@@ -95,7 +127,10 @@ export namespace jpt
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCount(shared.m_pRefCount)
 	{
-		m_pRefCount->IncrementWeakRef();
+		if (m_pRefCount)
+		{
+			m_pRefCount->IncrementWeakRef();
+		}
 	}
 
 	template<typename DataT>
@@ -122,14 +157,16 @@ export namespace jpt
 	template<typename DataT>
 	SharedPtr<DataT> WeakPtr<DataT>::Lock() const
 	{
-		//++*m_pRefCount;
+		if (m_pPtr && m_pRefCount)
+		{
+			m_pRefCount->IncrementStrongRef();
 
-		m_pRefCount->IncrementStrongRef();
+			SharedPtr<DataT> shared;
+			shared.m_pPtr = m_pPtr;
+			shared.m_pRefCount = m_pRefCount;
+			return shared;
+		}
 
-		SharedPtr<DataT> shared;
-		shared.m_pPtr = m_pPtr;
-		shared.m_pRefCount = m_pRefCount;
-
-		return shared;
+		return SharedPtr<DataT>();
 	}
 }
