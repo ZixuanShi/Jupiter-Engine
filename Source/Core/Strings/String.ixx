@@ -13,11 +13,11 @@ import jpt.Concepts;
 import jpt.StringUtils;
 import jpt.Math;
 
-namespace jpt
-{
-	/** Resizing multiplier for capacity */
-	static constexpr size_t kCapacityMultiplier = 2;
+/** Resizing multiplier for capacity */
+static constexpr size_t kLocCapacityMultiplier = 2;
 
+export namespace jpt
+{
 	template<StringLiteral _CharT, class _AllocatorT = Allocator<_CharT>>
 	class BasicString
 	{
@@ -497,10 +497,7 @@ namespace jpt
 
 		m_size = newSize;
 	}
-}
 
-export namespace jpt
-{
 	using String = BasicString<char>;
 	using WString = BasicString<wchar_t>;	// Wide string
 

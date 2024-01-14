@@ -47,6 +47,7 @@ export namespace jpt
 
 	private:
 		void Reset(DataT* pPtr);
+		void IncrementWeakRef();
 	};
 
 	template<typename DataT>
@@ -54,10 +55,7 @@ export namespace jpt
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
-		if (m_pRefCounter)
-		{
-			m_pRefCounter->IncrementWeakRef();
-		}
+		IncrementWeakRef();
 	}
 
 	template<typename DataT>
@@ -76,11 +74,7 @@ export namespace jpt
 		{
 			Reset(other.m_pPtr);
 			m_pRefCounter = other.m_pRefCounter;
-
-			if (m_pRefCounter)
-			{
-				m_pRefCounter->IncrementWeakRef();
-			}
+			IncrementWeakRef();
 		}
 
 		return *this;
@@ -91,11 +85,7 @@ export namespace jpt
 	{
 		Reset(shared.m_pPtr);
 		m_pRefCounter = shared.m_pRefCounter;
-
-		if (m_pRefCounter)
-		{
-			m_pRefCounter->IncrementWeakRef();
-		}
+		IncrementWeakRef();
 
 		return *this;
 	}
@@ -105,7 +95,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			m_pPtr = other.m_pPtr;
+			Reset(other.m_pPtr);
 			m_pRefCounter = other.m_pRefCounter;
 
 			other.m_pPtr = nullptr;
@@ -120,10 +110,7 @@ export namespace jpt
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCounter(shared.m_pRefCount)
 	{
-		if (m_pRefCounter)
-		{
-			m_pRefCounter->IncrementWeakRef();
-		}
+		IncrementWeakRef();
 	}
 
 	template<typename DataT>
@@ -160,6 +147,15 @@ export namespace jpt
 			{
 				JPT_DELETE(m_pRefCounter);
 			}
+		}
+	}
+
+	template<typename DataT>
+	void WeakPtr<DataT>::IncrementWeakRef()
+	{
+		if (m_pRefCounter)
+		{
+			m_pRefCounter->IncrementWeakRef();
 		}
 	}
 }

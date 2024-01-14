@@ -13,7 +13,7 @@ import jpt.CoreModules;
 bool UnitTests_StringView()
 {
 	jpt::String str = "Jupiter Engine";
-	//jpt::StringView strView(str);
+	jpt::StringView strView(str);
 
 	return true;
 }

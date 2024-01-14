@@ -40,6 +40,31 @@ bool UnitTest_StrongPtr_Char()
 	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr2.GetRefCount() != 2, "");
 	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr3.GetRefCount() != 1, "");
 
+	sharedCharPtr1 = sharedCharPtr3;
+	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1.IsValid(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1, "");
+	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr1 != 'A', "");
+
+	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr1.GetRefCount() != 2, "");
+	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr2.GetRefCount() != 1, "");
+	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr3.GetRefCount() != 2, "");
+
+	jpt::StrongPtr<int> left(new int (3));
+	jpt::StrongPtr<int> right(new int (4));
+	jpt::StrongPtr<int> third(new int (5));
+	left = right;
+	third = jpt::Move(left);
+	right = third;
+	right = left;
+	third.Reset(nullptr, [](int* pPtr)
+		{ 
+			//JPT_LOG("Deleted a strong ptr");
+			JPT_DELETE(pPtr); 
+		});
+	left.Reset(new int(42));
+	third = left;
+	right = jpt::Move(left);
+
 	return true;
 }
 
