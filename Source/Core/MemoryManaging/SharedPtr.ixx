@@ -9,6 +9,7 @@ export module jpt.SharedPtr;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt_private.Deleter;
+import jpt_private.ReferenceCounter;
 
 namespace jpt
 {
@@ -25,15 +26,14 @@ namespace jpt
 
 	private:
 		DataT* m_pPtr = nullptr;
-		int32* m_pRefCount = nullptr;
-		//DeleterT m_deleter;
+		jpt_private::ReferenceCounter* m_pRefCount = nullptr;
 
 	public:
 		constexpr SharedPtr() noexcept = default;
 		explicit SharedPtr(DataT* pPtr) noexcept;
 		SharedPtr(const SharedPtr& other);
 		SharedPtr(SharedPtr&& other) noexcept;
-		SharedPtr(const WeakPtr<DataT>& weakPtr);
+		//SharedPtr(const WeakPtr<DataT>& weakPtr);
 		SharedPtr& operator=(const SharedPtr& other);
 		SharedPtr& operator=(SharedPtr&& other) noexcept;
 		~SharedPtr();
@@ -46,7 +46,7 @@ namespace jpt
 		DataT* Get() const noexcept { return m_pPtr; }
 
 		/** @returns    number of SharedPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return *m_pRefCount; }
+		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr DataT& operator*() const noexcept { return *Get(); }
@@ -66,7 +66,8 @@ namespace jpt
 	template<typename DataT>
 	SharedPtr<DataT>::SharedPtr(DataT* pPtr) noexcept
 		: m_pPtr(pPtr)
-		, m_pRefCount(new int32(1))
+		//, m_pRefCount(new int32(1))
+		, m_pRefCount(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
@@ -75,7 +76,8 @@ namespace jpt
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCount(other.m_pRefCount)
 	{
-		++*m_pRefCount;
+		m_pRefCount->IncrementStrongRef();
+		// ++*m_pRefCount;
 	}
 
 	template<typename DataT>
@@ -87,13 +89,14 @@ namespace jpt
 		other.m_pRefCount = nullptr;
 	}
 
-	template<typename DataT>
-	SharedPtr<DataT>::SharedPtr(const WeakPtr<DataT>& weakPtr)
-		: m_pPtr(weakPtr.m_pPtr)
-		, m_pRefCount(weakPtr.m_pRefCount)
-	{
-		++m_pRefCount;
-	}
+	//template<typename DataT>
+	//SharedPtr<DataT>::SharedPtr(const WeakPtr<DataT>& weakPtr)
+	//	: m_pPtr(weakPtr.m_pPtr)
+	//	, m_pRefCount(weakPtr.m_pRefCount)
+	//{
+	//	m_pRefCount->IncrementStrongRef();
+	//	//++*m_pRefCount;
+	//}
 
 	template<typename DataT>
 	SharedPtr<DataT>& SharedPtr<DataT>::operator=(const SharedPtr& other)
@@ -102,7 +105,7 @@ namespace jpt
 		{
 			m_pPtr = other.m_pPtr;
 			m_pRefCount = other.m_pRefCount;
-			++*m_pRefCount;
+			m_pRefCount->IncrementStrongRef();
 		}
 
 		return *this;
@@ -115,7 +118,6 @@ namespace jpt
 		{
 			m_pPtr = other.m_pPtr;
 			m_pRefCount = other.m_pRefCount;
-			++*m_pRefCount;
 
 			other.m_pPtr = nullptr;
 			other.m_pRefCount = nullptr;
@@ -137,18 +139,25 @@ namespace jpt
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
 		{
-			--*m_pRefCount;
-			if (*m_pRefCount < 1)
+			m_pRefCount->DecrementStrongRef();
+
+			if (!m_pRefCount->HasAnySharedRef() && !m_pRefCount->HasAnyWeakRef())
 			{
 				JPT_DELETE(m_pRefCount);
+			}
+
+			if (!m_pRefCount || !m_pRefCount->HasAnySharedRef())
+			{
 				deleter(m_pPtr);
 			}
+
+
 
 			m_pPtr = pPtr;
 
 			if (m_pPtr)
 			{
-				m_pRefCount = new int32(1);
+				m_pRefCount = new jpt_private::ReferenceCounter(1, 0);
 			}
 		}
 	}

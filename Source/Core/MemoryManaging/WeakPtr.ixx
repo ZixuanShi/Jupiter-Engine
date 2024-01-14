@@ -1,8 +1,13 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Minimals/Macros.h"
+
 export module jpt.WeakPtr;
 
 import jpt.TypeDefs;
+import jpt_private.ReferenceCounter;
 
 export namespace jpt
 {
@@ -16,7 +21,7 @@ export namespace jpt
 	{
 	private:
 		DataT* m_pPtr = nullptr;
-		int32* m_pRefCount = nullptr;
+		jpt_private::ReferenceCounter* m_pRefCount = nullptr;
 
 	public:
 		constexpr WeakPtr() noexcept = default;
@@ -31,7 +36,7 @@ export namespace jpt
 		void Reset();
 
 		/** @return		number of SharedPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return m_pRefCount ? *m_pRefCount : 0; }
+		int32 GetRefCount() const { return m_pRefCount ? m_pRefCount->GetSharedRefs() : 0; }
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
 		bool IsExpired() const { return m_pRefCount ? GetRefCount() == 0 : true; }
@@ -45,6 +50,7 @@ export namespace jpt
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCount(other.m_pRefCount)
 	{
+		m_pRefCount->IncrementWeakRef();
 	}
 
 	template<typename DataT>
@@ -63,6 +69,7 @@ export namespace jpt
 		{
 			m_pPtr = other.m_pPtr;
 			m_pRefCount = other.m_pRefCount;
+			m_pRefCount->IncrementWeakRef();
 		}
 
 		return *this;
@@ -88,6 +95,7 @@ export namespace jpt
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCount(shared.m_pRefCount)
 	{
+		m_pRefCount->IncrementWeakRef();
 	}
 
 	template<typename DataT>
@@ -100,13 +108,23 @@ export namespace jpt
 	void WeakPtr<DataT>::Reset()
 	{
 		m_pPtr = nullptr;
-		m_pRefCount = nullptr;
+		
+		if (m_pRefCount)
+		{
+			m_pRefCount->DecrementWeakRef();
+			if (!m_pRefCount->HasAnySharedRef() && !m_pRefCount->HasAnyWeakRef())
+			{
+				JPT_DELETE(m_pRefCount);
+			}
+		}
 	}
 
 	template<typename DataT>
 	SharedPtr<DataT> WeakPtr<DataT>::Lock() const
 	{
-		++*m_pRefCount;
+		//++*m_pRefCount;
+
+		m_pRefCount->IncrementStrongRef();
 
 		SharedPtr<DataT> shared;
 		shared.m_pPtr = m_pPtr;

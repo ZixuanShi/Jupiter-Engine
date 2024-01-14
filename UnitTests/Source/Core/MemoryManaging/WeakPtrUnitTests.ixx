@@ -19,7 +19,10 @@ bool UnitTests_WeakPtr_Class()
 
 		Foo() = default;
 		Foo(int32 left, char right) : m_left(left), m_right(right) {}
-		~Foo() { JPT_LOG("Destroyed a Foo %s", ToString().ConstBuffer()); }
+		~Foo() 
+		{ 
+			//JPT_LOG("Destroyed a Foo %s", ToString().ConstBuffer()); 
+		}
 
 		jpt::String ToString() const
 		{
@@ -52,11 +55,12 @@ bool UnitTests_WeakPtr_Class()
 	//	JPT_RETURN_FALSE_IF_ERROR(fooShared2->m_right != 'C', "");
 	//}
 
-	//JPT_RETURN_FALSE_IF_ERROR(fooWeak.expired(), "");
+	//JPT_RETURN_FALSE_IF_ERROR(!fooWeak.expired(), "");
 	//JPT_RETURN_FALSE_IF_ERROR(fooWeak.use_count() != 0, "");
 
 	jpt::WeakPtr<Foo> fooWeak;
 	JPT_RETURN_FALSE_IF_ERROR(!fooWeak.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 0, "");
 
 	{
 		jpt::SharedPtr<Foo> fooShared1 = jpt::MakeShared<Foo>(42, 'C');
@@ -76,7 +80,7 @@ bool UnitTests_WeakPtr_Class()
 		JPT_RETURN_FALSE_IF_ERROR(fooShared2->m_right != 'C', "");
 	}
 
-	JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!fooWeak.IsExpired(), "");
 	JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 0, "");
 
 	return true;
@@ -84,7 +88,7 @@ bool UnitTests_WeakPtr_Class()
 
 export bool RunWeakPtrUnitTests()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_WeakPtr_Class(), "UnitTest_UniquePtr_String Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_WeakPtr_Class(), "UnitTests_WeakPtr_Class Failed");
 
 	return true;
 }
