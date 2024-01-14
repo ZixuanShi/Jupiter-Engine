@@ -65,7 +65,7 @@ namespace jpt
 	template<typename DataT>
 	StrongPtr<DataT>::StrongPtr(DataT* pPtr) noexcept
 		: m_pPtr(pPtr)
-		, m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
+		, m_pRefCounter(new jpt_private::ReferenceCounter)
 	{
 	}
 
@@ -155,7 +155,7 @@ namespace jpt
 
 			if (m_pPtr)
 			{
-				m_pRefCounter = new jpt_private::ReferenceCounter(1, 0);
+				m_pRefCounter = new jpt_private::ReferenceCounter;
 			}
 		}
 	}

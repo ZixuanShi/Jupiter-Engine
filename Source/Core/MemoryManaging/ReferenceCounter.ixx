@@ -9,12 +9,11 @@ export namespace jpt_private
 	class ReferenceCounter
 	{
 	private:
-		int32 m_sharedRefs = 0;
+		int32 m_sharedRefs = 1;
 		int32 m_weakRefs = 0;
 
 	public:
 		ReferenceCounter() = default;
-		ReferenceCounter(int32 sharedRefs, int32 weakRefs) : m_sharedRefs(sharedRefs), m_weakRefs(weakRefs) {}
 
 		void IncrementStrongRef() { ++m_sharedRefs; }
 		void IncrementWeakRef() { ++m_weakRefs; }
