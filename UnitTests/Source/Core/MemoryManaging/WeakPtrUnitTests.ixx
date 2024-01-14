@@ -63,7 +63,7 @@ bool UnitTests_WeakPtr_Class()
 	JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 0, "");
 
 	{
-		jpt::StrongPtr<Foo> fooShared1 = jpt::MakeShared<Foo>(42, 'C');
+		jpt::StrongPtr<Foo> fooShared1 = jpt::MakeStrong<Foo>(42, 'C');
 		fooWeak = fooShared1;
 
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
@@ -86,9 +86,69 @@ bool UnitTests_WeakPtr_Class()
 	return true;
 }
 
+jpt::WeakPtr<jpt::String> weakStringPtr1;
+jpt::WeakPtr<jpt::String> weakStringPtr2;
+jpt::WeakPtr<jpt::String> weakStringPtr3;
+bool UnitTests_WeakPtr_Referencing()
+{
+	jpt::StrongPtr<jpt::String> strongStringPtr1 = jpt::MakeStrong<jpt::String>("Jupiter Engine");
+	JPT_RETURN_FALSE_IF_ERROR(*strongStringPtr1 != "Jupiter Engine", "");
+
+	weakStringPtr1 = strongStringPtr1;
+	weakStringPtr2 = strongStringPtr1;
+	weakStringPtr3 = strongStringPtr1;
+
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");
+
+	{
+		jpt::StrongPtr<jpt::String> strongStringPtr2 = jpt::MakeStrong<jpt::String>("Zixuan Shi");
+		JPT_RETURN_FALSE_IF_ERROR(*strongStringPtr2 != "Zixuan Shi", "");
+
+		weakStringPtr1 = strongStringPtr2;
+		weakStringPtr2 = strongStringPtr2;
+		weakStringPtr3 = strongStringPtr2;
+
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
+		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
+		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");
+	}
+
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr1.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr2.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr3.IsExpired(), "");
+
+	weakStringPtr1 = strongStringPtr1;
+	weakStringPtr2 = strongStringPtr1;
+	weakStringPtr3 = strongStringPtr1;
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
+	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");
+
+	return true;
+}
+
 export bool RunWeakPtrUnitTests()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_WeakPtr_Class(), "UnitTests_WeakPtr_Class Failed");
+
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr1.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr2.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr3.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_WeakPtr_Referencing(), "UnitTests_WeakPtr_Class Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr1.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr2.IsExpired(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!weakStringPtr3.IsExpired(), "");
 
 	return true;
 }

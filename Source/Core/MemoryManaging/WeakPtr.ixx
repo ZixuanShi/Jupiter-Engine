@@ -71,10 +71,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			if (m_pRefCount && m_pRefCount->HasAnyWeakRef())
-			{
-				m_pRefCount->DecrementWeakRef();
-			}
+			Reset();
 
 			m_pPtr = other.m_pPtr;
 			m_pRefCount = other.m_pRefCount;
@@ -91,10 +88,7 @@ export namespace jpt
 	template<typename DataT>
 	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const StrongPtr<DataT>& shared)
 	{
-		if (m_pRefCount && m_pRefCount->HasAnyWeakRef())
-		{
-			m_pRefCount->DecrementWeakRef();
-		}
+		Reset();
 
 		m_pPtr = shared.m_pPtr;
 		m_pRefCount = shared.m_pRefCount;
@@ -147,7 +141,7 @@ export namespace jpt
 		if (m_pRefCount)
 		{
 			m_pRefCount->DecrementWeakRef();
-			if (!m_pRefCount->HasAnySharedRef() && !m_pRefCount->HasAnyWeakRef())
+			if (!m_pRefCount->HasAnyRef())
 			{
 				JPT_DELETE(m_pRefCount);
 			}

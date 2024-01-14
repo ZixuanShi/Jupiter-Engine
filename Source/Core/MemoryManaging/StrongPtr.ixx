@@ -57,7 +57,7 @@ namespace jpt
 	};
 
 	export template<typename DataT, class... Args>
-	[[nodiscard]] StrongPtr<DataT> MakeShared(Args&&... args)
+	[[nodiscard]] StrongPtr<DataT> MakeStrong(Args&&... args)
 	{
 		return StrongPtr<DataT>(new DataT(jpt::Forward<Args>(args)...));
 	}
@@ -141,14 +141,12 @@ namespace jpt
 		{
 			m_pRefCount->DecrementStrongRef();
 
-			if (!m_pRefCount->HasAnySharedRef() && 
-				!m_pRefCount->HasAnyWeakRef())
+			if (!m_pRefCount->HasAnyRef())
 			{
 				JPT_DELETE(m_pRefCount);
 			}
 
-			if (!m_pRefCount || 
-				!m_pRefCount->HasAnySharedRef())
+			if (!m_pRefCount || !m_pRefCount->HasAnySharedRef())
 			{
 				deleter(m_pPtr);
 			}

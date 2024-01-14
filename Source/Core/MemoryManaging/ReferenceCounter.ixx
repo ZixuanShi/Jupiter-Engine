@@ -31,5 +31,6 @@ export namespace jpt_private
 
 		bool HasAnySharedRef() const { return m_sharedRefs > 0; }
 		bool HasAnyWeakRef() const { return m_weakRefs > 0; }
+		bool HasAnyRef() const { return HasAnySharedRef() || HasAnyWeakRef(); }
 	};
 }

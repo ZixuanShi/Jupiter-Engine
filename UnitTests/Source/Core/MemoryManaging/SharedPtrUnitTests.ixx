@@ -12,7 +12,7 @@ import jpt.CoreModules;
 
 bool UnitTest_StrongPtr_Char()
 {
-	jpt::StrongPtr<char> sharedCharPtr1 = jpt::MakeShared<char>('C');
+	jpt::StrongPtr<char> sharedCharPtr1 = jpt::MakeStrong<char>('C');
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1.IsValid(), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1, "");
 	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr1 != 'C', "");
