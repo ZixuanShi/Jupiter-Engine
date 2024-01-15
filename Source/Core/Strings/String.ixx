@@ -169,13 +169,26 @@ export namespace jpt
 	template<StringLiteral CharT, class AllocatorT>
 	bool operator==(const BasicString<CharT, AllocatorT>& string, const CharT* otherString)
 	{
-		return AreStringsSame(string.ConstBuffer(), otherString);
+		return AreStringsSame(string.ConstBuffer(), otherString, string.Size());
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
 	bool operator==(const BasicString<CharT, AllocatorT>& string, const BasicString<CharT>& otherString)
 	{
-		return AreStringsSame(string, otherString);
+		if (string.Size() != otherString.Size())
+		{
+			return false;
+		}
+
+		for (size_t i = 0; i < string.Size(); ++i)
+		{
+			if (string[i] != otherString[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
@@ -215,7 +228,7 @@ export namespace jpt
 	template<StringLiteral CharT, class AllocatorT>
 	BasicString<CharT, AllocatorT>& BasicString<CharT, AllocatorT>::operator=(const CharT* CString)
 	{
-		if (!AreStringsSame(m_pBuffer, CString, m_size))
+		if (!AreStringsSame(m_pBuffer, CString, m_size, GetCStrLength(CString)))
 		{
 			Clear();
 			CopyString(CString);

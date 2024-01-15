@@ -267,19 +267,14 @@ export namespace jpt
 
 	/* @return		true if two C-Style strings within the given size are identical. false if not */
 	template<StringLiteral CharT>
-	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t size = kInvalidValue<size_t>)
+	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t string1Size, size_t string2Size)
 	{
-		const size_t string1Length = GetCStrLength(pString1);
-		const size_t string2Length = GetCStrLength(pString2);
-
-		if (string1Length != string2Length)
+		if (string1Size != string2Size)
 		{
 			return false;
 		}
 
-		size = (size == kInvalidValue<size_t>) ?string1Length : size;
-
-		for (size_t i = 0; i < size; ++i)
+		for (size_t i = 0; i < string1Size; ++i)
 		{
 			if (pString1[i] != pString2[i])
 			{
@@ -289,26 +284,15 @@ export namespace jpt
 
 		return true;
 	}
-
-	template<typename StringT>
-	bool AreStringsSame(const StringT& string1, const StringT& string2, size_t size = kInvalidValue<size_t>)
+	template<StringLiteral CharT>
+	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t size)
 	{
-		if (string1.Size() != string2.Size())
-		{
-			return false;
-		}
-
-		size = (size == kInvalidValue<size_t>) ? string1.Size() : size;
-
-		for (size_t i = 0; i < size; ++i)
-		{
-			if (string1[i] != string2[i])
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return AreStringsSame(pString1, pString2, size, size);
+	}
+	template<StringLiteral CharT>
+	bool AreStringsSame(const CharT* pString1, const CharT* pString2)
+	{
+		return AreStringsSame(pString1, pString2, GetCStrLength(pString1), GetCStrLength(pString2));
 	}
 
 	template<>

@@ -57,10 +57,10 @@ bool UnitTest_StrCpy()
 
 	CharT buffer[256];
 	jpt::StrCpy<CharT>(buffer, 15, JPT_GET_PROPER_STRING(CharT, Jupiter Engine));
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter Engine), 14), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter Engine)), "");
 
 	jpt::StrNCpy<CharT>(buffer, 15, JPT_GET_PROPER_STRING(CharT, Jupiter Engine), 10);
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter En), 10), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter En)), "");
 
 	return true;
 }

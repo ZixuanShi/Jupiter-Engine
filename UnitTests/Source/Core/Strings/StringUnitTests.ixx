@@ -15,8 +15,8 @@ bool UnitTest_DefaultStringConstructing()
 
 	StringT defaultStr;
 	JPT_RETURN_FALSE_IF_ERROR(!defaultStr.IsEmpty(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, ), 0), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(CharT, )), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(CharT, )), "");
 	
 	defaultStr.Reserve(30);
 	JPT_RETURN_FALSE_IF_ERROR(defaultStr.Capacity() != 30, "");

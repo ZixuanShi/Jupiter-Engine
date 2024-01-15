@@ -62,17 +62,17 @@ export namespace jpt
 	template<StringLiteral CharT>
 	bool operator==(const BasicStringView<CharT>& a, const BasicStringView<CharT>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size());
+		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size(), b.Size());
 	}
 	template<StringLiteral CharT>
 	bool operator==(const BasicStringView<CharT>& a, const CharT* b)
 	{
-		return AreStringsSame(a.Buffer(), b, a.Size());
+		return AreStringsSame(a.Buffer(), b, a.Size(), GetCStrLength(b));
 	}
 	template<StringLiteral CharT>
 	bool operator==(const BasicStringView<CharT>& a, const BasicString<CharT>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size());
+		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Size(), b.Size());
 	}
 
 	// Member Functions Definitions --------------------------------------------------------------------------------------------------------

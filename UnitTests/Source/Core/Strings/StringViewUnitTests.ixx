@@ -17,9 +17,15 @@ bool UnitTests_StringView()
 	
 	jpt::StringView strView(str);
 	JPT_RETURN_FALSE_IF_ERROR(strView != str, "");
+	
+	jpt::String str2 = "Jupiter";
+	jpt::String str3 = "Jupiter Engine Release";
+	JPT_RETURN_FALSE_IF_ERROR(strView == str2, "");
+	JPT_RETURN_FALSE_IF_ERROR(strView == str3, "");
 
 	strView = pName;
 	JPT_RETURN_FALSE_IF_ERROR(strView != pName, "");
+	JPT_RETURN_FALSE_IF_ERROR(strView == "Zixuan Shi Core Engineer", "");
 
 	strView = "Hi I am a StringView, Ha";
 	JPT_RETURN_FALSE_IF_ERROR(strView != "Hi I am a StringView, Ha", "");
@@ -44,7 +50,6 @@ bool UnitTests_string_view()
 	strView = "Hi I am a StringView, Ha";
 	JPT_RETURN_FALSE_IF_ERROR(strView != "Hi I am a StringView, Ha", "");
 
-	JPT_LOG(strView.substr(10, 10).data());
 	JPT_RETURN_FALSE_IF_ERROR(strView.substr(10, 10) != "StringView", "");
 
 	return true;
