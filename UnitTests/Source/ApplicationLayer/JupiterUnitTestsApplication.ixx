@@ -9,7 +9,8 @@ export module jpt.UnitTestsApplication;
 import jpt.CoreModules;
 import jpt.ApplicationBase;
 
-// Building
+// Core
+// Utilities
 import UtilitiesUnitTests;
 
 // Debugging
