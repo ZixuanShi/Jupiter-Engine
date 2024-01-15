@@ -9,9 +9,9 @@ export module jpt.CoreModules;
 
 // Building
 export import jpt.Concepts;
+export import jpt.Constants;
 export import jpt.TypeDefs;
 export import jpt.Utilities;
-export import jpt.Constants;
 
 // Math
 export import jpt.Math;

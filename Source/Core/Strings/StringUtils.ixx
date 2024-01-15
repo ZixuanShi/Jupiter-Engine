@@ -12,6 +12,7 @@ module;
 export module jpt.StringUtils;
 
 import jpt.TypeDefs;
+import jpt.Constants;
 import jpt.Concepts;
 import jpt.Utilities;
 import jpt.Allocator;
@@ -276,7 +277,7 @@ export namespace jpt
 			return false;
 		}
 
-		size = (size == kInvalidValue<size_t>) ? Min(string1Length, string2Length) : size;
+		size = (size == kInvalidValue<size_t>) ?string1Length : size;
 
 		for (size_t i = 0; i < size; ++i)
 		{
@@ -297,7 +298,7 @@ export namespace jpt
 			return false;
 		}
 
-		size = (size == kInvalidValue<size_t>) ? Min(string1.Size(), string2.Size()) : size;
+		size = (size == kInvalidValue<size_t>) ? string1.Size() : size;
 
 		for (size_t i = 0; i < size; ++i)
 		{

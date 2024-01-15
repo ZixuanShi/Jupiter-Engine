@@ -8,10 +8,11 @@ module;
 export module jpt.String;
 
 import jpt.Allocator;
-import jpt.TypeDefs;
 import jpt.Concepts;
-import jpt.StringUtils;
+import jpt.Constants;
 import jpt.Math;
+import jpt.StringUtils;
+import jpt.TypeDefs;
 
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
@@ -24,8 +25,6 @@ export namespace jpt
 	public:
 		using CharT = _CharT;
 		using AllocatorT = _AllocatorT;
-
-		static constexpr size_t npos = kInvalidValue<size_t>;
 
 	private:
 		CharT* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
@@ -49,10 +48,10 @@ export namespace jpt
 		CharT* Buffer() const { return m_pBuffer; }
 		CharT& operator[](size_t index) { return m_pBuffer[index]; }
 		const CharT& operator[](size_t index) const { return m_pBuffer[index]; }
-		CharT& Back() { return m_pBuffer[m_size - 1]; }
-		const CharT& Back() const { return m_pBuffer[m_size - 1]; }
 		CharT& Front() { return m_pBuffer[0]; }
 		const CharT& Front() const { return m_pBuffer[0]; }
+		CharT& Back() { return m_pBuffer[m_size - 1]; }
+		const CharT& Back() const { return m_pBuffer[m_size - 1]; }
 
 		// Capacity
 		size_t Size() const { return m_size; }
@@ -67,10 +66,6 @@ export namespace jpt
 		size_t FindLastOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		size_t FindLastOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		
-		/** Comparing */
-		bool operator==(const CharT* otherString) const;
-		bool operator==(const BasicString<CharT>& otherString) const;
-
 		/* Deallocate the memory that this string holds */
 		void Clear();
 
@@ -92,8 +87,6 @@ export namespace jpt
 		BasicString& operator+=(const CharT* CString) { Append(CString); return *this; }
 		BasicString& operator+=(const BasicString<CharT>& otherString) { Append(otherString); return *this; }
 		BasicString& operator+=(CharT c) { Append(c); return *this; }
-		BasicString operator+(const CharT* CString) const;
-		BasicString operator+(const BasicString<CharT>& otherString) const;
 
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		void Reserve(size_t capacity);
@@ -128,6 +121,64 @@ export namespace jpt
 		void InsertStringAt(const CharT* CString, size_t index, size_t size);
 	};
 
+	// Non member functions -------------------------------------------------------------------------------------------------------------------
+	template<StringLiteral CharT, class AllocatorT>
+	BasicString<CharT, AllocatorT> operator+(const BasicString<CharT, AllocatorT>& string, const CharT* CString)
+	{
+		BasicString<CharT> str = string;
+		str.Append(CString);
+		return str;
+	}
+
+	template<StringLiteral CharT, class AllocatorT>
+	BasicString<CharT, AllocatorT> operator+(BasicString<CharT, AllocatorT>&& string, const CharT* CString)
+	{
+		BasicString<CharT> str = Move(string);
+		str.Append(CString);
+		return str;
+	}
+
+	template<StringLiteral CharT, class AllocatorT>
+	BasicString<CharT, AllocatorT> operator+(const BasicString<CharT, AllocatorT>& string, const BasicString<CharT>& otherString)
+	{
+		BasicString<CharT> str = string;
+		str.Append(otherString);
+		return str;
+	}
+
+	template<StringLiteral CharT, class AllocatorT>
+	BasicString<CharT, AllocatorT> operator+(BasicString<CharT, AllocatorT>&& string, const BasicString<CharT>& otherString)
+	{
+		BasicString<CharT> str = Move(string);
+		str.Append(otherString);
+		return str;
+	}
+
+	template<StringLiteral CharT>
+	BasicString<CharT> operator+(const CharT* leftString, const BasicString<CharT>& rightString)
+	{
+		return jpt::BasicString<CharT>(leftString) += rightString;
+	}
+
+	template<StringLiteral CharT>
+	BasicString<CharT> operator+(const CharT* leftString, BasicString<CharT>&& rightString)
+	{
+		return jpt::BasicString<CharT>(leftString) += Move(rightString);
+	}
+
+	template<StringLiteral CharT, class AllocatorT>
+	bool operator==(const BasicString<CharT, AllocatorT>& string, const CharT* otherString)
+	{
+		return AreStringsSame(string.ConstBuffer(), otherString);
+	}
+
+	template<StringLiteral CharT, class AllocatorT>
+	bool operator==(const BasicString<CharT, AllocatorT>& string, const BasicString<CharT>& otherString)
+	{
+		return AreStringsSame(string, otherString);
+	}
+
+	// Member Functions Definitions ---------------------------------------------------------------------------------------
 	template<StringLiteral CharT, class AllocatorT>
 	BasicString<CharT, AllocatorT>::BasicString(const CharT* CString, size_t size)
 	{
@@ -306,18 +357,6 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	bool BasicString<CharT, AllocatorT>::operator==(const CharT* otherString) const
-	{
-		return AreStringsSame(m_pBuffer, otherString, m_size);
-	}
-
-	template<StringLiteral CharT, class AllocatorT>
-	bool BasicString<CharT, AllocatorT>::operator==(const BasicString<CharT>& otherString) const
-	{
-		return AreStringsSame(*this, otherString, m_size);
-	}
-
-	template<StringLiteral CharT, class AllocatorT>
 	void BasicString<CharT, AllocatorT>::Clear()
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
@@ -345,10 +384,10 @@ export namespace jpt
 				break;
 			}
 
-			const BasicString<CharT> pre = SubStr(0, foundPos);
-			const BasicString<CharT> suff = SubStr(foundPos + stringToFindSize);
+			BasicString<CharT> pre = SubStr(0, foundPos);
+			BasicString<CharT> suff = SubStr(foundPos + stringToFindSize);
 
-			*this = pre + replaced + suff;
+			*this = Move(pre) + replaced + Move(suff);
 			startIndex = foundPos + replaced.Size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'		
 		}
 
@@ -367,7 +406,7 @@ export namespace jpt
 		
 		if (count == 0)
 		{
-			return jpt::BasicString<CharT>();
+			return BasicString<CharT>();
 		}
 
 		CharT* subStrBuffer = AllocatorT::AllocateArray(count + sizeof(CharT));
@@ -400,22 +439,6 @@ export namespace jpt
 		cString[1] = '\0';
 		InsertStringAt(cString, m_size, 1);
 		AllocatorT::DeallocateArray(cString);
-	}
-
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> BasicString<CharT, AllocatorT>::operator+(const CharT* CString) const
-	{
-		BasicString<CharT> str = *this;
-		str.Append(CString);
-		return str;
-	}
-
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> BasicString<CharT, AllocatorT>::operator+(const BasicString<CharT>& otherString) const
-	{
-		BasicString<CharT> str = *this;
-		str.Append(otherString);
-		return str;
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
@@ -506,12 +529,6 @@ export namespace jpt
 
 	template<typename T>
 	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;	// Add any additional primitive types if implemented later
-
-	template<typename CharT>
-	BasicString<CharT> operator+(const CharT* leftString, const BasicString<CharT>& rightString)
-	{
-		return jpt::BasicString<CharT>(leftString) += rightString;
-	}
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>

@@ -3,7 +3,6 @@
 module;
 
 #include <type_traits>
-#include <limits>
 
 export module jpt.TypeDefs;
 
@@ -18,9 +17,6 @@ export using int64  = int64_t;
 
 export namespace jpt
 {
-	template<typename Type> const Type kInvalidValue = (std::numeric_limits<Type>::max)();	/**< If the value is not supported, you need to specialize template it in the corresponding file */
-	template<typename Type> const Type kDefaultValue = static_cast<Type>(0);
-
 	// Rvalue and Lvalue Utils
 	template<typename T> struct RemoveReference              { using Type = T; };
 	template<typename T> struct RemoveReference<T&>          { using Type = T; };

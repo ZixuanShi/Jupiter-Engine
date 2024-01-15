@@ -180,7 +180,7 @@ bool UnitTest_StringFinding()
 	JPT_RETURN_FALSE_IF_ERROR(last20EPosition != 31, "");
 
 	size_t noExistString = string.Find(JPT_GET_PROPER_STRING(CharT, Doesnt Exist String));
-	JPT_RETURN_FALSE_IF_ERROR(noExistString != StringT::npos, "");
+	JPT_RETURN_FALSE_IF_ERROR(noExistString != jpt::npos, "");
 
 	return true;
 }
