@@ -33,6 +33,9 @@ import StringViewUnitTests;
 // Timing
 import TimingUtilsUnitTests;
 
+// Types
+import OptionalUnitTests;
+
 export class JupiterUnitTestsApplication final : public jpt::ApplicationBase
 {
 private:
@@ -79,6 +82,9 @@ bool JupiterUnitTestsApplication::RunUnitTests_Core() const
 
 	// Timing
 	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUtilsUnitTests(), "TimingUtils Tests Failed");
+
+	// Types
+	JPT_RETURN_FALSE_IF_ERROR(!RunOptionalUnitTests(), "Optional Tests Failed");
 
 	return true;
 }

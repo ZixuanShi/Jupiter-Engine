@@ -30,3 +30,6 @@ export import jpt.StringView;
 
 // Timing
 export import jpt.TimingUtils;
+
+// Types
+export import jpt.Optional;
