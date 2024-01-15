@@ -1,0 +1,12 @@
+/*---------------- Search Box positioning */
+
+#navrow1 .tablist > li:last-child {
+    /* This <li> object is the parent of the search bar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    margin-right: 1em;
+    float: right;
+}
+
