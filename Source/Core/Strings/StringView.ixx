@@ -65,7 +65,10 @@ export namespace jpt
 		bool EndsWith(const CharT* CString, size_t count) const;
 		bool EndsWith(const CharT* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
 
-		//bool Contains(const CharT* CString) const;
+		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t Find(const CharT* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		bool Contains(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(charToFind, startIndex, endIndex) != npos; }
+		bool Contains(const CharT* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(pStringToFind, startIndex, endIndex) != npos; }
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
@@ -172,6 +175,51 @@ export namespace jpt
 	bool BasicStringView<_CharT>::EndsWith(const CharT* CString, size_t count) const
 	{
 		return AreStringsSame(m_pBuffer + m_size - count, CString, count);
+	}
+
+	template<StringLiteral _CharT>
+	size_t BasicStringView<_CharT>::Find(CharT charToFind, size_t startIndex, size_t endIndex) const
+	{
+		ClampTo(endIndex, size_t(0), m_size);
+
+		for (size_t i = startIndex; i < endIndex; ++i)
+		{
+			if ((i + 1) > endIndex)
+			{
+				return npos;
+			}
+
+			if (m_pBuffer[i] == charToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
+	}
+
+	template<StringLiteral _CharT>
+	size_t BasicStringView<_CharT>::Find(const CharT* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	{
+		const size_t stringToFindSize = GetCStrLength(pStringToFind);
+		ClampTo(endIndex, static_cast<size_t>(0), m_size);
+
+		BasicStringView current;
+		for (size_t i = startIndex; i < endIndex; ++i)
+		{
+			if ((i + stringToFindSize) > endIndex)
+			{
+				return npos;
+			}
+
+			current = SubStr(i, stringToFindSize);
+			if (current == pStringToFind)
+			{
+				return i;
+			}
+		}
+
+		return npos;
 	}
 
 	using StringView = BasicStringView<char>;

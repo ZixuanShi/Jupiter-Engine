@@ -94,7 +94,6 @@ project "Engine"
     includedirs
     {
         (jupiter_dir .. "Source"),
-        --(jupiter_dir .. "Source/Core/Building/CoreMinimal"),
     }
 
     files 
@@ -112,7 +111,6 @@ project "UnitTests"
     includedirs
     {
         (jupiter_dir .. "Source"),
-        --(jupiter_dir .. "Source/Core/Building/CoreMinimal"),
         ("../Source")
     }
 

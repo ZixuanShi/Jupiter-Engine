@@ -43,24 +43,13 @@ bool UnitTests_StringView()
 	JPT_RETURN_FALSE_IF_ERROR(!strView.EndsWith("Ha"), "");
 	JPT_RETURN_FALSE_IF_ERROR(strView.EndsWith("Hi"), "");
 
-	return true;
-}
-
-bool UnitTests_string_view()
-{
-	std::string str = "Jupiter Engine";
-	const char* pName = "Zixuan Shi";
-
-	std::string_view strView(str);
-	JPT_RETURN_FALSE_IF_ERROR(strView != str, "");
-
-	strView = pName;
-	JPT_RETURN_FALSE_IF_ERROR(strView != pName, "");
-
-	strView = "Hi I am a StringView, Ha";
-	JPT_RETURN_FALSE_IF_ERROR(strView != "Hi I am a StringView, Ha", "");
-
-	JPT_RETURN_FALSE_IF_ERROR(strView.substr(10, 10) != "StringView", "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.Find("StringView") != 10, "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.Find('I') != 3, "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.Find("NoExist") != jpt::npos, "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.Find('N') != jpt::npos, "");
+	JPT_RETURN_FALSE_IF_ERROR(!strView.Contains("StringView"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!strView.Contains('I'), "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.Contains("N"), "");
 
 	return true;
 }
@@ -68,7 +57,6 @@ bool UnitTests_string_view()
 export bool RunStringViewUnitTests()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_StringView(), "UnitTests_StringView Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_string_view(), "UnitTests_StringView Failed");
 
 	return true;
 }
