@@ -7,14 +7,12 @@ workspace "JupiterUnitTests"
 
     configurations 
     { 
-        "Debug",        -- Debugging
+        "Debug",        -- Debugging. No optimization will be performed
+        "Development",  -- Develop the project. Use Engine's editors and tools 
         "Profiling",    -- Profiling. Same configurations with Release but Profiling code
         "Release",      -- Relese/Shipping
     }
-    platforms 
-    { 
-        "Win64",
-    }
+    platforms { "Win64" }
 
     startproject ("UnitTests")
 
@@ -37,54 +35,45 @@ workspace "JupiterUnitTests"
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
     }
 
-    -- Global filters
-    filter "configurations:not Debug"
-        flags
-        {
-            "FatalCompileWarnings",
-        }
-        
+    -- Global filters for configurations
+    filter "configurations:Release or configurations:Profiling"
+        flags{ "FatalCompileWarnings" }
+
     filter "configurations:Debug"
         defines 
         { 
             "IS_DEBUG",
+            "JPT_ENABLE_DEBUG_FEATURES",
         }
-        buildoptions 
-        {
-            "/MTd",
+        buildoptions { "/MTd" }
+        optimize "Off"
+        symbols "On"
+
+    filter "configurations:Development"
+        defines 
+        { 
+            "IS_DEVELOPMENT",
+            "JPT_ENABLE_DEBUG_FEATURES",
         }
-        optimize "Debug"
+        buildoptions { "/MT" }
+        optimize "Full"
         symbols "On"
 
     filter "configurations:Profiling"
-        defines 
-        { 
-            "IS_PROFILING"
-        }
-        buildoptions 
-        {
-            "/MT",
-        }
-        optimize "Full"
+        defines { "IS_PROFILING" }
+        buildoptions { "/MT" }
+        optimize "Speed"
         symbols "off"
 
     filter "configurations:Release"
-        defines 
-        { 
-            "IS_RELEASE"
-        }
-        buildoptions 
-        {
-            "/MT",
-        }
-        optimize "Full"
+        defines { "IS_RELEASE" }
+        buildoptions { "/MT" }
+        optimize "Speed"
         symbols "off"
 
+    -- Global filters for platforms
     filter "platforms:Win64"
-        defines 
-        { 
-            "IS_PLATFORM_WIN64",
-        }
+        defines { "IS_PLATFORM_WIN64" }
 
         
 -- Jupiter Engine

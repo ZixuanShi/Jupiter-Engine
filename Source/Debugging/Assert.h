@@ -2,7 +2,7 @@
 
 #pragma once
 
-#if IS_DEBUG
+#if JPT_ENABLE_DEBUG_FEATURES
 
 import jpt.TypeDefs;
 
@@ -40,4 +40,5 @@ namespace jpt
 }
 #else
 	#define JPT_ASSERT(expression, ...) 
-#endif
+
+#endif // JPT_ENABLE_DEBUG_FEATURES
