@@ -30,8 +30,18 @@ bool UnitTests_StringView()
 	strView = "Hi I am a StringView, Ha";
 	JPT_RETURN_FALSE_IF_ERROR(strView != "Hi I am a StringView, Ha", "");
 
-	strView.SubStr(10, 10);
-	JPT_RETURN_FALSE_IF_ERROR(strView.SubStr(10, 10) != "StringView", "");
+	jpt::StringView subStr = strView.SubStr(10, 10);
+	JPT_RETURN_FALSE_IF_ERROR(subStr != "StringView", "");
+
+	JPT_RETURN_FALSE_IF_ERROR(!subStr.StartsWith("Str"), "");
+	JPT_RETURN_FALSE_IF_ERROR(subStr.StartsWith("StrI"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!strView.StartsWith("Hi I am"), "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.StartsWith("Hi am"), "");
+
+	JPT_RETURN_FALSE_IF_ERROR(!subStr.EndsWith("View"), "");
+	JPT_RETURN_FALSE_IF_ERROR(subStr.EndsWith("ViewwA"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!strView.EndsWith("Ha"), "");
+	JPT_RETURN_FALSE_IF_ERROR(strView.EndsWith("Hi"), "");
 
 	return true;
 }

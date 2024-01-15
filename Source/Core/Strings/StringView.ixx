@@ -56,6 +56,16 @@ export namespace jpt
 
 		/** @return		A sub string within the given range at index and length */
 		BasicStringView SubStr(size_t index, size_t count = npos) const;
+
+		/** @return     true if the string view starts with the given prefix */
+		bool StartsWith(const CharT* CString, size_t count) const;
+		bool StartsWith(const CharT* CString) const { return StartsWith(CString, GetCStrLength(CString)); }
+
+		/** @return     true if the string view ends with the given suffix */
+		bool EndsWith(const CharT* CString, size_t count) const;
+		bool EndsWith(const CharT* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
+
+		//bool Contains(const CharT* CString) const;
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
@@ -150,6 +160,18 @@ export namespace jpt
 		JPT_ASSERT((index + count) <= m_size, "SubStr cannot exceeds string's bound");
 
 		return BasicStringView(m_pBuffer + index, count);
+	}
+
+	template<StringLiteral _CharT>
+	bool BasicStringView<_CharT>::StartsWith(const CharT* CString, size_t count) const
+	{
+		return AreStringsSame(m_pBuffer, CString, count);
+	}
+
+	template<StringLiteral _CharT>
+	bool BasicStringView<_CharT>::EndsWith(const CharT* CString, size_t count) const
+	{
+		return AreStringsSame(m_pBuffer + m_size - count, CString, count);
 	}
 
 	using StringView = BasicStringView<char>;
