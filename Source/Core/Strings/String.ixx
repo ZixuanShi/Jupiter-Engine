@@ -14,6 +14,8 @@ import jpt.Math;
 import jpt.StringUtils;
 import jpt.TypeDefs;
 
+import jpt_private.ContiguousIterator;
+
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
 
@@ -25,6 +27,7 @@ export namespace jpt
 	public:
 		using CharT = _CharT;
 		using AllocatorT = _AllocatorT;
+		using Iterator = jpt_private::ContiguousIterator<CharT>;
 
 	private:
 		CharT* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
@@ -52,6 +55,12 @@ export namespace jpt
 		const CharT& Front() const { return m_pBuffer[0]; }
 		CharT& Back() { return m_pBuffer[m_size - 1]; }
 		const CharT& Back() const { return m_pBuffer[m_size - 1]; }
+
+		// Iterators
+		Iterator begin() { return Iterator(m_pBuffer); }
+		const Iterator begin() const { return Iterator(m_pBuffer); }
+		Iterator end() { return Iterator(m_pBuffer + m_size); }
+		const Iterator end() const { return Iterator(m_pBuffer + m_size); }
 
 		// Capacity
 		size_t Size() const { return m_size; }

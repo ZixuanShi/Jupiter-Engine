@@ -205,6 +205,35 @@ bool UnitTest_StringReplace()
 	return true;
 }
 
+//template<jpt::BasicStringType StringT>
+bool UnitTest_String_Iterator()
+{
+	jpt::String str("0123456789");
+
+	int32 i = 0;
+	for (char c : str)
+	{
+		//JPT_LOG(c);
+
+		jpt::String s = jpt::ToString(i);
+		JPT_RETURN_FALSE_IF_ERROR(s[0] != c, "");
+
+		++i;
+	}
+
+	str = "Jupiter Jupiter Jupiter Jupiter ";
+	for (auto itr = str.begin(); itr < str.end(); itr += 8)
+	{
+		jpt::StringView strView(&*itr, 8);
+		jpt::String s(&*itr, 8);
+		JPT_RETURN_FALSE_IF_ERROR(strView != "Jupiter ", "");
+		JPT_RETURN_FALSE_IF_ERROR(s != "Jupiter ", "");
+	}
+
+
+	return true;
+}
+
 export bool RunStringUnitTests()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_DefaultStringConstructing<jpt::String>(), "UnitTest_DefaultStringConstructing Failed");
@@ -230,6 +259,8 @@ export bool RunStringUnitTests()
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringReplace<jpt::String>(), "UnitTest_StringReplace Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringReplace<jpt::WString>(), "UnitTest_StringReplace Failed");
+
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Iterator(), "UnitTest_String_Iterator Failed");
 
 	return true;
 }

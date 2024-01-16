@@ -33,3 +33,4 @@ export import jpt.TimingUtils;
 
 // Types
 export import jpt.Optional;
+export import jpt.Enum;
