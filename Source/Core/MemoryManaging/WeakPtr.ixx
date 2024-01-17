@@ -34,7 +34,7 @@ export namespace jpt
 		~WeakPtr();
 
 		/** Releases the ownership of the managed object */
-		void Reset() { Reset(nullptr); }
+		void Reset() { InternalReset(nullptr); }
 
 		/** @return		number of StrongPtr objects referring to the same managed object */
 		int32 GetRefCount() const { return m_pRefCounter ? m_pRefCounter->GetSharedRefs() : 0; }
@@ -46,7 +46,7 @@ export namespace jpt
 		StrongPtr<DataT> Lock() const;
 
 	private:
-		void Reset(DataT* pPtr);
+		void InternalReset(DataT* pPtr);
 		void IncrementWeakRef();
 	};
 
@@ -72,7 +72,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			Reset(other.m_pPtr);
+			InternalReset(other.m_pPtr);
 			m_pRefCounter = other.m_pRefCounter;
 			IncrementWeakRef();
 		}
@@ -83,7 +83,7 @@ export namespace jpt
 	template<typename DataT>
 	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const StrongPtr<DataT>& shared)
 	{
-		Reset(shared.m_pPtr);
+		InternalReset(shared.m_pPtr);
 		m_pRefCounter = shared.m_pRefCounter;
 		IncrementWeakRef();
 
@@ -95,7 +95,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			Reset(other.m_pPtr);
+			InternalReset(other.m_pPtr);
 			m_pRefCounter = other.m_pRefCounter;
 
 			other.m_pPtr = nullptr;
@@ -116,7 +116,7 @@ export namespace jpt
 	template<typename DataT>
 	WeakPtr<DataT>::~WeakPtr()
 	{
-		Reset(nullptr);
+		InternalReset(nullptr);
 	}
 
 	template<typename DataT>
@@ -136,7 +136,7 @@ export namespace jpt
 	}
 
 	template<typename DataT>
-	void WeakPtr<DataT>::Reset(DataT* pPtr)
+	void WeakPtr<DataT>::InternalReset(DataT* pPtr)
 	{
 		m_pPtr = pPtr;
 

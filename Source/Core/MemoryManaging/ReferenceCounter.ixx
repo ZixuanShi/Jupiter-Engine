@@ -14,7 +14,7 @@ export namespace jpt_private
 
 	public:
 		ReferenceCounter() = default;
-		ReferenceCounter(int32 strongRef) : m_strongRefs(strongRef) {}
+		ReferenceCounter(int32 strongRefs, int32 weakRefs) : m_strongRefs(strongRefs), m_weakRefs(weakRefs) {}
 
 		void IncrementStrongRef() { ++m_strongRefs; }
 		void IncrementWeakRef() { ++m_weakRefs; }
