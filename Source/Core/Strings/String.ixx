@@ -105,7 +105,7 @@ export namespace jpt
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
 		void CopyString(const CharT* inCString, size_t size);
 		void CopyString(const CharT* inCString) { CopyString(inCString, GetCStrLength(inCString)); }
-		void CopyString(const BasicString<CharT>& otherString);
+		void CopyString(const BasicString<CharT>& otherString) { CopyString(otherString.ConstBuffer(), otherString.Size()); }
 
 		/* Move the content of string. Will take ownership of the passed in string */
 		void MoveString(CharT* inCString, size_t size);
@@ -483,17 +483,6 @@ export namespace jpt
 		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 		StrCpy(m_pBuffer, m_size + sizeof(CharT), inCString);
-	}
-
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::CopyString(const BasicString<CharT>& otherString)
-	{
-		m_size = otherString.m_size;
-		JPT_RETURN_IF(IsEmpty());
-
-		UpdateBuffer(m_size);
-		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
-		StrCpy(m_pBuffer, m_size + sizeof(CharT), otherString.ConstBuffer());
 	}
 
 	template<StringLiteral CharT, class AllocatorT>

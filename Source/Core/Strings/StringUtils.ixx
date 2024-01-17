@@ -265,34 +265,52 @@ export namespace jpt
 		}
 	}
 
-	/* @return		true if two C-Style strings within the given size are identical. false if not */
+	/* @return		
+		- npos if two C-Style strings within the given size are identical. 
+		- 0 maybe strings' sizes are not equal
+		- 0 to size for the index of of the first different char found in two strings */
 	template<StringLiteral CharT>
-	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t string1Size, size_t string2Size)
+	size_t StrCmp(const CharT* pString1, const CharT* pString2, size_t string1Size, size_t string2Size)
 	{
 		if (string1Size != string2Size)
 		{
-			return false;
+			return 0;
 		}
 
 		for (size_t i = 0; i < string1Size; ++i)
 		{
 			if (pString1[i] != pString2[i])
 			{
-				return false;
+				return i;
 			}
 		}
 
-		return true;
+		return npos;
+	}
+	template<StringLiteral CharT>
+	size_t StrCmp(const CharT* pString1, const CharT* pString2, size_t size)
+	{
+		return StrCmp(pString1, pString2, size, size);
+	}
+	template<StringLiteral CharT>
+	size_t StrCmp(const CharT* pString1, const CharT* pString2)
+	{
+		return StrCmp(pString1, pString2, GetCStrLength(pString1), GetCStrLength(pString2));
+	}
+	template<StringLiteral CharT>
+	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t string1Size, size_t string2Size)
+	{
+		return StrCmp(pString1, pString2, string1Size, string2Size) == npos;
 	}
 	template<StringLiteral CharT>
 	bool AreStringsSame(const CharT* pString1, const CharT* pString2, size_t size)
 	{
-		return AreStringsSame(pString1, pString2, size, size);
+		return StrCmp(pString1, pString2, size) == npos;
 	}
 	template<StringLiteral CharT>
 	bool AreStringsSame(const CharT* pString1, const CharT* pString2)
 	{
-		return AreStringsSame(pString1, pString2, GetCStrLength(pString1), GetCStrLength(pString2));
+		return StrCmp(pString1, pString2) == npos;
 	}
 
 	template<>
