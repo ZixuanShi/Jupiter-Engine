@@ -265,7 +265,10 @@ export namespace jpt
 		}
 	}
 
-	/* @return		
+	/** Compares two C-Style strings. 
+		Optional one size parameter indicates how many characters should it compare from begin
+		Optional two size parameters indicates the first and second string's size in order
+		@return		
 		- npos if two C-Style strings within the given size are identical. 
 		- 0 maybe strings' sizes are not equal
 		- 0 to size for the index of of the first different char found in two strings */
