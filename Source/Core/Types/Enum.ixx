@@ -2,8 +2,6 @@
 
 module;
 
-
-
 export module jpt.Enum;
 
 export namespace jpt

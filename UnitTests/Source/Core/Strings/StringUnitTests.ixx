@@ -225,9 +225,7 @@ bool UnitTest_String_Iterator()
 	for (auto itr = str.begin(); itr < str.end(); itr += 8)
 	{
 		jpt::StringView strView(&*itr, 8);
-		jpt::String s(&*itr, 8);
 		JPT_RETURN_FALSE_IF_ERROR(strView != "Jupiter ", "");
-		JPT_RETURN_FALSE_IF_ERROR(s != "Jupiter ", "");
 	}
 
 

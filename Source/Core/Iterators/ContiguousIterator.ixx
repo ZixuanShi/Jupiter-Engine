@@ -1,3 +1,5 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 export module jpt_private.ContiguousIterator;
 
 import jpt.TypeDefs;
@@ -35,10 +37,10 @@ export namespace jpt_private
 		DataT* operator->() { return m_pPtr; }
 		DataT& operator*() { return *m_pPtr; }
 
-		bool operator<(const ContiguousIterator& other) const { return m_pPtr < other.m_pPtr; }
+		bool operator< (const ContiguousIterator& other) const { return m_pPtr <  other.m_pPtr; }
 		bool operator<=(const ContiguousIterator& other) const { return m_pPtr <= other.m_pPtr; }
 
-		bool operator>(const ContiguousIterator& other) const { return m_pPtr > other.m_pPtr; }
+		bool operator> (const ContiguousIterator& other) const { return m_pPtr >  other.m_pPtr; }
 		bool operator>=(const ContiguousIterator& other) const { return m_pPtr >= other.m_pPtr; }
 
 		bool operator==(const ContiguousIterator& other) const { return m_pPtr == other.m_pPtr; }
