@@ -117,7 +117,7 @@
 		return pString;\
 	}()
 
-/** @return true if a macro's variadic arguments is not empty. false if the macro doesn't have optional arguments
+/** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/
 #define JPT_HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')
@@ -126,10 +126,6 @@
 	@example:
 	int intArray[12];
 	int intArrayCount = JPT_ARRAY_COUNT(intArray); */
-template <typename T, unsigned int Number>
-char(&ArrayCountHelper(const T(&)[Number]))[Number + 1];
-#define JPT_ARRAY_COUNT( inArray ) (sizeof(ArrayCountHelper(inArray)) - 1)
-
-/** Compile time outputs an error containing the argument value
-	@example: JPT_CT_PRINT(sizeof(int)); will output char [4] */
-#define JPT_CT_PRINT( X ) { char JPT_CT_PRINT_TRICK[(X)]; CT_PRINT_TRICK = 1; }
+template <typename T, unsigned int kNumber>
+char(&ArrayCountHelper(const T(&)[kNumber]))[kNumber + 1];
+#define JPT_ARRAY_COUNT(inArray) (sizeof(ArrayCountHelper(inArray)) - 1)

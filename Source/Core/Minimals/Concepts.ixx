@@ -59,7 +59,4 @@ export namespace jpt
 
 	template<typename T>
 	concept EnabledToString = requires(T object) { object.ToString(); };
-
-	template<typename T>
-	concept EnabledCout = requires(T object) { std::cout << object; };
 }
