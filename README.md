@@ -41,4 +41,23 @@ This applies to both Engine and Client Project directory
   - Init
   - Update
   - Clear
-  - OnEvent
+  - OnEvent 
+
+- A class should follow this order
+    class Example
+    {
+    public:
+        TypeDefs
+        Enums
+
+    private:
+        Member Variables
+
+    public:
+        6 generated member functions
+
+        APIs
+
+    private:
+        Internal functions
+    }
