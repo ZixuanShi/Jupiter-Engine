@@ -59,8 +59,11 @@ export namespace jpt
 		// Iterators
 		Iterator begin() { return Iterator(m_pBuffer); }
 		const Iterator begin() const { return Iterator(m_pBuffer); }
+		const Iterator cbegin() const { return Iterator(m_pBuffer); }
+
 		Iterator end() { return Iterator(m_pBuffer + m_size); }
 		const Iterator end() const { return Iterator(m_pBuffer + m_size); }
+		const Iterator cend() const { return Iterator(m_pBuffer + m_size); }
 
 		// Capacity
 		size_t Size() const { return m_size; }
@@ -80,11 +83,11 @@ export namespace jpt
 		/* Deallocate the memory that this string holds */
 		void Clear();
 
-		/* Replace the some content of this string with the new given one within a range
+		/* Replace the some content of this string with the new given one within optional range
 			@param stringToFind:	The string we want to remove and replace
 			@param stringToReplace:	The string to replace the original data
-			@param startIndex:		The start index to start searching. Default to 0
-			@param endIndex:		The end index to stop operation. Default to size() */
+			@param startIndex:		[optional] The start index to start searching. Default to 0
+			@param endIndex:		[optional] The end index to stop operation. Default to size() */
 		BasicString& Replace(const CharT* stringToFind, const CharT* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
 
 		/** @return		A sub string within the given range at index and length */
