@@ -45,7 +45,7 @@ namespace jpt
 		DataT* Get() const noexcept { return m_pPtr; }
 
 		/** @returns    number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return m_pRefCounter ? m_pRefCounter->GetSharedRefs() : 0; }
+		int32 GetRefCount() const;
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr DataT& operator*() const noexcept { return *Get(); }
@@ -126,6 +126,17 @@ namespace jpt
 	}
 
 	template<typename DataT>
+	int32 StrongPtr<DataT>::GetRefCount() const
+	{
+		if (m_pRefCounter)
+		{
+			return m_pRefCounter->GetStrongRefs();
+		}
+
+		return 0;
+	}
+
+	template<typename DataT>
 	template<typename DeleterT>
 	void StrongPtr<DataT>::Reset(DataT* pPtr, const DeleterT& deleter)
 	{
@@ -154,7 +165,7 @@ namespace jpt
 			}
 		}
 
-		if (!m_pRefCounter || !m_pRefCounter->HasAnySharedRef())
+		if (!m_pRefCounter || !m_pRefCounter->HasAnyStrongRef())
 		{
 			deleter(m_pPtr);
 		}

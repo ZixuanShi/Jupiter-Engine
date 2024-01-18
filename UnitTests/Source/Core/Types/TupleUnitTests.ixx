@@ -31,8 +31,6 @@ bool UnitTest_Tuple()
 
 export bool RunTupleUnitTests()
 {
-	jpt::StrCmp("String1", "String2");
-
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Tuple(), "UnitTest_Tuple Failed");
 
 	return true;

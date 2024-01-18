@@ -16,6 +16,25 @@ bool UnitTest_CreateEnum()
 	//	kOrange,
 	//	kPeach,
 	//};
+
+	//class EnumElement
+	//{
+	//	int32 value;
+	//	const char* str = "";
+	//};
+
+	//class JptEnum
+	//{
+	//private: 
+	//	StaticArray<EnumElement> m_enumElements;
+
+	//public:
+	// constexpr JptEnum()
+	// 
+	//	ToString();
+	//};
+
+
 	//EFruit::kApple;
 	//EFruit::kOrange;
 
@@ -26,6 +45,7 @@ bool UnitTest_CreateEnum()
 	//	"Peach",
 	//};
 	//EFruit.Val("Apple");
+
 
 	return true;
 }

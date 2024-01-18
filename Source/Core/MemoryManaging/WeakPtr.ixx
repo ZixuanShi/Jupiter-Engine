@@ -37,10 +37,10 @@ export namespace jpt
 		void Reset() { InternalReset(nullptr); }
 
 		/** @return		number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const { return m_pRefCounter ? m_pRefCounter->GetSharedRefs() : 0; }
+		int32 GetRefCount() const;
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
-		bool IsExpired() const { return m_pRefCounter ? GetRefCount() == 0 : true; }
+		bool IsExpired() const;
 
 		/** @return		a shared_ptr that manages the referenced object */
 		StrongPtr<DataT> Lock() const;
@@ -117,6 +117,28 @@ export namespace jpt
 	WeakPtr<DataT>::~WeakPtr()
 	{
 		InternalReset(nullptr);
+	}
+
+	template<typename DataT>
+	int32 WeakPtr<DataT>::GetRefCount() const
+	{
+		if (m_pRefCounter)
+		{
+			return m_pRefCounter->GetStrongRefs();
+		}
+
+		return 0;
+	}
+
+	template<typename DataT>
+	bool WeakPtr<DataT>::IsExpired() const
+	{
+		if (m_pRefCounter)
+		{
+			return GetRefCount() == 0;
+		}
+
+		return true;
 	}
 
 	template<typename DataT>

@@ -22,11 +22,11 @@ export namespace jpt_private
 		void DecrementStrongRef() { --m_strongRefs; }
 		void DecrementWeakRef() { --m_weakRefs; }
 
-		int32 GetSharedRefs() const { return m_strongRefs; }
+		int32 GetStrongRefs() const { return m_strongRefs; }
 		int32 GetWeakRefs() const { return m_weakRefs; }
 
-		bool HasAnySharedRef() const { return m_strongRefs > 0; }
+		bool HasAnyStrongRef() const { return m_strongRefs > 0; }
 		bool HasAnyWeakRef() const { return m_weakRefs > 0; }
-		bool HasAnyRef() const { return HasAnySharedRef() || HasAnyWeakRef(); }
+		bool HasAnyRef() const { return HasAnyStrongRef() || HasAnyWeakRef(); }
 	};
 }
