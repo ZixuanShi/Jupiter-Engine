@@ -1,9 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include <type_traits>
-
 export module jpt.TypeTraits;
 
 export namespace jpt

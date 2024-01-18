@@ -2,7 +2,7 @@
 
 module;
 
-#include <type_traits>
+#include <stdint.h>
 
 export module jpt.TypeDefs;
 
