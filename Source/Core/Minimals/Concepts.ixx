@@ -8,7 +8,7 @@ module;
 export module jpt.Concepts;
 
 import jpt.Constants;
-import jpt.TypeDefs;
+import jpt.TypeTraits;
 
 export namespace jpt
 {

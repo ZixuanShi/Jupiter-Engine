@@ -13,11 +13,10 @@ import jpt.Utilities;
 
 //namespace jpt_private
 //{
-//	template<size_t ...Indices, typename... DataTs>
-//	struct TupleImpl<integer_sequence<size_t, Indices...>, DataTs...> :public TupleLeaf<Indices, DataTs>...
-//	{
+//	// TupleLeaf
+//	template<size_t I, typename ValueType, bool IsEmpty = is_empty_v>
+//	class TupleLeaf;
 //
-//	}
 //}
 //
 //namespace jpt

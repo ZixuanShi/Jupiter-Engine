@@ -7,10 +7,11 @@
 
 export module jpt.CoreModules;
 
-// Building
+// Minimals
 export import jpt.Concepts;
 export import jpt.Constants;
 export import jpt.TypeDefs;
+export import jpt.TypeTraits;
 export import jpt.Utilities;
 
 // Math

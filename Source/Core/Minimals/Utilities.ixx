@@ -10,7 +10,7 @@ module;
 export module jpt.Utilities;
 
 import jpt.Concepts;
-import jpt.TypeDefs;
+import jpt.TypeTraits;
 
 export namespace jpt
 {

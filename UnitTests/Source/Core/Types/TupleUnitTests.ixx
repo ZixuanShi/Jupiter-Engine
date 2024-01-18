@@ -19,7 +19,8 @@ bool UnitTest_Tuple()
 		}
 	};
 
-	//jpt::Tuple<int, char, bool, Foo> tuple{3, 'C', false, Foo()};
+	//jpt::Tuple<int, char, bool, Foo> tuple1;
+	//jpt::Tuple<int, char, bool, Foo> tuple2{3, 'C', false, Foo()};
 	
 	//JPT_LOG(jpt::get<0>(tuple));
 	//JPT_LOG(jpt::get<1>(tuple));
