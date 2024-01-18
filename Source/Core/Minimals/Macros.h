@@ -75,16 +75,16 @@
 
 /** Helper for clean and delete.
 	@param pPointer: Assumed to have Clean() function implemented */
-#define JPT_CLEAN_THEN_DELETE(pPointer)\
-	pPointer->Clean();\
+#define JPT_CLEAR_THEN_DELETE(pPointer)\
+	pPointer->Clear();\
 	JPT_DELETE(pPointer);
 
 /** Helper for safe cleanand delete.
 	@param pPointer: Assumed to have Clean() function implemented */
-#define JPT_SAFE_CLEAN_THEN_DELETE(pPointer)\
+#define JPT_SAFE_CLEAR_THEN_DELETE(pPointer)\
 	if(pPointer)\
 	{\
-		pPointer->Clean();\
+		pPointer->Clear();\
 	}\
 	JPT_SAFE_DELETE(pPointer);
 

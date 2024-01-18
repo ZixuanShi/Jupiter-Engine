@@ -35,3 +35,10 @@ This applies to both Engine and Client Project directory
 | Scripting           | Node Based Visual Scripting, Lua Scripting                                                                           |
 | UIUX                | User Interface and Experience, Widgets, HUD                                                                          |
 | VFX                 | Visual Effects. Particles, Fog, Water, Smoke, Reflection                                                             |
+
+## Coding Standards
+- An object's life cycle should be named as the following:
+  - Init
+  - Update
+  - Clear
+  - OnEvent
