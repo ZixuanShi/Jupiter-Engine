@@ -82,10 +82,10 @@ bool UnitTest_IsLValueRefType()
 {
 	bool value = false;
 
-	value = jpt::IsLValueReferenceType<int32>;
+	value = jpt::IsLValueRef<int32>;
 	JPT_RETURN_FALSE_IF_ERROR(value, "");
 
-	value = jpt::IsLValueReferenceType<int32&>;
+	value = jpt::IsLValueRef<int32&>;
 	JPT_RETURN_FALSE_IF_ERROR(!value, "");
 
 	return true;
@@ -95,10 +95,26 @@ bool UnitTest_IsRValueRefType()
 {
 	bool value = false;
 
-	value = jpt::IsRValueReferenceType<int32>;
+	value = jpt::IsRValueRef<int32>;
 	JPT_RETURN_FALSE_IF_ERROR(value, "");
 
-	value = jpt::IsRValueReferenceType<int32&&>;
+	value = jpt::IsRValueRef<int32&&>;
+	JPT_RETURN_FALSE_IF_ERROR(!value, "");
+
+	return true;
+}
+
+bool UnitTest_IsRef()
+{
+	bool value = false;
+
+	value = jpt::IsRef<int32>;
+	JPT_RETURN_FALSE_IF_ERROR(value, "");
+
+	value = jpt::IsRef<int32&>;
+	JPT_RETURN_FALSE_IF_ERROR(!value, "");
+
+	value = jpt::IsRef<int32&&>;
 	JPT_RETURN_FALSE_IF_ERROR(!value, "");
 
 	return true;
@@ -276,7 +292,8 @@ export bool RunTypeTraitsUnitTests()
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Decay<jpt::String>(), "UnitTest_Decay Failed");
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsLValueRefType(), "UnitTest_IsLValueRefType Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsRValueRefType(), "UnitTest_IsRValueRefType Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsLValueRefType(), "UnitTest_IsLValueRefType Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsRef(), "UnitTest_IsRef Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsSameType(), "UnitTest_IsSameType Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsAnyOf(), "UnitTest_IsAnyOf Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_IsEmptyObj(), "UnitTest_IsEmptyObj Failed");

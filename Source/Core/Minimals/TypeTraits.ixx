@@ -19,10 +19,13 @@ export namespace jpt
 	template<typename T> struct Decay<const T&>              { using Type = T;  };
 	template<typename T> struct Decay<const T&&>             { using Type = T;  };
 
-	template<typename T> constexpr bool IsLValueReferenceType      = false;
-	template<typename T> constexpr bool IsLValueReferenceType<T&>  = true;
-	template<typename T> constexpr bool IsRValueReferenceType      = false;
-	template<typename T> constexpr bool IsRValueReferenceType<T&&> = true;
+	template<typename T> constexpr bool IsLValueRef      = false;
+	template<typename T> constexpr bool IsLValueRef<T&>  = true;
+	template<typename T> constexpr bool IsRValueRef      = false;
+	template<typename T> constexpr bool IsRValueRef<T&&> = true;
+	template<typename T> constexpr bool IsRef            = false;
+	template<typename T> constexpr bool IsRef<T&>        = true;
+	template<typename T> constexpr bool IsRef<T&&>       = true;
 
 	// Same type checking
 	// Example: jpt::IsSameType<int32, float>

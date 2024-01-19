@@ -14,15 +14,35 @@ import jpt.TypeTraits;
 
 //namespace jpt_private
 //{
-//	// TupleLeaf
-//	template<size_t I, typename ValueType, bool IsEmpty = jpt::IsEmpty<ValueType>>
+//	// Basic building-block
+//	// Each leaf has an index, so that each base-class becomes unique even if the types they contain are identical, 
+//	// so we can access the nth element with a simple static_cast:
+//	template<size_t I, typename ValueType, bool IsEmptyObj = jpt::IsEmptyObj<ValueType>>
 //	class TupleLeaf;
 //
+//	template<size_t I, typename ValueType, bool IsEmptyObj>
+//	void Swap(TupleLeaf<I, ValueType, IsEmptyObj>& a, TupleLeaf<I, ValueType, IsEmptyObj>& b)
+//	{
+//		jpt::Swap(a.Get(), b.Get());
+//	}
+//
+//	template<size_t _I, typename _ValueType, bool _IsEmptyObj>
+//	class TupleLeaf
+//	{
+//	private:
+//		_ValueType m_value;
+//
+//	public:
+//		TupleLeaf()
+//		{
+//			static_assert(!);
+//		}
+//	};
 //}
 //
 //namespace jpt
 //{
-//	template<typename... DataTs>
+//	export template<typename... DataTs>
 //	class Tuple;
 //
 //	export template<typename DataT, typename... DataTs>

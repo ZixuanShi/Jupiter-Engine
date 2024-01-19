@@ -20,7 +20,7 @@ export namespace jpt
 	{
 		using CastT = RemoveReference<T>::Type;
 
-		static_assert(IsLValueReferenceType<T>, "jpt::move called on an lvalue");
+		static_assert(IsLValueRef<T>, "jpt::move called on an lvalue");
 		static_assert(!IsSameType<CastT&, const CastT&>, "jpt::move called on a const object");
 
 		return static_cast<CastT&&>(object);
@@ -36,7 +36,7 @@ export namespace jpt
 	template<class T>
 	T&& Forward(typename RemoveReference<T>::Type&& obj)
 	{
-		static_assert(!IsLValueReferenceType<T>, "Bad forward call");
+		static_assert(!IsLValueRef<T>, "Bad forward call");
 		return static_cast<T&&>(obj);
 	}
 
