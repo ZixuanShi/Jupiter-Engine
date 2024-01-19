@@ -10,11 +10,12 @@ module;
 export module jpt.Tuple;
 
 import jpt.Utilities;
+import jpt.TypeTraits;
 
 //namespace jpt_private
 //{
 //	// TupleLeaf
-//	template<size_t I, typename ValueType, bool IsEmpty = is_empty_v>
+//	template<size_t I, typename ValueType, bool IsEmpty = jpt::IsEmpty<ValueType>>
 //	class TupleLeaf;
 //
 //}

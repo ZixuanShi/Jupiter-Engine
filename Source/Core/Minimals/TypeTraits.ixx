@@ -5,13 +5,19 @@ export module jpt.TypeTraits;
 export namespace jpt
 {
 	// Rvalue and Lvalue Utils
-	template<typename T> struct RemoveReference              { using Type = T; };
-	template<typename T> struct RemoveReference<T&>          { using Type = T; };
-	template<typename T> struct RemoveReference<T&&>         { using Type = T; };
-	template<typename T> struct RemoveConst                  { using Type = T; };
-	template<typename T> struct RemoveConst<const T>         { using Type = T; };
-	template<typename T> struct RValueToLValueReference      { using Type = T; };
+	template<typename T> struct RemoveReference              { using Type = T;  };
+	template<typename T> struct RemoveReference<T&>          { using Type = T;  };
+	template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
+	template<typename T> struct RemoveConst                  { using Type = T;  };
+	template<typename T> struct RemoveConst<const T>         { using Type = T;  };
+	template<typename T> struct RValueToLValueReference      { using Type = T;  };
 	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
+	template<typename T> struct Decay                        { using Type = T;  };
+	template<typename T> struct Decay<T&>                    { using Type = T;  };
+	template<typename T> struct Decay<T&&>                   { using Type = T;  };
+	template<typename T> struct Decay<const T>               { using Type = T;  };
+	template<typename T> struct Decay<const T&>              { using Type = T;  };
+	template<typename T> struct Decay<const T&&>             { using Type = T;  };
 
 	template<typename T> constexpr bool IsLValueReferenceType      = false;
 	template<typename T> constexpr bool IsLValueReferenceType<T&>  = true;
@@ -34,7 +40,7 @@ export namespace jpt
 
 	/** @return		Whether the given type is empty or not. */
 	template<typename T>
-	constexpr bool IsEmpty = __is_empty(T);
+	constexpr bool IsEmptyObj = __is_empty(T);
 
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};
@@ -42,7 +48,15 @@ export namespace jpt
 	template<bool kCondition, typename ReturnType = void> using enable_if_t = enable_if<kCondition, ReturnType>::ReturnType;
 
 	// Is Array
-	template<typename T>           struct IsArray       { static constexpr bool Value = false; };
-	template<typename T>           struct IsArray<T[]>  { static constexpr bool Value = true;  };
-	template<typename T, size_t N> struct IsArray<T[N]> { static constexpr bool Value = true;  };
+	/** @note	This doesn't work on heap allocated array
+		@example	
+			int32 numArray[] = { 0,1 };	
+			jpt::IsArray<decltype(numArray)> // true
+		
+		@example
+			int32* numArray = new int[2];
+			jpt::IsArray<decltype(numArray)>;	// false */
+	template<typename T>           constexpr bool IsArray       = false;
+	template<typename T>           constexpr bool IsArray<T[]>  = true;
+	template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
 }

@@ -8,6 +8,7 @@ export module CoreUnitTests;
 
 // Utilities
 import UtilitiesUnitTests;
+import TypeTraitsUnitTests;
 
 // Debugging
 import LoggerUnitTests;
@@ -37,8 +38,9 @@ import TupleUnitTests;
 
 export bool RunUnitTests_Core()
 {
-	// Building
+	// Minimals
 	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunTypeTraitsUnitTests(), "TypeTraits Unit Tests Failed");
 
 	// Debugging
 	JPT_RETURN_FALSE_IF_ERROR(!RunLoggerUnitTests(), "Logger Unit Tests Failed");
