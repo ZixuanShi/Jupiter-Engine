@@ -12,7 +12,10 @@ workspace "JupiterUnitTests"
         "Profiling",    -- Profiling. Same configurations with Release but Profiling code
         "Release",      -- Relese/Shipping
     }
-    platforms { "Win64" }
+    platforms 
+    {
+        "Win64",
+    }
 
     startproject ("UnitTests")
 
@@ -43,7 +46,7 @@ workspace "JupiterUnitTests"
         defines 
         { 
             "IS_DEBUG",
-            "JPT_ENABLE_DEBUG_FEATURES",
+            "JPT_ENABLE_EDITOR_FEATURES",
         }
         buildoptions { "/MTd" }
         optimize "Off"
@@ -53,14 +56,18 @@ workspace "JupiterUnitTests"
         defines 
         { 
             "IS_DEVELOPMENT",
-            "JPT_ENABLE_DEBUG_FEATURES",
+            "JPT_ENABLE_EDITOR_FEATURES",
         }
         buildoptions { "/MT" }
         optimize "Full"
         symbols "On"
 
     filter "configurations:Profiling"
-        defines { "IS_PROFILING" }
+        defines 
+        { 
+            "IS_PROFILING",
+            "JPT_ENABLE_EDITOR_FEATURES",
+        }
         buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"

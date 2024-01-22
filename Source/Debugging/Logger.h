@@ -2,7 +2,7 @@
 
 #pragma once
 
-#if JPT_ENABLE_DEBUG_FEATURES
+#if JPT_ENABLE_EDITOR_FEATURES
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -66,4 +66,4 @@ namespace jpt
 	#define JPT_WARNING(message, ...)		
 	#define JPT_ERROR(message, ...)		
 
-#endif // JPT_ENABLE_DEBUG_FEATURES
+#endif // JPT_ENABLE_EDITOR_FEATURES

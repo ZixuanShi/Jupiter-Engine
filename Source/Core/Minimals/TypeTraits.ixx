@@ -45,6 +45,12 @@ export namespace jpt
 	template<typename T>
 	constexpr bool IsEmptyObj = __is_empty(T);
 
+	template<typename T, typename... Args>
+	constexpr bool IsConstructible = __is_constructible(T, Args...);
+
+	template<typename FromT, typename ToT>
+	constexpr bool IsConvertible = __is_convertible_to(FromT, ToT);
+
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};
 	template<typename _ReturnType>                        struct enable_if<true, _ReturnType> { using ReturnType = _ReturnType; };

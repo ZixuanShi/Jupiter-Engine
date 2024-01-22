@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#if JPT_ENABLE_DEBUG_FEATURES
+#if JPT_ENABLE_EDITOR_FEATURES
 
 #include "Logger.h"
 
@@ -87,4 +87,4 @@ namespace jpt
 	}
 }
 
-#endif // JPT_ENABLE_DEBUG_FEATURES
+#endif // JPT_ENABLE_EDITOR_FEATURES

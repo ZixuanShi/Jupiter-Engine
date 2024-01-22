@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#if JPT_ENABLE_DEBUG_FEATURES
+#if JPT_ENABLE_EDITOR_FEATURES
 
 #include "Assert.h"
 
@@ -42,4 +42,4 @@ namespace jpt
 		OnAssertionFailed(line, file, expression, nullptr);
 	}
 }
-#endif // JPT_ENABLE_DEBUG_FEATURES
+#endif // JPT_ENABLE_EDITOR_FEATURES
