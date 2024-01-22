@@ -35,6 +35,7 @@ import TimingUtilsUnitTests;
 import OptionalUnitTests;
 import EnumUnitTests;
 import TupleUnitTests;
+import PairUnitTests;
 
 export bool RunUnitTests_Core()
 {
@@ -67,6 +68,7 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunOptionalUnitTests(), "Optional Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunEnumUnitTests(), "Enum Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunTupleUnitTests(), "Tuple Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunPairUnitTests(), "Pair Tests Failed");
 
 	return true;
 }

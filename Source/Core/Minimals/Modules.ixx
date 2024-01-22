@@ -36,3 +36,4 @@ export import jpt.TimingUtils;
 export import jpt.Optional;
 export import jpt.Enum;
 export import jpt.Tuple;
+export import jpt.Pair;
