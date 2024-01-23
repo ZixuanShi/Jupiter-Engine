@@ -7,75 +7,76 @@ import jpt.TypeTraits;
 
 export namespace jpt
 {
-	/** Recurssive inheriting tuple implementation */
-	template<typename... Args>
-	struct Tuple
-	{
-		static constexpr bool kIsConstructible = true;
-	};
-
-	template<typename DataT, typename... OtherTs>
-	struct Tuple<DataT, OtherTs...> : public Tuple<OtherTs...>
+	template<typename DataT, typename... RestT>
+	struct Tuple : public Tuple<RestT...>
 	{
 	public:
-		static constexpr bool kIsConstructible = IsConstructible<DataT> && Tuple<OtherTs...>::kIsConstructible;
-
-		DataT m_value;	/**< The value at this DataT & index will be stored */
+		DataT m_value;
 
 	public:
 		constexpr Tuple() = default;
-		constexpr Tuple(DataT value, OtherTs... otherValues);
+		constexpr Tuple(const DataT& value, RestT&&... rest);
 	};
 
-	template<typename DataT, typename ...OtherTs>
-	constexpr Tuple<DataT, OtherTs...>::Tuple(DataT value, OtherTs ...otherValues)
-		: Tuple<OtherTs...>(Forward<OtherTs>(otherValues)...)
-		, m_value(Forward<DataT>(value))
+	template<typename DataT>
+	struct Tuple<DataT>
+	{
+	public:
+		DataT m_value;
+
+	public:
+		constexpr Tuple() = default;
+		constexpr Tuple(const DataT& value);
+	};
+
+	template<typename DataT, typename ...RestT>
+	constexpr Tuple<DataT, RestT...>::Tuple(const DataT& value, RestT&& ...rest)
+		: Tuple<RestT...>(Forward<RestT>(rest)...)
+		, m_value(value)
+	{
+	}
+
+	template<typename DataT>
+	constexpr Tuple<DataT>::Tuple(const DataT& value)
+		: m_value(value)
 	{
 	}
 }
 
-/** Helpers for getting value */
+/** Helpers for retrieving Tuple data */
 namespace jpt_private
 {
 	using jpt::Tuple;
 
-	template<size_t, typename T>
-	struct GetTypeAt;
-
-	template<typename CurrentT, typename... OtherTs>
-	struct GetTypeAt<0, Tuple<CurrentT, OtherTs...>>
+	template<int index, typename DataT, typename... Rest>
+	struct GetValueAtImpl
 	{
-		using Type      = CurrentT;
-		using TupleType = Tuple<CurrentT, OtherTs...>;
+		static auto Value(const Tuple<DataT, Rest...>& t) -> decltype(GetValueAtImpl<index - 1, Rest...>::Value(t))&
+		{
+			return GetValueAtImpl<index - 1, Rest...>::Value(t);
+		}
 	};
 
-	template<size_t Index, typename CurrentT, typename... OtherTs>
-	struct GetTypeAt<Index, Tuple<CurrentT, OtherTs...>>
+	template<typename DataT, typename... Rest>
+	struct GetValueAtImpl<0, DataT, Rest...>
 	{
-		using Type      = GetTypeAt<Index - 1, Tuple<OtherTs...>>::Type;
-		using TupleType = GetTypeAt<Index - 1, Tuple<OtherTs...>>::TupleType;
+		static DataT& Value(const Tuple<DataT, Rest...>& t)
+		{
+			return *const_cast<DataT*>(&t.m_value);
+		}
 	};
 }
 
-/** Global utilities functions around tuple */
+/** Tuple global APIs */
 export namespace jpt
 {
-	/** Retrieving data from a tuple */
-	template<size_t Index, typename... Ts>
-	constexpr jpt_private::GetTypeAt<Index, Tuple<Ts...>>::Type& GetValueAt(Tuple<Ts...>& tuple)
+	// Get Value at index
+	using jpt_private::GetValueAtImpl;
+
+	template<int index, typename DataT, typename... Rest>
+	auto GetValueAt(const Tuple<DataT, Rest...>& t) -> decltype(GetValueAtImpl<index, DataT, Rest...>::Value(t))&
 	{
-		using TupleType = jpt_private::GetTypeAt<Index, Tuple<Ts...>>::TupleType;
-
-		return reinterpret_cast<TupleType&>(tuple).m_value;
-	}
-
-	template<size_t Index, typename... Ts>
-	constexpr const jpt_private::GetTypeAt<Index, Tuple<Ts...>>::Type& GetValueAt(const Tuple<Ts...>& tuple)
-	{
-		using TupleType = jpt_private::GetTypeAt<Index, Tuple<Ts...>>::TupleType;
-
-		return reinterpret_cast<const TupleType&>(tuple).m_value;
+		return GetValueAtImpl<index, DataT, Rest...>::Value(t);
 	}
 
 	/** Forwarding a group of data as tuple */
