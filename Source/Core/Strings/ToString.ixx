@@ -15,6 +15,12 @@ import jpt.String;
 export namespace jpt
 {
 	template<typename T>
+	concept EnabledToString = requires(T object) { object.ToString(); };
+
+	template<typename T>
+	concept EnabledToWString = requires(T object) { object.ToWString(); };
+
+	template<typename T>
 	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;	// Add any additional primitive types if implemented later
 
 	// Any non-primitive object that has ToString() implemented
@@ -24,14 +30,21 @@ export namespace jpt
 		return object.ToString();
 	}
 
+	template<EnabledToString T>
+	WString ToWString(const T& object)
+	{
+		return object.ToWString();
+	}
+
 	// int, uint
 	template<BasicStringType StringT = jpt::String, Integral IntT>
 	StringT ToString(IntT integer)
 	{
 		using CharT = StringT::CharT;
+
 		CharT* integerCString = IntegerToCStr<CharT>(integer);
 		StringT integerString;
-		integerString.MoveString(Move(integerCString));
+		integerString.MoveString(integerCString);
 		return integerString;
 	}
 
@@ -40,9 +53,10 @@ export namespace jpt
 	StringT ToString(FloatT value)
 	{
 		using CharT = StringT::CharT;
+
 		CharT* floatCString = FloatToCStr<CharT>(value);
 		StringT floatString;
-		floatString.MoveString(Move(floatCString));
+		floatString.MoveString(floatCString);
 		return floatString;
 	}
 

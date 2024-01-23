@@ -112,7 +112,7 @@ export namespace jpt
 
 		/* Move the content of string. Will take ownership of the passed in string */
 		void MoveString(CharT* inCString, size_t size);
-		void MoveString(CharT* inCString) { MoveString(Move(inCString), GetCStrLength(inCString)); }
+		void MoveString(CharT* inCString) { MoveString(inCString, GetCStrLength(inCString)); }
 		void MoveString(BasicString<CharT>&& otherString);
 
 		/** @return An integer associated with this string

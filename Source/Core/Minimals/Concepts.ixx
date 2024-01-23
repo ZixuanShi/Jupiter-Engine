@@ -56,7 +56,4 @@ export namespace jpt
 
 	template<typename T>
 	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
-
-	template<typename T>
-	concept EnabledToString = requires(T object) { object.ToString(); };
 }
