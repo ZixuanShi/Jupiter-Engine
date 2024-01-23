@@ -33,39 +33,40 @@ bool UnitTest_Tuple()
 	jpt::Tuple<int, char, bool, Foo, int, jpt::String> tuple{3, 'C', false, Foo(10), 4, "Hello"};
 	
 	// Initializing
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'C', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != false, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(10), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 4, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Hello", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 3, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'C', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != false, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(10), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 4, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Hello", "");
 
 	// Copy assign
-	jpt::GetValueAt<0>(tuple) = 42;
-	jpt::GetValueAt<1>(tuple) = 'A';
-	jpt::GetValueAt<2>(tuple) = true;
-	jpt::GetValueAt<3>(tuple) = Foo(42);
-	jpt::GetValueAt<4>(tuple) = 0;
-	jpt::GetValueAt<5>(tuple).Append(" World");
+	jpt::Get<0>(tuple) = 42;
+	jpt::Get<1>(tuple) = 'A';
+	jpt::Get<2>(tuple) = true;
+	jpt::Get<3>(tuple) = Foo(42);
+	jpt::Get<4>(tuple) = 0;
+	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 42, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'A', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != true, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(42), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 0, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Hello World", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'A', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != true, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(42), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 0, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Hello World", "");
 
 	// Move assign
 	Foo foo(420);
 	jpt::String str("Jupiter Engine");
 
-	jpt::GetValueAt<3>(tuple) = jpt::Move(foo);
-	jpt::GetValueAt<5>(tuple) = jpt::Move(str);
+	jpt::Get<3>(tuple) = jpt::Move(foo);
+	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(420), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Jupiter Engine", "");
-
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(420), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
+	
 	// Get Size
+	// Warning	C4127	conditional expression is constant :)
 	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
 
 	return true;
@@ -76,29 +77,32 @@ bool UnitTest_EmptyTuple()
 	jpt::Tuple<int, char, bool, Foo, int, jpt::String> tuple;
 
 	// Copy assign
-	jpt::GetValueAt<0>(tuple) = 42;
-	jpt::GetValueAt<1>(tuple) = 'A';
-	jpt::GetValueAt<2>(tuple) = true;
-	jpt::GetValueAt<3>(tuple) = Foo(42);
-	jpt::GetValueAt<4>(tuple) = 0;
-	jpt::GetValueAt<5>(tuple).Append(" World");
+	jpt::Get<0>(tuple) = 42;
+	jpt::Get<1>(tuple) = 'A';
+	jpt::Get<2>(tuple) = true;
+	jpt::Get<3>(tuple) = Foo(42);
+	jpt::Get<4>(tuple) = 0;
+	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 42, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'A', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != true, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(42), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 0, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != " World", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'A', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != true, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(42), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 0, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != " World", "");
 
 	// Move assign
+	char c = 'C';
 	Foo foo(420);
 	jpt::String str("Jupiter Engine");
 
-	jpt::GetValueAt<3>(tuple) = jpt::Move(foo);
-	jpt::GetValueAt<5>(tuple) = jpt::Move(str);
+	jpt::Get<1>(tuple) = jpt::Move(c);
+	jpt::Get<3>(tuple) = jpt::Move(foo);
+	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(420), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'C', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(420), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
 
 	// Get Size
 	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
@@ -111,11 +115,11 @@ bool UnitTest_ConstTuple()
 	const jpt::Tuple<int, char, bool, Foo, jpt::String> tuple{ 3, 'C', false, Foo(10), "Hello" };
 
 	// Initializing
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'C', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != false, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(10), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != "Hello", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 3, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'C', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != false, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(10), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != "Hello", "");
 
 	// Get Size
 	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 5, "");
@@ -128,28 +132,28 @@ bool UnitTest_ConstDataTuple()
 	jpt::Tuple<int, char, const bool, Foo, const int, const jpt::String> tuple{ 3, 'C', false, Foo(10), 4, "Hello" };
 
 	// Initializing
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'C', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != false, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(10), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 4, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Hello", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 3, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'C', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != false, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(10), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 4, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Hello", "");
 
 	// Copy assign
-	jpt::GetValueAt<0>(tuple) = 42;
-	jpt::GetValueAt<1>(tuple) = 'A';
-	jpt::GetValueAt<3>(tuple) = Foo(42);
+	jpt::Get<0>(tuple) = 42;
+	jpt::Get<1>(tuple) = 'A';
+	jpt::Get<3>(tuple) = Foo(42);
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 42, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'A', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(42), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'A', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(42), "");
 
 	// Move assign
 	Foo foo(420);
 
-	jpt::GetValueAt<3>(tuple) = jpt::Move(foo);
+	jpt::Get<3>(tuple) = jpt::Move(foo);
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(420), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(420), "");
 
 	// Get Size
 	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
@@ -162,37 +166,37 @@ bool UnitTest_Tie()
 	auto tuple = jpt::Tie(3, 'C', false, Foo(10), 4, jpt::String("Hello"));
 
 	// Initializing
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'C', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != false, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(10), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 4, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Hello", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 3, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'C', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != false, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(10), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 4, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Hello", "");
 
 	// Copy assign
-	jpt::GetValueAt<0>(tuple) = 42;
-	jpt::GetValueAt<1>(tuple) = 'A';
-	jpt::GetValueAt<2>(tuple) = true;
-	jpt::GetValueAt<3>(tuple) = Foo(42);
-	jpt::GetValueAt<4>(tuple) = 0;
-	jpt::GetValueAt<5>(tuple).Append(" World");
+	jpt::Get<0>(tuple) = 42;
+	jpt::Get<1>(tuple) = 'A';
+	jpt::Get<2>(tuple) = true;
+	jpt::Get<3>(tuple) = Foo(42);
+	jpt::Get<4>(tuple) = 0;
+	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<0>(tuple) != 42, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<1>(tuple) != 'A', "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<2>(tuple) != true, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(42), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<4>(tuple) != 0, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Hello World", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 42, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<1>(tuple) != 'A', "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<2>(tuple) != true, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(42), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != 0, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Hello World", "");
 
 	// Move assign
 	Foo foo(420);
 	jpt::String str("Jupiter Engine");
 
-	jpt::GetValueAt<3>(tuple) = jpt::Move(foo);
-	jpt::GetValueAt<5>(tuple) = jpt::Move(str);
+	jpt::Get<3>(tuple) = jpt::Move(foo);
+	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<3>(tuple) != Foo(420), "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetValueAt<5>(tuple) != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(420), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
 
 	// Get Size
 	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
