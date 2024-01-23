@@ -28,6 +28,7 @@ export import jpt.WeakPtr;
 export import jpt.String;
 export import jpt.StringUtils;
 export import jpt.StringView;
+export import jpt.ToString;
 
 // Timing
 export import jpt.TimingUtils;
