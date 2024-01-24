@@ -7,6 +7,7 @@ import jpt.Utilities;
 
 export namespace jpt
 {
+#pragma region Clamping
 	/** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
 	template<ComparableTrivial T>
 	constexpr T GetClamped(T value, T min, T max)
@@ -62,25 +63,9 @@ export namespace jpt
 		}
 	}
 
-	/** @return The absolute value of input arithmetic parameter */
-	template<Numeric NumT>
-	constexpr NumT GetAbs(NumT value)
-	{
-		return (value >= static_cast<NumT>(0) ? value : -value);
-	}
+#pragma endregion Clamping
 
-	/** @return true if two values are close enough */
-	template<Integral IntT>
-	constexpr bool AreValuesClose(IntT A, IntT B)
-	{
-		return A == B;
-	}
-
-	template<Floating FloatT>
-	constexpr bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
-	{
-		return GetAbs(A - B) < tolerance;
-	}
+#pragma region MinMax
 
 	template <Trivial FirstT, typename... RestT>
 	constexpr FirstT Min(FirstT first, RestT... inputs)
@@ -142,5 +127,27 @@ export namespace jpt
 			} (), ...);
 
 		return largestVal;
+	}
+
+#pragma endregion MinMax
+
+	/** @return The absolute value of input arithmetic parameter */
+	template<Numeric NumT>
+	constexpr NumT GetAbs(NumT value)
+	{
+		return (value >= static_cast<NumT>(0) ? value : -value);
+	}
+
+	/** @return true if two values are close enough */
+	template<Integral IntT>
+	constexpr bool AreValuesClose(IntT A, IntT B)
+	{
+		return A == B;
+	}
+
+	template<Floating FloatT>
+	constexpr bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
+	{
+		return GetAbs(A - B) < tolerance;
 	}
 }
