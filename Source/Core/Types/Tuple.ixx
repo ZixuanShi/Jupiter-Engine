@@ -14,7 +14,6 @@ export namespace jpt
 	template<typename DataT, typename... RestT>
 		struct Tuple<DataT, RestT...> : public Tuple<RestT...>
 	{
-	public:
 		DataT m_value;
 
 	public:
@@ -64,6 +63,7 @@ namespace jpt
 {
 	/** Get Value at Index */
 	using jpt_private::GetImpl;
+
 	export template<size_t index, typename DataT, typename... RestT>
 	constexpr auto Get(const Tuple<DataT, RestT...>& tuple) -> decltype(GetImpl<index, DataT, RestT...>::Value(tuple))
 	{
