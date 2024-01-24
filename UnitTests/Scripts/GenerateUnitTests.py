@@ -63,7 +63,8 @@ def main():
         file.write(file_to_add_content)
 
     # TODO: Modify corresponding Category_UnitTests.ixx to integrate the new unit test module automatically
-    # 
+    # Insert import <SubjectName>UnitTests;
+    # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
 
     # Run GenerateProjects.bat to adopt the new unit test in Visual Studio
     os.chdir(script_dir)

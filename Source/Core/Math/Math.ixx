@@ -79,90 +79,68 @@ export namespace jpt
 	template<Floating FloatT>
 	constexpr bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
 	{
-		return jpt::GetAbs(A - B) < tolerance;
+		return GetAbs(A - B) < tolerance;
 	}
 
-	template<ComparableTrivial T>
-	constexpr T Min(T a, T b)
+	template <Trivial FirstT, typename... RestT>
+	constexpr FirstT Min(FirstT first, RestT... inputs)
 	{
-		return (a < b) ? a : b;
+		FirstT smallestVal = first;
+
+		([&]
+			{
+				if (smallestVal > inputs)
+				{
+					smallestVal = inputs;
+				}
+			} (), ...);
+
+		return smallestVal;
+	}
+	template <NonTrivial FirstT, typename... RestT>
+	constexpr FirstT Min(const FirstT& first, const RestT&... inputs)
+	{
+		FirstT smallestVal = first;
+
+		([&]
+			{
+				if (smallestVal > inputs)
+				{
+					smallestVal = inputs;
+				}
+			} (), ...);
+
+		return smallestVal;
 	}
 
-	template<ComparableTrivial T>
-	constexpr T Min(T a, T b, T c)
+	template <Trivial FirstT, typename... RestT>
+	constexpr FirstT Max(FirstT first, RestT... inputs)
 	{
-		T temp = Min(a, b);
-		return Min(temp, c);
-	}
+		FirstT largestVal = first;
 
-	template<ComparableTrivial T>
-	constexpr T Min(T a, T b, T c, T d)
-	{
-		T temp1 = Min(a, b);
-		T temp2 = Min(c, d);
-		return Min(temp1, temp2);
-	}
+		([&]
+			{
+				if (largestVal < inputs)
+				{
+					largestVal = inputs;
+				}
+			} (), ...);
 
-	template<ComparableNonTrivial T>
-	constexpr T Min(const T& a, const T& b)
-	{
-		return (a < b) ? a : b;
+		return largestVal;
 	}
-
-	template<ComparableNonTrivial T>
-	constexpr T Min(const T& a, const T& b, const T& c)
+	template <NonTrivial FirstT, typename... RestT>
+	constexpr FirstT Max(const FirstT& first, const RestT&... inputs)
 	{
-		T temp = Min(a, b);
-		return Min(temp, c);
-	}
+		FirstT largestVal = first;
 
-	template<ComparableNonTrivial T>
-	constexpr T Min(const T& a, const T& b, const T& c, const T& d)
-	{
-		T temp1 = Min(a, b);
-		T temp2 = Min(c, d);
-		return Min(temp1, temp2);
-	}
+		([&]
+			{
+				if (largestVal < inputs)
+				{
+					largestVal = inputs;
+				}
+			} (), ...);
 
-	template<ComparableTrivial T>
-	constexpr T Max(T a, T b)
-	{
-		return (a > b) ? a : b;
-	}
-
-	template<ComparableTrivial T>
-	constexpr T Max(T a, T b, T c)
-	{
-		T temp = Max(a, b);
-		return Max(temp, c);
-	}
-
-	template<ComparableTrivial T>
-	constexpr T Max(T a, T b, T c, T d)
-	{
-		T temp1 = Max(a, b);
-		T temp2 = Max(c, d);
-		return Max(temp1, temp2);
-	}
-
-	template<ComparableNonTrivial T>
-	constexpr T Max(const T& a, const T& b)
-	{
-		return (a > b) ? a : b;
-	}
-
-	template<ComparableNonTrivial T>
-	constexpr T Max(const T& a, const T& b, const T& c)
-	{
-		T temp = Max(a, b);
-		return Max(temp, c);
-	}
-
-	template<ComparableNonTrivial T>
-	T Max(const T& a, const T& b, const T& c, const T& d)
-	{
-		T temp1 = Max(a, b);
-		T temp2 = Max(c, d);
-		return Max(temp1, temp2);
+		return largestVal;
 	}
 }
