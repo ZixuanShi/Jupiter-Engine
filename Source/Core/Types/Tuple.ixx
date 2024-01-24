@@ -8,8 +8,11 @@ import jpt.TypeTraits;
 /** Recursive Inheritance implementation  */
 export namespace jpt
 {
+	template<typename... ArgsT>
+	struct Tuple {};
+
 	template<typename DataT, typename... RestT>
-		struct Tuple : public Tuple<RestT...>
+		struct Tuple<DataT, RestT...> : public Tuple<RestT...>
 	{
 	public:
 		DataT m_value;
@@ -19,20 +22,6 @@ export namespace jpt
 		constexpr Tuple(const DataT& value, RestT&&... rest)
 			: Tuple<RestT...>(Forward<RestT>(rest)...)
 			, m_value(value)
-		{
-		}
-	};
-
-	template<typename DataT>
-		struct Tuple<DataT>
-	{
-	public:
-		DataT m_value;
-
-	public:
-		constexpr Tuple() = default;
-		constexpr Tuple(const DataT& value)
-			: m_value(value)
 		{
 		}
 	};
@@ -77,25 +66,27 @@ namespace jpt
 	}
 
 	/** Forwarding a group of data as tuple */
-	export template<typename... Ts>
-	constexpr Tuple<Ts...> Tie(Ts&&... args)
+	export template<typename... ArgsT>
+	constexpr Tuple<ArgsT...> Tie(ArgsT&&... args)
 	{
-		return Tuple<Ts...>(Forward<Ts>(args)...);
+		return Tuple<ArgsT...>(Forward<ArgsT>(args)...);
 	}
 
 	/** Getting how many data Ts can a tuple holds */
-	export template <typename T>
-	struct TupleSize {};
-
-	export template<typename... Ts>
-	struct TupleSize<Tuple<Ts...>> 
-	{ 
-		static constexpr size_t kValue = sizeof...(Ts);
-	};
-
-	export template<typename... Ts>
-	struct TupleSize<const Tuple<Ts...>>
+	export template <typename DataT>
+	struct TupleSize 
 	{
-		static constexpr size_t kValue = sizeof...(Ts);
 	};
+
+	export template<typename... ArgsT>
+	struct TupleSize<Tuple<ArgsT...>>
+	{ 
+		static constexpr size_t kValue = sizeof...(ArgsT);
+	};
+
+	export template<typename... ArgsT>
+	struct TupleSize<const Tuple<ArgsT...>>
+	{
+		static constexpr size_t kValue = sizeof...(ArgsT);
+	};	
 }

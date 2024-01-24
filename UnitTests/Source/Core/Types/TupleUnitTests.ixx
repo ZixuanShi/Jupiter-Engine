@@ -67,7 +67,7 @@ bool UnitTest_Tuple()
 	
 	// Get Size
 	// Warning	C4127	conditional expression is constant :)
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
 
 	return true;
 }
@@ -105,7 +105,7 @@ bool UnitTest_EmptyTuple()
 	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
 
 	// Get Size
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
 
 	return true;
 }

@@ -6,6 +6,8 @@ module;
 
 export module CoreUnitTests;
 
+// Containers
+
 // Utilities
 import UtilitiesUnitTests;
 import TypeTraitsUnitTests;
@@ -42,6 +44,8 @@ export bool RunUnitTests_Core()
 	// Minimals
 	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunTypeTraitsUnitTests(), "TypeTraits Unit Tests Failed");
+
+	// Containers
 
 	// Debugging
 	JPT_RETURN_FALSE_IF_ERROR(!RunLoggerUnitTests(), "Logger Unit Tests Failed");
