@@ -74,7 +74,7 @@ namespace jpt
 	using jpt_private::GetSizeImpl;
 
 	export template<typename... ArgsT>
-	consteval size_t GetSize(const jpt::Tuple<ArgsT...>& tuple)
+	consteval size_t GetSize(const jpt::Tuple<ArgsT...>& /*tuple*/)
 	{
 		return GetSizeImpl<ArgsT...>::kValue;
 	}
