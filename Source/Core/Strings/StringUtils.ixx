@@ -86,7 +86,7 @@ export namespace jpt
 		// Process each digit
 		while (value > 0)
 		{
-			const int32 digit = value % base;
+			const IntT digit = value % base;
 
 			// For different base, process differently
 			if (digit > 9)

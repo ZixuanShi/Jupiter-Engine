@@ -67,7 +67,7 @@ bool UnitTest_Tuple()
 	
 	// Get Size
 	// Warning	C4127	conditional expression is constant :)
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 6, "");
 
 	return true;
 }
@@ -105,7 +105,7 @@ bool UnitTest_EmptyTuple()
 	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
 
 	// Get Size
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 6, "");
 
 	return true;
 }
@@ -122,7 +122,7 @@ bool UnitTest_ConstTuple()
 	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<4>(tuple) != "Hello", "");
 
 	// Get Size
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 5, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 5, "");
 
 	return true;
 }
@@ -156,7 +156,7 @@ bool UnitTest_ConstDataTuple()
 	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<3>(tuple) != Foo(420), "");
 
 	// Get Size
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 6, "");
 
 	return true;
 }
@@ -199,7 +199,17 @@ bool UnitTest_Tie()
 	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<5>(tuple) != "Jupiter Engine", "");
 
 	// Get Size
-	//JPT_RETURN_FALSE_IF_ERROR(jpt::TupleSize<decltype(tuple)>::kValue != 6, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 6, "");
+
+	return true;
+}
+
+bool UnitTest_OneTypeTuple()
+{
+	jpt::Tuple<int> tuple{42};
+
+	JPT_RETURN_FALSE_IF_ERROR(jpt::Get<0>(tuple) != 42, "");
+	//JPT_RETURN_FALSE_IF_ERROR(jpt::GetSize(tuple) != 1, "");
 
 	return true;
 }
@@ -208,6 +218,7 @@ export bool RunTupleUnitTests()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Tuple(), "UnitTest_Tuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_EmptyTuple(), "UnitTest_EmptyTuple Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_OneTypeTuple(), "UnitTest_OneTypeTuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ConstTuple(), "UnitTest_ConstTuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ConstDataTuple(), "UnitTest_ConstDataTuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Tie(), "UnitTest_Tie Failed");
