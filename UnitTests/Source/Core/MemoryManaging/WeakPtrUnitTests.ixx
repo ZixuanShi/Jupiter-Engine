@@ -69,7 +69,7 @@ bool UnitTests_WeakPtr_Class()
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 1, "");
 
-		jpt::StrongPtr<Foo> fooShared2 = fooWeak.Lock();
+		jpt::StrongPtr<Foo> fooShared2 = fooWeak;
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.IsExpired(), "");
 		JPT_RETURN_FALSE_IF_ERROR(fooWeak.GetRefCount() != 2, "");
 		JPT_RETURN_FALSE_IF_ERROR(fooShared2.GetRefCount() != 2, "");
@@ -98,9 +98,9 @@ bool UnitTests_WeakPtr_Referencing()
 	weakStringPtr2 = strongStringPtr1;
 	weakStringPtr3 = strongStringPtr1;
 
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Jupiter Engine", "");
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Jupiter Engine", "");
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1 != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2 != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3 != "Jupiter Engine", "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");
@@ -113,9 +113,9 @@ bool UnitTests_WeakPtr_Referencing()
 		weakStringPtr2 = strongStringPtr2;
 		weakStringPtr3 = strongStringPtr2;
 
-		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Zixuan Shi", "");
-		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Zixuan Shi", "");
-		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1 != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2 != "Zixuan Shi", "");
+		JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3 != "Zixuan Shi", "");
 		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
 		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
 		JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");
@@ -128,9 +128,9 @@ bool UnitTests_WeakPtr_Referencing()
 	weakStringPtr1 = strongStringPtr1;
 	weakStringPtr2 = strongStringPtr1;
 	weakStringPtr3 = strongStringPtr1;
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1.Lock() != "Jupiter Engine", "");
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2.Lock() != "Jupiter Engine", "");
-	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3.Lock() != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr1 != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr2 != "Jupiter Engine", "");
+	JPT_RETURN_FALSE_IF_ERROR(*weakStringPtr3 != "Jupiter Engine", "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr1.GetRefCount() != 1, "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr2.GetRefCount() != 1, "");
 	JPT_RETURN_FALSE_IF_ERROR(weakStringPtr3.GetRefCount() != 1, "");

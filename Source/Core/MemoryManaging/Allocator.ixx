@@ -51,18 +51,18 @@ export namespace jpt
 	template<typename T>
 	T* Allocator<T>::Allocate(size_t count /* = 1 */ )
 	{
-		return static_cast<T*>(::operator new(count * sizeof(T)));
+		return new T[count];
 	}
 
 	template<typename T>
 	T* Allocator<T>::AllocateArray(size_t count, const std::initializer_list<T>& values/* = {}*/)
 	{
-		T* pArray = static_cast<T*>(::operator new[](count * sizeof(T)));
+		T* pArray = new T[count];
 
 		size_t i = 0;
-		for (auto itr = values.begin(); itr != values.end(); ++itr)
+		for (const T& element : values)
 		{
-			pArray[i] = *itr;
+			pArray[i] = element;
 			++i;
 		}
 
@@ -72,21 +72,19 @@ export namespace jpt
 	template<typename T>
 	T* Allocator<T>::AllocateWithValue(const T& data)
 	{
-		T* pPointer = static_cast<T*>(::operator new(sizeof(T)));
-		*pPointer = data;
-		return pPointer;
+		return new T(data);
 	}
 
 	template<typename T>
 	void Allocator<T>::Deallocate(T* pPointer)
 	{
-		::operator delete(pPointer);
+		delete pPointer;
 	}
 
 	template<typename T>
 	void Allocator<T>::DeallocateArray(T* pArray)
 	{
-		::operator delete[](pArray);
+		delete[] pArray;
 	}
 
 	template<typename T>

@@ -19,6 +19,8 @@ export namespace jpt
 	template<typename DataT>
 	class WeakPtr
 	{
+		friend class StrongPtr<DataT>;
+
 	private:
 		DataT* m_pPtr = nullptr;
 		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
@@ -42,8 +44,12 @@ export namespace jpt
 		/** @return		true if the managed object has already been deleted, false otherwise. */
 		bool IsExpired() const;
 
-		/** @return		a shared_ptr that manages the referenced object */
-		StrongPtr<DataT> Lock() const;
+		/** @return		Object Ptr if this is not Expired, nullptr otherwise */
+		DataT* GetIfValid() const;
+
+		/** @return		Reference or pointer to the managed object if not expired */
+		constexpr DataT& operator*() const noexcept  { return *GetIfValid(); }
+		constexpr DataT* operator->() const noexcept { return GetIfValid(); }
 
 	private:
 		void InternalReset(DataT* pPtr);
@@ -142,19 +148,14 @@ export namespace jpt
 	}
 
 	template<typename DataT>
-	StrongPtr<DataT> WeakPtr<DataT>::Lock() const
+	DataT* WeakPtr<DataT>::GetIfValid() const
 	{
-		if (m_pPtr && m_pRefCounter)
+		if (!IsExpired())
 		{
-			m_pRefCounter->IncrementStrongRef();
-
-			StrongPtr<DataT> shared;
-			shared.m_pPtr = m_pPtr;
-			shared.m_pRefCounter = m_pRefCounter;
-			return shared;
+			return m_pPtr;
 		}
 
-		return StrongPtr<DataT>();
+		return nullptr;
 	}
 
 	template<typename DataT>

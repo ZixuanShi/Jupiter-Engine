@@ -62,6 +62,9 @@ def main():
     with open(unit_test_path, "w") as file:
         file.write(file_to_add_content)
 
+    # TODO: Modify corresponding Category_UnitTests.ixx to integrate the new unit test module automatically
+    # 
+
     # Run GenerateProjects.bat to adopt the new unit test in Visual Studio
     os.chdir(script_dir)
     subprocess.run(script_dir + "/GenerateProjects.bat")

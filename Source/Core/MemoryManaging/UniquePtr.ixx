@@ -39,12 +39,9 @@ export namespace jpt
 		DeleterT& GetDeleter() noexcept { return m_deleter; }
 		const DeleterT& GetDeleter() const noexcept { return m_deleter; }
 
-		/** @return		Pointer to the managed object or nullptr if no object is owned */
-		DataT* Get() const noexcept { return m_pPtr; }
-
 		/** @return		Reference or pointer to the managed object */
-		constexpr DataT& operator*() const noexcept { return *Get(); }
-		constexpr DataT* operator->() const noexcept { return Get(); }
+		constexpr DataT& operator*()  const noexcept { return *m_pPtr; }
+		constexpr DataT* operator->() const noexcept { return  m_pPtr; }
 
 		/** @return		true if *this owns an object, false otherwise */
 		constexpr bool IsValid() const noexcept { return m_pPtr != nullptr; }
@@ -54,10 +51,10 @@ export namespace jpt
 	/** Constructs a non-array type T. The arguments args are passed to the constructor of T. 
 		This overload participates in overload resolution only if T is not an array type. 
 		The function is equivalent to: UniquePtr<T>(new T(std::forward<Args>(args)...)) */
-	template<typename DataT, class... Args>
-	[[nodiscard]] constexpr UniquePtr<DataT> MakeUnique(Args&&...args)
+	template<typename DataT, class... ArgsT>
+	[[nodiscard]] constexpr UniquePtr<DataT> MakeUnique(ArgsT&&...args)
 	{
-		return UniquePtr<DataT>(new DataT(jpt::Forward<Args>(args)...));
+		return UniquePtr<DataT>(new DataT(jpt::Forward<ArgsT>(args)...));
 	}
 
 	template<class DataT1, class DleterT1, class DataT2, class DleterT2 >

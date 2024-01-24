@@ -106,7 +106,7 @@
 		{\
 			pString = #SourceStr;\
 		}\
-		else if (jpt::IsSameType<CharT, wchar_t>)\
+		else if constexpr (jpt::IsSameType<CharT, wchar_t>)\
 		{\
 			pString = JPT_TO_WSTRING(#SourceStr);\
 		}\

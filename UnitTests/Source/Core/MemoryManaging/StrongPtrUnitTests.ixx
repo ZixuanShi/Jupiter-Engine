@@ -120,7 +120,7 @@ bool UnitTest_StrongPtr_Class2()
 	weakFoo = sharedFoo2;
 	weakFoo = weakFoo2;
 	weakFoo2 = sharedFoo1;
-	weakFoo2.Lock();
+	*weakFoo2;
 
 	return true;
 }

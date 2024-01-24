@@ -9,7 +9,7 @@ export namespace jpt
 {
 	/** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
 	template<ComparableTrivial T>
-	T GetClamped(T value, T min, T max)
+	constexpr T GetClamped(T value, T min, T max)
 	{
 		if (value < min)
 		{
@@ -22,7 +22,7 @@ export namespace jpt
 		return value;
 	}
 	template<ComparableNonTrivial T>
-	T GetClamped(const T& value, const T& min, const T& max)
+	constexpr T GetClamped(const T& value, const T& min, const T& max)
 	{
 		if (value < min)
 		{
@@ -71,32 +71,32 @@ export namespace jpt
 
 	/** @return true if two values are close enough */
 	template<Integral IntT>
-	bool AreValuesClose(IntT A, IntT B)
+	constexpr bool AreValuesClose(IntT A, IntT B)
 	{
 		return A == B;
 	}
 
 	template<Floating FloatT>
-	bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
+	constexpr bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
 	{
 		return jpt::GetAbs(A - B) < tolerance;
 	}
 
 	template<ComparableTrivial T>
-	T Min(T a, T b)
+	constexpr T Min(T a, T b)
 	{
 		return (a < b) ? a : b;
 	}
 
 	template<ComparableTrivial T>
-	T Min(T a, T b, T c)
+	constexpr T Min(T a, T b, T c)
 	{
 		T temp = Min(a, b);
 		return Min(temp, c);
 	}
 
 	template<ComparableTrivial T>
-	T Min(T a, T b, T c, T d)
+	constexpr T Min(T a, T b, T c, T d)
 	{
 		T temp1 = Min(a, b);
 		T temp2 = Min(c, d);
@@ -104,20 +104,20 @@ export namespace jpt
 	}
 
 	template<ComparableNonTrivial T>
-	T Min(const T& a, const T& b)
+	constexpr T Min(const T& a, const T& b)
 	{
 		return (a < b) ? a : b;
 	}
 
 	template<ComparableNonTrivial T>
-	T Min(const T& a, const T& b, const T& c)
+	constexpr T Min(const T& a, const T& b, const T& c)
 	{
 		T temp = Min(a, b);
 		return Min(temp, c);
 	}
 
 	template<ComparableNonTrivial T>
-	T Min(const T& a, const T& b, const T& c, const T& d)
+	constexpr T Min(const T& a, const T& b, const T& c, const T& d)
 	{
 		T temp1 = Min(a, b);
 		T temp2 = Min(c, d);
@@ -125,20 +125,20 @@ export namespace jpt
 	}
 
 	template<ComparableTrivial T>
-	T Max(T a, T b)
+	constexpr T Max(T a, T b)
 	{
 		return (a > b) ? a : b;
 	}
 
 	template<ComparableTrivial T>
-	T Max(T a, T b, T c)
+	constexpr T Max(T a, T b, T c)
 	{
 		T temp = Max(a, b);
 		return Max(temp, c);
 	}
 
 	template<ComparableTrivial T>
-	T Max(T a, T b, T c, T d)
+	constexpr T Max(T a, T b, T c, T d)
 	{
 		T temp1 = Max(a, b);
 		T temp2 = Max(c, d);
@@ -146,13 +146,13 @@ export namespace jpt
 	}
 
 	template<ComparableNonTrivial T>
-	T Max(const T& a, const T& b)
+	constexpr T Max(const T& a, const T& b)
 	{
 		return (a > b) ? a : b;
 	}
 
 	template<ComparableNonTrivial T>
-	T Max(const T& a, const T& b, const T& c)
+	constexpr T Max(const T& a, const T& b, const T& c)
 	{
 		T temp = Max(a, b);
 		return Max(temp, c);
