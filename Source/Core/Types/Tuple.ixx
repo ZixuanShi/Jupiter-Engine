@@ -50,12 +50,6 @@ namespace jpt_private
 			return const_cast<DataT&>(tuple.m_value);
 		}
 	};
-
-	template<class... ArgsT>
-	struct GetSizeImpl
-	{
-		static constexpr size_t kValue = sizeof...(ArgsT);
-	};
 }
 
 /** Tuple global APIs */
@@ -63,7 +57,6 @@ namespace jpt
 {
 	/** Get Value at Index */
 	using jpt_private::GetImpl;
-
 	export template<size_t index, typename DataT, typename... RestT>
 	constexpr auto Get(const Tuple<DataT, RestT...>& tuple) -> decltype(GetImpl<index, DataT, RestT...>::Value(tuple))
 	{
@@ -71,12 +64,10 @@ namespace jpt
 	}
 
 	/** Getting how many data Ts can a tuple holds */
-	using jpt_private::GetSizeImpl;
-
 	export template<typename... ArgsT>
 	consteval size_t GetSize(const jpt::Tuple<ArgsT...>& /*tuple*/)
 	{
-		return GetSizeImpl<ArgsT...>::kValue;
+		return sizeof...(ArgsT);
 	}
 
 	/** Forwarding a group of data as tuple */

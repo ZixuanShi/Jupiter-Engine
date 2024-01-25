@@ -4,7 +4,7 @@ module;
 
 #include <chrono>
 
-export module jpt.TimingUtils;
+export module jpt.TimingUtilsDeprecated;
 
 import jpt.String;
 

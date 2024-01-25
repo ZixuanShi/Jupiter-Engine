@@ -31,7 +31,7 @@ import StringUnitTests;
 import StringViewUnitTests;
 
 // Timing
-import TimingUtilsUnitTests;
+import TimingUnitTests;
 
 // Types
 import OptionalUnitTests;
@@ -66,7 +66,7 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringViewUnitTests(), "StringView Tests Failed");
 
 	// Timing
-	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUtilsUnitTests(), "TimingUtils Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUnitTests(), "Timing Tests Failed");
 
 	// Types
 	JPT_RETURN_FALSE_IF_ERROR(!RunOptionalUnitTests(), "Optional Tests Failed");

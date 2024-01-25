@@ -16,6 +16,7 @@ export import jpt.Utilities;
 
 // Math
 export import jpt.Math;
+export import jpt.NumericLimits;
 export import jpt.RandomNumberGenerator;
 
 // Memory Managing
@@ -31,7 +32,7 @@ export import jpt.StringView;
 export import jpt.ToString;
 
 // Timing
-export import jpt.TimingUtils;
+export import jpt.TimingUtilsDeprecated;
 
 // Types
 export import jpt.Optional;

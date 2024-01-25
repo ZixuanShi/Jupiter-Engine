@@ -14,7 +14,7 @@
 #endif
 
 import jpt.String;
-import jpt.TimingUtils;
+import jpt.TimingUtilsDeprecated;
 
 namespace jpt
 {

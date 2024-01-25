@@ -9,7 +9,7 @@ namespace jpt
 	export template<typename T>
 	struct NumericLimits
 	{
-		T Max() const { return std::numeric_limits<T>::max(); }
-		T Min() const { return std::numeric_limits<T>::min(); }
+		static constexpr T Max() { return std::numeric_limits<T>::max(); }
+		static constexpr T Min() { return std::numeric_limits<T>::min(); }
 	};
 }

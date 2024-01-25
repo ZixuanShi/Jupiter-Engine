@@ -4,12 +4,11 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module TimingUtilsUnitTests;
+export module TimingUnitTests;
 
 import jpt.CoreModules;
-import jpt.TimingUtils;
 
-bool UnitTest_TimingUtils()
+bool UnitTest_Timing()
 {
 	//jpt::TimePointParam data;
 	//data.year = 1999;
@@ -28,7 +27,7 @@ bool UnitTest_TimingUtils()
 	return true;
 }
 
-export bool RunTimingUtilsUnitTests()
+export bool RunTimingUnitTests()
 {
 
 	return true;
