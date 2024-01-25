@@ -70,7 +70,7 @@ namespace jpt
 		contentToLog.Reserve(256);
 
 		// Time
-		contentToLog += jpt::ToString(SystemClock::now()) + ". ";
+		//contentToLog += jpt::ToString(SystemClock::now()) + ". ";
 
 		// C++ file name. Get rid of previous folders
 		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);

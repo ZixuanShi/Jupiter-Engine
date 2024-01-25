@@ -8,8 +8,10 @@ export module jpt.TimingUtilsDeprecated;
 
 import jpt.String;
 
-export namespace jpt
+namespace jpt_deprecated
 {
+	using namespace jpt;
+
 	// Concepts
 	template<class T>
 	concept ClockT = std::chrono::is_clock_v<T>;

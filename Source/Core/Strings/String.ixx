@@ -5,6 +5,10 @@ module;
 #include "Core/Minimals/Macros.h"
 #include "Debugging/Assert.h"
 
+#include <stdio.h>
+#include <vadefs.h>
+#include <stdarg.h>
+
 export module jpt.String;
 
 import jpt.Allocator;
@@ -104,6 +108,9 @@ export namespace jpt
 
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		void Reserve(size_t capacity);
+
+		template<size_t kSize>
+		static BasicString Format(const CharT* format, ...);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
 		void CopyString(const CharT* inCString, size_t size);
@@ -475,6 +482,20 @@ export namespace jpt
 		{
 			UpdateBuffer(capacity);
 		}
+	}
+
+	template<StringLiteral _CharT, class _AllocatorT>
+	template<size_t kSize>
+	BasicString<_CharT, _AllocatorT> BasicString<_CharT, _AllocatorT>::Format(const CharT* format, ...)
+	{
+		CharT buffer[kSize];
+
+		va_list args;
+		va_start(args, format);
+		vsprintf_s(buffer, format, args);
+		va_end(args);
+
+		return BasicString(buffer);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>

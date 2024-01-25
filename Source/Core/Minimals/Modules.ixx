@@ -26,12 +26,12 @@ export import jpt.UniquePtr;
 export import jpt.WeakPtr;
 
 // Strings
-export import jpt.String;
-export import jpt.StringUtils;
 export import jpt.StringView;
 export import jpt.ToString;
 
 // Timing
+export import jpt.TimePoint;
+export import jpt.Clock;
 export import jpt.TimingUtilsDeprecated;
 
 // Types

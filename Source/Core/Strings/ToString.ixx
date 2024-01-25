@@ -7,10 +7,12 @@ module;
 
 export module jpt.ToString;
 
+export import jpt.String;
+export import jpt.StringUtils;
+
 import jpt.Concepts;
 import jpt.TypeTraits;
 import jpt.Utilities;
-import jpt.String;
 
 export namespace jpt
 {
