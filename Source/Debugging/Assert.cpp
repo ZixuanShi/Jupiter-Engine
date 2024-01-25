@@ -4,10 +4,13 @@
 
 #include "Assert.h"
 
+#include "Core/Minimals/Macros.h"
 #include "Logger.h"
 
 #include <stdio.h>
 #include <stdarg.h>
+
+
 
 import jpt.String;
 
@@ -23,13 +26,7 @@ namespace jpt
 			message.Append(", ");
 
 			char messageBuffer[512];
-
-			va_list args;
-			va_start(args, format);
-
-			vsprintf_s(messageBuffer, format, args);
-
-			va_end(args);
+			FORMAT_STRING(messageBuffer, format, ...);
 
 			message.Append(messageBuffer);
 		}

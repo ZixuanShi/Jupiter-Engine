@@ -75,14 +75,14 @@ export namespace jpt
 		bool IsEmpty() const { return m_size == 0; }
 
 		/** Searching. Returns npos if not found */
-		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t Find(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t FindFirstOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t FindFirstOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t FindLastOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t FindLastOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		bool Contains(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(charToFind, startIndex, endIndex) != npos; }
-		bool Contains(const CharT* charToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(charToFind, startIndex, endIndex) != npos; }
+		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t Find(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindFirstOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindFirstOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindLastOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindLastOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		bool Contains(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+		bool Contains(const CharT* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
 		
 		/* Deallocate the memory that this string holds */
 		void Clear();
@@ -289,7 +289,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::Find(CharT charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	size_t BasicString<CharT, AllocatorT>::Find(CharT charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -302,7 +302,11 @@ export namespace jpt
 
 			if (m_pBuffer[i] == charToFind)
 			{
-				return i;
+				--count;
+				if (count == 0)
+				{
+					return i;
+				}
 			}
 		}
 
@@ -310,7 +314,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::Find(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	size_t BasicString<CharT, AllocatorT>::Find(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
@@ -326,7 +330,11 @@ export namespace jpt
 			current = SubStr(i, stringToFindSize);
 			if (current == stringToFind)
 			{
-				return i;
+				--count;
+				if (count == 0)
+				{
+					return i;
+				}
 			}
 		}
 
@@ -334,19 +342,19 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindFirstOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	size_t BasicString<CharT, AllocatorT>::FindFirstOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		return Find(charToFind, startIndex, endIndex);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindFirstOf(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	size_t BasicString<CharT, AllocatorT>::FindFirstOf(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		return Find(stringToFind, startIndex, endIndex);
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindLastOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
+	size_t BasicString<CharT, AllocatorT>::FindLastOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -359,7 +367,11 @@ export namespace jpt
 
 			if (m_pBuffer[i] == charToFind)
 			{
-				return i;
+				--count;
+				if (count == 0)
+				{
+					return i;
+				}
 			}
 		}
 
@@ -367,7 +379,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindLastOf(const CharT* stringToFind, size_t startIndex, size_t endIndex) const
+	size_t BasicString<CharT, AllocatorT>::FindLastOf(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, size_t(0), m_size);
@@ -383,7 +395,11 @@ export namespace jpt
 			current = SubStr(i - stringToFindSize, stringToFindSize);
 			if (current == stringToFind)
 			{
-				return i - stringToFindSize;
+				--count;
+				if (count == 0)
+				{
+					return i - stringToFindSize;
+				}
 			}
 		}
 
@@ -489,12 +505,7 @@ export namespace jpt
 	BasicString<_CharT, _AllocatorT> BasicString<_CharT, _AllocatorT>::Format(const CharT* format, ...)
 	{
 		CharT buffer[kSize];
-
-		va_list args;
-		va_start(args, format);
-		vsprintf_s(buffer, format, args);
-		va_end(args);
-
+		FORMAT_STRING(buffer, format, ...);
 		return BasicString(buffer);
 	}
 

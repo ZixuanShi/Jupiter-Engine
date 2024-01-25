@@ -32,13 +32,8 @@ namespace jpt
 
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
-		// Parse info from parameters by format
 		char messageBuffer[512];
-		va_list args;
-		va_start(args, format);
-		vsprintf_s(messageBuffer, format, args);
-		va_end(args);
-
+		FORMAT_STRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
@@ -73,10 +68,11 @@ namespace jpt
 		//contentToLog += jpt::ToString(SystemClock::now()) + ". ";
 
 		// C++ file name. Get rid of previous folders
-		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
+		//contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
+		contentToLog += fileStr;	// If use full path, double clicking the output string in output window will direct to the LOG() call code
 
 		// line number and log type
-		contentToLog += ", line " + jpt::ToString(line) + ":  \t" + "[" + locGetLogStr(type) + "] ";
+		contentToLog += "(" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
 
 		// Content message
 		contentToLog += pMessage;

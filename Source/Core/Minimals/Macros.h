@@ -117,6 +117,16 @@
 		return pString;\
 	}()
 
+/** Formats a buffer as string 
+	@example:
+			char messageBuffer[512];
+			FORMAT_STRING(messageBuffer, "%s%d", "Hi", 42); */
+#define FORMAT_STRING(messageBuffer, format, ...)\
+	va_list args;\
+	va_start(args, format);\
+	vsprintf_s(messageBuffer, format, args);\
+	va_end(args)\
+
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/

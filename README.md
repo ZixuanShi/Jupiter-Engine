@@ -22,8 +22,7 @@ This applies to both Engine and Client Project directory
 | Audio               | Managing Sound and Audio playing                                                                                     |
 | Cinematics          | Controlling Cinematic Screens, managing sequences, channels, properties                                              |
 | Core                | Essential programming libraries. Math, Containers, Timing, Strings, Ptrs                                             |
-| Debugging           | Debug only features. Will be excluded on non-Debugging Configs. Assertion, Logging                                   |
-| Deploying           | Builds and deploy executables to different platforms                                                                 |
+| Debugging           | Debug only features. Will be excluded on releasing Configs. Assertion, Logging                                       |
 | Editor              | Editor only Tools. Will be excluded on releasing builds                                                              |
 | Framework           | Gameplay 3Cs, Entity Component System, Event System,                                                                 |
 | Input               | Managing multi-platform input, mouse, keyboards, controller for different consoles                                   |

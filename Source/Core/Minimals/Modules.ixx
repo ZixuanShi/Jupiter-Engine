@@ -29,11 +29,6 @@ export import jpt.WeakPtr;
 export import jpt.StringView;
 export import jpt.ToString;
 
-// Timing
-export import jpt.TimePoint;
-export import jpt.Clock;
-export import jpt.TimingUtilsDeprecated;
-
 // Types
 export import jpt.Optional;
 export import jpt.Enum;

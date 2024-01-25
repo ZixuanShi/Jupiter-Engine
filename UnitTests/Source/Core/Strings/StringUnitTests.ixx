@@ -205,7 +205,6 @@ bool UnitTest_StringReplace()
 	return true;
 }
 
-//template<jpt::BasicStringType StringT>
 bool UnitTest_String_Iterator()
 {
 	jpt::String str("0123456789");
@@ -228,6 +227,13 @@ bool UnitTest_String_Iterator()
 		JPT_RETURN_FALSE_IF_ERROR(strView != "Jupiter ", "");
 	}
 
+	return true;
+}
+
+bool UnitTest_String_Format()
+{
+	jpt::String str = jpt::String::Format<32>("%s %d %s", "Hello", 42, "World");
+	JPT_RETURN_FALSE_IF_ERROR(str != "Hello 42 World", "");
 
 	return true;
 }
@@ -259,6 +265,7 @@ export bool RunStringUnitTests()
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringReplace<jpt::WString>(), "UnitTest_StringReplace Failed");
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Iterator(), "UnitTest_String_Iterator Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Format(), "UnitTest_String_Format Failed");
 
 	return true;
 }
