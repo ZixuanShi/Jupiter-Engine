@@ -14,6 +14,7 @@ export module jpt.String;
 import jpt.Allocator;
 import jpt.Concepts;
 import jpt.Constants;
+import jpt.Utilities;
 import jpt.Math;
 import jpt.StringUtils;
 import jpt.TypeDefs;
@@ -243,7 +244,7 @@ export namespace jpt
 	template<StringLiteral CharT, class AllocatorT>
 	BasicString<CharT, AllocatorT>::BasicString(BasicString<CharT>&& otherString) noexcept
 	{
-		MoveString(jpt::Move(otherString));
+		MoveString(Move(otherString));
 	}
 
 	template<StringLiteral CharT, class AllocatorT>
@@ -276,7 +277,7 @@ export namespace jpt
 		if (this != &otherString)
 		{
 			Clear();
-			MoveString(jpt::Move(otherString));
+			MoveString(Move(otherString));
 		}
 
 		return *this;
