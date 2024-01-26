@@ -86,6 +86,8 @@ workspace "JupiterUnitTests"
 -- Jupiter Engine
 project "Engine"
     location  (jupiter_dir .. "Visual Studio Files")
+    targetdir (jupiter_dir .. "Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
+    objdir    (jupiter_dir .. "Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
     kind "StaticLib"
 
     includedirs
@@ -125,7 +127,7 @@ project "UnitTests"
 
     libdirs
     {
-        (project_dir .. "Generated/Engine_" .. jupiter_outputpath .. "_Output/")
+        (jupiter_dir .. "Generated/Engine_" .. jupiter_outputpath .. "_Output/")
     }
 
     files

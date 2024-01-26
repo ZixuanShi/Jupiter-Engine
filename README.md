@@ -60,3 +60,6 @@ This applies to both Engine and Client Project directory
     private:
         Internal functions
     }
+
+# Committing
+https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/
