@@ -7,7 +7,7 @@ workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
     local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/"   -- Needs to be changed if the Jupiter Engine or Premake5.exe moves.
-    local project_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/Unitests/"   -- Needs to be changed if the Game Project moves.-- Config
+    local project_dir = "C:/Program Files/Jupiter Technologies/Jupiter Engine/UnitTests/"   -- Needs to be changed if the Game Project moves.-- Config
 
     configurations 
     { 
@@ -24,7 +24,7 @@ workspace "JupiterUnitTests"
     startproject ("UnitTests")
 
     -- Paths
-    location  ("../Visual Studio Files")
+    location  (project_dir .. "Visual Studio Files")
     targetdir ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
     objdir    ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
 
@@ -89,6 +89,7 @@ workspace "JupiterUnitTests"
         
 -- Jupiter Engine
 project "Engine"
+    location  (jupiter_dir .. "Visual Studio Files")
     kind "StaticLib"
 
     includedirs
@@ -111,7 +112,7 @@ project "UnitTests"
     includedirs
     {
         (jupiter_dir .. "Source"),
-        ("../Source")
+        (project_dir .. "Source")
     }
 
     links
@@ -128,7 +129,7 @@ project "UnitTests"
 
     libdirs
     {
-        ("$(SolutionDir)../Generated/Engine_" .. jupiter_outputpath .. "_Output/")
+        (project_dir .. "Generated/Engine_" .. jupiter_outputpath .. "_Output/")
     }
 
     files
@@ -140,6 +141,6 @@ project "UnitTests"
 
     postbuildcommands
     {
-        "xcopy \"$(SolutionDir)../Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+        "xcopy \"$(SolutionDir)Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
         "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
     }

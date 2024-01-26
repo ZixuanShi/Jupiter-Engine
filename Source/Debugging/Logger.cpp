@@ -71,15 +71,11 @@ namespace jpt
 		String contentToLog;
 		contentToLog.Reserve(256);
 
-		// Time
-		//contentToLog += jpt::ToString(SystemClock::now()) + ". ";
-		size_t i = fileStr.Find("Source");
-		String s = fileStr.SubStr(i);
+		// Add time
+		//contentToLog += Clock::Now().ToString();
 
-		// C++ file name. Get rid of previous folders
-		contentToLog += "..\\" + s;
-		//contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
-		//contentToLog += fileStr;	// If use full path, double clicking the output string in output window will direct to the LOG() call code
+		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
+		contentToLog += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
 
 		// line number and log type
 		contentToLog += "(" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
