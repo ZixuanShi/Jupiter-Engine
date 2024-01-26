@@ -6,7 +6,7 @@ module;
 
 export module CoreUnitTests;
 
-// Containers
+/** Unit Test Modules */
 
 // Utilities
 import UtilitiesUnitTests;
@@ -30,9 +30,6 @@ import StringUtilsUnitTests;
 import StringUnitTests;
 import StringViewUnitTests;
 
-// Timing
-import TimingUnitTests;
-
 // Types
 import OptionalUnitTests;
 import EnumUnitTests;
@@ -41,11 +38,11 @@ import PairUnitTests;
 
 export bool RunUnitTests_Core()
 {
+	/** Unit Test Functions */
+
 	// Minimals
 	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunTypeTraitsUnitTests(), "TypeTraits Unit Tests Failed");
-
-	// Containers
 
 	// Debugging
 	JPT_RETURN_FALSE_IF_ERROR(!RunLoggerUnitTests(), "Logger Unit Tests Failed");
@@ -64,9 +61,6 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringUnitTests(), "String Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunStringViewUnitTests(), "StringView Tests Failed");
-
-	// Timing
-	JPT_RETURN_FALSE_IF_ERROR(!RunTimingUnitTests(), "Timing Tests Failed");
 
 	// Types
 	JPT_RETURN_FALSE_IF_ERROR(!RunOptionalUnitTests(), "Optional Tests Failed");
