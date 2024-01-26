@@ -1,10 +1,34 @@
 {
 	"Name": "Jupiter",
-	"Author": "Zixuan",
 	"Version1": 114514,
 	"Version2": -114514,
 	"IsPromising": true,
 	"TestFloat":4.21,
 	"TestFloat2":-4.21,
-	"TestArray":[true, "Jupiter", 114514, -11.4514]
+	"TestArray":[true, "Jupiter", 114514, -11.4514],
+	"Player1":
+	{
+		"Name": "Jax",
+		"Location": [12, 0, 1],
+		"Health": 352,
+		"Inventory": 
+		{
+			"Stick": 1,
+			"HealthPortion": 2,
+			"Pink": 1
+		}
+	},
+	"Player2":
+	{
+		"Name": "Darius",
+		"Location": [-2, -55, 15],
+		"Health": 270,
+		"Inventory":
+		{
+			"Axe":1,
+			"ManaPotion":5
+		}
+	},
+	"IsUEBetter": false,
+	"PI": 3.1415
 }

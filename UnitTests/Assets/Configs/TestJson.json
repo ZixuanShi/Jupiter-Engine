@@ -1,0 +1,33 @@
+{
+	"Name": "Zixuan",
+	"Version1": 1145,
+	"Version2": -1144,
+	"IsPromising": true,
+	"TestFloat":4152162.21,
+	"TestFloat2":-4.2414515,
+	"TestArray":[true, "Zixuan", 114, -11.4514],
+	"Player1":
+	{
+		"Name": "Aatrox",
+		"Location": [1, 2, 1],
+		"Health": 150,
+		"Inventory": 
+		{
+			"Stick": 2,
+			"HealthPortion": 2,
+			"Pink": 3
+		}
+	},
+	"Player2":
+	{
+		"Name": "Morde",
+		"Location": [-2, -1, -515],
+		"Health": 27,
+		"Inventory":
+		{
+			"Hammer":2,
+			"ManaPotion":0
+		}
+	},
+	"IsUnityBetter": false
+}
