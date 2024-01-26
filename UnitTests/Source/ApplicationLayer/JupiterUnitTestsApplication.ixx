@@ -1,4 +1,4 @@
-// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
 

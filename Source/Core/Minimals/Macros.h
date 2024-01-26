@@ -127,6 +127,12 @@
 	vsprintf_s(messageBuffer, format, args);\
 	va_end(args)\
 
+#define FORMAT_WSTRING(messageBuffer, format, ...)\
+	va_list args;\
+	va_start(args, format);\
+	vswprintf_s(messageBuffer, format, args);\
+	va_end(args)\
+
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/

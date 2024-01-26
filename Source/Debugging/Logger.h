@@ -49,7 +49,8 @@ namespace jpt
 		{
 			ProcessMessage(type, line, file, string.ConstBuffer());
 		}
-		void Log(ELogType type, int32 line, const char* file, const char* message, ...);
+		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
+		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);
 
 		static Logger& GetInstance();
 

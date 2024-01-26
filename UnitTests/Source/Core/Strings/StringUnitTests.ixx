@@ -158,6 +158,30 @@ bool UnitTest_ToString()
 	return true;
 }
 
+bool UnitTest_ToString2()
+{
+	struct Foo
+	{
+		int32 m_data = 0;
+
+		Foo() = default;
+		Foo(int32 data) :m_data(data) {}
+
+		jpt::String ToString() const
+		{
+			return jpt::ToString(m_data) + " Foo";
+		}
+	};
+
+	Foo foo;
+
+	JPT_RETURN_FALSE_IF_ERROR(jpt::ToString(foo) != "0 Foo", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::ToString(0) != "0", "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::ToString(Foo{32}) != "32 Foo", "");
+
+	return true;
+}
+
 template<class StringT>
 bool UnitTest_StringFinding()
 {
@@ -257,6 +281,7 @@ export bool RunStringUnitTests()
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ToString<jpt::String>(), "UnitTest_ToString Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ToString<jpt::WString>(), "UnitTest_ToString Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ToString2(), "UnitTest_ToString2 Failed");
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringFinding<jpt::String>(), "UnitTest_StringFinding Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringFinding<jpt::WString>(), "UnitTest_StringFinding Failed");

@@ -19,6 +19,8 @@ workspace "JupiterUnitTests"
 
     startproject ("UnitTests")
 
+    usefullpaths "Off"
+
     -- Paths
     location  ("../Visual Studio Files")
     targetdir ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")

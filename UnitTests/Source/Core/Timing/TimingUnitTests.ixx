@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimals/Headers.h"
+#include <Windows.h>
 
 export module TimingUnitTests;
 
@@ -22,8 +23,8 @@ bool UnitTest_Timing()
 
 export bool RunTimingUnitTests()
 {
-	JPT_LOG(jpt::LimitsOf<jpt::TimePointData>::kMax);
-	JPT_LOG(jpt::LimitsOf<jpt::TimePointData>::kMin);
+	//JPT_LOG(jpt::LimitsOf<jpt::TimePointData>::kMax);
+	//JPT_LOG(jpt::LimitsOf<jpt::TimePointData>::kMin);
 
 	jpt::TimePointData timeInfo;
 	timeInfo.year   = 1999;
@@ -32,7 +33,7 @@ export bool RunTimingUnitTests()
 	timeInfo.hour   = 5;
 	timeInfo.minute = 30;
 	timeInfo.second = 1;
-	JPT_LOG(timeInfo);
+	//JPT_LOG(timeInfo);
 
 	//timeInfo.year   = 1999;
 	//timeInfo.month  = 12;
