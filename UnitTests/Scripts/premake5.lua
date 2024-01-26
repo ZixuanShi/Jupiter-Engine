@@ -1,3 +1,7 @@
+function foo ()
+    
+end
+
 -- Jupiter workspace
 workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
@@ -18,8 +22,6 @@ workspace "JupiterUnitTests"
     }
 
     startproject ("UnitTests")
-
-    usefullpaths "Off"
 
     -- Paths
     location  ("../Visual Studio Files")

@@ -73,9 +73,12 @@ namespace jpt
 
 		// Time
 		//contentToLog += jpt::ToString(SystemClock::now()) + ". ";
+		size_t i = fileStr.Find("Source");
+		String s = fileStr.SubStr(i);
 
 		// C++ file name. Get rid of previous folders
-		contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
+		contentToLog += "..\\" + s;
+		//contentToLog += fileStr.SubStr(fileStr.FindLastOf("\\") + 1);
 		//contentToLog += fileStr;	// If use full path, double clicking the output string in output window will direct to the LOG() call code
 
 		// line number and log type
