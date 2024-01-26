@@ -1,7 +1,3 @@
-function foo ()
-    
-end
-
 -- Jupiter workspace
 workspace "JupiterUnitTests"
     -- Globals for jupiter workspace
