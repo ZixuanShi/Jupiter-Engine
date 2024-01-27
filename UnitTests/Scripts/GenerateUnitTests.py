@@ -14,25 +14,24 @@ source_dir            = ""
 unit_test_path        = ""
 file_to_add_name      = ""
 file_to_add_content   = ""
-file_name_template    = "<SubjectName>UnitTests"
+file_name_template    = "UnitTests_<SubjectName>"
 file_content_template = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
 
 #include "Core/Minimals/Headers.h"
 
-export module <SubjectName>UnitTests;
+export module UnitTests_<SubjectName>;
 
 import jpt.CoreModules;
 
 bool UnitTest_<SubjectName>()
 {
-    jpt::<SubjectName> instance;
 
     return true;
 }
 
-export bool Run<SubjectName>UnitTests()
+export bool RunUnitTests_<SubjectName>()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_<SubjectName>(), "UnitTest_<SubjectName> Failed");
 
