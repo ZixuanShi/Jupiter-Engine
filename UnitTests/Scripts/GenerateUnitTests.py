@@ -50,9 +50,13 @@ export module UnitTests_<SubjectName>;
 
 /** Unit Test Modules */
 
+
+
 export bool RunUnitTests_<SubjectName>()
 {
 	/** Unit Test Functions */
+
+    
 
 	return true;
 }
@@ -103,6 +107,7 @@ def update_application_layer():
     main_category  = categories_list[0]
     if len(categories_list) > 0:
         secondary_category  = categories_list[1]
+
     unit_test_name = "UnitTests_" + main_category + ".ixx"
     unit_test_path = source_dir + "ApplicationLayer/" + unit_test_name
 
@@ -112,27 +117,47 @@ def update_application_layer():
         with open(unit_test_path, "w") as file:
             file.write(unit_tests_content_content)
 
+    # Update UnitTests_main_category
     with open(unit_test_path, "r+") as file:
-        unit_test_file_lines = file.readlines()
-        print(unit_test_file_lines)
+        key_to_find  = "" 
+        line_to_add  = ""
+        index_to_add = 0
 
-        # Insert import <SubjectName>UnitTests; under // main_category, create it if doesn't exist
-        
-        if ("// " + secondary_category) in unit_test_file_lines:
-            line_to_insert = unit_test_file_lines.index("// " + secondary_category + "\n") + 1
+        unit_test_lines = file.readlines()
+    
+        # import UnitTests_<SubjectName>;\n
+        key_to_find = '// ' + secondary_category + '\n'
+        if key_to_find in unit_test_lines:
+            index_to_add = unit_test_lines.index(key_to_find)
         else:
-            line_to_insert = unit_test_file_lines.index("/** Unit Test Modules */") + 2
-            unit_test_file_lines.insert(line_to_insert, "// " + secondary_category + "\n")
-            line_to_insert += 2
+            key_to_find = '/** Unit Test Modules */\n'
+            index_to_add = unit_test_lines.index(key_to_find) + 2
+            unit_test_lines.insert(index_to_add, '// ' + secondary_category + '\n')
 
-        unit_test_file_lines.insert(line_to_insert, "// "import <SubjectName>UnitTests;"\n")
+        index_to_add += 1
+        line_to_add = 'import UnitTests_<SubjectName>;\n'
+        line_to_add = line_to_add.replace('<SubjectName>', subject_name)
+        unit_test_lines.insert(index_to_add, line_to_add) 
 
+        # JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_<SubjectName>(), "<SubjectName> Unit Tests Failed");
+        unit_test_functions_start = unit_test_lines.index("\t/** Unit Test Functions */\n")
+        key_to_find = '\t// ' + secondary_category + '\n'
+        if key_to_find in unit_test_lines:
+            index_to_add = unit_test_lines.index(key_to_find)
+        else:
+            key_to_find = "\t/** Unit Test Functions */\n"
+            index_to_add = unit_test_lines.index(key_to_find) + 2
+            unit_test_lines.insert(index_to_add, '\t// ' + secondary_category + '\n')
 
-        # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
-        pass
+        index_to_add += 1
+        line_to_add = "\tJPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_<SubjectName>(), \"<SubjectName> Unit Tests Failed\");\n"
+        line_to_add = line_to_add.replace('<SubjectName>', subject_name)
+        unit_test_lines.insert(index_to_add, line_to_add) 
 
-
-    # JupiterUnitTestsApplication add UnitTests_Category if there's none
+        # overwrite with new content
+        file.seek(0)
+        file.truncate()
+        file.writelines(unit_test_lines)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
