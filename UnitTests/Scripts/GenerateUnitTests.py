@@ -6,15 +6,15 @@ import subprocess
 # ----------------------------------------------------------------------------------------------------------------------
 # Data
 # ----------------------------------------------------------------------------------------------------------------------
-subject_name = ""
-categories  = ""
-main_category = ""
-script_dir = ""
-source_dir = ""
-unit_test_path = ""
-file_to_add_name = ""
-file_to_add_content = ""
-file_name_template = "<SubjectName>UnitTests"
+subject_name          = ""
+categories            = ""
+categories_list       = []
+script_dir            = ""
+source_dir            = ""
+unit_test_path        = ""
+file_to_add_name      = ""
+file_to_add_content   = ""
+file_name_template    = "<SubjectName>UnitTests"
 file_content_template = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
@@ -40,36 +40,51 @@ export bool Run<SubjectName>UnitTests()
 }
 """
 
+unit_tests_content_template = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+module;
+
+#include "Core/Minimals/Headers.h"
+
+export module <SubjectName>UnitTests;
+
+/** Unit Test Modules */
+
+export bool RunUnitTests_<SubjectName>()
+{
+	/** Unit Test Functions */
+
+	return true;
+}
+"""
+
 # ----------------------------------------------------------------------------------------------------------------------
 # Helper Functions
 # ----------------------------------------------------------------------------------------------------------------------
 def get_data():
-    global subject_name
-    global file_to_add_name
+    global subject_name       
+    global categories         
+    global categories_list      
+    global script_dir         
+    global source_dir         
+    global unit_test_path     
+    global file_to_add_name   
     global file_to_add_content
-    global categories
-    global script_dir
-    global source_dir
-    global unit_test_path
-    global main_category
 
     subject_name = input("What's the unit test's subject's name?")
+    categories = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Timing, etc)\n")
+    categories_list = categories.split('/')
+
     file_to_add_name = file_name_template.replace("<SubjectName>", subject_name)
     file_to_add_content = file_content_template.replace("<SubjectName>", subject_name)
-    
-    # Get categories
-    categories = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Timing, etc)\n")
 
-    # Get unit test file path to add
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    source_dir = script_dir.strip("Scripts") + "Source/"
+    source_dir = script_dir.strip("Scripts") + "Source/"    
     unit_test_path = source_dir + categories + "/" + file_to_add_name + ".ixx"
 
-    main_category = categories.split()[0]
 
-
+# Save the new added unit test file with content to Source
 def save_unit_test_file():
-    # Save file to Source
     if not os.path.isdir(source_dir + categories):
         os.makedirs(source_dir + categories)
         
@@ -77,10 +92,33 @@ def save_unit_test_file():
         file.write(file_to_add_content)
 
 
+# Run GenerateProjects.bat to adopt the new unit test in Visual Studio
 def regenerate_visual_studio_projects():
-    # Run GenerateProjects.bat to adopt the new unit test in Visual Studio
     os.chdir(script_dir)
     subprocess.run(script_dir + "/GenerateProjects.bat")
+
+
+# Modify corresponding main_category_UnitTests.ixx to integrate the new unit test module automatically
+def update_application_layer():
+    main_category  = categories_list[0]
+    unit_test_name = "UnitTests_" + main_category + ".ixx"
+    unit_test_path = source_dir + "ApplicationLayer/" + unit_test_name
+
+    # Create main_category_UnitTests.ixx under ApplicationLayer if it doesn't exist
+    if not os.path.exists(unit_test_path):
+        unit_tests_content_content = unit_tests_content_template.replace("<SubjectName>", main_category)
+        with open(unit_test_path, "w") as file:
+            file.write(unit_tests_content_content)
+
+    # Insert import <SubjectName>UnitTests; under // categories[1], create it if doesn't exist
+
+
+    # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
+
+
+    # JupiterUnitTestsApplication add UnitTests_Category if there's none
+
+    pass
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -97,12 +135,7 @@ def main():
         print("Adding <" + file_to_add_name + ">")
 
     save_unit_test_file()
-
-    # TODO: Modify corresponding main_category_UnitTests.ixx to integrate the new unit test module automatically
-    # Create main_category_UnitTests.ixx under ApplicationLayer if it doesn't exist
-    # Insert import <SubjectName>UnitTests; under // categories[1], create it if doesn't exist
-    # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
-
+    update_application_layer()
     regenerate_visual_studio_projects()
 
 

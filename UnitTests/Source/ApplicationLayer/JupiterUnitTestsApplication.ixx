@@ -24,7 +24,7 @@ bool JupiterUnitTestsApplication::Init()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!Super::Init(), "Failed Super::Init()");
 
-	JPT_LOG("Core Unit Tests %s", RunUnitTests_Core() ? "succeeded" : "failed");
+	JPT_LOG("Core Unit Tests %s", RunUnitTests_Core() ? "Succeeded" : "Failed");
 
 	return true;
 }
