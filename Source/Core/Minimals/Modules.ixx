@@ -16,7 +16,7 @@ export import jpt.Utilities;
 
 // Math
 export import jpt.Math;
-export import jpt.NumericLimits;
+export import jpt.Limits;
 export import jpt.RandomNumberGenerator;
 
 // Memory Managing

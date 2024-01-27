@@ -2,7 +2,7 @@ module;
 
 #include <limits>
 
-export module jpt.NumericLimits;
+export module jpt.Limits;
 
 namespace jpt
 {

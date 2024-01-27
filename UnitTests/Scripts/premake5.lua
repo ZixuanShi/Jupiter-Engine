@@ -28,7 +28,10 @@ workspace "JupiterUnitTests"
     language   "C++"
     cppdialect "C++latest"
     warnings   "Extra"
-    staticruntime "on"
+    staticruntime    "On"
+    allmodulespublic "On"
+
+    -- Macro defines
     defines
     {
         ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),

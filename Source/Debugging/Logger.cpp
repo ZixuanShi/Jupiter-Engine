@@ -70,7 +70,7 @@ namespace jpt
 		contentToLog += pMessage;
 		contentToLog += "\n";
 
-		PrTIntoConsole(contentToLog.ConstBuffer());
+		SendToOutputWindow(contentToLog.ConstBuffer());
 	}
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
@@ -87,17 +87,17 @@ namespace jpt
 		wStamp += pMessage;
 		wStamp += L"\n";
 
-		PrTIntoConsole(wStamp.ConstBuffer());
+		SendToOutputWindow(wStamp.ConstBuffer());
 	}
 
-	void Logger::PrTIntoConsole(const char* string)
+	void Logger::SendToOutputWindow(const char* string)
 	{
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringA(string);
 #endif
 	}
 
-	void Logger::PrTIntoConsole(const wchar_t* wideString)
+	void Logger::SendToOutputWindow(const wchar_t* wideString)
 	{
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
