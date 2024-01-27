@@ -8,18 +8,18 @@ export namespace jpt_private
 {
 	/** Iterator for linear & contiguous data in memory, for example, Static Array, Dynamic Array, String
 		Containers that is linear but non-contiguous shouldn't use this, like LinkedList, should use LinearNodeBasedIterator instead */
-	template<typename _DataT>
+	template<typename _TData>
 	class ContiguousIterator
 	{
 	public:
-		using DataT = _DataT;
+		using TData = _TData;
 
 	private:
-		DataT* m_pPtr = nullptr;
+		TData* m_pPtr = nullptr;
 
 	public:
 		ContiguousIterator() = default;
-		ContiguousIterator(DataT* pPtr) : m_pPtr(pPtr) {}
+		ContiguousIterator(TData* pPtr) : m_pPtr(pPtr) {}
 
 		ContiguousIterator& operator++();
 		ContiguousIterator operator++(int32);
@@ -33,9 +33,9 @@ export namespace jpt_private
 		ContiguousIterator& operator-=(size_t offset);
 		ContiguousIterator operator-(size_t offset);
 
-		DataT& operator[](size_t index) { return *(m_pPtr + index); }
-		DataT* operator->() { return m_pPtr; }
-		DataT& operator*() { return *m_pPtr; }
+		TData& operator[](size_t index) { return *(m_pPtr + index); }
+		TData* operator->() { return m_pPtr; }
+		TData& operator*() { return *m_pPtr; }
 
 		bool operator< (const ContiguousIterator& other) const { return m_pPtr <  other.m_pPtr; }
 		bool operator<=(const ContiguousIterator& other) const { return m_pPtr <= other.m_pPtr; }
@@ -47,59 +47,59 @@ export namespace jpt_private
 		bool operator!=(const ContiguousIterator& other) const { return m_pPtr != other.m_pPtr; }
 	};
 
-	template<typename DataT>
-	ContiguousIterator<DataT>& ContiguousIterator<DataT>::operator++()
+	template<typename TData>
+	ContiguousIterator<TData>& ContiguousIterator<TData>::operator++()
 	{
 		++m_pPtr;
 		return *this;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT> ContiguousIterator<DataT>::operator++(int32)
+	template<typename TData>
+	ContiguousIterator<TData> ContiguousIterator<TData>::operator++(int32)
 	{
 		ContiguousIterator iterator = *this;
 		++m_pPtr;
 		return iterator;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT>& ContiguousIterator<DataT>::operator+=(size_t offset)
+	template<typename TData>
+	ContiguousIterator<TData>& ContiguousIterator<TData>::operator+=(size_t offset)
 	{
 		m_pPtr += offset;
 		return *this;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT> ContiguousIterator<DataT>::operator+(size_t offset)
+	template<typename TData>
+	ContiguousIterator<TData> ContiguousIterator<TData>::operator+(size_t offset)
 	{
 		ContiguousIterator iterator = *this;
 		return iterator += offset;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT>& ContiguousIterator<DataT>::operator--()
+	template<typename TData>
+	ContiguousIterator<TData>& ContiguousIterator<TData>::operator--()
 	{
 		--m_pPtr;
 		return *this;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT> ContiguousIterator<DataT>::operator--(int32)
+	template<typename TData>
+	ContiguousIterator<TData> ContiguousIterator<TData>::operator--(int32)
 	{
 		ContiguousIterator iterator = *this;
 		--m_pPtr;
 		return iterator;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT>& ContiguousIterator<DataT>::operator-=(size_t offset)
+	template<typename TData>
+	ContiguousIterator<TData>& ContiguousIterator<TData>::operator-=(size_t offset)
 	{
 		m_pPtr -= offset;
 		return *this;
 	}
 
-	template<typename DataT>
-	ContiguousIterator<DataT> ContiguousIterator<DataT>::operator-(size_t offset)
+	template<typename TData>
+	ContiguousIterator<TData> ContiguousIterator<TData>::operator-(size_t offset)
 	{
 		ContiguousIterator iterator = *this;
 		return iterator -= offset;

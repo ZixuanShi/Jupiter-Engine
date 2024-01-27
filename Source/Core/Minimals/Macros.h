@@ -98,21 +98,21 @@
 	@return   C-Style string for different Char Type but contains the exact input string literals.
 	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
 	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
-#define JPT_GET_PROPER_STRING(CharT, SourceStr)\
-	[]() -> const CharT* \
+#define JPT_GET_PROPER_STRING(TChar, SourceStr)\
+	[]() -> const TChar* \
 	{\
-		const CharT* pString = nullptr; \
-		if constexpr (jpt::IsSameType<CharT, char>)\
+		const TChar* pString = nullptr; \
+		if constexpr (jpt::IsSameType<TChar, char>)\
 		{\
 			pString = #SourceStr;\
 		}\
-		else if constexpr (jpt::IsSameType<CharT, wchar_t>)\
+		else if constexpr (jpt::IsSameType<TChar, wchar_t>)\
 		{\
 			pString = JPT_TO_WSTRING(#SourceStr);\
 		}\
 		else\
 		{\
-			JPT_ASSERT(false, "Unsupported CharT");\
+			JPT_ASSERT(false, "Unsupported TChar");\
 		}\
 		return pString;\
 	}()

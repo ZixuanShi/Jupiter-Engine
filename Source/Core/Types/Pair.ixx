@@ -6,50 +6,50 @@ import jpt.Utilities;
 
 export namespace jpt 
 {
-	template<typename FirstT, typename SecondT>
+	template<typename TFirst, typename TSecond>
 	struct Pair
 	{
 	public:
-		FirstT first;
-		SecondT second;
+		TFirst first;
+		TSecond second;
 
 	public:
 		constexpr Pair() = default;
-		constexpr Pair(const FirstT& inFirst, const SecondT& inSecond);
-		constexpr Pair(const FirstT& inFirst, SecondT&& inSecond);
-		constexpr Pair(FirstT&& inFirst, const SecondT& inSecond);
-		constexpr Pair(FirstT&& inFirst, SecondT&& inSecond);
+		constexpr Pair(const TFirst& inFirst, const TSecond& inSecond);
+		constexpr Pair(const TFirst& inFirst, TSecond&& inSecond);
+		constexpr Pair(TFirst&& inFirst, const TSecond& inSecond);
+		constexpr Pair(TFirst&& inFirst, TSecond&& inSecond);
 	};
 
-	template<typename FirstT, typename SecondT>
-	bool operator==(const Pair<FirstT, SecondT>& a, const Pair<FirstT, SecondT>& b)
+	template<typename TFirst, typename TSecond>
+	bool operator==(const Pair<TFirst, TSecond>& a, const Pair<TFirst, TSecond>& b)
 	{
 		return a.first == b.first && a.second == b.second;
 	}
 
-	template<typename FirstT, typename SecondT>
-	constexpr Pair<FirstT, SecondT>::Pair(const FirstT& inFirst, const SecondT& inSecond)
+	template<typename TFirst, typename TSecond>
+	constexpr Pair<TFirst, TSecond>::Pair(const TFirst& inFirst, const TSecond& inSecond)
 		: first(inFirst)
 		, second(inSecond)
 	{
 	}
 
-	template<typename FirstT, typename SecondT>
-	constexpr Pair<FirstT, SecondT>::Pair(const FirstT& inFirst, SecondT&& inSecond)
+	template<typename TFirst, typename TSecond>
+	constexpr Pair<TFirst, TSecond>::Pair(const TFirst& inFirst, TSecond&& inSecond)
 		: first(inFirst)
 		, second(Move(inSecond))
 	{
 	}
 
-	template<typename FirstT, typename SecondT>
-	constexpr Pair<FirstT, SecondT>::Pair(FirstT&& inFirst, const SecondT& inSecond)
+	template<typename TFirst, typename TSecond>
+	constexpr Pair<TFirst, TSecond>::Pair(TFirst&& inFirst, const TSecond& inSecond)
 		: first(Move(inFirst))
 		, second(inSecond)
 	{
 	}
 
-	template<typename FirstT, typename SecondT>
-	constexpr Pair<FirstT, SecondT>::Pair(FirstT&& inFirst, SecondT&& inSecond)
+	template<typename TFirst, typename TSecond>
+	constexpr Pair<TFirst, TSecond>::Pair(TFirst&& inFirst, TSecond&& inSecond)
 		: first(Move(inFirst))
 		, second(Move(inSecond))
 	{

@@ -26,40 +26,40 @@ static constexpr size_t kLocCapacityMultiplier = 2;
 
 export namespace jpt
 {
-	template<StringLiteral _CharT, class _AllocatorT = Allocator<_CharT>>
+	template<StringLiteral _TChar, class _AllocatorT = Allocator<_TChar>>
 	class BasicString
 	{
 	public:
-		using CharT      = _CharT;
+		using TChar      = _TChar;
 		using AllocatorT = _AllocatorT;
-		using Iterator   = jpt_private::ContiguousIterator<CharT>;
+		using Iterator   = jpt_private::ContiguousIterator<TChar>;
 
 	private:
-		CharT* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
+		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
 		size_t m_size = 0;              /**< How many characters in this string currently */
 		size_t m_capacity = 0;          /**< How many characters this string can hold before resizing */
 
 	public:
 		BasicString() = default;
-		BasicString(const CharT* CString, size_t size);
-		BasicString(const CharT* CString);
-		BasicString(CharT c);
-		BasicString(const BasicString<CharT>& otherString);
-		BasicString(BasicString<CharT>&& otherString) noexcept;
-		BasicString& operator=(const CharT* CString);
-		BasicString& operator=(const BasicString<CharT>& otherString);
-		BasicString& operator=(BasicString<CharT>&& otherString) noexcept;
+		BasicString(const TChar* CString, size_t size);
+		BasicString(const TChar* CString);
+		BasicString(TChar c);
+		BasicString(const BasicString<TChar>& otherString);
+		BasicString(BasicString<TChar>&& otherString) noexcept;
+		BasicString& operator=(const TChar* CString);
+		BasicString& operator=(const BasicString<TChar>& otherString);
+		BasicString& operator=(BasicString<TChar>&& otherString) noexcept;
 		~BasicString();
 
 		// Element Access
-		const CharT* ConstBuffer() const { return m_pBuffer; }
-		      CharT* Buffer()      const { return m_pBuffer; }
-		      CharT& Front()       { return m_pBuffer[0]; }
-		const CharT& Front() const { return m_pBuffer[0]; }
-		      CharT& Back()        { return m_pBuffer[m_size - 1]; }
-		const CharT& Back()  const { return m_pBuffer[m_size - 1]; }
-		      CharT& operator[](size_t index)       { return m_pBuffer[index]; }
-		const CharT& operator[](size_t index) const { return m_pBuffer[index]; }
+		const TChar* ConstBuffer() const { return m_pBuffer; }
+		      TChar* Buffer()      const { return m_pBuffer; }
+		      TChar& Front()       { return m_pBuffer[0]; }
+		const TChar& Front() const { return m_pBuffer[0]; }
+		      TChar& Back()        { return m_pBuffer[m_size - 1]; }
+		const TChar& Back()  const { return m_pBuffer[m_size - 1]; }
+		      TChar& operator[](size_t index)       { return m_pBuffer[index]; }
+		const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
 		      Iterator begin()        { return Iterator(m_pBuffer); }
@@ -76,14 +76,14 @@ export namespace jpt
 		bool   IsEmpty()  const { return m_size == 0; }
 
 		/** Searching. Returns npos if not found */
-		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		size_t Find(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		size_t FindFirstOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		size_t FindFirstOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		size_t FindLastOf(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		size_t FindLastOf(const CharT* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		bool Contains(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
-		bool Contains(const CharT* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+		size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t Find(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindFirstOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindFirstOf(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindLastOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		size_t FindLastOf(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		bool Contains(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
+		bool Contains(const TChar* TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
 		
 		/* Deallocate the memory that this string holds */
 		void Clear();
@@ -93,46 +93,46 @@ export namespace jpt
 			@param stringToReplace:	The string to replace the original data
 			@param startIndex:		[optional] The start index to start searching. Default to 0
 			@param endIndex:		[optional] The end index to stop operation. Default to size() */
-		BasicString& Replace(const CharT* stringToFind, const CharT* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		BasicString& Replace(const TChar* stringToFind, const TChar* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
 
 		/** @return		A sub string within the given range at index and length */
 		BasicString SubStr(size_t index, size_t count = npos) const;
 
 		/** Appends a new string to the end of buffer */
-		void Append(const CharT* CString, size_t newStringSize);
-		void Append(const CharT* CString) { Append(CString, GetCStrLength(CString)); }
-		void Append(const BasicString<CharT>& otherString);
-		void Append(CharT c);
-		BasicString& operator+=(const CharT* CString) { Append(CString); return *this; }
-		BasicString& operator+=(const BasicString<CharT>& otherString) { Append(otherString); return *this; }
-		BasicString& operator+=(CharT c) { Append(c); return *this; }
+		void Append(const TChar* CString, size_t newStringSize);
+		void Append(const TChar* CString) { Append(CString, GetCStrLength(CString)); }
+		void Append(const BasicString<TChar>& otherString);
+		void Append(TChar c);
+		BasicString& operator+=(const TChar* CString) { Append(CString); return *this; }
+		BasicString& operator+=(const BasicString<TChar>& otherString) { Append(otherString); return *this; }
+		BasicString& operator+=(TChar c) { Append(c); return *this; }
 
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		void Reserve(size_t capacity);
 
 		template<size_t kSize>
-		static BasicString Format(const CharT* format, ...);
+		static BasicString Format(const TChar* format, ...);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
-		void CopyString(const CharT* inCString, size_t size);
-		void CopyString(const CharT* inCString) { CopyString(inCString, GetCStrLength(inCString)); }
-		void CopyString(const BasicString<CharT>& otherString) { CopyString(otherString.ConstBuffer(), otherString.Size()); }
+		void CopyString(const TChar* inCString, size_t size);
+		void CopyString(const TChar* inCString) { CopyString(inCString, GetCStrLength(inCString)); }
+		void CopyString(const BasicString<TChar>& otherString) { CopyString(otherString.ConstBuffer(), otherString.Size()); }
 
 		/* Move the content of string. Will take ownership of the passed in string */
-		void MoveString(CharT* inCString, size_t size);
-		void MoveString(CharT* inCString) { MoveString(inCString, GetCStrLength(inCString)); }
-		void MoveString(BasicString<CharT>&& otherString);
+		void MoveString(TChar* inCString, size_t size);
+		void MoveString(TChar* inCString) { MoveString(inCString, GetCStrLength(inCString)); }
+		void MoveString(BasicString<TChar>&& otherString);
 
 		/** @return An integer associated with this string
 			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front */
-		template<Integral IntT = int32>
-		IntT ToInt() const { return CStrToInteger(m_pBuffer, m_size); }
+		template<Integral TInt = int32>
+		TInt ToInt() const { return CStrToInteger(m_pBuffer, m_size); }
 
 		/** @return A float associated with this string
 			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front or the percision dot
 			@note	Will ignore the 'f' is there's any */
-		template<Floating FloatT = float>
-		FloatT ToFloat() const { return CStrToFloat(m_pBuffer, m_size); }
+		template<Floating TFloat = float>
+		TFloat ToFloat() const { return CStrToFloat(m_pBuffer, m_size); }
 
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
@@ -140,62 +140,62 @@ export namespace jpt
 		void UpdateBuffer(size_t inCapacity);
 
 		/** Inserts a C-String at the index by the given size */
-		void InsertStringAt(const CharT* CString, size_t index, size_t size);
+		void InsertStringAt(const TChar* CString, size_t index, size_t size);
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> operator+(const BasicString<CharT, AllocatorT>& string, const CharT* CString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT> operator+(const BasicString<TChar, AllocatorT>& string, const TChar* CString)
 	{
-		BasicString<CharT> str = string;
+		BasicString<TChar> str = string;
 		str.Append(CString);
 		return str;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> operator+(BasicString<CharT, AllocatorT>&& string, const CharT* CString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT> operator+(BasicString<TChar, AllocatorT>&& string, const TChar* CString)
 	{
-		BasicString<CharT> str = Move(string);
+		BasicString<TChar> str = Move(string);
 		str.Append(CString);
 		return str;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> operator+(const BasicString<CharT, AllocatorT>& string, const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT> operator+(const BasicString<TChar, AllocatorT>& string, const BasicString<TChar>& otherString)
 	{
-		BasicString<CharT> str = string;
+		BasicString<TChar> str = string;
 		str.Append(otherString);
 		return str;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> operator+(BasicString<CharT, AllocatorT>&& string, const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT> operator+(BasicString<TChar, AllocatorT>&& string, const BasicString<TChar>& otherString)
 	{
-		BasicString<CharT> str = Move(string);
+		BasicString<TChar> str = Move(string);
 		str.Append(otherString);
 		return str;
 	}
 
-	template<StringLiteral CharT>
-	BasicString<CharT> operator+(const CharT* leftString, const BasicString<CharT>& rightString)
+	template<StringLiteral TChar>
+	BasicString<TChar> operator+(const TChar* leftString, const BasicString<TChar>& rightString)
 	{
-		return jpt::BasicString<CharT>(leftString) += rightString;
+		return jpt::BasicString<TChar>(leftString) += rightString;
 	}
 
-	template<StringLiteral CharT>
-	BasicString<CharT> operator+(const CharT* leftString, BasicString<CharT>&& rightString)
+	template<StringLiteral TChar>
+	BasicString<TChar> operator+(const TChar* leftString, BasicString<TChar>&& rightString)
 	{
-		return jpt::BasicString<CharT>(leftString) += Move(rightString);
+		return jpt::BasicString<TChar>(leftString) += Move(rightString);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	bool operator==(const BasicString<CharT, AllocatorT>& string, const CharT* otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	bool operator==(const BasicString<TChar, AllocatorT>& string, const TChar* otherString)
 	{
 		return AreStringsSame(string.ConstBuffer(), otherString, string.Size());
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	bool operator==(const BasicString<CharT, AllocatorT>& string, const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	bool operator==(const BasicString<TChar, AllocatorT>& string, const BasicString<TChar>& otherString)
 	{
 		if (string.Size() != otherString.Size())
 		{
@@ -214,41 +214,41 @@ export namespace jpt
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>::BasicString(const CharT* CString, size_t size)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>::BasicString(const TChar* CString, size_t size)
 	{
 		CopyString(CString, size);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>::BasicString(const CharT* CString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>::BasicString(const TChar* CString)
 	{
 		CopyString(CString);
 	}
 
-	template<StringLiteral _CharT, class _AllocatorT>
-	BasicString<_CharT, _AllocatorT>::BasicString(CharT c)
+	template<StringLiteral _TChar, class _AllocatorT>
+	BasicString<_TChar, _AllocatorT>::BasicString(TChar c)
 	{
-		CharT* cString = AllocatorT::AllocateArray(2);
+		TChar* cString = AllocatorT::AllocateArray(2);
 		cString[0] = c;
 		cString[1] = '\0';
 		MoveString(cString, 1);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>::BasicString(const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>::BasicString(const BasicString<TChar>& otherString)
 	{
 		CopyString(otherString);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>::BasicString(BasicString<CharT>&& otherString) noexcept
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>::BasicString(BasicString<TChar>&& otherString) noexcept
 	{
 		MoveString(Move(otherString));
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>& BasicString<CharT, AllocatorT>::operator=(const CharT* CString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(const TChar* CString)
 	{
 		if (!AreStringsSame(m_pBuffer, CString, m_size, GetCStrLength(CString)))
 		{
@@ -259,8 +259,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>& BasicString<CharT, AllocatorT>::operator=(const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(const BasicString<TChar>& otherString)
 	{
 		if (this != &otherString)
 		{
@@ -271,8 +271,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>& BasicString<CharT, AllocatorT>::operator=(BasicString<CharT>&& otherString) noexcept
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(BasicString<TChar>&& otherString) noexcept
 	{
 		if (this != &otherString)
 		{
@@ -283,14 +283,14 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>::~BasicString()
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>::~BasicString()
 	{
 		Clear();
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::Find(CharT charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::Find(TChar TCharoFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -301,7 +301,7 @@ export namespace jpt
 				return npos;
 			}
 
-			if (m_pBuffer[i] == charToFind)
+			if (m_pBuffer[i] == TCharoFind)
 			{
 				--count;
 				if (count == 0)
@@ -314,13 +314,13 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::Find(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::Find(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
 
-		BasicString<CharT> current;
+		BasicString<TChar> current;
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
 			if ((i + stringToFindSize) > endIndex)
@@ -342,20 +342,20 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindFirstOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::FindFirstOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		return Find(charToFind, startIndex, endIndex);
+		return Find(TCharoFind, startIndex, endIndex);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindFirstOf(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::FindFirstOf(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		return Find(stringToFind, startIndex, endIndex);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindLastOf(CharT charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::FindLastOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -366,7 +366,7 @@ export namespace jpt
 				return npos;
 			}
 
-			if (m_pBuffer[i] == charToFind)
+			if (m_pBuffer[i] == TCharoFind)
 			{
 				--count;
 				if (count == 0)
@@ -379,13 +379,13 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	size_t BasicString<CharT, AllocatorT>::FindLastOf(const CharT* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	size_t BasicString<TChar, AllocatorT>::FindLastOf(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t stringToFindSize = GetCStrLength(stringToFind);
 		ClampTo(endIndex, size_t(0), m_size);
 
-		BasicString<CharT> current;
+		BasicString<TChar> current;
 		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
 		{
 			if ((i - stringToFindSize) < startIndex)
@@ -407,23 +407,23 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::Clear()
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::Clear()
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 		m_size = 0;
 		m_capacity = 0;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT>& BasicString<CharT, AllocatorT>::Replace(const CharT* stringToFind, const CharT* stringToReplace, size_t startIndex, size_t endIndex)
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::Replace(const TChar* stringToFind, const TChar* stringToReplace, size_t startIndex, size_t endIndex)
 	{
 		if (endIndex == npos)
 		{
 			endIndex = m_size;
 		}
 
-		const BasicString<CharT> replaced(stringToReplace);
+		const BasicString<TChar> replaced(stringToReplace);
 		const size_t stringToFindSize = GetCStrLength(stringToFind);
 
 		size_t foundPos = startIndex;
@@ -435,8 +435,8 @@ export namespace jpt
 				break;
 			}
 
-			BasicString<CharT> pre = SubStr(0, foundPos);
-			BasicString<CharT> suff = SubStr(foundPos + stringToFindSize);
+			BasicString<TChar> pre = SubStr(0, foundPos);
+			BasicString<TChar> suff = SubStr(foundPos + stringToFindSize);
 
 			*this = Move(pre) + replaced + Move(suff);
 			startIndex = foundPos + replaced.Size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'		
@@ -445,8 +445,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	BasicString<CharT, AllocatorT> BasicString<CharT, AllocatorT>::SubStr(size_t index, size_t count /*= npos*/) const
+	template<StringLiteral TChar, class AllocatorT>
+	BasicString<TChar, AllocatorT> BasicString<TChar, AllocatorT>::SubStr(size_t index, size_t count /*= npos*/) const
 	{
 		if (count == npos)
 		{
@@ -457,43 +457,43 @@ export namespace jpt
 		
 		if (count == 0)
 		{
-			return BasicString<CharT>();
+			return BasicString<TChar>();
 		}
 
-		CharT* subStrBuffer = AllocatorT::AllocateArray(count + sizeof(CharT));
-		StrNCpy(subStrBuffer, count + sizeof(CharT), &m_pBuffer[index], count);
+		TChar* subStrBuffer = AllocatorT::AllocateArray(count + sizeof(TChar));
+		StrNCpy(subStrBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
 
-		jpt::BasicString<CharT> result;
+		jpt::BasicString<TChar> result;
 		result.MoveString(subStrBuffer, count);
 		return result;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::Append(const CharT* CString, size_t newStringSize)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::Append(const TChar* CString, size_t newStringSize)
 	{
 		JPT_RETURN_IF(newStringSize == 0);
 		InsertStringAt(CString, m_size, newStringSize);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::Append(const BasicString<CharT>& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::Append(const BasicString<TChar>& otherString)
 	{
 		JPT_RETURN_IF(otherString.IsEmpty());
 		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
 	}
 
-	template<StringLiteral _CharT, class _AllocatorT>
-	void BasicString<_CharT, _AllocatorT>::Append(CharT c)
+	template<StringLiteral _TChar, class _AllocatorT>
+	void BasicString<_TChar, _AllocatorT>::Append(TChar c)
 	{
-		CharT* cString = AllocatorT::AllocateArray(2);
+		TChar* cString = AllocatorT::AllocateArray(2);
 		cString[0] = c;
 		cString[1] = '\0';
 		InsertStringAt(cString, m_size, 1);
 		AllocatorT::DeallocateArray(cString);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::Reserve(size_t capacity)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::Reserve(size_t capacity)
 	{
 		if (capacity > m_capacity)
 		{
@@ -501,36 +501,36 @@ export namespace jpt
 		}
 	}
 
-	template<StringLiteral _CharT, class _AllocatorT>
+	template<StringLiteral _TChar, class _AllocatorT>
 	template<size_t kSize>
-	BasicString<_CharT, _AllocatorT> BasicString<_CharT, _AllocatorT>::Format(const CharT* format, ...)
+	BasicString<_TChar, _AllocatorT> BasicString<_TChar, _AllocatorT>::Format(const TChar* format, ...)
 	{
-		CharT buffer[kSize];
+		TChar buffer[kSize];
 		FORMAT_STRING(buffer, format, ...);
 		return BasicString(buffer);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::CopyString(const CharT* inCString, size_t size)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::CopyString(const TChar* inCString, size_t size)
 	{
 		m_size = size;
 		JPT_RETURN_IF(IsEmpty());
 
 		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
-		StrCpy(m_pBuffer, m_size + sizeof(CharT), inCString);
+		StrCpy(m_pBuffer, m_size + sizeof(TChar), inCString);
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::MoveString(CharT* inCString, size_t size)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::MoveString(TChar* inCString, size_t size)
 	{
 		m_pBuffer  = inCString;
 		m_size     = size;
 		m_capacity = m_size;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::MoveString(BasicString<CharT>&& otherString)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::MoveString(BasicString<TChar>&& otherString)
 	{
 		m_pBuffer  = otherString.m_pBuffer;
 		m_size     = otherString.m_size;
@@ -541,14 +541,14 @@ export namespace jpt
 		otherString.m_capacity = 0;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::UpdateBuffer(size_t inCapacity)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::UpdateBuffer(size_t inCapacity)
 	{
-		CharT* pNewBuffer = AllocatorT::AllocateArray(inCapacity + sizeof(CharT));
+		TChar* pNewBuffer = AllocatorT::AllocateArray(inCapacity + sizeof(TChar));
 
 		if (m_pBuffer)
 		{
-			StrCpy(pNewBuffer, m_size + sizeof(CharT), m_pBuffer);
+			StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
 			AllocatorT::DeallocateArray(m_pBuffer);
 		}
 
@@ -556,8 +556,8 @@ export namespace jpt
 		m_capacity = inCapacity;
 	}
 
-	template<StringLiteral CharT, class AllocatorT>
-	void BasicString<CharT, AllocatorT>::InsertStringAt(const CharT* CString, size_t index, size_t size)
+	template<StringLiteral TChar, class AllocatorT>
+	void BasicString<TChar, AllocatorT>::InsertStringAt(const TChar* CString, size_t index, size_t size)
 	{
 		const size_t newSize = m_size + size;
 		if (newSize > m_capacity)
@@ -565,7 +565,7 @@ export namespace jpt
 			UpdateBuffer(newSize);
 		}
 
-		StrCpy(m_pBuffer + index, size + sizeof(CharT), CString);
+		StrCpy(m_pBuffer + index, size + sizeof(TChar), CString);
 
 		m_size = newSize;
 	}

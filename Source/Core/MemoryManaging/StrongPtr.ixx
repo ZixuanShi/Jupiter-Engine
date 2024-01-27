@@ -17,39 +17,39 @@ namespace jpt
 	/** Retains shared ownership of an object through a pointer. Several StrongPtr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
 		- the last remaining StrongPtr owning the object is destroyed;
 		- the last remaining StrongPtr owning the object is assigned another pointer via operator= or Reset(). */
-	export template<typename DataT>
+	export template<typename TData>
 	class StrongPtr
 	{
-		friend class WeakPtr<DataT>;
+		friend class WeakPtr<TData>;
 
 	private:
-		DataT* m_pPtr = nullptr;
+		TData* m_pPtr = nullptr;
 		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
 
 	public:
 		constexpr StrongPtr() noexcept = default;
-		explicit StrongPtr(DataT* pPtr) noexcept;
+		explicit StrongPtr(TData* pPtr) noexcept;
 		StrongPtr(const StrongPtr& other);
-		StrongPtr(const WeakPtr<DataT>& weakPtr);
+		StrongPtr(const WeakPtr<TData>& weakPtr);
 		StrongPtr(StrongPtr&& other) noexcept;
 		StrongPtr& operator=(const StrongPtr& other);
-		StrongPtr& operator=(const WeakPtr<DataT>& weakPtr);
+		StrongPtr& operator=(const WeakPtr<TData>& weakPtr);
 		StrongPtr& operator=(StrongPtr&& other) noexcept;
 		~StrongPtr();
 
-		template <typename OtherT>
-		StrongPtr(const StrongPtr<OtherT>& other) = delete;
+		template <typename TOther>
+		StrongPtr(const StrongPtr<TOther>& other) = delete;
 
 		/** Replaces the managed object with the new pPtr */
-		template<typename DeleterT = jpt_private::DefaultDelete<DataT>>
-		void Reset(DataT* pPtr = nullptr, const DeleterT& deleter = DeleterT());
+		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
+		void Reset(TData* pPtr = nullptr, const TDeleter& deleter = TDeleter());
 
 		/** @returns    number of StrongPtr objects referring to the same managed object */
 		int32 GetRefCount() const;
 
 		/** @return		Reference or pointer to the managed object */
-		constexpr DataT& operator*() const noexcept { return *m_pPtr; }
-		constexpr DataT* operator->() const noexcept { return m_pPtr; }
+		constexpr TData& operator*() const noexcept { return *m_pPtr; }
+		constexpr TData* operator->() const noexcept { return m_pPtr; }
 
 		/** @return		true if *this owns an object, false otherwise */
 		constexpr bool IsValid() const noexcept { return m_pPtr != nullptr; }
@@ -58,43 +58,43 @@ namespace jpt
 	private:
 		/** Resets this->m_pPtr with the passed in pPtr
 			Will destroy Ref counter and m_pPtr object if this is the last StrongPtr holding the data */
-		template<typename DeleterT = jpt_private::DefaultDelete<DataT>>
-		void InternalReset(DataT* pPtr, const DeleterT& deleter = DeleterT());
+		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
+		void InternalReset(TData* pPtr, const TDeleter& deleter = TDeleter());
 
 		void IncrementStrongRef();
 	};
 
-	export template<typename DataT, class... ArgsT>
-	[[nodiscard]] StrongPtr<DataT> MakeStrong(ArgsT&&... args)
+	export template<typename TData, class... TArgs>
+	[[nodiscard]] StrongPtr<TData> MakeStrong(TArgs&&... args)
 	{
-		return StrongPtr<DataT>(new DataT(jpt::Forward<ArgsT>(args)...));
+		return StrongPtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>::StrongPtr(DataT* pPtr) noexcept
+	template<typename TData>
+	StrongPtr<TData>::StrongPtr(TData* pPtr) noexcept
 		: m_pPtr(pPtr)
 		, m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>::StrongPtr(const StrongPtr& other)
+	template<typename TData>
+	StrongPtr<TData>::StrongPtr(const StrongPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
 		IncrementStrongRef();
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>::StrongPtr(const WeakPtr<DataT>& weakPtr)
+	template<typename TData>
+	StrongPtr<TData>::StrongPtr(const WeakPtr<TData>& weakPtr)
 		: m_pPtr(weakPtr.m_pPtr)
 		, m_pRefCounter(weakPtr.m_pRefCounter)
 	{
 		IncrementStrongRef();
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>::StrongPtr(StrongPtr&& other) noexcept
+	template<typename TData>
+	StrongPtr<TData>::StrongPtr(StrongPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -102,8 +102,8 @@ namespace jpt
 		other.m_pRefCounter = nullptr;
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>& StrongPtr<DataT>::operator=(const StrongPtr& other)
+	template<typename TData>
+	StrongPtr<TData>& StrongPtr<TData>::operator=(const StrongPtr& other)
 	{
 		if (this != &other)
 		{
@@ -115,8 +115,8 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>& StrongPtr<DataT>::operator=(const WeakPtr<DataT>& weakPtr)
+	template<typename TData>
+	StrongPtr<TData>& StrongPtr<TData>::operator=(const WeakPtr<TData>& weakPtr)
 	{
 		InternalReset(weakPtr.m_pPtr);
 		m_pRefCounter = weakPtr.m_pRefCounter;
@@ -125,8 +125,8 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>& StrongPtr<DataT>::operator=(StrongPtr&& other) noexcept
+	template<typename TData>
+	StrongPtr<TData>& StrongPtr<TData>::operator=(StrongPtr&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -140,14 +140,14 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	StrongPtr<DataT>::~StrongPtr()
+	template<typename TData>
+	StrongPtr<TData>::~StrongPtr()
 	{
 		Reset(nullptr);
 	}
 
-	template<typename DataT>
-	int32 StrongPtr<DataT>::GetRefCount() const
+	template<typename TData>
+	int32 StrongPtr<TData>::GetRefCount() const
 	{
 		if (m_pRefCounter)
 		{
@@ -157,9 +157,9 @@ namespace jpt
 		return 0;
 	}
 
-	template<typename DataT>
-	template<typename DeleterT>
-	void StrongPtr<DataT>::Reset(DataT* pPtr, const DeleterT& deleter)
+	template<typename TData>
+	template<typename TDeleter>
+	void StrongPtr<TData>::Reset(TData* pPtr, const TDeleter& deleter)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
@@ -173,9 +173,9 @@ namespace jpt
 		}
 	}
 
-	template<typename DataT>
-	template<typename DeleterT>
-	void StrongPtr<DataT>::InternalReset(DataT* pPtr, const DeleterT& deleter)
+	template<typename TData>
+	template<typename TDeleter>
+	void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter)
 	{
 		if (m_pRefCounter)
 		{
@@ -194,8 +194,8 @@ namespace jpt
 		m_pPtr = pPtr;
 	}
 
-	template<typename DataT>
-	void StrongPtr<DataT>::IncrementStrongRef()
+	template<typename TData>
+	void StrongPtr<TData>::IncrementStrongRef()
 	{
 		if (m_pRefCounter)
 		{

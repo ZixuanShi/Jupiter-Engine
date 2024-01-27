@@ -11,27 +11,27 @@ import jpt_private.ReferenceCounter;
 
 export namespace jpt
 {
-	template<typename DataT>
+	template<typename TData>
 	class StrongPtr;
 
 	/** Holds a non-owning ("weak") reference to an object that is managed by jpt::StrongPtr.
 		It must be converted to jpt::StrongPtr in order to access the referenced object */
-	template<typename DataT>
+	template<typename TData>
 	class WeakPtr
 	{
-		friend class StrongPtr<DataT>;
+		friend class StrongPtr<TData>;
 
 	private:
-		DataT* m_pPtr = nullptr;
+		TData* m_pPtr = nullptr;
 		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
 
 	public:
 		constexpr WeakPtr() noexcept = default;
 		WeakPtr(const WeakPtr& other);
 		WeakPtr(WeakPtr&& other) noexcept;
-		WeakPtr(const StrongPtr<DataT>& shared);
+		WeakPtr(const StrongPtr<TData>& shared);
 		WeakPtr& operator=(const WeakPtr& other);
-		WeakPtr& operator=(const StrongPtr<DataT>& shared);
+		WeakPtr& operator=(const StrongPtr<TData>& shared);
 		WeakPtr& operator=(WeakPtr&& other) noexcept;
 		~WeakPtr();
 
@@ -45,27 +45,27 @@ export namespace jpt
 		bool IsExpired() const;
 
 		/** @return		Object Ptr if this is not Expired, nullptr otherwise */
-		DataT* GetIfValid() const;
+		TData* GetIfValid() const;
 
 		/** @return		Reference or pointer to the managed object if not expired */
-		constexpr DataT& operator*() const noexcept  { return *GetIfValid(); }
-		constexpr DataT* operator->() const noexcept { return GetIfValid(); }
+		constexpr TData& operator*() const noexcept  { return *GetIfValid(); }
+		constexpr TData* operator->() const noexcept { return GetIfValid(); }
 
 	private:
-		void InternalReset(DataT* pPtr);
+		void InternalReset(TData* pPtr);
 		void IncrementWeakRef();
 	};
 
-	template<typename DataT>
-	WeakPtr<DataT>::WeakPtr(const WeakPtr& other)
+	template<typename TData>
+	WeakPtr<TData>::WeakPtr(const WeakPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
 		IncrementWeakRef();
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>::WeakPtr(WeakPtr&& other) noexcept
+	template<typename TData>
+	WeakPtr<TData>::WeakPtr(WeakPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -73,8 +73,8 @@ export namespace jpt
 		other.m_pRefCounter = nullptr;
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const WeakPtr& other)
+	template<typename TData>
+	WeakPtr<TData>& WeakPtr<TData>::operator=(const WeakPtr& other)
 	{
 		if (this != &other)
 		{
@@ -86,8 +86,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>& WeakPtr<DataT>::operator=(const StrongPtr<DataT>& shared)
+	template<typename TData>
+	WeakPtr<TData>& WeakPtr<TData>::operator=(const StrongPtr<TData>& shared)
 	{
 		InternalReset(shared.m_pPtr);
 		m_pRefCounter = shared.m_pRefCounter;
@@ -96,8 +96,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>& WeakPtr<DataT>::operator=(WeakPtr&& other) noexcept
+	template<typename TData>
+	WeakPtr<TData>& WeakPtr<TData>::operator=(WeakPtr&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -111,22 +111,22 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>::WeakPtr(const StrongPtr<DataT>& shared)
+	template<typename TData>
+	WeakPtr<TData>::WeakPtr(const StrongPtr<TData>& shared)
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCounter(shared.m_pRefCount)
 	{
 		IncrementWeakRef();
 	}
 
-	template<typename DataT>
-	WeakPtr<DataT>::~WeakPtr()
+	template<typename TData>
+	WeakPtr<TData>::~WeakPtr()
 	{
 		InternalReset(nullptr);
 	}
 
-	template<typename DataT>
-	int32 WeakPtr<DataT>::GetRefCount() const
+	template<typename TData>
+	int32 WeakPtr<TData>::GetRefCount() const
 	{
 		if (m_pRefCounter)
 		{
@@ -136,8 +136,8 @@ export namespace jpt
 		return 0;
 	}
 
-	template<typename DataT>
-	bool WeakPtr<DataT>::IsExpired() const
+	template<typename TData>
+	bool WeakPtr<TData>::IsExpired() const
 	{
 		if (m_pRefCounter)
 		{
@@ -147,8 +147,8 @@ export namespace jpt
 		return true;
 	}
 
-	template<typename DataT>
-	DataT* WeakPtr<DataT>::GetIfValid() const
+	template<typename TData>
+	TData* WeakPtr<TData>::GetIfValid() const
 	{
 		if (!IsExpired())
 		{
@@ -158,8 +158,8 @@ export namespace jpt
 		return nullptr;
 	}
 
-	template<typename DataT>
-	void WeakPtr<DataT>::InternalReset(DataT* pPtr)
+	template<typename TData>
+	void WeakPtr<TData>::InternalReset(TData* pPtr)
 	{
 		m_pPtr = pPtr;
 
@@ -173,8 +173,8 @@ export namespace jpt
 		}
 	}
 
-	template<typename DataT>
-	void WeakPtr<DataT>::IncrementWeakRef()
+	template<typename TData>
+	void WeakPtr<TData>::IncrementWeakRef()
 	{
 		if (m_pRefCounter)
 		{

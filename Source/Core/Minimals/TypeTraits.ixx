@@ -10,8 +10,8 @@ export namespace jpt
 	template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
 	template<typename T> struct RemoveConst                  { using Type = T;  };
 	template<typename T> struct RemoveConst<const T>         { using Type = T;  };
-	template<typename T> struct RValueToLValueReference      { using Type = T;  };
-	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
+	template<typename T> struct RTValueoLValueReference      { using Type = T;  };
+	template<typename T> struct RTValueoLValueReference<T&&> { using Type = T&; };
 	template<typename T> struct Decay                        { using Type = T;  };
 	template<typename T> struct Decay<T&>                    { using Type = T;  };
 	template<typename T> struct Decay<T&&>                   { using Type = T;  };
@@ -38,8 +38,8 @@ export namespace jpt
 				double bar = 42.0;
 				jpt::IsAnyOf<decltype(foo), float, char, int>; // true
 				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
-	template<typename Type, typename ...Types>
-	constexpr bool IsAnyOf = (IsSameType<Type, Types> || ...);
+	template<typename T, typename ...TOthers>
+	constexpr bool IsAnyOf = (IsSameType<T, TOthers> || ...);
 
 	/** @return		Whether the given type is empty or not. */
 	template<typename T>

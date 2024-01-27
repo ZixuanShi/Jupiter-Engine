@@ -22,8 +22,8 @@ export namespace jpt
 	public:
 		Allocator() = default;
 
-		template<class OtherT>
-		Allocator(const Allocator<OtherT>& other) noexcept {}
+		template<class TOther>
+		Allocator(const Allocator<TOther>& other) noexcept {}
 
 	public:
 		/** Allocates plain heap memory for desired amount of memory for <Type>
@@ -41,11 +41,11 @@ export namespace jpt
 		static void Construct(T* pPointer, const T& object);
 		static void Destruct(T* pPointer);
 
-		template<class OtherT>
-		bool operator==(const Allocator<OtherT>&) const noexcept;
+		template<class TOther>
+		bool operator==(const Allocator<TOther>&) const noexcept;
 
-		template<class OtherT>
-		bool operator!=(const Allocator<OtherT>&) const noexcept;
+		template<class TOther>
+		bool operator!=(const Allocator<TOther>&) const noexcept;
 	};
 
 	template<typename T>
@@ -100,15 +100,15 @@ export namespace jpt
 	}
 
 	template<typename T>
-	template<class OtherType>
-	bool Allocator<T>::operator==(const Allocator<OtherType>&) const noexcept
+	template<class TOtherype>
+	bool Allocator<T>::operator==(const Allocator<TOtherype>&) const noexcept
 	{
 		return true;
 	}
 
 	template<typename T>
-	template<class OtherType>
-	bool Allocator<T>::operator!=(const Allocator<OtherType>&) const noexcept
+	template<class TOtherype>
+	bool Allocator<T>::operator!=(const Allocator<TOtherype>&) const noexcept
 	{
 		return false;
 	}

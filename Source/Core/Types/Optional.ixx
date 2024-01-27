@@ -13,24 +13,24 @@ export namespace jpt
 {
 	/** Represents an optionally contained value. The value will only be valid when has_value() returns true
 			This is useful in many scenarios, such as return a optional result from function that may fail. */
-	template<typename _ValueT>
+	template<typename _TValue>
 	class Optional
 	{
 	public:
-		using ValueT = _ValueT;
+		using TValue = _TValue;
 
 	private:
-		ValueT m_value;
+		TValue m_value;
 		bool m_hasValue = false;
 
 	public:
 		Optional() = default;
-		Optional(const ValueT& value);
-		Optional(ValueT&& value);
+		Optional(const TValue& value);
+		Optional(TValue&& value);
 		Optional(const Optional& other);
 		Optional(Optional&& other) noexcept;
-		Optional& operator=(const ValueT& value);
-		Optional& operator=(ValueT&& value);
+		Optional& operator=(const TValue& value);
+		Optional& operator=(TValue&& value);
 		Optional& operator=(const Optional& other);
 		Optional& operator=(Optional&& other) noexcept;
 		~Optional();
@@ -42,44 +42,44 @@ export namespace jpt
 		bool HasValue() const { return m_hasValue; }
 		operator bool() const { return m_hasValue; }
 
-		const ValueT& Value() const { JPT_ASSERT(m_hasValue); return m_value; }
-		ValueT& Value() { JPT_ASSERT(m_hasValue); return m_value; }
-		const ValueT* GetPtr() const { JPT_ASSERT(m_hasValue); return &m_value; }
-		ValueT* GetPtr() { JPT_ASSERT(m_hasValue); return &m_value; }
+		const TValue& Value() const { JPT_ASSERT(m_hasValue); return m_value; }
+		TValue& Value() { JPT_ASSERT(m_hasValue); return m_value; }
+		const TValue* GetPtr() const { JPT_ASSERT(m_hasValue); return &m_value; }
+		TValue* GetPtr() { JPT_ASSERT(m_hasValue); return &m_value; }
 
 	private:
 		void CopyData(const Optional& other);
 		void MoveData(Optional&& other);
 	};
 
-	template<typename ValueT>
-	inline Optional<ValueT>::Optional(const ValueT& value)
+	template<typename TValue>
+	inline Optional<TValue>::Optional(const TValue& value)
 		: m_value(value)
 		, m_hasValue(true)
 	{
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>::Optional(ValueT&& value)
+	template<typename TValue>
+	inline Optional<TValue>::Optional(TValue&& value)
 		: m_value(Move(value))
 		, m_hasValue(true)
 	{
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>::Optional(const Optional& other)
+	template<typename TValue>
+	inline Optional<TValue>::Optional(const Optional& other)
 	{
 		CopyData(other);
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>::Optional(Optional&& other) noexcept
+	template<typename TValue>
+	inline Optional<TValue>::Optional(Optional&& other) noexcept
 	{
 		MoveData(Move(other));
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>& Optional<ValueT>::operator=(const ValueT& value)
+	template<typename TValue>
+	inline Optional<TValue>& Optional<TValue>::operator=(const TValue& value)
 	{
 		Reset();
 		m_value = value;
@@ -87,8 +87,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>& Optional<ValueT>::operator=(ValueT&& value)
+	template<typename TValue>
+	inline Optional<TValue>& Optional<TValue>::operator=(TValue&& value)
 	{
 		Reset();
 		m_value = Move(value);
@@ -96,8 +96,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>& Optional<ValueT>::operator=(const Optional& other)
+	template<typename TValue>
+	inline Optional<TValue>& Optional<TValue>::operator=(const Optional& other)
 	{
 		if (this != &other)
 		{
@@ -108,8 +108,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>& Optional<ValueT>::operator=(Optional&& other) noexcept
+	template<typename TValue>
+	inline Optional<TValue>& Optional<TValue>::operator=(Optional&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -120,37 +120,37 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename ValueT>
-	inline Optional<ValueT>::~Optional()
+	template<typename TValue>
+	inline Optional<TValue>::~Optional()
 	{
 		Reset();
 	}
 
-	template<typename ValueT>
-	void Optional<ValueT>::Reset()
+	template<typename TValue>
+	void Optional<TValue>::Reset()
 	{
 		if (!m_hasValue)
 		{
 			return;
 		}
 
-		if constexpr (!std::is_trivially_default_constructible_v<ValueT>)
+		if constexpr (!std::is_trivially_default_constructible_v<TValue>)
 		{
-			m_value.~ValueT();
+			m_value.~TValue();
 		}
 
 		m_hasValue = false;
 	}
 
-	template<typename ValueT>
-	inline void Optional<ValueT>::CopyData(const Optional& other)
+	template<typename TValue>
+	inline void Optional<TValue>::CopyData(const Optional& other)
 	{
 		m_value = other.m_value;
 		m_hasValue = other.m_hasValue;
 	}
 
-	template<typename ValueT>
-	inline void Optional<ValueT>::MoveData(Optional&& other)
+	template<typename TValue>
+	inline void Optional<TValue>::MoveData(Optional&& other)
 	{
 		m_value = move(other.m_value);
 		m_hasValue = other.m_hasValue;

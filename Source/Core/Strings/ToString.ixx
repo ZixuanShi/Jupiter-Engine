@@ -39,24 +39,24 @@ export namespace jpt
 	}
 
 	// int, uint
-	template<BasicStringType StringT = jpt::String, Integral IntT>
-	StringT ToString(IntT integer)
+	template<BasicStringType StringT = jpt::String, Integral TInt>
+	StringT ToString(TInt integer)
 	{
-		using CharT = StringT::CharT;
+		using TChar = StringT::TChar;
 
-		CharT* integerCString = IntegerToCStr<CharT>(integer);
+		TChar* integerCString = IntegerToCStr<TChar>(integer);
 		StringT integerString;
 		integerString.MoveString(integerCString);
 		return integerString;
 	}
 
 	// float, double
-	template<BasicStringType StringT = jpt::String, Floating FloatT>
-	StringT ToString(FloatT value)
+	template<BasicStringType StringT = jpt::String, Floating TFloat>
+	StringT ToString(TFloat value)
 	{
-		using CharT = StringT::CharT;
+		using TChar = StringT::TChar;
 
-		CharT* floatCString = FloatToCStr<CharT>(value);
+		TChar* floatCString = TFloatoCStr<TChar>(value);
 		StringT floatString;
 		floatString.MoveString(floatCString);
 		return floatString;
@@ -66,23 +66,23 @@ export namespace jpt
 	template<BasicStringType StringT = jpt::String>
 	StringT ToString(bool value)
 	{
-		using CharT = StringT::CharT;
+		using TChar = StringT::TChar;
 
 		StringT boolStr;
 		if (value)
 		{
-			boolStr = JPT_GET_PROPER_STRING(CharT, true);
+			boolStr = JPT_GET_PROPER_STRING(TChar, true);
 		}
 		else
 		{
-			boolStr = JPT_GET_PROPER_STRING(CharT, false);
+			boolStr = JPT_GET_PROPER_STRING(TChar, false);
 		}
 		return boolStr;
 	}
 
 	// char
 	template<BasicStringType StringT = jpt::String>
-	StringT ToString(typename StringT::CharT c)
+	StringT ToString(typename StringT::TChar c)
 	{
 		return StringT(c);
 	}

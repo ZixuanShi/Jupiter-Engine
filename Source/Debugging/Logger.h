@@ -66,8 +66,8 @@ namespace jpt
 		void ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage);
 
 		/** Impl of printing message to output console */
-		void PrintToConsole(const char* string);
-		void PrintToConsole(const wchar_t* wideString);
+		void PrTIntoConsole(const char* string);
+		void PrTIntoConsole(const wchar_t* wideString);
 	};
 }
 #else

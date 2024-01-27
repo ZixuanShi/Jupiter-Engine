@@ -127,7 +127,7 @@ bool UnitTest_ConstTuple()
 	return true;
 }
 
-bool UnitTest_ConstDataTuple()
+bool UnitTest_ConstTDatauple()
 {
 	jpt::Tuple<int, char, const bool, Foo, const int, const jpt::String> tuple{ 3, 'C', false, Foo(10), 4, "Hello" };
 
@@ -220,7 +220,7 @@ export bool RunUnitTests_Tuple()
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_EmptyTuple(), "UnitTest_EmptyTuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_OneTypeTuple(), "UnitTest_OneTypeTuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ConstTuple(), "UnitTest_ConstTuple Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ConstDataTuple(), "UnitTest_ConstDataTuple Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_ConstTDatauple(), "UnitTest_ConstTDatauple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Tie(), "UnitTest_Tie Failed");
 
 	return true;

@@ -18,12 +18,12 @@ export namespace jpt
 	template<Movable T>
 	typename RemoveReference<T>::Type&& Move(T&& object)
 	{
-		using CastT = RemoveReference<T>::Type;
+		using TCast = RemoveReference<T>::Type;
 
 		static_assert(IsLValueRef<T>, "jpt::move called on an Rvalue");
-		static_assert(!IsSameType<CastT&, const CastT&>, "jpt::move called on a const object");
+		static_assert(!IsSameType<TCast&, const TCast&>, "jpt::move called on a const object");
 
-		return static_cast<CastT&&>(object);
+		return static_cast<TCast&&>(object);
 	}
 
 	/** Equivalent of std::forward. Return a reference to an rvalue reference. */

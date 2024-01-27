@@ -67,10 +67,10 @@ export namespace jpt
 
 #pragma region MinMax
 
-	template <Trivial FirstT, typename... RestT>
-	constexpr FirstT Min(FirstT first, RestT... inputs)
+	template <Trivial TFirst, typename... TRest>
+	constexpr TFirst Min(TFirst first, TRest... inputs)
 	{
-		FirstT smallestVal = first;
+		TFirst smallestVal = first;
 
 		([&]
 			{
@@ -82,10 +82,10 @@ export namespace jpt
 
 		return smallestVal;
 	}
-	template <NonTrivial FirstT, typename... RestT>
-	constexpr FirstT Min(const FirstT& first, const RestT&... inputs)
+	template <NonTrivial TFirst, typename... TRest>
+	constexpr TFirst Min(const TFirst& first, const TRest&... inputs)
 	{
-		FirstT smallestVal = first;
+		TFirst smallestVal = first;
 
 		([&]
 			{
@@ -98,10 +98,10 @@ export namespace jpt
 		return smallestVal;
 	}
 
-	template <Trivial FirstT, typename... RestT>
-	constexpr FirstT Max(FirstT first, RestT... inputs)
+	template <Trivial TFirst, typename... TRest>
+	constexpr TFirst Max(TFirst first, TRest... inputs)
 	{
-		FirstT largestVal = first;
+		TFirst largestVal = first;
 
 		([&]
 			{
@@ -113,10 +113,10 @@ export namespace jpt
 
 		return largestVal;
 	}
-	template <NonTrivial FirstT, typename... RestT>
-	constexpr FirstT Max(const FirstT& first, const RestT&... inputs)
+	template <NonTrivial TFirst, typename... TRest>
+	constexpr TFirst Max(const TFirst& first, const TRest&... inputs)
 	{
-		FirstT largestVal = first;
+		TFirst largestVal = first;
 
 		([&]
 			{
@@ -132,21 +132,21 @@ export namespace jpt
 #pragma endregion MinMax
 
 	/** @return The absolute value of input arithmetic parameter */
-	template<Numeric NumT>
-	constexpr NumT GetAbs(NumT value)
+	template<Numeric TNum>
+	constexpr TNum GetAbs(TNum value)
 	{
-		return (value >= static_cast<NumT>(0) ? value : -value);
+		return (value >= static_cast<TNum>(0) ? value : -value);
 	}
 
 	/** @return true if two values are close enough */
-	template<Integral IntT>
-	constexpr bool AreValuesClose(IntT A, IntT B)
+	template<Integral TInt>
+	constexpr bool AreValuesClose(TInt A, TInt B)
 	{
 		return A == B;
 	}
 
-	template<Floating FloatT>
-	constexpr bool AreValuesClose(FloatT A, FloatT B, FloatT tolerance = static_cast<FloatT>(0.000001))
+	template<Floating TFloat>
+	constexpr bool AreValuesClose(TFloat A, TFloat B, TFloat tolerance = static_cast<TFloat>(0.000001))
 	{
 		return GetAbs(A - B) < tolerance;
 	}

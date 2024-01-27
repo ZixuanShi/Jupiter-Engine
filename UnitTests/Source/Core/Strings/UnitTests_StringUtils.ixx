@@ -11,39 +11,39 @@ import jpt.CoreModules;
 template<class StringT>
 bool UnitTest_StringLen()
 {
-	using CharT = StringT::CharT;
+	using TChar = StringT::TChar;
 
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(CharT, Jupiter Engine)) != 14, "");
-	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(CharT, Zixuan Shi)) != 10, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Jupiter Engine)) != 14, "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Zixuan Shi)) != 10, "");
 	return true;
 }
 
 template<class StringT>
 bool UnitTest_ToCStr()
 {
-	using CharT = StringT::CharT;
+	using TChar = StringT::TChar;
 
-	const CharT* integerCStr = jpt::IntegerToCStr<CharT>(114514);
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(CharT, 114514), 6), "");
+	const TChar* integerCStr = jpt::IntegerToCStr<TChar>(114514);
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(TChar, 114514), 6), "");
 	delete integerCStr;
 
-	integerCStr = jpt::IntegerToCStr<CharT>(-114514);
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(CharT, -114514), 7), "");
+	integerCStr = jpt::IntegerToCStr<TChar>(-114514);
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(TChar, -114514), 7), "");
 	delete integerCStr;
 
-	int32 num = jpt::CStrToInteger<CharT>(JPT_GET_PROPER_STRING(CharT, 114514), 6);
+	int32 num = jpt::CStrToInteger<TChar>(JPT_GET_PROPER_STRING(TChar, 114514), 6);
 	JPT_RETURN_FALSE_IF_ERROR(num != 114514, "");
 
-	num = jpt::CStrToInteger<CharT>(JPT_GET_PROPER_STRING(CharT, -114514), 7);
+	num = jpt::CStrToInteger<TChar>(JPT_GET_PROPER_STRING(TChar, -114514), 7);
 	JPT_RETURN_FALSE_IF_ERROR(num != -114514, "");
 
-	float f = jpt::CStrToFloat<CharT>(JPT_GET_PROPER_STRING(CharT, 114514.114514), 13);
+	float f = jpt::CStrToFloat<TChar>(JPT_GET_PROPER_STRING(TChar, 114514.114514), 13);
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreValuesClose(f, 114514.114514f), "");
 
-	f = jpt::CStrToFloat<CharT>(JPT_GET_PROPER_STRING(CharT, -114514.114514), 14);
+	f = jpt::CStrToFloat<TChar>(JPT_GET_PROPER_STRING(TChar, -114514.114514), 14);
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreValuesClose(f, -114514.114514f), "");
 
-	const CharT* floatingCStr = jpt::FloatToCStr<CharT>(-114514.114f);
+	const TChar* floatingCStr = jpt::TFloatoCStr<TChar>(-114514.114f);
 	//JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(floatingCStr, "-114514.114", 11), "");	// Not stable
 	delete floatingCStr;
 
@@ -53,14 +53,14 @@ bool UnitTest_ToCStr()
 template<class StringT>
 bool UnitTest_StrCpy()
 {
-	using CharT = StringT::CharT;
+	using TChar = StringT::TChar;
 
-	CharT buffer[256];
-	jpt::StrCpy<CharT>(buffer, 15, JPT_GET_PROPER_STRING(CharT, Jupiter Engine));
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter Engine)), "");
+	TChar buffer[256];
+	jpt::StrCpy<TChar>(buffer, 15, JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(TChar, Jupiter Engine)), "");
 
-	jpt::StrNCpy<CharT>(buffer, 15, JPT_GET_PROPER_STRING(CharT, Jupiter Engine), 10);
-	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(CharT, Jupiter En)), "");
+	jpt::StrNCpy<TChar>(buffer, 15, JPT_GET_PROPER_STRING(TChar, Jupiter Engine), 10);
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(buffer, JPT_GET_PROPER_STRING(TChar, Jupiter En)), "");
 
 	return true;
 }

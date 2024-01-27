@@ -11,12 +11,12 @@ export namespace jpt_private
 		constexpr DefaultDelete() noexcept = default;
 
 		/** Constructs a jpt::DefaultDelete<Type> object from another jpt::DefaultDelete object.
-			This constructor will only participate in overload resolution if OtherType* is implicitly convertible to Type* */
-		template<class OtherT>
-		constexpr DefaultDelete(const DefaultDelete<OtherT>& deleter) noexcept {}
+			This constructor will only participate in overload resolution if TOtherype* is implicitly convertible to Type* */
+		template<class TOther>
+		constexpr DefaultDelete(const DefaultDelete<TOther>& deleter) noexcept {}
 
-		template<class OtherT>
-		constexpr DefaultDelete& operator=(const DefaultDelete<OtherT>&) { return *this; }
+		template<class TOther>
+		constexpr DefaultDelete& operator=(const DefaultDelete<TOther>&) { return *this; }
 
 		constexpr void operator()(T* pPtr) const { delete pPtr; }
 	};
@@ -28,12 +28,12 @@ export namespace jpt_private
 		constexpr DefaultDelete() noexcept = default;
 
 		/** Constructs a jpt::DefaultDelete<Type> object from another jpt::DefaultDelete object.
-			This constructor will only participate in overload resolution if OtherType* is implicitly convertible to Type* */
-		template<class OtherT>
-		constexpr DefaultDelete(const DefaultDelete<OtherT[]>& deleter) noexcept {}
+			This constructor will only participate in overload resolution if TOtherype* is implicitly convertible to Type* */
+		template<class TOther>
+		constexpr DefaultDelete(const DefaultDelete<TOther[]>& deleter) noexcept {}
 
-		template<class OtherT>
-		DefaultDelete& operator=(const DefaultDelete<OtherT[]>&) { return *this; }
+		template<class TOther>
+		DefaultDelete& operator=(const DefaultDelete<TOther[]>&) { return *this; }
 
 		constexpr void operator()(T* pPtr) const { delete[] pPtr; }
 	};

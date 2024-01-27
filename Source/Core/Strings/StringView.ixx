@@ -17,36 +17,36 @@ import jpt.TypeDefs;
 export namespace jpt
 {
 	/** Describes an object that can refer to a constant contiguous sequence 
-		of CharT with the first element of the sequence at position zero. */
-	template<StringLiteral _CharT>
+		of TChar with the first element of the sequence at position zero. */
+	template<StringLiteral _TChar>
 	class BasicStringView
 	{
 	public:
-		using CharT = _CharT;
+		using TChar = _TChar;
 
 	private:
-		const CharT* m_pBuffer = nullptr;
+		const TChar* m_pBuffer = nullptr;
 		size_t m_size = 0;
 
 	public:
 		// Constructors
 		constexpr BasicStringView() = default;
-		constexpr BasicStringView(const CharT* CString, size_t size);
-		constexpr BasicStringView(const CharT* CString);
+		constexpr BasicStringView(const TChar* CString, size_t size);
+		constexpr BasicStringView(const TChar* CString);
 		BasicStringView(const BasicStringView& other);
-		BasicStringView(const BasicString<CharT>& string);
+		BasicStringView(const BasicString<TChar>& string);
 
 		// operator=
-		BasicStringView& operator=(const CharT* CString);
+		BasicStringView& operator=(const TChar* CString);
 		BasicStringView& operator=(const BasicStringView& other);
-		BasicStringView& operator=(const BasicString<CharT>& string);
+		BasicStringView& operator=(const BasicString<TChar>& string);
 
 		// Element Access
-		const CharT* Buffer() const { return m_pBuffer; }
-		const CharT& operator[](size_t index) const { return m_pBuffer[index]; }
-		const CharT& At(size_t index) const { return m_pBuffer[index]; }
-		const CharT& Front() const { return m_pBuffer[0]; }
-		const CharT& Back() const { return m_pBuffer[m_size - 1]; }
+		const TChar* Buffer() const { return m_pBuffer; }
+		const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
+		const TChar& At(size_t index) const { return m_pBuffer[index]; }
+		const TChar& Front() const { return m_pBuffer[0]; }
+		const TChar& Back() const { return m_pBuffer[m_size - 1]; }
 
 		// Capacity
 		bool IsEmpty() const { return m_size == 0; }
@@ -58,66 +58,66 @@ export namespace jpt
 		BasicStringView SubStr(size_t index, size_t count = npos) const;
 
 		/** @return     true if the string view starts with the given prefix */
-		bool StartsWith(const CharT* CString, size_t count) const;
-		bool StartsWith(const CharT* CString) const { return StartsWith(CString, GetCStrLength(CString)); }
+		bool StartsWith(const TChar* CString, size_t count) const;
+		bool StartsWith(const TChar* CString) const { return StartsWith(CString, GetCStrLength(CString)); }
 
 		/** @return     true if the string view ends with the given suffix */
-		bool EndsWith(const CharT* CString, size_t count) const;
-		bool EndsWith(const CharT* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
+		bool EndsWith(const TChar* CString, size_t count) const;
+		bool EndsWith(const TChar* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
 
-		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		size_t Find(const CharT* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		bool Contains(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(charToFind, startIndex, endIndex) != npos; }
-		bool Contains(const CharT* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(pStringToFind, startIndex, endIndex) != npos; }
+		size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		bool Contains(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(TCharoFind, startIndex, endIndex) != npos; }
+		bool Contains(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(pStringToFind, startIndex, endIndex) != npos; }
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
-	template<StringLiteral CharT>
-	bool operator==(const BasicStringView<CharT>& a, const BasicStringView<CharT>& b)
+	template<StringLiteral TChar>
+	bool operator==(const BasicStringView<TChar>& a, const BasicStringView<TChar>& b)
 	{
 		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size(), b.Size());
 	}
-	template<StringLiteral CharT>
-	bool operator==(const BasicStringView<CharT>& a, const CharT* b)
+	template<StringLiteral TChar>
+	bool operator==(const BasicStringView<TChar>& a, const TChar* b)
 	{
 		return AreStringsSame(a.Buffer(), b, a.Size(), GetCStrLength(b));
 	}
-	template<StringLiteral CharT>
-	bool operator==(const BasicStringView<CharT>& a, const BasicString<CharT>& b)
+	template<StringLiteral TChar>
+	bool operator==(const BasicStringView<TChar>& a, const BasicString<TChar>& b)
 	{
 		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Size(), b.Size());
 	}
 
 	// Member Functions Definitions --------------------------------------------------------------------------------------------------------
-	template<StringLiteral CharT>
-	constexpr BasicStringView<CharT>::BasicStringView(const CharT* CString, size_t size)
+	template<StringLiteral TChar>
+	constexpr BasicStringView<TChar>::BasicStringView(const TChar* CString, size_t size)
 		: m_pBuffer(CString)
 		, m_size(size)
 	{
 	}
 
-	template<StringLiteral CharT>
-	constexpr BasicStringView<CharT>::BasicStringView(const CharT* CString)
+	template<StringLiteral TChar>
+	constexpr BasicStringView<TChar>::BasicStringView(const TChar* CString)
 		: BasicStringView(CString, GetCStrLength(CString))
 	{
 	}
 
-	template<StringLiteral _CharT>
-	BasicStringView<_CharT>::BasicStringView(const BasicStringView& other)
+	template<StringLiteral _TChar>
+	BasicStringView<_TChar>::BasicStringView(const BasicStringView& other)
 		: m_pBuffer(other.m_pBuffer)
 		, m_size(other.m_size)
 	{
 	}
 
-	template<StringLiteral CharT>
-	BasicStringView<CharT>::BasicStringView(const BasicString<CharT>& string)
+	template<StringLiteral TChar>
+	BasicStringView<TChar>::BasicStringView(const BasicString<TChar>& string)
 		: m_pBuffer(string.ConstBuffer())
 		, m_size(string.Size())
 	{
 	}
 
-	template<StringLiteral CharT>
-	BasicStringView<CharT>& BasicStringView<CharT>::operator=(const CharT* CString)
+	template<StringLiteral TChar>
+	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const TChar* CString)
 	{
 		if (m_pBuffer != CString)
 		{
@@ -128,8 +128,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT>
-	BasicStringView<CharT>& BasicStringView<CharT>::operator=(const BasicStringView& other)
+	template<StringLiteral TChar>
+	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const BasicStringView& other)
 	{
 		if (this != &other)
 		{
@@ -140,8 +140,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT>
-	BasicStringView<CharT>& BasicStringView<CharT>::operator=(const BasicString<CharT>& string)
+	template<StringLiteral TChar>
+	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const BasicString<TChar>& string)
 	{
 		if (m_pBuffer != string.ConstBuffer())
 		{
@@ -152,8 +152,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral CharT>
-	BasicStringView<CharT> BasicStringView<CharT>::SubStr(size_t index, size_t count) const
+	template<StringLiteral TChar>
+	BasicStringView<TChar> BasicStringView<TChar>::SubStr(size_t index, size_t count) const
 	{
 		if (count == npos)
 		{
@@ -165,20 +165,20 @@ export namespace jpt
 		return BasicStringView(m_pBuffer + index, count);
 	}
 
-	template<StringLiteral _CharT>
-	bool BasicStringView<_CharT>::StartsWith(const CharT* CString, size_t count) const
+	template<StringLiteral _TChar>
+	bool BasicStringView<_TChar>::StartsWith(const TChar* CString, size_t count) const
 	{
 		return AreStringsSame(m_pBuffer, CString, count);
 	}
 
-	template<StringLiteral _CharT>
-	bool BasicStringView<_CharT>::EndsWith(const CharT* CString, size_t count) const
+	template<StringLiteral _TChar>
+	bool BasicStringView<_TChar>::EndsWith(const TChar* CString, size_t count) const
 	{
 		return AreStringsSame(m_pBuffer + m_size - count, CString, count);
 	}
 
-	template<StringLiteral _CharT>
-	size_t BasicStringView<_CharT>::Find(CharT charToFind, size_t startIndex, size_t endIndex) const
+	template<StringLiteral _TChar>
+	size_t BasicStringView<_TChar>::Find(TChar TCharoFind, size_t startIndex, size_t endIndex) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -189,7 +189,7 @@ export namespace jpt
 				return npos;
 			}
 
-			if (m_pBuffer[i] == charToFind)
+			if (m_pBuffer[i] == TCharoFind)
 			{
 				return i;
 			}
@@ -198,8 +198,8 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral _CharT>
-	size_t BasicStringView<_CharT>::Find(const CharT* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	template<StringLiteral _TChar>
+	size_t BasicStringView<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
 		const size_t stringToFindSize = GetCStrLength(pStringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
