@@ -6,7 +6,6 @@
 
 import jpt.TypeDefs;
 import jpt.Concepts;
-import jpt.String;
 import jpt.ToString;
 
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
@@ -57,7 +56,16 @@ namespace jpt
 	private:
 		Logger() = default;
 
+		/** @return	A time stamp that follows the format of filePath(lineNumber): 
+			This allows LOG message clickable in the output window, and will redirect to the source code where LOG is called 
+			@note filePath can be either relative to the VS proj file, or absolute path. Using relative path as default */
+		String GetStamp(ELogType type, int32 line, const char* file);
+
+		/** Combines stamp, message, line break, then pass to output console */
 		void ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage);
+		void ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage);
+
+		/** Impl of printing message to output console */
 		void PrintToConsole(const char* string);
 		void PrintToConsole(const wchar_t* wideString);
 	};

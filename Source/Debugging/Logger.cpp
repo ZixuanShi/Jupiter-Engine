@@ -18,6 +18,8 @@ import jpt.TimingUtilsDeprecated;
 
 namespace jpt
 {
+	static constexpr size_t kMaxMessageSize = 256;
+
 	const char* locGetLogStr(Logger::ELogType type)
 	{
 		switch (type)
@@ -32,16 +34,60 @@ namespace jpt
 
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
-		char messageBuffer[512];
+		char messageBuffer[kMaxMessageSize];
 		FORMAT_STRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
-	void Logger::Log(ELogType, int32,  const char*,  const wchar_t* format, ...)
+	void Logger::Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...)
 	{
-		wchar_t messageBuffer[512];
+		wchar_t messageBuffer[kMaxMessageSize];
 		FORMAT_WSTRING(messageBuffer, format, ...);
-		PrintToConsole(messageBuffer);
+		ProcessMessage(type, line, file, messageBuffer);
+	}
+
+	String Logger::GetStamp(ELogType type, int32 line, const char* file)
+	{
+		String contentToLog;
+		contentToLog.Reserve(kMaxMessageSize);
+
+		// Add time
+		//contentToLog += Clock::Now().ToString();
+
+		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
+		const String fileStr(file);
+		contentToLog += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
+
+		// line number and log type
+		contentToLog += "(" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
+
+		return contentToLog;
+	}
+
+	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
+	{
+		String contentToLog = GetStamp(type, line, file);
+		contentToLog += pMessage;
+		contentToLog += "\n";
+
+		PrintToConsole(contentToLog.ConstBuffer());
+	}
+
+	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
+	{
+		const String stamp = GetStamp(type, line, file);
+
+		const size_t wStampStrSize = stamp.Size() + 1;
+		wchar_t* wStampStr = new wchar_t[wStampStrSize];
+		mbstowcs_s(nullptr, wStampStr, wStampStrSize, stamp.ConstBuffer(), _TRUNCATE);
+
+		WString wStamp;
+		wStamp.MoveString(wStampStr);
+
+		wStamp += pMessage;
+		wStamp += L"\n";
+
+		PrintToConsole(wStamp.ConstBuffer());
 	}
 
 	void Logger::PrintToConsole(const char* string)
@@ -62,30 +108,6 @@ namespace jpt
 	{
 		static Logger s_logger;
 		return s_logger;
-	}
-
-	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
-	{
-		const String fileStr(file);
-
-		String contentToLog;
-		contentToLog.Reserve(256);
-
-		// Add time
-		//contentToLog += Clock::Now().ToString();
-
-		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
-		contentToLog += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
-
-		// line number and log type
-		contentToLog += "(" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
-
-		// Content message
-		contentToLog += pMessage;
-		contentToLog += "\n";
-
-		// Log to the output window
-		PrintToConsole(contentToLog.ConstBuffer());
 	}
 }
 

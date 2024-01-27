@@ -1,4 +1,4 @@
-// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "Core/Minimals/Headers.h"
 
@@ -21,7 +21,7 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_LOG("Hello World %s! Args: %s", "Jupiter Engine", lPStr);
+	JPT_LOG(L"你好，世界 %s!", L"Jupiter Engine");
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }

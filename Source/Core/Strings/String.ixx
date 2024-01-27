@@ -30,9 +30,9 @@ export namespace jpt
 	class BasicString
 	{
 	public:
-		using CharT = _CharT;
+		using CharT      = _CharT;
 		using AllocatorT = _AllocatorT;
-		using Iterator = jpt_private::ContiguousIterator<CharT>;
+		using Iterator   = jpt_private::ContiguousIterator<CharT>;
 
 	private:
 		CharT* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
@@ -53,27 +53,27 @@ export namespace jpt
 
 		// Element Access
 		const CharT* ConstBuffer() const { return m_pBuffer; }
-		CharT* Buffer() const { return m_pBuffer; }
-		CharT& operator[](size_t index) { return m_pBuffer[index]; }
-		const CharT& operator[](size_t index) const { return m_pBuffer[index]; }
-		CharT& Front() { return m_pBuffer[0]; }
+		      CharT* Buffer()      const { return m_pBuffer; }
+		      CharT& Front()       { return m_pBuffer[0]; }
 		const CharT& Front() const { return m_pBuffer[0]; }
-		CharT& Back() { return m_pBuffer[m_size - 1]; }
-		const CharT& Back() const { return m_pBuffer[m_size - 1]; }
+		      CharT& Back()        { return m_pBuffer[m_size - 1]; }
+		const CharT& Back()  const { return m_pBuffer[m_size - 1]; }
+		      CharT& operator[](size_t index)       { return m_pBuffer[index]; }
+		const CharT& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
-		Iterator begin() { return Iterator(m_pBuffer); }
-		const Iterator begin() const { return Iterator(m_pBuffer); }
+		      Iterator begin()        { return Iterator(m_pBuffer); }
+		const Iterator begin()  const { return Iterator(m_pBuffer); }
 		const Iterator cbegin() const { return Iterator(m_pBuffer); }
 
-		Iterator end() { return Iterator(m_pBuffer + m_size); }
-		const Iterator end() const { return Iterator(m_pBuffer + m_size); }
+		      Iterator end()        { return Iterator(m_pBuffer + m_size); }
+		const Iterator end()  const { return Iterator(m_pBuffer + m_size); }
 		const Iterator cend() const { return Iterator(m_pBuffer + m_size); }
 
 		// Capacity
-		size_t Size() const { return m_size; }
+		size_t Size()     const { return m_size; }
 		size_t Capacity() const { return m_capacity; }
-		bool IsEmpty() const { return m_size == 0; }
+		bool   IsEmpty()  const { return m_size == 0; }
 
 		/** Searching. Returns npos if not found */
 		size_t Find(CharT charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
