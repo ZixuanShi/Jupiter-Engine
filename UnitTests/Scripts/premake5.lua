@@ -9,7 +9,7 @@ workspace "JupiterUnitTests"
     { 
         "Debug",        -- Debugging. No optimization will be performed
         "Development",  -- Develop the project. Use Engine's editors and tools 
-        "Profiling",    -- Profiling. Same configurations with Release but Profiling code
+        "Profiling",    -- Profiling. Same configurations with Release but enables Profiling code
         "Release",      -- Relese/Shipping
     }
     platforms 
@@ -21,20 +21,20 @@ workspace "JupiterUnitTests"
 
     -- Paths
     location  (project_dir .. "Visual Studio Files")
-    targetdir ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir    ("../Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    targetdir (project_dir .. "Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
+    objdir    (project_dir .. "Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
 
     -- Programming
-    language "C++"
+    language   "C++"
     cppdialect "C++latest"
-    warnings "Extra"
+    warnings   "Extra"
     staticruntime "on"
     defines
     {
-        ("JPT_ENGINE_DIR=\""..jupiter_dir .. "\""),
-        ("JPT_ENGINE_DIR_W=L\""..jupiter_dir .. "\""),
-        ("JPT_PROJECT_DIR=\""..project_dir .. "\""),
-        ("JPT_PROJECT_DIR_W=L\""..project_dir .. "\""),
+        ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),
+        ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
+        ("JPT_PROJECT_DIR=\""   .. project_dir .."\""),
+        ("JPT_PROJECT_DIR_W=L\"".. project_dir .."\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
     }
 
@@ -132,13 +132,13 @@ project "UnitTests"
 
     files
     {
-        "../Source/**.h",
-        "../Source/**.cpp",
-        "../Source/**.ixx",
+        (project_dir .. "Source/**.h"),
+        (project_dir .. "Source/**.cpp"),
+        (project_dir .. "Source/**.ixx"),
     }
 
     postbuildcommands
     {
-        "xcopy \"$(SolutionDir)Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-        "xcopy \"" .. jupiter_dir .."Assets/Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
+        "xcopy \"" .. project_dir .. "Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+        "xcopy \"" .. jupiter_dir .. "Assets\\Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
     }
