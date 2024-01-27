@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module StringUnitTests;
+export module UnitTests_String;
 
 import jpt.CoreModules;
 
@@ -262,7 +262,7 @@ bool UnitTest_String_Format()
 	return true;
 }
 
-export bool RunStringUnitTests()
+export bool RunUnitTests_String()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_DefaultStringConstructing<jpt::String>(), "UnitTest_DefaultStringConstructing Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_DefaultStringConstructing<jpt::WString>(), "UnitTest_DefaultStringConstructing Failed");

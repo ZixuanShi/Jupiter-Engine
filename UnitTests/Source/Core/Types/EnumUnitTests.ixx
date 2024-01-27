@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module EnumUnitTests;
+export module UnitTests_Enum;
 
 import jpt.CoreModules;
 
@@ -50,7 +50,7 @@ bool UnitTest_CreateEnum()
 	return true;
 }
 
-export bool RunEnumUnitTests()
+export bool RunUnitTests_Enum()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_CreateEnum(), "");
 

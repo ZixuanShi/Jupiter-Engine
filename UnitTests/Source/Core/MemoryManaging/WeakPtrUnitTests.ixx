@@ -6,7 +6,7 @@ module;
 
 #include <memory>
 
-export module WeakPtrUnitTests;
+export module UnitTests_WeakPtr;
 
 import jpt.CoreModules;
 
@@ -138,7 +138,7 @@ bool UnitTests_WeakPtr_Referencing()
 	return true;
 }
 
-export bool RunWeakPtrUnitTests()
+export bool RunUnitTests_WeakPtr()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_WeakPtr_Class(), "UnitTests_WeakPtr_Class Failed");
 

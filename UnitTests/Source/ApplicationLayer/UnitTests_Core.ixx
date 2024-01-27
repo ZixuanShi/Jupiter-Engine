@@ -4,69 +4,69 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module CoreUnitTests;
+export module UnitTests_Core;
 
 /** Unit Test Modules */
 
 // Utilities
-import UtilitiesUnitTests;
-import TypeTraitsUnitTests;
+import UnitTests_Utilities;
+import UnitTests_TypeTraits;
 
 // Debugging
-import LoggerUnitTests;
+import UnitTests_Logger;
 
 // Math
-import MathUnitTests;
-import RandomNumberGeneratorUnitTests;
+import UnitTests_Math;
+import UnitTests_RandomNumberGenerator;
 
 // Memory Managing
-import AllocatorUnitTests;
-import StrongPtrUnitTests;
-import UniquePtrUnitTests;
-import WeakPtrUnitTests;
+import UnitTests_Allocator;
+import UnitTests_StrongPtr;
+import UnitTests_UniquePtr;
+import UnitTests_WeakPtr;
 
 // Strings
-import StringUtilsUnitTests;
-import StringUnitTests;
-import StringViewUnitTests;
+import UnitTests_StringUtils;
+import UnitTests_String;
+import UnitTests_StringView;
 
 // Types
-import OptionalUnitTests;
-import EnumUnitTests;
-import TupleUnitTests;
-import PairUnitTests;
+import UnitTests_Optional;
+import UnitTests_Enum;
+import UnitTests_Tuple;
+import UnitTests_Pair;
 
 export bool RunUnitTests_Core()
 {
 	/** Unit Test Functions */
 
 	// Minimals
-	JPT_RETURN_FALSE_IF_ERROR(!RunUtilitiesUnitTests(), "Utilities Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunTypeTraitsUnitTests(), "TypeTraits Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
 
 	// Debugging
-	JPT_RETURN_FALSE_IF_ERROR(!RunLoggerUnitTests(), "Logger Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Logger(), "Logger Unit Tests Failed");
 
 	// Math
-	JPT_RETURN_FALSE_IF_ERROR(!RunMathUnitTests(), "Math Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunRandomNumberGeneratorUnitTests(), "Random Number Generator Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Math(), "Math Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_RandomNumberGenerator(), "Random Number Generator Tests Failed");
 
 	// Memory Managing
-	JPT_RETURN_FALSE_IF_ERROR(!RunAllocatorUnitTests(), "Allocator Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunStrongPtrUnitTests(), "StrongPtr Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUniquePtrUnitTests(), "UniquePtr Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunWeakPtrUnitTests(), "WeakPtr Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Allocator(), "Allocator Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StrongPtr(), "StrongPtr Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_UniquePtr(), "UniquePtr Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_WeakPtr(), "WeakPtr Tests Failed");
 
 	// Strings
-	JPT_RETURN_FALSE_IF_ERROR(!RunStringUnitTests(), "String Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunStringUtilsUnitTests(), "StringUtils Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunStringViewUnitTests(), "StringView Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_String(), "String Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringUtils(), "StringUtils Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringView(), "StringView Tests Failed");
 
 	// Types
-	JPT_RETURN_FALSE_IF_ERROR(!RunOptionalUnitTests(), "Optional Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunEnumUnitTests(), "Enum Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunTupleUnitTests(), "Tuple Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunPairUnitTests(), "Pair Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Enum(), "Enum Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Tuple(), "Tuple Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Pair(), "Pair Tests Failed");
 
 	return true;
 }

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module StringUtilsUnitTests;
+export module UnitTests_StringUtils;
 
 import jpt.CoreModules;
 
@@ -65,7 +65,7 @@ bool UnitTest_StrCpy()
 	return true;
 }
 
-export bool RunStringUtilsUnitTests()
+export bool RunUnitTests_StringUtils()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringLen<jpt::String>(), "UnitTest_StringLen Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringLen<jpt::WString>(), "UnitTest_StringLen Failed");

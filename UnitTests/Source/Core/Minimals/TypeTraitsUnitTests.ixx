@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module TypeTraitsUnitTests;
+export module UnitTests_TypeTraits;
 
 import jpt.CoreModules;
 
@@ -283,7 +283,7 @@ bool UnitTest_IsArray()
 	return true;
 }
 
-export bool RunTypeTraitsUnitTests()
+export bool RunUnitTests_TypeTraits()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_RemoveTraits<int32>(), "UnitTest_RemoveTraits Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_RemoveTraits<jpt::String>(), "UnitTest_RemoveTraits Failed");

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module AllocatorUnitTests;
+export module UnitTests_Allocator;
 
 import jpt.CoreModules;
 
@@ -54,7 +54,7 @@ bool UnitTest_AllocatorTrivialType()
 	return true;
 }
 
-export bool RunAllocatorUnitTests()
+export bool RunUnitTests_Allocator()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<uint8>(), "UnitTest_AllocatorTrivialType<uint8> Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<int32>(), "UnitTest_AllocatorTrivialType<int32> Failed");

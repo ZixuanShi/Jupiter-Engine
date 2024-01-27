@@ -6,7 +6,7 @@ module;
 
 #include <memory>
 
-export module StrongPtrUnitTests;
+export module UnitTests_StrongPtr;
 
 import jpt.CoreModules;
 
@@ -125,7 +125,7 @@ bool UnitTest_StrongPtr_Class2()
 	return true;
 }
 
-export bool RunStrongPtrUnitTests()
+export bool RunUnitTests_StrongPtr()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Char(), "UnitTest_UniquePtr_Char Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Class(), "UnitTest_StrongPtr_Class Failed");

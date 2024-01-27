@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module RandomNumberGeneratorUnitTests;
+export module UnitTests_RandomNumberGenerator;
 
 import jpt.CoreModules;
 
@@ -50,7 +50,7 @@ bool UnitTest_FixedSeedGenerateRandomNumbers()
 	return true;
 }
 
-export bool RunRandomNumberGeneratorUnitTests()
+export bool RunUnitTests_RandomNumberGenerator()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_GenerateRandomNumbers(), "UnitTest_GenerateRandomNumbers Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_FixedSeedGenerateRandomNumbers(), "UnitTest_FixedSeedGenerateRandomNumbers Failed");

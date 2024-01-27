@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module UtilitiesUnitTests;
+export module UnitTests_Utilities;
 
 import jpt.CoreModules;
 
@@ -21,7 +21,7 @@ bool UnitTest_Move()
 	return true;
 }
 
-export bool RunUtilitiesUnitTests()
+export bool RunUnitTests_Utilities()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Move(), "UnitTest_Move Failed");
 

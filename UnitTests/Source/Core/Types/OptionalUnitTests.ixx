@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module OptionalUnitTests;
+export module UnitTests_Optional;
 
 import jpt.CoreModules;
 
@@ -41,7 +41,7 @@ bool UnitTest_Optional()
 	return true;
 }
 
-export bool RunOptionalUnitTests()
+export bool RunUnitTests_Optional()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Optional(), "UnitTest_Optional Failed");
 

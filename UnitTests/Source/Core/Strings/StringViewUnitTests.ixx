@@ -6,7 +6,7 @@ module;
 
 #include <string_view>
 
-export module StringViewUnitTests;
+export module UnitTests_StringView;
 
 import jpt.CoreModules;
 
@@ -54,7 +54,7 @@ bool UnitTests_StringView()
 	return true;
 }
 
-export bool RunStringViewUnitTests()
+export bool RunUnitTests_StringView()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_StringView(), "UnitTests_StringView Failed");
 

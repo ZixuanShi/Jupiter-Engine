@@ -46,7 +46,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module <SubjectName>UnitTests;
+export module UnitTests_<SubjectName>;
 
 /** Unit Test Modules */
 
@@ -71,8 +71,8 @@ def get_data():
     global file_to_add_name   
     global file_to_add_content
 
-    subject_name = input("What's the unit test's subject's name?")
-    categories = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Timing, etc)\n")
+    subject_name = input("What's the unit test's subject's name?\n")
+    categories   = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Timing, etc)\n")
     categories_list = categories.split('/')
 
     file_to_add_name = file_name_template.replace("<SubjectName>", subject_name)
@@ -101,6 +101,8 @@ def regenerate_visual_studio_projects():
 # Modify corresponding main_category_UnitTests.ixx to integrate the new unit test module automatically
 def update_application_layer():
     main_category  = categories_list[0]
+    if len(categories_list) > 0:
+        secondary_category  = categories_list[1]
     unit_test_name = "UnitTests_" + main_category + ".ixx"
     unit_test_path = source_dir + "ApplicationLayer/" + unit_test_name
 
@@ -110,15 +112,27 @@ def update_application_layer():
         with open(unit_test_path, "w") as file:
             file.write(unit_tests_content_content)
 
-    # Insert import <SubjectName>UnitTests; under // categories[1], create it if doesn't exist
+    with open(unit_test_path, "r+") as file:
+        unit_test_file_lines = file.readlines()
+        print(unit_test_file_lines)
+
+        # Insert import <SubjectName>UnitTests; under // main_category, create it if doesn't exist
+        
+        if ("// " + secondary_category) in unit_test_file_lines:
+            line_to_insert = unit_test_file_lines.index("// " + secondary_category + "\n") + 1
+        else:
+            line_to_insert = unit_test_file_lines.index("/** Unit Test Modules */") + 2
+            unit_test_file_lines.insert(line_to_insert, "// " + secondary_category + "\n")
+            line_to_insert += 2
+
+        unit_test_file_lines.insert(line_to_insert, "// "import <SubjectName>UnitTests;"\n")
 
 
-    # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
+        # Insert JPT_RETURN_FALSE_IF_ERROR(!Run<SubjectName>UnitTests(), "<SubjectName> Tests Failed");
+        pass
 
 
     # JupiterUnitTestsApplication add UnitTests_Category if there's none
-
-    pass
 
 
 # ----------------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module UniquePtrUnitTests;
+export module UnitTests_UniquePtr;
 
 import jpt.CoreModules;
 
@@ -259,7 +259,7 @@ bool UnitTest_UniquePtr_Class()
 	return true;
 }
 
-export bool RunUniquePtrUnitTests()
+export bool RunUnitTests_UniquePtr()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_UniquePtr_Char(), "UnitTest_UniquePtr_Char Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_UniquePtr_Int(), "UnitTest_UniquePtr_Int Failed");

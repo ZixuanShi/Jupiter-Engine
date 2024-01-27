@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module PairUnitTests;
+export module UnitTests_Pair;
 
 import jpt.CoreModules;
 
@@ -24,7 +24,7 @@ bool UnitTest_Pair()
 	return true;
 }
 
-export bool RunPairUnitTests()
+export bool RunUnitTests_Pair()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Pair(), "UnitTest_Pair Failed");
 

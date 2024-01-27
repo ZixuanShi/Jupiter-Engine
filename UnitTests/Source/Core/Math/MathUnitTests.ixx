@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module MathUnitTests;
+export module UnitTests_Math;
 
 import jpt.CoreModules;
 
@@ -63,7 +63,7 @@ bool UnitTest_MinMax()
 	return true;
 }
 
-export bool RunMathUnitTests()
+export bool RunUnitTests_Math()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Clamping(), "UnitTest_Clamping Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Abs(), "UnitTest_Abs Failed");

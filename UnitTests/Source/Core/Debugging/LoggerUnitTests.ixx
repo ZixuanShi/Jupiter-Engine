@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module LoggerUnitTests;
+export module UnitTests_Logger;
 
 import jpt.CoreModules;
 
@@ -42,7 +42,7 @@ bool UnitTest_Logger_Data()
 	return true;
 }
 
-export bool RunLoggerUnitTests()
+export bool RunUnitTests_Logger()
 {
 	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Logger_Data(), "UnitTest_Logger_Data Failed");
 

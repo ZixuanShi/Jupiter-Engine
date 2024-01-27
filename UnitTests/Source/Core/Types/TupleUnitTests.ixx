@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module TupleUnitTests;
+export module UnitTests_Tuple;
 
 import jpt.CoreModules;
 
@@ -214,7 +214,7 @@ bool UnitTest_OneTypeTuple()
 	return true;
 }
 
-export bool RunTupleUnitTests()
+export bool RunUnitTests_Tuple()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Tuple(), "UnitTest_Tuple Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_EmptyTuple(), "UnitTest_EmptyTuple Failed");
