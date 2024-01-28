@@ -7,6 +7,7 @@
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.ToString;
+import jpt.Timing.Utils;
 
 	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
 	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
@@ -43,7 +44,7 @@ namespace jpt
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
 		}
-		template<BasicTStringype TString>
+		template<BasicStringType TString>
 		void Log(ELogType type, int32 line, const char* file, const TString& string, ...)
 		{
 			ProcessMessage(type, line, file, string.ConstBuffer());

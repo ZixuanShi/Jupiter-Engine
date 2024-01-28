@@ -574,5 +574,5 @@ export namespace jpt
 	using WString = BasicString<wchar_t>;	// Wide string
 
 	template<typename T>
-	concept BasicTStringype = IsSameType<T, String> || IsSameType<T, WString>;
+	concept BasicStringType = IsSameType<T, String> || IsSameType<T, WString>;
 }

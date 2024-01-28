@@ -2,12 +2,13 @@
 
 module; 
 
+#include <time.h>
 #include <chrono>
 
 export module jpt.Timing.Utils;
 
 export import jpt.Timing.TypeDefs;
-import jpt.ToString;
+import jpt.String;
 
 export namespace jpt
 {
@@ -34,11 +35,21 @@ export namespace jpt
 			const Point<T> currentTimePoint = T::now();
 			return GetSecondsBetween(start, currentTimePoint);
 		}
+	}
 
-		//template<BasicTStringype TString, ClockT T = Clock>
-		//TString ToString(const Point<T>& point)
-		//{
-		//	return "TimePoint";
-		//}
+	String ToString(const std::chrono::time_point<std::chrono::system_clock>& point)
+	{
+		static constexpr size_t kStringSize = 32;
+
+		std::time_t time = std::chrono::system_clock::to_time_t(point);
+		std::tm t;
+		localtime_s(&t, &time);
+
+		char buffer[kStringSize];
+		strftime(buffer, sizeof(buffer), "%m/%d/%Y. %X", &t);
+
+		jpt::String timeString;
+		timeString.CopyString(buffer, kStringSize);
+		return timeString;
 	}
 }

@@ -2,6 +2,7 @@
 
 module; 
 
+#include <time.h>
 #include <chrono>
 
 export module jpt.Timing.TypeDefs;

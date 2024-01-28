@@ -22,8 +22,9 @@ export namespace jpt
 	template<typename T>
 	concept EnabledToWString = requires(T object) { object.ToWString(); };
 
+	// Add any additional primitive types if implemented later
 	template<typename T>
-	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;	// Add any additional primitive types if implemented later
+	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>
@@ -39,7 +40,7 @@ export namespace jpt
 	}
 
 	// int, uint
-	template<BasicTStringype TString = jpt::String, Integral TInt>
+	template<BasicStringType TString = jpt::String, Integral TInt>
 	constexpr TString ToString(TInt integer)
 	{
 		using TChar = TString::TChar;
@@ -51,7 +52,7 @@ export namespace jpt
 	}
 
 	// float, double
-	template<BasicTStringype TString = jpt::String, Floating TFloat>
+	template<BasicStringType TString = jpt::String, Floating TFloat>
 	constexpr TString ToString(TFloat value)
 	{
 		using TChar = TString::TChar;
@@ -63,7 +64,7 @@ export namespace jpt
 	}
 
 	// bool
-	template<BasicTStringype TString = jpt::String>
+	template<BasicStringType TString = jpt::String>
 	constexpr TString ToString(bool value)
 	{
 		using TChar = TString::TChar;
@@ -81,7 +82,7 @@ export namespace jpt
 	}
 
 	// char
-	template<BasicTStringype TString = jpt::String>
+	template<BasicStringType TString = jpt::String>
 	constexpr TString ToString(typename TString::TChar c)
 	{
 		return TString(c);

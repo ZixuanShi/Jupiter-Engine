@@ -11,7 +11,7 @@ import jpt.Timing.Utils;
 
 bool UnitTest_Timing()
 {
-    //JPT_LOG(jpt::ToString(jpt::Timing::Now()));
+    JPT_LOG(jpt::ToString(jpt::Timing::Now()));
 
     return true;
 }
