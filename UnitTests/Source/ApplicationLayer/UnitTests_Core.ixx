@@ -2,11 +2,14 @@
 
 module;
 
-#include "Core/Minimals/Headers.h"
+#include "Core/Minimal/Headers.h"
 
 export module UnitTests_Core;
 
 /** Unit Test Modules */
+
+// Containers
+import UnitTests_StaticArray;
 
 // Utilities
 import UnitTests_Utilities;
@@ -39,6 +42,9 @@ import UnitTests_Pair;
 export bool RunUnitTests_Core()
 {
 	/** Unit Test Functions */
+
+	// Containers
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
 
 	// Minimals
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Utilities(), "Utilities Unit Tests Failed");

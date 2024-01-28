@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimals/Headers.h"
+#include "Core/Minimal/Headers.h"
 
 export module UnitTests_Enum;
 

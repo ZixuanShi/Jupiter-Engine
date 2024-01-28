@@ -1,6 +1,6 @@
 ﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Core/Minimals/Headers.h"
+#include "Core/Minimal/Headers.h"
 
 import jpt.CoreModules;
 import jpt.EntryPoints;

@@ -7,6 +7,9 @@
 
 export module jpt.CoreModules;
 
+// Containers
+export import jpt.StaticArray;
+
 // Minimals
 export import jpt.Concepts;
 export import jpt.Constants;

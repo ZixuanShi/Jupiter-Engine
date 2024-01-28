@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimals/Macros.h"
+#include "Core/Minimal/Macros.h"
 
 export module jpt.StrongPtr;
 
