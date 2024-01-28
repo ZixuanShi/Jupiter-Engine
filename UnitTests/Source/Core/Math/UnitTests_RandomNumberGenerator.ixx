@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_RandomNumberGenerator;
 
-import jpt.CoreModules;
+import jpt.RandomNumberGenerator;
 
 bool UnitTest_GenerateRandomNumbers()
 {

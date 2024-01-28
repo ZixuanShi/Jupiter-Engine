@@ -23,7 +23,7 @@ module;
 
 export module UnitTests_<SubjectName>;
 
-import jpt.CoreModules;
+import jpt.<SubjectName>;
 
 bool UnitTest_<SubjectName>()
 {

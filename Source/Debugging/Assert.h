@@ -4,19 +4,16 @@
 
 #if JPT_ENABLE_EDITOR_FEATURES
 
-import jpt.TypeDefs;
-
 namespace jpt
 {
-
 	/** Implementation when an assertion has failed
 		@param line:	   Line of the file caused assertion fail
 		@param file:       The file where assertion failed
 		@param expression: Stringified assert condition.
 		@param format:     Optional. Used to append additional debug info if there's any provided. Follow printf format
 		@param ... :       Optional. Variadic arguments to append to assertion. */
-	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...);
-	void OnAssertionFailed(int32 line, const char* file, const char* expression);
+	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...);
+	void OnAssertionFailed(int line, const char* file, const char* expression);
 
 	/** Assert with error message logging if Debug mode, do nothing if not Debugging
 		@param expression: A boolean expression to assert true

@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Optional;
 
-import jpt.CoreModules;
+import jpt.Optional;
 
 bool UnitTest_Optional()
 {

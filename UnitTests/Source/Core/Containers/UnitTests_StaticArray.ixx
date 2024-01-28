@@ -6,10 +6,13 @@ module;
 
 export module UnitTests_StaticArray;
 
-import jpt.CoreModules;
+import jpt.StaticArray;
 
 bool UnitTest_StaticArray()
 {
+    jpt::StaticArray<int32, 5> staticArray{ 0,1,2,3,4 };
+
+
 
     return true;
 }

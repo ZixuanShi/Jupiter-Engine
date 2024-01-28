@@ -8,7 +8,8 @@ module;
 
 export module UnitTests_StringView;
 
-import jpt.CoreModules;
+import jpt.String;
+import jpt.StringView;
 
 bool UnitTests_StringView()
 {

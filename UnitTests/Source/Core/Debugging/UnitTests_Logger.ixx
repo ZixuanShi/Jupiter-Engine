@@ -6,8 +6,6 @@ module;
 
 export module UnitTests_Logger;
 
-import jpt.CoreModules;
-
 bool UnitTest_Logger_Data()
 {
 	JPT_LOG("%d", 1);

@@ -6,7 +6,9 @@ module;
 
 export module UnitTests_String;
 
-import jpt.CoreModules;
+import jpt.String;
+import jpt.Math;
+import jpt.StringView;
 
 template<class TString>
 bool UnitTest_DefaultStringConstructing()

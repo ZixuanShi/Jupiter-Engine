@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Math;
 
-import jpt.CoreModules;
+import jpt.Math;
 
 bool UnitTest_Clamping()
 {

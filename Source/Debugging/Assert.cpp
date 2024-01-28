@@ -10,13 +10,11 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-
-
 import jpt.String;
 
 namespace jpt
 {
-	void OnAssertionFailed(int32 line, const char* file, const char* expression, const char* format, ...)
+	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...)
 	{
 		jpt::String message = "Assertion Failed: ";
 		message.Append(expression);
@@ -34,7 +32,7 @@ namespace jpt
 		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error, line, file, message.ConstBuffer());
 	}
 
-	void OnAssertionFailed(int32 line, const char* file, const char* expression)
+	void OnAssertionFailed(int line, const char* file, const char* expression)
 	{
 		OnAssertionFailed(line, file, expression, nullptr);
 	}

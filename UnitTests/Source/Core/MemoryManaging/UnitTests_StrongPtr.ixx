@@ -8,7 +8,7 @@ module;
 
 export module UnitTests_StrongPtr;
 
-import jpt.CoreModules;
+import jpt.StrongPtr;
 
 bool UnitTest_StrongPtr_Char()
 {

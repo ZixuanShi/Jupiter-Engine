@@ -8,7 +8,8 @@ module;
 
 export module UnitTests_WeakPtr;
 
-import jpt.CoreModules;
+import jpt.StrongPtr;
+import jpt.WeakPtr;
 
 bool UnitTests_WeakPtr_Class()
 {

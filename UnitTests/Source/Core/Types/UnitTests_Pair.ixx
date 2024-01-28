@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Pair;
 
-import jpt.CoreModules;
+import jpt.Pair;
 
 bool UnitTest_Pair()
 {

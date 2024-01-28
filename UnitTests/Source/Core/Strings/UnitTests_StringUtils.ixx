@@ -6,7 +6,8 @@ module;
 
 export module UnitTests_StringUtils;
 
-import jpt.CoreModules;
+import jpt.StringUtils;
+import jpt.Math;
 
 template<class TString>
 bool UnitTest_StringLen()

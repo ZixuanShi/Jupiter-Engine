@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Allocator;
 
-import jpt.CoreModules;
+import jpt.Allocator;
 
 template<jpt::Numeric TNum>
 bool UnitTest_AllocatorTrivialType()

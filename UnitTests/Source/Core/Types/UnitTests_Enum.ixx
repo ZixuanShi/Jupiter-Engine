@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Enum;
 
-import jpt.CoreModules;
+import jpt.Enum;
 
 bool UnitTest_CreateEnum()
 {

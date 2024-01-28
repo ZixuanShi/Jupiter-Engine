@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Utilities;
 
-import jpt.CoreModules;
+import jpt.Utilities;
 
 bool UnitTest_Move()
 {

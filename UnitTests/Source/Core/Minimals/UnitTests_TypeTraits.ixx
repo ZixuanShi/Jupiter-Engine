@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_TypeTraits;
 
-import jpt.CoreModules;
+import jpt.TypeTraits;
 
 template<typename T>
 bool UnitTest_RemoveTraits()
