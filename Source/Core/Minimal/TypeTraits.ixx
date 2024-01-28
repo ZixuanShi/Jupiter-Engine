@@ -51,6 +51,9 @@ export namespace jpt
 	template<typename FromT, typename ToT>
 	constexpr bool IsConvertible = __is_convertible_to(FromT, ToT);
 
+	template<typename T>
+	constexpr bool IsTriviallyDestructible = __is_trivially_destructible(T);
+
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};
 	template<typename _ReturnType>                        struct enable_if<true, _ReturnType> { using ReturnType = _ReturnType; };
