@@ -16,7 +16,7 @@ export namespace jpt
 {
 	/** Equivalent of std::move. Returns a rvalue of the object */
 	template<Movable T>
-	typename RemoveReference<T>::Type&& Move(T&& object)
+	constexpr typename RemoveReference<T>::Type&& Move(T&& object)
 	{
 		using TCast = RemoveReference<T>::Type;
 
@@ -28,13 +28,13 @@ export namespace jpt
 
 	/** Equivalent of std::forward. Return a reference to an rvalue reference. */
 	template<class T>
-	T&& Forward(typename RemoveReference<T>::Type& obj)
+	constexpr T&& Forward(typename RemoveReference<T>::Type& obj)
 	{
 		return static_cast<T&&>(obj);
 	}
 
 	template<class T>
-	T&& Forward(typename RemoveReference<T>::Type&& obj)
+	constexpr T&& Forward(typename RemoveReference<T>::Type&& obj)
 	{
 		static_assert(!IsLValueRef<T>, "Bad forward call");
 		return static_cast<T&&>(obj);
@@ -42,7 +42,7 @@ export namespace jpt
 
 	/** Equivalent for std::swap. Swaps the value of two items */
 	template<Movable T>
-	void Swap(T& a, T& b)
+	constexpr void Swap(T& a, T& b)
 	{
 		T temp = jpt::Move(b);
 		b = jpt::Move(a);

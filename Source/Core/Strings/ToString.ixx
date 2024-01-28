@@ -27,20 +27,20 @@ export namespace jpt
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>
-	String ToString(const T& object)
+	constexpr String ToString(const T& object)
 	{
 		return object.ToString();
 	}
 
 	template<EnabledToString T>
-	WString ToWString(const T& object)
+	constexpr WString ToWString(const T& object)
 	{
 		return object.ToWString();
 	}
 
 	// int, uint
 	template<BasicStringType StringT = jpt::String, Integral TInt>
-	StringT ToString(TInt integer)
+	constexpr StringT ToString(TInt integer)
 	{
 		using TChar = StringT::TChar;
 
@@ -52,7 +52,7 @@ export namespace jpt
 
 	// float, double
 	template<BasicStringType StringT = jpt::String, Floating TFloat>
-	StringT ToString(TFloat value)
+	constexpr StringT ToString(TFloat value)
 	{
 		using TChar = StringT::TChar;
 
@@ -64,7 +64,7 @@ export namespace jpt
 
 	// bool
 	template<BasicStringType StringT = jpt::String>
-	StringT ToString(bool value)
+	constexpr StringT ToString(bool value)
 	{
 		using TChar = StringT::TChar;
 
@@ -82,7 +82,7 @@ export namespace jpt
 
 	// char
 	template<BasicStringType StringT = jpt::String>
-	StringT ToString(typename StringT::TChar c)
+	constexpr StringT ToString(typename StringT::TChar c)
 	{
 		return StringT(c);
 	}

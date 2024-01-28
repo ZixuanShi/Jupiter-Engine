@@ -27,37 +27,37 @@ export namespace jpt
 
 	public:
 		constexpr WeakPtr() noexcept = default;
-		WeakPtr(const WeakPtr& other);
-		WeakPtr(WeakPtr&& other) noexcept;
-		WeakPtr(const StrongPtr<TData>& shared);
+		constexpr WeakPtr(const WeakPtr& other);
+		constexpr WeakPtr(WeakPtr&& other) noexcept;
+		constexpr WeakPtr(const StrongPtr<TData>& shared);
 		WeakPtr& operator=(const WeakPtr& other);
 		WeakPtr& operator=(const StrongPtr<TData>& shared);
 		WeakPtr& operator=(WeakPtr&& other) noexcept;
-		~WeakPtr();
+		constexpr ~WeakPtr();
 
 		/** Releases the ownership of the managed object */
-		void Reset() { InternalReset(nullptr); }
+		constexpr void Reset() { InternalReset(nullptr); }
 
 		/** @return		number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const;
+		constexpr int32 GetRefCount() const;
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
-		bool IsExpired() const;
+		constexpr bool IsExpired() const;
 
 		/** @return		Object Ptr if this is not Expired, nullptr otherwise */
-		TData* GetIfValid() const;
+		constexpr TData* GetIfValid() const;
 
 		/** @return		Reference or pointer to the managed object if not expired */
 		constexpr TData& operator*() const noexcept  { return *GetIfValid(); }
 		constexpr TData* operator->() const noexcept { return GetIfValid(); }
 
 	private:
-		void InternalReset(TData* pPtr);
-		void IncrementWeakRef();
+		constexpr void InternalReset(TData* pPtr);
+		constexpr void IncrementWeakRef();
 	};
 
 	template<typename TData>
-	WeakPtr<TData>::WeakPtr(const WeakPtr& other)
+	constexpr WeakPtr<TData>::WeakPtr(const WeakPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -65,7 +65,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	WeakPtr<TData>::WeakPtr(WeakPtr&& other) noexcept
+	constexpr WeakPtr<TData>::WeakPtr(WeakPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -112,7 +112,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	WeakPtr<TData>::WeakPtr(const StrongPtr<TData>& shared)
+	constexpr WeakPtr<TData>::WeakPtr(const StrongPtr<TData>& shared)
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCounter(shared.m_pRefCount)
 	{
@@ -120,13 +120,13 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	WeakPtr<TData>::~WeakPtr()
+	constexpr WeakPtr<TData>::~WeakPtr()
 	{
 		InternalReset(nullptr);
 	}
 
 	template<typename TData>
-	int32 WeakPtr<TData>::GetRefCount() const
+	constexpr int32 WeakPtr<TData>::GetRefCount() const
 	{
 		if (m_pRefCounter)
 		{
@@ -137,7 +137,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	bool WeakPtr<TData>::IsExpired() const
+	constexpr bool WeakPtr<TData>::IsExpired() const
 	{
 		if (m_pRefCounter)
 		{
@@ -148,7 +148,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	TData* WeakPtr<TData>::GetIfValid() const
+	constexpr TData* WeakPtr<TData>::GetIfValid() const
 	{
 		if (!IsExpired())
 		{
@@ -159,7 +159,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	void WeakPtr<TData>::InternalReset(TData* pPtr)
+	constexpr void WeakPtr<TData>::InternalReset(TData* pPtr)
 	{
 		m_pPtr = pPtr;
 
@@ -174,7 +174,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	void WeakPtr<TData>::IncrementWeakRef()
+	constexpr void WeakPtr<TData>::IncrementWeakRef()
 	{
 		if (m_pRefCounter)
 		{

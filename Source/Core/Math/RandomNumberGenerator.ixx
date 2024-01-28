@@ -21,35 +21,35 @@ export namespace jpt
 		uint64 m_seeds[2];
 
 	public:
-		RNG(uint64 seed = unsigned(time(nullptr)));
+		constexpr RNG(uint64 seed = unsigned(time(nullptr)));
 
 		/** @return		a random number from min to max inclusive
 			@param min	Minimum value inclusive
 			@param max	Maximum value inclusive	*/
 		template<Integral TInt = uint32>
-		TInt RandInRange(TInt min, TInt max);
+		constexpr TInt RandInRange(TInt min, TInt max);
 
 		/** @return		a random integral value within max range
 			@param max	Largest possible value (inclusive) */
 		template<Integral TInt = uint32>
-		TInt RandInMax(TInt max = (std::numeric_limits<TInt>::max)());
+		constexpr TInt RandInMax(TInt max = (std::numeric_limits<TInt>::max)());
 
 		/** @return		a random floating point from 0 to 1 inclusive */
 		template<Floating Type = float>
-		Type FRand();
+		constexpr Type FRand();
 
 		/** @return		a random floating point from min to max inclusive
 			@param min	Minimum value inclusive
 			@param max	Maximum value inclusive	*/
 		template<Floating Type = float>
-		Type FRand(Type min, Type max);
+		constexpr Type FRand(Type min, Type max);
 
 		/** @return		a random boolean */
-		bool RandBool();
+		constexpr bool RandBool();
 
 		/** Update two seeds
 			@param Seed	The seed as input */
-		void SetSeed(uint64 seed);
+		constexpr void SetSeed(uint64 seed);
 
 		/** @return a static global rng */
 		static RNG& Global();
@@ -58,17 +58,17 @@ export namespace jpt
 		/** xorshift128+ algorithm from https://en.wikipedia.org/wiki/Xorshift
 			@template Type	The result will be in this Type	 */
 		template<Integral TInt>
-		TInt XOrShift128Plus();
+		constexpr TInt XOrShift128Plus();
 	};
 
-	RNG::RNG(uint64 seed /* = unsigned(time(nullptr))*/)
+	constexpr RNG::RNG(uint64 seed /* = unsigned(time(nullptr))*/)
 	{
 		m_seeds[0] = seed << 3 | seed;
 		m_seeds[1] = seed << 7 | seed;
 	}
 
 	template<Floating Type>
-	Type RNG::FRand()
+	constexpr Type RNG::FRand()
 	{
 		float result = 0.f;
 
@@ -87,20 +87,20 @@ export namespace jpt
 		return result;
 	}
 
-	template<Floating Type>
-	Type RNG::FRand(Type min, Type max)
+	template<Floating T>
+	constexpr T RNG::FRand(T min, T max)
 	{
-		const Type randomFloat = FRand();
-		const Type range = max - min;
+		const T randomFloat = FRand();
+		const T range = max - min;
 		return randomFloat * range + min;
 	}
 
-	bool RNG::RandBool()
+	constexpr bool RNG::RandBool()
 	{
 		return static_cast<bool>(RandInRange(0, 1));
 	}
 
-	void RNG::SetSeed(uint64 seed)
+	constexpr void RNG::SetSeed(uint64 seed)
 	{
 		JPT_ASSERT(seed != 0, "seed should not be zero");
 		m_seeds[0] = seed << 3 | seed;
@@ -114,20 +114,20 @@ export namespace jpt
 	}
 
 	template<Integral TInt>
-	TInt RNG::RandInRange(TInt min, TInt max)
+	constexpr TInt RNG::RandInRange(TInt min, TInt max)
 	{
 		uint64 mod = (uint64)max - (uint64)min + 1;
 		return XOrShift128Plus<TInt>() % mod + min;
 	}
 
 	template<Integral TInt>
-	TInt RNG::RandInMax(TInt max /* = (std::numeric_limits<TInt>::max)()*/)
+	constexpr TInt RNG::RandInMax(TInt max /* = (std::numeric_limits<TInt>::max)()*/)
 	{
 		return RandInRange<TInt>(0, max);
 	}
 
 	template<Integral TInt>
-	TInt RNG::XOrShift128Plus()
+	constexpr TInt RNG::XOrShift128Plus()
 	{
 		uint64 T = m_seeds[0];
 		const uint64 S = m_seeds[1];

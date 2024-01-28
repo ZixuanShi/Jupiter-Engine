@@ -31,7 +31,7 @@ export namespace jpt
 
 			constexpr bool IsValid() const;
 
-			String ToString() const;
+			constexpr String ToString() const;
 		};
 
 		constexpr TimePointData::TimePointData(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second)
@@ -70,7 +70,7 @@ export namespace jpt
 				   validHour && validMinute && validSecond;
 		}
 
-		String TimePointData::ToString() const
+		constexpr String TimePointData::ToString() const
 		{
 			// MM/DD/YYYY. HH:MM:SS
 			return String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second);

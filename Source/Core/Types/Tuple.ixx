@@ -12,7 +12,7 @@ export namespace jpt
 	struct Tuple {};
 
 	template<typename TData, typename... TRest>
-		struct Tuple<TData, TRest...> : public Tuple<TRest...>
+	struct Tuple<TData, TRest...> : public Tuple<TRest...>
 	{
 		TData m_value;
 
@@ -36,7 +36,7 @@ namespace jpt_private
 	{
 		using NextT = GetImpl<index - 1, TRest...>;
 
-		static auto Value(const Tuple<TData, TRest...>& tuple) -> decltype(NextT::Value(tuple))
+		static constexpr auto Value(const Tuple<TData, TRest...>& tuple) -> decltype(NextT::Value(tuple))
 		{
 			return NextT::Value(tuple);
 		}
@@ -45,7 +45,7 @@ namespace jpt_private
 	template<typename TData, typename... TRest>
 	struct GetImpl<0, TData, TRest...>
 	{
-		static TData& Value(const Tuple<TData, TRest...>& tuple)
+		static constexpr TData& Value(const Tuple<TData, TRest...>& tuple)
 		{
 			return const_cast<TData&>(tuple.m_value);
 		}

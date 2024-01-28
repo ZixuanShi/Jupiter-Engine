@@ -4,9 +4,9 @@ module;
 
 export module jpt.Limits;
 
-namespace jpt
+export namespace jpt
 {
-	export template<typename T>
+	template<typename T>
 	struct LimitsOf
 	{
 		static constexpr T kMax = std::numeric_limits<T>::max();

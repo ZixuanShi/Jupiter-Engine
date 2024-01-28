@@ -22,7 +22,7 @@ export namespace jpt
 	};
 
 	template<typename TFirst, typename TSecond>
-	bool operator==(const Pair<TFirst, TSecond>& a, const Pair<TFirst, TSecond>& b)
+	constexpr bool operator==(const Pair<TFirst, TSecond>& a, const Pair<TFirst, TSecond>& b)
 	{
 		return a.first == b.first && a.second == b.second;
 	}

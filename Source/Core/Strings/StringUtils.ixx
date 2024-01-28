@@ -22,7 +22,7 @@ export namespace jpt
 {
 	/**	@return const TChar* string' string to check for size.'s size. Excluding '\0' */
 	template<StringLiteral TChar>
-	size_t GetCStrLength(const TChar* string)
+	constexpr size_t GetCStrLength(const TChar* string)
 	{
 		if (!string)
 		{
@@ -43,7 +43,7 @@ export namespace jpt
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	TChar* IntegerToCStr(TInt value, TInt base = 10)
+	constexpr TChar* IntegerToCStr(TInt value, TInt base = 10)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
@@ -116,7 +116,7 @@ export namespace jpt
 
 	/** @return Integral number converted from pBuffer */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	TInt CStrToInteger(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
 		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
 		TInt result = 0;
@@ -149,7 +149,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar = char, Floating TFloat = float>
-	TChar* TFloatoCStr(TFloat value)
+	constexpr TChar* TFloatoCStr(TFloat value)
 	{
 		TChar* buffer = new TChar[32];
 		const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);
@@ -168,7 +168,7 @@ export namespace jpt
 
 	/** @note	Will ignore the 'f' is there's any */
 	template<StringLiteral TChar = char, Floating TFloat = float>
-	TFloat CStrToFloat(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
+	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
 	{
 		// Parse two integral parts of the precision dot, then combine them
 
@@ -239,7 +239,7 @@ export namespace jpt
 
 	/**	Copies data from destination to source with the given size */
 	template<StringLiteral TChar>
-	void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource)
+	constexpr void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource)
 	{
 		if constexpr (IsSameType<TChar, char>)
 		{
@@ -253,7 +253,7 @@ export namespace jpt
 
 	/**	Copies data from destination to source with the given size and max count */
 	template<StringLiteral TChar>
-	void StrNCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource, size_t maxCount)
+	constexpr void StrNCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource, size_t maxCount)
 	{
 		if constexpr (IsSameType<TChar, char>)
 		{
@@ -273,7 +273,7 @@ export namespace jpt
 		- 0 maybe strings' sizes are not equal
 		- 0 to size for the index of of the first different char found in two strings */
 	template<StringLiteral TChar>
-	size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
+	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
 	{
 		if (string1Size != string2Size)
 		{
@@ -291,27 +291,27 @@ export namespace jpt
 		return npos;
 	}
 	template<StringLiteral TChar>
-	size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t size)
+	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t size)
 	{
 		return StrCmp(pString1, pString2, size, size);
 	}
 	template<StringLiteral TChar>
-	size_t StrCmp(const TChar* pString1, const TChar* pString2)
+	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2)
 	{
 		return StrCmp(pString1, pString2, GetCStrLength(pString1), GetCStrLength(pString2));
 	}
 	template<StringLiteral TChar>
-	bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
+	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
 	{
 		return StrCmp(pString1, pString2, string1Size, string2Size) == npos;
 	}
 	template<StringLiteral TChar>
-	bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t size)
+	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t size)
 	{
 		return StrCmp(pString1, pString2, size) == npos;
 	}
 	template<StringLiteral TChar>
-	bool AreStringsSame(const TChar* pString1, const TChar* pString2)
+	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2)
 	{
 		return StrCmp(pString1, pString2) == npos;
 	}

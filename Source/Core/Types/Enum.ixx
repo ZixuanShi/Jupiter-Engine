@@ -13,6 +13,6 @@ export namespace jpt
 	{
 	public:
 		constexpr Enum() = default;
-		Enum(...) {}
+		constexpr Enum(...) {}
 	};
 }

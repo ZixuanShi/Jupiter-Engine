@@ -26,7 +26,7 @@ export namespace jpt
 			constexpr TimePoint(TimePointData data);
 			constexpr TimePoint(const tm* pTimeData);
 
-			String ToString() const;
+			constexpr String ToString() const;
 		};
 
 		constexpr TimePoint::TimePoint(TimePointData data)
@@ -41,7 +41,7 @@ export namespace jpt
 			JPT_ASSERT(m_data.IsValid());
 		}
 
-		String TimePoint::ToString() const
+		constexpr String TimePoint::ToString() const
 		{
 			return m_data.ToString();
 		}

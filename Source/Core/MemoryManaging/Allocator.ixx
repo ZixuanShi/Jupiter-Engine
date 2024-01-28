@@ -20,42 +20,42 @@ export namespace jpt
 	class Allocator
 	{
 	public:
-		Allocator() = default;
+		constexpr Allocator() = default;
 
 		template<class TOther>
-		Allocator(const Allocator<TOther>& other) noexcept {}
+		constexpr Allocator(const Allocator<TOther>& other) noexcept {}
 
 	public:
 		/** Allocates plain heap memory for desired amount of memory for <Type>
 			@param count		How many <Type> objects to allocate */
-		static T* Allocate(size_t count = 1);
-		static T* AllocateArray(size_t count, const std::initializer_list<T>& values = {});
+		static constexpr T* Allocate(size_t count = 1);
+		static constexpr T* AllocateArray(size_t count, const std::initializer_list<T>& values = {});
 
 		/** Allocates heap memory for one <Type>, with initializing value */
-		static T* AllocateWithValue(const T& data);
+		static constexpr T* AllocateWithValue(const T& data);
 
 		/** Deallocate memory for the passed in pointer */
-		static void Deallocate(T* pPointer);
-		static void DeallocateArray(T* pArray);
+		static constexpr void Deallocate(T* pPointer);
+		static constexpr void DeallocateArray(T* pArray);
 
-		static void Construct(T* pPointer, const T& object);
-		static void Destruct(T* pPointer);
-
-		template<class TOther>
-		bool operator==(const Allocator<TOther>&) const noexcept;
+		static constexpr void Construct(T* pPointer, const T& object);
+		static constexpr void Destruct(T* pPointer);
 
 		template<class TOther>
-		bool operator!=(const Allocator<TOther>&) const noexcept;
+		constexpr bool operator==(const Allocator<TOther>&) const noexcept;
+
+		template<class TOther>
+		constexpr bool operator!=(const Allocator<TOther>&) const noexcept;
 	};
 
 	template<typename T>
-	T* Allocator<T>::Allocate(size_t count /* = 1 */ )
+	constexpr T* Allocator<T>::Allocate(size_t count /* = 1 */ )
 	{
 		return new T[count];
 	}
 
 	template<typename T>
-	T* Allocator<T>::AllocateArray(size_t count, const std::initializer_list<T>& values/* = {}*/)
+	constexpr T* Allocator<T>::AllocateArray(size_t count, const std::initializer_list<T>& values/* = {}*/)
 	{
 		T* pArray = new T[count];
 
@@ -70,45 +70,45 @@ export namespace jpt
 	}
 
 	template<typename T>
-	T* Allocator<T>::AllocateWithValue(const T& data)
+	constexpr T* Allocator<T>::AllocateWithValue(const T& data)
 	{
 		return new T(data);
 	}
 
 	template<typename T>
-	void Allocator<T>::Deallocate(T* pPointer)
+	constexpr void Allocator<T>::Deallocate(T* pPointer)
 	{
 		delete pPointer;
 	}
 
 	template<typename T>
-	void Allocator<T>::DeallocateArray(T* pArray)
+	constexpr void Allocator<T>::DeallocateArray(T* pArray)
 	{
 		delete[] pArray;
 	}
 
 	template<typename T>
-	void Allocator<T>::Construct(T* pPointer, const T& object)
+	constexpr void Allocator<T>::Construct(T* pPointer, const T& object)
 	{
 		new(pPointer) T(object);
 	}
 
 	template<typename T>
-	void Allocator<T>::Destruct(T* pPointer)
+	constexpr void Allocator<T>::Destruct(T* pPointer)
 	{
 		pPointer->~Type();
 	}
 
 	template<typename T>
 	template<class TOtherype>
-	bool Allocator<T>::operator==(const Allocator<TOtherype>&) const noexcept
+	constexpr bool Allocator<T>::operator==(const Allocator<TOtherype>&) const noexcept
 	{
 		return true;
 	}
 
 	template<typename T>
 	template<class TOtherype>
-	bool Allocator<T>::operator!=(const Allocator<TOtherype>&) const noexcept
+	constexpr bool Allocator<T>::operator!=(const Allocator<TOtherype>&) const noexcept
 	{
 		return false;
 	}

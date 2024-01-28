@@ -39,7 +39,7 @@ export namespace jpt
 	/** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
 		@param outValue:	Will be changed if less than min or bigger than max */
 	template<ComparableTrivial T>
-	void ClampTo(T& outValue, T min, T max)
+	constexpr void ClampTo(T& outValue, T min, T max)
 	{
 		if (outValue < min)
 		{
@@ -51,7 +51,7 @@ export namespace jpt
 		}
 	}
 	template<ComparableNonTrivial T>
-	void ClampTo(T& outValue, const T& min, const T& max)
+	constexpr void ClampTo(T& outValue, const T& min, const T& max)
 	{
 		if (outValue < min)
 		{

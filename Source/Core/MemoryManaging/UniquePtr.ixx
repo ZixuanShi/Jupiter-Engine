@@ -18,26 +18,26 @@ export namespace jpt
 
 	public:
 		constexpr UniquePtr() noexcept = default;
-		explicit UniquePtr(TData* pPtr) noexcept;
+		constexpr explicit UniquePtr(TData* pPtr) noexcept;
 		constexpr UniquePtr(TData* pPtr, const TDeleter& deleter) noexcept;
 		constexpr UniquePtr(UniquePtr&& other) noexcept;
 		UniquePtr& operator=(UniquePtr<TData, TDeleter>&& other) noexcept;
-		~UniquePtr();
+		constexpr ~UniquePtr();
 
 		constexpr UniquePtr(const UniquePtr&) = delete;
 		UniquePtr& operator=(const UniquePtr&) = delete;
 
 		/** Replaces the managed object with the new pPtr */
-		void Reset(TData* pPtr = nullptr);
+		constexpr void Reset(TData* pPtr = nullptr);
 
 		/** Releases the ownership of the managed object, if any
 			@return		Pointer to the managed object or nullptr if there was no managed object 
 			@note		The caller is responsible for cleaning up the object (e.g. by use of get_deleter()).*/
-		TData* Release() noexcept;
+		constexpr TData* Release() noexcept;
 
 		/** @return		The stored deleter object */
-		TDeleter& GetDeleter() noexcept { return m_deleter; }
-		const TDeleter& GetDeleter() const noexcept { return m_deleter; }
+		constexpr TDeleter& GetDeleter() noexcept { return m_deleter; }
+		constexpr const TDeleter& GetDeleter() const noexcept { return m_deleter; }
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr TData& operator*()  const noexcept { return *m_pPtr; }
@@ -58,13 +58,13 @@ export namespace jpt
 	}
 
 	template<class TData1, class DleterT1, class TData2, class DleterT2 >
-	bool operator==(const UniquePtr<TData1, DleterT1>& a, const UniquePtr<TData2, DleterT2>& b)
+	constexpr bool operator==(const UniquePtr<TData1, DleterT1>& a, const UniquePtr<TData2, DleterT2>& b)
 	{
 		return a.Get() == b.Get();
 	}
 
 	template<typename TData, class TDeleter>
-	UniquePtr<TData, TDeleter>::UniquePtr(TData* pPtr) noexcept
+	constexpr UniquePtr<TData, TDeleter>::UniquePtr(TData* pPtr) noexcept
 		: m_pPtr(pPtr)
 	{
 	}
@@ -97,13 +97,13 @@ export namespace jpt
 	}
 
 	template<typename TData, class TDeleter>
-	UniquePtr<TData, TDeleter>::~UniquePtr()
+	constexpr UniquePtr<TData, TDeleter>::~UniquePtr()
 	{
 		Reset();
 	}
 
 	template<typename TData, class TDeleter>
-	void UniquePtr<TData, TDeleter>::Reset(TData* pPtr /*= nullptr*/)
+	constexpr void UniquePtr<TData, TDeleter>::Reset(TData* pPtr /*= nullptr*/)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
@@ -114,7 +114,7 @@ export namespace jpt
 	}
 
 	template<typename TData, class TDeleter>
-	TData* UniquePtr<TData, TDeleter>::Release() noexcept
+	constexpr TData* UniquePtr<TData, TDeleter>::Release() noexcept
 	{
 		TData* dataPtr = m_pPtr;
 		m_pPtr = nullptr;
@@ -150,7 +150,7 @@ export namespace jpt
 		UniquePtr& operator=(const UniquePtr&) = delete;
 
 		/** Replaces the managed object with the new pPtr */
-		void Reset(TData* pPtr = nullptr)
+		constexpr void Reset(TData* pPtr = nullptr)
 		{
 			// If the old pointer was non-empty, deletes the previously managed object
 			if (m_pPtr != pPtr)
@@ -163,7 +163,7 @@ export namespace jpt
 		/** Releases the ownership of the managed object, if any
 			@return		Pointer to the managed object or nullptr if there was no managed object
 			@note		The caller is responsible for cleaning up the object (e.g. by use of get_deleter()).*/
-		TData* Release() noexcept
+		constexpr TData* Release() noexcept
 		{
 			TData* dataPtr = m_pPtr;
 			m_pPtr = nullptr;
@@ -171,11 +171,11 @@ export namespace jpt
 		}
 
 		/** @return		The stored deleter object */
-		TDeleter& GetDeleter() noexcept { return m_deleter; }
-		const TDeleter& GetDeleter() const noexcept { return m_deleter; }
+		constexpr TDeleter& GetDeleter() noexcept { return m_deleter; }
+		constexpr const TDeleter& GetDeleter() const noexcept { return m_deleter; }
 
 		/** @return		Pointer to the managed object or nullptr if no object is owned */
-		TData* Get() const noexcept { return m_pPtr; }
+		constexpr TData* Get() const noexcept { return m_pPtr; }
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr TData& operator*() const noexcept { return *Get(); }

@@ -28,24 +28,24 @@ namespace jpt
 
 	public:
 		constexpr StrongPtr() noexcept = default;
-		explicit StrongPtr(TData* pPtr) noexcept;
-		StrongPtr(const StrongPtr& other);
-		StrongPtr(const WeakPtr<TData>& weakPtr);
-		StrongPtr(StrongPtr&& other) noexcept;
+		constexpr explicit StrongPtr(TData* pPtr) noexcept;
+		constexpr StrongPtr(const StrongPtr& other);
+		constexpr StrongPtr(const WeakPtr<TData>& weakPtr);
+		constexpr StrongPtr(StrongPtr&& other) noexcept;
 		StrongPtr& operator=(const StrongPtr& other);
 		StrongPtr& operator=(const WeakPtr<TData>& weakPtr);
 		StrongPtr& operator=(StrongPtr&& other) noexcept;
-		~StrongPtr();
+		constexpr ~StrongPtr();
 
 		template <typename TOther>
 		StrongPtr(const StrongPtr<TOther>& other) = delete;
 
 		/** Replaces the managed object with the new pPtr */
 		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
-		void Reset(TData* pPtr = nullptr, const TDeleter& deleter = TDeleter());
+		constexpr void Reset(TData* pPtr = nullptr, const TDeleter& deleter = TDeleter());
 
 		/** @returns    number of StrongPtr objects referring to the same managed object */
-		int32 GetRefCount() const;
+		constexpr int32 GetRefCount() const;
 
 		/** @return		Reference or pointer to the managed object */
 		constexpr TData& operator*() const noexcept { return *m_pPtr; }
@@ -59,26 +59,26 @@ namespace jpt
 		/** Resets this->m_pPtr with the passed in pPtr
 			Will destroy Ref counter and m_pPtr object if this is the last StrongPtr holding the data */
 		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
-		void InternalReset(TData* pPtr, const TDeleter& deleter = TDeleter());
+		constexpr void InternalReset(TData* pPtr, const TDeleter& deleter = TDeleter());
 
-		void IncrementStrongRef();
+		constexpr void IncrementStrongRef();
 	};
 
 	export template<typename TData, class... TArgs>
-	[[nodiscard]] StrongPtr<TData> MakeStrong(TArgs&&... args)
+	[[nodiscard]] constexpr StrongPtr<TData> MakeStrong(TArgs&&... args)
 	{
 		return StrongPtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
 	}
 
 	template<typename TData>
-	StrongPtr<TData>::StrongPtr(TData* pPtr) noexcept
+	constexpr StrongPtr<TData>::StrongPtr(TData* pPtr) noexcept
 		: m_pPtr(pPtr)
 		, m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
 	template<typename TData>
-	StrongPtr<TData>::StrongPtr(const StrongPtr& other)
+	constexpr StrongPtr<TData>::StrongPtr(const StrongPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -86,7 +86,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>::StrongPtr(const WeakPtr<TData>& weakPtr)
+	constexpr StrongPtr<TData>::StrongPtr(const WeakPtr<TData>& weakPtr)
 		: m_pPtr(weakPtr.m_pPtr)
 		, m_pRefCounter(weakPtr.m_pRefCounter)
 	{
@@ -94,7 +94,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>::StrongPtr(StrongPtr&& other) noexcept
+	constexpr StrongPtr<TData>::StrongPtr(StrongPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -141,13 +141,13 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>::~StrongPtr()
+	constexpr StrongPtr<TData>::~StrongPtr()
 	{
 		Reset(nullptr);
 	}
 
 	template<typename TData>
-	int32 StrongPtr<TData>::GetRefCount() const
+	constexpr int32 StrongPtr<TData>::GetRefCount() const
 	{
 		if (m_pRefCounter)
 		{
@@ -159,7 +159,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	void StrongPtr<TData>::Reset(TData* pPtr, const TDeleter& deleter)
+	constexpr void StrongPtr<TData>::Reset(TData* pPtr, const TDeleter& deleter)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
@@ -175,7 +175,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter)
+	constexpr void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter)
 	{
 		if (m_pRefCounter)
 		{
@@ -195,7 +195,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	void StrongPtr<TData>::IncrementStrongRef()
+	constexpr void StrongPtr<TData>::IncrementStrongRef()
 	{
 		if (m_pRefCounter)
 		{
