@@ -8,12 +8,12 @@ export module UnitTests_String;
 
 import jpt.CoreModules;
 
-template<class StringT>
+template<class TString>
 bool UnitTest_DefaultStringConstructing()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT defaultStr;
+	TString defaultStr;
 	JPT_RETURN_FALSE_IF_ERROR(!defaultStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(TChar, )), "");
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(TChar, )), "");
@@ -49,12 +49,12 @@ bool UnitTest_DefaultStringConstructing()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_ConvertingString()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT numberStr(JPT_GET_PROPER_STRING(TChar, 114514));
+	TString numberStr(JPT_GET_PROPER_STRING(TChar, 114514));
 	JPT_RETURN_FALSE_IF_ERROR(numberStr.ToInt() != 114514, "");
 
 	numberStr = JPT_GET_PROPER_STRING(TChar, 114514.114514);
@@ -63,15 +63,15 @@ bool UnitTest_ConvertingString()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_CopyingString()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
+	TString sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(TChar, Jupiter Engine), "");
 
-	StringT copiedStr(sourceStr);
+	TString copiedStr(sourceStr);
 	JPT_RETURN_FALSE_IF_ERROR(copiedStr != JPT_GET_PROPER_STRING(TChar, Jupiter Engine), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != copiedStr, "");
 
@@ -92,15 +92,15 @@ bool UnitTest_CopyingString()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_MovingString()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
+	TString sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr != JPT_GET_PROPER_STRING(TChar, Jupiter Engine), "");
 
-	StringT movedStr(jpt::Move(sourceStr));
+	TString movedStr(jpt::Move(sourceStr));
 	JPT_RETURN_FALSE_IF_ERROR(movedStr != JPT_GET_PROPER_STRING(TChar, Jupiter Engine), "");
 	JPT_RETURN_FALSE_IF_ERROR(!sourceStr.IsEmpty(), "");
 	JPT_RETURN_FALSE_IF_ERROR(sourceStr.ConstBuffer() != nullptr, "");
@@ -125,13 +125,13 @@ bool UnitTest_MovingString()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_SubStr()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
-	StringT subStr;
+	TString sourceStr(JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
+	TString subStr;
 
 	subStr = sourceStr.SubStr(0, 7);
 	JPT_RETURN_FALSE_IF_ERROR(subStr != JPT_GET_PROPER_STRING(TChar, Jupiter), "");
@@ -142,15 +142,15 @@ bool UnitTest_SubStr()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_ToString()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
-	StringT string = jpt::ToString<StringT>(114151);
+	TString string = jpt::ToString<TString>(114151);
 	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(TChar, 114151), "");
 
-	string = jpt::ToString<StringT>(114151.114);
+	string = jpt::ToString<TString>(114151.114);
 	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(TChar, 114151.114), "");
 
 	// TODO [zshi]: Add containers, vector, and matrix when finished
@@ -182,11 +182,11 @@ bool UnitTest_ToString2()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_StringFinding()
 {
-	using TChar = StringT::TChar;
-	StringT string(JPT_GET_PROPER_STRING(TChar, This is a test string for Jupiter Engine's jpt::BasicString'));
+	using TChar = TString::TChar;
+	TString string(JPT_GET_PROPER_STRING(TChar, This is a test string for Jupiter Engine's jpt::BasicString'));
 
 	size_t isPosition = string.Find(JPT_GET_PROPER_STRING(TChar, is));
 	JPT_RETURN_FALSE_IF_ERROR(isPosition != 2, "");
@@ -209,11 +209,11 @@ bool UnitTest_StringFinding()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_StringReplace()
 {
-	using TChar = StringT::TChar;
-	StringT string(JPT_GET_PROPER_STRING(TChar, This is a test string for Jupiter Engine jpt::BasicString));
+	using TChar = TString::TChar;
+	TString string(JPT_GET_PROPER_STRING(TChar, This is a test string for Jupiter Engine jpt::BasicString));
 
 	string.Replace(JPT_GET_PROPER_STRING(TChar, e), JPT_GET_PROPER_STRING(TChar, LOL));
 	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(TChar, This is a tLOLst string for JupitLOLr EnginLOL jpt::BasicString), "");

@@ -4,41 +4,21 @@ module;
 
 #include "Core/Minimals/Headers.h"
 
-export module UnitTests_Clock;
+export module UnitTests_Timing;
 
 import jpt.CoreModules;
-import jpt.Clock;
+import jpt.Timing.Utils;
 
-bool UnitTest_Clock()
+bool UnitTest_Timing()
 {
-    JPT_LOG(jpt::Clock::Now());
+    //JPT_LOG(jpt::ToString(jpt::Timing::Now()));
 
     return true;
 }
 
-export bool RunUnitTests_Clock()
+export bool RunUnitTests_Timing()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Clock(), "UnitTest_Clock Failed");
-
-	JPT_LOG(jpt::LimitsOf<jpt::Clock::TimePointData>::kMax);
-	JPT_LOG(jpt::LimitsOf<jpt::Clock::TimePointData>::kMin);
-
-	jpt::Clock::TimePointData timeInfo;
-	timeInfo.year   = 1999;
-	timeInfo.month  = 7;
-	timeInfo.day    = 26;
-	timeInfo.hour   = 5;
-	timeInfo.minute = 30;
-	timeInfo.second = 1;
-	JPT_LOG(jpt::Clock::TimePoint(timeInfo));
-
-	timeInfo.year   = 1999;
-	timeInfo.month  = 12;
-	timeInfo.day    = 31;
-	timeInfo.hour   = 23;
-	timeInfo.minute = 59;
-	timeInfo.second = 29;
-	JPT_LOG(jpt::Clock::TimePoint(timeInfo));
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Timing(), "UnitTest_Timing Failed");
 
     return true;
 }

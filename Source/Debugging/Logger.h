@@ -38,13 +38,13 @@ namespace jpt
 		{
 			ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
 		}
-		template<EnabledToString ToStringT>
-		void Log(ELogType type, int32 line, const char* file, const ToStringT& obj, ...)
+		template<EnabledToString ToTString>
+		void Log(ELogType type, int32 line, const char* file, const ToTString& obj, ...)
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
 		}
-		template<BasicStringType StringT>
-		void Log(ELogType type, int32 line, const char* file, const StringT& string, ...)
+		template<BasicTStringype TString>
+		void Log(ELogType type, int32 line, const char* file, const TString& string, ...)
 		{
 			ProcessMessage(type, line, file, string.ConstBuffer());
 		}

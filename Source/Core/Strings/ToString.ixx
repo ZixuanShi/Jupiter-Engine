@@ -39,36 +39,36 @@ export namespace jpt
 	}
 
 	// int, uint
-	template<BasicStringType StringT = jpt::String, Integral TInt>
-	constexpr StringT ToString(TInt integer)
+	template<BasicTStringype TString = jpt::String, Integral TInt>
+	constexpr TString ToString(TInt integer)
 	{
-		using TChar = StringT::TChar;
+		using TChar = TString::TChar;
 
 		TChar* integerCString = IntegerToCStr<TChar>(integer);
-		StringT integerString;
+		TString integerString;
 		integerString.MoveString(integerCString);
 		return integerString;
 	}
 
 	// float, double
-	template<BasicStringType StringT = jpt::String, Floating TFloat>
-	constexpr StringT ToString(TFloat value)
+	template<BasicTStringype TString = jpt::String, Floating TFloat>
+	constexpr TString ToString(TFloat value)
 	{
-		using TChar = StringT::TChar;
+		using TChar = TString::TChar;
 
 		TChar* floatCString = TFloatoCStr<TChar>(value);
-		StringT floatString;
+		TString floatString;
 		floatString.MoveString(floatCString);
 		return floatString;
 	}
 
 	// bool
-	template<BasicStringType StringT = jpt::String>
-	constexpr StringT ToString(bool value)
+	template<BasicTStringype TString = jpt::String>
+	constexpr TString ToString(bool value)
 	{
-		using TChar = StringT::TChar;
+		using TChar = TString::TChar;
 
-		StringT boolStr;
+		TString boolStr;
 		if (value)
 		{
 			boolStr = JPT_GET_PROPER_STRING(TChar, true);
@@ -81,9 +81,9 @@ export namespace jpt
 	}
 
 	// char
-	template<BasicStringType StringT = jpt::String>
-	constexpr StringT ToString(typename StringT::TChar c)
+	template<BasicTStringype TString = jpt::String>
+	constexpr TString ToString(typename TString::TChar c)
 	{
-		return StringT(c);
+		return TString(c);
 	}
 }

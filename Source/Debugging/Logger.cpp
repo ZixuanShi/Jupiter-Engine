@@ -14,7 +14,7 @@
 #endif
 
 import jpt.String;
-import jpt.TimingUtilsDeprecated;
+import jpt.Timing.TypeDefs;
 
 namespace jpt
 {
@@ -50,9 +50,6 @@ namespace jpt
 	{
 		String contentToLog;
 		contentToLog.Reserve(kMaxMessageSize);
-
-		// Add time
-		//contentToLog += Clock::Now().ToString();
 
 		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
 		const String fileStr(file);

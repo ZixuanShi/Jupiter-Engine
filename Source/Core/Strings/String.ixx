@@ -77,11 +77,11 @@ export namespace jpt
 
 		/** Searching. Returns npos if not found */
 		constexpr size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t Find(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t Find(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t FindFirstOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindFirstOf(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t FindLastOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindLastOf(const TChar* stringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindLastOf(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr bool Contains(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
 		constexpr bool Contains(const TChar* TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
 		
@@ -89,11 +89,11 @@ export namespace jpt
 		constexpr void Clear();
 
 		/* Replace the some content of this string with the new given one within optional range
-			@param stringToFind:	The string we want to remove and replace
-			@param stringToReplace:	The string to replace the original data
+			@param TStringoFind:	The string we want to remove and replace
+			@param TStringoReplace:	The string to replace the original data
 			@param startIndex:		[optional] The start index to start searching. Default to 0
 			@param endIndex:		[optional] The end index to stop operation. Default to size() */
-		constexpr BasicString& Replace(const TChar* stringToFind, const TChar* stringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		constexpr BasicString& Replace(const TChar* TStringoFind, const TChar* TStringoReplace, size_t startIndex = 0, size_t endIndex = npos);
 
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
@@ -315,21 +315,21 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::Find(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t BasicString<TChar, AllocatorT>::Find(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t stringToFindSize = GetCStrLength(stringToFind);
+		const size_t TStringoFindSize = GetCStrLength(TStringoFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
 
 		BasicString<TChar> current;
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
-			if ((i + stringToFindSize) > endIndex)
+			if ((i + TStringoFindSize) > endIndex)
 			{
 				return npos;
 			}
 
-			current = SubStr(i, stringToFindSize);
-			if (current == stringToFind)
+			current = SubStr(i, TStringoFindSize);
+			if (current == TStringoFind)
 			{
 				--count;
 				if (count == 0)
@@ -349,9 +349,9 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindFirstOf(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t BasicString<TChar, AllocatorT>::FindFirstOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		return Find(stringToFind, startIndex, endIndex);
+		return Find(TStringoFind, startIndex, endIndex);
 	}
 
 	template<StringLiteral TChar, class AllocatorT>
@@ -380,26 +380,26 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindLastOf(const TChar* stringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t BasicString<TChar, AllocatorT>::FindLastOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t stringToFindSize = GetCStrLength(stringToFind);
+		const size_t TStringoFindSize = GetCStrLength(TStringoFind);
 		ClampTo(endIndex, size_t(0), m_size);
 
 		BasicString<TChar> current;
 		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
 		{
-			if ((i - stringToFindSize) < startIndex)
+			if ((i - TStringoFindSize) < startIndex)
 			{
 				return npos;
 			}
 
-			current = SubStr(i - stringToFindSize, stringToFindSize);
-			if (current == stringToFind)
+			current = SubStr(i - TStringoFindSize, TStringoFindSize);
+			if (current == TStringoFind)
 			{
 				--count;
 				if (count == 0)
 				{
-					return i - stringToFindSize;
+					return i - TStringoFindSize;
 				}
 			}
 		}
@@ -416,30 +416,30 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::Replace(const TChar* stringToFind, const TChar* stringToReplace, size_t startIndex, size_t endIndex)
+	constexpr BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::Replace(const TChar* TStringoFind, const TChar* TStringoReplace, size_t startIndex, size_t endIndex)
 	{
 		if (endIndex == npos)
 		{
 			endIndex = m_size;
 		}
 
-		const BasicString<TChar> replaced(stringToReplace);
-		const size_t stringToFindSize = GetCStrLength(stringToFind);
+		const BasicString<TChar> replaced(TStringoReplace);
+		const size_t TStringoFindSize = GetCStrLength(TStringoFind);
 
 		size_t foundPos = startIndex;
 		while (true)
 		{
-			foundPos = Find(stringToFind, startIndex, endIndex);
+			foundPos = Find(TStringoFind, startIndex, endIndex);
 			if (foundPos == npos)
 			{
 				break;
 			}
 
 			BasicString<TChar> pre = SubStr(0, foundPos);
-			BasicString<TChar> suff = SubStr(foundPos + stringToFindSize);
+			BasicString<TChar> suff = SubStr(foundPos + TStringoFindSize);
 
 			*this = Move(pre) + replaced + Move(suff);
-			startIndex = foundPos + replaced.Size();	// In case 'stringToReplace' contains 'stringToFind', like replacing 'x' with 'yx'		
+			startIndex = foundPos + replaced.Size();	// In case 'TStringoReplace' contains 'TStringoFind', like replacing 'x' with 'yx'		
 		}
 
 		return *this;
@@ -574,5 +574,5 @@ export namespace jpt
 	using WString = BasicString<wchar_t>;	// Wide string
 
 	template<typename T>
-	concept BasicStringType = IsSameType<T, String> || IsSameType<T, WString>;
+	concept BasicTStringype = IsSameType<T, String> || IsSameType<T, WString>;
 }

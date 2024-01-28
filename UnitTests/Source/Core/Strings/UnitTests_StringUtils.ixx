@@ -8,20 +8,20 @@ export module UnitTests_StringUtils;
 
 import jpt.CoreModules;
 
-template<class StringT>
+template<class TString>
 bool UnitTest_StringLen()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
 	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Jupiter Engine)) != 14, "");
 	JPT_RETURN_FALSE_IF_ERROR(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Zixuan Shi)) != 10, "");
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_ToCStr()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
 	const TChar* integerCStr = jpt::IntegerToCStr<TChar>(114514);
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(TChar, 114514), 6), "");
@@ -50,10 +50,10 @@ bool UnitTest_ToCStr()
 	return true;
 }
 
-template<class StringT>
+template<class TString>
 bool UnitTest_StrCpy()
 {
-	using TChar = StringT::TChar;
+	using TChar = TString::TChar;
 
 	TChar buffer[256];
 	jpt::StrCpy<TChar>(buffer, 15, JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
