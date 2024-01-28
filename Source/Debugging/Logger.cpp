@@ -14,7 +14,6 @@
 #endif
 
 import jpt.String;
-import jpt.Timing.TypeDefs;
 
 namespace jpt
 {
@@ -56,7 +55,7 @@ namespace jpt
 		contentToLog += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
 
 		// line number and log type
-		contentToLog += "(" + jpt::ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
+		contentToLog += "(" + ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
 
 		return contentToLog;
 	}

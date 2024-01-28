@@ -18,7 +18,9 @@ bool UnitTest_Clock()
     Sleep(3'000);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::Clock>();
 
-    JPT_LOG(jpt::Timing::GetSecondsBetween(start, end));
+    const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
+    const bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
+    JPT_RETURN_FALSE_IF_ERROR(!value, "");
 
     return true;
 }
@@ -26,10 +28,12 @@ bool UnitTest_Clock()
 bool UnitTest_StopWatch()
 {
     jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::StopWatch>();
-    Sleep(3'000);
+    Sleep(3'500);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::StopWatch>();
 
-    JPT_LOG(jpt::Timing::GetSecondsBetween(start, end));
+    const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
+    const bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
+    JPT_RETURN_FALSE_IF_ERROR(!value, "");
 
     return true;
 }
