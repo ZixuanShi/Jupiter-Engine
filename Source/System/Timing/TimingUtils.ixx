@@ -45,6 +45,7 @@ export namespace jpt
 		std::tm t;
 		localtime_s(&t, &time);
 
+		// MM/DD/YYYY. HH:MM:SS
 		char buffer[kStringSize];
 		strftime(buffer, sizeof(buffer), "%m/%d/%Y. %X", &t);
 

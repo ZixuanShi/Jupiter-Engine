@@ -87,4 +87,11 @@ export namespace jpt
 	{
 		return TString(c);
 	}
+
+	// Strings themselves. Doing this because APIs usages might passing Strings in templated context
+	template<BasicStringType TString = jpt::String>
+	constexpr TString ToString(const TString& str)
+	{
+		return str;
+	}
 }

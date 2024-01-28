@@ -149,6 +149,45 @@ bool UnitTest_StaticArray_Moving()
     return true;
 }
 
+bool UnitTest_StaticArray_HeapAllocating()
+{
+    jpt::StaticArray<jpt::String*, 5> staticArray1{ new jpt::String("Four"), new jpt::String("Three"), new jpt::String("Two"), new jpt::String("One"), new jpt::String("Zero") };
+    jpt::StaticArray<jpt::String*, 5> staticArray2{ new jpt::String("Zero"), new jpt::String("One"), new jpt::String("Two"), new jpt::String("Three"), new jpt::String("Four") };
+
+    jpt::Swap(staticArray1, staticArray2);
+
+    auto locHelper = [](size_t i) -> const char*
+        {
+            switch (i)
+            {
+                case 0: return "Zero";
+                case 1: return "One";
+                case 2: return "Two";
+                case 3: return "Three";
+                case 4: return "Four";
+
+                default: return "Error";
+            }
+        };
+
+    size_t i = 0;
+    for (const jpt::String* element : staticArray1)
+    {
+        JPT_RETURN_FALSE_IF_ERROR(*element != locHelper(i++), "");
+    }
+
+    for (jpt::String* element : staticArray1)
+    {
+        JPT_DELETE(element);
+    }
+    for (jpt::String* element : staticArray2)
+    {
+        JPT_DELETE(element);
+    }
+
+    return true;
+}
+
 export bool RunUnitTests_StaticArray()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StaticArray_Constructing_Trivial(), "UnitTest_StaticArray_Constructing_Trivial Failed");
@@ -156,6 +195,7 @@ export bool RunUnitTests_StaticArray()
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StaticArray_Copying_Trivial(), "UnitTest_StaticArray_Copying_Trivial Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StaticArray_Copying_NonTrivial(), "UnitTest_StaticArray_Copying_NonTrivial Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StaticArray_Moving(), "UnitTest_StaticArray_Moving Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StaticArray_HeapAllocating(), "UnitTest_StaticArray_HeapAllocating Failed");
 
     return true;
 }

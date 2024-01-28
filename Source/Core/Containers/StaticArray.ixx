@@ -8,6 +8,7 @@ module;
 
 export module jpt.StaticArray;
 
+import jpt.ToString;
 import jpt_private.ContiguousIterator;
 
 export namespace jpt
@@ -52,6 +53,10 @@ export namespace jpt
 
 		// Capacity
 		constexpr size_t Size() const { return kSize; }
+
+		// Utils
+		/** @return		A string contains all the data in this StaticArray */
+		constexpr String ToString() const;
 
 	private:
 		constexpr void CopyData(const StaticArray& other);
@@ -114,6 +119,25 @@ export namespace jpt
 				m_buffer[i].~TData();
 			}
 		}
+	}
+
+	template<typename _TData, size_t kSize>
+	constexpr String StaticArray<_TData, kSize>::ToString() const
+	{
+		String str("{ ");
+
+		for (size_t i = 0; i < kSize; ++i)
+		{
+			// Append ", " suffix if it's not the last element
+			const char* pSuffix = (i == kSize - 1 ? "" : ", ");
+
+			// Elements need to provide ToString() implementation to make this work
+			str += jpt::ToString(m_buffer[i]) + pSuffix;
+		}
+
+		str.Append(" }");
+
+		return str;
 	}
 
 	template<typename _TData, size_t kSize>

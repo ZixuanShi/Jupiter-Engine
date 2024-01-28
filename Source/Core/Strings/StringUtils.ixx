@@ -151,16 +151,18 @@ export namespace jpt
 	template<StringLiteral TChar = char, Floating TFloat = float>
 	constexpr TChar* TFloatoCStr(TFloat value)
 	{
-		TChar* buffer = new TChar[32];
+		static constexpr size_t kMaxSize = 32;
+
+		TChar* buffer = new TChar[kMaxSize];
 		const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);
 
 		if constexpr (IsSameType<TChar, char>)
 		{
-			snprintf(buffer, 32, format, value);
+			snprintf(buffer, kMaxSize, format, value);
 		}
 		else if (IsSameType<TChar, wchar_t>)
 		{
-			swprintf(buffer, 32, format, value);
+			swprintf(buffer, kMaxSize, format, value);
 		}
 
 		return buffer;

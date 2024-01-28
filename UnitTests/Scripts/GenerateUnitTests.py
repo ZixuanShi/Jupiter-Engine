@@ -19,7 +19,7 @@ file_content_template = """// Copyright Jupiter Technologies, Inc. All Rights Re
 
 module;
 
-#include "Core/Minimals/Headers.h"
+#include "Core/Minimal/Headers.h"
 
 export module UnitTests_<SubjectName>;
 
@@ -43,7 +43,7 @@ unit_tests_content_template = """// Copyright Jupiter Technologies, Inc. All Rig
 
 module;
 
-#include "Core/Minimals/Headers.h"
+#include "Core/Minimal/Headers.h"
 
 export module UnitTests_<SubjectName>;
 
