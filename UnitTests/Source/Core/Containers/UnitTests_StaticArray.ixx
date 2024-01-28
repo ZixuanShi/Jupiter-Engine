@@ -42,13 +42,13 @@ bool UnitTest_StaticArray_Constructing_NonTrivial()
         {
             switch (i)
             {
-            case 0: return "Zero";
-            case 1: return "One";
-            case 2: return "Two";
-            case 3: return "Three";
-            case 4: return "Four";
+                case 0: return "Zero";
+                case 1: return "One";
+                case 2: return "Two";
+                case 3: return "Three";
+                case 4: return "Four";
 
-            default: return "Error";
+                default: return "Error";
             }
         };
 
@@ -100,13 +100,13 @@ bool UnitTest_StaticArray_Copying_NonTrivial()
         {
             switch (i)
             {
-            case 0: return "Zero";
-            case 1: return "One";
-            case 2: return "Two";
-            case 3: return "Three";
-            case 4: return "Four";
+                case 0: return "Zero";
+                case 1: return "One";
+                case 2: return "Two";
+                case 3: return "Three";
+                case 4: return "Four";
 
-            default: return "Error";
+                default: return "Error";
             }
         };
 
@@ -130,13 +130,13 @@ bool UnitTest_StaticArray_Moving()
         {
             switch (i)
             {
-            case 0: return "Zero";
-            case 1: return "One";
-            case 2: return "Two";
-            case 3: return "Three";
-            case 4: return "Four";
-
-            default: return "Error";
+                case 0: return "Zero";
+                case 1: return "One";
+                case 2: return "Two";
+                case 3: return "Three";
+                case 4: return "Four";
+                
+                default: return "Error";
             }
         };
 
