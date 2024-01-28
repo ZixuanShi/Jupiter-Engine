@@ -37,11 +37,11 @@ export namespace jpt
 		}
 	}
 
-	String ToString(const std::chrono::time_point<std::chrono::system_clock>& point)
+	String ToString(const std::chrono::time_point<Timing::Clock>& point)
 	{
 		static constexpr size_t kStringSize = 32;
 
-		std::time_t time = std::chrono::system_clock::to_time_t(point);
+		std::time_t time = Timing::Clock::to_time_t(point);
 		std::tm t;
 		localtime_s(&t, &time);
 
