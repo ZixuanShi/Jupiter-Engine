@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_String;
 
+import jpt.Utilities;
 import jpt.String;
 import jpt.Math;
 import jpt.StringView;

@@ -9,7 +9,7 @@ export module UnitTests_Allocator;
 import jpt.Allocator;
 
 template<jpt::Numeric TNum>
-bool UnitTest_AllocatorTrivialType()
+bool UnitTest_TAllocatorrivialType()
 {
 	// Single
 	TNum* pSingle = jpt::Allocator<TNum>::Allocate();
@@ -56,10 +56,10 @@ bool UnitTest_AllocatorTrivialType()
 
 export bool RunUnitTests_Allocator()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<uint8>(), "UnitTest_AllocatorTrivialType<uint8> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<int32>(), "UnitTest_AllocatorTrivialType<int32> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<float>(), "UnitTest_AllocatorTrivialType<float> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_AllocatorTrivialType<double>(), "UnitTest_AllocatorTrivialType<float> Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<uint8>(), "UnitTest_TAllocatorrivialType<uint8> Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<int32>(), "UnitTest_TAllocatorrivialType<int32> Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<float>(), "UnitTest_TAllocatorrivialType<float> Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<double>(), "UnitTest_TAllocatorrivialType<float> Failed");
 
 	return true;
 }

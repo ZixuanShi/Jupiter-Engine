@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_Optional;
 
+import jpt.Utilities;
 import jpt.Optional;
 
 bool UnitTest_Optional()

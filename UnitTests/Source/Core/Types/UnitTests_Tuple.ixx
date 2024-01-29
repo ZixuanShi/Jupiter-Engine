@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_Tuple;
 
+import jpt.Utilities;
 import jpt.Tuple;
 
 class Foo

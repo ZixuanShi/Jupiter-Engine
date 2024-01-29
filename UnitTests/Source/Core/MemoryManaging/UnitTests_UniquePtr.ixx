@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_UniquePtr;
 
+import jpt.Utilities;
 import jpt.UniquePtr;
 
 bool UnitTest_UniquePtr_Char()

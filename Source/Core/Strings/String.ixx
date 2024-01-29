@@ -26,12 +26,12 @@ static constexpr size_t kLocCapacityMultiplier = 2;
 
 export namespace jpt
 {
-	template<StringLiteral _TChar, class _AllocatorT = Allocator<_TChar>>
+	template<StringLiteral _TChar, class _TAllocator = Allocator<_TChar>>
 	class BasicString
 	{
 	public:
 		using TChar      = _TChar;
-		using AllocatorT = _AllocatorT;
+		using TAllocator = _TAllocator;
 		using Iterator   = jpt_private::ContiguousIterator<TChar>;
 
 	private:
@@ -65,25 +65,24 @@ export namespace jpt
 		constexpr       Iterator begin()        { return Iterator(m_pBuffer); }
 		constexpr const Iterator begin()  const { return Iterator(m_pBuffer); }
 		constexpr const Iterator cbegin() const { return Iterator(m_pBuffer); }
-
-		constexpr       Iterator end()        { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator end()  const { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator cend() const { return Iterator(m_pBuffer + m_size); }
+		constexpr       Iterator end()          { return Iterator(m_pBuffer + m_size); }
+		constexpr const Iterator end()    const { return Iterator(m_pBuffer + m_size); }
+		constexpr const Iterator cend()   const { return Iterator(m_pBuffer + m_size); }
 
 		// Capacity
-		constexpr size_t Size()     const { return m_size; }
-		constexpr size_t Capacity() const { return m_capacity; }
+		constexpr size_t Size()     const { return m_size;      }
+		constexpr size_t Capacity() const { return m_capacity;  }
 		constexpr bool   IsEmpty()  const { return m_size == 0; }
 
 		/** Searching. Returns npos if not found */
-		constexpr size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t Find(      TChar  TCharoFind,   size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t Find(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindFirstOf(      TChar TCharoFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t FindFirstOf(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindLastOf(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindLastOf(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr bool Contains(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
-		constexpr bool Contains(const TChar* TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
+		constexpr size_t FindLastOf(      TChar TCharoFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
+		constexpr size_t FindLastOf(const TChar* TStringoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
+		constexpr bool   Contains(      TChar  TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
+		constexpr bool   Contains(const TChar* TCharoFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(TCharoFind, startIndex, endIndex, count) != npos; }
 		
 		/* Deallocate the memory that this string holds */
 		constexpr void Clear();
@@ -100,12 +99,12 @@ export namespace jpt
 
 		/** Appends a new string to the end of buffer */
 		constexpr void Append(const TChar* CString, size_t newStringSize);
-		constexpr void Append(const TChar* CString) { Append(CString, GetCStrLength(CString)); }
+		constexpr void Append(const TChar* CString);
 		constexpr void Append(const BasicString<TChar>& otherString);
 		constexpr void Append(TChar c);
-		constexpr BasicString& operator+=(const TChar* CString) { Append(CString); return *this; }
-		constexpr BasicString& operator+=(const BasicString<TChar>& otherString) { Append(otherString); return *this; }
-		constexpr BasicString& operator+=(TChar c) { Append(c); return *this; }
+		constexpr BasicString& operator+=(const TChar* CString);
+		constexpr BasicString& operator+=(const BasicString<TChar>& otherString);
+		constexpr BasicString& operator+=(TChar c);
 
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		constexpr void Reserve(size_t capacity);
@@ -115,24 +114,24 @@ export namespace jpt
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
 		constexpr void CopyString(const TChar* inCString, size_t size);
-		constexpr void CopyString(const TChar* inCString) { CopyString(inCString, GetCStrLength(inCString)); }
-		constexpr void CopyString(const BasicString<TChar>& otherString) { CopyString(otherString.ConstBuffer(), otherString.Size()); }
+		constexpr void CopyString(const TChar* inCString);
+		constexpr void CopyString(const BasicString<TChar>& otherString);
 
 		/* Move the content of string. Will take ownership of the passed in string */
 		constexpr void MoveString(TChar* inCString, size_t size);
-		constexpr void MoveString(TChar* inCString) { MoveString(inCString, GetCStrLength(inCString)); }
+		constexpr void MoveString(TChar* inCString);
 		constexpr void MoveString(BasicString<TChar>&& otherString);
 
 		/** @return An integer associated with this string
 			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front */
 		template<Integral TInt = int32>
-		constexpr TInt ToInt() const { return CStrToInteger(m_pBuffer, m_size); }
+		constexpr TInt ToInt() const;
 
 		/** @return A float associated with this string
 			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front or the percision dot
 			@note	Will ignore the 'f' is there's any */
 		template<Floating TFloat = float>
-		constexpr TFloat ToFloat() const { return CStrToFloat(m_pBuffer, m_size); }
+		constexpr TFloat ToFloat() const;
 
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
@@ -144,32 +143,32 @@ export namespace jpt
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT> operator+(const BasicString<TChar, AllocatorT>& string, const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator> operator+(const BasicString<TChar, TAllocator>& string, const TChar* CString)
 	{
 		BasicString<TChar> str = string;
 		str.Append(CString);
 		return str;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT> operator+(BasicString<TChar, AllocatorT>&& string, const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator> operator+(BasicString<TChar, TAllocator>&& string, const TChar* CString)
 	{
 		BasicString<TChar> str = Move(string);
 		str.Append(CString);
 		return str;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT> operator+(const BasicString<TChar, AllocatorT>& string, const BasicString<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator> operator+(const BasicString<TChar, TAllocator>& string, const BasicString<TChar>& otherString)
 	{
 		BasicString<TChar> str = string;
 		str.Append(otherString);
 		return str;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT> operator+(BasicString<TChar, AllocatorT>&& string, const BasicString<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator> operator+(BasicString<TChar, TAllocator>&& string, const BasicString<TChar>& otherString)
 	{
 		BasicString<TChar> str = Move(string);
 		str.Append(otherString);
@@ -188,14 +187,14 @@ export namespace jpt
 		return jpt::BasicString<TChar>(leftString) += Move(rightString);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr bool operator==(const BasicString<TChar, AllocatorT>& string, const TChar* otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const TChar* otherString)
 	{
 		return AreStringsSame(string.ConstBuffer(), otherString, string.Size());
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr bool operator==(const BasicString<TChar, AllocatorT>& string, const BasicString<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const BasicString<TChar>& otherString)
 	{
 		if (string.Size() != otherString.Size())
 		{
@@ -214,41 +213,41 @@ export namespace jpt
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>::BasicString(const TChar* CString, size_t size)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>::BasicString(const TChar* CString, size_t size)
 	{
 		CopyString(CString, size);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>::BasicString(const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>::BasicString(const TChar* CString)
 	{
 		CopyString(CString);
 	}
 
-	template<StringLiteral _TChar, class _AllocatorT>
-	constexpr BasicString<_TChar, _AllocatorT>::BasicString(TChar c)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr BasicString<_TChar, _TAllocator>::BasicString(TChar c)
 	{
-		TChar* cString = AllocatorT::AllocateArray(2);
+		TChar* cString = TAllocator::AllocateArray(2);
 		cString[0] = c;
 		cString[1] = '\0';
 		MoveString(cString, 1);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>::BasicString(const BasicString<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>::BasicString(const BasicString<TChar>& otherString)
 	{
 		CopyString(otherString);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>::BasicString(BasicString<TChar>&& otherString) noexcept
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>::BasicString(BasicString<TChar>&& otherString) noexcept
 	{
 		MoveString(Move(otherString));
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	BasicString<TChar, TAllocator>& BasicString<TChar, TAllocator>::operator=(const TChar* CString)
 	{
 		if (!AreStringsSame(m_pBuffer, CString, m_size, GetCStrLength(CString)))
 		{
@@ -259,8 +258,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(const BasicString<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	BasicString<TChar, TAllocator>& BasicString<TChar, TAllocator>::operator=(const BasicString<TChar>& otherString)
 	{
 		if (this != &otherString)
 		{
@@ -271,8 +270,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::operator=(BasicString<TChar>&& otherString) noexcept
+	template<StringLiteral TChar, class TAllocator>
+	BasicString<TChar, TAllocator>& BasicString<TChar, TAllocator>::operator=(BasicString<TChar>&& otherString) noexcept
 	{
 		if (this != &otherString)
 		{
@@ -283,14 +282,14 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>::~BasicString()
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>::~BasicString()
 	{
 		Clear();
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::Find(TChar TCharoFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::Find(TChar TCharoFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -314,8 +313,8 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::Find(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::Find(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t TStringoFindSize = GetCStrLength(TStringoFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
@@ -342,20 +341,20 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindFirstOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::FindFirstOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		return Find(TCharoFind, startIndex, endIndex);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindFirstOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::FindFirstOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		return Find(TStringoFind, startIndex, endIndex);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindLastOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::FindLastOf(TChar TCharoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -379,8 +378,8 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr size_t BasicString<TChar, AllocatorT>::FindLastOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr size_t BasicString<TChar, TAllocator>::FindLastOf(const TChar* TStringoFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
 		const size_t TStringoFindSize = GetCStrLength(TStringoFind);
 		ClampTo(endIndex, size_t(0), m_size);
@@ -407,16 +406,16 @@ export namespace jpt
 		return npos;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::Clear()
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::Clear()
 	{
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 		m_size = 0;
 		m_capacity = 0;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT>& BasicString<TChar, AllocatorT>::Replace(const TChar* TStringoFind, const TChar* TStringoReplace, size_t startIndex, size_t endIndex)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator>& BasicString<TChar, TAllocator>::Replace(const TChar* TStringoFind, const TChar* TStringoReplace, size_t startIndex, size_t endIndex)
 	{
 		if (endIndex == npos)
 		{
@@ -445,8 +444,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr BasicString<TChar, AllocatorT> BasicString<TChar, AllocatorT>::SubStr(size_t index, size_t count /*= npos*/) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr BasicString<TChar, TAllocator> BasicString<TChar, TAllocator>::SubStr(size_t index, size_t count /*= npos*/) const
 	{
 		if (count == npos)
 		{
@@ -460,7 +459,7 @@ export namespace jpt
 			return BasicString<TChar>();
 		}
 
-		TChar* subStrBuffer = AllocatorT::AllocateArray(count + sizeof(TChar));
+		TChar* subStrBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
 		StrNCpy(subStrBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
 
 		jpt::BasicString<TChar> result;
@@ -468,32 +467,59 @@ export namespace jpt
 		return result;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::Append(const TChar* CString, size_t newStringSize)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::Append(const TChar* CString, size_t newStringSize)
 	{
 		JPT_RETURN_IF(newStringSize == 0);
 		InsertStringAt(CString, m_size, newStringSize);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::Append(const BasicString<TChar>& otherString)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::Append(const TChar* CString)
+	{
+		Append(CString, GetCStrLength(CString));
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::Append(const BasicString<TChar>& otherString)
 	{
 		JPT_RETURN_IF(otherString.IsEmpty());
 		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
 	}
 
-	template<StringLiteral _TChar, class _AllocatorT>
-	constexpr void BasicString<_TChar, _AllocatorT>::Append(TChar c)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::Append(TChar c)
 	{
-		TChar* cString = AllocatorT::AllocateArray(2);
+		TChar* cString = TAllocator::AllocateArray(2);
 		cString[0] = c;
 		cString[1] = '\0';
 		InsertStringAt(cString, m_size, 1);
-		AllocatorT::DeallocateArray(cString);
+		TAllocator::DeallocateArray(cString);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::Reserve(size_t capacity)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr BasicString<_TChar, _TAllocator>& BasicString<_TChar, _TAllocator>::operator+=(const TChar* CString)
+	{
+		Append(CString);
+		return *this;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr BasicString<_TChar, _TAllocator>& BasicString<_TChar, _TAllocator>::operator+=(const BasicString<TChar>& otherString)
+	{
+		Append(otherString);
+		return *this;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr BasicString<_TChar, _TAllocator>& BasicString<_TChar, _TAllocator>::operator+=(TChar c)
+	{
+		Append(c);
+		return *this;
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::Reserve(size_t capacity)
 	{
 		if (capacity > m_capacity)
 		{
@@ -501,17 +527,31 @@ export namespace jpt
 		}
 	}
 
-	template<StringLiteral _TChar, class _AllocatorT>
+	template<StringLiteral _TChar, class _TAllocator>
 	template<size_t kSize>
-	constexpr BasicString<_TChar, _AllocatorT> BasicString<_TChar, _AllocatorT>::Format(const TChar* format, ...)
+	constexpr BasicString<_TChar, _TAllocator> BasicString<_TChar, _TAllocator>::Format(const TChar* format, ...)
 	{
 		TChar buffer[kSize];
 		FORMAT_STRING(buffer, format, ...);
 		return BasicString(buffer);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::CopyString(const TChar* inCString, size_t size)
+	template<StringLiteral _TChar, class _TAllocator>
+	template<Integral TInt>
+	constexpr TInt BasicString<_TChar, _TAllocator>::ToInt() const
+	{
+		return CStrToInteger(m_pBuffer, m_size);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	template<Floating TFloat>
+	constexpr TFloat BasicString<_TChar, _TAllocator>::ToFloat() const
+	{
+		return CStrToFloat(m_pBuffer, m_size);
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
 		m_size = size;
 		JPT_RETURN_IF(IsEmpty());
@@ -521,16 +561,34 @@ export namespace jpt
 		StrCpy(m_pBuffer, m_size + sizeof(TChar), inCString);
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::MoveString(TChar* inCString, size_t size)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::CopyString(const TChar* inCString)
+	{
+		CopyString(inCString, GetCStrLength(inCString));
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::CopyString(const BasicString<TChar>& otherString)
+	{
+		CopyString(otherString.ConstBuffer(), otherString.Size());
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::MoveString(TChar* inCString, size_t size)
 	{
 		m_pBuffer  = inCString;
 		m_size     = size;
 		m_capacity = m_size;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::MoveString(BasicString<TChar>&& otherString)
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::MoveString(TChar* inCString)
+	{
+		MoveString(inCString, GetCStrLength(inCString));
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::MoveString(BasicString<TChar>&& otherString)
 	{
 		m_pBuffer  = otherString.m_pBuffer;
 		m_size     = otherString.m_size;
@@ -541,23 +599,23 @@ export namespace jpt
 		otherString.m_capacity = 0;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::UpdateBuffer(size_t inCapacity)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::UpdateBuffer(size_t inCapacity)
 	{
-		TChar* pNewBuffer = AllocatorT::AllocateArray(inCapacity + sizeof(TChar));
+		TChar* pNewBuffer = TAllocator::AllocateArray(inCapacity + sizeof(TChar));
 
 		if (m_pBuffer)
 		{
 			StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
-			AllocatorT::DeallocateArray(m_pBuffer);
+			TAllocator::DeallocateArray(m_pBuffer);
 		}
 
 		m_pBuffer = pNewBuffer;
 		m_capacity = inCapacity;
 	}
 
-	template<StringLiteral TChar, class AllocatorT>
-	constexpr void BasicString<TChar, AllocatorT>::InsertStringAt(const TChar* CString, size_t index, size_t size)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void BasicString<TChar, TAllocator>::InsertStringAt(const TChar* CString, size_t index, size_t size)
 	{
 		const size_t newSize = m_size + size;
 		if (newSize > m_capacity)

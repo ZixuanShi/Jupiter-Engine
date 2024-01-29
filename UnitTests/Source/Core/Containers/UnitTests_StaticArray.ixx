@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_StaticArray;
 
+import jpt.Utilities;
 import jpt.StaticArray;
 
 bool UnitTest_StaticArray_Constructing_Trivial()
