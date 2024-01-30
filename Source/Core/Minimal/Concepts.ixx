@@ -56,4 +56,11 @@ export namespace jpt
 
 	template<typename T>
 	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
+
+	template<typename T>
+	concept Iterable = requires(T container)
+	{
+		container.begin();
+		container.end();
+	};
 }

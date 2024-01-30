@@ -41,15 +41,15 @@ export namespace jpt
 		/** Create a new data buffer with a new capacity, move the existing data over */
 		constexpr void UpdateBuffer(size_t capacity);
 		
-		/** Copy other's data through it's iterators. TOther should be guaranteed to provide iterator interfaces and size() */
-		template<class TOther>
-		constexpr void CopyIterators(const TOther& other);
+		/** Copy other's data through it's iterators. TOtherContainer should be guaranteed to provide iterator interfaces */
+		template<Iterable TOtherContainer>
+		constexpr void CopyIterators(const TOtherContainer& container, size_t size);
 	};
 
 	template<typename TData, class TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::DynamicArray(const std::initializer_list<TData>& list)
 	{
-		CopyIterators(list);
+		CopyIterators(list, list.size());
 	}
 
 	template<typename _TData, class _TAllocator>
@@ -96,20 +96,20 @@ export namespace jpt
 	}
 
 	template<typename _TData, class _TAllocator>
-	template<class TOther>
-	constexpr void DynamicArray<_TData, _TAllocator>::CopyIterators(const TOther& other)
+	template<Iterable TOtherContainer>
+	constexpr void DynamicArray<_TData, _TAllocator>::CopyIterators(const TOtherContainer& container, size_t size)
 	{
-		m_size = other.size();
+		m_size = size;
 		UpdateBuffer(m_size);
 
 		if constexpr (IsTriviallyCopyable<TData>)
 		{
-			std::memcpy(m_pBuffer, other.begin(), m_size * sizeof(TData));
+			std::memcpy(m_pBuffer, container.begin(), m_size * sizeof(TData));
 		}
 		else
 		{
 			size_t i = 0;
-			for (auto itr = other.begin(); itr != other.end(); ++itr)
+			for (auto itr = container.begin(); itr != container.end(); ++itr)
 			{
 				m_pBuffer[i++] = *itr;
 			}
