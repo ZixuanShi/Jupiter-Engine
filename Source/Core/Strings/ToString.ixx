@@ -57,7 +57,7 @@ export namespace jpt
 	{
 		using TChar = TString::TChar;
 
-		TChar* floatCString = TFloatoCStr<TChar>(value);
+		TChar* floatCString = FloatToCStr<TChar>(value);
 		TString floatString;
 		floatString.MoveString(floatCString);
 		return floatString;

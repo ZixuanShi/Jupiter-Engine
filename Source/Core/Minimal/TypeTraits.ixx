@@ -54,6 +54,9 @@ export namespace jpt
 	template<typename T>
 	constexpr bool IsTriviallyDestructible = __is_trivially_destructible(T);
 
+	template<typename T>
+	constexpr bool IsTriviallyCopyable = __is_trivially_copyable(T);
+
 	// enable_if implementation [Deprecated. Use Concepts instead]
 	template<bool kCondition, typename ReturnType = void> struct enable_if {};
 	template<typename _ReturnType>                        struct enable_if<true, _ReturnType> { using ReturnType = _ReturnType; };

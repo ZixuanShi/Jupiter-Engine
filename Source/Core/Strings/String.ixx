@@ -109,6 +109,8 @@ export namespace jpt
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		constexpr void Reserve(size_t capacity);
 
+		/** Formats data to a string with provided format then return it
+			@example String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second); */
 		template<size_t kSize>
 		static constexpr BasicString Format(const TChar* format, ...);
 

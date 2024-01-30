@@ -116,9 +116,8 @@ export namespace jpt
 
 	/** @return Integral number converted from pBuffer */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size)
 	{
-		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
 		TInt result = 0;
 		bool isNegative = false;
 
@@ -147,14 +146,19 @@ export namespace jpt
 
 		return result;
 	}
+	template<StringLiteral TChar = char, Integral TInt = int32>
+	constexpr TInt CStrToInteger(const TChar* pBuffer)
+	{
+		return CStrToInteger(pBuffer, GetCStrLength(pBuffer));
+	}
 
 	template<StringLiteral TChar = char, Floating TFloat = float>
-	constexpr TChar* TFloatoCStr(TFloat value)
+	constexpr TChar* FloatToCStr(TFloat value)
 	{
 		static constexpr size_t kMaxSize = 32;
 
 		TChar* buffer = new TChar[kMaxSize];
-		const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);
+		const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);	// controls how many precision digits to keep
 
 		if constexpr (IsSameType<TChar, char>)
 		{
@@ -170,11 +174,10 @@ export namespace jpt
 
 	/** @note	Will ignore the 'f' is there's any */
 	template<StringLiteral TChar = char, Floating TFloat = float>
-	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t size = kInvalidValue<size_t>)
+	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t size)
 	{
 		// Parse two integral parts of the precision dot, then combine them
 
-		size = (size == kInvalidValue<size_t>) ? GetCStrLength(pBuffer) : size;
 		TFloat integer = 0;		// Left of precision
 		TFloat floatingNum = 0;	// Right of precision
 		size_t precisionIndex = kInvalidValue<size_t>;
@@ -232,6 +235,11 @@ export namespace jpt
 		}
 
 		return result;
+	}
+	template<StringLiteral TChar = char, Floating TFloat = float>
+	constexpr TFloat CStrToFloat(const TChar* pBuffer)
+	{
+		return CStrToFloat(pBuffer, GetCStrLength(pBuffer));
 	}
 
 	/** constexpr compile time hash functions, 32 and 64 bit
