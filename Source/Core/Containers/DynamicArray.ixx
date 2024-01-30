@@ -14,6 +14,7 @@ import jpt_private.ContiguousIterator;
 
 export namespace jpt
 {
+	/** A sequence container that encapsulates dynamic size arrays. */
 	template<typename _TData, class _TAllocator = Allocator<_TData>>
 	class DynamicArray
 	{

@@ -13,6 +13,7 @@ import jpt_private.ContiguousIterator;
 
 export namespace jpt
 {
+	/** A sequence container that encapsulates fixed size arrays */
 	template<typename _TData, size_t kSize>
 	class StaticArray
 	{
