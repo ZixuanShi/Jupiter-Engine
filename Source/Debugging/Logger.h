@@ -34,7 +34,7 @@ namespace jpt
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function
 			@param message, ...: Templated message to send */
-		template<NoBuiltInToStringPrimitive MessageT>
+		template<NoBuiltInToString MessageT>
 		void Log(ELogType type, int32 line, const char* file, MessageT message, ...)
 		{
 			ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
@@ -43,32 +43,6 @@ namespace jpt
 		void Log(ELogType type, int32 line, const char* file, const ToTString& obj, ...)
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
-		}
-		template<Iterable TContainer>
-		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)
-		{
-			if constexpr (IsSameType<TContainer, String> || IsSameType<TContainer, WString>)
-			{
-				ProcessMessage(type, line, file, container.ConstBuffer());
-			}
-			else
-			{
-				String str("{ ");
-
-				for (auto itr = container.begin(); itr != container.end(); ++itr)
-				{
-					// Append ", " suffix if it's not the last element
-					const bool isLastElement = ((itr + 1) == container.end());
-					const char* pSuffix = (isLastElement ? "" : ", ");
-
-					// Elements need to provide ToString() implementation to make this work
-					str += jpt::ToString(*itr) + pSuffix;
-				}
-
-				str.Append(" }");
-
-				ProcessMessage(type, line, file, str.ConstBuffer());
-			}
 		}
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);

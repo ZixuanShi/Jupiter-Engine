@@ -23,7 +23,7 @@ export namespace jpt
 
 	// Add any additional primitive types if implemented later
 	template<typename T>
-	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;
+	concept NoBuiltInToString = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T> || Iterable<T>;
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>
@@ -87,10 +87,31 @@ export namespace jpt
 		return TString(c);
 	}
 
-	// Strings themselves. Doing this because APIs usages might passing Strings in templated context
-	template<BasicStringType TString = jpt::String>
-	constexpr TString ToString(const TString& str)
+	// Containers
+	template<Iterable TContainer>
+	constexpr String ToString(const TContainer& container)
 	{
-		return str;
+		if constexpr (IsSameType<TContainer, String>)
+		{
+			return container;
+		}
+		else
+		{
+			String str("{ ");
+
+			for (auto itr = container.begin(); itr != container.end(); ++itr)
+			{
+				// Append ", " suffix if it's not the last element
+				const bool isLastElement = ((itr + 1) == container.end());
+				const char* pSuffix = (isLastElement ? "" : ", ");
+
+				// Elements need to provide ToString() implementation to make this work
+				str += jpt::ToString(*itr) + pSuffix;
+			}
+
+			str.Append(" }");
+
+			return str;
+		}
 	}
 }
