@@ -121,7 +121,7 @@ bool UnitTest_StaticArray_Moving()
         JPT_RETURN_FALSE_IF_ERROR(element != locHelper(i++), "");
     }
 
-    JPT_LOG(staticArray1);
+    //JPT_LOG(staticArray1);
 
     return true;
 }

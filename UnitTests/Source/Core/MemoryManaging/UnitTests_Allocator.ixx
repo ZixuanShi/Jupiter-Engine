@@ -24,11 +24,6 @@ bool UnitTest_TAllocatorrivialType()
 	JPT_RETURN_FALSE_IF_ERROR(*pSingleWithValue != static_cast<TNum>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
 	jpt::Allocator<TNum>::Deallocate(pSingleWithValue);
 
-	// Multi
-	TNum* pMulti = jpt::Allocator<TNum>::Allocate(10);
-	JPT_RETURN_FALSE_IF_ERROR(pMulti == nullptr, "jpt::Allocator<TestType>::Allocate(10) returned a nullptr");
-	jpt::Allocator<TNum>::Deallocate(pMulti);
-
 	// Array
 	constexpr size_t kArraySize = 10'000;
 	TNum* pArray = jpt::Allocator<TNum>::AllocateArray(kArraySize);

@@ -2,7 +2,8 @@
 
 module;
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/Macros.h"
+#include "Debugging/Assert.h"
 
 #include <initializer_list>
 #include <string>
@@ -107,6 +108,25 @@ export namespace jpt
 	};
 
 	template<typename TData, class TAllocator>
+	constexpr bool operator==(const DynamicArray<TData, TAllocator>& a, const DynamicArray<TData, TAllocator>& b)
+	{
+		if (a.Size() != b.Size())
+		{
+			return false;
+		}
+
+		for (size_t i = 0; i < a.Size(); ++i)
+		{
+			if (a[i] != b[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	template<typename TData, class TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::DynamicArray(const std::initializer_list<TData>& list)
 	{
 		CopyData(list.begin(), list.size());
@@ -207,14 +227,14 @@ export namespace jpt
 	constexpr void DynamicArray<_TData, _TAllocator>::Insert(size_t index, const TData& data)
 	{
 		UpdateBufferForInsert(index);
-		TAllocator::Construct(m_pBuffer + index, data);
+		new(m_pBuffer + index) TData(data);
 	}
 
 	template<typename _TData, class _TAllocator>
 	constexpr void DynamicArray<_TData, _TAllocator>::Insert(size_t index, TData&& data)
 	{
 		UpdateBufferForInsert(index);
-		TAllocator::Construct(m_pBuffer + index, Move(data));
+		new(m_pBuffer + index) TData(Move(data));
 	}
 
 	template<typename _TData, class _TAllocator>
@@ -234,7 +254,7 @@ export namespace jpt
 	constexpr DynamicArray<_TData, _TAllocator>::TData& DynamicArray<_TData, _TAllocator>::Emplace(size_t index, TArgs&& ...args)
 	{
 		UpdateBufferForInsert(index);
-		TAllocator::Emplace(m_pBuffer + index, Forward<TArgs>(args)...);
+		new(m_pBuffer + index) TData(Forward<TArgs>(args)...);
 		return m_pBuffer[index];
 	}
 

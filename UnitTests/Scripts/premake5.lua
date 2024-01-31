@@ -76,7 +76,10 @@ workspace "JupiterUnitTests"
         symbols "off"
 
     filter "configurations:Release"
-        defines { "IS_RELEASE" }
+        defines 
+        { 
+            "IS_RELEASE",
+        }
         buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"

@@ -26,9 +26,8 @@ export namespace jpt
 		constexpr Allocator(const Allocator<TOther>& other) noexcept {}
 
 	public:
-		/** Allocates plain heap memory for desired amount of memory for <Type>
-			@param count		How many <Type> objects to allocate */
-		static constexpr T* Allocate(size_t count = 1);
+		/** Allocates plain heap memory for <Type>*/
+		static constexpr T* Allocate();
 		static constexpr T* AllocateArray(size_t count, const std::initializer_list<T>& values = {});
 
 		/** Allocates heap memory for one <Type>, with initializing value */
@@ -39,10 +38,8 @@ export namespace jpt
 		static constexpr void Deallocate(T* pPointer);
 		static constexpr void DeallocateArray(T* pArray);
 
-		static constexpr void Construct(T* pPointer, const T& object);
-		static constexpr void Construct(T* pPointer, T&& object);
 		template<typename ...TArgs>
-		static constexpr void Emplace(T* pPointer, TArgs&&... args);
+		static constexpr void Construct(T* pPointer, TArgs&&... args);
 		static constexpr void Destruct(T* pPointer);
 
 		template<class TOther>
@@ -53,9 +50,9 @@ export namespace jpt
 	};
 
 	template<typename T>
-	constexpr T* Allocator<T>::Allocate(size_t count /* = 1 */ )
+	constexpr T* Allocator<T>::Allocate()
 	{
-		return new T[count];
+		return new T;
 	}
 
 	template<typename T>
@@ -98,20 +95,8 @@ export namespace jpt
 	}
 
 	template<typename T>
-	constexpr void Allocator<T>::Construct(T* pPointer, const T& object)
-	{
-		new(pPointer) T(object);
-	}
-
-	template<typename T>
-	constexpr void Allocator<T>::Construct(T* pPointer, T&& object)
-	{
-		new(pPointer) T(Move(object));
-	}
-
-	template<typename T>
 	template<typename ...TArgs>
-	constexpr void Allocator<T>::Emplace(T* pPointer, TArgs && ...args)
+	constexpr void Allocator<T>::Construct(T* pPointer, TArgs&& ...args)
 	{
 		new(pPointer) T(Forward<TArgs>(args)...);
 	}

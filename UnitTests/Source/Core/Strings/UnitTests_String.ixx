@@ -6,13 +6,36 @@ module;
 
 export module UnitTests_String;
 
-import jpt.Utilities;
+import jpt.DynamicArray;
 import jpt.Math;
-import jpt.TypeDefs;
-import jpt.ToString;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.StringView;
+import jpt.ToString;
+import jpt.TypeDefs;
+import jpt.Utilities;
+
+auto locHelper = [](size_t i) -> const char*
+	{
+		switch (i)
+		{
+		case 0: return "Zero";
+		case 1: return "One";
+		case 2: return "Two";
+		case 3: return "Three";
+		case 4: return "Four";
+		case 5: return "Five";
+		case 6: return "Six";
+		case 7: return "Seven";
+		case 8: return "Eight";
+		case 9: return "Nine";
+		case 10: return "Ten";
+		case 11: return "Eleven";
+		case 12: return "Twelve";
+
+		default: return "Error";
+		}
+	};
 
 template<class TString>
 bool UnitTest_DefaultStringConstructing()
@@ -232,6 +255,9 @@ bool UnitTest_StringReplace()
 	string.Replace(JPT_GET_PROPER_STRING(TChar, e), JPT_GET_PROPER_STRING(TChar, LOL), 20, 32);
 	JPT_RETURN_FALSE_IF_ERROR(string != JPT_GET_PROPER_STRING(TChar, This is a test string for JupitLOLr Engine jpt::BasicString), "");
 
+	TString replaced = string.GetReplaced(JPT_GET_PROPER_STRING(TChar, e), JPT_GET_PROPER_STRING(TChar, LOL));
+	JPT_RETURN_FALSE_IF_ERROR(replaced != JPT_GET_PROPER_STRING(TChar, This is a tLOLst string for JupitLOLr EnginLOL jpt::BasicString), "");
+	
 	return true;
 }
 
@@ -268,6 +294,17 @@ bool UnitTest_String_Format()
 	return true;
 }
 
+bool UnitTest_String_Split()
+{
+	jpt::String str = "Zero, One, Two, Three, Four, Five, Six";
+	jpt::DynamicArray<jpt::String> substrs = str.Split(", ");
+	jpt::DynamicArray<jpt::String> result = {"Zero", "One", "Two", "Three", "Four", "Five", "Six"};
+
+	JPT_RETURN_FALSE_IF_ERROR(substrs != result, "");
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_DefaultStringConstructing<jpt::String>(), "UnitTest_DefaultStringConstructing Failed");
@@ -297,6 +334,7 @@ export bool RunUnitTests_String()
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Iterator(), "UnitTest_String_Iterator Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Format(), "UnitTest_String_Format Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_String_Split(), "UnitTest_String_Split Failed");
 
 	return true;
 }

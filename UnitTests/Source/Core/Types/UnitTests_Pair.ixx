@@ -11,7 +11,7 @@ import jpt.Pair;
 bool UnitTest_Pair()
 {
 	jpt::Pair<int, bool> pair{ 42, true };
-	JPT_LOG(pair);
+	//JPT_LOG(pair);
 
 	JPT_RETURN_FALSE_IF_ERROR(pair.first != 42, "");
 	JPT_RETURN_FALSE_IF_ERROR(pair.second != true, "");

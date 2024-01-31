@@ -66,9 +66,9 @@ export namespace jpt
 		constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
 
 		constexpr size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos) const;
-		constexpr size_t Find(const TChar* pTStringoFind, size_t startIndex = 0, size_t endIndex = npos) const;
+		constexpr size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		constexpr bool Contains(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(TCharoFind, startIndex, endIndex) != npos; }
-		constexpr bool Contains(const TChar* pTStringoFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(pTStringoFind, startIndex, endIndex) != npos; }
+		constexpr bool Contains(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const { return Find(pStringToFind, startIndex, endIndex) != npos; }
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
@@ -199,21 +199,21 @@ export namespace jpt
 	}
 
 	template<StringLiteral _TChar>
-	constexpr size_t BasicStringView<_TChar>::Find(const TChar* pTStringoFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	constexpr size_t BasicStringView<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
-		const size_t TStringoFindSize = GetCStrLength(pTStringoFind);
+		const size_t StringToFindSize = GetCStrLength(pStringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
 
 		BasicStringView current;
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
-			if ((i + TStringoFindSize) > endIndex)
+			if ((i + StringToFindSize) > endIndex)
 			{
 				return npos;
 			}
 
-			current = SubStr(i, TStringoFindSize);
-			if (current == pTStringoFind)
+			current = SubStr(i, StringToFindSize);
+			if (current == pStringToFind)
 			{
 				return i;
 			}

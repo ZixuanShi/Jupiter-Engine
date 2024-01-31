@@ -2,7 +2,8 @@
 
 module;
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/Macros.h"
+#include "Debugging/Assert.h"
 
 #include <initializer_list>
 
