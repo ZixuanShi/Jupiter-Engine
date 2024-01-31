@@ -10,6 +10,8 @@ module;
 export module jpt.DynamicArray;
 
 import jpt.Allocator;
+import jpt.Concepts;
+import jpt.TypeTraits;
 import jpt.ToString;
 import jpt.Math;
 import jpt_private.ContiguousIterator;

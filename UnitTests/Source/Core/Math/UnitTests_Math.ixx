@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_Math;
 
+import jpt.TypeDefs;
 import jpt.Math;
 
 bool UnitTest_Clamping()

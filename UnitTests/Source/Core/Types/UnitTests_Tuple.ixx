@@ -8,6 +8,8 @@ export module UnitTests_Tuple;
 
 import jpt.Utilities;
 import jpt.Tuple;
+import jpt.TypeDefs;
+import jpt.String;
 
 class Foo
 {

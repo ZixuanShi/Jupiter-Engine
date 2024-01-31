@@ -10,6 +10,8 @@ import jpt.Utilities;
 import jpt.String;
 import jpt.Math;
 import jpt.StringView;
+import jpt.TypeDefs;
+import jpt.ToString;
 
 template<class TString>
 bool UnitTest_DefaultStringConstructing()

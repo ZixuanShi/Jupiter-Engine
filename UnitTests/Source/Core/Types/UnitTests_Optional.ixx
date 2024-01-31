@@ -6,8 +6,10 @@ module;
 
 export module UnitTests_Optional;
 
+import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Optional;
+import jpt.String;
 
 bool UnitTest_Optional()
 {

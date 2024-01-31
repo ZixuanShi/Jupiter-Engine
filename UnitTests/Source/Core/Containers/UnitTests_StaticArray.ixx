@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_StaticArray;
 
+import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.StaticArray;
 

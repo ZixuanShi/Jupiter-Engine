@@ -7,6 +7,8 @@ module;
 export module UnitTests_Allocator;
 
 import jpt.Allocator;
+import jpt.TypeDefs;
+import jpt.Concepts;
 
 template<jpt::Numeric TNum>
 bool UnitTest_TAllocatorrivialType()

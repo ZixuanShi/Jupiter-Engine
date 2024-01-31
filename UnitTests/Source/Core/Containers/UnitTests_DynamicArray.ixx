@@ -8,6 +8,7 @@ module;
 
 export module UnitTests_DynamicArray;
 
+import jpt.TypeDefs;
 import jpt.DynamicArray;
 
 bool UnitTest_DynamicArray_Trivial()

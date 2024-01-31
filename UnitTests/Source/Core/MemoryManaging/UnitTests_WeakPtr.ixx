@@ -10,6 +10,8 @@ export module UnitTests_WeakPtr;
 
 import jpt.StrongPtr;
 import jpt.WeakPtr;
+import jpt.ToString;
+import jpt.TypeDefs;
 
 bool UnitTests_WeakPtr_Class()
 {

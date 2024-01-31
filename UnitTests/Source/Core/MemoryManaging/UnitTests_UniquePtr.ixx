@@ -6,8 +6,11 @@ module;
 
 export module UnitTests_UniquePtr;
 
+import jpt.Allocator;
+import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.UniquePtr;
+import jpt.ToString;
 
 bool UnitTest_UniquePtr_Char()
 {
