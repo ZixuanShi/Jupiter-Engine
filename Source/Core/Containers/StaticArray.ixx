@@ -8,8 +8,7 @@ module;
 
 export module jpt.StaticArray;
 
-import jpt.ToString;
-import jpt.String;
+import jpt.Utilities;
 import jpt_private.ContiguousIterator;
 
 export namespace jpt
@@ -19,8 +18,9 @@ export namespace jpt
 	class StaticArray
 	{
 	public:
-		using TData    = _TData;
-		using Iterator = jpt_private::ContiguousIterator<TData>;
+		using TData         = _TData;
+		using Iterator      = jpt_private::ContiguousIterator<TData>;
+		using ConstIterator = jpt_private::ConstContiguousIterator<TData>;
 
 	private:
 		TData m_buffer[kSize];
@@ -45,19 +45,15 @@ export namespace jpt
 		constexpr const TData& operator[](size_t index) const { return m_buffer[index]; }
 
 		// Iterators
-		constexpr       Iterator begin()        { return Iterator(m_buffer); }
-		constexpr const Iterator begin()  const { return Iterator(m_buffer); }
-		constexpr const Iterator cbegin() const { return Iterator(m_buffer); }
-		constexpr       Iterator end()        { return Iterator(m_buffer + kSize); }
-		constexpr const Iterator end()  const { return Iterator(m_buffer + kSize); }
-		constexpr const Iterator cend() const { return Iterator(m_buffer + kSize); }
+		constexpr Iterator begin() { return Iterator(m_buffer); }
+		constexpr Iterator end()   { return Iterator(m_buffer + kSize); }
+		constexpr ConstIterator begin()  const { return ConstIterator(m_buffer); }
+		constexpr ConstIterator cbegin() const { return ConstIterator(m_buffer); }
+		constexpr ConstIterator end()    const { return ConstIterator(m_buffer + kSize); }
+		constexpr ConstIterator cend()   const { return ConstIterator(m_buffer + kSize); }
 
 		// Capacity
 		constexpr size_t Size() const { return kSize; }
-
-		// Utils
-		/** @return		A string contains all the data in this StaticArray */
-		constexpr String ToString() const;
 
 	private:
 		constexpr void CopyData(const StaticArray& other);
@@ -113,32 +109,13 @@ export namespace jpt
 	template<typename _TData, size_t kSize>
 	constexpr StaticArray<_TData, kSize>::~StaticArray()
 	{
-		if constexpr (jpt::IsTriviallyDestructible<TData>)
+		if constexpr (IsTriviallyDestructible<TData>)
 		{
 			for (size_t i = 0; i < kSize; ++i)
 			{
 				m_buffer[i].~TData();
 			}
 		}
-	}
-
-	template<typename _TData, size_t kSize>
-	constexpr String StaticArray<_TData, kSize>::ToString() const
-	{
-		String str("{ ");
-
-		for (size_t i = 0; i < kSize; ++i)
-		{
-			// Append ", " suffix if it's not the last element
-			const char* pSuffix = (i == kSize - 1 ? "" : ", ");
-
-			// Elements need to provide ToString() implementation to make this work
-			str += jpt::ToString(m_buffer[i]) + pSuffix;
-		}
-
-		str.Append(" }");
-
-		return str;
 	}
 
 	template<typename _TData, size_t kSize>

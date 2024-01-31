@@ -18,6 +18,7 @@ import jpt.Utilities;
 import jpt.Math;
 import jpt.StringUtils;
 import jpt.TypeDefs;
+//import jpt.DynamicArray;
 
 import jpt_private.ContiguousIterator;
 
@@ -448,6 +449,12 @@ export namespace jpt
 
 		return *this;
 	}
+
+	//template<StringLiteral _TChar, class _TAllocator>
+	//constexpr DynamicArray<BasicString> BasicString<_TChar, _TAllocator>::Split(const TChar* pKeyword) const
+	//{
+	//	return DynamicArray<BasicString>();
+	//}
 
 	template<StringLiteral TChar, class TAllocator>
 	constexpr BasicString<TChar, TAllocator> BasicString<TChar, TAllocator>::SubStr(size_t index, size_t count /*= npos*/) const

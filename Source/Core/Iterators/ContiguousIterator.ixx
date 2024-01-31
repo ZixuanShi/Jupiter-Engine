@@ -104,4 +104,101 @@ export namespace jpt_private
 		ContiguousIterator iterator = *this;
 		return iterator -= offset;
 	}
+
+	template<typename _TData>
+	class ConstContiguousIterator
+	{
+	public:
+		using TData = _TData;
+
+	private:
+		const TData* m_pPtr = nullptr;
+
+	public:
+		constexpr ConstContiguousIterator() = default;
+		constexpr ConstContiguousIterator(const TData* pPtr) : m_pPtr(pPtr) {}
+
+		constexpr ConstContiguousIterator& operator++();
+		constexpr ConstContiguousIterator operator++(int32);
+		
+		constexpr ConstContiguousIterator& operator+=(size_t offset);
+		constexpr ConstContiguousIterator operator+(size_t offset);
+		
+		constexpr ConstContiguousIterator& operator--();
+		constexpr ConstContiguousIterator operator--(int32);
+		
+		constexpr ConstContiguousIterator& operator-=(size_t offset);
+		constexpr ConstContiguousIterator operator-(size_t offset);
+		
+		constexpr const TData& operator[](size_t index) const { return *(m_pPtr + index); }
+		constexpr const TData* operator->() const { return m_pPtr; }
+		constexpr const TData& operator*() const { return *m_pPtr; }
+		
+		constexpr bool operator< (const ConstContiguousIterator& other) const { return m_pPtr < other.m_pPtr; }
+		constexpr bool operator<=(const ConstContiguousIterator& other) const { return m_pPtr <= other.m_pPtr; }
+		
+		constexpr bool operator> (const ConstContiguousIterator& other) const { return m_pPtr > other.m_pPtr; }
+		constexpr bool operator>=(const ConstContiguousIterator& other) const { return m_pPtr >= other.m_pPtr; }
+		
+		constexpr bool operator==(const ConstContiguousIterator& other) const { return m_pPtr == other.m_pPtr; }
+		constexpr bool operator!=(const ConstContiguousIterator& other) const { return m_pPtr != other.m_pPtr; }
+	};
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData>& ConstContiguousIterator<TData>::operator++()
+	{
+		++m_pPtr;
+		return *this;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData> ConstContiguousIterator<TData>::operator++(int32)
+	{
+		ConstContiguousIterator iterator = *this;
+		++m_pPtr;
+		return iterator;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData>& ConstContiguousIterator<TData>::operator+=(size_t offset)
+	{
+		m_pPtr += offset;
+		return *this;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData> ConstContiguousIterator<TData>::operator+(size_t offset)
+	{
+		ConstContiguousIterator iterator = *this;
+		return iterator += offset;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData>& ConstContiguousIterator<TData>::operator--()
+	{
+		--m_pPtr;
+		return *this;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData> ConstContiguousIterator<TData>::operator--(int32)
+	{
+		ConstContiguousIterator iterator = *this;
+		--m_pPtr;
+		return iterator;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData>& ConstContiguousIterator<TData>::operator-=(size_t offset)
+	{
+		m_pPtr -= offset;
+		return *this;
+	}
+
+	template<typename TData>
+	constexpr ConstContiguousIterator<TData> ConstContiguousIterator<TData>::operator-(size_t offset)
+	{
+		ConstContiguousIterator iterator = *this;
+		return iterator -= offset;
+	}
 }

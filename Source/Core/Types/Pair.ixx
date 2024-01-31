@@ -3,6 +3,8 @@
 export module jpt.Pair;
 
 import jpt.Utilities;
+import jpt.ToString;
+import jpt.String;
 
 export namespace jpt 
 {
@@ -19,6 +21,8 @@ export namespace jpt
 		constexpr Pair(const TFirst& inFirst, TSecond&& inSecond);
 		constexpr Pair(TFirst&& inFirst, const TSecond& inSecond);
 		constexpr Pair(TFirst&& inFirst, TSecond&& inSecond);
+
+		constexpr String ToString() const;
 	};
 
 	template<typename TFirst, typename TSecond>
@@ -53,5 +57,19 @@ export namespace jpt
 		: first(Move(inFirst))
 		, second(Move(inSecond))
 	{
+	}
+
+	template<typename TFirst, typename TSecond>
+	constexpr String Pair<TFirst, TSecond>::ToString() const
+	{
+		String str;
+
+		str.Append("{ ");
+		str += jpt::ToString(first);
+		str += ", ";
+		str += jpt::ToString(second);
+		str.Append(" }");
+
+		return str;
 	}
 }

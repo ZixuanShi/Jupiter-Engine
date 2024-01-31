@@ -14,8 +14,6 @@ import jpt.Concepts;
 import jpt.TypeTraits;
 import jpt.Utilities;
 import jpt.Math;
-import jpt.ToString;
-import jpt.String;
 
 import jpt_private.ContiguousIterator;
 
@@ -28,9 +26,10 @@ export namespace jpt
 	class DynamicArray
 	{
 	public:
-		using TData      = _TData;
-		using TAllocator = _TAllocator;
-		using Iterator   = jpt_private::ContiguousIterator<TData>;
+		using TData         = _TData;
+		using TAllocator    = _TAllocator;
+		using Iterator      = jpt_private::ContiguousIterator<TData>;
+		using ConstIterator = jpt_private::ConstContiguousIterator<TData>;
 
 	private:
 		TData* m_pBuffer  = nullptr;
@@ -57,12 +56,12 @@ export namespace jpt
 		constexpr const TData& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
-		constexpr       Iterator begin()        { return Iterator(m_pBuffer); }
-		constexpr const Iterator begin()  const { return Iterator(m_pBuffer); }
-		constexpr const Iterator cbegin() const { return Iterator(m_pBuffer); }
-		constexpr       Iterator end()        { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator end()  const { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator cend() const { return Iterator(m_pBuffer + m_size); }
+		constexpr Iterator begin() { return Iterator(m_pBuffer); }
+		constexpr Iterator end()   { return Iterator(m_pBuffer + m_size); }
+		constexpr ConstIterator begin()  const { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator end()    const { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator cbegin() const { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_size); }
 
 		// Capacity
 		constexpr size_t Size()     const { return m_size;      }
@@ -88,10 +87,6 @@ export namespace jpt
 		// Erasing
 		constexpr void Erase(size_t index);
 		constexpr void PopBack();
-
-		// Utils
-		/** @return		A string contains all the data in this StaticArray */
-		constexpr String ToString() const;
 
 	private:
 		/** Create a new data buffer with a new capacity, move the existing data over */
@@ -274,25 +269,6 @@ export namespace jpt
 	constexpr void DynamicArray<_TData, _TAllocator>::ShrinkToFit()
 	{
 		UpdateBuffer(m_size);
-	}
-
-	template<typename _TData, class _TAllocator>
-	constexpr String DynamicArray<_TData, _TAllocator>::ToString() const
-	{
-		String str("{ ");
-
-		for (size_t i = 0; i < m_size; ++i)
-		{
-			// Append ", " suffix if it's not the last element
-			const char* pSuffix = (i == m_size - 1 ? "" : ", ");
-
-			// Elements need to provide ToString() implementation to make this work
-			str += jpt::ToString(m_pBuffer[i]) + pSuffix;
-		}
-
-		str.Append(" }");
-
-		return str;
 	}
 
 	template<typename _TData, class _TAllocator>

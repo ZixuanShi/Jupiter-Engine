@@ -9,6 +9,7 @@ export module UnitTests_StaticArray;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.StaticArray;
+import jpt.String;
 
 auto locHelper = [](size_t i) -> const char*
     {
@@ -103,7 +104,7 @@ bool UnitTest_StaticArray_Copying_NonTrivial()
     {
         JPT_RETURN_FALSE_IF_ERROR(element != locHelper(i++), "");
     }
-
+    
     return true;
 }
 
@@ -119,6 +120,8 @@ bool UnitTest_StaticArray_Moving()
     {
         JPT_RETURN_FALSE_IF_ERROR(element != locHelper(i++), "");
     }
+
+    JPT_LOG(staticArray1);
 
     return true;
 }

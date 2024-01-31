@@ -11,6 +11,8 @@
 /** Turn on optimization */
 #define JPT_REOPTIMIZE __pragma(optimize("", on))
 
+#pragma region Memory
+
 /** Deleter helpers */
 #define JPT_DELETE(pPointer)\
 			delete pPointer;\
@@ -32,6 +34,24 @@
 			JPT_DELETE_ARRAY(pPointer);\
 		}
 
+/** Helper for clean and delete.
+	@param pPointer: Assumed to have Clean() function implemented */
+#define JPT_CLEAR_THEN_DELETE(pPointer)\
+	pPointer->Clear();\
+	JPT_DELETE(pPointer);
+
+	/** Helper for safe cleanand delete.
+		@param pPointer: Assumed to have Clean() function implemented */
+#define JPT_SAFE_CLEAR_THEN_DELETE(pPointer)\
+	if(pPointer)\
+	{\
+		pPointer->Clear();\
+	}\
+	JPT_SAFE_DELETE(pPointer);
+
+#pragma endregion Memory
+
+#pragma region Logging
 /** If the condition has occured, log an messageand return a value
 	@param condition:	The expression of the operation
 	@param returnValue: The value to return if condition occured
@@ -73,21 +93,9 @@
 		JPT_LOG(__VA_ARGS__);\
 	}
 
-/** Helper for clean and delete.
-	@param pPointer: Assumed to have Clean() function implemented */
-#define JPT_CLEAR_THEN_DELETE(pPointer)\
-	pPointer->Clear();\
-	JPT_DELETE(pPointer);
+#pragma endregion Logging
 
-/** Helper for safe cleanand delete.
-	@param pPointer: Assumed to have Clean() function implemented */
-#define JPT_SAFE_CLEAR_THEN_DELETE(pPointer)\
-	if(pPointer)\
-	{\
-		pPointer->Clear();\
-	}\
-	JPT_SAFE_DELETE(pPointer);
-
+#pragma region String
 /** Combines two strings */
 #define JPT_COMBINE_STR(A, B)   A##B
 
@@ -132,6 +140,8 @@
 	va_start(args, format);\
 	vswprintf_s(messageBuffer, format, args);\
 	va_end(args)\
+
+#pragma endregion String
 
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:

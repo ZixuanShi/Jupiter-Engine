@@ -44,10 +44,31 @@ namespace jpt
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
 		}
-		template<BasicStringType TString>
-		void Log(ELogType type, int32 line, const char* file, const TString& string, ...)
+		template<Iterable TContainer>
+		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)
 		{
-			ProcessMessage(type, line, file, string.ConstBuffer());
+			if constexpr (IsSameType<TContainer, String> || IsSameType<TContainer, WString>)
+			{
+				ProcessMessage(type, line, file, container.ConstBuffer());
+			}
+			else
+			{
+				String str("{ ");
+
+				for (auto itr = container.begin(); itr != container.end(); ++itr)
+				{
+					// Append ", " suffix if it's not the last element
+					const bool isLastElement = ((itr + 1) == container.end());
+					const char* pSuffix = (isLastElement ? "" : ", ");
+
+					// Elements need to provide ToString() implementation to make this work
+					str += jpt::ToString(*itr) + pSuffix;
+				}
+
+				str.Append(" }");
+
+				ProcessMessage(type, line, file, str.ConstBuffer());
+			}
 		}
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);
