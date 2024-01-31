@@ -9,6 +9,7 @@ export module jpt.CoreModules;
 
 // Containers
 export import jpt.StaticArray;
+export import jpt.DynamicArray;
 
 // Minimals
 export import jpt.Concepts;

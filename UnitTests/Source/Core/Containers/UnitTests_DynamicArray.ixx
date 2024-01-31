@@ -140,6 +140,7 @@ bool UnitTest_DynamicArray_Trivial()
         JPT_RETURN_FALSE_IF_ERROR(element != i * 2, "");
         ++i;
     }
+    JPT_LOG(copiedArray);
 
     return true;
 }
@@ -251,6 +252,7 @@ bool UnitTest_DynamicArray_NonTrivial()
         JPT_RETURN_FALSE_IF_ERROR(element != locHelper(i * 2), "");
         ++i;
     }
+    JPT_LOG(copiedArray);
 
     return true;
 }

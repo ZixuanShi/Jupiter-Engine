@@ -12,6 +12,7 @@ import jpt.StrongPtr;
 import jpt.WeakPtr;
 import jpt.ToString;
 import jpt.TypeDefs;
+import jpt.String;
 
 bool UnitTests_WeakPtr_Class()
 {

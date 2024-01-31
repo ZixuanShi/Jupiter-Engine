@@ -7,6 +7,7 @@ module;
 export module UnitTests_Logger;
 
 import jpt.ToString;
+import jpt.String;
 
 bool UnitTest_Logger_Data()
 {

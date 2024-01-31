@@ -12,8 +12,11 @@ export module jpt.DynamicArray;
 import jpt.Allocator;
 import jpt.Concepts;
 import jpt.TypeTraits;
-import jpt.ToString;
+import jpt.Utilities;
 import jpt.Math;
+import jpt.ToString;
+import jpt.String;
+
 import jpt_private.ContiguousIterator;
 
 static constexpr size_t kLocGrowMultiplier = 2;

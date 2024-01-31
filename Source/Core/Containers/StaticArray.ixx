@@ -9,6 +9,7 @@ module;
 export module jpt.StaticArray;
 
 import jpt.ToString;
+import jpt.String;
 import jpt_private.ContiguousIterator;
 
 export namespace jpt

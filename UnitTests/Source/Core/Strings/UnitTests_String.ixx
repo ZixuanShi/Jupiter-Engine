@@ -7,11 +7,12 @@ module;
 export module UnitTests_String;
 
 import jpt.Utilities;
-import jpt.String;
 import jpt.Math;
-import jpt.StringView;
 import jpt.TypeDefs;
 import jpt.ToString;
+import jpt.String;
+import jpt.StringUtils;
+import jpt.StringView;
 
 template<class TString>
 bool UnitTest_DefaultStringConstructing()

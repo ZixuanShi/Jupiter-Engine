@@ -10,6 +10,7 @@ export module jpt.TimePointData;
 
 import jpt.TypeDefs;
 import jpt.ToString;
+import jpt.String;
 import jpt.Limits;
 
 export namespace jpt

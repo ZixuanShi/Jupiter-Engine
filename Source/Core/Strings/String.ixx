@@ -94,6 +94,9 @@ export namespace jpt
 			@param endIndex:		[optional] The end index to stop operation. Default to size() */
 		constexpr BasicString& Replace(const TChar* TStringoFind, const TChar* TStringoReplace, size_t startIndex = 0, size_t endIndex = npos);
 
+		/** Splits this string to substrings by a keyword, stored by a dynamic array */
+		//constexpr DynamicArray<BasicString> Split(const TChar* pKeyword) const;
+
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
 

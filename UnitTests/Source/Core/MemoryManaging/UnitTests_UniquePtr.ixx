@@ -11,6 +11,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.UniquePtr;
 import jpt.ToString;
+import jpt.String;
 
 bool UnitTest_UniquePtr_Char()
 {
