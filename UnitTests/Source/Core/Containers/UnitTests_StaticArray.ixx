@@ -10,6 +10,20 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.StaticArray;
 
+auto locHelper = [](size_t i) -> const char*
+    {
+        switch (i)
+        {
+        case 0: return "Zero";
+        case 1: return "One";
+        case 2: return "Two";
+        case 3: return "Three";
+        case 4: return "Four";
+
+        default: return "Error";
+        }
+    };
+
 bool UnitTest_StaticArray_Constructing_Trivial()
 {
     jpt::StaticArray<int32, 5> staticArray{ 0,1,2,3,4 };
@@ -39,20 +53,6 @@ bool UnitTest_StaticArray_Constructing_Trivial()
 bool UnitTest_StaticArray_Constructing_NonTrivial()
 {
     jpt::StaticArray<jpt::String, 5> staticArray{ "Zero", "One", "Two", "Three", "Four" };
-
-    auto locHelper = [](size_t i) -> const char* 
-        {
-            switch (i)
-            {
-                case 0: return "Zero";
-                case 1: return "One";
-                case 2: return "Two";
-                case 3: return "Three";
-                case 4: return "Four";
-
-                default: return "Error";
-            }
-        };
 
     size_t i = 0;
     for (const jpt::String& element : staticArray)
@@ -98,20 +98,6 @@ bool UnitTest_StaticArray_Copying_NonTrivial()
 
     staticArray1 = staticArray2;
 
-    auto locHelper = [](size_t i) -> const char*
-        {
-            switch (i)
-            {
-                case 0: return "Zero";
-                case 1: return "One";
-                case 2: return "Two";
-                case 3: return "Three";
-                case 4: return "Four";
-
-                default: return "Error";
-            }
-        };
-
     size_t i = 0;
     for (const jpt::String& element : staticArray1)
     {
@@ -128,20 +114,6 @@ bool UnitTest_StaticArray_Moving()
 
     jpt::Swap(staticArray1, staticArray2);
 
-    auto locHelper = [](size_t i) -> const char*
-        {
-            switch (i)
-            {
-                case 0: return "Zero";
-                case 1: return "One";
-                case 2: return "Two";
-                case 3: return "Three";
-                case 4: return "Four";
-                
-                default: return "Error";
-            }
-        };
-
     size_t i = 0;
     for (const jpt::String& element : staticArray1)
     {
@@ -157,20 +129,6 @@ bool UnitTest_StaticArray_HeapAllocating()
     jpt::StaticArray<jpt::String*, 5> staticArray2{ new jpt::String("Zero"), new jpt::String("One"), new jpt::String("Two"), new jpt::String("Three"), new jpt::String("Four") };
 
     jpt::Swap(staticArray1, staticArray2);
-
-    auto locHelper = [](size_t i) -> const char*
-        {
-            switch (i)
-            {
-                case 0: return "Zero";
-                case 1: return "One";
-                case 2: return "Two";
-                case 3: return "Three";
-                case 4: return "Four";
-
-                default: return "Error";
-            }
-        };
 
     size_t i = 0;
     for (const jpt::String* element : staticArray1)

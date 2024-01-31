@@ -16,6 +16,8 @@ import jpt.ToString;
 import jpt.Math;
 import jpt_private.ContiguousIterator;
 
+static constexpr size_t kLocGrowMultiplier = 2;
+
 export namespace jpt
 {
 	/** A sequence container that encapsulates dynamic size arrays. */
@@ -36,6 +38,9 @@ export namespace jpt
 		constexpr DynamicArray() = default;
 		constexpr DynamicArray(const std::initializer_list<TData>& list);
 		constexpr DynamicArray(const DynamicArray& other);
+		constexpr DynamicArray(DynamicArray&& other) noexcept;
+		DynamicArray& operator=(const DynamicArray& other) noexcept;
+		DynamicArray& operator=(DynamicArray&& other) noexcept;
 		constexpr ~DynamicArray();
 
 		// Element Access
@@ -60,6 +65,26 @@ export namespace jpt
 		constexpr size_t Size()     const { return m_size;      }
 		constexpr size_t Capacity() const { return m_capacity;  }
 		constexpr bool   IsEmpty()  const { return m_size == 0; }
+		constexpr void Reserve(size_t capacity);
+		constexpr void ShrinkToFit();
+
+		// Modifiers
+		constexpr void Clear();
+		constexpr void Resize(size_t size, const TData& data = TData());
+
+		// Inserting
+		constexpr void Insert(size_t index, const TData& data);
+		constexpr void Insert(size_t index, TData&& data);
+		constexpr void PushBack(const TData& data);
+		constexpr void PushBack(TData&& data);
+		template<typename ...TArgs>
+		constexpr TData& Emplace(size_t index, TArgs&&... args);
+		template<typename ...TArgs>
+		constexpr TData& EmplaceBack(TArgs&&... args);
+
+		// Erasing
+		constexpr void Erase(size_t index);
+		constexpr void PopBack();
 
 		// Utils
 		/** @return		A string contains all the data in this StaticArray */
@@ -70,34 +95,182 @@ export namespace jpt
 		constexpr void UpdateBuffer(size_t capacity);
 		
 		/** Copy other's data through it's iterators. TOtherContainer should be guaranteed to provide iterator interfaces */
-		template<Iterable TContainer>
-		constexpr void CopyData(const TContainer& container, size_t size);
+		constexpr void CopyData(const TData* pBegin, size_t size);
+
+		/** Moves the data from a deprecating dynamic array */
+		constexpr void MoveData(DynamicArray&& other);
+
+		/** Moves data towards a direction starting at given index for the distance provided */
+		constexpr void ShiftDataToEnd(size_t index, size_t distance = 1);
+		constexpr void ShiftDataToBegin(size_t index, size_t distance = 1);
+
+		/** Called before inserting operation */
+		constexpr void UpdateBufferForInsert(size_t index);
 	};
 
 	template<typename TData, class TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::DynamicArray(const std::initializer_list<TData>& list)
 	{
-		CopyData(list, list.size());
+		CopyData(list.begin(), list.size());
 	}
 
 	template<typename _TData, class _TAllocator>
 	constexpr DynamicArray<_TData, _TAllocator>::DynamicArray(const DynamicArray& other)
 	{
-		CopyData(other, other.Size());
+		CopyData(other.ConstBuffer(), other.Size());
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr DynamicArray<_TData, _TAllocator>::DynamicArray(DynamicArray&& other) noexcept
+	{
+		MoveData(Move(other));
+	}
+
+	template<typename _TData, class _TAllocator>
+	DynamicArray< _TData, _TAllocator>& DynamicArray<_TData, _TAllocator>::operator=(const DynamicArray& other) noexcept
+	{
+		if (this != &other)
+		{
+			Clear();
+			CopyData(other.ConstBuffer(), other.Size());
+		}
+
+		return *this;
+	}
+
+	template<typename _TData, class _TAllocator>
+	DynamicArray<_TData, _TAllocator>& DynamicArray<_TData, _TAllocator>::operator=(DynamicArray&& other) noexcept
+	{
+		if (this != &other)
+		{
+			Clear();
+			MoveData(Move(other));
+		}
+
+		return *this;
 	}
 
 	template<typename _TData, class _TAllocator>
 	constexpr DynamicArray<_TData, _TAllocator>::~DynamicArray()
 	{
+		Clear();
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Reserve(size_t capacity)
+	{
+		if (m_capacity < capacity)
+		{
+			UpdateBuffer(capacity);
+		}
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Clear()
+	{
 		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			for (size_t i = 0; i < m_size; ++i)
 			{
-				m_pBuffer[i].~TData();
+				TAllocator::Destruct(&m_pBuffer[i]);
 			}
 		}
 
-		JPT_DELETE(m_pBuffer);
+		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+		m_size = 0;
+		m_capacity = 0;
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Resize(size_t size, const TData& data /*= TData()*/)
+	{
+		// If size if less than m_size, shrink
+		if (size < m_size)
+		{
+			for (size_t i = size; i < m_size; ++i)
+			{
+				PopBack();
+			}
+		}
+		// If size if greater than m_size, grow
+		else if (size > m_size)
+		{
+			Reserve(size);
+			for (size_t i = m_size; i < size; ++i)
+			{
+				EmplaceBack(data);
+			}
+		}
+
+		m_size = size;
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Insert(size_t index, const TData& data)
+	{
+		UpdateBufferForInsert(index);
+		TAllocator::Construct(m_pBuffer + index, data);
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Insert(size_t index, TData&& data)
+	{
+		UpdateBufferForInsert(index);
+		TAllocator::Construct(m_pBuffer + index, Move(data));
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::PushBack(const TData& data)
+	{
+		Insert(m_size, data);
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::PushBack(TData&& data)
+	{
+		Insert(m_size, Move(data));
+	}
+
+	template<typename _TData, class _TAllocator>
+	template<typename ...TArgs>
+	constexpr DynamicArray<_TData, _TAllocator>::TData& DynamicArray<_TData, _TAllocator>::Emplace(size_t index, TArgs&& ...args)
+	{
+		UpdateBufferForInsert(index);
+		TAllocator::Emplace(m_pBuffer + index, Forward<TArgs>(args)...);
+		return m_pBuffer[index];
+	}
+
+	template<typename _TData, class _TAllocator>
+	template<typename ...TArgs>
+	constexpr DynamicArray<_TData, _TAllocator>::TData& DynamicArray<_TData, _TAllocator>::EmplaceBack(TArgs&& ...args)
+	{
+		return Emplace(m_size, Forward<TArgs>(args)...);
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::Erase(size_t index)
+	{
+		JPT_ASSERT(index <= m_size, "Calling Erase() with an invalid index");
+
+		--m_size;
+		if constexpr (IsTriviallyDestructible<TData>)
+		{
+			TAllocator::Destruct(&m_pBuffer[index]);
+		}
+
+		ShiftDataToBegin(index);
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::PopBack()
+	{
+		Erase(m_size - 1);
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::ShrinkToFit()
+	{
+		UpdateBuffer(m_size);
 	}
 
 	template<typename _TData, class _TAllocator>
@@ -149,22 +322,82 @@ export namespace jpt
 	}
 
 	template<typename _TData, class _TAllocator>
-	template<Iterable TContainer>
-	constexpr void DynamicArray<_TData, _TAllocator>::CopyData(const TContainer& container, size_t size)
+	constexpr void DynamicArray<_TData, _TAllocator>::MoveData(DynamicArray&& other)
+	{
+		m_pBuffer  = other.m_pBuffer;
+		m_capacity = other.m_capacity;
+		m_size     = other.m_size;
+
+		other.m_pBuffer  = nullptr;
+		other.m_capacity = 0;
+		other.m_size     = 0;
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::ShiftDataToEnd(size_t index, size_t distance /*= 1*/)
+	{
+		JPT_ASSERT(index <= m_size, "Distance went beyond the bound of this vector. Use reserve first");
+
+		if constexpr (IsTriviallyCopyable<TData>)
+		{
+			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_size - index) * sizeof(TData));
+		}
+		else
+		{
+			for (size_t i = m_size; i > index; --i)
+			{
+				m_pBuffer[i] = Move(m_pBuffer[i - distance]);
+			}
+		}
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::ShiftDataToBegin(size_t index, size_t distance)
+	{
+		JPT_ASSERT(index - distance >= 0, "Distance went beyond the start of this vector. Use smaller index or distance");
+
+		if constexpr (IsTriviallyCopyable<TData>)
+		{
+			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_size - index) * sizeof(TData));
+		}
+		else
+		{
+			for (size_t i = index; i < m_size; ++i)
+			{
+				m_pBuffer[i] = Move(m_pBuffer[i + distance]);
+			}
+		}
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::UpdateBufferForInsert(size_t index)
+	{
+		JPT_ASSERT(index <= m_size, "Calling DynamicArray::Insert() with an invalid index");
+
+		if (m_size >= m_capacity)
+		{
+			UpdateBuffer(m_size * kLocGrowMultiplier);
+		}
+
+		ShiftDataToEnd(index);
+		++m_size;
+	}
+
+	template<typename _TData, class _TAllocator>
+	constexpr void DynamicArray<_TData, _TAllocator>::CopyData(const TData* pBegin, size_t size)
 	{
 		m_size = size;
 		UpdateBuffer(m_size);
 
 		if constexpr (IsTriviallyCopyable<TData>)
 		{
-			std::memcpy(m_pBuffer, container.begin(), m_size * sizeof(TData));
+			std::memcpy(m_pBuffer, pBegin, m_size * sizeof(TData));
 		}
 		else
 		{
-			size_t i = 0;
-			for (auto itr = container.begin(); itr != container.end(); ++itr)
+			for (size_t i = 0; i < size; ++i, ++pBegin)
 			{
-				m_pBuffer[i++] = *itr;
+				m_pBuffer[i] = *pBegin;
 			}
 		}
 	}

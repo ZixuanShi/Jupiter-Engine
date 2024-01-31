@@ -33,12 +33,16 @@ export namespace jpt
 
 		/** Allocates heap memory for one <Type>, with initializing value */
 		static constexpr T* AllocateWithValue(const T& data);
+		static constexpr T* AllocateWithValue(T&& data);
 
 		/** Deallocate memory for the passed in pointer */
 		static constexpr void Deallocate(T* pPointer);
 		static constexpr void DeallocateArray(T* pArray);
 
 		static constexpr void Construct(T* pPointer, const T& object);
+		static constexpr void Construct(T* pPointer, T&& object);
+		template<typename ...TArgs>
+		static constexpr void Emplace(T* pPointer, TArgs&&... args);
 		static constexpr void Destruct(T* pPointer);
 
 		template<class TOther>
@@ -76,6 +80,12 @@ export namespace jpt
 	}
 
 	template<typename T>
+	constexpr T* Allocator<T>::AllocateWithValue(T&& data)
+	{
+		return new T(Move(data));
+	}
+
+	template<typename T>
 	constexpr void Allocator<T>::Deallocate(T* pPointer)
 	{
 		delete pPointer;
@@ -94,9 +104,22 @@ export namespace jpt
 	}
 
 	template<typename T>
+	constexpr void Allocator<T>::Construct(T* pPointer, T&& object)
+	{
+		new(pPointer) T(Move(object));
+	}
+
+	template<typename T>
+	template<typename ...TArgs>
+	constexpr void Allocator<T>::Emplace(T* pPointer, TArgs && ...args)
+	{
+		new(pPointer) T(Forward<TArgs>(args)...);
+	}
+
+	template<typename T>
 	constexpr void Allocator<T>::Destruct(T* pPointer)
 	{
-		pPointer->~Type();
+		pPointer->~T();
 	}
 
 	template<typename T>
