@@ -47,7 +47,6 @@ export namespace jpt
 		constexpr       Iterator begin()        { return Iterator(m_buffer); }
 		constexpr const Iterator begin()  const { return Iterator(m_buffer); }
 		constexpr const Iterator cbegin() const { return Iterator(m_buffer); }
-
 		constexpr       Iterator end()        { return Iterator(m_buffer + kSize); }
 		constexpr const Iterator end()  const { return Iterator(m_buffer + kSize); }
 		constexpr const Iterator cend() const { return Iterator(m_buffer + kSize); }

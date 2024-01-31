@@ -16,6 +16,7 @@ bool UnitTest_DynamicArray_Trivial()
     jpt::DynamicArray<int32> dynamicArray{ 0,1,2,3,4 };
 
 
+
     return true;
 }
 
