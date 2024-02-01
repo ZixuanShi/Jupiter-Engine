@@ -8,12 +8,9 @@ export namespace jpt_private
 {
 	/** Iterator for linear & contiguous data in memory, for example, Static Array, Dynamic Array, String
 		Containers that is linear but non-contiguous shouldn't use this, like LinkedList, should use LinearNodeBasedIterator instead */
-	template<typename _TData>
+	template<typename TData>
 	class ContiguousIterator
 	{
-	public:
-		using TData = _TData;
-
 	private:
 		TData* m_pPtr = nullptr;
 
@@ -105,12 +102,9 @@ export namespace jpt_private
 		return iterator -= offset;
 	}
 
-	template<typename _TData>
+	template<typename TData>
 	class ConstContiguousIterator
 	{
-	public:
-		using TData = _TData;
-
 	private:
 		const TData* m_pPtr = nullptr;
 

@@ -21,7 +21,7 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_LOG(L"你好，世界 %s!", L"Jupiter Engine");
+	JPT_LOG(L"你好，世界 %s!", L"Jupiter Engine太岁引擎");
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }

@@ -5,6 +5,7 @@ module;
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
 
+#include <string>
 #include <initializer_list>
 
 export module jpt.StaticArray;
@@ -57,7 +58,7 @@ export namespace jpt
 		constexpr size_t Size() const { return kSize; }
 
 	private:
-		constexpr void CopyData(const StaticArray& other);
+		constexpr void CopyData(const TData* pBegin);
 		constexpr void MoveData(StaticArray&& other);
 	};
 
@@ -65,18 +66,13 @@ export namespace jpt
 	constexpr StaticArray<TData, kSize>::StaticArray(const std::initializer_list<TData>& initializerList)
 	{
 		JPT_ASSERT(initializerList.size() == kSize, "Initializer list size doesn't match");
-
-		size_t i = 0;
-		for (const auto& element : initializerList)
-		{
-			m_buffer[i++] = element;
-		}
+		CopyData(initializerList.begin());
 	}
 
 	template<typename _TData, size_t kSize>
 	constexpr StaticArray<_TData, kSize>::StaticArray(const StaticArray& other)
 	{
-		CopyData(other);
+		CopyData(other.ConstBuffer());
 	}
 
 	template<typename _TData, size_t kSize>
@@ -90,7 +86,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			CopyData(other);
+			CopyData(other.ConstBuffer());
 		}
 
 		return *this;
@@ -120,11 +116,18 @@ export namespace jpt
 	}
 
 	template<typename _TData, size_t kSize>
-	constexpr void StaticArray<_TData, kSize>::CopyData(const StaticArray& other)
+	constexpr void StaticArray<_TData, kSize>::CopyData(const TData* pBegin)
 	{
-		for (size_t i = 0; i < kSize; ++i)
+		if constexpr (IsTriviallyCopyable<TData>)
 		{
-			m_buffer[i] = other.m_buffer[i];
+			std::memcpy(m_buffer, pBegin, kSize * sizeof(TData));
+		}
+		else
+		{
+			for (size_t i = 0; i < kSize; ++i, ++pBegin)
+			{
+				m_buffer[i] = *pBegin;
+			}
 		}
 	}
 
