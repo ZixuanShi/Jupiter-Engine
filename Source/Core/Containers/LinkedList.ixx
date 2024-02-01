@@ -88,9 +88,10 @@ export namespace jpt
 		{
 			return false;
 		}
-
-		auto bItr = b.cbegin();
-		for (auto aItr = a.cbegin(); aItr != a.cend(); ++aItr, ++bItr)
+		
+		for (auto aItr = a.cbegin(), bItr = b.cbegin(); 
+			      aItr != a.cend();
+			      ++aItr, ++bItr)
 		{
 			if (*aItr != *bItr)
 			{
