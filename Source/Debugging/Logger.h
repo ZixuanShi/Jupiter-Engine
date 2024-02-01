@@ -35,7 +35,7 @@ namespace jpt
 			@param file: The file where we called the log function
 			@param message, ...: Templated message to send */
 		template<NoBuiltInToString MessageT>
-		void Log(ELogType type, int32 line, const char* file, MessageT message, ...)
+		void Log(ELogType type, int32 line, const char* file, const MessageT& message, ...)
 		{
 			ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
 		}

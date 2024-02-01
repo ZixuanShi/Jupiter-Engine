@@ -27,8 +27,8 @@ export namespace jpt
 	{
 	public:
 		using TData         = _TData;
-		using Iterator      = jpt_private::ContiguousIterator<TData>;
-		using ConstIterator = jpt_private::ConstContiguousIterator<TData>;
+		using Iterator      = TData*;
+		using ConstIterator = const TData*;
 
 	private:
 		TData* m_pBuffer  = nullptr;

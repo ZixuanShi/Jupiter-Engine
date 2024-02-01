@@ -31,9 +31,10 @@ export namespace jpt
 	class BasicString
 	{
 	public:
-		using TChar      = _TChar;
-		using TAllocator = _TAllocator;
-		using Iterator   = jpt_private::ContiguousIterator<TChar>;
+		using TChar         = _TChar;
+		using TAllocator    = _TAllocator;
+		using Iterator      = TChar*;
+		using ConstIterator = const TChar*;
 
 	private:
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
@@ -63,12 +64,12 @@ export namespace jpt
 		constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
-		constexpr       Iterator begin()        { return Iterator(m_pBuffer); }
-		constexpr const Iterator begin()  const { return Iterator(m_pBuffer); }
-		constexpr const Iterator cbegin() const { return Iterator(m_pBuffer); }
-		constexpr       Iterator end()          { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator end()    const { return Iterator(m_pBuffer + m_size); }
-		constexpr const Iterator cend()   const { return Iterator(m_pBuffer + m_size); }
+		constexpr Iterator begin() { return Iterator(m_pBuffer); }
+		constexpr Iterator end()   { return Iterator(m_pBuffer + m_size); }
+		constexpr ConstIterator begin()  const { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator cbegin() const { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator end()    const { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_size); }
 
 		// Capacity
 		constexpr size_t Size()     const { return m_size;      }
