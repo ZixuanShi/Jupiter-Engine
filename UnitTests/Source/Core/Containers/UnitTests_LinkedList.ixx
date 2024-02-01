@@ -13,13 +13,20 @@ import jpt.LinkedList;
 
 bool UnitTest_LinkedList_Trivial()
 {
-    jpt::LinkedList<int32> list;
+    jpt::LinkedList<int32> list{ 7,8,9 };
 
-    list.PushBack(0);
     list.PushBack(1);
+    list.PushFront(0);
     list.PushBack(2);
+    list.PushFront(-1);
+
+    list.InsertBefore(list.begin() + 2, 42);
+    list.InsertAfter(list.begin() + (list.Size() - 1), 19);
 
     JPT_LOG(list);
+
+    jpt::LinkedList<int32> anotherList{ -1, 0, 42, 7, 8, 9, 1, 2, 19 };
+    JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
 
     return true;
 }

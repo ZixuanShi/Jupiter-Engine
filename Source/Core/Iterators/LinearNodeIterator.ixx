@@ -17,7 +17,7 @@ export namespace jpt_private
 		LinearNode* pNext     = nullptr;
 
 		constexpr LinearNode(const TData& _data) : data(_data) {}
-		constexpr LinearNode(TData&& _data) : data(Move(_data)) {}
+		constexpr LinearNode(TData&& _data) : data(jpt::Move(_data)) {}
 		constexpr ~LinearNode()
 		{
 			if constexpr (!jpt::IsTriviallyDestructible<TData>)
