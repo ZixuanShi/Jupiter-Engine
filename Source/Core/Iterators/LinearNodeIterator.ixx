@@ -18,17 +18,24 @@ export namespace jpt_private
 
 		constexpr LinearNode(const TData& _data) : data(_data) {}
 		constexpr LinearNode(TData&& _data) : data(jpt::Move(_data)) {}
-		constexpr ~LinearNode()
-		{
-			if constexpr (!jpt::IsTriviallyDestructible<TData>)
-			{
-				data.~TData();
-			}
 
-			pPrevious = nullptr;
-			pNext = nullptr;
-		}
+		template<typename...TArgs>
+		LinearNode(TArgs&& ...args) : data(jpt::Forward<TArgs>(args)...) {}
+
+		constexpr ~LinearNode();
 	};
+
+	template<typename TData>
+	constexpr LinearNode<TData>::~LinearNode()
+	{
+		if constexpr (!jpt::IsTriviallyDestructible<TData>)
+		{
+			data.~TData();
+		}
+
+		pPrevious = nullptr;
+		pNext = nullptr;
+	}
 
 	/** Iterator for linear node based data, i.e. LinkedList */
 	template<typename TData>

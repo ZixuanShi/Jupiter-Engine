@@ -68,9 +68,20 @@ export namespace jpt
 		constexpr void PushBack(const TData& value);
 		constexpr void PushBack(TData&& value);
 
+		template<typename ...TArgs>
+		constexpr TData& EmplaceAfter(Iterator iterator, TArgs&&... args);
+		template<typename ...TArgs>
+		constexpr TData& EmplaceBack(TArgs&&... args);
+
+		template<typename ...TArgs>
+		constexpr TData& EmplaceBefore(Iterator iterator, TArgs&&... args);
+		template<typename ...TArgs>
+		constexpr TData& EmplaceFront(TArgs&&... args);
+
 		// Erasing
-		//constexpr void EraseBefore(Iterator iterator)
-		//constexpr void EraseAfter(Iterator iterator)
+		constexpr void Erase(Iterator iterator);
+		constexpr void PopBack();
+		constexpr void PopFront();
 
 	private:
 		template<Iterable TContainer>
@@ -153,12 +164,10 @@ export namespace jpt
 	template<typename _TData>
 	constexpr void LinkedList<_TData>::Clear()
 	{
-		Node* pCurrent = m_pHead;
-
-		while (pCurrent)
+		while (m_pHead)
 		{
-			Node* pToDelete = pCurrent;
-			pCurrent = pCurrent->pNext;
+			Node* pToDelete = m_pHead;
+			m_pHead = m_pHead->pNext;
 			JPT_DELETE(pToDelete);
 		}
 
@@ -217,6 +226,82 @@ export namespace jpt
 	constexpr void LinkedList<_TData>::PushBack(TData&& value)
 	{
 		InsertAfter(m_pTail, Move(value));
+	}
+
+	template<typename _TData>
+	template<typename ...TArgs>
+	constexpr LinkedList<_TData>::TData& LinkedList<_TData>::EmplaceAfter(Iterator iterator, TArgs&& ...args)
+	{
+		Node* pNewNode = new Node(Forward<TArgs>(args)...);
+		InternalInsertAfter(iterator, pNewNode);
+		return pNewNode->data;
+	}
+
+	template<typename _TData>
+	template<typename ...TArgs>
+	constexpr LinkedList<_TData>::TData& LinkedList<_TData>::EmplaceBack(TArgs&& ...args)
+	{
+		return EmplaceAfter(m_pTail, Forward<TArgs>(args)...);
+	}
+
+	template<typename _TData>
+	template<typename ...TArgs>
+	constexpr LinkedList<_TData>::TData& LinkedList<_TData>::EmplaceBefore(Iterator iterator, TArgs&& ...args)
+	{
+		Node* pNewNode = new Node(Forward<TArgs>(args)...);
+		InternalInsertBefore(iterator, pNewNode);
+		return pNewNode->data;
+	}
+
+	template<typename _TData>
+	template<typename ...TArgs>
+	constexpr LinkedList<_TData>::TData& LinkedList<_TData>::EmplaceFront(TArgs&& ...args)
+	{
+		return EmplaceBefore(m_pHead, Forward<TArgs>(args)...);
+	}
+
+	template<typename _TData>
+	constexpr void LinkedList<_TData>::Erase(Iterator iterator)
+	{
+		JPT_ASSERT(!IsEmpty(), "LinkedList::Erase() called on an empty list");
+
+		Node* pToDelete = iterator.GetNode();
+		JPT_ASSERT(pToDelete, "LinkedList::Erase() called with an invalid iterator");
+
+		Node* pPrevious = pToDelete->pPrevious;
+		Node* pNext = pToDelete->pNext;
+
+		if (pToDelete == m_pHead)
+		{
+			m_pHead = pNext;
+		}
+		if (pToDelete == m_pTail)
+		{
+			m_pTail = pPrevious;
+		}
+		if (pPrevious)
+		{
+			pPrevious->pNext = pNext;
+		}
+		if (pNext)
+		{
+			pNext->pPrevious = pPrevious;
+		}
+
+		JPT_DELETE(pToDelete);
+		--m_size;
+	}
+
+	template<typename _TData>
+	constexpr void LinkedList<_TData>::PopBack()
+	{
+		Erase(m_pTail);
+	}
+
+	template<typename _TData>
+	constexpr void LinkedList<_TData>::PopFront()
+	{
+		Erase(m_pHead);
 	}
 
 	template<typename _TData>
