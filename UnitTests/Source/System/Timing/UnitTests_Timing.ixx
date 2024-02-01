@@ -4,8 +4,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-#include <Windows.h>
 #include <chrono>
+
+#if IS_PLATFORM_WIN64
+    #include <Windows.h>
+#endif
 
 export module UnitTests_Timing;
 
@@ -15,7 +18,7 @@ import jpt.Timing.Utils;
 bool UnitTest_Clock()
 {
     jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::Clock>();
-    Sleep(3'000);
+    //Sleep(3'000);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::Clock>();
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
@@ -28,7 +31,7 @@ bool UnitTest_Clock()
 bool UnitTest_StopWatch()
 {
     jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::StopWatch>();
-    Sleep(3'500);
+    //Sleep(3'500);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::StopWatch>();
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
