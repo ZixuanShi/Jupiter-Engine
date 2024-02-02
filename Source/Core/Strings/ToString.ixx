@@ -23,7 +23,7 @@ export namespace jpt
 
 	// Add any additional primitive types if implemented later
 	template<typename T>
-	concept NoBuiltInToString = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T> || Iterable<T>;
+	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>

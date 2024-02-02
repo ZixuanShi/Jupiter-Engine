@@ -34,15 +34,20 @@ namespace jpt
 			@param line: The line where we called the log function
 			@param file: The file where we called the log function
 			@param message, ...: Templated message to send */
-		template<NoBuiltInToString MessageT>
-		void Log(ELogType type, int32 line, const char* file, const MessageT& message, ...)
+		template<NoBuiltInToStringPrimitive TPrimitiveData>
+		void Log(ELogType type, int32 line, const char* file, TPrimitiveData data, ...)
 		{
-			ProcessMessage(type, line, file, jpt::ToString(message).ConstBuffer());
+			ProcessMessage(type, line, file, jpt::ToString(data).ConstBuffer());
 		}
-		template<EnabledToString ToTString>
-		void Log(ELogType type, int32 line, const char* file, const ToTString& obj, ...)
+		template<EnabledToString TObject>
+		void Log(ELogType type, int32 line, const char* file, const TObject& obj, ...)
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
+		}
+		template<Iterable TContainer>
+		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)
+		{
+			ProcessMessage(type, line, file, jpt::ToString(container).ConstBuffer());
 		}
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);
