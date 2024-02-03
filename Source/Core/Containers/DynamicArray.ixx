@@ -268,12 +268,12 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Calling Erase() with an invalid index");
 
-		--m_size;
 		if constexpr (IsTriviallyDestructible<TData>)
 		{
 			m_pBuffer[index].~TData();
 		}
 
+		--m_size;
 		ShiftDataToBegin(index);
 	}
 
