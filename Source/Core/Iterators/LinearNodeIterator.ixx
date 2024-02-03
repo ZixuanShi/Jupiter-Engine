@@ -60,10 +60,13 @@ export namespace jpt_private
 		constexpr LinearNodeIterator& operator-=(size_t offset);
 		constexpr LinearNodeIterator operator-(size_t offset);
 
-		constexpr TData* operator->() { return &m_pNode->data; }
-		constexpr TData& operator*() { return m_pNode->data; }
+		constexpr       TData* operator->()       { return &m_pNode->data; }
+		constexpr const TData* operator->() const { return &m_pNode->data; }
+		constexpr       TData& operator*()        { return m_pNode->data; }
+		constexpr const TData& operator*()  const { return m_pNode->data; }
 
-		constexpr LinearNode<TData>* GetNode() const { return m_pNode; }
+		constexpr       LinearNode<TData>* GetNode()       { return m_pNode; }
+		constexpr const LinearNode<TData>* GetNode() const { return m_pNode; }
 
 		constexpr bool operator==(const LinearNodeIterator& other) const { return m_pNode == other.m_pNode; }
 	};
@@ -226,7 +229,7 @@ export namespace jpt_private
 	template<typename TData>
 	constexpr ConstLinearNodeIterator<TData> ConstLinearNodeIterator<TData>::operator-(size_t offset)
 	{
-		LinearNodeIterator iterator = *this;
+		ConstLinearNodeIterator iterator = *this;
 		return iterator -= offset;
 	}
 }

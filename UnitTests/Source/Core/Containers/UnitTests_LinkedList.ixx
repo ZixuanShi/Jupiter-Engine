@@ -90,8 +90,6 @@ bool UnitTest_LinkedList_NonTrivial()
     list.PopBack();
     list.PopFront();
 
-    JPT_LOG(list);
-
     jpt::LinkedList<jpt::String> anotherList{ locHelper(5), locHelper(3),locHelper(7),locHelper(8),locHelper(0),locHelper(1),locHelper(9),locHelper(12),locHelper(2) };
     JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
 

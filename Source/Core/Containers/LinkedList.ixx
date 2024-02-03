@@ -43,8 +43,8 @@ export namespace jpt
 		constexpr ~LinkedList();
 
 		// Iterators
-		constexpr Iterator begin() { return  Iterator(m_pHead); }
-		constexpr Iterator end()   { return  Iterator(nullptr); }
+		constexpr Iterator begin() { return Iterator(m_pHead); }
+		constexpr Iterator end()   { return Iterator(nullptr); }
 		constexpr ConstIterator begin()  const { return ConstIterator(m_pHead); }
 		constexpr ConstIterator end()    const { return ConstIterator(nullptr); }
 		constexpr ConstIterator cbegin() const { return ConstIterator(m_pHead); }
