@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.UnorderedPairedIterator;
+export module jpt_private.ChainedBucketIterator;
 
 import jpt.TypeDefs;
 
@@ -11,7 +11,7 @@ export namespace jpt_private
 {
 	/** Unordered Map iterator */
 	template<typename TKey, typename TData>
-	class UnorderedPairedIterator
+	class ChainedBucketIterator
 	{
 	private:
 
@@ -21,7 +21,7 @@ export namespace jpt_private
 	};
 
 	template<typename TKey, typename TData>
-	class ConstUnorderedPairedIterator
+	class ConstChainedBucketIterator
 	{
 	private:
 
@@ -40,7 +40,7 @@ export namespace jpt_private
 
 
 
-/*export class UnorderedPairedIterator<T1, T2> implements TypeDefs.PairIterator<T1, T2>
+/*export class ChainedBucketIterator<T1, T2> implements TypeDefs.PairIterator<T1, T2>
 	{
 		private _first: LinearNodeIterator<T1>;
 		private _second: LinearNodeIterator<T2>;
@@ -98,6 +98,6 @@ export namespace jpt_private
 
 		public clone(): TypeDefs.PairIterator<T1, T2>
 		{
-			return new UnorderedPairedIterator(this._first.clone(), this._second.clone());
+			return new ChainedBucketIterator(this._first.clone(), this._second.clone());
 		}
 	}*/

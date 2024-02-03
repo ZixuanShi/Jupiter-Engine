@@ -12,6 +12,12 @@ import jpt.HashMap;
 
 bool UnitTest_HashMap_Trivial()
 {
+    jpt::HashMap<char, int32> map;
+
+    //for (const auto& [key, value] : map)
+    //{
+
+    //}
 
     return true;
 }

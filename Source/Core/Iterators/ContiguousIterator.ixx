@@ -7,7 +7,7 @@ import jpt.TypeDefs;
 export namespace jpt_private
 {
 	/** Iterator for linear & contiguous data in memory, for example, Static Array, Dynamic Array, String
-		Containers that is linear but non-contiguous shouldn't use this, like LinkedList, should use LinearNodeBasedIterator instead */
+		Containers that is linear but non-contiguous shouldn't use this, like LinkedList, should use LinearNodeIterator instead */
 	template<typename TData>
 	class ContiguousIterator
 	{

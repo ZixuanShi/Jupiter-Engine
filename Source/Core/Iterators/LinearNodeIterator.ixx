@@ -19,9 +19,6 @@ export namespace jpt_private
 		constexpr LinearNode(const TData& _data) : data(_data) {}
 		constexpr LinearNode(TData&& _data) : data(jpt::Move(_data)) {}
 
-		template<typename...TArgs>
-		LinearNode(TArgs&& ...args) : data(jpt::Forward<TArgs>(args)...) {}
-
 		constexpr ~LinearNode();
 	};
 
