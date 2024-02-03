@@ -25,10 +25,13 @@ export namespace jpt
 	concept StringLiteral = IsSameType<T, char> || IsSameType<T, wchar_t>;
 
 	template<typename T>
-	concept Copyable = std::is_copy_constructible_v<T>;
+	concept MoveAssignable = std::is_move_assignable_v<T>;
 
 	template<typename T>
-	concept Movable = std::is_move_constructible_v<T>;
+	concept MoveConstructible = IsConstructible<T, T>;
+
+	template<typename T>
+	concept Movable = MoveConstructible<T> && MoveAssignable<T>;
 
 	template<typename T>
 	concept Primitive = std::is_fundamental_v<T>;

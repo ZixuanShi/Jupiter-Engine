@@ -14,19 +14,19 @@ import jpt.TypeTraits;
 
 export namespace jpt
 {
-	/** Equivalent of std::move. Returns a rvalue of the object */
-	template<Movable T>
+	/** Returns a rvalue of the object */
+	template<MoveConstructible T>
 	constexpr typename RemoveReference<T>::Type&& Move(T&& object)
 	{
 		using TCast = RemoveReference<T>::Type;
 
-		static_assert(IsLValueRef<T>, "jpt::move called on an Rvalue");
-		static_assert(!IsSameType<TCast&, const TCast&>, "jpt::move called on a const object");
+		static_assert(IsLValueRef<T>, "jpt::Move called on an Rvalue");
+		static_assert(!IsSameType<TCast&, const TCast&>, "jpt::Move called on a const object");
 
 		return static_cast<TCast&&>(object);
 	}
 
-	/** Equivalent of std::forward. Return a reference to an rvalue reference. */
+	/** Returns LValue if obj is LValue, Returns RValue if obj is RValue */
 	template<class T>
 	constexpr T&& Forward(typename RemoveReference<T>::Type& obj)
 	{
