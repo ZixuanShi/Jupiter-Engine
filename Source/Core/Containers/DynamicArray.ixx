@@ -268,7 +268,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Calling Erase() with an invalid index");
 
-		if constexpr (IsTriviallyDestructible<TData>)
+		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			m_pBuffer[index].~TData();
 		}
@@ -299,7 +299,7 @@ export namespace jpt
 
 		if (m_pBuffer)
 		{
-			if constexpr (IsTriviallyCopyable<TData>)
+			if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 			{
 				std::memmove(pNewBuffer, m_pBuffer, m_size * sizeof(TData));
 			}
@@ -335,7 +335,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Distance went beyond the bound of this vector. Use reserve first");
 
-		if constexpr (IsTriviallyCopyable<TData>)
+		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 		{
 			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_size - index) * sizeof(TData));
 		}
@@ -353,7 +353,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index - distance >= 0, "Distance went beyond the start of this vector. Use smaller index or distance");
 
-		if constexpr (IsTriviallyCopyable<TData>)
+		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 		{
 			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_size - index) * sizeof(TData));
 		}
