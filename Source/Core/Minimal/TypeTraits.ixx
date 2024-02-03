@@ -4,7 +4,7 @@ export module jpt.TypeTraits;
 
 export namespace jpt
 {
-	// Rvalue and Lvalue Utils
+#pragma region Removing Qualifiers
 	template<typename T> struct RemoveReference              { using Type = T;  };
 	template<typename T> struct RemoveReference<T&>          { using Type = T;  };
 	template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
@@ -18,7 +18,16 @@ export namespace jpt
 	template<typename T> struct Decay<const T>               { using Type = T;  };
 	template<typename T> struct Decay<const T&>              { using Type = T;  };
 	template<typename T> struct Decay<const T&&>             { using Type = T;  };
+#pragma endregion
 
+#pragma region Adding Qualifiers
+	template<typename T> struct AddLValueReference           { using Type = T&; };
+	template<typename T> struct AddRValueReference           { using Type = T&&; };
+	template<typename T> struct AddConst                     { using Type = const T; };
+	template<typename T> struct AddVolatile                  { using Type = volatile T; };
+#pragma endregion
+
+#pragma region Type Properties
 	template<typename T> constexpr bool IsLValueRef      = false;
 	template<typename T> constexpr bool IsLValueRef<T&>  = true;
 	template<typename T> constexpr bool IsRValueRef      = false;
@@ -48,14 +57,26 @@ export namespace jpt
 	template<typename T, typename... Args>
 	constexpr bool IsConstructible = __is_constructible(T, Args...);
 
+	template<typename T, typename... Args>
+	constexpr bool IsTriviallyConstructible = __is_trivially_constructible(T, Args...);
+
 	template<typename FromT, typename ToT>
-	constexpr bool IsConvertible = __is_convertible_to(FromT, ToT);
+	constexpr bool IsConvertibleTo = __is_convertible_to(FromT, ToT);
+
+	template<typename T>
+	constexpr bool IsTriviallyCopyable = __is_trivially_copyable(T);
+
+	template<typename T>
+	constexpr bool IsTriviallyMoveConstructible = __is_trivially_constructible(T, T);
+
+	template<typename T>
+	constexpr bool IsTriviallyMoveAssignable = __is_trivially_assignable(typename AddLValueReference<T>::Type, T);
 
 	template<typename T>
 	constexpr bool IsTriviallyDestructible = __is_trivially_destructible(T);
 
 	template<typename T>
-	constexpr bool IsTriviallyCopyable = __is_trivially_copyable(T);
+	constexpr bool IsTrivial = __is_trivially_constructible(T) && __is_trivially_copyable(T);
 
 	// Is Array
 	/** @note	This doesn't work on heap allocated array
@@ -69,4 +90,5 @@ export namespace jpt
 	template<typename T>           constexpr bool IsArray       = false;
 	template<typename T>           constexpr bool IsArray<T[]>  = true;
 	template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
+#pragma endregion
 }
