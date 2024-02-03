@@ -674,4 +674,13 @@ export namespace jpt
 
 	template<typename T>
 	concept BasicStringType = IsSameType<T, String> || IsSameType<T, WString>;
+
+	template<>
+	struct Hash<String>
+	{
+		size_t operator()(const String& key)
+		{
+			return jpt::StringHash64(key.ConstBuffer());
+		}
+	};
 }

@@ -51,7 +51,7 @@ export namespace jpt
 
 	/** Equivalent for std::hash. Calculate the key's hash value */
 	template<class KeyT>
-	struct hash
+	struct Hash
 	{
 		/** Example: jpt::hash<jpt::string>()(key) */
 		size_t operator()(const KeyT& key)

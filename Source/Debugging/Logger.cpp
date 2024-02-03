@@ -47,17 +47,17 @@ namespace jpt
 
 	String Logger::GetStamp(ELogType type, int32 line, const char* file)
 	{
-		String contentToLog;
-		contentToLog.Reserve(kMaxMessageSize);
+		String stamp;
+		stamp.Reserve(kMaxMessageSize);
 
 		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
 		const String fileStr(file);
-		contentToLog += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
+		stamp += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
 
 		// line number and log type
-		contentToLog += "(" + ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
+		stamp += "(" + ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
 
-		return contentToLog;
+		return stamp;
 	}
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)

@@ -327,7 +327,7 @@ export namespace jpt
 	}
 
 	template<>
-	struct hash<const char*>
+	struct Hash<const char*>
 	{
 		size_t operator()(const char* key)
 		{

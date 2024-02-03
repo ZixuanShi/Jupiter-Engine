@@ -9,6 +9,7 @@ export module UnitTests_Core;
 /** Unit Test Modules */
 
 // Containers
+import UnitTests_HashMap;
 import UnitTests_LinkedList;
 import UnitTests_DynamicArray;
 import UnitTests_StaticArray;
@@ -46,6 +47,7 @@ export bool RunUnitTests_Core()
 	/** Unit Test Functions */
 
 	// Containers
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_HashMap(), "HashMap Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_LinkedList(), "LinkedList Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_DynamicArray(), "DynamicArray Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
