@@ -106,7 +106,7 @@ export namespace jpt
 	template<typename _TData, size_t kSize>
 	constexpr StaticArray<_TData, kSize>::~StaticArray()
 	{
-		if constexpr (IsTriviallyDestructible<TData>)
+		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			for (size_t i = 0; i < kSize; ++i)
 			{

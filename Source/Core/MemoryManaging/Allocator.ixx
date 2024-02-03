@@ -2,6 +2,7 @@
 
 module;
 
+#include <new>
 #include <stdlib.h>
 #include <cstring>
 #include <initializer_list>
@@ -28,11 +29,12 @@ export namespace jpt
 	public:
 		/** Allocates plain heap memory for <Type>*/
 		static constexpr T* Allocate();
-		static constexpr T* AllocateArray(size_t count, const std::initializer_list<T>& values = {});
+		static constexpr T* AllocateArray(size_t count);
+		static constexpr T* AllocateArray(size_t count, std::initializer_list<T>&& values);
 
 		/** Allocates heap memory for one <Type>, with initializing value */
-		static constexpr T* AllocateWithValue(const T& data);
-		static constexpr T* AllocateWithValue(T&& data);
+		template<typename ...TArgs>
+		static constexpr T* AllocateWithValue(TArgs&&... args);
 
 		/** Deallocate memory for the passed in pointer */
 		static constexpr void Deallocate(T* pPointer);
@@ -56,14 +58,20 @@ export namespace jpt
 	}
 
 	template<typename T>
-	constexpr T* Allocator<T>::AllocateArray(size_t count, const std::initializer_list<T>& values/* = {}*/)
+	constexpr T* Allocator<T>::AllocateArray(size_t count)
+	{
+		return new T[count];
+	}
+
+	template<typename T>
+	constexpr T* Allocator<T>::AllocateArray(size_t count, std::initializer_list<T>&& values)
 	{
 		T* pArray = new T[count];
 
 		size_t i = 0;
 		for (const T& element : values)
 		{
-			pArray[i] = element;
+			pArray[i] = Move(const_cast<T&>(element));
 			++i;
 		}
 
@@ -71,15 +79,10 @@ export namespace jpt
 	}
 
 	template<typename T>
-	constexpr T* Allocator<T>::AllocateWithValue(const T& data)
+	template<typename ...TArgs>
+	constexpr T* Allocator<T>::AllocateWithValue(TArgs&& ...args)
 	{
-		return new T(data);
-	}
-
-	template<typename T>
-	constexpr T* Allocator<T>::AllocateWithValue(T&& data)
-	{
-		return new T(Move(data));
+		return new T(Forward<TArgs>(args)...);
 	}
 
 	template<typename T>
