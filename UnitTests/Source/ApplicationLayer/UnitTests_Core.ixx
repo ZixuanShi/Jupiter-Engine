@@ -40,6 +40,7 @@ import UnitTests_String;
 import UnitTests_StringView;
 
 // Types
+import UnitTests_Function;
 import UnitTests_Optional;
 import UnitTests_Enum;
 import UnitTests_Tuple;
@@ -81,6 +82,7 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringView(), "StringView Tests Failed");
 
 	// Types
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Enum(), "Enum Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Tuple(), "Tuple Tests Failed");

@@ -72,9 +72,9 @@ namespace jpt
 	};
 }
 #else
-	#define JPT_LOG(message, ...)			
-	#define JPT_SYSTEM_INFO(message, ...)   
-	#define JPT_WARNING(message, ...)		
-	#define JPT_ERROR(message, ...)		
+	#define JPT_LOG(message, ...)	      JPT_IGNORE(message)		
+	#define JPT_SYSTEM_INFO(message, ...) JPT_IGNORE(message)	
+	#define JPT_WARNING(message, ...)     JPT_IGNORE(message)	
+	#define JPT_ERROR(message, ...)		  JPT_IGNORE(message)	
 
 #endif // JPT_ENABLE_EDITOR_FEATURES
