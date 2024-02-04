@@ -31,6 +31,10 @@ export namespace jpt
 
 	public:
 		constexpr HashMap() = default;
+		constexpr ~HashMap();
+		
+		// Modifiers
+		constexpr void Clear();
 
 		// Inserting
 		constexpr void Insert(const TKey& key, const TValue& value);
@@ -38,10 +42,27 @@ export namespace jpt
 
 		// Erasing
 
+
+		// Lookup
+		constexpr bool Contains(const TKey& key) const;
+
 	private:
 		constexpr void ResizeBuckets(size_t capacity);
 		constexpr size_t GetBucketIndex(const TKey& key) const;
 	};
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::~HashMap()
+	{
+		Clear();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr void HashMap<_TKey, _TValue>::Clear()
+	{
+		m_buckets.Clear(); 
+		m_size = 0;
+	}
 
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::Insert(const TKey& key, const TValue& value)
@@ -59,7 +80,26 @@ export namespace jpt
 		}
 
 		const size_t index = GetBucketIndex(element.first);
-		m_buckets[index].PushBack(element);
+
+			// insert the value
+			m_buckets[index].PushBack(element);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
+	{
+		const size_t index = GetBucketIndex(key);
+		const TBucket& bucket = m_buckets[index];
+
+		for (const TElement& element : bucket)
+		{
+			if (element.first == key)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	template<typename _TKey, typename _TValue>

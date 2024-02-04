@@ -8,6 +8,9 @@ export module UnitTests_Core;
 
 /** Unit Test Modules */
 
+// Algorithms
+import UnitTests_Searching;
+
 // Containers
 import UnitTests_HashMap;
 import UnitTests_LinkedList;
@@ -45,6 +48,9 @@ import UnitTests_Pair;
 export bool RunUnitTests_Core()
 {
 	/** Unit Test Functions */
+	
+	// Algorithms
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Searching(), "Algorithms Unit Tests Failed");
 
 	// Containers
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_HashMap(), "HashMap Unit Tests Failed");

@@ -46,6 +46,7 @@ bool UnitTest_DynamicArray_Trivial()
         ++i;
     }
 
+    // Inserting
     dynamicArray.Insert(1, 1);
     int32 data = dynamicArray.Emplace(3, 3);
     JPT_RETURN_FALSE_IF_ERROR(data != 3, "");
@@ -55,9 +56,11 @@ bool UnitTest_DynamicArray_Trivial()
     data = dynamicArray.EmplaceBack(6);
     JPT_RETURN_FALSE_IF_ERROR(data != 6, "");
 
+    // Erasing
     dynamicArray.Erase(6);
     dynamicArray.PopBack();
 
+    // iterating
     i = 0;
     for (int32 element : dynamicArray)
     {
@@ -77,6 +80,7 @@ bool UnitTest_DynamicArray_Trivial()
         ++i;
     }
 
+    // Capacity
     dynamicArray.Reserve(32);
     JPT_RETURN_FALSE_IF_ERROR(dynamicArray.Capacity() != 32, "");
 
@@ -156,6 +160,7 @@ bool UnitTest_DynamicArray_NonTrivial()
         ++i;
     }
 
+    // Inserting
     dynamicArray.Insert(1, locHelper(1));
     const jpt::String& data1 = dynamicArray.Emplace(3, "Three");
     JPT_RETURN_FALSE_IF_ERROR(data1 != "Three", "");
@@ -165,9 +170,11 @@ bool UnitTest_DynamicArray_NonTrivial()
     const jpt::String& data2 = dynamicArray.EmplaceBack("Six");
     JPT_RETURN_FALSE_IF_ERROR(data2 != "Six", "");
 
+    // Erasing
     dynamicArray.Erase(6);
     dynamicArray.PopBack();
 
+    // Iterating
     i = 0;
     for (const jpt::String& element : dynamicArray)
     {
@@ -189,6 +196,7 @@ bool UnitTest_DynamicArray_NonTrivial()
         ++i;
     }
 
+    // Capacity
     dynamicArray.Reserve(32);
     JPT_RETURN_FALSE_IF_ERROR(dynamicArray.Capacity() != 32, "");
 

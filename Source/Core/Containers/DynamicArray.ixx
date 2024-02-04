@@ -88,6 +88,10 @@ export namespace jpt
 		constexpr void Erase(size_t index);
 		constexpr void PopBack();
 
+		// Lookup
+		constexpr Iterator Find(const TData& data) const;
+		constexpr bool Contains(const TData& data) const;
+
 	private:
 		/** Create a new data buffer with a new capacity, move the existing data over */
 		constexpr void UpdateBuffer(size_t capacity);

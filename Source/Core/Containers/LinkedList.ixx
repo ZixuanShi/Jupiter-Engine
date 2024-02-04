@@ -85,6 +85,10 @@ export namespace jpt
 		constexpr void PopBack();
 		constexpr void PopFront();
 
+		// Lookup
+		constexpr Iterator Find(const TData& data) const;
+		constexpr bool Contains(const TData& data) const;
+
 	private:
 		template<Iterable TContainer>
 		constexpr void CopyData(const TContainer& container);
