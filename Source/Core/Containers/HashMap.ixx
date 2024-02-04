@@ -8,8 +8,9 @@ import jpt.Pair;
 import jpt.DynamicArray;
 import jpt.LinkedList;
 import jpt.Utilities;
+import jpt.Math;
 
-import jpt_private.ChainedBucketIterator;
+static constexpr size_t kLocGrowMultiplier = 2;
 
 export namespace jpt
 {
@@ -20,35 +21,70 @@ export namespace jpt
 	public:
 		using TKey          = _TKey;
 		using TValue        = _TValue;
-		using Element       = Pair<TKey, TValue>;
-		using Bucket        = LinkedList<Element>;
-		using Buckets 	    = DynamicArray<Bucket>;
-		using Iterator      = jpt_private::ChainedBucketIterator<TKey, TValue>;
-		using ConstIterator = jpt_private::ConstChainedBucketIterator<TKey, TValue>;
+		using TElement      = Pair<TKey, TValue>;
+		using TBucket       = LinkedList<TElement>;
+		using TBuckets 	    = DynamicArray<TBucket>;
 
 	private:
-		Buckets m_buckets;
+		TBuckets m_buckets;
+		size_t m_size = 0;		// Count of actual elements in the map
 
 	public:
 		constexpr HashMap() = default;
-		constexpr ~HashMap();
 
-		// Element Access
-		
+		// Inserting
+		constexpr void Insert(const TKey& key, const TValue& value);
+		constexpr void Insert(const TElement& element);
 
-		// Iterators
-		constexpr Iterator begin() noexcept { return m_buckets.begin(); }
-		constexpr Iterator end()   noexcept { return m_buckets.end();   }
-		constexpr ConstIterator begin()  const noexcept { return m_buckets.begin();  }
-		constexpr ConstIterator end()    const noexcept { return m_buckets.end();    }
-		constexpr ConstIterator cbegin() const noexcept { return m_buckets.cbegin(); }
-		constexpr ConstIterator cend()   const noexcept { return m_buckets.cend();   }
+		// Erasing
 
 	private:
+		constexpr void ResizeBuckets(size_t capacity);
+		constexpr size_t GetBucketIndex(const TKey& key) const;
 	};
 
 	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::~HashMap()
+	constexpr void HashMap<_TKey, _TValue>::Insert(const TKey& key, const TValue& value)
 	{
+		Insert(TElement{ key, value });
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr void HashMap<_TKey, _TValue>::Insert(const TElement& element)
+	{
+		// Grow if needed
+		if (m_size >= m_buckets.Size() * kLocGrowMultiplier)
+		{
+			ResizeBuckets(m_size * kLocGrowMultiplier);
+		}
+
+		const size_t index = GetBucketIndex(element.first);
+		m_buckets[index].PushBack(element);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr void HashMap<_TKey, _TValue>::ResizeBuckets(size_t capacity)
+	{
+		static constexpr size_t kMinCapacity = 8;
+
+		TBuckets newBuckets;
+		newBuckets.Resize(Max(kMinCapacity, capacity));
+
+		for (const TBucket& bucket : m_buckets)
+		{
+			for (const TElement& element : bucket)
+			{
+				const size_t index = GetBucketIndex(element.first);
+				newBuckets[index].EmplaceBack(element);
+			}
+		}
+
+		m_buckets = Move(newBuckets);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr size_t HashMap<_TKey, _TValue>::GetBucketIndex(const TKey& key) const
+	{
+		return Hash<TKey>()(key) % m_buckets.Size();
 	}
 }
