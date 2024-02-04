@@ -13,7 +13,8 @@ bool TestFunction1(int32 n, char c)
 {
     //JPT_LOG(n);
     //JPT_LOG(c);
-
+    JPT_IGNORE(n);
+    JPT_IGNORE(c);
 	return true;
 }
 
@@ -21,6 +22,8 @@ bool TestFunction2(int32 n, char c)
 {
     //JPT_LOG(n * 2);
     //JPT_LOG(c);
+    JPT_IGNORE(n);
+    JPT_IGNORE(c);
 
     return true;
 }

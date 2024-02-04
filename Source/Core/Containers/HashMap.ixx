@@ -22,8 +22,8 @@ export namespace jpt
 	public:
 		using TKey          = _TKey;
 		using TValue        = _TValue;
-		using TElement      = Pair<TKey, TValue>;
-		using TBucket       = LinkedList<TElement>;
+		using TData         = Pair<TKey, TValue>;
+		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
 
 	private:
@@ -39,7 +39,7 @@ export namespace jpt
 
 		// Inserting
 		constexpr void Insert(const TKey& key, const TValue& value);
-		constexpr void Insert(const TElement& element);
+		constexpr void Insert(const TData& element);
 
 		// Erasing
 
@@ -69,11 +69,11 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::Insert(const TKey& key, const TValue& value)
 	{
-		Insert(TElement{ key, value });
+		Insert(TData{ key, value });
 	}
 
 	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Insert(const TElement& element)
+	constexpr void HashMap<_TKey, _TValue>::Insert(const TData& element)
 	{
 		// Grow if needed
 		if (m_size >= m_buckets.Size() * kLocGrowMultiplier)
@@ -93,7 +93,7 @@ export namespace jpt
 		const TBucket& bucket = GetBucket(key);
 
 
-		for (const TElement& element : bucket)
+		for (const TData& element : bucket)
 		{
 			if (element.first == key)
 			{
@@ -114,7 +114,7 @@ export namespace jpt
 
 		for (const TBucket& bucket : m_buckets)
 		{
-			for (const TElement& element : bucket)
+			for (const TData& element : bucket)
 			{
 				const size_t index = GetBucketIndex(element.first);
 				newBuckets[index].EmplaceBack(element);
