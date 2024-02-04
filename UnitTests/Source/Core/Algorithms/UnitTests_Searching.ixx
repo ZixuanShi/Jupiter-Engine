@@ -40,6 +40,15 @@ bool UnitTest_Searching_DynamicArray()
     dynamicArray.EmplaceBack(7);
     JPT_RETURN_FALSE_IF_ERROR(!jpt::Contains(dynamicArray, 7), "");
 
+    *jpt::Find(dynamicArray, 7) = 8;
+    JPT_RETURN_FALSE_IF_ERROR(jpt::Contains(dynamicArray, 7), "");
+    JPT_RETURN_FALSE_IF_ERROR(!jpt::Contains(dynamicArray, 8), "");
+
+    //jpt::Find(dynamicArray, [](int32 n)
+    //    {
+    //        return (n == 8);
+    //    });
+
     jpt::DynamicArray<jpt::String> dynamicStrArray = { "Zero", "One", "Two", "Three", "Four" };
 
     JPT_RETURN_FALSE_IF_ERROR(jpt::Find(dynamicStrArray, "Six") != dynamicStrArray.end(), "");
@@ -48,6 +57,10 @@ bool UnitTest_Searching_DynamicArray()
     JPT_RETURN_FALSE_IF_ERROR(jpt::Contains(dynamicStrArray, "Seven"), "");
     dynamicStrArray.EmplaceBack("Seven");
     JPT_RETURN_FALSE_IF_ERROR(!jpt::Contains(dynamicStrArray, "Seven"), "");
+
+    *jpt::Find(dynamicStrArray, "Seven") = "Eight";
+    JPT_RETURN_FALSE_IF_ERROR(jpt::Contains(dynamicStrArray, "Seven"), "");
+    JPT_RETURN_FALSE_IF_ERROR(!jpt::Contains(dynamicStrArray, "Eight"), "");
 
     return true;
 }

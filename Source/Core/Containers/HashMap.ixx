@@ -9,6 +9,7 @@ import jpt.DynamicArray;
 import jpt.LinkedList;
 import jpt.Utilities;
 import jpt.Math;
+import jpt.Searching;
 
 static constexpr size_t kLocGrowMultiplier = 2;
 
@@ -49,6 +50,7 @@ export namespace jpt
 	private:
 		constexpr void ResizeBuckets(size_t capacity);
 		constexpr size_t GetBucketIndex(const TKey& key) const;
+		constexpr TBucket& GetBucket(const TKey& key);
 	};
 
 	template<typename _TKey, typename _TValue>
@@ -88,8 +90,8 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
 	{
-		const size_t index = GetBucketIndex(key);
-		const TBucket& bucket = m_buckets[index];
+		const TBucket& bucket = GetBucket(key);
+
 
 		for (const TElement& element : bucket)
 		{
@@ -126,5 +128,12 @@ export namespace jpt
 	constexpr size_t HashMap<_TKey, _TValue>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash<TKey>()(key) % m_buckets.Size();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key)
+	{
+		const size_t index = GetBucketIndex(key);
+		return m_buckets[index];
 	}
 }

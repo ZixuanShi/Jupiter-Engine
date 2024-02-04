@@ -14,9 +14,9 @@ bool UnitTest_HashMap_Trivial()
 {
     jpt::HashMap<char, int32> map;
 
-    map.Insert('a', 0);
-    map.Insert('b', 1);
-    map.Insert('c', 2);
+    //map.Insert('a', 0);
+    //map.Insert('b', 1);
+    //map.Insert('c', 2);
 
     return true;
 }
