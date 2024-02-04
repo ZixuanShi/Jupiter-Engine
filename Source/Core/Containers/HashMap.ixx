@@ -25,6 +25,7 @@ export namespace jpt
 		using TData         = Pair<TKey, TValue>;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
+		using Iterator	    = typename TBucket::Iterator;
 
 	private:
 		TBuckets m_buckets;
@@ -34,12 +35,20 @@ export namespace jpt
 		constexpr HashMap() = default;
 		constexpr ~HashMap();
 		
+		// Element access
+
+
+		// Iterators	
+		constexpr Iterator begin() { return m_buckets.Front().begin(); }
+		constexpr Iterator end()   { return m_buckets[m_buckets.Size()].end(); }
+
+
 		// Modifiers
 		constexpr void Clear();
 
 		// Inserting
-		constexpr void Insert(const TKey& key, const TValue& value);
-		constexpr void Insert(const TData& element);
+		constexpr TValue& Insert(const TKey& key, const TValue& value);
+		constexpr TValue& Insert(const TData& element);
 
 		// Erasing
 
@@ -66,14 +75,8 @@ export namespace jpt
 		m_size = 0;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Insert(const TKey& key, const TValue& value)
-	{
-		Insert(TData{ key, value });
-	}
-
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Insert(const TData& element)
+	template<typename TKey, typename TValue>
+	constexpr TValue& HashMap<TKey, TValue>::Insert(const TKey& key, const TValue& value)
 	{
 		// Grow if needed
 		if (m_size >= m_buckets.Size() * kLocGrowMultiplier)
@@ -81,17 +84,41 @@ export namespace jpt
 			ResizeBuckets(m_size * kLocGrowMultiplier);
 		}
 
-		const size_t index = GetBucketIndex(element.first);
+		const size_t index = GetBucketIndex(key);
+		TBucket& bucket = m_buckets[index];
 
-			// insert the value
-			m_buckets[index].PushBack(element);
+		// Check if the key already exists. If it does, update the value
+		bool found = false;
+		for (TData& element : bucket)
+		{
+			if (element.first == key)
+			{
+				found = true;
+				element.second = value;
+				return element.second;
+			}
+		}
+
+		// If the key does not exist, add it
+		if (!found)
+		{
+			bucket.EmplaceBack(Pair{ key ,value });
+			++m_size;
+		}
+
+		return bucket.Back().second;
+	}
+
+	template<typename TKey, typename TValue>
+	constexpr TValue& HashMap<TKey, TValue>::Insert(const TData& element)
+	{
+		return Insert(element.first, element.second);
 	}
 
 	template<typename _TKey, typename _TValue>
 	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
 	{
 		const TBucket& bucket = GetBucket(key);
-
 
 		for (const TData& element : bucket)
 		{

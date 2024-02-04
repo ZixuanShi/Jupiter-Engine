@@ -44,6 +44,12 @@ export namespace jpt
 		constexpr LinkedList& operator=(LinkedList&& other) noexcept;
 		constexpr ~LinkedList();
 
+		// Element Access
+		constexpr       TData& Front()       { return m_pHead->data; }
+		constexpr const TData& Front() const { return m_pHead->data; }
+		constexpr       TData& Back()        { return m_pTail->data; }
+		constexpr const TData& Back()  const { return m_pTail->data; }
+
 		// Iterators
 		constexpr Iterator begin() { return Iterator(m_pHead); }
 		constexpr Iterator end()   { return Iterator(nullptr); }
@@ -84,10 +90,6 @@ export namespace jpt
 		constexpr void Erase(Iterator iterator);
 		constexpr void PopBack();
 		constexpr void PopFront();
-
-		// Lookup
-		constexpr Iterator Find(const TData& data) const;
-		constexpr bool Contains(const TData& data) const;
 
 	private:
 		template<Iterable TContainer>
