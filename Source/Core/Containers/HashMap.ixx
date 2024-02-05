@@ -11,6 +11,8 @@ import jpt.Utilities;
 import jpt.Math;
 import jpt.Searching;
 
+import jpt_private.ChainedBucketIterator;
+
 static constexpr size_t kLocGrowMultiplier = 2;
 
 export namespace jpt
@@ -25,7 +27,7 @@ export namespace jpt
 		using TData         = Pair<TKey, TValue>;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
-		using Iterator	    = typename TBucket::Iterator;
+		//using Iterator	    = jpt_private::ChainedBucketIterator<TKey, TValue>;
 
 	private:
 		TBuckets m_buckets;
@@ -39,8 +41,8 @@ export namespace jpt
 
 
 		// Iterators	
-		constexpr Iterator begin() { return m_buckets.Front().begin(); }
-		constexpr Iterator end()   { return m_buckets[m_buckets.Size()].end(); }
+		//constexpr Iterator begin() { return m_buckets.Front().begin(); }
+		//constexpr Iterator end()   { return m_buckets[m_buckets.Size()].end(); }
 
 
 		// Modifiers

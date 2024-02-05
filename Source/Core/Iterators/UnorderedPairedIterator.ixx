@@ -14,7 +14,6 @@ export namespace jpt_private
 	template<typename TKey, typename TData>
 	class ChainedBucketIterator
 	{
-
 	private:
 
 	public:

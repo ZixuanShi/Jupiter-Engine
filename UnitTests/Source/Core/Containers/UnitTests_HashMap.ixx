@@ -19,11 +19,11 @@ bool UnitTest_HashMap_Trivial()
     map.Insert('c', 2);
     map.Insert('a', 3);
 
-    for(auto& [k, v] : map)
-	{
-        JPT_LOG(k);
-        JPT_LOG(v);
-	}
+ //   for(auto& [k, v] : map)
+	//{
+ //       JPT_LOG(k);
+ //       JPT_LOG(v);
+	//}
 
     return true;
 }
