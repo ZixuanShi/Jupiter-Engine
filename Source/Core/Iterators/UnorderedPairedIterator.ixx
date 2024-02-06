@@ -6,7 +6,6 @@ import jpt.TypeDefs;
 
 import jpt.Pair;
 import jpt_private.LinearNodeIterator;
-import jpt_private.ContiguousIterator;
 
 export namespace jpt_private
 {

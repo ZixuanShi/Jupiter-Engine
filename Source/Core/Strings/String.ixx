@@ -20,8 +20,6 @@ import jpt.StringUtils;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
 
-import jpt_private.ContiguousIterator;
-
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
 

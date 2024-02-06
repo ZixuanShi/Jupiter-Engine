@@ -16,8 +16,6 @@ import jpt.TypeTraits;
 import jpt.Utilities;
 import jpt.Math;
 
-import jpt_private.ContiguousIterator;
-
 static constexpr size_t kLocGrowMultiplier = 2;
 
 export namespace jpt
