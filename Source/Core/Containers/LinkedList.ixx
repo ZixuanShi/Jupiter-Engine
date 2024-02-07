@@ -26,14 +26,14 @@ export namespace jpt
 	public:
 		using TData         = _TData;
 		using TAllocator    = _TAllocator;
-		using Node          = jpt_private::LinearNode<TData>;
+		using TNode          = jpt_private::LinearNode<TData>;
 		using Iterator      = jpt_private::LinearNodeIterator<TData>;
 		using ConstIterator = jpt_private::ConstLinearNodeIterator<TData>;
 
 	private:
-		Node* m_pHead = nullptr;
-		Node* m_pTail = nullptr;
-		size_t m_size = 0;
+		TNode* m_pHead = nullptr;
+		TNode* m_pTail = nullptr;
+		size_t m_size  = 0;
 
 	public:
 		constexpr LinkedList() = default;
@@ -96,8 +96,8 @@ export namespace jpt
 		constexpr void CopyData(const TContainer& container);
 		constexpr void MoveData(LinkedList<TData>&& other);
 
-		constexpr void InternalInsertAfter(Iterator iterator, Node* pNewNode);
-		constexpr void InternalInsertBefore(Iterator iterator, Node* pNewNode);
+		constexpr void InternalInsertAfter(Iterator iterator, TNode* pNewNode);
+		constexpr void InternalInsertBefore(Iterator iterator, TNode* pNewNode);
 	};
 
 	template<typename TData>
@@ -174,7 +174,7 @@ export namespace jpt
 	{
 		while (m_pHead)
 		{
-			Node* pToDelete = m_pHead;
+			TNode* pToDelete = m_pHead;
 			m_pHead = m_pHead->pNext;
 			TAllocator::Deallocate(pToDelete);
 		}
@@ -187,14 +187,14 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void LinkedList<TData, TAllocator>::InsertBefore(Iterator iterator, const TData& value)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(value);
+		TNode* pNewNode = TAllocator::AllocateWithValue(value);
 		InternalInsertBefore(iterator, pNewNode);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void LinkedList<TData, TAllocator>::InsertBefore(Iterator iterator, TData&& value)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(Move(value));
+		TNode* pNewNode = TAllocator::AllocateWithValue(Move(value));
 		InternalInsertBefore(iterator, pNewNode);
 	}
 
@@ -213,14 +213,14 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void LinkedList<TData, TAllocator>::InsertAfter(Iterator iterator, const TData& value)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(value);
+		TNode* pNewNode = TAllocator::AllocateWithValue(value);
 		InternalInsertAfter(iterator, pNewNode);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void LinkedList<TData, TAllocator>::InsertAfter(Iterator iterator, TData&& value)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(Move(value));
+		TNode* pNewNode = TAllocator::AllocateWithValue(Move(value));
 		InternalInsertAfter(iterator, pNewNode);
 	}
 
@@ -240,7 +240,7 @@ export namespace jpt
 	template<typename ...TArgs>
 	constexpr LinkedList<TData, TAllocator>::TData& LinkedList<TData, TAllocator>::EmplaceAfter(Iterator iterator, TArgs&& ...args)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
+		TNode* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
 		InternalInsertAfter(iterator, pNewNode);
 		return pNewNode->data;
 	}
@@ -256,7 +256,7 @@ export namespace jpt
 	template<typename ...TArgs>
 	constexpr LinkedList<TData, TAllocator>::TData& LinkedList<TData, TAllocator>::EmplaceBefore(Iterator iterator, TArgs&& ...args)
 	{
-		Node* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
+		TNode* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
 		InternalInsertBefore(iterator, pNewNode);
 		return pNewNode->data;
 	}
@@ -273,11 +273,11 @@ export namespace jpt
 	{
 		JPT_ASSERT(!IsEmpty(), "LinkedList::Erase() called on an empty list");
 
-		Node* pToDelete = iterator.GetNode();
+		TNode* pToDelete = iterator.GetNode();
 		JPT_ASSERT(pToDelete, "LinkedList::Erase() called with an invalid iterator");
 
-		Node* pPrevious = pToDelete->pPrevious;
-		Node* pNext = pToDelete->pNext;
+		TNode* pPrevious = pToDelete->pPrevious;
+		TNode* pNext = pToDelete->pNext;
 
 		if (pToDelete == m_pHead)
 		{
@@ -335,12 +335,12 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void LinkedList<TData, TAllocator>::InternalInsertAfter(Iterator iterator, Node* pNewNode)
+	constexpr void LinkedList<TData, TAllocator>::InternalInsertAfter(Iterator iterator, TNode* pNewNode)
 	{
-		Node* pCurrentNode = iterator.GetNode();
+		TNode* pCurrentNode = iterator.GetNode();
 		if (pCurrentNode)
 		{
-			Node* pNext = pCurrentNode->pNext;
+			TNode* pNext = pCurrentNode->pNext;
 
 			pCurrentNode->pNext = pNewNode;
 			pNewNode->pPrevious = pCurrentNode;
@@ -365,12 +365,12 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void LinkedList<TData, TAllocator>::InternalInsertBefore(Iterator iterator, Node* pNewNode)
+	constexpr void LinkedList<TData, TAllocator>::InternalInsertBefore(Iterator iterator, TNode* pNewNode)
 	{
-		Node* pCurrentNode = iterator.GetNode();
+		TNode* pCurrentNode = iterator.GetNode();
 		if (pCurrentNode)
 		{
-			Node* pPrevious = pCurrentNode->pPrevious;
+			TNode* pPrevious = pCurrentNode->pPrevious;
 
 			pCurrentNode->pPrevious = pNewNode;
 			pNewNode->pNext = pCurrentNode;

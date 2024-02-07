@@ -12,14 +12,18 @@ import jpt_private.LinearNodeIterator;
 export namespace jpt_private
 {
 	/** Unordered Map iterator */
-	template<typename TKey, typename TData>
+	template<typename TKey, typename TValue>
 	class ChainedBucketIterator
 	{
-	private:
+		using TData    = jpt::Pair<TKey, TValue>;
+		using TBucket  = jpt::LinkedList<TData>;
+		using TBuckets = jpt::DynamicArray<TBucket>;
 
+	private:
+		TBuckets::Iterator m_iterator;
 
 	public:
-		//constexpr ChainedBucketIterator() noexcept = default;
+		constexpr ChainedBucketIterator(TBuckets::Iterator iterator) : m_iterator(iterator) {}
 
 	};
 }

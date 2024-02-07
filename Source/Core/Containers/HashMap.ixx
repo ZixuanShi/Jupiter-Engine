@@ -41,8 +41,8 @@ export namespace jpt
 
 
 		// Iterators	
-		//constexpr Iterator begin() noexcept { return Iterator(m_buckets.begin()); }
-		//constexpr Iterator end()   noexcept { return Iterator(m_buckets.end()); }
+		constexpr Iterator begin() noexcept { return Iterator(m_buckets.begin()); }
+		constexpr Iterator end()   noexcept { return Iterator(m_buckets.end()); }
 
 		// Modifiers
 		constexpr void Clear();
