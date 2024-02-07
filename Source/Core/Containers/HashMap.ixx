@@ -27,10 +27,10 @@ export namespace jpt
 		using TData         = Pair<TKey, TValue>;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
-		//using Iterator	    = jpt_private::ChainedBucketIterator<TKey, TValue>;
+		using Iterator	    = jpt_private::ChainedBucketIterator<TKey, TValue>;
 
 	private:
-		TBuckets m_buckets;
+		TBuckets m_buckets; 
 		size_t m_size = 0;		// Count of actual elements in the map
 
 	public:
@@ -41,9 +41,8 @@ export namespace jpt
 
 
 		// Iterators	
-		//constexpr Iterator begin() { return m_buckets.Front().begin(); }
-		//constexpr Iterator end()   { return m_buckets[m_buckets.Size()].end(); }
-
+		//constexpr Iterator begin() noexcept { return Iterator(m_buckets.begin()); }
+		//constexpr Iterator end()   noexcept { return Iterator(m_buckets.end()); }
 
 		// Modifiers
 		constexpr void Clear();
@@ -60,8 +59,8 @@ export namespace jpt
 
 	private:
 		constexpr void ResizeBuckets(size_t capacity);
+
 		constexpr size_t GetBucketIndex(const TKey& key) const;
-		constexpr TBucket& GetBucket(const TKey& key);
 	};
 
 	template<typename _TKey, typename _TValue>
@@ -120,7 +119,8 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
 	{
-		const TBucket& bucket = GetBucket(key);
+		const size_t index = GetBucketIndex(key);
+		const TBucket& bucket = m_buckets[index];
 
 		for (const TData& element : bucket)
 		{
@@ -157,12 +157,5 @@ export namespace jpt
 	constexpr size_t HashMap<_TKey, _TValue>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash<TKey>()(key) % m_buckets.Size();
-	}
-
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key)
-	{
-		const size_t index = GetBucketIndex(key);
-		return m_buckets[index];
 	}
 }

@@ -51,15 +51,15 @@ export namespace jpt
 		constexpr const TData& Back()  const { return m_pTail->data; }
 
 		// Iterators
-		constexpr Iterator begin() { return Iterator(m_pHead); }
-		constexpr Iterator end()   { return Iterator(nullptr); }
-		constexpr ConstIterator begin()  const { return ConstIterator(m_pHead); }
-		constexpr ConstIterator end()    const { return ConstIterator(nullptr); }
-		constexpr ConstIterator cbegin() const { return ConstIterator(m_pHead); }
-		constexpr ConstIterator cend()   const { return ConstIterator(nullptr); }
+		constexpr Iterator begin() noexcept { return Iterator(m_pHead); }
+		constexpr Iterator end()   noexcept { return Iterator(nullptr); }
+		constexpr ConstIterator begin()  const noexcept { return ConstIterator(m_pHead); }
+		constexpr ConstIterator end()    const noexcept { return ConstIterator(nullptr); }
+		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(m_pHead); }
+		constexpr ConstIterator cend()   const noexcept { return ConstIterator(nullptr); }
 
 		// Capacity
-		constexpr size_t Size() const { return m_size; }
+		constexpr size_t Size()  const { return m_size; }
 		constexpr bool IsEmpty() const { return m_size == 0; }
 
 		// Modifier

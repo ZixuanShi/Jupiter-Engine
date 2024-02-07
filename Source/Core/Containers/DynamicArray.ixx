@@ -54,12 +54,12 @@ export namespace jpt
 		constexpr const TData& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
-		constexpr Iterator begin() { return Iterator(m_pBuffer); }
-		constexpr Iterator end()   { return Iterator(m_pBuffer + m_size); }
-		constexpr ConstIterator begin()  const { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator end()    const { return ConstIterator(m_pBuffer + m_size); }
-		constexpr ConstIterator cbegin() const { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_size); }
+		constexpr Iterator begin() noexcept { return Iterator(m_pBuffer); }
+		constexpr Iterator end()   noexcept { return Iterator(m_pBuffer + m_size); }
+		constexpr ConstIterator begin()  const noexcept { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator end()    const noexcept { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(m_pBuffer); }
+		constexpr ConstIterator cend()   const noexcept { return ConstIterator(m_pBuffer + m_size); }
 
 		// Capacity
 		constexpr size_t Size()     const { return m_size;      }

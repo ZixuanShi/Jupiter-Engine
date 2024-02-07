@@ -3,8 +3,10 @@
 export module jpt_private.ChainedBucketIterator;
 
 import jpt.TypeDefs;
-
 import jpt.Pair;
+import jpt.DynamicArray;
+import jpt.LinkedList;
+
 import jpt_private.LinearNodeIterator;
 
 export namespace jpt_private
@@ -15,6 +17,9 @@ export namespace jpt_private
 	{
 	private:
 
+
 	public:
+		//constexpr ChainedBucketIterator() noexcept = default;
+
 	};
 }
