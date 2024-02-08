@@ -42,6 +42,7 @@ export namespace jpt_private
 		LinearNode<TData>* m_pNode;
 
 	public:
+		constexpr LinearNodeIterator() = default;
 		constexpr LinearNodeIterator(LinearNode<TData>* pNode) : m_pNode(pNode) {}
 
 		constexpr LinearNodeIterator& operator++();
@@ -58,6 +59,8 @@ export namespace jpt_private
 
 		constexpr       TData* operator->()       { return &m_pNode->data; }
 		constexpr const TData* operator->() const { return &m_pNode->data; }
+		constexpr       TData* operator&()        { return &m_pNode->data; }
+		constexpr const TData* operator&()  const { return &m_pNode->data; }
 		constexpr       TData& operator*()        { return m_pNode->data; }
 		constexpr const TData& operator*()  const { return m_pNode->data; }
 
@@ -140,6 +143,7 @@ export namespace jpt_private
 		const LinearNode<TData>* m_pNode;
 
 	public:
+		constexpr ConstLinearNodeIterator() = default;
 		constexpr ConstLinearNodeIterator(const LinearNode<TData>* pNode) : m_pNode(pNode) {}
 
 		constexpr ConstLinearNodeIterator& operator++();

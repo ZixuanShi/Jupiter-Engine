@@ -41,8 +41,8 @@ export namespace jpt
 
 
 		// Iterators	
-		constexpr Iterator begin() noexcept { return Iterator(m_buckets.begin()); }
-		constexpr Iterator end()   noexcept { return Iterator(m_buckets.end()); }
+		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                &m_buckets.Front(), m_buckets.Front().begin()); }
+		constexpr Iterator end()   noexcept { return Iterator(&m_buckets, m_buckets.Size(), nullptr,            nullptr);    }
 
 		// Modifiers
 		constexpr void Clear();
@@ -136,7 +136,7 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::ResizeBuckets(size_t capacity)
 	{
-		static constexpr size_t kMinCapacity = 8;
+		static constexpr size_t kMinCapacity = 4;
 
 		TBuckets newBuckets;
 		newBuckets.Resize(Max(kMinCapacity, capacity));

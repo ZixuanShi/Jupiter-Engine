@@ -26,7 +26,7 @@ export namespace jpt
 	public:
 		using TData         = _TData;
 		using TAllocator    = _TAllocator;
-		using TNode          = jpt_private::LinearNode<TData>;
+		using TNode         = jpt_private::LinearNode<TData>;
 		using Iterator      = jpt_private::LinearNodeIterator<TData>;
 		using ConstIterator = jpt_private::ConstLinearNodeIterator<TData>;
 
