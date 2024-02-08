@@ -38,7 +38,7 @@ export namespace jpt
 		constexpr ~HashMap();
 		
 		// Element access
-
+		constexpr TValue& operator[](const TKey& key) { return Insert(key, TValue()); }
 
 		// Iterators	
 		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                m_buckets.Front().begin()); }
