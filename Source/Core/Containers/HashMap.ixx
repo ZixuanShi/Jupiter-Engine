@@ -41,8 +41,8 @@ export namespace jpt
 
 
 		// Iterators	
-		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                &m_buckets.Front(), m_buckets.Front().begin()); }
-		constexpr Iterator end()   noexcept { return Iterator(&m_buckets, m_buckets.Size(), nullptr,            nullptr);    }
+		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                m_buckets.Front().begin()); }
+		constexpr Iterator end()   noexcept { return Iterator(&m_buckets, m_buckets.Size(), nullptr); }
 
 		// Modifiers
 		constexpr void Clear();
@@ -88,7 +88,7 @@ export namespace jpt
 		const size_t index = GetBucketIndex(key);
 		TBucket& bucket = m_buckets[index];
 
-		// Check if the key already exists. If it does, update the value
+		// Check if the key already exists. If it does, update the value and return it
 		bool found = false;
 		for (TData& element : bucket)
 		{
@@ -136,7 +136,7 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::ResizeBuckets(size_t capacity)
 	{
-		static constexpr size_t kMinCapacity = 4;
+		static constexpr size_t kMinCapacity = 8;
 
 		TBuckets newBuckets;
 		newBuckets.Resize(Max(kMinCapacity, capacity));

@@ -21,14 +21,12 @@ export namespace jpt_private
 
 	private:
 		TBuckets* m_pBuckets = nullptr;
-		TBucket* m_pBucket = nullptr;
 		size_t m_index = 0;
 		LinearNodeIterator<TData> m_iterator;
 
-
 	public:
 		constexpr ChainedBucketIterator() = default;
-		constexpr ChainedBucketIterator(TBuckets* pBuckets, size_t index, TBucket* pBucket, LinearNodeIterator<TData> iterator);
+		constexpr ChainedBucketIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator);
 
 		constexpr       TData* operator->()       { return &m_iterator; }
 		constexpr const TData* operator->() const { return &m_iterator; }
@@ -36,6 +34,10 @@ export namespace jpt_private
 		constexpr const TData& operator*()  const { return *m_iterator; }
 
 		constexpr ChainedBucketIterator& operator++();
+		constexpr ChainedBucketIterator operator++(int32);
+
+		constexpr ChainedBucketIterator& operator+=(size_t offset);
+		constexpr ChainedBucketIterator operator+(size_t offset);
 
 		constexpr bool operator==(const ChainedBucketIterator& other) const;
 
@@ -45,10 +47,9 @@ export namespace jpt_private
 	};
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue>::ChainedBucketIterator(TBuckets* pBuckets, size_t index, TBucket* pBucket, LinearNodeIterator<TData> iterator)
+	constexpr ChainedBucketIterator<TKey, TValue>::ChainedBucketIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator)
 		: m_pBuckets(pBuckets)
 		, m_index(index)
-		, m_pBucket(pBucket)
 		, m_iterator(iterator)
 	{
 		FindNextValidIterator();
@@ -60,6 +61,33 @@ export namespace jpt_private
 		++m_iterator;
 		FindNextValidIterator();
 		return *this;
+	}
+
+	template<typename TKey, typename TValue>
+	constexpr ChainedBucketIterator<TKey, TValue> ChainedBucketIterator<TKey, TValue>::operator++(int32)
+	{
+		ChainedBucketIterator iterator = *this;
+		++m_iterator;
+		FindNextValidIterator();
+		return iterator;
+	}
+
+	template<typename TKey, typename TValue>
+	constexpr ChainedBucketIterator<TKey, TValue>& ChainedBucketIterator<TKey, TValue>::operator+=(size_t offset)
+	{
+		for (size_t i = 0; i < offset; ++i)
+		{
+			++m_iterator;
+			FindNextValidIterator();
+		}
+		return *this;
+	}
+
+	template<typename TKey, typename TValue>
+	constexpr ChainedBucketIterator<TKey, TValue> ChainedBucketIterator<TKey, TValue>::operator+(size_t offset)
+	{
+		ChainedBucketIterator iterator = *this;
+		return iterator += offset;
 	}
 
 	template<typename TKey, typename TValue>
@@ -79,20 +107,18 @@ export namespace jpt_private
 	template<typename TKey, typename TValue>
 	constexpr void ChainedBucketIterator<TKey, TValue>::FindNextValidIterator()
 	{
-		while (m_pBucket &&
-			m_iterator == m_pBucket->end() &&
+		while (m_iterator.GetNode() == nullptr &&
 			!HasReachedEnd())
 		{
 			++m_index;
 			if (HasReachedEnd())
 			{
-				m_pBucket = nullptr;
 				m_iterator = nullptr;
 			}
 			else
 			{
-				m_pBucket = &m_pBuckets->At(m_index);
-				m_iterator = m_pBucket->begin();
+				TBucket& pBucket = m_pBuckets->At(m_index);
+				m_iterator = pBucket.begin();
 			}
 		}
 	}
