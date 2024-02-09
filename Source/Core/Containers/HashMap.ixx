@@ -38,7 +38,7 @@ export namespace jpt
 
 	private:
 		TBuckets m_buckets; 
-		size_t m_size = 0;		// Count of actual elements in the map
+		size_t m_size = 0;		/**< Count of actual elements in the map */
 
 	public:
 		constexpr HashMap() = default;
@@ -50,7 +50,10 @@ export namespace jpt
 		constexpr ~HashMap();
 		
 		// Element access
+		/** Can insert/update the value at key, no matter if key is existed already */
 		constexpr       TValue& operator[](const TKey& key);
+
+		/** Cannot insert/update the value at key. Will fail assertion if key doesn't exist */
 		constexpr const TValue& operator[](const TKey& key) const;
 
 		// Iterators	
@@ -82,7 +85,10 @@ export namespace jpt
 
 	private:
 		constexpr void ResizeBuckets(size_t capacity);
+
 		constexpr size_t GetBucketIndex(const TKey& key) const;
+		constexpr       TBucket& GetBucket(const TKey& key);
+		constexpr const TBucket& GetBucket(const TKey& key) const;
 
 		template<Iterable TContainer>
 		constexpr void CopyData(const TContainer& container);
@@ -221,8 +227,7 @@ export namespace jpt
 			ResizeBuckets(m_size * kLocGrowMultiplier);
 		}
 
-		const size_t index = GetBucketIndex(key);
-		TBucket& bucket = m_buckets[index];
+		TBucket& bucket = GetBucket(key);
 
 		// Check if the key already exists. If it does, update the value and return it
 		bool found = false;
@@ -255,8 +260,7 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::Erase(const TKey& key)
 	{
-		const size_t index = GetBucketIndex(key);
-		TBucket& bucket = m_buckets[index];
+		TBucket& bucket = GetBucket(key);
 
 		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
 		{
@@ -335,12 +339,15 @@ export namespace jpt
 	}
 
 	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::MoveMap(HashMap&& other)
+	constexpr HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key)
 	{
-		m_buckets = Move(other.m_buckets);
-		m_size    = other.m_size;
+		return m_buckets[GetBucketIndex(key)];
+	}
 
-		other.m_size = 0;
+	template<typename _TKey, typename _TValue>
+	constexpr const HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key) const
+	{
+		return m_buckets[GetBucketIndex(key)];
 	}
 
 	template<typename _TKey, typename _TValue>
@@ -351,5 +358,14 @@ export namespace jpt
 		{
 			Insert(data);
 		}
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr void HashMap<_TKey, _TValue>::MoveMap(HashMap&& other)
+	{
+		m_buckets = Move(other.m_buckets);
+		m_size    = other.m_size;
+
+		other.m_size = 0;
 	}
 }
