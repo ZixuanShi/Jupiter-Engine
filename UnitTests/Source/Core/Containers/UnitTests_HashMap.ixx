@@ -8,6 +8,7 @@ export module UnitTests_HashMap;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.Function;
 import jpt.HashMap;
 
 bool UnitTest_HashMap_Trivial()
@@ -201,6 +202,33 @@ bool UnitTest_HashMap_NonTrivial_Move()
     return true;
 }
 
+void Func(int32& num)
+{
+    ++num;
+}
+
+bool UnitTest_HashMap_Function()
+{
+    auto lambda = [](int32& num)->void
+        {
+            num += 2;
+        };
+    
+    jpt::HashMap<jpt::String, jpt::Function<void(int32&)>> map;
+    map["Func1"] = Func;
+    map["Func2"] = lambda;
+
+    int32 i = 0;
+
+    map["Func1"](i);
+    JPT_RETURN_FALSE_IF_ERROR(i != 1, "");
+    
+    map["Func2"](i);
+    JPT_RETURN_FALSE_IF_ERROR(i != 3, "");
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_HashMap_Trivial(), "UnitTest_HashMap_Trivial Failed");
@@ -210,6 +238,8 @@ export bool RunUnitTests_HashMap()
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_HashMap_NonTrivial(), "UnitTest_HashMap_Trivial Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_HashMap_NonTrivial_Copy(), "UnitTest_HashMap_NonTrivial_Copy Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_HashMap_NonTrivial_Move(), "UnitTest_HashMap_NonTrivial_Move Failed");
+    
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_HashMap_Function(), "UnitTest_HashMap_Function Failed");
 
     return true;
 }

@@ -277,6 +277,11 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::Find(const TKey& key)
 	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+
 		const size_t index = GetBucketIndex(key);
 		TBucket& bucket = m_buckets[index];
 
@@ -294,6 +299,11 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::Find(const TKey& key) const
 	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+
 		const size_t index = GetBucketIndex(key);
 		const TBucket& bucket = m_buckets[index];
 
