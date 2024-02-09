@@ -50,10 +50,12 @@ export namespace jpt
 		constexpr ~HashMap();
 		
 		// Element access
-		/** Can insert/update the value at key, no matter if key is existed already */
+		/** If key exists, return reference to it's associated value, caller may update it outside
+			If key doesn't exist, insert a default value, return the inserted value too */
 		constexpr       TValue& operator[](const TKey& key);
 
-		/** Cannot insert/update the value at key. Will fail assertion if key doesn't exist */
+		/** If key exists, return reference to it's associated value, caller can't update it outside
+			If key doesn't exist, assertion fails */
 		constexpr const TValue& operator[](const TKey& key) const;
 
 		// Iterators	
