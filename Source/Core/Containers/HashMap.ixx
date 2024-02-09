@@ -28,6 +28,7 @@ export namespace jpt
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
 		using Iterator	    = jpt_private::ChainedBucketIterator<TKey, TValue>;
+		using ConstIterator = jpt_private::ConstChainedBucketIterator<TKey, TValue>;
 
 	private:
 		TBuckets m_buckets; 
@@ -43,6 +44,10 @@ export namespace jpt
 		// Iterators	
 		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                m_buckets.Front().begin()); }
 		constexpr Iterator end()   noexcept { return Iterator(&m_buckets, m_buckets.Size(), nullptr); }
+		constexpr ConstIterator begin()  const noexcept { return ConstIterator(&m_buckets, 0,                m_buckets.Front().begin()); }
+		constexpr ConstIterator end()    const noexcept { return ConstIterator(&m_buckets, m_buckets.Size(), nullptr); }
+		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(&m_buckets, 0,                m_buckets.Front().begin()); }
+		constexpr ConstIterator cend()   const noexcept { return ConstIterator(&m_buckets, m_buckets.Size(), nullptr); }
 
 		// Modifiers
 		constexpr void Clear();

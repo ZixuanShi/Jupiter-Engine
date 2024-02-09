@@ -159,7 +159,8 @@ export namespace jpt_private
 		constexpr ConstLinearNodeIterator operator-(size_t offset);
 
 		constexpr const TData* operator->() const { return &m_pNode->data; }
-		constexpr const TData& operator*() const { return m_pNode->data; }
+		constexpr const TData* operator&()  const { return &m_pNode->data; }
+		constexpr const TData& operator*()  const { return  m_pNode->data; }
 
 		constexpr const LinearNode<TData>* GetNode() const { return m_pNode; }
 

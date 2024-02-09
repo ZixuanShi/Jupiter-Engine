@@ -26,6 +26,8 @@ bool UnitTest_HashMap_Trivial()
         JPT_LOG(*itr);
     }
 
+    JPT_LOG(map);
+
     return true;
 }
 
@@ -44,6 +46,8 @@ bool UnitTest_HashMap_NonTrivial()
     {
         JPT_LOG(*itr);
     }
+
+    JPT_LOG(map);
 
     return true;
 }
