@@ -107,19 +107,18 @@ export namespace jpt_private
 	template<typename TKey, typename TValue>
 	constexpr void ChainedBucketIterator<TKey, TValue>::FindNextValidIterator()
 	{
-		while (m_iterator.GetNode() == nullptr &&
-			!HasReachedEnd())
+		while (!m_iterator.GetNode() && !HasReachedEnd())
 		{
 			++m_index;
+
 			if (HasReachedEnd())
 			{
 				m_iterator = nullptr;
+				return;
 			}
-			else
-			{
-				TBucket& pBucket = m_pBuckets->At(m_index);
-				m_iterator = pBucket.begin();
-			}
+
+			TBucket& pBucket = m_pBuckets->At(m_index);
+			m_iterator = pBucket.begin();
 		}
 	}
 }
