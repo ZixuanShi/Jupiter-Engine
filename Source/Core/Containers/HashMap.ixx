@@ -2,11 +2,17 @@
 
 module;
 
+#include "Core/Minimal/Macros.h"
+#include "Debugging/Assert.h"
+
+#include <initializer_list>
+
 export module jpt.HashMap;
 
 import jpt.Pair;
 import jpt.DynamicArray;
 import jpt.LinkedList;
+import jpt.Concepts;
 import jpt.Utilities;
 import jpt.Math;
 import jpt.Searching;
@@ -36,18 +42,28 @@ export namespace jpt
 
 	public:
 		constexpr HashMap() = default;
+		constexpr HashMap(const std::initializer_list<TData>& list);
+		constexpr HashMap(const HashMap& other);
+		constexpr HashMap(HashMap&& other) noexcept;
+		constexpr HashMap& operator=(const HashMap& other);
+		constexpr HashMap& operator=(HashMap&& other) noexcept;
 		constexpr ~HashMap();
 		
 		// Element access
-		constexpr TValue& operator[](const TKey& key) { return Insert(key, TValue()); }
+		constexpr       TValue& operator[](const TKey& key);
+		constexpr const TValue& operator[](const TKey& key) const;
 
 		// Iterators	
-		constexpr Iterator begin() noexcept { return Iterator(&m_buckets, 0,                m_buckets.Front().begin()); }
-		constexpr Iterator end()   noexcept { return Iterator(&m_buckets, m_buckets.Size(), nullptr); }
-		constexpr ConstIterator begin()  const noexcept { return ConstIterator(&m_buckets, 0,                m_buckets.Front().begin()); }
-		constexpr ConstIterator end()    const noexcept { return ConstIterator(&m_buckets, m_buckets.Size(), nullptr); }
-		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(&m_buckets, 0,                m_buckets.Front().begin()); }
-		constexpr ConstIterator cend()   const noexcept { return ConstIterator(&m_buckets, m_buckets.Size(), nullptr); }
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
+
+		// Capacity
+		constexpr size_t Size()  const { return m_size; }
+		constexpr bool IsEmpty() const { return m_size == 0; }
 
 		// Modifiers
 		constexpr void Clear();
@@ -57,21 +73,136 @@ export namespace jpt
 		constexpr TValue& Insert(const TData& element);
 
 		// Erasing
+		constexpr void Erase(const TKey& key);
 
-
-		// Lookup
+		// Searching
+		constexpr Iterator      Find(const TKey& key);
+		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Contains(const TKey& key) const;
 
 	private:
 		constexpr void ResizeBuckets(size_t capacity);
-
 		constexpr size_t GetBucketIndex(const TKey& key) const;
+
+		template<Iterable TContainer>
+		constexpr void CopyData(const TContainer& container);
+		constexpr void MoveMap(HashMap&& other);
 	};
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::HashMap(const std::initializer_list<TData>& list)
+	{
+		CopyData(list);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::HashMap(const HashMap& other)
+	{
+		CopyData(other);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::HashMap(HashMap&& other) noexcept
+	{
+		MoveMap(Move(other));
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>& HashMap<_TKey, _TValue>::operator=(const HashMap& other)
+	{
+		if (this != &other)
+		{
+			Clear();
+			CopyData(other);
+		}
+
+		return *this;
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>& HashMap<_TKey, _TValue>::operator=(HashMap&& other) noexcept
+	{
+		if (this != &other)
+		{
+			Clear();
+			MoveMap(Move(other));
+		}
+
+		return *this;
+	}
 
 	template<typename _TKey, typename _TValue>
 	constexpr HashMap<_TKey, _TValue>::~HashMap()
 	{
 		Clear();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::TValue& HashMap<_TKey, _TValue>::operator[](const TKey& key)
+	{
+		Iterator itr = Find(key);
+		if (itr == end())
+		{
+			return Insert(key, TValue());
+		}
+
+		return itr->second;
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr const HashMap<_TKey, _TValue>::TValue& HashMap<_TKey, _TValue>::operator[](const TKey& key) const
+	{
+		ConstIterator itr = Find(key);
+		JPT_ASSERT(itr != cend());
+		return itr->second;
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::begin() noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::end() noexcept
+	{
+		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::begin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::end() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::cbegin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::cend() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
 	template<typename _TKey, typename _TValue>
@@ -105,7 +236,7 @@ export namespace jpt
 			}
 		}
 
-		// If the key does not exist, add it
+		// If the key does not exist, add and return it
 		if (!found)
 		{
 			bucket.EmplaceBack(Pair{ key ,value });
@@ -122,20 +253,59 @@ export namespace jpt
 	}
 
 	template<typename _TKey, typename _TValue>
-	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
+	constexpr void HashMap<_TKey, _TValue>::Erase(const TKey& key)
+	{
+		const size_t index = GetBucketIndex(key);
+		TBucket& bucket = m_buckets[index];
+
+		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
+		{
+			if (itr->first == key)
+			{
+				bucket.Erase(itr);
+				return;
+			}
+		}
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::Find(const TKey& key)
+	{
+		const size_t index = GetBucketIndex(key);
+		TBucket& bucket = m_buckets[index];
+
+		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
+		{
+			if (itr->first == key)
+			{
+				return Iterator(&m_buckets, index, itr);
+			}
+		}
+
+		return end();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::Find(const TKey& key) const
 	{
 		const size_t index = GetBucketIndex(key);
 		const TBucket& bucket = m_buckets[index];
 
-		for (const TData& element : bucket)
+		for (auto itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
 		{
-			if (element.first == key)
+			if (itr->first == key)
 			{
-				return true;
+				return ConstIterator(&m_buckets, index, itr);
 			}
 		}
 
-		return false;
+		return cend();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
+	{
+		return Find(key) != cend();
 	}
 
 	template<typename _TKey, typename _TValue>
@@ -162,5 +332,24 @@ export namespace jpt
 	constexpr size_t HashMap<_TKey, _TValue>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash<TKey>()(key) % m_buckets.Size();
+	}
+
+	template<typename _TKey, typename _TValue>
+	constexpr void HashMap<_TKey, _TValue>::MoveMap(HashMap&& other)
+	{
+		m_buckets = Move(other.m_buckets);
+		m_size    = other.m_size;
+
+		other.m_size = 0;
+	}
+
+	template<typename _TKey, typename _TValue>
+	template<Iterable TContainer>
+	constexpr void HashMap<_TKey, _TValue>::CopyData(const TContainer& container)
+	{
+		for (const TData& data : container)
+		{
+			Insert(data);
+		}
 	}
 }

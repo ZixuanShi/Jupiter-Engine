@@ -66,7 +66,7 @@ export namespace jpt
 
 		str.Append("{ ");
 		str += jpt::ToString(first);
-		str += ", ";
+		str += ": ";
 		str += jpt::ToString(second);
 		str.Append(" }");
 
