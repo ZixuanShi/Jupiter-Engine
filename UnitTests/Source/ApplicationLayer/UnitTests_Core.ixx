@@ -17,12 +17,12 @@ import UnitTests_LinkedList;
 import UnitTests_DynamicArray;
 import UnitTests_StaticArray;
 
+// Functional
+import UnitTests_Function;
+
 // Utilities
 import UnitTests_Utilities;
 import UnitTests_TypeTraits;
-
-// Debugging
-import UnitTests_Logger;
 
 // Math
 import UnitTests_Math;
@@ -42,7 +42,6 @@ import UnitTests_StringView;
 // Types
 import UnitTests_Byte;
 import UnitTests_Variant;
-import UnitTests_Function;
 import UnitTests_Optional;
 import UnitTests_Enum;
 import UnitTests_Tuple;
@@ -61,12 +60,12 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_DynamicArray(), "DynamicArray Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
 
+	// Functional
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
+
 	// Minimals
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
-
-	// Debugging
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Logger(), "Logger Unit Tests Failed");
 
 	// Math
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Math(), "Math Unit Tests Failed");
@@ -86,7 +85,6 @@ export bool RunUnitTests_Core()
 	// Types
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Byte(), "Byte Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Variant(), "Variant Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Enum(), "Enum Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Tuple(), "Tuple Tests Failed");

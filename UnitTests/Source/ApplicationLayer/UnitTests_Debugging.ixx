@@ -1,0 +1,24 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+module;
+
+#include "Core/Minimal/Headers.h"
+
+export module UnitTests_Debugging;
+
+/** Unit Test Modules */
+
+// Logging
+import UnitTests_Logger;
+
+
+export bool RunUnitTests_Debugging()
+{
+	/** Unit Test Functions */
+
+	// Timing
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Logger(), "Logger Unit Tests Failed");
+    
+
+	return true;
+}

@@ -17,7 +17,7 @@ export bool RunUnitTests_System()
 	/** Unit Test Functions */
 
 	// Timing
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Timing(), "Timing Unit Tests Failed");
+	//JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Timing(), "Timing Unit Tests Failed");	// Will sleep the program to test timing
     
 
 	return true;

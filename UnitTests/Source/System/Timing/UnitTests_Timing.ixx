@@ -18,7 +18,7 @@ import jpt.Timing.Utils;
 bool UnitTest_Clock()
 {
     jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::Clock>();
-    //Sleep(3'000);
+    Sleep(3'000);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::Clock>();
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
@@ -31,7 +31,7 @@ bool UnitTest_Clock()
 bool UnitTest_StopWatch()
 {
     jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::StopWatch>();
-    //Sleep(3'500);
+    Sleep(3'500);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::StopWatch>();
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
@@ -43,8 +43,8 @@ bool UnitTest_StopWatch()
 
 export bool RunUnitTests_Timing()
 {
-    //JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Clock(), "UnitTest_Clock Failed");
-    //JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StopWatch(), "UnitTest_StopWatch Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Clock(), "UnitTest_Clock Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StopWatch(), "UnitTest_StopWatch Failed");
 
     return true;
 }
