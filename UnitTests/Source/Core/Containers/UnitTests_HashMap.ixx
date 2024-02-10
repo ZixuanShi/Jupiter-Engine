@@ -4,6 +4,8 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
+#include <unordered_map>
+
 export module UnitTests_HashMap;
 
 import jpt.TypeDefs;

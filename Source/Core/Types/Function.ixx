@@ -24,13 +24,22 @@ export namespace jpt
 
 	public:
 		constexpr Function() = default;
-		constexpr Function(FunctionType* pFunction) : m_pFunction(pFunction) {}
+
+		template<class TFunc>
+		constexpr Function(TFunc&& pFunction);
 
 		template<class TFunc>
 		constexpr Function& operator=(TFunc&& func);
 
 		constexpr TReturn operator()(TArgs&&... args);
 	};
+
+	template<class TReturn, class ...TArgs>
+	template<class TFunc>
+	constexpr Function<TReturn(TArgs...)>::Function(TFunc&& pFunction)
+		: m_pFunction(pFunction) 
+	{
+	}
 
 	template<class TReturn, class ...TArgs>
 	template<class TFunc>

@@ -40,6 +40,8 @@ import UnitTests_String;
 import UnitTests_StringView;
 
 // Types
+import UnitTests_Byte;
+import UnitTests_Variant;
 import UnitTests_Function;
 import UnitTests_Optional;
 import UnitTests_Enum;
@@ -82,6 +84,8 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringView(), "StringView Tests Failed");
 
 	// Types
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Byte(), "Byte Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Variant(), "Variant Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Enum(), "Enum Tests Failed");

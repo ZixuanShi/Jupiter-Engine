@@ -9,32 +9,48 @@ export module UnitTests_Function;
 import jpt.Function;
 import jpt.TypeDefs;
 
-bool TestFunction1(int32 n, char c)
+bool TestFunction1(int32& n)
 {
-    //JPT_LOG(n);
-    //JPT_LOG(c);
-    JPT_IGNORE(n);
-    JPT_IGNORE(c);
-	return true;
-}
+    if (n < 10)
+    {
+        return true;
+    }
 
-bool TestFunction2(int32 n, char c)
-{
-    //JPT_LOG(n * 2);
-    //JPT_LOG(c);
-    JPT_IGNORE(n);
-    JPT_IGNORE(c);
-
-    return true;
+    n = 100;
+    return false;
 }
 
 bool UnitTest_Function()
 {
-    jpt::Function<bool(int32, char)> function = TestFunction1;
+    // Functions
+    jpt::Function<bool(int32&)> function = TestFunction1;
+    int32 n = 5;
+    JPT_RETURN_FALSE_IF_ERROR(!function(n), "");
+    JPT_RETURN_FALSE_IF_ERROR(n != 5, "");
 
-    function(1, 'a');
-    function = TestFunction2;
-    function(1, 'a');
+    n = 10;
+    JPT_RETURN_FALSE_IF_ERROR(function(n), "");
+	JPT_RETURN_FALSE_IF_ERROR(n != 100, "");
+
+    // Lambda
+    auto lambda = [](int32& n) -> bool
+        { 
+            if (n < 10)
+            {
+                return true;
+            }
+
+            n = 100;
+            return false;
+        };
+    function = lambda;
+    n = 5;
+    JPT_RETURN_FALSE_IF_ERROR(!function(n), "");
+    JPT_RETURN_FALSE_IF_ERROR(n != 5, "");
+
+    n = 10;
+    JPT_RETURN_FALSE_IF_ERROR(function(n), "");
+    JPT_RETURN_FALSE_IF_ERROR(n != 100, "");
 
     return true;
 }
