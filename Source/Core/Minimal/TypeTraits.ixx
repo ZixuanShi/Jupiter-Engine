@@ -27,7 +27,7 @@ export namespace jpt
 	template<typename T> struct AddVolatile                  { using Type = volatile T; };
 #pragma endregion
 
-#pragma region Type Properties
+#pragma region Type Identification
 	template<typename T> constexpr bool IsLValueRef      = false;
 	template<typename T> constexpr bool IsLValueRef<T&>  = true;
 	template<typename T> constexpr bool IsRValueRef      = false;
@@ -50,6 +50,21 @@ export namespace jpt
 	template<typename T, typename ...TOthers>
 	constexpr bool IsAnyOf = (IsSameType<T, TOthers> || ...);
 
+	// Is Array
+	/** @note	This doesn't work on heap allocated array
+		@example	
+			int32 numArray[] = { 0,1 };	
+			jpt::IsArray<decltype(numArray)> // true
+		
+		@example
+			int32* numArray = new int[2];
+			jpt::IsArray<decltype(numArray)>;	// false */
+	template<typename T>           constexpr bool IsArray       = false;
+	template<typename T>           constexpr bool IsArray<T[]>  = true;
+	template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
+#pragma endregion
+
+#pragma region Type Properties
 	/** @return		Whether the given type is empty or not. */
 	template<typename T>
 	constexpr bool IsEmptyObj = __is_empty(T);
@@ -77,18 +92,5 @@ export namespace jpt
 
 	template<typename T>
 	constexpr bool IsTrivial = __is_trivially_constructible(T) && __is_trivially_copyable(T);
-
-	// Is Array
-	/** @note	This doesn't work on heap allocated array
-		@example	
-			int32 numArray[] = { 0,1 };	
-			jpt::IsArray<decltype(numArray)> // true
-		
-		@example
-			int32* numArray = new int[2];
-			jpt::IsArray<decltype(numArray)>;	// false */
-	template<typename T>           constexpr bool IsArray       = false;
-	template<typename T>           constexpr bool IsArray<T[]>  = true;
-	template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
 #pragma endregion
 }

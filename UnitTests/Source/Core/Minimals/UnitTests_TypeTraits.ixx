@@ -159,6 +159,16 @@ bool UnitTest_IsSameType()
 	return true;
 }
 
+template<typename ...TArgs>
+struct Foo
+{
+	template<typename T>
+	bool Work()
+	{
+		return jpt::IsAnyOf<T, TArgs...>;
+	}
+};
+
 bool UnitTest_IsAnyOf()
 {
 	bool value = false;
@@ -166,6 +176,10 @@ bool UnitTest_IsAnyOf()
 		{
 			return jpt::IsAnyOf<typename jpt::Decay<decltype(var)>::Type, int32, float, char, jpt::String>;
 		};
+
+	Foo<int32, float, char> foo;
+	JPT_RETURN_FALSE_IF_ERROR(!foo.Work<int32>(), "");
+	JPT_RETURN_FALSE_IF_ERROR(foo.Work<jpt::String>(), "");
 
 	int32 num = 10;
 	value = helper(num);
