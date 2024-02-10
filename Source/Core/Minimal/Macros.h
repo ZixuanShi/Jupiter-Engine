@@ -3,7 +3,7 @@
 #pragma once
 
 /** Used for hacky fix unused parameters */
-#define JPT_IGNORE(param) static_cast<void>(param)
+#define JPT_IGNORE(...) __VA_ARGS__
 
 /** Turn off optimization */
 #define JPT_DEOPTIMIZE __pragma(optimize("", off))

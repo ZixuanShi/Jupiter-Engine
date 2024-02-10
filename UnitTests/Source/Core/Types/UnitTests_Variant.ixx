@@ -15,7 +15,7 @@ import jpt.TypeDefs;
 bool UnitTest_Variant()
 {
     jpt::Variant<int32, char, bool> variant;
-   // variant = 5;
+    variant = 5;
     return true;
 }
 

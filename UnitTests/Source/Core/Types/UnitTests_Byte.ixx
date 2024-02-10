@@ -18,6 +18,7 @@ bool UnitTest_Byte()
 bool UnitTest_stdByte()
 {
     std::byte b = std::byte(0);
+    JPT_IGNORE(b);
 
     return true;
 }
