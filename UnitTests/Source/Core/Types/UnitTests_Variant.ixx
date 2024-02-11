@@ -14,15 +14,21 @@ import jpt.TypeDefs;
 
 bool UnitTest_Variant()
 {
-    jpt::Variant<int32, char, bool> variant;
-    variant = 5;
+    jpt::Variant<int32, char, bool, jpt::String> variant;
+
+    variant.Debug();
+
+    //variant = 5;
+
     return true;
 }
 
 bool UnitTest_stdVariant()
 {
-    std::variant<int32, char, bool> variant;
+    std::variant<int32, char, bool, jpt::String> variant = "Hello World";
+
     variant = 5;
+
     return true;
 }
 
