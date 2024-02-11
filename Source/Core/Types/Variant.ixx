@@ -1,12 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+// Warning: Client ixx file MUST #include <typeinfo> to use typeid. Otherwise error C2027: use of undefined type 'type_info'
+
 module;
 
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
-
-#include <typeinfo>
 
 export module jpt.Variant;
 

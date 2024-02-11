@@ -5,6 +5,7 @@ module;
 #include "Core/Minimal/Headers.h"
 
 #include <variant>
+#include <typeinfo>
 
 export module UnitTests_Variant;
 
