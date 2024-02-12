@@ -23,16 +23,16 @@ export namespace jpt
 	template<typename...TArgs>
 	class Variant
 	{
-		using TypeInfo = Pair<size_t, const char*>; // size_t: hash code, const char*: type name
+		using TypeInfo = Pair<size_t, const char*>; /**< size_t: hash code, const char*: type name */
 
-	private:
 		static constexpr size_t kMaxTypeSize = Max(sizeof(TArgs)...);	/**< The biggest size amoung TArgs */
 		static constexpr size_t kTypesCount  = sizeof...(TArgs);	    /**< Count of TArgs */
 
-		Byte m_buffer[kMaxTypeSize];	/**< The buffer to store the value of the Variant. Sized by the biggest type */
-		TypeInfo m_typeInfos[kTypesCount];	/**<  */
+	private:
+		Byte     m_buffer[kMaxTypeSize];    /**< The buffer to store the value of the Variant. Sized by the biggest type */
+		TypeInfo m_typeInfos[kTypesCount];  /**< Stores info about TArgs */
 
-		size_t m_currentIndex = kInvalidValue<size_t>;	/**< The index of the current using type in the Variant */
+		size_t m_currentIndex = kInvalidValue<size_t>;  /**< The current using index in m_typeInfos */
 
 	public:
 		constexpr Variant();
@@ -47,27 +47,32 @@ export namespace jpt
 
 	private:
 		template<typename T>
-		void Construct(const T& value);
+		constexpr void Construct(const T& value);
 
-		void Destruct();
+		constexpr void Destruct();
 
+		template<typename T>
+		constexpr size_t FindIndexOfType(const T& value) const;
+
+		// Recursive initializing type info. Should be called only once
 		template<typename TFinal>
-		constexpr void SetFinalTypeHashCode();
+		constexpr void InitFinalTypeInfo();
 
 		template<typename TCurrent, typename ...TRest>
-		constexpr void SetTypeHashCode();
+		constexpr void InitTypeInfos();
 	};
 
 	template<typename ...TArgs>
 	constexpr Variant<TArgs...>::Variant()
 	{
-		SetTypeHashCode<TArgs...>();
+		InitTypeInfos<TArgs...>();
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
 	constexpr Variant<TArgs...>::Variant(const T& value)
 	{
+		InitTypeInfos<TArgs...>();
 		Construct<T>(value);
 	}
 
@@ -82,22 +87,24 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	void Variant<TArgs...>::Construct(const T& value)
+	constexpr void Variant<TArgs...>::Construct(const T& value)
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in Variant");
 
-		JPT_IGNORE(value);
+		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
+		m_currentIndex = FindIndexOfType(value);
 	}
 
 	template<typename ...TArgs>
-	void Variant<TArgs...>::Destruct()
+	constexpr void Variant<TArgs...>::Destruct()
 	{
 		if (m_currentIndex == kInvalidValue<size_t>)
 		{
 			return;
 		}
 
-		
+		// Call the destructor of the current type
+
 	}
 
 	template<typename ...TArgs>
@@ -110,25 +117,45 @@ export namespace jpt
 	}
 
 	template<typename ...TArgs>
-	template<typename TFinal>
-	constexpr void Variant<TArgs...>::SetFinalTypeHashCode()
+	template<typename T>
+	constexpr size_t Variant<TArgs...>::FindIndexOfType(const T& value) const
 	{
-		m_typeInfos[kTypesCount - 1] = { typeid(TFinal).hash_code(), typeid(TFinal).name() };
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in Variant");
+
+		const size_t hashCode = typeid(value).hash_code();
+		for (size_t i = 0; i < kTypesCount; ++i)
+		{
+			if (m_typeInfos[i].first == hashCode)
+			{
+				return i;
+			}
+		}
+
+		return kInvalidValue<size_t>;
 	}
 
 	template<typename ...TArgs>
-	template<typename TCurrent, typename ...TRest>
-	constexpr void Variant<TArgs...>::SetTypeHashCode()
+	template<typename TFinal>
+	constexpr void Variant<TArgs...>::InitFinalTypeInfo()
 	{
-		m_typeInfos[kTypesCount - sizeof...(TRest) - 1] = { typeid(TCurrent).hash_code(), typeid(TCurrent).name() };
+		m_typeInfos[kTypesCount - 1].first  = typeid(TFinal).hash_code();
+		m_typeInfos[kTypesCount - 1].second = typeid(TFinal).name();
+	};
+
+	template<typename ...TArgs>
+	template<typename TCurrent, typename ...TRest>
+	constexpr void Variant<TArgs...>::InitTypeInfos()
+	{
+		m_typeInfos[kTypesCount - sizeof...(TRest) - 1].first  = typeid(TCurrent).hash_code();
+		m_typeInfos[kTypesCount - sizeof...(TRest) - 1].second = typeid(TCurrent).name();
 
 		if constexpr (sizeof...(TRest) > 1)
 		{
-			SetTypeHashCode<TRest...>();
+			InitTypeInfos<TRest...>();
 		}
 		else
 		{
-			SetFinalTypeHashCode<TRest...>();
+			InitFinalTypeInfo<TRest...>();
 		}
 	}
 }
