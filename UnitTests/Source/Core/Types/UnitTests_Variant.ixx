@@ -12,17 +12,56 @@ import jpt.Variant;
 import jpt.Utilities;
 import jpt.TypeDefs;
 
+class LoggingTester
+{
+public:
+    LoggingTester()
+    {
+        JPT_LOG("LogingTester::LogingTester()");
+    }
+
+    ~LoggingTester()
+    {
+        JPT_LOG("LogingTester::~LogingTester()");
+    }
+
+    LoggingTester(const LoggingTester&)
+    {
+        JPT_LOG("LogingTester::LogingTester(const LogingTester&)");
+    }
+
+    LoggingTester(LoggingTester&&)
+    {
+        JPT_LOG("LogingTester::LogingTester(LogingTester&&)");
+    }
+
+    LoggingTester& operator=(const LoggingTester&)
+    {
+        JPT_LOG("LogingTester::operator=(const LogingTester&)");
+        return *this;
+    }
+
+    LoggingTester& operator=(LoggingTester&&)
+    {
+        JPT_LOG("LogingTester::operator=(LogingTester&&)");
+        return *this;
+    }
+};
+
 bool UnitTest_Variant()
 {
-    jpt::Variant<int32, char, bool, jpt::String> variant;
+    jpt::Variant<int32, char, bool, jpt::String, LoggingTester> variant;
 
     variant = 42;
-    variant.Get<int32>() += 2;
-    JPT_LOG(variant.Get<int32>());
+    variant.As<int32>() += 2;
+    JPT_LOG(variant.As<int32>());
 
     variant = jpt::String("Hello World");
-    JPT_LOG(variant.Get<jpt::String>());
+    JPT_LOG(variant.As<jpt::String>());
 
+    LoggingTester loggingTester;
+    variant = LoggingTester();
+    variant = loggingTester;
 
     return true;
 }

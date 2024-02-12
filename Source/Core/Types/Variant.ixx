@@ -1,10 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Minimal/Macros.h"
-#include "Debugging/Assert.h"
-
 export module jpt.Variant;
 
 import jpt.Allocator;
@@ -34,8 +29,8 @@ export namespace jpt
 		template<typename T>
 		constexpr Variant& operator=(const T& value);
 
-		template<typename T> constexpr       T& Get();
-		template<typename T> constexpr const T& Get() const;
+		template<typename T> constexpr       T& As();
+		template<typename T> constexpr const T& As() const;
 
 	private:
 		template<typename T>
@@ -73,7 +68,7 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr T& Variant<TArgs...>::Get()
+	constexpr T& Variant<TArgs...>::As()
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 		return reinterpret_cast<T&>(m_buffer);
@@ -81,7 +76,7 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr const T& Variant<TArgs...>::Get() const
+	constexpr const T& Variant<TArgs...>::As() const
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 		return reinterpret_cast<const T&>(m_buffer);
