@@ -17,7 +17,7 @@ bool UnitTest_Variant()
 {
     jpt::Variant<int32, char, bool, jpt::String> variant;
     variant.Debug();
-    variant = 5;
+    variant = 1;
 
     return true;
 }

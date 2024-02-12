@@ -51,12 +51,13 @@ export namespace jpt
 
 		constexpr void Destruct();
 
-		template<typename T>
-		constexpr size_t FindIndexOfType(const T& value) const;
+		// Find the index of the given type in TArgs
+		template<typename TypeToFind, typename TCurrent, typename ...TRest>
+		constexpr size_t FindIndexOfType() const;
 
 		// Recursive initializing type info. Should be called only once
-		template<typename TFinal>
-		constexpr void InitFinalTypeInfo();
+		template<typename TLast>
+		constexpr void InitLastTypeInfo();
 
 		template<typename TCurrent, typename ...TRest>
 		constexpr void InitTypeInfos();
@@ -89,10 +90,10 @@ export namespace jpt
 	template<typename T>
 	constexpr void Variant<TArgs...>::Construct(const T& value)
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in Variant");
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
-		m_currentIndex = FindIndexOfType(value);
+		m_currentIndex = FindIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
@@ -117,29 +118,25 @@ export namespace jpt
 	}
 
 	template<typename ...TArgs>
-	template<typename T>
-	constexpr size_t Variant<TArgs...>::FindIndexOfType(const T& value) const
+	template<typename TypeToFind, typename TCurrent, typename ...TRest>
+	constexpr size_t Variant<TArgs...>::FindIndexOfType() const
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in Variant");
-
-		const size_t hashCode = typeid(value).hash_code();
-		for (size_t i = 0; i < kTypesCount; ++i)
+		if constexpr (IsSameType<TypeToFind, TCurrent>)
 		{
-			if (m_typeInfos[i].first == hashCode)
-			{
-				return i;
-			}
+			return kTypesCount - sizeof...(TRest) - 1;
 		}
-
-		return kInvalidValue<size_t>;
+		else
+		{
+			return FindIndexOfType<TypeToFind, TRest...>();
+		}
 	}
 
 	template<typename ...TArgs>
-	template<typename TFinal>
-	constexpr void Variant<TArgs...>::InitFinalTypeInfo()
+	template<typename TLast>
+	constexpr void Variant<TArgs...>::InitLastTypeInfo()
 	{
-		m_typeInfos[kTypesCount - 1].first  = typeid(TFinal).hash_code();
-		m_typeInfos[kTypesCount - 1].second = typeid(TFinal).name();
+		m_typeInfos[kTypesCount - 1].first  = typeid(TLast).hash_code();
+		m_typeInfos[kTypesCount - 1].second = typeid(TLast).name();
 	};
 
 	template<typename ...TArgs>
@@ -155,7 +152,7 @@ export namespace jpt
 		}
 		else
 		{
-			InitFinalTypeInfo<TRest...>();
+			InitLastTypeInfo<TRest...>();
 		}
 	}
 }
