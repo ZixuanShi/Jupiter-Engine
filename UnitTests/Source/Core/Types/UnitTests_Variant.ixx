@@ -59,19 +59,20 @@ bool UnitTest_Variant()
     variant = jpt::String("Hello World");
     JPT_LOG(variant.As<jpt::String>());
 
-    LoggingTester loggingTester;
-    variant = LoggingTester();
-    variant = loggingTester;
+
+    JPT_LOG(sizeof(variant));
 
     return true;
 }
 
 bool UnitTest_stdVariant()
 {
-    std::variant<int32, char, bool, jpt::String> variant = "Hello World";
+    std::variant<int32, char, bool, jpt::String, LoggingTester> variant;
 
     variant = 5;
     variant = false;
+    JPT_LOG(sizeof(variant));
+
     //JPT_LOG(std::get<bool>(variant));
 
     return true;

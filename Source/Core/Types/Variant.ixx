@@ -5,19 +5,25 @@ export module jpt.Variant;
 import jpt.Allocator;
 import jpt.Byte;
 import jpt.TypeTraits;
+import jpt.TypeDefs;
 import jpt.Math;
+import jpt.Limits;
 
 export namespace jpt
 {
 	template<typename...TArgs>
 	class Variant
 	{
+		using TIndex = uint8;
+
 		static constexpr size_t kMaxTypeSize = Max(sizeof(TArgs)...);	/**< The biggest size amoung TArgs */
-		static constexpr size_t kTypesCount  = sizeof...(TArgs);	    /**< Count of TArgs */
+		static constexpr TIndex kTypesCount  = sizeof...(TArgs);	    /**< Count of TArgs */
+
+		static_assert(kTypesCount > 0, "Variant must have at least one type");
 
 	private:
 		Byte m_buffer[kMaxTypeSize];    /**< The buffer to store the value of the Variant. Sized by the biggest type */
-		size_t m_currentIndex = kInvalidValue<size_t>;  /**< The current using index in m_typeInfos */
+		TIndex m_currentIndex = kInvalidValue<TIndex>;  /**< The current using index in m_typeInfos */
 
 	public:
 		constexpr Variant() = default;
@@ -41,7 +47,7 @@ export namespace jpt
 
 		/** @return		The index of the TypeToFind in TArgs */
 		template<typename TypeToFind, typename TCurrent, typename ...TRest>
-		constexpr size_t GetIndexOfType() const;
+		constexpr TIndex GetIndexOfType() const;
 	};
 
 	template<typename ...TArgs>
@@ -99,7 +105,7 @@ export namespace jpt
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
 			Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
-			m_currentIndex = kInvalidValue<size_t>;
+			m_currentIndex = kInvalidValue<TIndex>;
 		}
 
 		if constexpr (sizeof...(TRest) > 0)
@@ -110,7 +116,7 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename TypeToFind, typename TCurrent, typename ...TRest>
-	constexpr size_t Variant<TArgs...>::GetIndexOfType() const
+	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const
 	{
 		if constexpr (IsSameType<TypeToFind, TCurrent>)
 		{
