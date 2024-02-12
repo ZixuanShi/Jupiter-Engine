@@ -36,6 +36,7 @@ export namespace jpt
 
 	public:
 		constexpr Variant();
+		constexpr ~Variant();
 
 		template<typename T>
 		constexpr Variant(const T& value);
@@ -43,22 +44,21 @@ export namespace jpt
 		template<typename T>
 		constexpr Variant& operator=(const T& value);
 
-		void Debug();
+		template<typename T> constexpr       T& Get();
+		template<typename T> constexpr const T& Get() const;
 
 	private:
 		template<typename T>
 		constexpr void Construct(const T& value);
 
+		template<typename TCurrent, typename ...TRest>
 		constexpr void Destruct();
 
-		// Find the index of the given type in TArgs
+		/** @return		The index of the TypeToFind in TArgs */
 		template<typename TypeToFind, typename TCurrent, typename ...TRest>
-		constexpr size_t FindIndexOfType() const;
+		constexpr size_t GetIndexOfType() const;
 
-		// Recursive initializing type info. Should be called only once
-		template<typename TLast>
-		constexpr void InitLastTypeInfo();
-
+		/** Recursively initializing m_typeInfos. Should be called only once in constructor */
 		template<typename TCurrent, typename ...TRest>
 		constexpr void InitTypeInfos();
 	};
@@ -67,6 +67,12 @@ export namespace jpt
 	constexpr Variant<TArgs...>::Variant()
 	{
 		InitTypeInfos<TArgs...>();
+	}
+
+	template<typename ...TArgs>
+	constexpr Variant<TArgs...>::~Variant()
+	{
+		Destruct<TArgs...>();
 	}
 
 	template<typename ...TArgs>
@@ -81,9 +87,29 @@ export namespace jpt
 	template<typename T>
 	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const T& value)
 	{
-		Destruct();
+		Destruct<TArgs...>();
 		Construct<T>(value);
 		return *this;
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
+	constexpr T& Variant<TArgs...>::Get()
+	{
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+		JPT_ASSERT(m_typeInfos[m_currentIndex].first == typeid(T).hash_code(), "Get() called with not current using type");
+
+		return reinterpret_cast<T&>(m_buffer);
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
+	constexpr const T& Variant<TArgs...>::Get() const
+	{
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+		JPT_ASSERT(m_typeInfos[m_currentIndex].first == typeid(T).hash_code(), "Get() called with not current using type");
+
+		return reinterpret_cast<const T&>(m_buffer);
 	}
 
 	template<typename ...TArgs>
@@ -93,33 +119,28 @@ export namespace jpt
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
-		m_currentIndex = FindIndexOfType<T, TArgs...>();
+		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
+	template<typename TCurrent, typename ...TRest>
 	constexpr void Variant<TArgs...>::Destruct()
 	{
-		if (m_currentIndex == kInvalidValue<size_t>)
+		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
-			return;
+			Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
+			m_currentIndex = kInvalidValue<size_t>;
 		}
 
-		// Call the destructor of the current type
-
-	}
-
-	template<typename ...TArgs>
-	void Variant<TArgs...>::Debug()
-	{
-		for (size_t i = 0; i < kTypesCount; ++i)
+		if constexpr (sizeof...(TRest) > 0)
 		{
-			JPT_LOG("Index: %zu, HashCode: %zu, Name: %s", i, m_typeInfos[i].first, m_typeInfos[i].second);
+			Destruct<TRest...>();
 		}
 	}
 
 	template<typename ...TArgs>
 	template<typename TypeToFind, typename TCurrent, typename ...TRest>
-	constexpr size_t Variant<TArgs...>::FindIndexOfType() const
+	constexpr size_t Variant<TArgs...>::GetIndexOfType() const
 	{
 		if constexpr (IsSameType<TypeToFind, TCurrent>)
 		{
@@ -127,17 +148,9 @@ export namespace jpt
 		}
 		else
 		{
-			return FindIndexOfType<TypeToFind, TRest...>();
+			return GetIndexOfType<TypeToFind, TRest...>();
 		}
 	}
-
-	template<typename ...TArgs>
-	template<typename TLast>
-	constexpr void Variant<TArgs...>::InitLastTypeInfo()
-	{
-		m_typeInfos[kTypesCount - 1].first  = typeid(TLast).hash_code();
-		m_typeInfos[kTypesCount - 1].second = typeid(TLast).name();
-	};
 
 	template<typename ...TArgs>
 	template<typename TCurrent, typename ...TRest>
@@ -146,13 +159,9 @@ export namespace jpt
 		m_typeInfos[kTypesCount - sizeof...(TRest) - 1].first  = typeid(TCurrent).hash_code();
 		m_typeInfos[kTypesCount - sizeof...(TRest) - 1].second = typeid(TCurrent).name();
 
-		if constexpr (sizeof...(TRest) > 1)
+		if constexpr (sizeof...(TRest) > 0)
 		{
 			InitTypeInfos<TRest...>();
-		}
-		else
-		{
-			InitLastTypeInfo<TRest...>();
 		}
 	}
 }

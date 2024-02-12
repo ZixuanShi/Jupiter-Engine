@@ -16,8 +16,14 @@ import jpt.TypeDefs;
 bool UnitTest_Variant()
 {
     jpt::Variant<int32, char, bool, jpt::String> variant;
-    variant.Debug();
-    variant = 1;
+
+    variant = 42;
+    variant.Get<int32>() += 2;
+    JPT_LOG(variant.Get<int32>());
+
+    variant = jpt::String("Hello World");
+    JPT_LOG(variant.Get<jpt::String>());
+
 
     return true;
 }
@@ -27,6 +33,8 @@ bool UnitTest_stdVariant()
     std::variant<int32, char, bool, jpt::String> variant = "Hello World";
 
     variant = 5;
+    variant = false;
+    //JPT_LOG(std::get<bool>(variant));
 
     return true;
 }
