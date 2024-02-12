@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
+#include <typeinfo>
 #include <variant>
 
 export module UnitTests_Variant;
@@ -55,12 +56,14 @@ bool UnitTest_Variant()
     variant = 42;
     variant.As<int32>() += 2;
     JPT_LOG(variant.As<int32>());
+    JPT_LOG(variant.Is<int32>());
+    JPT_LOG(variant.Is<jpt::String>());
 
     variant = jpt::String("Hello World");
     JPT_LOG(variant.As<jpt::String>());
 
-
-    JPT_LOG(sizeof(variant));
+    JPT_LOG(variant.Is<int32>());
+    JPT_LOG(variant.Is<jpt::String>());
 
     return true;
 }
@@ -71,9 +74,6 @@ bool UnitTest_stdVariant()
 
     variant = 5;
     variant = false;
-    JPT_LOG(sizeof(variant));
-
-    //JPT_LOG(std::get<bool>(variant));
 
     return true;
 }

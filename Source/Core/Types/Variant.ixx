@@ -7,7 +7,6 @@ import jpt.Byte;
 import jpt.TypeTraits;
 import jpt.TypeDefs;
 import jpt.Math;
-import jpt.Limits;
 
 export namespace jpt
 {
@@ -22,7 +21,7 @@ export namespace jpt
 		static_assert(kTypesCount > 0, "Variant must have at least one type");
 
 	private:
-		Byte m_buffer[kMaxTypeSize];    /**< The buffer to store the value of the Variant. Sized by the biggest type */
+		Byte m_buffer[kMaxTypeSize];       /**< The buffer to store the value of the Variant. Sized by the biggest type */
 		TIndex m_currentIndex = kInvalidValue<TIndex>;  /**< The current using index in m_typeInfos */
 
 	public:
@@ -35,8 +34,13 @@ export namespace jpt
 		template<typename T>
 		constexpr Variant& operator=(const T& value);
 
+		/** @return		Reference to the current buffer data that casted to given T */
 		template<typename T> constexpr       T& As();
 		template<typename T> constexpr const T& As() const;
+
+		/** @return		true if this variant's current assigned type is same as the T */
+		template<typename T>
+		constexpr bool Is() const;
 
 	private:
 		template<typename T>
@@ -86,6 +90,14 @@ export namespace jpt
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 		return reinterpret_cast<const T&>(m_buffer);
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
+	constexpr bool Variant<TArgs...>::Is() const
+	{
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+		return m_currentIndex == GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
