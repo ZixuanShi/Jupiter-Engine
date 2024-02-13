@@ -18,6 +18,7 @@ import UnitTests_DynamicArray;
 import UnitTests_StaticArray;
 
 // Functional
+import UnitTests_Slot;
 import UnitTests_Function;
 
 // Utilities
@@ -61,6 +62,7 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
 
 	// Functional
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Slot(), "Slot Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
 
 	// Minimals

@@ -1,7 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
 export module jpt.Function;
 
 import jpt.TypeTraits;
@@ -32,6 +30,8 @@ export namespace jpt
 		constexpr Function& operator=(TFunc&& func);
 
 		constexpr TReturn operator()(TArgs&&... args);
+
+		constexpr bool operator==(const Function& other) const;
 	};
 
 	template<class TReturn, class ...TArgs>
@@ -53,5 +53,11 @@ export namespace jpt
 	constexpr TReturn Function<TReturn(TArgs...)>::operator()(TArgs&&... args)
 	{
 		return m_pFunction(Forward<TArgs>(args)...);
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr bool Function<TReturn(TArgs...)>::operator==(const Function& other) const
+	{
+		return m_pFunction == other.m_pFunction;
 	}
 }
