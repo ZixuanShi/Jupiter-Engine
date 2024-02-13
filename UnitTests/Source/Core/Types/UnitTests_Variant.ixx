@@ -44,7 +44,41 @@ bool UnitTest_Variant()
 
 bool UnitTest_Variant_Copy()
 {
-    //jpt::Variant<int32, char, bool, jpt::String> variant;
+    jpt::Variant<int32, char, bool, jpt::String> originalVariant;
+    originalVariant = jpt::String("Original");
+
+    jpt::Variant<int32, char, bool, jpt::String> copiedVariant = originalVariant;
+    copiedVariant.As<jpt::String>() = "Copied";
+
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<jpt::String>() != "Original", "");
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<jpt::String>() != "Copied", "");
+
+    originalVariant = 42;
+    copiedVariant = originalVariant;
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<int32>() != 42, "");
+
+    copiedVariant.As<int32>() = 84;
+
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<int32>() != 42, "");
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<int32>() != 84, "");
+
+    copiedVariant = false;
+    JPT_RETURN_FALSE_IF_ERROR(!copiedVariant.Is<bool>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<bool>() != false, "");
+    
+    originalVariant = 'a';
+    JPT_RETURN_FALSE_IF_ERROR(!originalVariant.Is<char>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<char>() != 'a', "");
+
+    copiedVariant = originalVariant;
+    JPT_RETURN_FALSE_IF_ERROR(!originalVariant.Is<char>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<char>() != 'a', "");
+    JPT_RETURN_FALSE_IF_ERROR(!copiedVariant.Is<char>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<char>() != 'a', "");
+
+    copiedVariant.As<char>() = 'b';
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<char>() != 'a', "");
+    JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<char>() != 'b', "");
 
     return true;
 }

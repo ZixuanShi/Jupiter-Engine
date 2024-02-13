@@ -4,6 +4,8 @@ module;
 
 #include "Debugging/Assert.h"
 
+#include <string>
+
 export module jpt.Variant;
 
 import jpt.Allocator;
@@ -31,12 +33,14 @@ export namespace jpt
 	public:
 		constexpr Variant() = default;
 		constexpr ~Variant();
+		constexpr Variant(const Variant& other);
+		constexpr Variant(Variant&& other) = delete;
+		constexpr Variant& operator=(const Variant& other);
+		constexpr Variant& operator=(Variant&& other) = delete;
 
-		template<typename T>
-		constexpr Variant(const T& value);
-
-		template<typename T>
-		constexpr Variant& operator=(const T& value);
+		/** Copy-Assign value to this variant */
+		template<typename T> constexpr Variant(const T& value);
+		template<typename T> constexpr Variant& operator=(const T& value);
 
 		/** @return		Reference to the current buffer data that casted to given T */
 		template<typename T> constexpr       T& As();
@@ -56,12 +60,40 @@ export namespace jpt
 		/** @return		The index of the TypeToFind in TArgs */
 		template<typename TypeToFind, typename TCurrent, typename ...TRest>
 		constexpr TIndex GetIndexOfType() const;
+
+		template<typename TCurrent, typename ...TRest>
+		constexpr void Copy(const Variant& other);
 	};
 
 	template<typename ...TArgs>
 	constexpr Variant<TArgs...>::~Variant()
 	{
 		Destruct<TArgs...>();
+	}
+
+	template<typename ...TArgs>
+	constexpr Variant<TArgs...>::Variant(const Variant& other)
+	{
+		if (other.m_currentIndex != kInvalidValue<TIndex>)
+		{
+			Copy<TArgs...>(other);
+		}
+	}
+
+	template<typename ...TArgs>
+	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const Variant& other)
+	{
+		if (this != &other)
+		{
+			Destruct<TArgs...>();
+
+			if (other.m_currentIndex != kInvalidValue<TIndex>)
+			{
+				Copy<TArgs...>(other);
+			}
+		}
+
+		return *this;
 	}
 
 	template<typename ...TArgs>
@@ -123,7 +155,11 @@ export namespace jpt
 	{
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
-			Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
+			if constexpr (!IsTriviallyDestructible<TCurrent>)
+			{
+				Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
+			}
+
 			m_currentIndex = kInvalidValue<TIndex>;
 		}
 
@@ -144,6 +180,29 @@ export namespace jpt
 		else
 		{
 			return GetIndexOfType<TypeToFind, TRest...>();
+		}
+	}
+
+	template<typename ...TArgs>
+	template<typename TCurrent, typename ...TRest>
+	constexpr void Variant<TArgs...>::Copy(const Variant& other)
+	{
+		if (other.m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
+		{
+			if constexpr (IsTriviallyCopyable<TCurrent>)
+			{
+				std::memcpy(m_buffer, other.m_buffer, sizeof(TCurrent));
+				m_currentIndex = kTypesCount - sizeof...(TRest) - 1;
+			}
+			else
+			{
+				Construct<TCurrent>(other.As<TCurrent>());
+			}
+		}
+
+		if constexpr (sizeof...(TRest) > 0)
+		{
+			Copy<TRest...>(other);
 		}
 	}
 }
