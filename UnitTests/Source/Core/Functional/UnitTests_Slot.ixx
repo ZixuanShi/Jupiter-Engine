@@ -8,6 +8,8 @@ export module UnitTests_Slot;
 
 import jpt.Slot;
 import jpt.TypeDefs;
+import jpt.Variant;
+import jpt.DynamicArray;
 
 void VoidFunc(int32& n)
 {
@@ -52,6 +54,11 @@ bool UnitTest_Slot_Void()
     JPT_RETURN_FALSE_IF_ERROR(voidFuncIndex != 0, "");
     JPT_RETURN_FALSE_IF_ERROR(lambdaVarIndex != 2, "");
 
+    slot.Erase(lambdaPlaceHolderIndex);
+    jpt::Function<void(int32&)> function = VoidFunc;
+    size_t functionIndex = slot.Add(function);
+    JPT_RETURN_FALSE_IF_ERROR(functionIndex != 1, "");
+
     // Call all
     slot(n);
     JPT_RETURN_FALSE_IF_ERROR(n != 64, "");
@@ -59,9 +66,66 @@ bool UnitTest_Slot_Void()
     return true;
 }
 
+int32 CharToInt(char c)
+{
+    return c - '0';
+}
+
+int32 CharToIntTimes2(char c)
+{
+    return (c - '0') * 2;
+}
+
+bool UnitTest_Slot_Return()
+{
+    jpt::Slot<int32(char)> slot;
+
+    size_t charToIntHandle        = slot.Add(CharToInt);
+    size_t charToIntTimes2Handle  = slot.Add(CharToIntTimes2);
+    size_t charToIntSquaredHandle = slot.Add([](char c) -> int32 {  return (c - '0') * (c - '0'); });
+    
+    jpt::DynamicArray<int32> results = slot.ReturnAll('3');
+
+    JPT_RETURN_FALSE_IF_ERROR(results[charToIntHandle]        != 3, "");
+    JPT_RETURN_FALSE_IF_ERROR(results[charToIntTimes2Handle]  != 6, "");
+    JPT_RETURN_FALSE_IF_ERROR(results[charToIntSquaredHandle] != 9, "");
+
+    return true;
+}
+
+using TVariant = jpt::Variant<int32, bool, char>;
+
+bool SetVariant(TVariant& variant)
+{
+    variant = 'c';
+    return true;
+}
+
+bool UnitTest_Slot_Variant()
+{
+    jpt::Slot<bool(TVariant&)> slot;
+
+    slot.Add(SetVariant);
+    slot.Add([](TVariant& variant) 
+        {
+            variant.As<char>() += 1;
+            return true;
+        });
+
+    TVariant variant;
+    slot(variant);
+
+    JPT_RETURN_FALSE_IF_ERROR(!variant.Is<char>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(variant.As<char>() != 'd', "");
+
+    return true;
+}
+
 export bool RunUnitTests_Slot()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Slot_Void(), "UnitTest_Slot Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Slot_Return(), "UnitTest_Slot_Return Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Slot_Variant(), "UnitTest_Slot_Variant Failed");
 
     return true;
 }

@@ -29,14 +29,18 @@ export namespace jpt
 
 	public:
 		/** Adds a new function to this Slot and returns it's index as handle */
-		constexpr size_t Add(TFunc&& function);
+		constexpr size_t Add(TFunc&& function);			// Accepts R-value to free functions and lambdas
+		constexpr size_t Add(const TFunc& function);	// Accepts L-value to existing jpt::Function instance
 
-		/** Enumerate Slot, try to find and erase this function.  */
-		constexpr bool Erase(TFunc&& function);
-
-		/** Erases a function from this Slot
+		/** Erases a function from this Slot with O(1) time
 			@param	index		The index of the function to erase from this Slot */
 		constexpr void Erase(size_t index);
+
+		/** Enumerate Slot, try to find and erase this function.
+			@note	When possible, use handle and erase with index instead for performance */
+		constexpr bool Erase(TFunc&& function);
+
+		/** Clears all the functions in this slot. Reset array to empty */
 		constexpr void Clear();
 
 		/** Calls all functions in this Slot with the given arguments */
@@ -59,12 +63,28 @@ export namespace jpt
 		{
 			if (!m_functions[i].IsSet())
 			{
-				m_functions[i] = Forward<TFunc>(function);
+				m_functions[i] = Move(function);
 				return i;
 			}
 		}
 
 		m_functions.EmplaceBack(Forward<TFunc>(function));
+		return m_functions.Size() - 1;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr size_t Slot<TReturn(TArgs...)>::Add(const TFunc& function)
+	{
+		for (size_t i = 0; i < m_functions.Size(); ++i)
+		{
+			if (!m_functions[i].IsSet())
+			{
+				m_functions[i] = function;
+				return i;
+			}
+		}
+
+		m_functions.EmplaceBack(function);
 		return m_functions.Size() - 1;
 	}
 
@@ -123,8 +143,6 @@ export namespace jpt
 	template<class TReturn, class ...TArgs>
 	constexpr DynamicArray<TReturn> Slot<TReturn(TArgs...)>::ReturnAll(TArgs && ...args)
 	{
-		static_assert(!IsSameType<TReturn, void>(), "Return type of Slot must not be void.");
-
 		DynamicArray<TReturn> results;
 		results.Reserve(m_functions.Size());
 

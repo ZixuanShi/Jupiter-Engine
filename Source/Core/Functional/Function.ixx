@@ -36,6 +36,7 @@ export namespace jpt
 		constexpr TReturn operator()(TArgs&&... args);
 		
 		constexpr void Clear() { m_pFunction = nullptr; }
+
 		constexpr bool IsSet() const { return m_pFunction != nullptr; }
 		constexpr bool operator==(const Function& other) const;
 	};
