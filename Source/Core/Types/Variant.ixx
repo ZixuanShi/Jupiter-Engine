@@ -43,7 +43,7 @@ export namespace jpt
 		template<typename T> constexpr const T& As() const;
 
 		/** @return		true if this variant's current assigned type is same as the T */
-		template<typename T>
+		template<typename T> 
 		constexpr bool Is() const;
 
 	private:
