@@ -51,19 +51,13 @@ public:
 
 bool UnitTest_Variant()
 {
-    jpt::Variant<int32, char, bool, jpt::String, LoggingTester> variant;
-
-    variant = 42;
-    variant.As<int32>() += 2;
-    JPT_LOG(variant.As<int32>());
-    JPT_LOG(variant.Is<int32>());
-    JPT_LOG(variant.Is<jpt::String>());
+    jpt::Variant<int32, char, bool, jpt::String> variant;
 
     variant = jpt::String("Hello World");
     JPT_LOG(variant.As<jpt::String>());
 
-    JPT_LOG(variant.Is<int32>());
-    JPT_LOG(variant.Is<jpt::String>());
+    variant = 42;
+    JPT_LOG(variant.As<int32>());
 
     return true;
 }

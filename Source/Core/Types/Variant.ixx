@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Debugging/Assert.h"
+
 export module jpt.Variant;
 
 import jpt.Allocator;
@@ -80,7 +84,8 @@ export namespace jpt
 	template<typename T>
 	constexpr T& Variant<TArgs...>::As()
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+
 		return reinterpret_cast<T&>(m_buffer);
 	}
 
@@ -88,7 +93,8 @@ export namespace jpt
 	template<typename T>
 	constexpr const T& Variant<TArgs...>::As() const
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+
 		return reinterpret_cast<const T&>(m_buffer);
 	}
 
@@ -97,6 +103,7 @@ export namespace jpt
 	constexpr bool Variant<TArgs...>::Is() const
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+
 		return m_currentIndex == GetIndexOfType<T, TArgs...>();
 	}
 
