@@ -101,6 +101,7 @@ export namespace jpt
 	constexpr Variant<TArgs...>::Variant(const T& value)
 	{
 		Construct<T>(value);
+		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
@@ -109,6 +110,7 @@ export namespace jpt
 	{
 		Destruct<TArgs...>();
 		Construct<T>(value);
+		m_currentIndex = GetIndexOfType<T, TArgs...>();
 		return *this;
 	}
 
@@ -146,7 +148,6 @@ export namespace jpt
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
-		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
@@ -155,12 +156,12 @@ export namespace jpt
 	{
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
+			m_currentIndex = kInvalidValue<TIndex>;
+
 			if constexpr (!IsTriviallyDestructible<TCurrent>)
 			{
 				Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
 			}
-
-			m_currentIndex = kInvalidValue<TIndex>;
 		}
 
 		if constexpr (sizeof...(TRest) > 0)
@@ -189,10 +190,11 @@ export namespace jpt
 	{
 		if (other.m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
+			m_currentIndex = other.m_currentIndex;
+
 			if constexpr (IsTriviallyCopyable<TCurrent>)
 			{
 				std::memcpy(m_buffer, other.m_buffer, sizeof(TCurrent));
-				m_currentIndex = kTypesCount - sizeof...(TRest) - 1;
 			}
 			else
 			{

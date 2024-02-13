@@ -83,18 +83,10 @@ bool UnitTest_Variant_Copy()
     return true;
 }
 
-bool UnitTest_Variant_Move()
-{
-    //jpt::Variant<int32, char, bool, jpt::String> variant;
-
-    return true;
-}
-
 export bool RunUnitTests_Variant()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Variant(), "UnitTest_Variant Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Variant_Copy(), "UnitTest_Variant_Copy Failed");
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Variant_Move(), "UnitTest_Variant_Move Failed");
 
     return true;
 }
