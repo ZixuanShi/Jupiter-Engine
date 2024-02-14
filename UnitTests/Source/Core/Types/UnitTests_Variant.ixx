@@ -93,6 +93,9 @@ bool UnitTest_Variant_Move()
     JPT_RETURN_FALSE_IF_ERROR(movedVariant.As<jpt::String>() != "Original", "");
     JPT_RETURN_FALSE_IF_ERROR(originalVariant.Is<jpt::String>(), "");
 
+    jpt::String str = "Hello World";
+    movedVariant = Move(str);
+
     return true;
 }
 

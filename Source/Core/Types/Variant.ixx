@@ -42,7 +42,9 @@ export namespace jpt
 
 		/** Assign value to this variant */
 		template<typename T> constexpr Variant(const T& value);
+		template<typename T> constexpr Variant(T&& value) requires IsAnyOf<T, TArgs...>;
 		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant&> operator=(const T& value);
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant&> operator=(T&& value);
 
 		/** @return		Reference to the current buffer data that casted to given T */
 		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, T&> As();
@@ -118,10 +120,26 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
+	constexpr Variant<TArgs...>::Variant(T&& value) requires IsAnyOf<T, TArgs...>
+	{
+		Construct<T>(Move(value));
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
 	constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant<TArgs...>&> Variant<TArgs...>::operator=(const T& value)
 	{
 		Destruct<TArgs...>();
 		Construct<T>(value);
+		return *this;
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant<TArgs...>&> Variant<TArgs...>::operator=(T&& value)
+	{
+		Destruct<TArgs...>();
+		Construct<T>(Move(value));
 		return *this;
 	}
 
