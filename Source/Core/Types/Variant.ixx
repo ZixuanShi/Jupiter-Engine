@@ -42,19 +42,19 @@ export namespace jpt
 
 		/** Assign value to this variant */
 		template<typename T> constexpr Variant(const T& value);
-		template<typename T> constexpr Variant& operator=(const T& value);
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant&> operator=(const T& value);
 
 		/** @return		Reference to the current buffer data that casted to given T */
-		template<typename T> constexpr       T& As();
-		template<typename T> constexpr const T& As() const;
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, T&> As();
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, const T&> As() const;
 
 		/** @return		true if this variant's current assigned type is same as the T */
 		template<typename T> 
-		constexpr bool Is() const;
+		constexpr TEnableIf<IsAnyOf<T, TArgs...>, bool> Is() const;
 
 	private:
-		template<typename T> constexpr void Construct(const T& value);
-		template<typename T> constexpr void Construct(T&& value);
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, void> Construct(const T& value);
+		template<typename T> constexpr TEnableIf<IsAnyOf<T, TArgs...>, void> Construct(T&& value);
 
 		template<typename TCurrent, typename ...TRest>
 		constexpr void Destruct();
@@ -118,7 +118,7 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const T& value)
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, Variant<TArgs...>&> Variant<TArgs...>::operator=(const T& value)
 	{
 		Destruct<TArgs...>();
 		Construct<T>(value);
@@ -127,28 +127,26 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr T& Variant<TArgs...>::As()
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, T&> Variant<TArgs...>::As()
 	{
-		//JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
 		return reinterpret_cast<T&>(m_buffer);
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr const T& Variant<TArgs...>::As() const
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, const T&> Variant<TArgs...>::As() const
 	{
-		//JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
 		return reinterpret_cast<const T&>(m_buffer);
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr bool Variant<TArgs...>::Is() const
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, bool> Variant<TArgs...>::Is() const
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
-
 		if (m_currentIndex == kInvalidValue<TIndex>)
 		{
 			return false;
@@ -159,20 +157,16 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr void Variant<TArgs...>::Construct(const T& value)
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, void> Variant<TArgs...>::Construct(const T& value)
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
-
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
 		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr void Variant<TArgs...>::Construct(T&& value)
+	constexpr TEnableIf<IsAnyOf<T, TArgs...>, void> Variant<TArgs...>::Construct(T&& value)
 	{
-		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
-
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), Move(value));
 		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}

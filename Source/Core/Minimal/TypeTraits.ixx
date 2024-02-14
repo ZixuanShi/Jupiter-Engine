@@ -93,4 +93,10 @@ export namespace jpt
 	template<typename T>
 	constexpr bool IsTrivial = __is_trivially_constructible(T) && __is_trivially_copyable(T);
 #pragma endregion
+
+#pragma region EnableIf
+	template<bool kCondition, typename ReturnType = void> struct EnableIf {};
+	template<typename _ReturnType>                        struct EnableIf<true, _ReturnType> { using ReturnType = _ReturnType; };
+	template<bool kCondition, typename ReturnType = void> using  TEnableIf = EnableIf<kCondition, ReturnType>::ReturnType;
+#pragma endregion
 }
