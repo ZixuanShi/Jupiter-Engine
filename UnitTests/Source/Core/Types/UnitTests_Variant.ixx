@@ -95,6 +95,13 @@ bool UnitTest_Variant_Move()
 
     jpt::String str = "Hello World";
     movedVariant = Move(str);
+    JPT_RETURN_FALSE_IF_ERROR(movedVariant.As<jpt::String>() != "Hello World", "");
+    JPT_RETURN_FALSE_IF_ERROR(!str.IsEmpty(), "");
+
+    str = "Hello World";
+    jpt::Variant<int32, char, bool, jpt::String> anotherMovedVariant = Move(str);
+    JPT_RETURN_FALSE_IF_ERROR(anotherMovedVariant.As<jpt::String>() != "Hello World", "");
+    JPT_RETURN_FALSE_IF_ERROR(!str.IsEmpty(), "");
 
     return true;
 }
