@@ -98,14 +98,14 @@ namespace jpt
 	template<typename T>
 	constexpr T& Any::As() requires NotSameType<T, Any>
 	{
-		JPT_ASSERT(Is<T>());
+		JPT_ASSERT(Is<T>(), "Any should be assigned to the given T before calling As()");
 		return reinterpret_cast<T&>(*m_pBuffer);
 	}
 
 	template<typename T>
 	constexpr const T& Any::As() const requires NotSameType<T, Any>
 	{
-		JPT_ASSERT(Is<T>());
+		JPT_ASSERT(Is<T>(), "Any should be assigned to the given T before calling As()");
 		return reinterpret_cast<const T&>(*m_pBuffer);
 	}
 

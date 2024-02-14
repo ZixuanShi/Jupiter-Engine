@@ -7,8 +7,7 @@ export module jpt.Enum;
 export namespace jpt
 {
 	/** An Enum class supports the following operations: 
-	
-	*/
+		-  */
 	class Enum
 	{
 	public:
