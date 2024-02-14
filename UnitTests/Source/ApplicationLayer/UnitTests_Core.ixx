@@ -41,6 +41,7 @@ import UnitTests_String;
 import UnitTests_StringView;
 
 // Types
+import UnitTests_Any;
 import UnitTests_Byte;
 import UnitTests_Variant;
 import UnitTests_Optional;
@@ -85,6 +86,7 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringView(), "StringView Tests Failed");
 
 	// Types
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Any(), "Any Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Byte(), "Byte Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Variant(), "Variant Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
