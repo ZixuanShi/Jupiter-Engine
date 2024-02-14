@@ -30,6 +30,7 @@ export namespace jpt
 	public:
 		/** Adds a new function to this Slot and returns it's index as handle */
 		constexpr size_t Add(const TFunc& function);
+		constexpr size_t Add(TFunc&& function);
 
 		/** Erases a function from this Slot with O(1) time
 			@param	index		The index of the function to erase from this Slot */
@@ -68,6 +69,22 @@ export namespace jpt
 		}
 
 		m_functions.EmplaceBack(function);
+		return m_functions.Size() - 1;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr size_t Slot<TReturn(TArgs...)>::Add(TFunc&& function)
+	{
+		for (size_t i = 0; i < m_functions.Size(); ++i)
+		{
+			if (!m_functions[i].IsSet())
+			{
+				m_functions[i] = Move(function);
+				return i;
+			}
+		}
+
+		m_functions.EmplaceBack(Move(function));
 		return m_functions.Size() - 1;
 	}
 

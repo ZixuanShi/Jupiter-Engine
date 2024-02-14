@@ -29,7 +29,9 @@ export namespace jpt
 
 		/** Assign function/lambda */
 		template<class TFunc> constexpr Function(const TFunc& func) requires NotSameType<TFunc, Function>;
+		template<class TFunc> constexpr Function(TFunc&& func)      requires NotSameType<TFunc, Function>;
 		template<class TFunc> constexpr Function& operator=(const TFunc& func) requires NotSameType<TFunc, Function>;
+		template<class TFunc> constexpr Function& operator=(TFunc&& func)      requires NotSameType<TFunc, Function>;
 
 		/** Call the function */
 		template<typename T> constexpr TReturn operator()(const T& param);
@@ -55,6 +57,21 @@ export namespace jpt
 	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(const TFunc& func) requires NotSameType<TFunc, Function>
 	{
 		m_pFunction = func;
+		return *this;
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TFunc>
+	constexpr Function<TReturn(TArgs...)>::Function(TFunc&& func) requires NotSameType<TFunc, Function>
+		: m_pFunction(Move(func))
+	{
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TFunc>
+	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunc&& func) requires NotSameType<TFunc, Function>
+	{
+		m_pFunction = Move(func);
 		return *this;
 	}
 
