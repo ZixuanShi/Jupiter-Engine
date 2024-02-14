@@ -63,7 +63,7 @@ export namespace jpt
 
 		/** @return		The index of the TypeToFind in TArgs */
 		template<typename TypeToFind, typename TCurrent, typename ...TRest>
-		constexpr TIndex GetIndexOfType() const;
+		constexpr TIndex GetIndexOfType() const requires IsAnyOf<TypeToFind, TArgs...>;
 
 		template<typename TCurrent, typename ...TRest> constexpr void CopyData(const Variant& other);
 		template<typename TCurrent, typename ...TRest> constexpr void MoveData(Variant&& other);
@@ -216,7 +216,7 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename TypeToFind, typename TCurrent, typename ...TRest>
-	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const
+	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const requires IsAnyOf<TypeToFind, TArgs...>
 	{
 		if constexpr (IsSameType<TypeToFind, TCurrent>)
 		{
