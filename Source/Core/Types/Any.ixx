@@ -20,10 +20,9 @@ namespace jpt
 	export class Any
 	{
 	private:
-		Byte* m_pBuffer = nullptr;
-
-		Function<void(Byte*)> m_destructor;
-		size_t m_currentTypeHash = kInvalidValue<size_t>;
+		Byte* m_pBuffer = nullptr; /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
+		Function<void(Byte*)> m_destructor; /**< Function pointer to the destructor of the current type */
+		size_t m_currentTypeHash = kInvalidValue<size_t>; /**< Hash code of the current type. Used for comparing */
 
 	public:
 		constexpr Any() = default;

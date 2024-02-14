@@ -29,8 +29,7 @@ export namespace jpt
 
 	public:
 		/** Adds a new function to this Slot and returns it's index as handle */
-		constexpr size_t Add(TFunc&& function);			// Accepts R-value to free functions and lambdas
-		constexpr size_t Add(const TFunc& function);	// Accepts L-value to existing jpt::Function instance
+		constexpr size_t Add(const TFunc& function);
 
 		/** Erases a function from this Slot with O(1) time
 			@param	index		The index of the function to erase from this Slot */
@@ -55,22 +54,6 @@ export namespace jpt
 			@return		Strictly matches the member functions layout. Will insert empty result if the Function at index is Not Set */
 		constexpr DynamicArray<TReturn> ReturnAll(TArgs&&... args);
 	};
-
-	template<class TReturn, class ...TArgs>
-	constexpr size_t Slot<TReturn(TArgs...)>::Add(TFunc&& function)
-	{
-		for (size_t i = 0; i < m_functions.Size(); ++i)
-		{
-			if (!m_functions[i].IsSet())
-			{
-				m_functions[i] = Move(function);
-				return i;
-			}
-		}
-
-		m_functions.EmplaceBack(Move(function));
-		return m_functions.Size() - 1;
-	}
 
 	template<class TReturn, class ...TArgs>
 	constexpr size_t Slot<TReturn(TArgs...)>::Add(const TFunc& function)
