@@ -10,6 +10,7 @@ export module UnitTests_Any;
 import jpt.Any;
 import jpt.String;
 import jpt.Function;
+import jpt.TypeDefs;
 
 bool UnitTest_Any()
 {
