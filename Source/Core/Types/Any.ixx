@@ -29,11 +29,11 @@ namespace jpt
 		constexpr Any() = default;
 		constexpr ~Any();
 
-		template<typename T> constexpr Any(const T& value) requires NotSameType<T, Any>;
-		//template<typename T> constexpr Any(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T&& value)      requires NotSameType<T, Any>;
 
-		template<typename T> constexpr Any& operator=(const T& value) requires NotSameType<T, Any>;
-		//template<typename T> constexpr Any& operator=(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T&& value)      requires NotSameType<T, Any>;
 
 		template<typename T> constexpr       T& As()       requires NotSameType<T, Any>;
 		template<typename T> constexpr const T& As() const requires NotSameType<T, Any>;
@@ -41,8 +41,8 @@ namespace jpt
 		template<typename T> constexpr bool Is();
 
 	private:
-		template<typename T> constexpr void Construct(const T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr void Construct(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr void Construct(T& value)  requires NotSameType<T, Any>;
+		template<typename T> constexpr void Construct(T&& value) requires NotSameType<T, Any>;
 
 		constexpr void Destruct();
 
@@ -68,32 +68,32 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any::Any(const T& value) requires NotSameType<T, Any>
+	constexpr Any::Any(T& value) requires NotSameType<T, Any>
 	{
 		Construct(value);
 	}
 
-	//template<typename T>
-	//constexpr Any::Any(T&& value) requires NotSameType<T, Any>
-	//{
-	//	Construct(Move(value));
-	//}
+	template<typename T>
+	constexpr Any::Any(T&& value) requires NotSameType<T, Any>
+	{
+		Construct(Move(value));
+	}
 
 	template<typename T>
-	constexpr Any& Any::operator=(const T& value) requires NotSameType<T, Any>
+	constexpr Any& Any::operator=(T& value) requires NotSameType<T, Any>
 	{
 		Destruct();
 		Construct(value);
 		return *this;
 	}
 
-	//template<typename T>
-	//constexpr Any& Any::operator=(T&& value) requires NotSameType<T, Any>
-	//{
-	//	Destruct();
-	//	Construct(Move(value));
-	//	return *this;
-	//}
+	template<typename T>
+	constexpr Any& Any::operator=(T&& value) requires NotSameType<T, Any>
+	{
+		Destruct();
+		Construct(Move(value));
+		return *this;
+	}
 
 	template<typename T>
 	constexpr T& Any::As() requires NotSameType<T, Any>
@@ -116,7 +116,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr void Any::Construct(const T& value) requires NotSameType<T, Any>
+	constexpr void Any::Construct(T& value) requires NotSameType<T, Any>
 	{
 		m_pBuffer = new Byte[sizeof(T)];
 		new (m_pBuffer) T(value);
