@@ -54,6 +54,7 @@ export namespace jpt
 
 	private:
 		template<typename T> constexpr void Construct(const T& value);
+		template<typename T> constexpr void Construct(T&& value);
 
 		template<typename TCurrent, typename ...TRest>
 		constexpr void Destruct();
@@ -128,7 +129,7 @@ export namespace jpt
 	template<typename T>
 	constexpr T& Variant<TArgs...>::As()
 	{
-		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+		//JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
 		return reinterpret_cast<T&>(m_buffer);
 	}
@@ -137,7 +138,7 @@ export namespace jpt
 	template<typename T>
 	constexpr const T& Variant<TArgs...>::As() const
 	{
-		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
+		//JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
 		return reinterpret_cast<const T&>(m_buffer);
 	}
@@ -163,6 +164,16 @@ export namespace jpt
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
+		m_currentIndex = GetIndexOfType<T, TArgs...>();
+	}
+
+	template<typename ...TArgs>
+	template<typename T>
+	constexpr void Variant<TArgs...>::Construct(T&& value)
+	{
+		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
+
+		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), Move(value));
 		m_currentIndex = GetIndexOfType<T, TArgs...>();
 	}
 
@@ -229,9 +240,20 @@ export namespace jpt
 	template<typename TCurrent, typename ...TRest>
 	constexpr void Variant<TArgs...>::MoveData(Variant&& other)
 	{
-		std::memmove(m_buffer, other.m_buffer, kMaxTypeSize);
+		if (other.m_currentIndex == kInvalidValue<TIndex>)
+		{
+			return;
+		}
 
-		m_currentIndex = other.m_currentIndex;
-		other.m_currentIndex = kInvalidValue<TIndex>;
+		if (other.m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
+		{
+			Construct<TCurrent>(Move(other.As<TCurrent>()));
+			other.m_currentIndex = kInvalidValue<TIndex>;
+		}
+
+		if constexpr (sizeof...(TRest) > 0)
+		{
+			MoveData<TRest...>(Move(other));
+		}
 	}
 }
