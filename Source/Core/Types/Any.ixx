@@ -20,9 +20,10 @@ namespace jpt
 	export class Any
 	{
 	private:
-		Byte* m_pBuffer = nullptr; /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
+		Byte* m_pBuffer = nullptr;          /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
 		Function<void(Byte*)> m_destructor; /**< Function pointer to the destructor of the current type */
-		size_t m_currentTypeHash = kInvalidValue<size_t>; /**< Hash code of the current type. Used for comparing */
+		size_t m_currentTypeHash   = 0;     /**< Hash code of the current type. Used for comparing */
+		size_t m_currentBufferSize = 0;     /**< size of the current buffer */
 
 	public:
 		constexpr Any() = default;
@@ -42,15 +43,16 @@ namespace jpt
 	private:
 		template<typename T> constexpr void Construct(T& value)  requires NotSameType<T, Any>;
 		template<typename T> constexpr void Construct(T&& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr void AdaptToType()        requires NotSameType<T, Any>;
 
 		constexpr void Destruct();
-
-		template<typename T> constexpr void SetHelpers();
 	};
 
 	constexpr Any::~Any()
 	{
 		Destruct();
+		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+		m_currentBufferSize = 0;
 	}
 
 	constexpr void Any::Destruct()
@@ -59,11 +61,9 @@ namespace jpt
 		{
 			m_destructor(m_pBuffer);
 		}
-		
-		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 
 		m_destructor.Clear();
-		m_currentTypeHash = kInvalidValue<size_t>;
+		m_currentTypeHash = 0;
 	}
 
 	template<typename T>
@@ -117,23 +117,31 @@ namespace jpt
 	template<typename T>
 	constexpr void Any::Construct(T& value) requires NotSameType<T, Any>
 	{
-		m_pBuffer = new Byte[sizeof(T)];
+		AdaptToType<T>();
 		new (m_pBuffer) T(value);
-		SetHelpers<T>();
 	}
 
 	template<typename T>
 	constexpr void Any::Construct(T&& value) requires NotSameType<T, Any>
 	{
-		m_pBuffer = new Byte[sizeof(T)];
+		AdaptToType<T>();
 		new (m_pBuffer) T(Move(value));
-		SetHelpers<T>();
 	}
 
 	template<typename T>
-	constexpr void Any::SetHelpers()
+	constexpr void Any::AdaptToType() requires NotSameType<T, Any>
 	{
-		m_destructor = [](Byte* pBuffer) 
+		// Update buffer if the new is bigger than current buffer's size
+		const size_t newTypeSize = sizeof(T);
+		if (newTypeSize > m_currentBufferSize)
+		{
+			JPT_DELETE_ARRAY(m_pBuffer);
+			m_pBuffer = new Byte[newTypeSize];
+			m_currentBufferSize = newTypeSize;
+		}
+
+		// Assign destructor function to current T
+		m_destructor = [](Byte* pBuffer)
 			{
 				if constexpr (!IsTriviallyDestructible<T>)
 				{
@@ -141,6 +149,7 @@ namespace jpt
 				}
 			};
 
+		// Current type hash is set to current T
 		m_currentTypeHash = typeid(T).hash_code();
 	}
 }
