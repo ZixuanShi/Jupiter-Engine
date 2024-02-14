@@ -51,8 +51,7 @@ export namespace jpt
 		template<typename T> constexpr const T& As() const requires IsAnyOf<T, TArgs...>;
 
 		/** @return		true if this variant's current assigned type is same as the T */
-		template<typename T> 
-		constexpr bool Is() const requires IsAnyOf<T, TArgs...>;
+		template<typename T> constexpr bool Is() const requires IsAnyOf<T, TArgs...>;
 
 	private:
 		template<typename T> constexpr void Construct(const T& value) requires IsAnyOf<T, TArgs...>;

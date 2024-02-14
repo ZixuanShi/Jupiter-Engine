@@ -80,6 +80,11 @@ bool UnitTest_Variant_Copy()
     JPT_RETURN_FALSE_IF_ERROR(originalVariant.As<char>() != 'a', "");
     JPT_RETURN_FALSE_IF_ERROR(copiedVariant.As<char>() != 'b', "");
 
+    jpt::String str = "Hello World";
+    jpt::Variant<int32, char, bool, jpt::String> anotherCopiedVariant = str;
+    JPT_RETURN_FALSE_IF_ERROR(anotherCopiedVariant.As<jpt::String>() != "Hello World", "");
+    JPT_RETURN_FALSE_IF_ERROR(str != "Hello World", "");
+
     return true;
 }
 

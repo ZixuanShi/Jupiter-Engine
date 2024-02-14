@@ -40,6 +40,7 @@ export namespace jpt
 	// Example: jpt::IsSameType<int32, float>
 	template<typename A, typename B> constexpr bool IsSameType       = false;
 	template<typename A>             constexpr bool IsSameType<A, A> = true;
+	template<typename A, typename B> constexpr bool NotSameType      = !IsSameType<A, B>;
 
 	/** @return true if the Type is within any of the passed ...Types
 		@example:
@@ -47,8 +48,8 @@ export namespace jpt
 				double bar = 42.0;
 				jpt::IsAnyOf<decltype(foo), float, char, int>; // true
 				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
-	template<typename T, typename ...TOthers>
-	constexpr bool IsAnyOf = (IsSameType<T, TOthers> || ...);
+	template<typename T, typename ...TOthers> constexpr bool IsAnyOf  = (IsSameType<T, TOthers> || ...);
+	template<typename T, typename ...TOthers> constexpr bool NotAnyOf = !IsAnyOf<T, TOthers...>;
 
 	// Is Array
 	/** @note	This doesn't work on heap allocated array

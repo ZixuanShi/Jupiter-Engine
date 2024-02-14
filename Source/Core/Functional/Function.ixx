@@ -27,37 +27,60 @@ export namespace jpt
 	public:
 		constexpr Function() = default;
 
-		template<class TFunc>
-		constexpr Function(TFunc&& pFunction);
+		/** Assign function/lambda */
+		template<class TFunc> constexpr Function(const TFunc& func) requires NotSameType<TFunc, Function>;
+		template<class TFunc> constexpr Function& operator=(const TFunc& func) requires NotSameType<TFunc, Function>;
 
-		template<class TFunc>
-		constexpr Function& operator=(TFunc&& func);
-
+		/** Call the function */
+		template<typename T> constexpr TReturn operator()(T& param);
+		template<typename T> constexpr TReturn Call(T& param);
 		constexpr TReturn operator()(TArgs&&... args);
+		constexpr TReturn Call(TArgs&&... args);
 		
+		/** Utilities query */
 		constexpr void Clear() { m_pFunction = nullptr; }
-
 		constexpr bool IsSet() const { return m_pFunction != nullptr; }
 		constexpr bool operator==(const Function& other) const;
 	};
 
 	template<class TReturn, class ...TArgs>
 	template<class TFunc>
-	constexpr Function<TReturn(TArgs...)>::Function(TFunc&& pFunction)
-		: m_pFunction(pFunction) 
+	constexpr Function<TReturn(TArgs...)>::Function(const TFunc& func) requires NotSameType<TFunc, Function>
+		: m_pFunction(func)
 	{
 	}
 
 	template<class TReturn, class ...TArgs>
 	template<class TFunc>
-	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunc&& func)
+	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(const TFunc& func) requires NotSameType<TFunc, Function>
 	{
 		m_pFunction = func;
 		return *this;
 	}
 
+	template<class TReturn, class ...TArgs>
+	template<typename T>
+	constexpr TReturn Function<TReturn(TArgs...)>::operator()(T& param)
+	{
+		return Call(param);
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<typename T>
+	constexpr TReturn Function<TReturn(TArgs...)>::Call(T& param)
+	{
+		JPT_ASSERT(IsSet(), "m_pFunction is nullptr");
+		return m_pFunction(param);
+	}
+
 	template<class TReturn, class... TArgs>
 	constexpr TReturn Function<TReturn(TArgs...)>::operator()(TArgs&&... args)
+	{
+		return Call(Forward<TArgs>(args)...);
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr TReturn Function<TReturn(TArgs...)>::Call(TArgs&& ...args)
 	{
 		JPT_ASSERT(IsSet(), "m_pFunction is nullptr");
 		return m_pFunction(Forward<TArgs>(args)...);
