@@ -69,6 +69,7 @@ export namespace jpt
 	constexpr Variant<TArgs...>::~Variant()
 	{
 		Destruct<TArgs...>();
+		m_currentIndex = kInvalidValue<TIndex>;
 	}
 
 	template<typename ...TArgs>
@@ -156,8 +157,6 @@ export namespace jpt
 	{
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
-			m_currentIndex = kInvalidValue<TIndex>;
-
 			if constexpr (!IsTriviallyDestructible<TCurrent>)
 			{
 				Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));

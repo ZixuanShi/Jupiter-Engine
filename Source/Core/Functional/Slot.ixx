@@ -68,7 +68,7 @@ export namespace jpt
 			}
 		}
 
-		m_functions.EmplaceBack(Forward<TFunc>(function));
+		m_functions.EmplaceBack(Move(function));
 		return m_functions.Size() - 1;
 	}
 
@@ -123,12 +123,6 @@ export namespace jpt
 	}
 
 	template<class TReturn, class ...TArgs>
-	constexpr TReturn Slot<TReturn(TArgs...)>::Call(size_t index, TArgs && ...args)
-	{
-		return m_functions[index](Forward<TArgs>(args)...);
-	}
-
-	template<class TReturn, class ...TArgs>
 	constexpr void Slot<TReturn(TArgs...)>::CallAll(TArgs && ...args)
 	{
 		for (auto& function : m_functions)
@@ -138,6 +132,12 @@ export namespace jpt
 				function(Forward<TArgs>(args)...);
 			}
 		}
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr TReturn Slot<TReturn(TArgs...)>::Call(size_t index, TArgs && ...args)
+	{
+		return m_functions[index](Forward<TArgs>(args)...);
 	}
 
 	template<class TReturn, class ...TArgs>
