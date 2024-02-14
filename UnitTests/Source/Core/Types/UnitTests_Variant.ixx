@@ -90,7 +90,8 @@ bool UnitTest_Variant_Move()
 
     jpt::Variant<int32, char, bool, jpt::String> movedVariant = Move(originalVariant);
 
-    
+    JPT_RETURN_FALSE_IF_ERROR(movedVariant.As<jpt::String>() != "Original", "");
+    JPT_RETURN_FALSE_IF_ERROR(originalVariant.Is<jpt::String>(), "");
 
     return true;
 }

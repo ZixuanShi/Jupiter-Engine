@@ -148,6 +148,11 @@ export namespace jpt
 	{
 		static_assert(IsAnyOf<T, TArgs...>, "T is not in this variant TArgs list");
 
+		if (m_currentIndex == kInvalidValue<TIndex>)
+		{
+			return false;
+		}
+
 		return m_currentIndex == GetIndexOfType<T, TArgs...>();
 	}
 
