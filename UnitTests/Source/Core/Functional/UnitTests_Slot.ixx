@@ -10,6 +10,7 @@ import jpt.Slot;
 import jpt.TypeDefs;
 import jpt.Variant;
 import jpt.DynamicArray;
+import jpt.ToString;
 
 void VoidFunc(int32& n)
 {
@@ -95,28 +96,28 @@ bool UnitTest_Slot_Return()
 
 using TVariant = jpt::Variant<int32, bool, char>;
 
-bool SetVariant(TVariant& variant)
+void SetVariant(TVariant& variant)
 {
-    variant = 'c';
-    return true;
+    variant = false;
 }
 
 bool UnitTest_Slot_Variant()
 {
-    jpt::Slot<bool(TVariant&)> slot;
+    jpt::Slot<void(TVariant&)> slot;
 
     slot.Add(SetVariant);
     slot.Add([](TVariant& variant) 
         {
-            variant.As<char>() += 1;
-            return true;
+            variant.As<bool>() = true;
         });
 
     TVariant variant;
     slot(variant);
 
-    JPT_RETURN_FALSE_IF_ERROR(!variant.Is<char>(), "");
-    JPT_RETURN_FALSE_IF_ERROR(variant.As<char>() != 'd', "");
+    JPT_RETURN_FALSE_IF_ERROR(!variant.Is<bool>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(!variant.As<bool>(), "");
+
+    JPT_RETURN_FALSE_IF_ERROR(jpt::ToString(variant.As<bool>()) != "true", "");
 
     return true;
 }
