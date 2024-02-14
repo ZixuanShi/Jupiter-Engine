@@ -88,6 +88,6 @@ export namespace jpt
 	constexpr void Any::Construct(const T& value)
 	{
 		m_pBuffer = new Byte[sizeof(T)];
-		reinterpret_cast<T&>(*m_pBuffer) = value;
+		new (m_pBuffer) T(value);
 	}
 }

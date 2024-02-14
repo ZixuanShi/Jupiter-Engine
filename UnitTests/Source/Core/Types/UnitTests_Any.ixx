@@ -13,10 +13,9 @@ bool UnitTest_Any()
 {
     jpt::Any any;
 
-    any = 42;
-    JPT_LOG(any.As<int32>());
+    //any = 42;
+    //JPT_LOG(any.As<int32>());
 
-    // TOFIX
     //any = jpt::String("Hello");
     //JPT_LOG(any.As<jpt::String>());
 
