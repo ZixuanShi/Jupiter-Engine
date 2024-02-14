@@ -49,6 +49,12 @@ export namespace jpt
 
 	constexpr void Any::Destruct()
 	{
+		// TODO: Try to find a way to call current type's destructor if it's not trivially destructible
+		//if constexpr (!IsTriviallyDestructible<TCurrent>)
+		//{
+		//	reinterpret_cast<TCurrent*>(m_buffer)->~TCurrent();
+		//}
+
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
 	}
 
