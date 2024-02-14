@@ -29,11 +29,11 @@ namespace jpt
 		constexpr Any() = default;
 		constexpr ~Any();
 
-		template<typename T> constexpr Any(T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr Any(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T& value)  requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T&& value) requires NotSameType<T, Any>;
 
-		template<typename T> constexpr Any& operator=(T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr Any& operator=(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T& value)  requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T&& value) requires NotSameType<T, Any>;
 
 		template<typename T> constexpr       T& As()       requires NotSameType<T, Any>;
 		template<typename T> constexpr const T& As() const requires NotSameType<T, Any>;

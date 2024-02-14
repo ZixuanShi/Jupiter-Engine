@@ -63,10 +63,29 @@ bool UnitTest_Any_Copy()
     return true;
 }
 
+bool UnitTest_Any_Move()
+{
+    jpt::String str1 = "Hello";
+    jpt::String str2 = "World";
+
+    // Move constructor
+    jpt::Any any = Move(str1);
+    JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != "Hello", "");
+    JPT_RETURN_FALSE_IF_ERROR(!str1.IsEmpty(), "");
+
+    // Move assignment
+    any = Move(str2);
+    JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != "World", "");
+    JPT_RETURN_FALSE_IF_ERROR(!str2.IsEmpty(), "");
+
+    return true;
+}
+
 export bool RunUnitTests_Any()
 {
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Any(), "UnitTest_Any Failed");
     JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Any_Copy(), "UnitTest_Any_Copy Failed");
+    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Any_Move(), "UnitTest_Any_Move Failed");
 
     return true;
 }

@@ -32,8 +32,8 @@ export namespace jpt
 		template<class TFunc> constexpr Function& operator=(const TFunc& func) requires NotSameType<TFunc, Function>;
 
 		/** Call the function */
-		template<typename T> constexpr TReturn operator()(T& param);
-		template<typename T> constexpr TReturn Call(T& param);
+		template<typename T> constexpr TReturn operator()(const T& param);
+		template<typename T> constexpr TReturn Call(const T& param);
 		constexpr TReturn operator()(TArgs&&... args);
 		constexpr TReturn Call(TArgs&&... args);
 		
@@ -60,14 +60,14 @@ export namespace jpt
 
 	template<class TReturn, class ...TArgs>
 	template<typename T>
-	constexpr TReturn Function<TReturn(TArgs...)>::operator()(T& param)
+	constexpr TReturn Function<TReturn(TArgs...)>::operator()(const T& param)
 	{
 		return Call(param);
 	}
 
 	template<class TReturn, class ...TArgs>
 	template<typename T>
-	constexpr TReturn Function<TReturn(TArgs...)>::Call(T& param)
+	constexpr TReturn Function<TReturn(TArgs...)>::Call(const T& param)
 	{
 		JPT_ASSERT(IsSet(), "m_pFunction is nullptr");
 		return m_pFunction(param);

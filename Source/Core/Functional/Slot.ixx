@@ -89,6 +89,13 @@ export namespace jpt
 	}
 
 	template<class TReturn, class ...TArgs>
+	constexpr void Slot<TReturn(TArgs...)>::Erase(size_t index)
+	{
+		JPT_ASSERT(index < m_functions.Size());
+		m_functions[index].Clear();
+	}
+
+	template<class TReturn, class ...TArgs>
 	constexpr bool Slot<TReturn(TArgs...)>::Erase(TFunc&& function)
 	{
 		for (size_t i = 0; i < m_functions.Size(); ++i)
@@ -101,13 +108,6 @@ export namespace jpt
 		}
 
 		return false;
-	}
-
-	template<class TReturn, class ...TArgs>
-	constexpr void Slot<TReturn(TArgs...)>::Erase(size_t index)
-	{
-		JPT_ASSERT(index < m_functions.Size());
-		m_functions[index].Clear();
 	}
 
 	template<class TReturn, class ...TArgs>
