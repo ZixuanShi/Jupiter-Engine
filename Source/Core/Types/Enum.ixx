@@ -14,4 +14,4 @@ export namespace jpt
 		constexpr Enum() = default;
 		constexpr Enum(...) {}
 	};
-}
+} 

@@ -34,11 +34,11 @@ export namespace jpt
 
 	public:
 		constexpr Variant() = default;
-		constexpr ~Variant();
 		constexpr Variant(const Variant& other);
 		constexpr Variant(Variant&& other) noexcept;
 		constexpr Variant& operator=(const Variant& other);
 		constexpr Variant& operator=(Variant&& other) noexcept;
+		constexpr ~Variant();
 
 		/** Assign value to this variant */
 		template<typename T> constexpr Variant(const T& value) requires IsAnyOf<T, TArgs...>;
@@ -67,12 +67,6 @@ export namespace jpt
 		template<typename TCurrent, typename ...TRest> constexpr void CopyData(const Variant& other);
 		template<typename TCurrent, typename ...TRest> constexpr void MoveData(Variant&& other);
 	};
-
-	template<typename ...TArgs>
-	constexpr Variant<TArgs...>::~Variant()
-	{
-		Destruct<TArgs...>();
-	}
 
 	template<typename ...TArgs>
 	constexpr Variant<TArgs...>::Variant(const Variant& other)
@@ -108,6 +102,12 @@ export namespace jpt
 		}
 
 		return *this;
+	}
+
+	template<typename ...TArgs>
+	constexpr Variant<TArgs...>::~Variant()
+	{
+		Destruct<TArgs...>();
 	}
 
 	template<typename ...TArgs>

@@ -47,6 +47,12 @@ bool UnitTest_Any_Copy()
     JPT_RETURN_FALSE_IF_ERROR(!any.Is<int32>(), "");
     JPT_RETURN_FALSE_IF_ERROR(any.Is<char>(), "");
 
+    // float
+    float f = 3.14f;
+    any = f;
+    JPT_RETURN_FALSE_IF_ERROR(any.As<float>() != f, "");
+    JPT_RETURN_FALSE_IF_ERROR(!any.Is<float>(), "");
+
     // String
     jpt::String str = "Hello";
     any = str;
@@ -54,11 +60,12 @@ bool UnitTest_Any_Copy()
     JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != str, "");
     JPT_RETURN_FALSE_IF_ERROR(!any.Is<jpt::String>(), "");
 
-    // float
-    float f = 3.14f;
-    any = f;
-    JPT_RETURN_FALSE_IF_ERROR(any.As<float>() != f, "");
-    JPT_RETURN_FALSE_IF_ERROR(!any.Is<float>(), "");
+    // Copy constructor
+    //jpt::Any any2 = any;
+    //JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != str, "");
+    //JPT_RETURN_FALSE_IF_ERROR(any2.As<jpt::String>() != str, "");
+    
+    //any = any2;
 
     return true;
 }

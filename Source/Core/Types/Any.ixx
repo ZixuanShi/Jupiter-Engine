@@ -6,6 +6,7 @@ module;
 #include "Debugging/Assert.h"
 
 #include <typeinfo>
+#include <string>
 
 export module jpt.Any;
 
@@ -27,13 +28,14 @@ namespace jpt
 
 	public:
 		constexpr Any() = default;
+		constexpr Any(const Any& other);
 		constexpr ~Any();
 
-		template<typename T> constexpr Any(T& value)  requires NotSameType<T, Any>;
-		template<typename T> constexpr Any(T&& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(const T& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T&& value)      requires NotSameType<T, Any>;
 
-		template<typename T> constexpr Any& operator=(T& value)  requires NotSameType<T, Any>;
-		template<typename T> constexpr Any& operator=(T&& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(const T& value) requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T&& value)      requires NotSameType<T, Any>;
 
 		template<typename T> constexpr       T& As()       requires NotSameType<T, Any>;
 		template<typename T> constexpr const T& As() const requires NotSameType<T, Any>;
@@ -41,12 +43,22 @@ namespace jpt
 		template<typename T> constexpr bool Is();
 
 	private:
-		template<typename T> constexpr void Construct(T& value)  requires NotSameType<T, Any>;
+		template<typename T> constexpr void Construct(const T& value) requires NotSameType<T, Any>;
 		template<typename T> constexpr void Construct(T&& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr void AdaptToType()        requires NotSameType<T, Any>;
+		template<typename T> constexpr void Adapt() requires NotSameType<T, Any>;
 
 		constexpr void Destruct();
 	};
+
+	constexpr Any::Any(const Any& other)
+	{
+		other;
+
+		//m_pBuffer = new Byte[other.m_currentBufferSize];
+		//std::memcpy(m_pBuffer, other.m_pBuffer, other.m_currentBufferSize);
+		//m_destructor = other.m_destructor;
+		//m_currentTypeHash = other.m_currentTypeHash;
+	}
 
 	constexpr Any::~Any()
 	{
@@ -67,7 +79,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any::Any(T& value) requires NotSameType<T, Any>
+	constexpr Any::Any(const T& value) requires NotSameType<T, Any>
 	{
 		Construct(value);
 	}
@@ -79,7 +91,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any& Any::operator=(T& value) requires NotSameType<T, Any>
+	constexpr Any& Any::operator=(const T& value) requires NotSameType<T, Any>
 	{
 		Destruct();
 		Construct(value);
@@ -115,21 +127,21 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr void Any::Construct(T& value) requires NotSameType<T, Any>
+	constexpr void Any::Construct(const T& value) requires NotSameType<T, Any>
 	{
-		AdaptToType<T>();
+		Adapt<T>();
 		new (m_pBuffer) T(value);
 	}
 
 	template<typename T>
 	constexpr void Any::Construct(T&& value) requires NotSameType<T, Any>
 	{
-		AdaptToType<T>();
+		Adapt<T>();
 		new (m_pBuffer) T(Move(value));
 	}
 
 	template<typename T>
-	constexpr void Any::AdaptToType() requires NotSameType<T, Any>
+	constexpr void Any::Adapt() requires NotSameType<T, Any>
 	{
 		// Update buffer if the new is bigger than current buffer's size
 		const size_t newTypeSize = sizeof(T);
