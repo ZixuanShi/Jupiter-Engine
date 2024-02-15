@@ -67,6 +67,37 @@ bool UnitTest_StrCpy()
 	return true;
 }
 
+bool RunUnitTests_IsValidDataCStr()
+{
+	// Empty
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr(""), "");
+
+	// number
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("1"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("1010"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("9876543210"), "");
+
+	// text
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("JupiterEngine"), "");
+
+	// underscore
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("_"), "");
+
+	// special
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("!"), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::IsValidDataCStr("!", false), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?"), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?", false), "");
+
+	// Combination
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("Jupiter-Engine!@#$%^&*()_+-=[]\\{}|;':\",./<>?"), "");
+	JPT_RETURN_FALSE_IF_ERROR(jpt::IsValidDataCStr("Jupiter_Engine!@#$%^&*()_+-=[]\\{}|;':\",./<>?", false), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("Jupiter_Engine"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("_Jupiter_Engine", false), "");
+
+	return true;
+}
+
 export bool RunUnitTests_StringUtils()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StringLen<jpt::String>(), "UnitTest_StringLen Failed");
@@ -77,6 +108,8 @@ export bool RunUnitTests_StringUtils()
 
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrCpy<jpt::String>(), "UnitTest_ToCStr Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrCpy<jpt::WString>(), "UnitTest_ToCStr Failed");
+
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_IsValidDataCStr(), "RunUnitTests_IsValidDataCStr Failed");
 
 	return true;
 }

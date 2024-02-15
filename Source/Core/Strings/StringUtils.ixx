@@ -326,6 +326,72 @@ export namespace jpt
 		return StrCmp(pString1, pString2) == npos;
 	}
 
+	constexpr bool IsAlpha(char c)
+	{
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+	}
+
+	constexpr bool IsDigit(char c)
+	{
+		return (c >= '0' && c <= '9');
+	}
+
+	constexpr bool IsAlphaNumeric(char c)
+	{
+		return IsAlpha(c) || IsDigit(c);
+	}
+
+	constexpr bool IsSafeSpecialChar(char c)
+	{
+		return (c == '_' || c == ' ');
+	}
+
+	constexpr bool IsSensitiveSpecialChar(char c)
+	{
+		return (c == '-' || c == '.' || c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '+' || c == '=' || c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ';' || c == '"' || c == '\'' || c == '<' || c == '>' || c == ',' || c == '.' || c == '?' || c == '/' || c == '\\' || c == '|' || c == '`' || c == '~');
+	}
+
+	/** @return		true if input CString contains acceptable text data
+		@param pString				The string to perform check on every char 
+		@param treatSpecialAsValid	 */
+	constexpr bool IsValidDataCStr(const char* pString, bool treatSpecialAsValid = true)
+	{
+		// Check if the pointer is valid and not empty
+		if (pString == nullptr)
+		{
+			return false;
+		}
+
+		// Check first char range a-z, A-Z, 0-9
+		size_t i = 0;
+		while (true)
+		{
+			const char c = pString[i];
+			if (c == '\0')
+			{
+				break;
+			}
+			++i;
+
+			const bool isDigit = IsDigit(c);
+			const bool isAlpha = IsAlpha(c);
+			const bool isSafeSpecial = IsSafeSpecialChar(c);
+			const bool isSensitiveSpecial = IsSensitiveSpecialChar(c);
+
+			if (!isDigit && !isAlpha && !isSafeSpecial)
+			{
+				if (treatSpecialAsValid && isSensitiveSpecial)
+				{
+					continue;
+				}
+
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	template<>
 	struct Hash<const char*>
 	{

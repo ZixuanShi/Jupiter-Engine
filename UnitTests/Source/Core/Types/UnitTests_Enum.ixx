@@ -7,52 +7,35 @@ module;
 export module UnitTests_Enum;
 
 import jpt.Enum;
+import jpt.TypeDefs;
 
-bool UnitTest_CreateEnum()
+//jpt::Enum EFruits
+//{
+//	"Apple",
+//	//"Banana",
+//	//"Orange",
+//	//
+//	//"End"
+//};
+
+bool UnitTest_Enum()
 {
-	//enum class EFruit
-	//{
-	//	kApple,
-	//	kOrange,
-	//	kPeach,
-	//};
-
-	//class EnumElement
-	//{
-	//	int32 value;
-	//	const char* str = "";
-	//};
-
-	//class JptEnum
-	//{
-	//private: 
-	//	StaticArray<EnumElement> m_enumElements;
-
-	//public:
-	// constexpr JptEnum()
-	// 
-	//	ToString();
-	//};
-
-
-	//EFruit::kApple;
-	//EFruit::kOrange;
-
-	//jpt::Enum EFruit
-	//{
-	//	"Apple",
-	//	"Orange",
-	//	"Peach",
-	//};
-	//EFruit.Val("Apple");
-
 
 	return true;
 }
 
 export bool RunUnitTests_Enum()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_CreateEnum(), "");
+	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Enum(), "");
+
+	//jpt::Enum EWeapon
+	//{
+	//	"Sword",
+	//	//"Axe",
+	//	//"Spear",
+
+	//	//"End"
+	//};
 
 	return true;
 }

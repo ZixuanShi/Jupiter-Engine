@@ -8,6 +8,8 @@
 #include "Assert.h"
 
 #include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
 
 #if IS_PLATFORM_WIN64
 	#include <Windows.h>
