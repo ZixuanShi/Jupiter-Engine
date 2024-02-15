@@ -97,6 +97,7 @@ export namespace jpt
 
 		/** Splits this string to substrings by a keyword */
 		constexpr DynamicArray<BasicString> Split(const TChar* pKeyword) const;
+		constexpr DynamicArray<BasicString> Split(TChar keyword) const;
 
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
@@ -478,6 +479,30 @@ export namespace jpt
 			current = copy.SubStr(0, keywordIndex);
 			substrs.EmplaceBack(current);
 			copy = copy.SubStr(keywordIndex + pKeywordSize);
+		}
+
+		return substrs;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr DynamicArray<BasicString<_TChar, _TAllocator>> BasicString<_TChar, _TAllocator>::Split(TChar keyword) const
+	{
+		DynamicArray<BasicString> substrs;
+		BasicString current;
+		BasicString copy = *this;
+
+		while (true)
+		{
+			const size_t keywordIndex = copy.Find(keyword);
+			if (keywordIndex == npos)
+			{
+				substrs.EmplaceBack(copy);
+				break;
+			}
+
+			current = copy.SubStr(0, keywordIndex);
+			substrs.EmplaceBack(current);
+			copy = copy.SubStr(keywordIndex + 1);
 		}
 
 		return substrs;
