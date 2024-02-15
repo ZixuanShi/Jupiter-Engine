@@ -9,14 +9,12 @@ export module UnitTests_Enum;
 import jpt.Enum;
 import jpt.TypeDefs;
 
-//jpt::Enum EFruits
-//{
-//	"Apple",
-//	//"Banana",
-//	//"Orange",
-//	//
-//	//"End"
-//};
+static const jpt::Enum EFruits
+{
+	"Apple",
+	"Banana",
+	"Orange",
+};
 
 bool UnitTest_Enum()
 {
@@ -28,13 +26,11 @@ export bool RunUnitTests_Enum()
 {
 	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Enum(), "");
 
-	//jpt::Enum EWeapon
+	//static const jpt::Enum EWeapon
 	//{
 	//	"Sword",
-	//	//"Axe",
-	//	//"Spear",
-
-	//	//"End"
+	//	"Axe",
+	//	"Spear",
 	//};
 
 	return true;

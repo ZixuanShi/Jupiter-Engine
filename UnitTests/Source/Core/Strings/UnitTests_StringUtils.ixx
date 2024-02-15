@@ -85,6 +85,7 @@ bool RunUnitTests_IsValidDataCStr()
 
 	// special
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("!"), "");
+	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("!Jupiter"), "");
 	JPT_RETURN_FALSE_IF_ERROR(jpt::IsValidDataCStr("!", false), "");
 	JPT_RETURN_FALSE_IF_ERROR(!jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?"), "");
 	JPT_RETURN_FALSE_IF_ERROR(jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?", false), "");

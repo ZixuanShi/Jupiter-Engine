@@ -353,7 +353,7 @@ export namespace jpt
 
 	/** @return		true if input CString contains acceptable text data
 		@param pString				The string to perform check on every char 
-		@param treatSpecialAsValid	 */
+		@param treatSpecialAsValid	[Optional] false if treat special characters as failure of validness. default to true */
 	constexpr bool IsValidDataCStr(const char* pString, bool treatSpecialAsValid = true)
 	{
 		// Check if the pointer is valid and not empty
@@ -362,7 +362,7 @@ export namespace jpt
 			return false;
 		}
 
-		// Check first char range a-z, A-Z, 0-9
+		// Check each char validness
 		size_t i = 0;
 		while (true)
 		{
@@ -371,20 +371,16 @@ export namespace jpt
 			{
 				break;
 			}
+
 			++i;
 
-			const bool isDigit = IsDigit(c);
-			const bool isAlpha = IsAlpha(c);
-			const bool isSafeSpecial = IsSafeSpecialChar(c);
-			const bool isSensitiveSpecial = IsSensitiveSpecialChar(c);
-
-			if (!isDigit && !isAlpha && !isSafeSpecial)
+			if (treatSpecialAsValid && IsSensitiveSpecialChar(c))
 			{
-				if (treatSpecialAsValid && isSensitiveSpecial)
-				{
-					continue;
-				}
+				continue;
+			}
 
+			if (!IsDigit(c) && !IsAlpha(c) && !IsSafeSpecialChar(c))
+			{
 				return false;
 			}
 		}

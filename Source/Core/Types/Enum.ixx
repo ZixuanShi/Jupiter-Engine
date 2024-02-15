@@ -32,10 +32,11 @@ export namespace jpt
 			arg != nullptr; 
 			arg = va_arg(arguments, const char*))
 		{
-			//if (IsValidDataCStr(arg, false))
-			//{
-			//}
+			if (IsValidDataCStr(arg, false) && GetCStrLength(arg) > 0)
+			{
 				JPT_LOG(arg);
+
+			}
 		}
 
 		va_end(arguments);
