@@ -18,6 +18,26 @@ import jpt.Function;
 
 namespace jpt
 {
+	/** Can hold any type 
+		@note	When copying or moving another Any object. Do not use the default member copy/move constructor/operator=. Instead use CopyAny or MoveAny
+		@example 
+			
+			// Assigning and retrieving values
+			jpt::Any any;
+			any = 42;
+			JPT_LOG(any.Is<int>()); // true
+			JPT_LOG(any.As<int>()); // 42
+			any = jpt::String("Hello, World!");
+			JPT_LOG(any.Is<jpt::String>()); // true
+			JPT_LOG(any.As<jpt::String>()); // Hello, World!
+
+			// DON'T DO THIS
+			jpt::Any any2;
+			any2 = any; // This will cause a runtime infinite constructing loop and heap will overflow
+
+			// DO THIS
+			any2.CopyAny<jpt::String>(any);
+			any2.MoveAny(Move(any));       		*/
 	export class Any
 	{
 	private:
@@ -28,37 +48,33 @@ namespace jpt
 
 	public:
 		constexpr Any() = default;
-		constexpr Any(const Any& other);
 		constexpr ~Any();
+		constexpr Any(const Any&) = delete;
+		constexpr Any(Any&&) noexcept = delete;
+		constexpr Any& operator=(const Any&) = delete;
+		constexpr Any& operator=(Any&&) noexcept = delete;
 
-		template<typename T> constexpr Any(const T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr Any(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any(T& value);
+		template<typename T> constexpr Any(T&& value);
 
-		template<typename T> constexpr Any& operator=(const T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr Any& operator=(T&& value)      requires NotSameType<T, Any>;
+		template<typename T> constexpr Any& operator=(T& value);
+		template<typename T> constexpr Any& operator=(T&& value);
 
-		template<typename T> constexpr       T& As()       requires NotSameType<T, Any>;
-		template<typename T> constexpr const T& As() const requires NotSameType<T, Any>;
+		template<typename T> constexpr       T& As();
+		template<typename T> constexpr const T& As() const;
 
 		template<typename T> constexpr bool Is();
 
+		template<typename T> constexpr void CopyAny(Any& other);
+		constexpr void MoveAny(Any&& other);
+
 	private:
-		template<typename T> constexpr void Construct(const T& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr void Construct(T&& value) requires NotSameType<T, Any>;
-		template<typename T> constexpr void Adapt() requires NotSameType<T, Any>;
+		template<typename T> constexpr void Construct(T& value);
+		template<typename T> constexpr void Construct(T&& value);
+		template<typename T> constexpr void Adapt();
 
 		constexpr void Destruct();
 	};
-
-	constexpr Any::Any(const Any& other)
-	{
-		other;
-
-		//m_pBuffer = new Byte[other.m_currentBufferSize];
-		//std::memcpy(m_pBuffer, other.m_pBuffer, other.m_currentBufferSize);
-		//m_destructor = other.m_destructor;
-		//m_currentTypeHash = other.m_currentTypeHash;
-	}
 
 	constexpr Any::~Any()
 	{
@@ -79,19 +95,19 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any::Any(const T& value) requires NotSameType<T, Any>
+	constexpr Any::Any(T& value)
 	{
 		Construct(value);
 	}
 
 	template<typename T>
-	constexpr Any::Any(T&& value) requires NotSameType<T, Any>
+	constexpr Any::Any(T&& value)
 	{
 		Construct(Move(value));
 	}
 
 	template<typename T>
-	constexpr Any& Any::operator=(const T& value) requires NotSameType<T, Any>
+	constexpr Any& Any::operator=(T& value)
 	{
 		Destruct();
 		Construct(value);
@@ -99,7 +115,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any& Any::operator=(T&& value) requires NotSameType<T, Any>
+	constexpr Any& Any::operator=(T&& value)
 	{
 		Destruct();
 		Construct(Move(value));
@@ -107,14 +123,14 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr T& Any::As() requires NotSameType<T, Any>
+	constexpr T& Any::As()
 	{
 		JPT_ASSERT(Is<T>(), "Any should be assigned to the given T before calling As()");
 		return reinterpret_cast<T&>(*m_pBuffer);
 	}
 
 	template<typename T>
-	constexpr const T& Any::As() const requires NotSameType<T, Any>
+	constexpr const T& Any::As() const
 	{
 		JPT_ASSERT(Is<T>(), "Any should be assigned to the given T before calling As()");
 		return reinterpret_cast<const T&>(*m_pBuffer);
@@ -127,21 +143,40 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr void Any::Construct(const T& value) requires NotSameType<T, Any>
+	constexpr void Any::CopyAny(Any& other)
+	{
+		Construct(other.As<T>());
+	}
+
+	constexpr void Any::MoveAny(Any&& other)
+	{
+		m_pBuffer           = other.m_pBuffer;
+		m_currentBufferSize = other.m_currentBufferSize;
+		m_currentTypeHash   = other.m_currentTypeHash;
+		m_destructor 	    = Move(other.m_destructor);
+
+		other.m_pBuffer           = nullptr;
+		other.m_currentBufferSize = 0;
+		other.m_currentTypeHash   = 0;
+		other.m_destructor.Clear();
+	}
+
+	template<typename T>
+	constexpr void Any::Construct(T& value)
 	{
 		Adapt<T>();
 		new (m_pBuffer) T(value);
 	}
 
 	template<typename T>
-	constexpr void Any::Construct(T&& value) requires NotSameType<T, Any>
+	constexpr void Any::Construct(T&& value)
 	{
 		Adapt<T>();
 		new (m_pBuffer) T(Move(value));
 	}
 
 	template<typename T>
-	constexpr void Any::Adapt() requires NotSameType<T, Any>
+	constexpr void Any::Adapt()
 	{
 		// Update buffer if the new is bigger than current buffer's size
 		const size_t newTypeSize = sizeof(T);

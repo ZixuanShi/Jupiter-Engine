@@ -11,6 +11,7 @@ import jpt.Any;
 import jpt.String;
 import jpt.Function;
 import jpt.TypeDefs;
+import jpt.Variant;
 
 bool UnitTest_Any()
 {
@@ -60,12 +61,22 @@ bool UnitTest_Any_Copy()
     JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != str, "");
     JPT_RETURN_FALSE_IF_ERROR(!any.Is<jpt::String>(), "");
 
-    // Copy constructor
-    //jpt::Any any2 = any;
-    //JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != str, "");
-    //JPT_RETURN_FALSE_IF_ERROR(any2.As<jpt::String>() != str, "");
-    
-    //any = any2;
+    // CopyAny
+    jpt::Any any2;
+    any2.CopyAny<jpt::String>(any);
+    JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != str, "");
+    JPT_RETURN_FALSE_IF_ERROR(any2.As<jpt::String>() != str, "");
+
+    // Copy variant
+    using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
+    TVariant variant = jpt::String("Variant");
+    any = variant;
+    const TVariant& variant2 = any.As<TVariant>();
+    JPT_RETURN_FALSE_IF_ERROR(!variant2.Is<jpt::String>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(variant2.As<jpt::String>() != "Variant", "");
+    JPT_RETURN_FALSE_IF_ERROR(!variant.Is<jpt::String>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(variant.As<jpt::String>() != "Variant", "");
+    JPT_RETURN_FALSE_IF_ERROR(&variant2 == &variant, "");
 
     return true;
 }
@@ -84,6 +95,22 @@ bool UnitTest_Any_Move()
     any = Move(str2);
     JPT_RETURN_FALSE_IF_ERROR(any.As<jpt::String>() != "World", "");
     JPT_RETURN_FALSE_IF_ERROR(!str2.IsEmpty(), "");
+
+    // MoveAny
+    jpt::Any any2;
+    any2.MoveAny(Move(any));
+    JPT_RETURN_FALSE_IF_ERROR(any2.As<jpt::String>() != "World", "");
+    JPT_RETURN_FALSE_IF_ERROR(any.Is<jpt::String>(), "");
+
+    // Move variant
+    using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
+    TVariant variant = jpt::String("Variant");
+    any = Move(variant);
+    const TVariant& variant2 = any.As<TVariant>();
+    JPT_RETURN_FALSE_IF_ERROR(!variant2.Is<jpt::String>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(variant2.As<jpt::String>() != "Variant", "");
+    JPT_RETURN_FALSE_IF_ERROR(variant.Is<jpt::String>(), "");
+    JPT_RETURN_FALSE_IF_ERROR(&variant2 == &variant, "");
 
     return true;
 }
