@@ -24,7 +24,7 @@ namespace jpt
 			message.Append(", ");
 
 			char messageBuffer[512];
-			FORMAT_STRING(messageBuffer, format, ...);
+			JPT_FORMAT_STRING(messageBuffer, format, ...);
 
 			message.Append(messageBuffer);
 		}

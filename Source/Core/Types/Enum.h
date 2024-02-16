@@ -2,13 +2,14 @@
 
 #pragma once
 
-#include <initializer_list>
-
 import jpt.TypeDefs;
 import jpt.DynamicArray;
+import jpt.StaticArray;
 import jpt.String;
+import jpt.Utilities;
+import jpt.HashMap;
 
-void EnumBuilder(jpt::DynamicArray<jpt::String>& names, uint8 count, const char* pSource);
+void BuildNames(jpt::HashMap<uint8, jpt::String>& namesMap, uint8& count, uint8& start, const char* pSource);
 
 	/** An Enum class supports the following operations:
 		- operator++/--: prefix and postfix increment/decrement
@@ -23,23 +24,26 @@ public:\
 	\
 	enum EData : uint8\
 	{\
-		__VA_ARGS__, Count, Start = 0\
+		__VA_ARGS__\
 	};\
 	\
 private:\
-	jpt::DynamicArray<jpt::String> m_names;\
-	TSize m_value = Start;\
+	inline static jpt::HashMap<uint8, jpt::String> m_namesMap;\
+	inline static TSize m_count = 0;\
+	inline static TSize m_start = 0;\
+	\
+	TSize m_value = 0;\
 	\
 public:\
 	EnumName()\
 	{\
-		EnumBuilder(m_names, Count, #__VA_ARGS__);\
+		BuildNames(m_namesMap, m_count, m_start, #__VA_ARGS__);\
 	}\
 	\
 	EnumName(EData data)\
 		: m_value(data)\
 	{\
-		EnumBuilder(m_names, Count, #__VA_ARGS__);\
+		BuildNames(m_namesMap, m_count, m_start, #__VA_ARGS__);\
 	}\
 	\
 	EnumName& operator=(EData data)\
@@ -47,6 +51,4 @@ public:\
 		m_value = data;\
 		return *this;\
 	}\
-	\
-private:\
 };

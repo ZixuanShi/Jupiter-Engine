@@ -36,14 +36,14 @@ namespace jpt
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		char messageBuffer[kMaxMessageSize];
-		FORMAT_STRING(messageBuffer, format, ...);
+		JPT_FORMAT_STRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
 	void Logger::Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...)
 	{
 		wchar_t messageBuffer[kMaxMessageSize];
-		FORMAT_WSTRING(messageBuffer, format, ...);
+		JPT_FORMAT_WSTRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 

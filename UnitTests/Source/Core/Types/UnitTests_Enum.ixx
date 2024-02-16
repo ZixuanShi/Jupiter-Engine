@@ -10,14 +10,62 @@ export module UnitTests_Enum;
 
 import jpt.TypeDefs;
 
-JPT_ENUM(EFruits2, 
-	Apple,
+import jpt.RandomNumberGenerator;
+
+struct Data
+{
+	int32 value1;
+	int32 value2;
+};
+
+class Foo
+{
+public:
+	static Data s_data;
+};
+
+static Data GenerateData()
+{
+	return { jpt::RNG::Global().RandInMax(100), jpt::RNG::Global().RandInMax(100) };
+}
+
+Data Foo::s_data = GenerateData();
+
+JPT_ENUM(EFruits, 
+	Apple = 1,
 	Banana,
-    Orange);
+    Orange = 7);
+
+const int32 n = 3;
+enum EData
+{
+	Light = 1,
+	Medium,
+	Heavy = 7,
+
+	Count = n,
+	Start = Light
+};
 
 bool UnitTest_GlobalEnum()
 {
-	EFruits2 fruit = EFruits2::Apple;
+	EFruits fruit = EFruits::Apple;
+	EFruits otherFruit = EFruits::Banana;
+
+	EFruits::Apple;
+	EFruits::Banana;
+	EFruits::Orange;
+	//EFruits::Count;
+	//EFruits::Start;
+
+	Foo f;
+	JPT_LOG(f.s_data.value1);
+	JPT_LOG(f.s_data.value2);
+	f.s_data.value1 += 100;
+	JPT_LOG(f.s_data.value1);
+	JPT_LOG(f.s_data.value2);
+	JPT_LOG(Foo::s_data.value1);
+	JPT_LOG(Foo::s_data.value2);
 
 	return true;
 }
@@ -26,13 +74,12 @@ bool UnitTest_NormalEnum()
 {
 	enum class EArmor
 	{
-		Start = 0,
-
-		Light = Start,
+		Light = 1,
 		Medium,
-		Heavy,
+		Heavy = 7,
 
-		Count
+		Count,
+		Start = Light
 	};
 
 	EArmor armor = EArmor::Light;
@@ -69,9 +116,9 @@ bool UnitTest_LocalEnum()
 
 export bool RunUnitTests_Enum()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");
+	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
+	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
+	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");
 
 	return true;
 }

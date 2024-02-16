@@ -596,7 +596,7 @@ export namespace jpt
 	constexpr BasicString<_TChar, _TAllocator> BasicString<_TChar, _TAllocator>::Format(const TChar* format, ...)
 	{
 		TChar buffer[kSize];
-		FORMAT_STRING(buffer, format, ...);
+		JPT_FORMAT_STRING(buffer, format, ...);
 		return BasicString(buffer);
 	}
 

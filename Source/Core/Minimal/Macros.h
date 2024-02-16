@@ -2,6 +2,7 @@
 
 #pragma once
 
+#pragma region Building
 /** Used for hacky fix unused parameters */
 #define JPT_IGNORE(...) __VA_ARGS__
 
@@ -10,6 +11,8 @@
 
 /** Turn on optimization */
 #define JPT_REOPTIMIZE __pragma(optimize("", on))
+
+#pragma endregion
 
 #pragma region Memory
 
@@ -49,13 +52,10 @@
 	}\
 	JPT_SAFE_DELETE(pPointer);
 
-#pragma endregion Memory
+#pragma endregion
 
 #pragma region Logging
-/** If the condition has occured, log an messageand return a value
-	@param condition:	The expression of the operation
-	@param returnValue: The value to return if condition occured
-	@param message:		The message to log if condition occured */
+
 #define JPT_RETURN_VALUE_IF_ERROR(condition, returnValue, ...)\
 	if ((condition))\
 	{\
@@ -93,7 +93,7 @@
 		JPT_LOG(__VA_ARGS__);\
 	}
 
-#pragma endregion Logging
+#pragma endregion
 
 #pragma region String
 /** Combines two strings */
@@ -127,26 +127,42 @@
 
 /** Formats a buffer as string 
 	@example:
-			char messageBuffer[512];
-			FORMAT_STRING(messageBuffer, "%s%d", "Hi", 42); */
-#define FORMAT_STRING(messageBuffer, format, ...)\
+			#include <stdarg.h>
+			#include <stdio.h>
+
+			void Foo(const char* format, ...)	// lambda works too
+			{
+				char buffer[64];	// any size you want
+				JPT_FORMAT_STRING(buffer, format, ...);
+
+				// Do something with buffer
+			} */
+#define JPT_FORMAT_STRING(buffer, format, ...)\
 	va_list args;\
 	va_start(args, format);\
-	vsprintf_s(messageBuffer, format, args);\
+	vsprintf_s(buffer, format, args);\
 	va_end(args)\
 
-#define FORMAT_WSTRING(messageBuffer, format, ...)\
+#define JPT_FORMAT_WSTRING(buffer, format, ...)\
 	va_list args;\
 	va_start(args, format);\
-	vswprintf_s(messageBuffer, format, args);\
+	vswprintf_s(buffer, format, args);\
 	va_end(args)\
 
-#pragma endregion String
+#pragma endregion
+
+#pragma region VA_ARGS
 
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/
 #define JPT_HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')
+
+
+
+//#define JPT_VA_ARGS_COUNT(...) JPT_VA_ARGS_COUNT_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1)
+
+#pragma endregion
 
 /** @return Count of a plain array.
 	@example:

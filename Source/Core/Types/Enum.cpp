@@ -6,11 +6,26 @@
 
 using namespace jpt;
 
-void EnumBuilder(jpt::DynamicArray<jpt::String>& names, uint8 count, const char* pSource)
+void BuildNames(jpt::HashMap<uint8, jpt::String>& namesMap, uint8& count, uint8& start, const char* pSource)
 {
-	String source(pSource);
-	source.Replace(" ", "");
 
-	names.Resize(count);
-	names = source.Split(',');
 }
+
+
+/*
+
+private:\
+	void BuildNames()\
+	{\
+		jpt::String source(#__VA_ARGS__);\
+		source.Replace(" ", "");\
+	\
+		jpt::DynamicArray<jpt::String> splittedNames = source.Split(',');\
+	\
+		for (size_t i = 0; i < splittedNames.Size(); ++i)\
+		{\
+			m_names[i] = Move(splittedNames[i]);\
+		}\
+	}\
+
+*/

@@ -8,6 +8,9 @@ export module UnitTests_Core;
 
 /** Unit Test Modules */
 
+// Minimal
+import UnitTests_Macros;
+
 // Algorithms
 import UnitTests_Searching;
 
@@ -66,9 +69,10 @@ export bool RunUnitTests_Core()
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Slot(), "Slot Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
 
-	// Minimals
+	// Minimal
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
+	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Macros(), "Macros Unit Tests Failed");
 
 	// Math
 	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Math(), "Math Unit Tests Failed");

@@ -38,6 +38,8 @@ export namespace jpt
 		return size;
 	}
 
+#pragma region Converters
+
 	/** Convert from IntegerType to a char pointer holding the integer's value as string literal
 		@param value:        The IntegerType value to convert to char*
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
@@ -242,10 +244,26 @@ export namespace jpt
 		return CStrToFloat(pBuffer, GetCStrLength(pBuffer));
 	}
 
+#pragma endregion
+
+#pragma region Hashing
+
 	/** constexpr compile time hash functions, 32 and 64 bit
 		@str: should be a null terminated string literal */
 	constexpr uint32 StringHash32(const char* const str, const uint32 value = 0x811c9dc5)         noexcept { return (str[0] == '\0') ? value : StringHash32(&str[1], (value ^ uint32(str[0])) * 0x1000193); }
 	constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept { return (str[0] == '\0') ? value : StringHash64(&str[1], (value ^ uint64(str[0])) * 0x100000001b3); }
+	
+	template<>
+	struct Hash<const char*>
+	{
+		size_t operator()(const char* key)
+		{
+			return jpt::StringHash64(key);
+		}
+	};
+#pragma endregion
+
+#pragma region Operations
 
 	/**	Copies data from destination to source with the given size */
 	template<StringLiteral TChar>
@@ -274,6 +292,12 @@ export namespace jpt
 			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
 	}
+
+	
+
+#pragma endregion
+
+#pragma region Comparisons
 
 	/** Compares two C-Style strings. 
 		Optional one size parameter indicates how many characters should it compare from begin
@@ -325,6 +349,10 @@ export namespace jpt
 	{
 		return StrCmp(pString1, pString2) == npos;
 	}
+
+#pragma endregion
+
+#pragma region Validation
 
 	constexpr bool IsAlpha(char c)
 	{
@@ -388,12 +416,5 @@ export namespace jpt
 		return true;
 	}
 
-	template<>
-	struct Hash<const char*>
-	{
-		size_t operator()(const char* key)
-		{
-			return jpt::StringHash64(key);
-		}
-	};
+#pragma endregion
 }

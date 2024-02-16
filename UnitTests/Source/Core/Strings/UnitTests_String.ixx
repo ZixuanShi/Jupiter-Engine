@@ -291,6 +291,9 @@ bool UnitTest_String_Format()
 	jpt::String str = jpt::String::Format<32>("%s %d %s", "Hello", 42, "World");
 	JPT_RETURN_FALSE_IF_ERROR(str != "Hello 42 World", "");
 
+	str = jpt::String::Format<128>("%s, %s %d, %d, %d:%d:%d %s - %s", "Thursday", "December", 28, 2023, 10, 16, 56, "PM", "Jupiter Engine's Birthday");
+	JPT_RETURN_FALSE_IF_ERROR(str != "Thursday, December 28, 2023, 10:16:56 PM - Jupiter Engine's Birthday", "");
+
 	return true;
 }
 
