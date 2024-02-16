@@ -60,4 +60,10 @@ export namespace jpt
 			return std::hash<KeyT>()(key);
 		}
 	};
+
+	template<typename ...Ts>
+	constexpr size_t GetArgsCount(Ts&&... args)
+	{
+		return (0 + ... + (void(args), 1));
+	}
 }

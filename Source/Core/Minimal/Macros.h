@@ -1,4 +1,4 @@
-// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -88,7 +88,10 @@
 #pragma endregion
 
 #pragma region String
-/** Combines two strings */
+
+/** Combines two strings 
+	@example #define TEST(x) JPT_COMBINE_STR("Hello ", #x)	// x can be anything
+	@example #define TEST(x) JPT_COMBINE_STR(L"你好 ", #x) */
 #define JPT_COMBINE_STR(A, B)   A##B
 
 /** Converts a const char* to const wchar_t* by prefixing 'L' */
@@ -148,11 +151,10 @@
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/
-#define JPT_HAS_ARGS(...) (""#__VA_ARGS__[0] != '\0')
+#define JPT_HAS_ARGS(...) jpt::GetArgsCount(__VA_ARGS__) > 0
 
-
-
-//#define JPT_VA_ARGS_COUNT(...) JPT_VA_ARGS_COUNT_IMPL(__VA_ARGS__, 5, 4, 3, 2, 1)
+/** @return	Count of arguments in __VA_ARGS__ */
+#define JPT_ARGS_COUNT(...)	jpt::GetArgsCount(__VA_ARGS__)
 
 #pragma endregion
 
