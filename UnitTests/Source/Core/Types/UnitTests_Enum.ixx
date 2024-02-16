@@ -36,17 +36,6 @@ JPT_ENUM(EFruits,
 	Banana,
     Orange = 7);
 
-const int32 n = 3;
-enum EData
-{
-	Light = 1,
-	Medium,
-	Heavy = 7,
-
-	Count = n,
-	Start = Light
-};
-
 bool UnitTest_GlobalEnum()
 {
 	EFruits fruit = EFruits::Apple;
@@ -55,17 +44,11 @@ bool UnitTest_GlobalEnum()
 	EFruits::Apple;
 	EFruits::Banana;
 	EFruits::Orange;
+
+	JPT_LOG(EFruits::Start);
+
 	//EFruits::Count;
 	//EFruits::Start;
-
-	Foo f;
-	JPT_LOG(f.s_data.value1);
-	JPT_LOG(f.s_data.value2);
-	f.s_data.value1 += 100;
-	JPT_LOG(f.s_data.value1);
-	JPT_LOG(f.s_data.value2);
-	JPT_LOG(Foo::s_data.value1);
-	JPT_LOG(Foo::s_data.value2);
 
 	return true;
 }
@@ -116,7 +99,7 @@ bool UnitTest_LocalEnum()
 
 export bool RunUnitTests_Enum()
 {
-	//JPT_ENSURE(UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
+	JPT_ENSURE(UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
 	//JPT_ENSURE(UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
 	//JPT_ENSURE(UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");
 

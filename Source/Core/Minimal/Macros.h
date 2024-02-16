@@ -151,7 +151,7 @@
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
 	@example:
 	#define MACRO_WITH_VARIADIC_ARGUMENTS(...)			{ if (JPT_HAS_ARGS(__VA_ARGS__)) { DoStuff(); } }	*/
-#define JPT_HAS_ARGS(...) jpt::GetArgsCount(__VA_ARGS__) > 0
+#define JPT_HAS_ARGS(...) jpt::HasAnyArgs(__VA_ARGS__)
 
 /** @return	Count of arguments in __VA_ARGS__ */
 #define JPT_ARGS_COUNT(...)	jpt::GetArgsCount(__VA_ARGS__)
