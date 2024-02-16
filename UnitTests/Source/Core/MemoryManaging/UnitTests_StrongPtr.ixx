@@ -14,41 +14,41 @@ import jpt.StrongPtr;
 bool UnitTest_StrongPtr_Char()
 {
 	jpt::StrongPtr<char> sharedCharPtr1 = jpt::MakeStrong<char>('C');
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1.IsValid(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1, "");
-	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr1 != 'C', "");
+	JPT_ENSURE(sharedCharPtr1.IsValid(), "");
+	JPT_ENSURE(sharedCharPtr1, "");
+	JPT_ENSURE(*sharedCharPtr1 == 'C', "");
 	
 	jpt::StrongPtr<char> sharedCharPtr2 = sharedCharPtr1;
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr2.IsValid(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr2, "");
-	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr2 != 'C', "");
+	JPT_ENSURE(sharedCharPtr2.IsValid(), "");
+	JPT_ENSURE(sharedCharPtr2, "");
+	JPT_ENSURE(*sharedCharPtr2 == 'C', "");
 
 	jpt::StrongPtr<char> sharedCharPtr3 = sharedCharPtr1;
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3.IsValid(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3, "");
-	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr3 != 'C', "");
+	JPT_ENSURE(sharedCharPtr3.IsValid(), "");
+	JPT_ENSURE(sharedCharPtr3, "");
+	JPT_ENSURE(*sharedCharPtr3 == 'C', "");
 
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr1.GetRefCount() != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr2.GetRefCount() != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr3.GetRefCount() != 3, "");
+	JPT_ENSURE(sharedCharPtr1.GetRefCount() == 3, "");
+	JPT_ENSURE(sharedCharPtr2.GetRefCount() == 3, "");
+	JPT_ENSURE(sharedCharPtr3.GetRefCount() == 3, "");
 
 	sharedCharPtr3.Reset(new char('A'));
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3.IsValid(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr3, "");
-	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr3 != 'A', "");
+	JPT_ENSURE(sharedCharPtr3.IsValid(), "");
+	JPT_ENSURE(sharedCharPtr3, "");
+	JPT_ENSURE(*sharedCharPtr3 == 'A', "");
 
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr1.GetRefCount() != 2, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr2.GetRefCount() != 2, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr3.GetRefCount() != 1, "");
+	JPT_ENSURE(sharedCharPtr1.GetRefCount() == 2, "");
+	JPT_ENSURE(sharedCharPtr2.GetRefCount() == 2, "");
+	JPT_ENSURE(sharedCharPtr3.GetRefCount() == 1, "");
 
 	sharedCharPtr1 = sharedCharPtr3;
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1.IsValid(), "");
-	JPT_RETURN_FALSE_IF_ERROR(!sharedCharPtr1, "");
-	JPT_RETURN_FALSE_IF_ERROR(*sharedCharPtr1 != 'A', "");
+	JPT_ENSURE(sharedCharPtr1.IsValid(), "");
+	JPT_ENSURE(sharedCharPtr1, "");
+	JPT_ENSURE(*sharedCharPtr1 == 'A', "");
 
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr1.GetRefCount() != 2, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr2.GetRefCount() != 1, "");
-	JPT_RETURN_FALSE_IF_ERROR(sharedCharPtr3.GetRefCount() != 2, "");
+	JPT_ENSURE(sharedCharPtr1.GetRefCount() == 2, "");
+	JPT_ENSURE(sharedCharPtr2.GetRefCount() == 1, "");
+	JPT_ENSURE(sharedCharPtr3.GetRefCount() == 2, "");
 
 	jpt::StrongPtr<int> left(new int (3));
 	jpt::StrongPtr<int> right(new int (4));
@@ -128,9 +128,9 @@ bool UnitTest_StrongPtr_Class2()
 
 export bool RunUnitTests_StrongPtr()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Char(), "UnitTest_UniquePtr_Char Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Class(), "UnitTest_StrongPtr_Class Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StrongPtr_Class2(), "UnitTest_StrongPtr_Class2 Failed");
+	JPT_ENSURE(UnitTest_StrongPtr_Char(), "UnitTest_UniquePtr_Char Failed");
+	JPT_ENSURE(UnitTest_StrongPtr_Class(), "UnitTest_StrongPtr_Class Failed");
+	JPT_ENSURE(UnitTest_StrongPtr_Class2(), "UnitTest_StrongPtr_Class2 Failed");
 
 	return true;
 }

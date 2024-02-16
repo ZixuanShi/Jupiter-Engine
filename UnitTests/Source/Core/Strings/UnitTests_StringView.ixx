@@ -17,47 +17,47 @@ bool UnitTests_StringView()
 	const char* pName = "Zixuan Shi";
 	
 	jpt::StringView strView(str);
-	JPT_RETURN_FALSE_IF_ERROR(strView != str, "");
+	JPT_ENSURE(strView == str, "");
 	
 	jpt::String str2 = "Jupiter";
 	jpt::String str3 = "Jupiter Engine Release";
-	JPT_RETURN_FALSE_IF_ERROR(strView == str2, "");
-	JPT_RETURN_FALSE_IF_ERROR(strView == str3, "");
+	JPT_ENSURE(strView != str2, "");
+	JPT_ENSURE(strView != str3, "");
 
 	strView = pName;
-	JPT_RETURN_FALSE_IF_ERROR(strView != pName, "");
-	JPT_RETURN_FALSE_IF_ERROR(strView == "Zixuan Shi Core Engineer", "");
+	JPT_ENSURE(strView == pName, "");
+	JPT_ENSURE(strView != "Zixuan Shi Core Engineer", "");
 
 	strView = "Hi I am a StringView, Ha";
-	JPT_RETURN_FALSE_IF_ERROR(strView != "Hi I am a StringView, Ha", "");
+	JPT_ENSURE(strView == "Hi I am a StringView, Ha", "");
 
 	jpt::StringView subStr = strView.SubStr(10, 10);
-	JPT_RETURN_FALSE_IF_ERROR(subStr != "StringView", "");
+	JPT_ENSURE(subStr == "StringView", "");
 
-	JPT_RETURN_FALSE_IF_ERROR(!subStr.StartsWith("Str"), "");
-	JPT_RETURN_FALSE_IF_ERROR(subStr.StartsWith("StrI"), "");
-	JPT_RETURN_FALSE_IF_ERROR(!strView.StartsWith("Hi I am"), "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.StartsWith("Hi am"), "");
+	JPT_ENSURE(subStr.StartsWith("Str"), "");
+	JPT_ENSURE(!subStr.StartsWith("StrI"), "");
+	JPT_ENSURE(strView.StartsWith("Hi I am"), "");
+	JPT_ENSURE(!strView.StartsWith("Hi am"), "");
 
-	JPT_RETURN_FALSE_IF_ERROR(!subStr.EndsWith("View"), "");
-	JPT_RETURN_FALSE_IF_ERROR(subStr.EndsWith("ViewwA"), "");
-	JPT_RETURN_FALSE_IF_ERROR(!strView.EndsWith("Ha"), "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.EndsWith("Hi"), "");
+	JPT_ENSURE(subStr.EndsWith("View"), "");
+	JPT_ENSURE(!subStr.EndsWith("ViewwA"), "");
+	JPT_ENSURE(strView.EndsWith("Ha"), "");
+	JPT_ENSURE(!strView.EndsWith("Hi"), "");
 
-	JPT_RETURN_FALSE_IF_ERROR(strView.Find("StringView") != 10, "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.Find('I') != 3, "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.Find("NoExist") != jpt::npos, "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.Find('N') != jpt::npos, "");
-	JPT_RETURN_FALSE_IF_ERROR(!strView.Contains("StringView"), "");
-	JPT_RETURN_FALSE_IF_ERROR(!strView.Contains('I'), "");
-	JPT_RETURN_FALSE_IF_ERROR(strView.Contains("N"), "");
+	JPT_ENSURE(strView.Find("StringView") == 10, "");
+	JPT_ENSURE(strView.Find('I') == 3, "");
+	JPT_ENSURE(strView.Find("NoExist") == jpt::npos, "");
+	JPT_ENSURE(strView.Find('N') == jpt::npos, "");
+	JPT_ENSURE(strView.Contains("StringView"), "");
+	JPT_ENSURE(strView.Contains('I'), "");
+	JPT_ENSURE(!strView.Contains("N"), "");
 
 	return true;
 }
 
 export bool RunUnitTests_StringView()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTests_StringView(), "UnitTests_StringView Failed");
+	JPT_ENSURE(UnitTests_StringView(), "UnitTests_StringView Failed");
 
 	return true;
 }

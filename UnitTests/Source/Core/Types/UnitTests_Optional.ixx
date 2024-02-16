@@ -14,39 +14,39 @@ import jpt.String;
 bool UnitTest_Optional()
 {
 	jpt::Optional<int32> intOptional;
-	JPT_RETURN_FALSE_IF_ERROR(intOptional.HasValue(), "");
+	JPT_ENSURE(!intOptional.HasValue(), "");
 
 	intOptional = 42;
-	JPT_RETURN_FALSE_IF_ERROR(!intOptional.HasValue(), "");
-	JPT_RETURN_FALSE_IF_ERROR(intOptional.Value() != 42, "");
+	JPT_ENSURE(intOptional.HasValue(), "");
+	JPT_ENSURE(intOptional.Value() == 42, "");
 
 	int32 num = 12;
 	intOptional = num;
-	JPT_RETURN_FALSE_IF_ERROR(intOptional.Value() != 12, "");
+	JPT_ENSURE(intOptional.Value() == 12, "");
 
 	intOptional.Reset();
-	JPT_RETURN_FALSE_IF_ERROR(intOptional.HasValue(), "");
+	JPT_ENSURE(!intOptional.HasValue(), "");
 
 	jpt::Optional<jpt::String> stringOptional;
-	JPT_RETURN_FALSE_IF_ERROR(stringOptional.HasValue(), "");
+	JPT_ENSURE(!stringOptional.HasValue(), "");
 
 	stringOptional = "42";
-	JPT_RETURN_FALSE_IF_ERROR(!stringOptional.HasValue(), "");
-	JPT_RETURN_FALSE_IF_ERROR(stringOptional.Value() != "42", "");
+	JPT_ENSURE(stringOptional.HasValue(), "");
+	JPT_ENSURE(stringOptional.Value() == "42", "");
 
 	jpt::String str("Jupiter Engine");
 	stringOptional = jpt::Move(str);
-	JPT_RETURN_FALSE_IF_ERROR(stringOptional.Value() != "Jupiter Engine", "");
+	JPT_ENSURE(stringOptional.Value() == "Jupiter Engine", "");
 
 	stringOptional.Reset();
-	JPT_RETURN_FALSE_IF_ERROR(stringOptional.HasValue(), "");
+	JPT_ENSURE(!stringOptional.HasValue(), "");
 
 	return true;
 }
 
 export bool RunUnitTests_Optional()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Optional(), "UnitTest_Optional Failed");
+	JPT_ENSURE(UnitTest_Optional(), "UnitTest_Optional Failed");
 
 	return true;
 }

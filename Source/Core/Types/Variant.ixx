@@ -164,11 +164,6 @@ export namespace jpt
 	template<typename T>
 	constexpr bool Variant<TArgs...>::Is() const requires IsAnyOf<T, TArgs...>
 	{
-		if (m_currentIndex == kInvalidValue<TIndex>)
-		{
-			return false;
-		}
-
 		return m_currentIndex == GetIndexOfType<T, TArgs...>();
 	}
 

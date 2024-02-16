@@ -15,7 +15,7 @@ bool UnitTest_Byte()
 
 export bool RunUnitTests_Byte()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Byte(), "UnitTest_Byte Failed");
+    JPT_ENSURE(UnitTest_Byte(), "UnitTest_Byte Failed");
 
     return true;
 }

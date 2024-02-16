@@ -57,46 +57,46 @@ export bool RunUnitTests_Core()
 	/** Unit Test Functions */
 	
 	// Algorithms
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Searching(), "Algorithms Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Searching(), "Algorithms Unit Tests Failed");
 
 	// Containers
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_HashMap(), "HashMap Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_LinkedList(), "LinkedList Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_DynamicArray(), "DynamicArray Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_HashMap(), "HashMap Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_LinkedList(), "LinkedList Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_DynamicArray(), "DynamicArray Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
 
 	// Functional
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Slot(), "Slot Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Function(), "Function Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Slot(), "Slot Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Function(), "Function Unit Tests Failed");
 
 	// Minimal
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Macros(), "Macros Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Macros(), "Macros Unit Tests Failed");
 
 	// Math
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Math(), "Math Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_RandomNumberGenerator(), "Random Number Generator Tests Failed");
+	JPT_ENSURE(RunUnitTests_Math(), "Math Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_RandomNumberGenerator(), "Random Number Generator Tests Failed");
 
 	// Memory Managing
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Allocator(), "Allocator Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StrongPtr(), "StrongPtr Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_UniquePtr(), "UniquePtr Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_WeakPtr(), "WeakPtr Tests Failed");
+	JPT_ENSURE(RunUnitTests_Allocator(), "Allocator Tests Failed");
+	JPT_ENSURE(RunUnitTests_StrongPtr(), "StrongPtr Tests Failed");
+	JPT_ENSURE(RunUnitTests_UniquePtr(), "UniquePtr Tests Failed");
+	JPT_ENSURE(RunUnitTests_WeakPtr(), "WeakPtr Tests Failed");
 
 	// Strings
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_String(), "String Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringUtils(), "StringUtils Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_StringView(), "StringView Tests Failed");
+	JPT_ENSURE(RunUnitTests_String(), "String Tests Failed");
+	JPT_ENSURE(RunUnitTests_StringUtils(), "StringUtils Tests Failed");
+	JPT_ENSURE(RunUnitTests_StringView(), "StringView Tests Failed");
 
 	// Types
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Any(), "Any Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Byte(), "Byte Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Variant(), "Variant Unit Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Optional(), "Optional Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Enum(), "Enum Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Tuple(), "Tuple Tests Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_Pair(), "Pair Tests Failed");
+	JPT_ENSURE(RunUnitTests_Any(), "Any Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Byte(), "Byte Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Variant(), "Variant Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Optional(), "Optional Tests Failed");
+	JPT_ENSURE(RunUnitTests_Enum(), "Enum Tests Failed");
+	JPT_ENSURE(RunUnitTests_Tuple(), "Tuple Tests Failed");
+	JPT_ENSURE(RunUnitTests_Pair(), "Pair Tests Failed");
 
 	return true;
 }

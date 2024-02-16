@@ -2,13 +2,14 @@
 
 #include "Enum.h"
 
+#include "Core/Minimal/Macros.h"
 #include "Debugging/Logger.h"
 
 using namespace jpt;
 
 void BuildNames(jpt::HashMap<uint8, jpt::String>& namesMap, uint8& count, uint8& start, const char* pSource)
 {
-
+	JPT_IGNORE(namesMap, count, start, pSource);
 }
 
 

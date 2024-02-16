@@ -24,12 +24,12 @@ bool UnitTest_Function()
 {
     jpt::Function<bool(int32&)> function = TestFunction1;
     int32 n = 5;
-    JPT_RETURN_FALSE_IF_ERROR(!function(n), "");
-    JPT_RETURN_FALSE_IF_ERROR(n != 5, "");
+    JPT_ENSURE(function(n), "");
+    JPT_ENSURE(n == 5, "");
 
     n = 10;
-    JPT_RETURN_FALSE_IF_ERROR(function(n), "");
-	JPT_RETURN_FALSE_IF_ERROR(n != 100, "");
+    JPT_ENSURE(!function(n), "");
+	JPT_ENSURE(n == 100, "");
 
     return true;
 }
@@ -48,12 +48,12 @@ bool UnitTest_Lambda()
         };
     jpt::Function<bool(int32&)> function = lambda;
     int32 n = 5;
-    JPT_RETURN_FALSE_IF_ERROR(!function(n), "");
-    JPT_RETURN_FALSE_IF_ERROR(n != 5, "");
+    JPT_ENSURE(function(n), "");
+    JPT_ENSURE(n == 5, "");
 
     n = 10;
-    JPT_RETURN_FALSE_IF_ERROR(function(n), "");
-    JPT_RETURN_FALSE_IF_ERROR(n != 100, "");
+    JPT_ENSURE(!function(n), "");
+    JPT_ENSURE(n == 100, "");
     
     return true;
 }
@@ -61,8 +61,8 @@ bool UnitTest_Lambda()
 
 export bool RunUnitTests_Function()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Function(), "UnitTest_Function Failed");
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Lambda(), "UnitTest_Function Failed");
+    JPT_ENSURE(UnitTest_Function(), "UnitTest_Function Failed");
+    JPT_ENSURE(UnitTest_Lambda(), "UnitTest_Function Failed");
 
     return true;
 }

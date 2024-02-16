@@ -116,9 +116,9 @@ bool UnitTest_LocalEnum()
 
 export bool RunUnitTests_Enum()
 {
-	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
-	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
-	//JPT_RETURN_FALSE_IF_ERROR(!UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");
+	//JPT_ENSURE(UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
+	//JPT_ENSURE(UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
+	//JPT_ENSURE(UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");
 
 	return true;
 }

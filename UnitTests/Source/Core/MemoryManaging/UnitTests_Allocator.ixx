@@ -18,19 +18,19 @@ bool UnitTest_TAllocatorrivialType()
 {
 	// Single
 	TNum* pSingle = jpt::Allocator<TNum>::Allocate();
-	JPT_RETURN_FALSE_IF_ERROR(pSingle == nullptr, "jpt::Allocator<TestType>::Allocate() returned a nullptr");
+	JPT_ENSURE(pSingle != nullptr, "jpt::Allocator<TestType>::Allocate() returned a nullptr");
 	jpt::Allocator<TNum>::Deallocate(pSingle);
 
 	// Single with value
 	TNum* pSingleWithValue = jpt::Allocator<TNum>::AllocateWithValue(static_cast<TNum>(42));
-	JPT_RETURN_FALSE_IF_ERROR(pSingleWithValue == nullptr, "jpt::Allocator<int>::AllocateWithValue(42) returned a nullptr");
-	JPT_RETURN_FALSE_IF_ERROR(*pSingleWithValue != static_cast<TNum>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
+	JPT_ENSURE(pSingleWithValue != nullptr, "jpt::Allocator<int>::AllocateWithValue(42) returned a nullptr");
+	JPT_ENSURE(*pSingleWithValue == static_cast<TNum>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
 	jpt::Allocator<TNum>::Deallocate(pSingleWithValue);
 
 	// Array
 	constexpr size_t kArraySize = 10'000;
 	TNum* pArray = jpt::Allocator<TNum>::AllocateArray(kArraySize);
-	JPT_RETURN_FALSE_IF_ERROR(pArray == nullptr, "jpt::Allocator<TestType>::AllocateArray(kArraySize) returned a nullptr");
+	JPT_ENSURE(pArray != nullptr, "jpt::Allocator<TestType>::AllocateArray(kArraySize) returned a nullptr");
 
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
@@ -38,16 +38,16 @@ bool UnitTest_TAllocatorrivialType()
 	}
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
-		JPT_RETURN_FALSE_IF_ERROR(pArray[i] != static_cast<TNum>(i), "jpt::Allocator<TestType>::AllocateArray(kArraySize) doesn't write data correctly");
+		JPT_ENSURE(pArray[i] == static_cast<TNum>(i), "jpt::Allocator<TestType>::AllocateArray(kArraySize) doesn't write data correctly");
 	}
 	jpt::Allocator<TNum>::DeallocateArray(pArray);
 
 	// Multi with value initializer list
 	TNum* pMultiWithValue = jpt::Allocator<TNum>::AllocateArray(10, { 0,1,2,3,4,5,6,7,8,9 });
-	JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue == nullptr, "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) returned a nullptr");
+	JPT_ENSURE(pMultiWithValue != nullptr, "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) returned a nullptr");
 	for (size_t i = 0; i < 10; ++i)
 	{
-		JPT_RETURN_FALSE_IF_ERROR(pMultiWithValue[i] != static_cast<TNum>(i), "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) doesn't write data correctly");
+		JPT_ENSURE(pMultiWithValue[i] == static_cast<TNum>(i), "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) doesn't write data correctly");
 	}
 	jpt::Allocator<TNum>::Deallocate(pMultiWithValue);
 
@@ -115,37 +115,37 @@ bool UnitTest_TAllocator_NonTrivial()
 	jpt::Allocator<Foo> allocator;
 
 	Foo* pFoo = allocator.Allocate();
-	JPT_RETURN_FALSE_IF_ERROR(pFoo == nullptr, "");
+	JPT_ENSURE(pFoo != nullptr, "");
 	allocator.Deallocate(pFoo);
 
 	Foo* pFooWithArgs = allocator.AllocateWithValue(jpt::String("Bar"));
-	JPT_RETURN_FALSE_IF_ERROR(pFooWithArgs == nullptr, "");
-	JPT_RETURN_FALSE_IF_ERROR(pFooWithArgs->ToString() != "FooBar", "");
+	JPT_ENSURE(pFooWithArgs != nullptr, "");
+	JPT_ENSURE(pFooWithArgs->ToString() == "FooBar", "");
 	allocator.Deallocate(pFooWithArgs);
 
 	Foo* pFooArray = allocator.AllocateArray(10, { Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9") });
-	JPT_RETURN_FALSE_IF_ERROR(pFooArray == nullptr, "");
+	JPT_ENSURE(pFooArray != nullptr, "");
 	for (size_t i = 0; i < 10; ++i)
 	{
-		JPT_RETURN_FALSE_IF_ERROR(pFooArray[i].ToString() != "Foo" + jpt::ToString(i), "");
+		JPT_ENSURE(pFooArray[i].ToString() == "Foo" + jpt::ToString(i), "");
 	}
 	allocator.DeallocateArray(pFooArray);
 
 	Foo* pConstructedFoo = allocator.Allocate();
 	allocator.Construct(pConstructedFoo, Foo("Bar"));
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo == nullptr, "");
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo->ToString() != "FooBar", "");
+	JPT_ENSURE(pConstructedFoo != nullptr, "");
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBar", "");
 	allocator.Destruct(pConstructedFoo);
 
 	Foo anotherFoo = jpt::String("Baz");
 	allocator.Construct(pConstructedFoo, anotherFoo);
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo == nullptr, "");
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo->ToString() != "FooBaz", "");
+	JPT_ENSURE(pConstructedFoo != nullptr, "");
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz", "");
 	allocator.Destruct(pConstructedFoo);
 
 	allocator.Construct(pConstructedFoo, jpt::Move(anotherFoo));
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo == nullptr, "");
-	JPT_RETURN_FALSE_IF_ERROR(pConstructedFoo->ToString() != "FooBaz", "");
+	JPT_ENSURE(pConstructedFoo != nullptr, "");
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz", "");
 	allocator.Destruct(pConstructedFoo);
 
 	allocator.Deallocate(pConstructedFoo);
@@ -155,12 +155,12 @@ bool UnitTest_TAllocator_NonTrivial()
 
 export bool RunUnitTests_Allocator()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<uint8>(), "UnitTest_TAllocatorrivialType<uint8> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<int32>(), "UnitTest_TAllocatorrivialType<int32> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<float>(), "UnitTest_TAllocatorrivialType<float> Failed");
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocatorrivialType<double>(), "UnitTest_TAllocatorrivialType<float> Failed");
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<uint8>(), "UnitTest_TAllocatorrivialType<uint8> Failed");
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<int32>(), "UnitTest_TAllocatorrivialType<int32> Failed");
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<float>(), "UnitTest_TAllocatorrivialType<float> Failed");
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<double>(), "UnitTest_TAllocatorrivialType<float> Failed");
 
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_TAllocator_NonTrivial(), "UnitTest_TAllocator_NonTrivial Failed");
+	JPT_ENSURE(UnitTest_TAllocator_NonTrivial(), "UnitTest_TAllocator_NonTrivial Failed");
 
 	return true;
 }

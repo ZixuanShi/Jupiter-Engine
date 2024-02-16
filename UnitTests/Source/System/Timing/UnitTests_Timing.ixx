@@ -23,7 +23,7 @@ bool UnitTest_Clock()
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
     const bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
-    JPT_RETURN_FALSE_IF_ERROR(!value, "");
+    JPT_ENSURE(value, "");
 
     return true;
 }
@@ -36,15 +36,15 @@ bool UnitTest_StopWatch()
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
     const bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
-    JPT_RETURN_FALSE_IF_ERROR(!value, "");
+    JPT_ENSURE(value, "");
 
     return true;
 }
 
 export bool RunUnitTests_Timing()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Clock(), "UnitTest_Clock Failed");
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_StopWatch(), "UnitTest_StopWatch Failed");
+    JPT_ENSURE(UnitTest_Clock(), "UnitTest_Clock Failed");
+    JPT_ENSURE(UnitTest_StopWatch(), "UnitTest_StopWatch Failed");
 
     return true;
 }

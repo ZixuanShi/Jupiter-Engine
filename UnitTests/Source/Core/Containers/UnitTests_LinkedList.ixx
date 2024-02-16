@@ -38,10 +38,10 @@ bool UnitTest_LinkedList_Trivial()
     jpt::LinkedList<int32> list{ 7,8,9 };
 
     int32& result1 = list.EmplaceBack(1);
-    JPT_RETURN_FALSE_IF_ERROR(result1 != 1, "");
+    JPT_ENSURE(result1 == 1, "");
     result1 = 12;
     int32& result2 = list.EmplaceFront(0);
-    JPT_RETURN_FALSE_IF_ERROR(result2 != 0, "");
+    JPT_ENSURE(result2 == 0, "");
     result2 = 5;
     list.PushBack(2);
     list.PushFront(-1);
@@ -55,16 +55,16 @@ bool UnitTest_LinkedList_Trivial()
     list.PopFront();
 
     jpt::LinkedList<int32> anotherList{ 5, 3, 7, 8, 0, 1, 9, 12, 2 };
-    JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
+    JPT_ENSURE(list == anotherList, "");
 
     jpt::LinkedList<int32> copiedList = anotherList;
-    JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
-    JPT_RETURN_FALSE_IF_ERROR(list != copiedList, "");
+    JPT_ENSURE(list == anotherList, "");
+    JPT_ENSURE(list == copiedList, "");
 
     jpt::LinkedList<int32> movedList = jpt::Move(anotherList);
-    JPT_RETURN_FALSE_IF_ERROR(list != movedList, "");
-    JPT_RETURN_FALSE_IF_ERROR(list != copiedList, "");
-    JPT_RETURN_FALSE_IF_ERROR(!anotherList.IsEmpty(), "");
+    JPT_ENSURE(list == movedList, "");
+    JPT_ENSURE(list == copiedList, "");
+    JPT_ENSURE(anotherList.IsEmpty(), "");
 
     return true;
 }
@@ -74,10 +74,10 @@ bool UnitTest_LinkedList_NonTrivial()
     jpt::LinkedList<jpt::String> list{ "Seven", "Eight", "Nine" };
 
     jpt::String& result1 = list.EmplaceBack(locHelper(1));
-    JPT_RETURN_FALSE_IF_ERROR(result1 != locHelper(1), "");
+    JPT_ENSURE(result1 == locHelper(1), "");
     result1 = locHelper(12);
     jpt::String& result2 = list.EmplaceFront(locHelper(0));
-    JPT_RETURN_FALSE_IF_ERROR(result2 != locHelper(0), "");
+    JPT_ENSURE(result2 == locHelper(0), "");
     result2 = locHelper(5);
     list.PushBack(locHelper(2));
     list.PushFront(locHelper(1));
@@ -91,24 +91,24 @@ bool UnitTest_LinkedList_NonTrivial()
     list.PopFront();
 
     jpt::LinkedList<jpt::String> anotherList{ locHelper(5), locHelper(3),locHelper(7),locHelper(8),locHelper(0),locHelper(1),locHelper(9),locHelper(12),locHelper(2) };
-    JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
+    JPT_ENSURE(list == anotherList, "");
 
     jpt::LinkedList<jpt::String> copiedList = anotherList;
-    JPT_RETURN_FALSE_IF_ERROR(list != anotherList, "");
-    JPT_RETURN_FALSE_IF_ERROR(list != copiedList, "");
+    JPT_ENSURE(list == anotherList, "");
+    JPT_ENSURE(list == copiedList, "");
 
     jpt::LinkedList<jpt::String> movedList = jpt::Move(anotherList);
-    JPT_RETURN_FALSE_IF_ERROR(list != movedList, "");
-    JPT_RETURN_FALSE_IF_ERROR(list != copiedList, "");
-    JPT_RETURN_FALSE_IF_ERROR(!anotherList.IsEmpty(), "");
+    JPT_ENSURE(list == movedList, "");
+    JPT_ENSURE(list == copiedList, "");
+    JPT_ENSURE(anotherList.IsEmpty(), "");
 
     return true;
 }
 
 export bool RunUnitTests_LinkedList()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_LinkedList_Trivial(), "UnitTest_LinkedList_Trivial Failed");
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_LinkedList_NonTrivial(), "UnitTest_LinkedList_NonTrivial Failed");
+    JPT_ENSURE(UnitTest_LinkedList_Trivial(), "UnitTest_LinkedList_Trivial Failed");
+    JPT_ENSURE(UnitTest_LinkedList_NonTrivial(), "UnitTest_LinkedList_NonTrivial Failed");
 
     return true;
 }

@@ -21,8 +21,8 @@ bool UnitTest_Macro_String()
             return jpt::AreStringsSame(buffer, expectedResult);
         };
 
-    JPT_RETURN_FALSE_IF_ERROR(!helper("Hello World", "Hello World"), "");
-    JPT_RETURN_FALSE_IF_ERROR(!helper("42", "%d", 42), "");
+    JPT_ENSURE(helper("Hello World", "Hello World"), "");
+    JPT_ENSURE(helper("42", "%d", 42), "");
 
     return true;
 }
@@ -36,8 +36,8 @@ bool UnitTest_Macro_VA_ARGS()
 
 export bool RunUnitTests_Macros()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Macro_String(), "UnitTest_Macro_String Failed");
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Macro_VA_ARGS(), "UnitTest_Macro_VA_ARGS Failed");
+    JPT_ENSURE(UnitTest_Macro_String(), "UnitTest_Macro_String Failed");
+    JPT_ENSURE(UnitTest_Macro_VA_ARGS(), "UnitTest_Macro_VA_ARGS Failed");
 
     return true;
 }

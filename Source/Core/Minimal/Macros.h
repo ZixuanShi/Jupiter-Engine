@@ -56,41 +56,26 @@
 
 #pragma region Logging
 
-#define JPT_RETURN_VALUE_IF_ERROR(condition, returnValue, ...)\
-	if ((condition))\
+#define JPT_NOTIFY(condition, ...)\
+	if (!(condition))\
+	{\
+		JPT_WARNING(__VA_ARGS__);\
+	}
+
+#define JPT_VERIFY(condition, returnValue, ...)\
+	if (!(condition))\
 	{\
 		JPT_ERROR(__VA_ARGS__);\
 		return returnValue;\
 	}
 
-#define JPT_RETURN_VALUE_IF(condition, returnValue)\
-	if ((condition))\
-	{\
-		return returnValue;\
-	}
-
-#define JPT_RETURN_FALSE_IF_ERROR(condition, ...)\
-	JPT_RETURN_VALUE_IF_ERROR(condition, false, __VA_ARGS__);
-
-#define JPT_RETURN_FALSE_IF(condition)\
-	JPT_RETURN_VALUE_IF(condition, false);
-
-#define JPT_RETURN_IF_ERROR(condition, ...)\
-	JPT_RETURN_VALUE_IF_ERROR(condition, void(), __VA_ARGS__);
+#define JPT_ENSURE(condition, ...)\
+	JPT_VERIFY(condition, false , __VA_ARGS__)
 
 #define JPT_RETURN_IF(condition)\
-	JPT_RETURN_VALUE_IF(condition, void());
-
-#define JPT_ERROR_IF(condition, ...)\
 	if ((condition))\
 	{\
-		JPT_ERROR(__VA_ARGS__);\
-	}
-
-#define JPT_LOG_IF(condition, ...)\
-	if ((condition))\
-	{\
-		JPT_LOG(__VA_ARGS__);\
+		return;\
 	}
 
 #pragma endregion

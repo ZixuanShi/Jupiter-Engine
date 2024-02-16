@@ -15,16 +15,16 @@ bool UnitTest_Move()
 	jpt::String str1 = "Jupiter";
 	jpt::String str2 = "Engine";
 	str1 = jpt::Move(str2);
-	JPT_RETURN_FALSE_IF_ERROR(str1 != "Engine", "");
-	JPT_RETURN_FALSE_IF_ERROR(!str2.IsEmpty(), "");
-	JPT_RETURN_FALSE_IF_ERROR(str2.ConstBuffer(), "");
+	JPT_ENSURE(str1 == "Engine", "");
+	JPT_ENSURE(str2.IsEmpty(), "");
+	JPT_ENSURE(!str2.ConstBuffer(), "");
 
 	return true;
 }
 
 export bool RunUnitTests_Utilities()
 {
-	JPT_RETURN_FALSE_IF_ERROR(!UnitTest_Move(), "UnitTest_Move Failed");
+	JPT_ENSURE(UnitTest_Move(), "UnitTest_Move Failed");
 
 	return true;
 }
