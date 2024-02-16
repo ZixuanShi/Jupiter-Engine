@@ -56,12 +56,14 @@
 
 #pragma region Logging
 
+/**< Warning if condition is true */
 #define JPT_NOTIFY(condition, ...)\
 	if (!(condition))\
 	{\
 		JPT_WARNING(__VA_ARGS__);\
 	}
 
+/**< Error and return some value if condition is true */
 #define JPT_VERIFY(condition, returnValue, ...)\
 	if (!(condition))\
 	{\
@@ -69,14 +71,19 @@
 		return returnValue;\
 	}
 
+/**< Error and return false if condition is true */
 #define JPT_ENSURE(condition, ...)\
 	JPT_VERIFY(condition, false , __VA_ARGS__)
 
-#define JPT_RETURN_IF(condition)\
+/**< Return if condition is true */
+#define JPT_RETURN_IF(condition, returnValue)\
 	if ((condition))\
 	{\
-		return;\
+		return returnValue;\
 	}
+
+#define JPT_EXIT_IF(condition)\
+	JPT_RETURN_IF(condition, void())
 
 #pragma endregion
 

@@ -618,7 +618,7 @@ export namespace jpt
 	constexpr void BasicString<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
 		m_size = size;
-		JPT_RETURN_IF(IsEmpty());
+		JPT_EXIT_IF(IsEmpty());
 
 		UpdateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
