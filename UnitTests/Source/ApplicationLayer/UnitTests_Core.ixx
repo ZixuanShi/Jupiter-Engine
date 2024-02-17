@@ -12,6 +12,7 @@ export module UnitTests_Core;
 import UnitTests_Macros;
 
 // Algorithms
+import UnitTests_Sorting;
 import UnitTests_Searching;
 
 // Containers
@@ -58,6 +59,7 @@ export bool RunUnitTests_Core()
 	/** Unit Test Functions */
 	
 	// Algorithms
+	JPT_ENSURE(RunUnitTests_Sorting(), "Sorting Unit Tests Failed");
 	JPT_ENSURE(RunUnitTests_Searching(), "Algorithms Unit Tests Failed");
 
 	// Containers

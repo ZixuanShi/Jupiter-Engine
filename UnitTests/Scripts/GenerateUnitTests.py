@@ -33,7 +33,7 @@ bool UnitTest_<SubjectName>()
 
 export bool RunUnitTests_<SubjectName>()
 {
-    JPT_RETURN_FALSE_IF_ERROR(!UnitTest_<SubjectName>(), "UnitTest_<SubjectName> Failed");
+    JPT_ENSURE(UnitTest_<SubjectName>(), "UnitTest_<SubjectName> Failed");
 
     return true;
 }
@@ -138,7 +138,7 @@ def update_application_layer():
         line_to_add = line_to_add.replace('<SubjectName>', subject_name)
         unit_test_lines.insert(index_to_add, line_to_add) 
 
-        # JPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_<SubjectName>(), "<SubjectName> Unit Tests Failed");
+        # JPT_ENSURE(RunUnitTests_<SubjectName>(), "<SubjectName> Unit Tests Failed");
         unit_test_functions_start = unit_test_lines.index("\t/** Unit Test Functions */\n")
         key_to_find = '\t// ' + secondary_category + '\n'
         if key_to_find in unit_test_lines:
@@ -149,7 +149,7 @@ def update_application_layer():
             unit_test_lines.insert(index_to_add, '\t// ' + secondary_category + '\n')
 
         index_to_add += 1
-        line_to_add = "\tJPT_RETURN_FALSE_IF_ERROR(!RunUnitTests_<SubjectName>(), \"<SubjectName> Unit Tests Failed\");\n"
+        line_to_add = "\tJPT_ENSURE(RunUnitTests_<SubjectName>(), \"<SubjectName> Unit Tests Failed\");\n"
         line_to_add = line_to_add.replace('<SubjectName>', subject_name)
         unit_test_lines.insert(index_to_add, line_to_add) 
 
