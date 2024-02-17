@@ -26,10 +26,26 @@ struct EnumData
 EnumData GenerateData(const char* pSource);
 
 /** Enum wrapper supports the followings:
+	- Static global API for shared EnumData
+	- Comparing with numeric and string
+	- Math operators
+	- Iteration through all values. Range-based is also supported
+	- Conversion to numeric and string
 
 	@examples: 
-		JPT_ENUM(EDemo, A, B, C); 
-		JPT_ENUM(EDemo, A = 2, B, C = 5);	*/
+	
+	// Local Enum for current file
+	JPT_ENUM(ELocal, A, B = 2, C = 5);
+
+	// Global Enum for all files as module
+	export JPT_ENUM(EGlobal, A, B = 2, C = 5);
+
+	// Nested Enum in class
+	export class GlobalEnumContainer
+	{
+	public:
+		JPT_ENUM(ENested, A, B = 2, C = 5);
+	}; */
 #define JPT_ENUM(EnumName, ...)\
 class EnumName\
 {\
@@ -79,21 +95,42 @@ public:\
 		return *this; \
 	}\
 	\
-	/** Modifier */\
-	/** If you are using ++/--. Make sure your enum values is linear and contiguous, otherwise you will have assertion failed */\
-	/**	Good example: JPT_ENUM(EDemo, A, B, C); JPT_ENUM(EDemo, A = 2, B, C);			// All good */\
-	/**	Bad  example: JPT_ENUM(EDemo, A, B = 3, C); JPT_ENUM(EDemo, A = 2, B, C = 5);	// Error!	*/\
-	constexpr EnumName& operator++()\
+	/** Math operators */\
+	/** If you are using math operators. Make sure you exactly know the result is a valid JPT_ENUM(YourEnum)'s value */\
+    /** JPT_ENUM's values are not guaranteed linear and contigous, you will have assertion failed if that's the case */\
+	template<jpt::Integral TInt>\
+	constexpr EnumName& operator+=(TInt offset)\
 	{\
-		++m_value;\
+		m_value += static_cast<TEnumSize>(offset);\
 		JPT_ASSERT(s_data.names.Contains(m_value));\
 		return *this;\
 	}\
-	constexpr EnumName& operator--()\
+	template<jpt::Integral TInt>\
+	constexpr EnumName& operator-=(TInt offset)\
 	{\
-		--m_value;\
+		m_value -= static_cast<TEnumSize>(offset);\
 		JPT_ASSERT(s_data.names.Contains(m_value));\
 		return *this;\
+	}\
+	constexpr EnumName& operator++()\
+	{\
+		return *this += 1;\
+	}\
+	constexpr EnumName& operator--()\
+	{\
+		return *this -= 1;\
+	}\
+	template<jpt::Integral TInt>\
+	constexpr EnumName operator+(TInt offset)\
+	{\
+		EnumName copy = *this;\
+		return copy += offset;\
+	}\
+	template<jpt::Integral TInt>\
+	constexpr EnumName operator-(TInt offset)\
+	{\
+		EnumName copy = *this;\
+		return copy -= offset;\
 	}\
 	\
 	/** Iteration */\

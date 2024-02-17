@@ -27,6 +27,35 @@ bool UnitTest_Enum()
 	JPT_ENSURE(fruit < EType::Orange, "");
 	JPT_ENSURE(fruit != EType::Grape, "");
 
+	// Math operations
+	--fruit;
+	JPT_ENSURE(fruit == 5, "");
+	JPT_ENSURE(fruit == "Apple", "");
+	JPT_ENSURE(fruit == EType::Apple, "");
+
+	++fruit;
+	JPT_ENSURE(fruit == 6, "");
+	JPT_ENSURE(fruit == "Banana", "");
+	JPT_ENSURE(fruit == EType::Banana, "");
+
+	fruit += 3;
+	JPT_ENSURE(fruit == 9, "");
+	JPT_ENSURE(fruit == "Orange", "");
+	JPT_ENSURE(fruit == EType::Orange, "");
+
+	fruit -= 3;
+	JPT_ENSURE(fruit == 6, "");
+	JPT_ENSURE(fruit == "Banana", "");
+	JPT_ENSURE(fruit == EType::Banana, "");
+
+	JPT_ENSURE(fruit + 3 == 9, "");
+	JPT_ENSURE(fruit + 3 == "Orange", "");
+	JPT_ENSURE(fruit + 3 == EType::Orange, "");
+
+	JPT_ENSURE(fruit - 1 == 5, "");
+	JPT_ENSURE(fruit - 1 == "Apple", "");
+	JPT_ENSURE(fruit - 1 == EType::Apple, "");
+
 	// Assigning
 	fruit = EType::Orange;
 	JPT_ENSURE(fruit == 9, "");
