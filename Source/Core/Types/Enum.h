@@ -3,22 +3,22 @@
 #pragma once
 
 import jpt.TypeDefs;
-import jpt.DynamicArray;
-import jpt.StaticArray;
 import jpt.String;
-import jpt.Utilities;
+import jpt.StringUtils;
 import jpt.HashMap;
-
-void BuildNames(jpt::HashMap<uint8, jpt::String>& namesMap, uint8& count, uint8& start, const char* pSource);
+import jpt.DynamicArray;
+import jpt.Limits;
 
 using TEnumSize = uint8; /* If ran out of space later, change this to larger uint */
 
 struct EnumData
 {
-	size_t count;
-	size_t start;
+	TEnumSize count;
+	TEnumSize start;
 	jpt::HashMap<TEnumSize, jpt::String> names;
 };
+
+EnumData GenerateData(const char* pSource);
 
 	/** An Enum class supports the following operations:
 		- operator++/--: prefix and postfix increment/decrement

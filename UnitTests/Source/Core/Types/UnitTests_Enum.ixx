@@ -14,40 +14,28 @@ import jpt.String;
 import jpt.StringUtils;
 import jpt.HashMap;
 import jpt.DynamicArray;
-import jpt.StaticArray;
 import jpt.Limits;
 
 //-----------------------------------------------------------------------------------------------
-struct Data
-{
-	size_t count;
-	size_t start;
-	jpt::HashMap<TEnumSize, jpt::String> names;
-};
-
 class EnumDummy
 {
 public:
 	enum EEnumDummyData : TEnumSize
 	{
-		Apple = 1,
+		Apple = 5,
 		Banana,
 		Orange = 7
 	};
-	static Data s_data;
+
+	static EnumData s_data;
 
 private:
 	TEnumSize m_value = 0;
 
 public:
-	EnumDummy()
-	{
-	}
-
 	EnumDummy(EEnumDummyData data)
 		: m_value(data)
 	{
-		
 	}
 
 	EnumDummy& operator=(EEnumDummyData data)
@@ -55,57 +43,33 @@ public:
 		m_value = data;
 		return *this; 
 	}
-};
 
-// Apple = 1, Banana, Orange = 7
-static Data GenerateData(const char* pSource)
-{
-	Data data;
+	TEnumSize Value()    const { return m_value; }
+	operator TEnumSize() const { return m_value; }
+	const jpt::String& ToString() const { return s_data.names[m_value]; }
+	operator const jpt::String&() const { return s_data.names[m_value]; }
 
-	// Parse source
-	jpt::String source = pSource;
-	source.Replace(" ", "");	
+	static TEnumSize Count() { return s_data.count; }
+	static TEnumSize Start() { return s_data.start; }
 
-	// Apple=1,
-	// Banana,
-	// Orange=7
-	jpt::DynamicArray<jpt::String> tokens = source.Split(',');
-
-	TEnumSize key = 0;
-	TEnumSize start = jpt::LimitsOf<TEnumSize>::kMax;
-	for (size_t i = 0; i < tokens.Size(); ++i)
+	static const jpt::HashMap<TEnumSize, jpt::String>& Names()
 	{
-		jpt::String token = tokens[i];
-		jpt::String name = token;
-
-		if (size_t equalIndex = tokens[i].Find('='); equalIndex != jpt::npos)
-		{
-			name = tokens[i].SubStr(0, equalIndex);
-			jpt::String valueStr = tokens[i].SubStr(equalIndex + 1, tokens[i].Size() - equalIndex - 1);
-			key = jpt::CStrToInteger<char, TEnumSize>(valueStr.ConstBuffer());
-		}
-
-		if (key < start)
-		{
-			start = key;
-		}
-
-		data.names[key] = name;
-		++key;
+		return s_data.names;
 	}
 
-	data.count = tokens.Size();
-	data.start = start;
+	static const jpt::String& Name(TEnumSize index) 
+	{
+		JPT_ASSERT(s_data.names.Contains(index));
+		return s_data.names[index];
+	}
+};
 
-	return data;
-}
-
-Data EnumDummy::s_data = GenerateData("Apple = 1, Banana, Orange = 7");
+EnumData EnumDummy::s_data = GenerateData("Apple = 5, Banana, Orange = 7");
 
 //-----------------------------------------------------------------------------------------------
 
 JPT_ENUM(EFruits, 
-	Apple = 1,
+	Apple = 5,
 	Banana,
     Orange = 7);
 
@@ -115,9 +79,15 @@ bool UnitTest_GlobalEnum()
 	EnumDummy::Banana;
 	EnumDummy::Orange;
 
-	JPT_LOG(EnumDummy::s_data.count);
-	JPT_LOG(EnumDummy::s_data.start);
-	JPT_LOG(EnumDummy::s_data.names);
+	JPT_LOG(jpt::String("EnumDummy Count: ") + jpt::ToString(EnumDummy::Count()));
+	JPT_LOG(jpt::String("EnumDummy Start: ") + jpt::ToString(EnumDummy::Start()));
+	JPT_LOG(EnumDummy::Names());
+	JPT_LOG(EnumDummy::Name(EnumDummy::Apple));
+
+	EnumDummy dummy = EnumDummy::Apple;
+	dummy = EnumDummy::Orange;
+	JPT_LOG(dummy.Value());
+	JPT_LOG(dummy);
 
 
 	EFruits fruit = EFruits::Apple;
