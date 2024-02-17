@@ -11,11 +11,13 @@ import jpt.HashMap;
 
 void BuildNames(jpt::HashMap<uint8, jpt::String>& namesMap, uint8& count, uint8& start, const char* pSource);
 
+using TEnumSize = uint8; /* If ran out of space later, change this to larger uint */
+
 struct EnumData
 {
 	size_t count;
 	size_t start;
-	jpt::HashMap<uint8, jpt::String> names;
+	jpt::HashMap<TEnumSize, jpt::String> names;
 };
 
 	/** An Enum class supports the following operations:
@@ -27,19 +29,15 @@ struct EnumData
 class EnumName\
 {\
 public:\
-	using TSize = uint8; /* If ran out of space later, change this to larger uint */ \
-	\
-	enum EData : uint8\
+	enum EData : TEnumSize\
 	{\
 		__VA_ARGS__ \
 	};\
 	\
-	static jpt::HashMap<uint8, jpt::String> s_names;\
-	static size_t Count;\
-	static size_t Start;\
+	static EnumData s_data;\
 	\
 private:\
-	TSize m_value = 0;\
+	TEnumSize m_value = 0;\
 	\
 public:\
 	EnumName()\
@@ -59,6 +57,4 @@ public:\
 		return *this;\
 	}\
 };\
-\
-size_t EnumName::Count = 0;\
-size_t EnumName::Start = 0;
+

@@ -106,10 +106,13 @@ export namespace jpt
 		}
 
 		// If value was negative, add '-' at the beginning
-		if (isNegative)
+		if constexpr (std::is_signed_v<TInt>)
 		{
-			result[index] = '-';
-			--index;
+			if (isNegative)
+			{
+				result[index] = '-';
+				--index;
+			}
 		}
 
 		// Return result
@@ -128,22 +131,28 @@ export namespace jpt
 			const TChar c = pBuffer[i];
 
 			// Negative
-			if (c == '-')
+			if constexpr (std::is_signed_v<TInt>)
 			{
-				isNegative = true;
-				continue;
+				if (c == '-')
+				{
+					isNegative = true;
+					continue;
+				}
 			}
 
 			// Parse number
 			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const int32 number = c - static_cast<TChar>('0');
+			const TInt number = c - static_cast<TChar>('0');
 			result *= 10;
 			result += number;
 		}
 
-		if (isNegative)
+		if constexpr (std::is_signed_v<TInt>)
 		{
-			result *= -1;
+			if (isNegative)
+			{
+				result *= -1;
+			}
 		}
 
 		return result;
@@ -151,7 +160,7 @@ export namespace jpt
 	template<StringLiteral TChar = char, Integral TInt = int32>
 	constexpr TInt CStrToInteger(const TChar* pBuffer)
 	{
-		return CStrToInteger(pBuffer, GetCStrLength(pBuffer));
+		return CStrToInteger<TChar, TInt>(pBuffer, GetCStrLength(pBuffer));
 	}
 
 	template<StringLiteral TChar = char, Floating TFloat = float>

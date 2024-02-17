@@ -9,27 +9,100 @@ module;
 export module UnitTests_Enum;
 
 import jpt.TypeDefs;
-
 import jpt.RandomNumberGenerator;
+import jpt.String;
+import jpt.StringUtils;
+import jpt.HashMap;
+import jpt.DynamicArray;
+import jpt.StaticArray;
+import jpt.Limits;
 
+//-----------------------------------------------------------------------------------------------
 struct Data
 {
-	int32 value1;
-	int32 value2;
+	size_t count;
+	size_t start;
+	jpt::HashMap<TEnumSize, jpt::String> names;
 };
 
-class Foo
+class EnumDummy
 {
 public:
+	enum EEnumDummyData : TEnumSize
+	{
+		Apple = 1,
+		Banana,
+		Orange = 7
+	};
 	static Data s_data;
+
+private:
+	TEnumSize m_value = 0;
+
+public:
+	EnumDummy()
+	{
+	}
+
+	EnumDummy(EEnumDummyData data)
+		: m_value(data)
+	{
+		
+	}
+
+	EnumDummy& operator=(EEnumDummyData data)
+	{
+		m_value = data;
+		return *this; 
+	}
 };
 
-static Data GenerateData()
+// Apple = 1, Banana, Orange = 7
+static Data GenerateData(const char* pSource)
 {
-	return { jpt::RNG::Global().RandInMax(100), jpt::RNG::Global().RandInMax(100) };
+	Data data;
+
+	// Parse source
+	jpt::String source = pSource;
+	source.Replace(" ", "");	
+
+	// Apple=1,
+	// Banana,
+	// Orange=7
+	jpt::DynamicArray<jpt::String> tokens = source.Split(',');
+
+	TEnumSize key = 0;
+	TEnumSize start = jpt::LimitsOf<TEnumSize>::kMax;
+	for (size_t i = 0; i < tokens.Size(); ++i)
+	{
+		jpt::String token = tokens[i];
+		jpt::String name = token;
+
+		if (size_t equalIndex = tokens[i].Find('='); equalIndex != jpt::npos)
+		{
+			name = tokens[i].SubStr(0, equalIndex);
+			jpt::String valueStr = tokens[i].SubStr(equalIndex + 1, tokens[i].Size() - equalIndex - 1);
+			key = jpt::CStrToInteger<char, TEnumSize>(valueStr.ConstBuffer());
+		}
+
+		if (key < start)
+		{
+			start = key;
+		}
+
+		data.names[key] = name;
+		++key;
+	}
+
+	data.count = tokens.Size();
+	data.start = start;
+
+	return data;
 }
 
-Data Foo::s_data = GenerateData();
+Data EnumDummy::s_data = GenerateData("Apple = 1, Banana, Orange = 7");
+
+//-----------------------------------------------------------------------------------------------
 
 JPT_ENUM(EFruits, 
 	Apple = 1,
@@ -38,17 +111,21 @@ JPT_ENUM(EFruits,
 
 bool UnitTest_GlobalEnum()
 {
+	EnumDummy::Apple;
+	EnumDummy::Banana;
+	EnumDummy::Orange;
+
+	JPT_LOG(EnumDummy::s_data.count);
+	JPT_LOG(EnumDummy::s_data.start);
+	JPT_LOG(EnumDummy::s_data.names);
+
+
 	EFruits fruit = EFruits::Apple;
 	EFruits otherFruit = EFruits::Banana;
 
 	EFruits::Apple;
 	EFruits::Banana;
 	EFruits::Orange;
-
-	JPT_LOG(EFruits::Start);
-
-	//EFruits::Count;
-	//EFruits::Start;
 
 	return true;
 }

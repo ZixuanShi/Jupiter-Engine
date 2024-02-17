@@ -534,7 +534,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Append(const TChar* CString, size_t newStringSize)
 	{
-		JPT_ASSERT(newStringSize != 0);
+		JPT_EXIT_IF(newStringSize == 0);
 		InsertStringAt(CString, m_size, newStringSize);
 	}
 
@@ -547,7 +547,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Append(const BasicString<TChar>& otherString)
 	{
-		JPT_ASSERT(!otherString.IsEmpty());
+		JPT_EXIT_IF(otherString.IsEmpty());
 		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
 	}
 
