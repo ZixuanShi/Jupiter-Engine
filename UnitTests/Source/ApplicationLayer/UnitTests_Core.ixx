@@ -44,6 +44,7 @@ import UnitTests_String;
 import UnitTests_StringView;
 
 // Types
+import UnitTests_Enum_Global;
 import UnitTests_Any;
 import UnitTests_Byte;
 import UnitTests_Variant;

@@ -25,6 +25,11 @@ struct EnumData
 	@param pSource		A string contains all the enum values, separated by ',' accepts value assignment too */
 EnumData GenerateData(const char* pSource);
 
+/** Enum wrapper supports the followings:
+
+	@examples: 
+		JPT_ENUM(EDemo, A, B, C); 
+		JPT_ENUM(EDemo, A = 2, B, C = 5);	*/
 #define JPT_ENUM(EnumName, ...)\
 class EnumName\
 {\
@@ -49,9 +54,12 @@ public:\
 	constexpr static const jpt::String& Name(TEnumSize index);\
 	\
 public:\
-	/** Member API */\
-	constexpr EnumName(TEnumSize data);\
-	constexpr EnumName& operator=(TEnumSize data);\
+	/** Member Constructor & operator= */\
+	constexpr EnumName() = default;\
+	constexpr EnumName(EnumName::EValues value);\
+	constexpr EnumName& operator=(EnumName::EValues value);\
+	template<jpt::Integral TInt> constexpr EnumName(TInt integer);\
+	template<jpt::Integral TInt> constexpr EnumName& operator=(TInt integer);\
 	\
 	/** Modifier */\
 	/** If you are using ++/--. Make sure your enum values is linear and contiguous, otherwise you will have assertion failed */\
@@ -83,17 +91,29 @@ public:\
 \
 const EnumData EnumName::s_data = GenerateData(#__VA_ARGS__);\
 \
-constexpr EnumName::EnumName(TEnumSize data)\
-	: m_value(data)\
+constexpr EnumName::EnumName(EnumName::EValues value)\
+	: m_value(value)\
 {\
 }\
 \
-constexpr EnumName& EnumName::operator=(TEnumSize data)\
+constexpr EnumName& EnumName::operator=(EnumName::EValues value)\
 {\
-	m_value = data;\
+	m_value = value;\
 	return *this;\
 }\
 \
+template<jpt::Integral TInt>\
+constexpr EnumName::EnumName(TInt integer)\
+	: m_value(static_cast<TEnumSize>(integer))\
+{\
+}\
+\
+template<jpt::Integral TInt>\
+constexpr EnumName& EnumName::operator=(TInt integer)\
+{\
+	m_value = static_cast<TEnumSize>(integer);\
+	return *this;\
+}\
 constexpr EnumName& EnumName::operator++()\
 {\
 	++m_value;\
