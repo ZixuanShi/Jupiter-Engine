@@ -10,47 +10,28 @@ export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
 
-bool UnitTest_GlobalEnum()
+template<typename EType>
+bool UnitTest_Enum()
 {
-	//EFruit_Global fruit(EFruit_Global::Banana);
-
-	return true;
-}
-
-bool UnitTest_GlobalEnumContainer()
-{
-	GlobalEnumContainer::NestedEnum::s_data;
-
-	return true;
-}
-
-JPT_ENUM(EFruit_Local,
-	Apple = 5,
-	Banana,
-	Orange = 9,
-	Grape);
-
-bool UnitTest_LocalEnum()
-{
-	// Global data
-	JPT_ENSURE(EFruit_Local::Count() == 4, "");
-	JPT_ENSURE(EFruit_Local::Min() == EFruit_Local::Apple, "");
-	JPT_ENSURE(EFruit_Local::Max() == EFruit_Local::Grape, "");
+	// Static data
+	JPT_ENSURE(EType::Count() == 4, "");
+	JPT_ENSURE(EType::Min() == EType::Apple, "");
+	JPT_ENSURE(EType::Max() == EType::Grape, "");
 
 	// Comparing
-	EFruit_Local fruit(EFruit_Local::Banana);
+	EType fruit(EType::Banana);
 	JPT_ENSURE(fruit == 6, "");
 	JPT_ENSURE(fruit == "Banana", "");
-	JPT_ENSURE(fruit == EFruit_Local::Banana, "");
-	JPT_ENSURE(fruit > EFruit_Local::Apple, "");
-	JPT_ENSURE(fruit < EFruit_Local::Orange, "");
-	JPT_ENSURE(fruit != EFruit_Local::Grape, "");
+	JPT_ENSURE(fruit == EType::Banana, "");
+	JPT_ENSURE(fruit > EType::Apple, "");
+	JPT_ENSURE(fruit < EType::Orange, "");
+	JPT_ENSURE(fruit != EType::Grape, "");
 
 	// Assigning
-	fruit = EFruit_Local::Orange;
+	fruit = EType::Orange;
 	JPT_ENSURE(fruit == 9, "");
 	JPT_ENSURE(fruit == "Orange", "");
-	JPT_ENSURE(fruit == EFruit_Local::Orange, "");
+	JPT_ENSURE(fruit == EType::Orange, "");
 
 	// Iterating
 	// for (const auto& pair : fruit)
@@ -74,24 +55,30 @@ bool UnitTest_LocalEnum()
 	size_t i = 5;
 	fruit = i;
 	JPT_ENSURE(fruit == 5, "");
-	JPT_ENSURE(fruit == EFruit_Local::Apple, "");
+	JPT_ENSURE(fruit == EType::Apple, "");
 	JPT_ENSURE(fruit == "Apple", "");
 
 	// int64
 	int64 j = 9;
 	fruit = j;
 	JPT_ENSURE(fruit == 9, "");
-	JPT_ENSURE(fruit == EFruit_Local::Orange, "");
+	JPT_ENSURE(fruit == EType::Orange, "");
 	JPT_ENSURE(fruit == "Orange", "");
 
 	return true;
 }
 
+JPT_ENUM(EFruit_Local,
+	Apple = 5,
+	Banana,
+	Orange = 9,
+	Grape);
+
 export bool RunUnitTests_Enum()
 {
-	JPT_ENSURE(UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
-	JPT_ENSURE(UnitTest_GlobalEnumContainer(), "UnitTest_GlobalEnumContainer Failed");
-	JPT_ENSURE(UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
+	JPT_ENSURE(UnitTest_Enum<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
+	JPT_ENSURE(UnitTest_Enum<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
+	JPT_ENSURE(UnitTest_Enum<GlobalEnumContainer::EFruit_GlobalEnumContainer>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
 
 	return true;
 }
