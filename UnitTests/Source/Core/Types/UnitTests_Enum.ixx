@@ -27,76 +27,125 @@ public:
 		Orange = 7
 	};
 
-	static EnumData s_data;
-
 private:
+	static const EnumData s_data;
 	TEnumSize m_value = 0;
 
 public:
-	EnumDummy(EEnumDummyData data)
-		: m_value(data)
-	{
-	}
+	/** Static global API */
+	constexpr static TEnumSize Count() { return s_data.count; }
+	constexpr static TEnumSize Min()   { return s_data.min; }
+	constexpr static TEnumSize Max()   { return s_data.max; }
+	constexpr static const jpt::HashMap<TEnumSize, jpt::String>& Names();
+	constexpr static const jpt::String& Name(TEnumSize index);
 
-	EnumDummy& operator=(EEnumDummyData data)
-	{
-		m_value = data;
-		return *this; 
-	}
+public:
+	/** Member API */
+	constexpr EnumDummy(TEnumSize data);
+	constexpr EnumDummy& operator=(TEnumSize data);
 
-	TEnumSize Value()    const { return m_value; }
-	operator TEnumSize() const { return m_value; }
-	const jpt::String& ToString() const { return s_data.names[m_value]; }
-	operator const jpt::String&() const { return s_data.names[m_value]; }
+	// Modifier
+	constexpr EnumDummy& operator++();
+	constexpr EnumDummy& operator--();
 
-	static TEnumSize Count() { return s_data.count; }
-	static TEnumSize Start() { return s_data.start; }
+	// Iteration
+	constexpr auto begin()  const { return s_data.names.begin();  }
+	constexpr auto end()    const { return s_data.names.end();    }
+	constexpr auto cbegin() const { return s_data.names.cbegin(); }
+	constexpr auto cend()   const { return s_data.names.cend();   }
 
-	static const jpt::HashMap<TEnumSize, jpt::String>& Names()
-	{
-		return s_data.names;
-	}
+	// Comparison
+	template<jpt::Integral TInt>
+	constexpr bool operator==(TInt value) const;
+	constexpr bool operator==(const char* str) const;
 
-	static const jpt::String& Name(TEnumSize index) 
-	{
-		JPT_ASSERT(s_data.names.Contains(index));
-		return s_data.names[index];
-	}
+	// Numeric value access
+	constexpr TEnumSize Value()    const { return m_value; }
+	constexpr operator TEnumSize() const { return m_value; }
+
+	// String value access
+	constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }
+	constexpr operator const jpt::String&() const { return s_data.names[m_value]; }
 };
 
-EnumData EnumDummy::s_data = GenerateData("Apple = 5, Banana, Orange = 7");
+const EnumData EnumDummy::s_data = GenerateData("Apple = 5, Banana, Orange = 7");
+
+constexpr EnumDummy::EnumDummy(TEnumSize data)
+	: m_value(data)
+{
+}
+
+constexpr EnumDummy& EnumDummy::operator=(TEnumSize data)
+{
+	m_value = data;
+	return *this;
+}
+
+constexpr EnumDummy& EnumDummy::operator++()
+{
+	++m_value;
+	JPT_ASSERT(s_data.names.Contains(m_value));
+	return *this;
+}
+
+constexpr EnumDummy& EnumDummy::operator--()
+{
+	--m_value;
+	JPT_ASSERT(s_data.names.Contains(m_value));
+	return *this;
+}
+
+template<jpt::Integral TInt>
+constexpr bool EnumDummy::operator==(TInt value) const
+{
+	return m_value == static_cast<TEnumSize>(value);
+}
+
+constexpr bool EnumDummy::operator==(const char* str) const
+{
+	return ToString() == str;
+}
+
+constexpr const jpt::HashMap<TEnumSize, jpt::String>& EnumDummy::Names()
+{
+	return s_data.names;
+}
+
+constexpr const jpt::String& EnumDummy::Name(TEnumSize index)
+{
+	JPT_ASSERT(s_data.names.Contains(index));
+	return s_data.names[index];
+}
+
+bool UnitTest_TestEnum()
+{
+	JPT_ENSURE(EnumDummy::Count() == 3, "");
+	JPT_ENSURE(EnumDummy::Min() == EnumDummy::Apple, "");
+	JPT_ENSURE(EnumDummy::Max()   == EnumDummy::Orange, "");
+
+	EnumDummy dummy(EnumDummy::Apple);
+	JPT_ENSURE(dummy == 5, "");
+	JPT_ENSURE(dummy == EnumDummy::Apple, "");
+	JPT_ENSURE(dummy != EnumDummy::Orange, "");
+	JPT_ENSURE(dummy == "Apple", "");
+
+	dummy = EnumDummy::Banana;
+	JPT_ENSURE(dummy == 6, "");
+	JPT_ENSURE(dummy == EnumDummy::Banana, "");
+	JPT_ENSURE(dummy == "Banana", "");
+
+	--dummy;
+	JPT_ENSURE(dummy == 5, "");
+	JPT_ENSURE(dummy == EnumDummy::Apple, "");
+	JPT_ENSURE(dummy == "Apple", "");
+
+	return true;
+}
 
 //-----------------------------------------------------------------------------------------------
 
-JPT_ENUM(EFruits, 
-	Apple = 5,
-	Banana,
-    Orange = 7);
-
 bool UnitTest_GlobalEnum()
 {
-	EnumDummy::Apple;
-	EnumDummy::Banana;
-	EnumDummy::Orange;
-
-	JPT_LOG(jpt::String("EnumDummy Count: ") + jpt::ToString(EnumDummy::Count()));
-	JPT_LOG(jpt::String("EnumDummy Start: ") + jpt::ToString(EnumDummy::Start()));
-	JPT_LOG(EnumDummy::Names());
-	JPT_LOG(EnumDummy::Name(EnumDummy::Apple));
-
-	EnumDummy dummy = EnumDummy::Apple;
-	dummy = EnumDummy::Orange;
-	JPT_LOG(dummy.Value());
-	JPT_LOG(dummy);
-
-
-	EFruits fruit = EFruits::Apple;
-	EFruits otherFruit = EFruits::Banana;
-
-	EFruits::Apple;
-	EFruits::Banana;
-	EFruits::Orange;
-
 	return true;
 }
 
@@ -146,6 +195,7 @@ bool UnitTest_LocalEnum()
 
 export bool RunUnitTests_Enum()
 {
+	JPT_ENSURE(UnitTest_TestEnum(), "UnitTest_TestEnum Failed");
 	JPT_ENSURE(UnitTest_GlobalEnum(), "UnitTest_GlobalEnum Failed");
 	//JPT_ENSURE(UnitTest_LocalEnum(), "UnitTest_LocalEnum Failed");
 	//JPT_ENSURE(UnitTest_NormalEnum(), "UnitTest_NormalEnum Failed");

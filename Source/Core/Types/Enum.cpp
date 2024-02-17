@@ -7,7 +7,6 @@
 
 using namespace jpt;
 
-// Apple = 1, Banana, Orange = 7
 EnumData GenerateData(const char* pSource)
 {
 	EnumData data;
@@ -16,13 +15,9 @@ EnumData GenerateData(const char* pSource)
 	jpt::String source = pSource;
 	source.Replace(" ", "");
 
-	// Apple=1,
-	// Banana,
-	// Orange=7
 	jpt::DynamicArray<jpt::String> tokens = source.Split(',');
 
 	TEnumSize key = 0;
-	TEnumSize start = jpt::LimitsOf<TEnumSize>::kMax;
 	for (size_t i = 0; i < tokens.Size(); ++i)
 	{
 		jpt::String token = tokens[i];
@@ -35,9 +30,14 @@ EnumData GenerateData(const char* pSource)
 			key = jpt::CStrToInteger<char, TEnumSize>(valueStr.ConstBuffer());
 		}
 
-		if (key < start)
+		if (key < data.min)
 		{
-			start = key;
+			data.min = key;
+		}
+
+		if (key > data.max)
+		{
+			data.max = key;
 		}
 
 		data.names[key] = name;
@@ -45,7 +45,6 @@ EnumData GenerateData(const char* pSource)
 	}
 
 	data.count = static_cast<TEnumSize>(tokens.Size());
-	data.start = start;
 
 	return data;
 }

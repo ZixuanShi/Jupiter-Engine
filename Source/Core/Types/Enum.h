@@ -13,18 +13,14 @@ using TEnumSize = uint8; /* If ran out of space later, change this to larger uin
 
 struct EnumData
 {
-	TEnumSize count;
-	TEnumSize start;
+	TEnumSize count = 0;
+	TEnumSize min = jpt::LimitsOf<TEnumSize>::kMax;
+	TEnumSize max = jpt::LimitsOf<TEnumSize>::kMin;
 	jpt::HashMap<TEnumSize, jpt::String> names;
 };
 
 EnumData GenerateData(const char* pSource);
 
-	/** An Enum class supports the following operations:
-		- operator++/--: prefix and postfix increment/decrement
-		- ToString(): returns the string representation of the enum
-		- FromString(): returns the enum value from the string representation
-	*/
 #define JPT_ENUM(EnumName, ...)\
 class EnumName\
 {\
