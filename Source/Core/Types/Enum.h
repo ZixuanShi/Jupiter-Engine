@@ -1,6 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #pragma once
+#include "Debugging/Logger.h"
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -11,7 +12,7 @@ import jpt.DynamicArray;
 import jpt.Limits;
 
 /** Contains shared enum data across all instances and public */
-template<jpt::Integral TInt = uint8>
+template<jpt::Integral TInt>
 struct EnumData
 {
 	TInt count = 0;	/**< How many values this enum has */
@@ -22,7 +23,7 @@ struct EnumData
 
 /** Generate the shared enum data 
 	@param pSource		A string contains all the enum values, separated by ',' accepts value assignment too */
-template<jpt::Integral TInt = uint8>
+template<jpt::Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource);
 
 /** Enum wrapper supports the followings:
@@ -49,11 +50,10 @@ EnumData<TInt> GenerateData(const char* pSource);
 		public:
 			JPT_ENUM_UINT64(ENested, A, B = 2, C = 5);
 		}; */
-#define JPT_ENUM(EnumName, EnumSizeType, ...)\
+#define JPT_ENUM(EnumName, TSize, isEnumFlag, ...)\
 class EnumName\
 {\
 public:\
-	using TSize = EnumSizeType;\
 	enum EValues : TSize\
 	{\
 		__VA_ARGS__\
@@ -68,15 +68,15 @@ public:\
 	/**	@example: EFoo::Count() */\
 	\
 	constexpr static TSize Count() { return s_data.count; }\
-	constexpr static TSize Min()   { return s_data.min; }\
-	constexpr static TSize Max()   { return s_data.max; }\
+	constexpr static TSize Min()   { return s_data.min;   }\
+	constexpr static TSize Max()   { return s_data.max;   }\
 	constexpr static const jpt::HashMap<TSize, jpt::String>& Names() { return s_data.names; }\
 	constexpr static const jpt::String& Name(TSize index) { JPT_ASSERT(s_data.names.Contains(index)); return s_data.names[index]; }\
 	\
 public:\
 	/** Member Constructor & operator= */\
 	constexpr EnumName() = default;\
-	constexpr EnumName(EnumName::EValues value)	: m_value(value) {}\
+	constexpr EnumName(EnumName::EValues value)	: m_value(value) { if constexpr (isEnumFlag){ /*HERE!!!!!!!!!!!!!!!!!!!!!!!*/ } }\
 	constexpr EnumName& operator=(EnumName::EValues value) { m_value = value; return *this; }\
 	\
 	template<jpt::Integral TInt = TSize>\
@@ -149,12 +149,16 @@ public:\
 	constexpr operator TSize() const { return m_value; }\
 	\
 	/** String value access */\
-	constexpr const jpt::String& ToString()  const { return s_data.names[m_value]; }\
-	constexpr operator const jpt::String&()  const { return s_data.names[m_value]; }\
+	constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }\
+	constexpr operator const jpt::String&() const { return s_data.names[m_value]; }\
 };
 
-#define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)
-#define JPT_ENUM_UINT16(EnumName, ...) JPT_ENUM(EnumName, uint16, __VA_ARGS__)
-#define JPT_ENUM_UINT32(EnumName, ...) JPT_ENUM(EnumName, uint32, __VA_ARGS__)
-#define JPT_ENUM_UINT64(EnumName, ...) JPT_ENUM(EnumName, uint64, __VA_ARGS__)
+#define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  false, __VA_ARGS__)
+#define JPT_ENUM_UINT16(EnumName, ...) JPT_ENUM(EnumName, uint16, false, __VA_ARGS__)
+#define JPT_ENUM_UINT32(EnumName, ...) JPT_ENUM(EnumName, uint32, false, __VA_ARGS__)
+#define JPT_ENUM_UINT64(EnumName, ...) JPT_ENUM(EnumName, uint64, false, __VA_ARGS__)
+#define JPT_ENUM_UINT8_FLAG( EnumName, ...) JPT_ENUM(EnumName, uint8,  true, __VA_ARGS__)
+#define JPT_ENUM_UINT16_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint16, true, __VA_ARGS__)
+#define JPT_ENUM_UINT32_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint32, true, __VA_ARGS__)
+#define JPT_ENUM_UINT64_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint64, true, __VA_ARGS__)
 

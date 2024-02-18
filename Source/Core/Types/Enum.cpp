@@ -38,7 +38,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 		{
 			data.min = key;
 		}
-		if (key > data.max)
+		else if (key > data.max)
 		{
 			data.max = key;
 		}

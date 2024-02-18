@@ -133,7 +133,7 @@ bool UnitTest_Enum_Sequence()
 
 	// Iterating
 	// for (const auto& pair : fruit)
-	for (typename EType::TSize i = EType::Min(); i < EType::Max(); ++i)
+	for (auto i = EType::Min(); i < EType::Max(); ++i)
 	{
 		EType e = static_cast<EType>(i);
 		if (e == EType::Sword)
@@ -164,14 +164,21 @@ JPT_ENUM_UINT8(EWeapon_Local,
 	Hammer,
 	Axe);
 
-JPT_ENUM_UINT64(EInputFlag_Local,
-	Move   = 1,
-	Click  = 2,
-	Drag   = 4,
-	Scroll = 8);
+JPT_ENUM_UINT8_FLAG(EMouseFlag_Local,
+	Move_X,
+	Move_Y,
+	Left_Button_Down,
+	Left_Button_Up,
+	Right_Button_Down,
+	Right_Button_Up,
+	Scroll_Wheel_Up,
+	Scroll_Wheel_Down);
 
 export bool RunUnitTests_Enum()
 {
+	JPT_LOG(sizeof(EWeapon_Local));
+	JPT_LOG(sizeof(EMouseFlag_Local));
+
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
 	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
