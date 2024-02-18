@@ -16,8 +16,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 	jpt::String source = pSource;
 	source.Replace(" ", "");
 	const jpt::DynamicArray<jpt::String> tokens = source.Split(',');
-	data.count = static_cast<TInt>(tokens.Size());
-	data.names.Resize(data.count);
+	data.names.Resize(tokens.Size());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;

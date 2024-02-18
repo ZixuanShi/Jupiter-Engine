@@ -15,7 +15,6 @@ import jpt.Limits;
 template<jpt::Integral TInt>
 struct EnumData
 {
-	TInt count = 0;	/**< How many values this enum has */
 	TInt min = jpt::LimitsOf<TInt>::kMax;	/**< The min value of this enum */
 	TInt max = jpt::LimitsOf<TInt>::kMin;	/**< The max value of this enum */
 	jpt::HashMap<TInt, jpt::String> names;	/**< The names map of the enum values */
@@ -81,9 +80,9 @@ public:\
 	/** Static global API. See EnumData for more details at Enum.h */\
 	/**	@example: EFoo::Count() */\
 	\
-	constexpr static TSize Count() { return s_data.count; }\
-	constexpr static TSize Min()   { return s_data.min;   }\
-	constexpr static TSize Max()   { return s_data.max;   }\
+	constexpr static TSize Min()   { return s_data.min; }\
+	constexpr static TSize Max()   { return s_data.max; }\
+	constexpr static TSize Count() { return static_cast<TSize>(s_data.names.Size()); }\
 	constexpr static const jpt::HashMap<TSize, jpt::String>& Names() { return s_data.names; }\
 	constexpr static const jpt::String& Name(TSize index) { JPT_ASSERT(s_data.names.Contains(index)); return s_data.names[index]; }\
 	\
