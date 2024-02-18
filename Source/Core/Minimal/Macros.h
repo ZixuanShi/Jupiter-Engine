@@ -67,13 +67,16 @@
 #define JPT_VERIFY(condition, returnValue, ...)\
 	if (!(condition))\
 	{\
-		JPT_ERROR(__VA_ARGS__);\
+		if constexpr (JPT_HAS_ARGS(__VA_ARGS__))\
+		{\
+			JPT_ERROR(__VA_ARGS__);\
+		}\
 		return returnValue;\
 	}
 
 /**< Error and return false if condition is true */
 #define JPT_ENSURE(condition, ...)\
-	JPT_VERIFY(condition, false , __VA_ARGS__)
+	JPT_VERIFY(condition, false, __VA_ARGS__)
 
 /**< Return if condition is true */
 #define JPT_RETURN_IF(condition, returnValue)\

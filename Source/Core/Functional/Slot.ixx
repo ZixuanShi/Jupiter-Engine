@@ -44,16 +44,15 @@ export namespace jpt
 		constexpr void Clear();
 
 		/** Calls all functions in this Slot with the given arguments */
-		constexpr void operator()(TArgs&&... args);
-		constexpr void CallAll(TArgs&&... args);
+		constexpr void operator()(TArgs... args);
 
 		/** Calls a function in this Slot with the given arguments
 			@param	index		The handle of the function to call from this Slot */
-		constexpr TReturn Call(size_t index, TArgs&&... args);
+		constexpr TReturn Call(size_t index, TArgs... args);
 
 		/** Calls all functions in this Slot with the given arguments and returns the results
 			@return		Strictly matches the member functions layout. Will insert empty result if the Function at index is Not Set */
-		constexpr DynamicArray<TReturn> ReturnAll(TArgs&&... args);
+		constexpr DynamicArray<TReturn> ReturnAll(TArgs... args);
 	};
 
 	template<class TReturn, class ...TArgs>
@@ -117,13 +116,7 @@ export namespace jpt
 	}
 
 	template<class TReturn, class ...TArgs>
-	constexpr void Slot<TReturn(TArgs...)>::operator()(TArgs && ...args)
-	{
-		CallAll(Forward<TArgs>(args)...);
-	}
-
-	template<class TReturn, class ...TArgs>
-	constexpr void Slot<TReturn(TArgs...)>::CallAll(TArgs && ...args)
+	constexpr void Slot<TReturn(TArgs...)>::operator()(TArgs ...args)
 	{
 		for (auto& function : m_functions)
 		{
@@ -135,13 +128,13 @@ export namespace jpt
 	}
 
 	template<class TReturn, class ...TArgs>
-	constexpr TReturn Slot<TReturn(TArgs...)>::Call(size_t index, TArgs && ...args)
+	constexpr TReturn Slot<TReturn(TArgs...)>::Call(size_t index, TArgs ...args)
 	{
 		return m_functions[index](Forward<TArgs>(args)...);
 	}
 
 	template<class TReturn, class ...TArgs>
-	constexpr DynamicArray<TReturn> Slot<TReturn(TArgs...)>::ReturnAll(TArgs && ...args)
+	constexpr DynamicArray<TReturn> Slot<TReturn(TArgs...)>::ReturnAll(TArgs ...args)
 	{
 		DynamicArray<TReturn> results;
 		results.Reserve(m_functions.Size());

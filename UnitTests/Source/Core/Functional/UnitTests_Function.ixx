@@ -31,6 +31,9 @@ bool UnitTest_Function()
     JPT_ENSURE(!function(n), "");
 	JPT_ENSURE(n == 100, "");
 
+    jpt::Function<bool(int32)> function2 = [](int32 n) { JPT_ENSURE(n == 5, ""); return true; };
+    function2(5);
+
     return true;
 }
 

@@ -11,35 +11,15 @@ import jpt.TypeDefs;
 import jpt.DynamicArray;
 import jpt.String;
 
-template<typename T>
-bool OverriddenComparator(T a, T b)
-{
-    JPT_LOG("Using Overridden Comparator");
-    return a < b;
-}
-
 bool UnitTest_Sorting_Basic()
 {
     jpt::DynamicArray<int32> array{ 2,3,1,0,4 };
 
-   // JPT_LOG(array);
+    JPT_LOG(array);
 
-   // jpt::Sort(array);
-   // jpt::Sort(array, [](int32 a, int32 b) 
-   //     {
-   //         JPT_LOG("Using custom placeholder lambda");
-			//return a > b;
-   //     });
-   // jpt::Sort(array, OverriddenComparator<int32>);
+    //jpt::Sort(array);
 
-   // auto lambda = [](int32 a, int32 b)
-   //     {
-   //         JPT_LOG("Using custom lambda");
-   //         return a > b;
-   //     };
-   // jpt::Sort(array, lambda);
-
-   // JPT_LOG(array);
+    JPT_LOG(array);
 
     return true;
 }
