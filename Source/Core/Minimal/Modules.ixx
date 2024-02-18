@@ -10,6 +10,7 @@ export module jpt.CoreModules;
 // Containers
 export import jpt.StaticArray;
 export import jpt.DynamicArray;
+export import jpt.HashMap;
 
 // Minimals
 export import jpt.Concepts;
@@ -22,6 +23,7 @@ export import jpt.Utilities;
 export import jpt.Math;
 export import jpt.Limits;
 export import jpt.RandomNumberGenerator;
+export import jpt.Vector2;
 
 // Memory Managing
 export import jpt.Allocator;

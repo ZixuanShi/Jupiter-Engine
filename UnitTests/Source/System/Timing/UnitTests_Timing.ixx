@@ -12,8 +12,8 @@ module;
 
 export module UnitTests_Timing;
 
-import jpt.CoreModules;
 import jpt.Timing.Utils;
+import jpt.Math;
 
 bool UnitTest_Clock()
 {

@@ -30,6 +30,7 @@ import UnitTests_Utilities;
 import UnitTests_TypeTraits;
 
 // Math
+import UnitTests_Vector2;
 import UnitTests_Math;
 import UnitTests_RandomNumberGenerator;
 
@@ -78,6 +79,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Macros(), "Macros Unit Tests Failed");
 
 	// Math
+	JPT_ENSURE(RunUnitTests_Vector2(), "Vector2 Unit Tests Failed");
 	JPT_ENSURE(RunUnitTests_Math(), "Math Unit Tests Failed");
 	JPT_ENSURE(RunUnitTests_RandomNumberGenerator(), "Random Number Generator Tests Failed");
 
