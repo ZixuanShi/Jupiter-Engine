@@ -66,4 +66,19 @@ export namespace jpt
 		container.begin();
 		container.end();
 	};
+
+	template<typename T>
+	concept Sized = requires(T container)
+	{
+		container.Size();
+	};
+
+	template<typename TContainer>
+	concept Containing = Iterable<TContainer> && Sized<TContainer>;
+
+	template<typename TContainer>
+	concept ContainingTrivial = Containing<TContainer> && Trivial<typename TContainer::TData>;
+
+	template<typename TContainer>
+	concept ContainingNonTrivial = Containing<TContainer> && NonTrivial<typename TContainer::TData>;
 }

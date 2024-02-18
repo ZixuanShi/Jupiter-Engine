@@ -158,7 +158,6 @@ def update_application_layer():
         file.truncate()
         file.writelines(unit_test_lines)
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 # Main
 # ----------------------------------------------------------------------------------------------------------------------
@@ -167,10 +166,10 @@ def main():
 
     # Check if it exists already
     if os.path.exists(unit_test_path):
-        print(unit_test_path + " has already been created. Quitting")
-        return
+       print(unit_test_path + " has already been created. Quitting")
+       return
     else:
-        print("Adding <" + file_to_add_name + ">")
+       print("Adding <" + file_to_add_name + ">")
 
     save_unit_test_file()
     update_application_layer()

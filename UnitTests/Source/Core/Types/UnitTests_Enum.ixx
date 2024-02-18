@@ -11,7 +11,7 @@ export module UnitTests_Enum;
 import UnitTests_Enum_Global;
 
 template<typename EType>
-bool UnitTest_Enum()
+bool UnitTest_Enum_NonSequence()
 {
 	// Static data
 	JPT_ENSURE(EType::Count() == 4, "");
@@ -97,17 +97,82 @@ bool UnitTest_Enum()
 	return true;
 }
 
+template<typename EType>
+bool UnitTest_Enum_Sequence()
+{
+	// Static data
+	JPT_ENSURE(EType::Count() == 4, "");
+	JPT_ENSURE(EType::Min() == EType::Sword, "");
+	JPT_ENSURE(EType::Max() == EType::Axe, "");
+
+	// Comparing
+	EType weapon(EType::Spear);
+	JPT_ENSURE(weapon == 1, "");
+	JPT_ENSURE(weapon == "Spear", "");
+	JPT_ENSURE(weapon == EType::Spear, "");
+	JPT_ENSURE(weapon > EType::Sword, "");
+	JPT_ENSURE(weapon < EType::Hammer, "");
+	JPT_ENSURE(weapon != EType::Axe, "");
+
+	// Math operations
+	--weapon;
+	JPT_ENSURE(weapon == 0, "");
+	JPT_ENSURE(weapon == "Sword", "");
+	JPT_ENSURE(weapon == EType::Sword, "");
+
+	++weapon;
+	JPT_ENSURE(weapon == 1, "");
+	JPT_ENSURE(weapon == "Spear", "");
+	JPT_ENSURE(weapon == EType::Spear, "");
+
+	// Assigning
+	weapon = EType::Axe;
+	JPT_ENSURE(weapon == 3, "");
+	JPT_ENSURE(weapon == "Axe", "");
+	JPT_ENSURE(weapon == EType::Axe, "");
+
+	// Iterating
+	// for (const auto& pair : fruit)
+	for (TEnumSize i = EType::Min(); i < EType::Max(); ++i)
+	{
+		EType e = static_cast<EType>(i);
+		if (e == EType::Sword)
+			JPT_ENSURE(e == "Sword", "");
+
+		if (e == EType::Spear)
+			JPT_ENSURE(e == "Spear", "");
+
+		if (e == EType::Hammer)
+			JPT_ENSURE(e == "Hammer", "");
+
+		if (e == EType::Axe)
+			JPT_ENSURE(e == "Axe", "");
+	}
+
+	return true;
+}
+
 JPT_ENUM(EFruit_Local,
 	Apple = 5,
 	Banana,
 	Orange = 9,
 	Grape);
 
+JPT_ENUM(EWeapon_Local,
+	Sword,
+	Spear,
+	Hammer,
+	Axe);
+
 export bool RunUnitTests_Enum()
 {
-	JPT_ENSURE(UnitTest_Enum<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
-	JPT_ENSURE(UnitTest_Enum<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
-	JPT_ENSURE(UnitTest_Enum<GlobalEnumContainer::EFruit_GlobalEnumContainer>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
+	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_GlobalEnumContainer>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
+
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>(), "UnitTest_Enum_Local Failed");
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>(), "UnitTest_Enum_Global Failed");
+	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_GlobalEnumContainer>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
 
 	return true;
 }

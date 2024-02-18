@@ -14,6 +14,12 @@ export JPT_ENUM(EFruit_Global,
 	Orange = 9,
 	Grape);
 
+export JPT_ENUM(EWeapon_Global,
+	Sword,
+	Spear,
+	Hammer,
+	Axe);
+
 // Global class containing an enum
 export class GlobalEnumContainer
 {
@@ -23,4 +29,10 @@ public:
 		Banana,
 		Orange = 9,
 		Grape);
+
+	JPT_ENUM(EWeapon_GlobalEnumContainer,
+		Sword,
+		Spear,
+		Hammer,
+		Axe);
 };

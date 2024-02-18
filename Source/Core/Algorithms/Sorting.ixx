@@ -16,18 +16,18 @@ import jpt.Utilities;
 
 namespace jpt
 {
-	template<typename T>
-	bool DefaultComparator(const T& a, const T& b)
+	template<Trivial T>
+	bool DefaultComparator(T a, T b)
 	{
-		JPT_LOG("Using default comparator");
+		JPT_LOG("Using NonTrivial comparator");
 		return a < b;
 	}
 }
 
 namespace jpt
 {
-	export template<Iterable TContainer>
-	void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultComparator<typename TContainer::TData>)
+	export template<ContainingTrivial TContainer>
+	void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultComparator<typename TContainer::TData>)
 	{
 		comparator(1, 2);
 		JPT_IGNORE(container, comparator);

@@ -28,24 +28,23 @@ EnumData GenerateData(const char* pSource);
 /** Enum wrapper supports the followings:
 	- Static global API for shared EnumData
 	- Comparing with numeric and string
-	- Math operators
-	- Iteration through all values. Range-based is also supported
 	- Conversion to numeric and string
+	- Common Math operators
+	- Iteration through all values. Range-based is also supported
 
-	@examples: 
-	
-	// Local Enum for current file
-	JPT_ENUM(ELocal, A, B = 2, C = 5);
-
-	// Global Enum for all files as module
-	export JPT_ENUM(EGlobal, A, B = 2, C = 5);
-
-	// Nested Enum in class
-	export class GlobalEnumContainer
-	{
-	public:
-		JPT_ENUM(ENested, A, B = 2, C = 5);
-	}; */
+	@examples: 	
+		// Local Enum for current file
+		JPT_ENUM(ELocal, A, B = 2, C = 5);
+		
+		// Global Enum for all files as module
+		export JPT_ENUM(EGlobal, A, B = 2, C = 5);
+		
+		// Nested Enum in class
+		export class GlobalEnumContainer
+		{
+		public:
+			JPT_ENUM(ENested, A, B = 2, C = 5);
+		}; */
 #define JPT_ENUM(EnumName, ...)\
 class EnumName\
 {\
