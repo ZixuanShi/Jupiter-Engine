@@ -10,6 +10,11 @@ export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
 
+JPT_ENUM_UINT8(EFruit_Local,
+	Apple = 5,
+	Banana,
+	Orange = 9,
+	Grape);
 template<typename EType>
 bool UnitTest_Enum_NonSequence()
 {
@@ -97,6 +102,11 @@ bool UnitTest_Enum_NonSequence()
 	return true;
 }
 
+JPT_ENUM_UINT8(EWeapon_Local,
+	Sword,
+	Spear,
+	Hammer,
+	Axe);
 template<typename EType>
 bool UnitTest_Enum_Sequence()
 {
@@ -131,54 +141,98 @@ bool UnitTest_Enum_Sequence()
 	JPT_ENSURE(weapon == "Axe", "");
 	JPT_ENSURE(weapon == EType::Axe, "");
 
-	// Iterating
 	// for (const auto& pair : fruit)
+	// Iterating. This works on sequential enums
 	for (auto i = EType::Min(); i < EType::Max(); ++i)
 	{
-		EType e = static_cast<EType>(i);
+		EType e(i);
 		if (e == EType::Sword)
+		{
 			JPT_ENSURE(e == "Sword", "");
-
+		}
 		if (e == EType::Spear)
+		{
 			JPT_ENSURE(e == "Spear", "");
-
+		}
 		if (e == EType::Hammer)
+		{
 			JPT_ENSURE(e == "Hammer", "");
-
+		}
 		if (e == EType::Axe)
+		{
 			JPT_ENSURE(e == "Axe", "");
+		}
 	}
 
 	return true;
 }
 
-JPT_ENUM_UINT8(EFruit_Local,
-	Apple = 5,
-	Banana,
-	Orange = 9,
-	Grape);
+JPT_ENUM_UINT16(EFlag_Local,
+	A = (1 << 0),
+	B = (1 << 1),
+	C = (1 << 2),
+	D = (1 << 3),
+	E = (1 << 4),
+	F = (1 << 5),
+	G = (1 << 6),
+	H = (1 << 7),
+	I = (1 << 8),
+	J = (1 << 9),
+	K = (1 << 10),
+	L = (1 << 11),
+	M = (1 << 12),
+	N = (1 << 13),
+	O = (1 << 14),
+	P = (1 << 15)
+);
 
-JPT_ENUM_UINT8(EWeapon_Local,
-	Sword,
-	Spear,
-	Hammer,
-	Axe);
+bool UnitTest_Enum_Flag()
+{
+	EFlag_Local flag(EFlag_Local::A | EFlag_Local::G | EFlag_Local::P);
 
-JPT_ENUM_UINT8_FLAG(EMouseFlag_Local,
-	Move_X,
-	Move_Y,
-	Left_Button_Down,
-	Left_Button_Up,
-	Right_Button_Down,
-	Right_Button_Up,
-	Scroll_Wheel_Up,
-	Scroll_Wheel_Down);
+	// |
+	JPT_ENSURE(!flag.Has(EFlag_Local::B), "");
+	flag |= EFlag_Local::B;
+
+	// &
+	JPT_ENSURE(flag.Has(EFlag_Local::A), "");
+	JPT_ENSURE(flag.Has(EFlag_Local::B), "");
+	JPT_ENSURE(flag.Has(EFlag_Local::G), "");
+	JPT_ENSURE(flag.Has(EFlag_Local::P), "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::C), "");
+
+	flag &= EFlag_Local::B;
+	JPT_ENSURE(flag == EFlag_Local::B, "");
+	JPT_ENSURE(flag.Has(EFlag_Local::B), "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::A), "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::G), "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::P), "");
+
+	// ^
+	flag |= EFlag_Local::A;
+	flag ^= EFlag_Local::B;
+	JPT_ENSURE(flag == EFlag_Local::A, "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::B), "");
+
+	// ~
+	flag = ~flag;
+	for (const auto& [key, value] : flag)
+	{
+		if (key == EFlag_Local::A)
+		{
+			JPT_ENSURE(!flag.Has(EFlag_Local::EValues(key)), "");
+		}
+		else
+		{
+			JPT_ENSURE(flag.Has(EFlag_Local::EValues(key)), "");
+		}
+	}
+
+	return true;
+}
 
 export bool RunUnitTests_Enum()
 {
-	JPT_LOG(sizeof(EWeapon_Local));
-	JPT_LOG(sizeof(EMouseFlag_Local));
-
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
 	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
@@ -186,6 +240,8 @@ export bool RunUnitTests_Enum()
 	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>(), "UnitTest_Enum_Local Failed");
 	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>(), "UnitTest_Enum_Global Failed");
 	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
+
+	JPT_ENSURE(UnitTest_Enum_Flag(), "UnitTest_Enum_EFlag_Local Failed");
 
 	return true;
 }

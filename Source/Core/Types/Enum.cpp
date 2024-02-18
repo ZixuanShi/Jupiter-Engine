@@ -17,6 +17,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 	source.Replace(" ", "");
 	const jpt::DynamicArray<jpt::String> tokens = source.Split(',');
 	data.count = static_cast<TInt>(tokens.Size());
+	data.names.Resize(data.count);
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
@@ -26,11 +27,27 @@ EnumData<TInt> GenerateData(const char* pSource)
 		jpt::String name = token;
 
 		// If token contains an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
+		// Example: "Name", Name=5", "Name=(1<<2)"
 		if (const size_t equalIndex = tokens[i].Find('='); equalIndex != jpt::npos)
 		{
 			name = tokens[i].SubStr(0, equalIndex);
+
 			const jpt::String valueStr = tokens[i].SubStr(equalIndex + 1, tokens[i].Size() - equalIndex - 1);
-			key = jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer());
+
+			// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
+			if (const size_t shiftIndex = valueStr.Find("<<"); shiftIndex != jpt::npos)
+			{
+				const jpt::String left  = valueStr.SubStr(1, shiftIndex - 1);
+				const jpt::String right = valueStr.SubStr(shiftIndex + 2, valueStr.Size() - shiftIndex - 3);
+				const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.ConstBuffer());
+				const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.ConstBuffer());
+				key = (leftValue << rightValue);
+			}
+			// valueStr is a number. Convert it to integer
+			else
+			{
+				key = jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer());
+			}
 		}
 
 		// Update min and max values

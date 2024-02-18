@@ -69,6 +69,7 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Size()  const { return m_size; }
 		constexpr bool IsEmpty() const { return m_size == 0; }
+		constexpr void Resize(size_t capacity);
 
 		// Modifiers
 		constexpr void Clear();
@@ -86,8 +87,6 @@ export namespace jpt
 		constexpr bool Contains(const TKey& key) const;
 
 	private:
-		constexpr void ResizeBuckets(size_t capacity);
-
 		constexpr size_t GetBucketIndex(const TKey& key) const;
 		constexpr       TBucket& GetBucket(const TKey& key);
 		constexpr const TBucket& GetBucket(const TKey& key) const;
@@ -226,7 +225,7 @@ export namespace jpt
 		// Grow if needed
 		if (m_size >= m_buckets.Size() * kLocGrowMultiplier)
 		{
-			ResizeBuckets(m_size * kLocGrowMultiplier);
+			Resize(m_size * kLocGrowMultiplier);
 		}
 
 		TBucket& bucket = GetBucket(key);
@@ -325,7 +324,7 @@ export namespace jpt
 	}
 
 	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::ResizeBuckets(size_t capacity)
+	constexpr void HashMap<_TKey, _TValue>::Resize(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 

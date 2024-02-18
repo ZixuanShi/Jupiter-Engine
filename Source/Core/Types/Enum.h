@@ -18,7 +18,7 @@ struct EnumData
 	TInt count = 0;	/**< How many values this enum has */
 	TInt min = jpt::LimitsOf<TInt>::kMax;	/**< The min value of this enum */
 	TInt max = jpt::LimitsOf<TInt>::kMin;	/**< The max value of this enum */
-	jpt::HashMap<TInt, jpt::String> names;		/**< The names map of the enum values */
+	jpt::HashMap<TInt, jpt::String> names;	/**< The names map of the enum values */
 };
 
 /** Generate the shared enum data 
@@ -34,23 +34,37 @@ EnumData<TInt> GenerateData(const char* pSource);
 	- Iteration through all values. Range-based is also supported
 
 	@param EnumName		The name of the enum. Like EFruit. Prefix with 'E' is recommended
-	@param EnumSizeType	The size of the enum. uint8, uint16, uint32, uint64. 
+	@param TSize		The size of the enum. uint8, uint16, uint32, uint64. 
 						Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
-
 	@examples: 	
 		// Local Enum for current file
-		JPT_ENUM_UINT8(ELocal, A, B = 2, C = 5);
+		JPT_ENUM_UINT8(ELocal, 
+		A, 
+		B = 2, 
+		C = 5);
+
+		// Local Enum flag
+		JPT_ENUM_UINT8(ELocalFlag,
+		A = (1 << 0),
+		B = (1 << 1),
+		C = (1 << 2));
 		
 		// Global Enum for all files as module
-		export JPT_ENUM_UINT8(EGlobal, A, B = 2, C = 5);
+		export JPT_ENUM_UINT8(EGlobal, 
+		A, 
+		B = 2, 
+		C = 5);
 		
 		// Nested Enum in class
 		export class GlobalEnumContainer
 		{
 		public:
-			JPT_ENUM_UINT64(ENested, A, B = 2, C = 5);
+			JPT_ENUM_UINT64(ENested, 
+			A, 
+			B = 2, 
+			C = 5);
 		}; */
-#define JPT_ENUM(EnumName, TSize, isEnumFlag, ...)\
+#define JPT_ENUM(EnumName, TSize, ...)\
 class EnumName\
 {\
 public:\
@@ -76,21 +90,19 @@ public:\
 public:\
 	/** Member Constructor & operator= */\
 	constexpr EnumName() = default;\
-	constexpr EnumName(EnumName::EValues value)	: m_value(value) { if constexpr (isEnumFlag){ /*HERE!!!!!!!!!!!!!!!!!!!!!!!*/ } }\
+	constexpr EnumName(EnumName::EValues value)	: m_value(value) {}\
 	constexpr EnumName& operator=(EnumName::EValues value) { m_value = value; return *this; }\
 	\
 	template<jpt::Integral TInt = TSize>\
 	constexpr EnumName(TInt integer)\
 		: m_value(static_cast<TSize>(integer)) \
 	{\
-		JPT_ASSERT(s_data.names.Contains(m_value));\
 	}\
 	\
 	template<jpt::Integral TInt = TSize> \
 	constexpr EnumName& operator=(TInt integer) \
 	{ \
 		m_value = static_cast<TSize>(integer); \
-		JPT_ASSERT(s_data.names.Contains(m_value)); \
 		return *this; \
 	} \
 	\
@@ -120,17 +132,21 @@ public:\
 	\
 	/** +, - */\
 	template<jpt::Integral TInt>\
-	constexpr EnumName operator+(TInt offset)\
-	{\
-		EnumName copy = *this;\
-		return copy += offset;\
-	}\
+	constexpr EnumName operator+(TInt offset) {	EnumName copy = *this; return copy += offset; }\
 	template<jpt::Integral TInt>\
-	constexpr EnumName operator-(TInt offset)\
-	{\
-		EnumName copy = *this;\
-		return copy -= offset;\
-	}\
+	constexpr EnumName operator-(TInt offset) {	EnumName copy = *this; return copy -= offset; }\
+	\
+	/** Bitwise */\
+	constexpr EnumName& operator&=(EValues value) { m_value &= value; return *this; } \
+	constexpr EnumName& operator|=(EValues value) { m_value |= value; return *this; } \
+	constexpr EnumName& operator^=(EValues value) { m_value ^= value; return *this; } \
+	constexpr TSize operator&(EValues value) const { return m_value & value; } \
+	constexpr TSize operator|(EValues value) const { return m_value | value; } \
+	constexpr TSize operator^(EValues value) const { return m_value ^ value; } \
+	constexpr TSize operator~() const { return ~m_value; } \
+	constexpr bool Has(EValues value) const { return (m_value & value) != 0; } \
+	constexpr void Insert(EValues value) { m_value |= value; } \
+	constexpr void Toggle(EValues value) { m_value ^= value; } \
 	\
 	/** Iteration */\
 	/** Supports range-based, iterated, and numeric if items are linear and contigous */\
@@ -153,12 +169,8 @@ public:\
 	constexpr operator const jpt::String&() const { return s_data.names[m_value]; }\
 };
 
-#define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  false, __VA_ARGS__)
-#define JPT_ENUM_UINT16(EnumName, ...) JPT_ENUM(EnumName, uint16, false, __VA_ARGS__)
-#define JPT_ENUM_UINT32(EnumName, ...) JPT_ENUM(EnumName, uint32, false, __VA_ARGS__)
-#define JPT_ENUM_UINT64(EnumName, ...) JPT_ENUM(EnumName, uint64, false, __VA_ARGS__)
-#define JPT_ENUM_UINT8_FLAG( EnumName, ...) JPT_ENUM(EnumName, uint8,  true, __VA_ARGS__)
-#define JPT_ENUM_UINT16_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint16, true, __VA_ARGS__)
-#define JPT_ENUM_UINT32_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint32, true, __VA_ARGS__)
-#define JPT_ENUM_UINT64_FLAG(EnumName, ...) JPT_ENUM(EnumName, uint64, true, __VA_ARGS__)
+#define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)
+#define JPT_ENUM_UINT16(EnumName, ...) JPT_ENUM(EnumName, uint16, __VA_ARGS__)
+#define JPT_ENUM_UINT32(EnumName, ...) JPT_ENUM(EnumName, uint32, __VA_ARGS__)
+#define JPT_ENUM_UINT64(EnumName, ...) JPT_ENUM(EnumName, uint64, __VA_ARGS__)
 
