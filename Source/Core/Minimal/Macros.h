@@ -67,10 +67,7 @@
 #define JPT_VERIFY(condition, returnValue, ...)\
 	if (!(condition))\
 	{\
-		if constexpr (JPT_HAS_ARGS(__VA_ARGS__))\
-		{\
-			JPT_ERROR(__VA_ARGS__);\
-		}\
+		JPT_ERROR(__VA_ARGS__);\
 		return returnValue;\
 	}
 

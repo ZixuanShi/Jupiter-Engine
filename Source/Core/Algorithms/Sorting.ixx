@@ -18,20 +18,49 @@ import jpt.Limits;
 namespace jpt
 {
 	template<typename TContainer>
-	size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex)
+	constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex)
 	{
 		// Mid of three pivot selection
-		return endIndex;
+
+		// Get each elements
+		typename TContainer::TData first = container[beginIndex];
+		typename TContainer::TData mid   = container[endIndex / 2];
+		typename TContainer::TData last  = container[beginIndex];
+
+		// Compare and return mid index
+		if (first > mid)
+		{
+			if (mid > last)
+				return endIndex / 2;
+			else if (first > last)
+				return endIndex;
+			else
+				return beginIndex;
+		}
+		else
+		{
+			if (first > last)
+				return beginIndex;
+			else if (mid > last)
+				return endIndex;
+			else
+				return endIndex / 2;
+		}
 	}
 
 	template<typename TContainer, typename Comparator>
-	size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, Comparator&& comparator)
+	constexpr size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, Comparator&& comparator)
 	{
+		Swap(container[GetPivot(container, beginIndex, endIndex)], container[endIndex]);
+
 		typename TContainer::TData pivot = container[endIndex];
 		size_t i = beginIndex - 1;	// i is the last element's index of region 1, which is less than the pivot
 
+		// j is the current processing element's index
 		for (size_t j = beginIndex; j < endIndex; ++j)
 		{
+			// if current element should be placed to region one
+			// Swap last element in region 1 with current processing element.
 			if (comparator(container[j], pivot))
 			{
 				++i;
@@ -39,14 +68,16 @@ namespace jpt
 			}
 		}
 
-		size_t pivotIndex = i + 1;
+		// Everything is in its place except for the pivot. We swap the pivot with the first element of region 2.
+		const size_t pivotIndex = i + 1;
 		Swap(container[pivotIndex], container[endIndex]);
 
+		// return the pivot, which becomes the beginning and end points of the next calls to Partition().
 		return pivotIndex;
 	}
 
 	template<typename TContainer, typename Comparator>
-	void QuickSort(TContainer& container, size_t beginIndex, size_t endIndex, Comparator&& comparator)
+	constexpr void QuickSort(TContainer& container, size_t beginIndex, size_t endIndex, Comparator&& comparator)
 	{
 		// Bounds check
 		if (beginIndex >= endIndex || endIndex == LimitsOf<size_t>::kMax)
@@ -67,13 +98,13 @@ namespace jpt
 	constexpr bool DefaultNonTrivialComparator(const T& a, const T& b) { return a < b; }
 
 	export template<ContainingTrivial TContainer>
-	void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultTrivialComparator<typename TContainer::TData>)
+	constexpr void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultTrivialComparator<typename TContainer::TData>)
 	{
 		QuickSort(container, 0, container.Size() - 1, Move(comparator));
 	}
 
 	export template<ContainingNonTrivial TContainer>
-	void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultNonTrivialComparator<typename TContainer::TData>)
+	constexpr void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultNonTrivialComparator<typename TContainer::TData>)
 	{
 		QuickSort(container, 0, container.Size() - 1, Move(comparator));
 	}
