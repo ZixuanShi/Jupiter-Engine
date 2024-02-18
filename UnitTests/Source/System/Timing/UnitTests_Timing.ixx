@@ -23,7 +23,7 @@ bool UnitTest_Clock()
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
     const bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
-    JPT_ENSURE(value, "");
+    JPT_ENSURE(value);
 
     return true;
 }
@@ -36,7 +36,7 @@ bool UnitTest_StopWatch()
 
     const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
     const bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
-    JPT_ENSURE(value, "");
+    JPT_ENSURE(value);
 
     return true;
 }

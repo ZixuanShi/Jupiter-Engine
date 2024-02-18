@@ -42,19 +42,19 @@ bool UnitTest_DynamicArray_Trivial()
 
     for (int32 element : dynamicArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
 
     // Inserting
     dynamicArray.Insert(1, 1);
     int32 data = dynamicArray.Emplace(3, 3);
-    JPT_ENSURE(data == 3, "");
+    JPT_ENSURE(data == 3);
     dynamicArray.PushBack(5);
     dynamicArray.PushBack(6);
     dynamicArray.PushBack(6);
     data = dynamicArray.EmplaceBack(6);
-    JPT_ENSURE(data == 6, "");
+    JPT_ENSURE(data == 6);
 
     // Erasing
     dynamicArray.Erase(6);
@@ -64,7 +64,7 @@ bool UnitTest_DynamicArray_Trivial()
     i = 0;
     for (int32 element : dynamicArray)
     {
-        JPT_ENSURE(element == i, "");
+        JPT_ENSURE(element == i);
         ++i;
     }
 
@@ -76,34 +76,34 @@ bool UnitTest_DynamicArray_Trivial()
     i = 0;
     for (int32 element : dynamicArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
 
     // Capacity
     dynamicArray.Reserve(32);
-    JPT_ENSURE(dynamicArray.Capacity() == 32, "");
+    JPT_ENSURE(dynamicArray.Capacity() == 32);
 
     dynamicArray.ShrinkToFit();
-    JPT_ENSURE(dynamicArray.Capacity() == 7, "");
+    JPT_ENSURE(dynamicArray.Capacity() == 7);
 
     dynamicArray.Resize(16, 42);
-    JPT_ENSURE(dynamicArray.Size() == 16, "");
+    JPT_ENSURE(dynamicArray.Size() == 16);
 
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(dynamicArray[i] == 42, "");
+        JPT_ENSURE(dynamicArray[i] == 42);
     }
 
     // Copying
     jpt::DynamicArray<int32> copiedArray(dynamicArray);
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(copiedArray[i] == 42, "");
+        JPT_ENSURE(copiedArray[i] == 42);
     }
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(dynamicArray[i] == 42, "");
+        JPT_ENSURE(dynamicArray[i] == 42);
     }
 
     copiedArray.Resize(7);
@@ -111,37 +111,37 @@ bool UnitTest_DynamicArray_Trivial()
     i = 0;
     for (int32 element : copiedArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
     i = 0;
     for (int32 element : dynamicArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
 
     // Moving
     jpt::DynamicArray<int32> movedArray(Move(dynamicArray));
-    JPT_ENSURE(dynamicArray.ConstBuffer() == nullptr, "");
-    JPT_ENSURE(dynamicArray.IsEmpty(), "");
-    JPT_ENSURE(dynamicArray.Capacity() == 0, "");
+    JPT_ENSURE(dynamicArray.ConstBuffer() == nullptr);
+    JPT_ENSURE(dynamicArray.IsEmpty());
+    JPT_ENSURE(dynamicArray.Capacity() == 0);
     i = 0;
     for (int32 element : movedArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
 
     copiedArray = Move(movedArray);
-    JPT_ENSURE(movedArray.ConstBuffer() == nullptr, "");
-    JPT_ENSURE(movedArray.IsEmpty(), "");
-    JPT_ENSURE(movedArray.Capacity() == 0, "");
+    JPT_ENSURE(movedArray.ConstBuffer() == nullptr);
+    JPT_ENSURE(movedArray.IsEmpty());
+    JPT_ENSURE(movedArray.Capacity() == 0);
 
     i = 0;
     for (int32 element : copiedArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
     //JPT_LOG(copiedArray);
@@ -156,19 +156,19 @@ bool UnitTest_DynamicArray_NonTrivial()
 
     for (const jpt::String& element : dynamicArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
 
     // Inserting
     dynamicArray.Insert(1, locHelper(1));
     const jpt::String& data1 = dynamicArray.Emplace(3, "Three");
-    JPT_ENSURE(data1 == "Three", "");
+    JPT_ENSURE(data1 == "Three");
     dynamicArray.PushBack(locHelper(5));
     dynamicArray.PushBack(locHelper(6));
     dynamicArray.PushBack(locHelper(6));
     const jpt::String& data2 = dynamicArray.EmplaceBack("Six");
-    JPT_ENSURE(data2 == "Six", "");
+    JPT_ENSURE(data2 == "Six");
 
     // Erasing
     dynamicArray.Erase(6);
@@ -178,7 +178,7 @@ bool UnitTest_DynamicArray_NonTrivial()
     i = 0;
     for (const jpt::String& element : dynamicArray)
     {
-        JPT_ENSURE(element == locHelper(i), "");
+        JPT_ENSURE(element == locHelper(i));
         ++i;
     }
 
@@ -192,34 +192,34 @@ bool UnitTest_DynamicArray_NonTrivial()
     i = 0;
     for (const jpt::String& element : dynamicArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
 
     // Capacity
     dynamicArray.Reserve(32);
-    JPT_ENSURE(dynamicArray.Capacity() == 32, "");
+    JPT_ENSURE(dynamicArray.Capacity() == 32);
 
     dynamicArray.ShrinkToFit();
-    JPT_ENSURE(dynamicArray.Capacity() == 7, "");
+    JPT_ENSURE(dynamicArray.Capacity() == 7);
 
     dynamicArray.Resize(16, "42");
-    JPT_ENSURE(dynamicArray.Size() == 16, "");
+    JPT_ENSURE(dynamicArray.Size() == 16);
 
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(dynamicArray[i] == "42", "");
+        JPT_ENSURE(dynamicArray[i] == "42");
     }
 
     // Copying
     jpt::DynamicArray<jpt::String> copiedArray(dynamicArray);
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(copiedArray[i] == "42", "");
+        JPT_ENSURE(copiedArray[i] == "42");
     }
     for (i = 7; i < 16; ++i)
     {
-        JPT_ENSURE(dynamicArray[i] == "42", "");
+        JPT_ENSURE(dynamicArray[i] == "42");
     }
 
     copiedArray.Resize(7);
@@ -227,37 +227,37 @@ bool UnitTest_DynamicArray_NonTrivial()
     i = 0;
     for (const jpt::String& element : copiedArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
     i = 0;
     for (const jpt::String& element : dynamicArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
 
     // Moving
     jpt::DynamicArray<jpt::String> movedArray(Move(dynamicArray));
-    JPT_ENSURE(dynamicArray.ConstBuffer() == nullptr, "");
-    JPT_ENSURE(dynamicArray.IsEmpty(), "");
-    JPT_ENSURE(dynamicArray.Capacity() == 0, "");
+    JPT_ENSURE(dynamicArray.ConstBuffer() == nullptr);
+    JPT_ENSURE(dynamicArray.IsEmpty());
+    JPT_ENSURE(dynamicArray.Capacity() == 0);
     i = 0;
     for (const jpt::String& element : movedArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
 
     copiedArray = Move(movedArray);
-    JPT_ENSURE(movedArray.ConstBuffer() == nullptr, "");
-    JPT_ENSURE(movedArray.IsEmpty(), "");
-    JPT_ENSURE(movedArray.Capacity() == 0, "");
+    JPT_ENSURE(movedArray.ConstBuffer() == nullptr);
+    JPT_ENSURE(movedArray.IsEmpty());
+    JPT_ENSURE(movedArray.Capacity() == 0);
 
     i = 0;
     for (const jpt::String& element : copiedArray)
     {
-        JPT_ENSURE(element == locHelper(i * 2), "");
+        JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
     //JPT_LOG(copiedArray);

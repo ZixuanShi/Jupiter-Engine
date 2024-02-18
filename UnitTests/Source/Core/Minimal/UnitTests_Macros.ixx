@@ -25,9 +25,9 @@ bool TestFormatHelper(const char* expectedResult, const char* format, ...)
 
 bool UnitTest_Macro_String()
 {
-    JPT_ENSURE(TestFormatHelper("Hello World", "Hello World"), "");
-    JPT_ENSURE(TestFormatHelper("42", "%d", 42), "");
-    JPT_ENSURE(TestFormatHelper<128>("Thursday, December 28, 2023, 10:16:56 PM - Jupiter Engine's Birthday", "%s, %s %d, %d, %d:%d:%d %s - %s", "Thursday", "December", 28, 2023, 10, 16, 56, "PM", "Jupiter Engine's Birthday"), "");
+    JPT_ENSURE(TestFormatHelper("Hello World", "Hello World"));
+    JPT_ENSURE(TestFormatHelper("42", "%d", 42));
+    JPT_ENSURE(TestFormatHelper<128>("Thursday, December 28, 2023, 10:16:56 PM - Jupiter Engine's Birthday", "%s, %s %d, %d, %d:%d:%d %s - %s", "Thursday", "December", 28, 2023, 10, 16, 56, "PM", "Jupiter Engine's Birthday"));
 
     return true;
 }
@@ -79,10 +79,10 @@ void InitializerList(const std::initializer_list<T>& list)
 
 bool UnitTest_Macro_VA_ARGS()
 {
-    JPT_ENSURE(JPT_HAS_ARGS() == false, "");
-    JPT_ENSURE(JPT_HAS_ARGS(false), "");
-    JPT_ENSURE(JPT_HAS_ARGS(1, 2, 3), "");
-    JPT_ENSURE(JPT_HAS_ARGS(1, "2", 3, 'c'), "");
+    JPT_ENSURE(JPT_HAS_ARGS() == false);
+    JPT_ENSURE(JPT_HAS_ARGS(false));
+    JPT_ENSURE(JPT_HAS_ARGS(1, 2, 3));
+    JPT_ENSURE(JPT_HAS_ARGS(1, "2", 3, 'c'));
 
     return true;
 }
@@ -93,10 +93,10 @@ bool UnitTest_Macro_VA_ARGS()
 
 bool UnitTests_Macro_ArgsCount()
 {
-    JPT_ENSURE(JPT_ARGS_COUNT() == 0, "");
-    JPT_ENSURE(JPT_ARGS_COUNT(false) == 1, "");
-    JPT_ENSURE(JPT_ARGS_COUNT(1, 2, 3) == 3, "");
-    JPT_ENSURE(JPT_ARGS_COUNT(1, "2", 3, 'c') == 4, "");
+    JPT_ENSURE(JPT_ARGS_COUNT() == 0);
+    JPT_ENSURE(JPT_ARGS_COUNT(false) == 1);
+    JPT_ENSURE(JPT_ARGS_COUNT(1, 2, 3) == 3);
+    JPT_ENSURE(JPT_ARGS_COUNT(1, "2", 3, 'c') == 4);
 
     return true;
 }

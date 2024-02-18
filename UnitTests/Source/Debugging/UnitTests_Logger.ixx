@@ -38,7 +38,7 @@ bool UnitTest_Logger_Data()
 	JPT_LOG(foo.ToString().ConstBuffer());
 	JPT_LOG("%s", foo.ToString().ConstBuffer());
 
-	JPT_ENSURE(jpt::ToString(foo) != "I am a Foo object", "");
+	JPT_ENSURE(jpt::ToString(foo) != "I am a Foo object");
 
 	return true;
 }

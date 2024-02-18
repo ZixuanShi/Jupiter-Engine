@@ -16,40 +16,40 @@ bool UnitTest_RemoveTraits()
 	bool value = false;
 
 	value = jpt::IsSameType<typename jpt::RemoveReference<T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveReference<T&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveReference<T&&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveConst<T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveConst<const T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RTValueoLValueReference<T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RTValueoLValueReference<T&&>::Type, T&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveReference<const T&>::Type, const T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	typename jpt::RemoveConst<const T&>::Type foo = T();
 	value = jpt::IsSameType<decltype(foo), const T&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	typename jpt::RemoveReference<decltype(foo)>::Type bar = foo;
 	value = jpt::IsSameType<decltype(bar), const T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	typename jpt::RemoveConst<decltype(bar)>::Type baz = foo;
 	value = jpt::IsSameType<decltype(baz), T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -60,22 +60,22 @@ bool UnitTest_Decay()
 	bool value = false;
 
 	value = jpt::IsSameType<typename jpt::Decay<T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::Decay<T&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::Decay<T&&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::Decay<const T>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::Decay<const T&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::Decay<const T&&>::Type, T>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -85,10 +85,10 @@ bool UnitTest_IsLValueRefType()
 	bool value = false;
 
 	value = jpt::IsLValueRef<int32>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::IsLValueRef<int32&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -98,10 +98,10 @@ bool UnitTest_IsRValueRefType()
 	bool value = false;
 
 	value = jpt::IsRValueRef<int32>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsRValueRef<int32&&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -111,13 +111,13 @@ bool UnitTest_IsRef()
 	bool value = false;
 
 	value = jpt::IsRef<int32>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::IsRef<int32&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsRef<int32&&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -127,34 +127,34 @@ bool UnitTest_IsSameType()
 	bool value = false;
 
 	value = jpt::IsSameType<int32, int32>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<int32, int32&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::IsSameType<int32&, int32&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<int32, float>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::IsSameType<float, float>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<jpt::String, jpt::String>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<jpt::String&, jpt::String&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<jpt::String&&, jpt::String&&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<jpt::String&, jpt::String&&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::IsSameType<jpt::String, jpt::String&&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	return true;
 }
@@ -164,34 +164,34 @@ bool UnitTest_NotSameType()
 	bool value = false;
 
 	value = jpt::NotSameType<int32, int32>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<int32, int32&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::NotSameType<int32&, int32&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<int32, float>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::NotSameType<float, float>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<jpt::String, jpt::String>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<jpt::String&, jpt::String&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<jpt::String&&, jpt::String&&>;
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	value = jpt::NotSameType<jpt::String&, jpt::String&&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	value = jpt::NotSameType<jpt::String, jpt::String&&>;
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -215,50 +215,50 @@ bool UnitTest_IsAnyOf()
 		};
 
 	Foo<int32, float, char> foo;
-	JPT_ENSURE(foo.Work<int32>(), "");
-	JPT_ENSURE(!foo.Work<jpt::String>(), "");
+	JPT_ENSURE(foo.Work<int32>());
+	JPT_ENSURE(!foo.Work<jpt::String>());
 
 	int32 num = 10;
 	value = helper(num);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(10);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	float f = 10.0f;
 	value = helper(f);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(10.0f);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	double d = 10.0;
 	value = helper(d);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(10.0);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	const char* cstr = "Hello";
 	value = helper(cstr);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper("Hello");
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	jpt::String str = "Hello";
 	value = helper(str);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(jpt::String("Hello"));
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	jpt::WString wstr = L"Hello";
 	value = helper(wstr);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(jpt::WString(L"Hello"));
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	bool b = false;
 	value = helper(b);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(false);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	return true;
 }
@@ -273,45 +273,45 @@ bool UnitTest_NotAnyOf()
 
 	int32 num = 10;
 	value = helper(num);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(10);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	float f = 10.0f;
 	value = helper(f);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(10.0f);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	double d = 10.0;
 	value = helper(d);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(10.0);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	const char* cstr = "Hello";
 	value = helper(cstr);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper("Hello");
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	jpt::String str = "Hello";
 	value = helper(str);
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 	value = helper(jpt::String("Hello"));
-	JPT_ENSURE(!value, "");
+	JPT_ENSURE(!value);
 
 	jpt::WString wstr = L"Hello";
 	value = helper(wstr);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(jpt::WString(L"Hello"));
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	bool b = false;
 	value = helper(b);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 	value = helper(false);
-	JPT_ENSURE(value, "");
+	JPT_ENSURE(value);
 
 	return true;
 }
@@ -322,13 +322,13 @@ bool UnitTest_IsEmptyObj()
 	{
 	};
 
-	JPT_ENSURE(jpt::IsEmptyObj<Foo>, "");
+	JPT_ENSURE(jpt::IsEmptyObj<Foo>);
 
 	class Bar
 	{
 		int32 m_data = 10;
 	};
-	JPT_ENSURE(!jpt::IsEmptyObj<Bar>, "");
+	JPT_ENSURE(!jpt::IsEmptyObj<Bar>);
 
 	class Baz
 	{
@@ -336,33 +336,33 @@ bool UnitTest_IsEmptyObj()
 		Baz() = default;
 		Baz(int32 data) {JPT_IGNORE(data); }
 	};
-	JPT_ENSURE(jpt::IsEmptyObj<Baz>, "");
+	JPT_ENSURE(jpt::IsEmptyObj<Baz>);
 
 	class A
 	{
 	public:
 		virtual ~A() = default;
 	};
-	JPT_ENSURE(!jpt::IsEmptyObj<A>, "");
+	JPT_ENSURE(!jpt::IsEmptyObj<A>);
 
 	class B : public A
 	{
 	};
-	JPT_ENSURE(!jpt::IsEmptyObj<B>, "");
+	JPT_ENSURE(!jpt::IsEmptyObj<B>);
 
 	class C
 	{
 	public:
 		void Work() {}
 	};
-	JPT_ENSURE(jpt::IsEmptyObj<C>, "");
+	JPT_ENSURE(jpt::IsEmptyObj<C>);
 
 	class D
 	{
 	public:
 		static void Work() {}
 	};
-	JPT_ENSURE(jpt::IsEmptyObj<D>, "");
+	JPT_ENSURE(jpt::IsEmptyObj<D>);
 
 	return true;
 }
@@ -370,20 +370,20 @@ bool UnitTest_IsEmptyObj()
 bool UnitTest_IsArray()
 {
 	int32 num = 0;
-	JPT_ENSURE(!jpt::IsArray<decltype(num)>, "");
+	JPT_ENSURE(!jpt::IsArray<decltype(num)>);
 
 	int32 numArray[] = { 0,1 };
-	JPT_ENSURE(jpt::IsArray<decltype(numArray)>, "");
+	JPT_ENSURE(jpt::IsArray<decltype(numArray)>);
 	
 	int32 numArray2[2] = { 0,1 };
-	JPT_ENSURE(jpt::IsArray<decltype(numArray2)>, "");
+	JPT_ENSURE(jpt::IsArray<decltype(numArray2)>);
 
 	int32* num2 = new int;
-	JPT_ENSURE(!jpt::IsArray<decltype(num2)>, "");
+	JPT_ENSURE(!jpt::IsArray<decltype(num2)>);
 	JPT_DELETE(num2);
 
 	int32* numArray3 = new int[2];
-	JPT_ENSURE(!jpt::IsArray<decltype(numArray3)>, "");
+	JPT_ENSURE(!jpt::IsArray<decltype(numArray3)>);
 	JPT_DELETE(numArray3);
 
 	return true;

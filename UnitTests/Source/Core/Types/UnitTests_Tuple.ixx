@@ -36,12 +36,12 @@ bool UnitTest_Tuple()
 	jpt::Tuple<int, char, bool, Foo, int, jpt::String> tuple{3, 'C', false, Foo(10), 4, "Hello"};
 	
 	// Initializing
-	JPT_ENSURE(jpt::Get<0>(tuple) == 3, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'C', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == false, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 4, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 3);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'C');
+	JPT_ENSURE(jpt::Get<2>(tuple) == false);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 4);
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello");
 
 	// Copy assign
 	jpt::Get<0>(tuple) = 42;
@@ -51,12 +51,12 @@ bool UnitTest_Tuple()
 	jpt::Get<4>(tuple) = 0;
 	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_ENSURE(jpt::Get<0>(tuple) == 42, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'A', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == true, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 0, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello World", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 42);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'A');
+	JPT_ENSURE(jpt::Get<2>(tuple) == true);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 0);
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello World");
 
 	// Move assign
 	Foo foo(420);
@@ -65,12 +65,12 @@ bool UnitTest_Tuple()
 	jpt::Get<3>(tuple) = jpt::Move(foo);
 	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420), "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine", "");
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 	
 	// Get Size
 	// Warning	C4127	conditional expression is constant :)
-	//JPT_ENSURE(jpt::GetSize(tuple) == 6, "");
+	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
 }
@@ -87,12 +87,12 @@ bool UnitTest_EmptyTuple()
 	jpt::Get<4>(tuple) = 0;
 	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_ENSURE(jpt::Get<0>(tuple) == 42, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'A', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == true, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 0, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == " World", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 42);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'A');
+	JPT_ENSURE(jpt::Get<2>(tuple) == true);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 0);
+	JPT_ENSURE(jpt::Get<5>(tuple) == " World");
 
 	// Move assign
 	char c = 'C';
@@ -103,12 +103,12 @@ bool UnitTest_EmptyTuple()
 	jpt::Get<3>(tuple) = jpt::Move(foo);
 	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'C', "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420), "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine", "");
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'C');
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 
 	// Get Size
-	//JPT_ENSURE(jpt::GetSize(tuple) == 6, "");
+	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
 }
@@ -118,14 +118,14 @@ bool UnitTest_ConstTuple()
 	const jpt::Tuple<int, char, bool, Foo, jpt::String> tuple{ 3, 'C', false, Foo(10), "Hello" };
 
 	// Initializing
-	JPT_ENSURE(jpt::Get<0>(tuple) == 3, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'C', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == false, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == "Hello", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 3);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'C');
+	JPT_ENSURE(jpt::Get<2>(tuple) == false);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10));
+	JPT_ENSURE(jpt::Get<4>(tuple) == "Hello");
 
 	// Get Size
-	//JPT_ENSURE(jpt::GetSize(tuple) == 5, "");
+	//JPT_ENSURE(jpt::GetSize(tuple) == 5);
 
 	return true;
 }
@@ -135,31 +135,31 @@ bool UnitTest_ConstTDatauple()
 	jpt::Tuple<int, char, const bool, Foo, const int, const jpt::String> tuple{ 3, 'C', false, Foo(10), 4, "Hello" };
 
 	// Initializing
-	JPT_ENSURE(jpt::Get<0>(tuple) == 3, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'C', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == false, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 4, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 3);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'C');
+	JPT_ENSURE(jpt::Get<2>(tuple) == false);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 4);
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello");
 
 	// Copy assign
 	jpt::Get<0>(tuple) = 42;
 	jpt::Get<1>(tuple) = 'A';
 	jpt::Get<3>(tuple) = Foo(42);
 
-	JPT_ENSURE(jpt::Get<0>(tuple) == 42, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'A', "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42), "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 42);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'A');
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42));
 
 	// Move assign
 	Foo foo(420);
 
 	jpt::Get<3>(tuple) = jpt::Move(foo);
 
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420), "");
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
 
 	// Get Size
-	//JPT_ENSURE(jpt::GetSize(tuple) == 6, "");
+	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
 }
@@ -169,12 +169,12 @@ bool UnitTest_Tie()
 	auto tuple = jpt::Tie(3, 'C', false, Foo(10), 4, jpt::String("Hello"));
 
 	// Initializing
-	JPT_ENSURE(jpt::Get<0>(tuple) == 3, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'C', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == false, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 4, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 3);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'C');
+	JPT_ENSURE(jpt::Get<2>(tuple) == false);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 4);
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello");
 
 	// Copy assign
 	jpt::Get<0>(tuple) = 42;
@@ -184,12 +184,12 @@ bool UnitTest_Tie()
 	jpt::Get<4>(tuple) = 0;
 	jpt::Get<5>(tuple).Append(" World");
 
-	JPT_ENSURE(jpt::Get<0>(tuple) == 42, "");
-	JPT_ENSURE(jpt::Get<1>(tuple) == 'A', "");
-	JPT_ENSURE(jpt::Get<2>(tuple) == true, "");
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42), "");
-	JPT_ENSURE(jpt::Get<4>(tuple) == 0, "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello World", "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 42);
+	JPT_ENSURE(jpt::Get<1>(tuple) == 'A');
+	JPT_ENSURE(jpt::Get<2>(tuple) == true);
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(42));
+	JPT_ENSURE(jpt::Get<4>(tuple) == 0);
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Hello World");
 
 	// Move assign
 	Foo foo(420);
@@ -198,11 +198,11 @@ bool UnitTest_Tie()
 	jpt::Get<3>(tuple) = jpt::Move(foo);
 	jpt::Get<5>(tuple) = jpt::Move(str);
 
-	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420), "");
-	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine", "");
+	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
+	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 
 	// Get Size
-	//JPT_ENSURE(jpt::GetSize(tuple) == 6, "");
+	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
 }
@@ -211,8 +211,8 @@ bool UnitTest_OneTypeTuple()
 {
 	jpt::Tuple<int> tuple{42};
 
-	JPT_ENSURE(jpt::Get<0>(tuple) == 42, "");
-	//JPT_ENSURE(jpt::GetSize(tuple) == 1, "");
+	JPT_ENSURE(jpt::Get<0>(tuple) == 42);
+	//JPT_ENSURE(jpt::GetSize(tuple) == 1);
 
 	return true;
 }

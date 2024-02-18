@@ -32,7 +32,7 @@ bool UnitTest_StaticArray_Constructing_Trivial()
     int32 i = 0;
     for (int32 element : staticArray)
     {
-        JPT_ENSURE(element == i, "");
+        JPT_ENSURE(element == i);
         ++i;
     }
 
@@ -44,7 +44,7 @@ bool UnitTest_StaticArray_Constructing_Trivial()
     i = 0;
     for (int32 element : staticArray)
     {
-        JPT_ENSURE(element == i * 2, "");
+        JPT_ENSURE(element == i * 2);
         ++i;
     }
 
@@ -58,7 +58,7 @@ bool UnitTest_StaticArray_Constructing_NonTrivial()
     size_t i = 0;
     for (const jpt::String& element : staticArray)
     {
-        JPT_ENSURE(element == locHelper(i++), "");
+        JPT_ENSURE(element == locHelper(i++));
     }
 
     for (i = 0; i < staticArray.Size() / 2; ++i)
@@ -69,7 +69,7 @@ bool UnitTest_StaticArray_Constructing_NonTrivial()
     i = staticArray.Size() - 1;
     for (const jpt::String& element : staticArray)
     {
-        JPT_ENSURE(element == locHelper(i--), "");
+        JPT_ENSURE(element == locHelper(i--));
     }
 
     return true;
@@ -85,7 +85,7 @@ bool UnitTest_StaticArray_Copying_Trivial()
     int32 i = 0;
     for (int32 element : staticArray1)
     {
-        JPT_ENSURE(element == i, "");
+        JPT_ENSURE(element == i);
         ++i;
     }
 
@@ -102,7 +102,7 @@ bool UnitTest_StaticArray_Copying_NonTrivial()
     size_t i = 0;
     for (const jpt::String& element : staticArray1)
     {
-        JPT_ENSURE(element == locHelper(i++), "");
+        JPT_ENSURE(element == locHelper(i++));
     }
     
     return true;
@@ -118,7 +118,7 @@ bool UnitTest_StaticArray_Moving()
     size_t i = 0;
     for (const jpt::String& element : staticArray1)
     {
-        JPT_ENSURE(element == locHelper(i++), "");
+        JPT_ENSURE(element == locHelper(i++));
     }
 
     //JPT_LOG(staticArray1);
@@ -136,7 +136,7 @@ bool UnitTest_StaticArray_HeapAllocating()
     size_t i = 0;
     for (const jpt::String* element : staticArray1)
     {
-        JPT_ENSURE(*element == locHelper(i++), "");
+        JPT_ENSURE(*element == locHelper(i++));
     }
 
     for (jpt::String* element : staticArray1)

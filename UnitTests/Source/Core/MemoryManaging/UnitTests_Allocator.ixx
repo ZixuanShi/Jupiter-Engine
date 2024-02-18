@@ -115,37 +115,37 @@ bool UnitTest_TAllocator_NonTrivial()
 	jpt::Allocator<Foo> allocator;
 
 	Foo* pFoo = allocator.Allocate();
-	JPT_ENSURE(pFoo != nullptr, "");
+	JPT_ENSURE(pFoo != nullptr);
 	allocator.Deallocate(pFoo);
 
 	Foo* pFooWithArgs = allocator.AllocateWithValue(jpt::String("Bar"));
-	JPT_ENSURE(pFooWithArgs != nullptr, "");
-	JPT_ENSURE(pFooWithArgs->ToString() == "FooBar", "");
+	JPT_ENSURE(pFooWithArgs != nullptr);
+	JPT_ENSURE(pFooWithArgs->ToString() == "FooBar");
 	allocator.Deallocate(pFooWithArgs);
 
 	Foo* pFooArray = allocator.AllocateArray(10, { Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9") });
-	JPT_ENSURE(pFooArray != nullptr, "");
+	JPT_ENSURE(pFooArray != nullptr);
 	for (size_t i = 0; i < 10; ++i)
 	{
-		JPT_ENSURE(pFooArray[i].ToString() == "Foo" + jpt::ToString(i), "");
+		JPT_ENSURE(pFooArray[i].ToString() == "Foo" + jpt::ToString(i));
 	}
 	allocator.DeallocateArray(pFooArray);
 
 	Foo* pConstructedFoo = allocator.Allocate();
 	allocator.Construct(pConstructedFoo, Foo("Bar"));
-	JPT_ENSURE(pConstructedFoo != nullptr, "");
-	JPT_ENSURE(pConstructedFoo->ToString() == "FooBar", "");
+	JPT_ENSURE(pConstructedFoo != nullptr);
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBar");
 	allocator.Destruct(pConstructedFoo);
 
 	Foo anotherFoo = jpt::String("Baz");
 	allocator.Construct(pConstructedFoo, anotherFoo);
-	JPT_ENSURE(pConstructedFoo != nullptr, "");
-	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz", "");
+	JPT_ENSURE(pConstructedFoo != nullptr);
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz");
 	allocator.Destruct(pConstructedFoo);
 
 	allocator.Construct(pConstructedFoo, jpt::Move(anotherFoo));
-	JPT_ENSURE(pConstructedFoo != nullptr, "");
-	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz", "");
+	JPT_ENSURE(pConstructedFoo != nullptr);
+	JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz");
 	allocator.Destruct(pConstructedFoo);
 
 	allocator.Deallocate(pConstructedFoo);

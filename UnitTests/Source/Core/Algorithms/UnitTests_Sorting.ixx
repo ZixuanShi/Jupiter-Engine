@@ -18,7 +18,7 @@ bool UnitTest_Sorting_Basic()
     jpt::DynamicArray<int32> array{ 2,3,1,0,4 };
 
     jpt::Sort(array);
-    JPT_ENSURE((array == jpt::DynamicArray<int32>{ 0, 1, 2, 3, 4 }), "");
+    JPT_ENSURE((array == jpt::DynamicArray<int32>{ 0, 1, 2, 3, 4 }));
 
     return true;
 }
@@ -44,7 +44,7 @@ bool UnitTest_Sorting_Random()
     {
         if (i <= kArraySize)
         {
-            JPT_ENSURE(array[i] >= array[i + 1], "");
+            JPT_ENSURE(array[i] >= array[i + 1]);
         }
     }
 

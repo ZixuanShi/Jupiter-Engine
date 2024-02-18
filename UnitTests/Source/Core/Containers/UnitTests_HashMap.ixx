@@ -25,20 +25,20 @@ bool UnitTest_HashMap_Trivial()
     map['d'] = 4;
     map['e'] = 5;
 
-    JPT_ENSURE(map['a'] == 3, "");
-    JPT_ENSURE(map['b'] == 1, "");
-    JPT_ENSURE(map['c'] == 2, "");
-    JPT_ENSURE(map['d'] == 4, "");
-    JPT_ENSURE(map['e'] == 5, "");
+    JPT_ENSURE(map['a'] == 3);
+    JPT_ENSURE(map['b'] == 1);
+    JPT_ENSURE(map['c'] == 2);
+    JPT_ENSURE(map['d'] == 4);
+    JPT_ENSURE(map['e'] == 5);
 
     // Erasing
     map.Erase('e');
 
     // Searching
-    JPT_ENSURE(map.Contains('a'), "");
-    JPT_ENSURE(!map.Contains('e'), "");
-    JPT_ENSURE(map.Find('a')->second == 3, "");
-    JPT_ENSURE(map.Find('e') == map.end(), "");
+    JPT_ENSURE(map.Contains('a'));
+    JPT_ENSURE(!map.Contains('e'));
+    JPT_ENSURE(map.Find('a')->second == 3);
+    JPT_ENSURE(map.Find('e') == map.end());
 
     // Modifiying
     //JPT_LOG(map);
@@ -46,7 +46,7 @@ bool UnitTest_HashMap_Trivial()
     //JPT_LOG(map);
 
     // Capacity
-    JPT_ENSURE(map.IsEmpty(), "");
+    JPT_ENSURE(map.IsEmpty());
 
     return true;
 }
@@ -54,23 +54,23 @@ bool UnitTest_HashMap_Trivial()
 bool UnitTest_HashMap_Trivial_Copy()
 {
     jpt::HashMap<char, int32> map{ {'a', 1},{'b', 2},{'c', 3} };
-    JPT_ENSURE(map['a'] == 1, "");
-    JPT_ENSURE(map['b'] == 2, "");
-    JPT_ENSURE(map['c'] == 3, "");
-    JPT_ENSURE(map.Size() == 3, "");
+    JPT_ENSURE(map['a'] == 1);
+    JPT_ENSURE(map['b'] == 2);
+    JPT_ENSURE(map['c'] == 3);
+    JPT_ENSURE(map.Size() == 3);
 
     jpt::HashMap<char, int32> otherMap(map);
-    JPT_ENSURE(otherMap['a'] == 1, "");
-    JPT_ENSURE(otherMap['b'] == 2, "");
-    JPT_ENSURE(otherMap['c'] == 3, "");
-    JPT_ENSURE(otherMap.Size() == 3, "");
+    JPT_ENSURE(otherMap['a'] == 1);
+    JPT_ENSURE(otherMap['b'] == 2);
+    JPT_ENSURE(otherMap['c'] == 3);
+    JPT_ENSURE(otherMap.Size() == 3);
 
     jpt::HashMap<char, int32> otherMap2;
     otherMap2 = otherMap;
-    JPT_ENSURE(otherMap2['a'] == 1, "");
-    JPT_ENSURE(otherMap2['b'] == 2, "");
-    JPT_ENSURE(otherMap2['c'] == 3, "");
-    JPT_ENSURE(otherMap2.Size() == 3, "");
+    JPT_ENSURE(otherMap2['a'] == 1);
+    JPT_ENSURE(otherMap2['b'] == 2);
+    JPT_ENSURE(otherMap2['c'] == 3);
+    JPT_ENSURE(otherMap2.Size() == 3);
 
     //JPT_LOG(map);
     //JPT_LOG(otherMap);
@@ -82,25 +82,25 @@ bool UnitTest_HashMap_Trivial_Copy()
 bool UnitTest_HashMap_Trivial_Move()
 {
     jpt::HashMap<char, int32> map{ {'a', 1},{'b', 2},{'c', 3} };
-    JPT_ENSURE(map['a'] == 1, "");
-    JPT_ENSURE(map['b'] == 2, "");
-    JPT_ENSURE(map['c'] == 3, "");
-    JPT_ENSURE(map.Size() == 3, "");
+    JPT_ENSURE(map['a'] == 1);
+    JPT_ENSURE(map['b'] == 2);
+    JPT_ENSURE(map['c'] == 3);
+    JPT_ENSURE(map.Size() == 3);
 
     jpt::HashMap<char, int32> otherMap(jpt::Move(map));
-    JPT_ENSURE(otherMap['a'] == 1, "");
-    JPT_ENSURE(otherMap['b'] == 2, "");
-    JPT_ENSURE(otherMap['c'] == 3, "");
-    JPT_ENSURE(otherMap.Size() == 3, "");
-    JPT_ENSURE(map.IsEmpty(), "");
+    JPT_ENSURE(otherMap['a'] == 1);
+    JPT_ENSURE(otherMap['b'] == 2);
+    JPT_ENSURE(otherMap['c'] == 3);
+    JPT_ENSURE(otherMap.Size() == 3);
+    JPT_ENSURE(map.IsEmpty());
 
     jpt::HashMap<char, int32> otherMap2;
     otherMap2 = jpt::Move(otherMap);
-    JPT_ENSURE(otherMap2['a'] == 1, "");
-    JPT_ENSURE(otherMap2['b'] == 2, "");
-    JPT_ENSURE(otherMap2['c'] == 3, "");
-    JPT_ENSURE(otherMap2.Size() == 3, "");
-    JPT_ENSURE(otherMap.IsEmpty(), "");
+    JPT_ENSURE(otherMap2['a'] == 1);
+    JPT_ENSURE(otherMap2['b'] == 2);
+    JPT_ENSURE(otherMap2['c'] == 3);
+    JPT_ENSURE(otherMap2.Size() == 3);
+    JPT_ENSURE(otherMap.IsEmpty());
 
     //JPT_LOG(map);
     //JPT_LOG(otherMap);
@@ -122,20 +122,20 @@ bool UnitTest_HashMap_NonTrivial()
     map["Champ E"] =  "Zac";
 
     // Inserting
-    JPT_ENSURE(map["Champ A"] == "Morde", "");
-    JPT_ENSURE(map["Champ B"] == "Darius", "");
-    JPT_ENSURE(map["Champ C"] == "Jax", "");
-    JPT_ENSURE(map["Champ D"] == "Nasus", "");
-    JPT_ENSURE(map["Champ E"] == "Zac", "");
+    JPT_ENSURE(map["Champ A"] == "Morde");
+    JPT_ENSURE(map["Champ B"] == "Darius");
+    JPT_ENSURE(map["Champ C"] == "Jax");
+    JPT_ENSURE(map["Champ D"] == "Nasus");
+    JPT_ENSURE(map["Champ E"] == "Zac");
 
     // Erasing
     map.Erase("Champ E");
 
     // Searching
-    JPT_ENSURE(map.Contains("Champ A"), "");
-    JPT_ENSURE(!map.Contains("Champ E"), "");
-    JPT_ENSURE(map.Find("Champ A")->second == "Morde", "");
-    JPT_ENSURE(map.Find("Champ E") == map.end(), "");
+    JPT_ENSURE(map.Contains("Champ A"));
+    JPT_ENSURE(!map.Contains("Champ E"));
+    JPT_ENSURE(map.Find("Champ A")->second == "Morde");
+    JPT_ENSURE(map.Find("Champ E") == map.end());
 
     // Modifiying
     //JPT_LOG(map);
@@ -143,7 +143,7 @@ bool UnitTest_HashMap_NonTrivial()
     //JPT_LOG(map);
 
     // Capacity
-    JPT_ENSURE(map.IsEmpty(), "");
+    JPT_ENSURE(map.IsEmpty());
 
     return true;
 }
@@ -151,23 +151,23 @@ bool UnitTest_HashMap_NonTrivial()
 bool UnitTest_HashMap_NonTrivial_Copy()
 {
     jpt::HashMap<jpt::String, jpt::String> map{ {"Champ A", "Aatrox"},{"Champ B","Jax"},{"Champ C", "Darius"} };
-    JPT_ENSURE(map["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(map["Champ B"] == "Jax"   , "");
-    JPT_ENSURE(map["Champ C"] == "Darius", "");
-    JPT_ENSURE(map.Size() == 3, "");
+    JPT_ENSURE(map["Champ A"] == "Aatrox");
+    JPT_ENSURE(map["Champ B"] == "Jax"   );
+    JPT_ENSURE(map["Champ C"] == "Darius");
+    JPT_ENSURE(map.Size() == 3);
 
     jpt::HashMap<jpt::String, jpt::String> otherMap(map);
-    JPT_ENSURE(otherMap["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(otherMap["Champ B"] == "Jax"   , "");
-    JPT_ENSURE(otherMap["Champ C"] == "Darius", "");
-    JPT_ENSURE(otherMap.Size() == 3, "");
+    JPT_ENSURE(otherMap["Champ A"] == "Aatrox");
+    JPT_ENSURE(otherMap["Champ B"] == "Jax"   );
+    JPT_ENSURE(otherMap["Champ C"] == "Darius");
+    JPT_ENSURE(otherMap.Size() == 3);
 
     jpt::HashMap<jpt::String, jpt::String> otherMap2;
     otherMap2 = otherMap;
-    JPT_ENSURE(otherMap2["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(otherMap2["Champ B"] == "Jax"   , "");
-    JPT_ENSURE(otherMap2["Champ C"] == "Darius", "");
-    JPT_ENSURE(otherMap2.Size() == 3, "");
+    JPT_ENSURE(otherMap2["Champ A"] == "Aatrox");
+    JPT_ENSURE(otherMap2["Champ B"] == "Jax"   );
+    JPT_ENSURE(otherMap2["Champ C"] == "Darius");
+    JPT_ENSURE(otherMap2.Size() == 3);
 
     //JPT_LOG(map);
     //JPT_LOG(otherMap);
@@ -179,23 +179,23 @@ bool UnitTest_HashMap_NonTrivial_Copy()
 bool UnitTest_HashMap_NonTrivial_Move()
 {
     jpt::HashMap<jpt::String, jpt::String> map{ {"Champ A", "Aatrox"},{"Champ B","Jax"},{"Champ C", "Darius"} };
-    JPT_ENSURE(map["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(map["Champ B"] == "Jax", "");
-    JPT_ENSURE(map["Champ C"] == "Darius", "");
-    JPT_ENSURE(map.Size() == 3, "");
+    JPT_ENSURE(map["Champ A"] == "Aatrox");
+    JPT_ENSURE(map["Champ B"] == "Jax");
+    JPT_ENSURE(map["Champ C"] == "Darius");
+    JPT_ENSURE(map.Size() == 3);
 
     jpt::HashMap<jpt::String, jpt::String> otherMap(jpt::Move(map));
-    JPT_ENSURE(otherMap["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(otherMap["Champ B"] == "Jax"   , "");
-    JPT_ENSURE(otherMap["Champ C"] == "Darius", "");
-    JPT_ENSURE(otherMap.Size() == 3, "");
+    JPT_ENSURE(otherMap["Champ A"] == "Aatrox");
+    JPT_ENSURE(otherMap["Champ B"] == "Jax"   );
+    JPT_ENSURE(otherMap["Champ C"] == "Darius");
+    JPT_ENSURE(otherMap.Size() == 3);
 
     jpt::HashMap<jpt::String, jpt::String> otherMap2;
     otherMap2 = jpt::Move(otherMap);
-    JPT_ENSURE(otherMap2["Champ A"] == "Aatrox", "");
-    JPT_ENSURE(otherMap2["Champ B"] == "Jax"   , "");
-    JPT_ENSURE(otherMap2["Champ C"] == "Darius", "");
-    JPT_ENSURE(otherMap2.Size() == 3, "");
+    JPT_ENSURE(otherMap2["Champ A"] == "Aatrox");
+    JPT_ENSURE(otherMap2["Champ B"] == "Jax"   );
+    JPT_ENSURE(otherMap2["Champ C"] == "Darius");
+    JPT_ENSURE(otherMap2.Size() == 3);
 
     //JPT_LOG(map);
     //JPT_LOG(otherMap);
@@ -223,10 +223,10 @@ bool UnitTest_HashMap_Function()
     int32 i = 0;
 
     map["Func1"](i);
-    JPT_ENSURE(i == 1, "");
+    JPT_ENSURE(i == 1);
     
     map["Func2"](i);
-    JPT_ENSURE(i == 3, "");
+    JPT_ENSURE(i == 3);
 
     return true;
 }

@@ -19,85 +19,85 @@ template<typename EType>
 bool UnitTest_Enum_NonSequence()
 {
 	// Static data
-	JPT_ENSURE(EType::Count() == 4, "");
-	JPT_ENSURE(EType::Min() == EType::Apple, "");
-	JPT_ENSURE(EType::Max() == EType::Grape, "");
+	JPT_ENSURE(EType::Count() == 4);
+	JPT_ENSURE(EType::Min() == EType::Apple);
+	JPT_ENSURE(EType::Max() == EType::Grape);
 
 	// Comparing
 	EType fruit(EType::Banana);
-	JPT_ENSURE(fruit == 6, "");
-	JPT_ENSURE(fruit == "Banana", "");
-	JPT_ENSURE(fruit == EType::Banana, "");
-	JPT_ENSURE(fruit > EType::Apple, "");
-	JPT_ENSURE(fruit < EType::Orange, "");
-	JPT_ENSURE(fruit != EType::Grape, "");
+	JPT_ENSURE(fruit == 6);
+	JPT_ENSURE(fruit == "Banana");
+	JPT_ENSURE(fruit == EType::Banana);
+	JPT_ENSURE(fruit > EType::Apple);
+	JPT_ENSURE(fruit < EType::Orange);
+	JPT_ENSURE(fruit != EType::Grape);
 
 	// Math operations
 	--fruit;
-	JPT_ENSURE(fruit == 5, "");
-	JPT_ENSURE(fruit == "Apple", "");
-	JPT_ENSURE(fruit == EType::Apple, "");
+	JPT_ENSURE(fruit == 5);
+	JPT_ENSURE(fruit == "Apple");
+	JPT_ENSURE(fruit == EType::Apple);
 
 	++fruit;
-	JPT_ENSURE(fruit == 6, "");
-	JPT_ENSURE(fruit == "Banana", "");
-	JPT_ENSURE(fruit == EType::Banana, "");
+	JPT_ENSURE(fruit == 6);
+	JPT_ENSURE(fruit == "Banana");
+	JPT_ENSURE(fruit == EType::Banana);
 
 	fruit += 3;
-	JPT_ENSURE(fruit == 9, "");
-	JPT_ENSURE(fruit == "Orange", "");
-	JPT_ENSURE(fruit == EType::Orange, "");
+	JPT_ENSURE(fruit == 9);
+	JPT_ENSURE(fruit == "Orange");
+	JPT_ENSURE(fruit == EType::Orange);
 
 	fruit -= 3;
-	JPT_ENSURE(fruit == 6, "");
-	JPT_ENSURE(fruit == "Banana", "");
-	JPT_ENSURE(fruit == EType::Banana, "");
+	JPT_ENSURE(fruit == 6);
+	JPT_ENSURE(fruit == "Banana");
+	JPT_ENSURE(fruit == EType::Banana);
 
-	JPT_ENSURE(fruit + 3 == 9, "");
-	JPT_ENSURE(fruit + 3 == "Orange", "");
-	JPT_ENSURE(fruit + 3 == EType::Orange, "");
+	JPT_ENSURE(fruit + 3 == 9);
+	JPT_ENSURE(fruit + 3 == "Orange");
+	JPT_ENSURE(fruit + 3 == EType::Orange);
 
-	JPT_ENSURE(fruit - 1 == 5, "");
-	JPT_ENSURE(fruit - 1 == "Apple", "");
-	JPT_ENSURE(fruit - 1 == EType::Apple, "");
+	JPT_ENSURE(fruit - 1 == 5);
+	JPT_ENSURE(fruit - 1 == "Apple");
+	JPT_ENSURE(fruit - 1 == EType::Apple);
 
 	// Assigning
 	fruit = EType::Orange;
-	JPT_ENSURE(fruit == 9, "");
-	JPT_ENSURE(fruit == "Orange", "");
-	JPT_ENSURE(fruit == EType::Orange, "");
+	JPT_ENSURE(fruit == 9);
+	JPT_ENSURE(fruit == "Orange");
+	JPT_ENSURE(fruit == EType::Orange);
 
 	// Iterating
 	// for (const auto& pair : fruit)
 	for (const auto& [key, value] : fruit) // Structure binding is available too
 	{
 		if (key == 5)
-			JPT_ENSURE(value == "Apple", "");
+			JPT_ENSURE(value == "Apple");
 
 		if (key == 6)
-			JPT_ENSURE(value == "Banana", "");
+			JPT_ENSURE(value == "Banana");
 
 		if (key == 9)
-			JPT_ENSURE(value == "Orange", "");
+			JPT_ENSURE(value == "Orange");
 
 		if (key == 10)
-			JPT_ENSURE(value == "Grape", "");
+			JPT_ENSURE(value == "Grape");
 	}
 
 	// Assigning with different sized integer
 	// size_t
 	size_t i = 5;
 	fruit = i;
-	JPT_ENSURE(fruit == 5, "");
-	JPT_ENSURE(fruit == EType::Apple, "");
-	JPT_ENSURE(fruit == "Apple", "");
+	JPT_ENSURE(fruit == 5);
+	JPT_ENSURE(fruit == EType::Apple);
+	JPT_ENSURE(fruit == "Apple");
 
 	// int64
 	int64 j = 9;
 	fruit = j;
-	JPT_ENSURE(fruit == 9, "");
-	JPT_ENSURE(fruit == EType::Orange, "");
-	JPT_ENSURE(fruit == "Orange", "");
+	JPT_ENSURE(fruit == 9);
+	JPT_ENSURE(fruit == EType::Orange);
+	JPT_ENSURE(fruit == "Orange");
 
 	return true;
 }
@@ -111,35 +111,35 @@ template<typename EType>
 bool UnitTest_Enum_Sequence()
 {
 	// Static data
-	JPT_ENSURE(EType::Count() == 4, "");
-	JPT_ENSURE(EType::Min() == EType::Sword, "");
-	JPT_ENSURE(EType::Max() == EType::Axe, "");
+	JPT_ENSURE(EType::Count() == 4);
+	JPT_ENSURE(EType::Min() == EType::Sword);
+	JPT_ENSURE(EType::Max() == EType::Axe);
 
 	// Comparing
 	EType weapon(EType::Spear);
-	JPT_ENSURE(weapon == 1, "");
-	JPT_ENSURE(weapon == "Spear", "");
-	JPT_ENSURE(weapon == EType::Spear, "");
-	JPT_ENSURE(weapon > EType::Sword, "");
-	JPT_ENSURE(weapon < EType::Hammer, "");
-	JPT_ENSURE(weapon != EType::Axe, "");
+	JPT_ENSURE(weapon == 1);
+	JPT_ENSURE(weapon == "Spear");
+	JPT_ENSURE(weapon == EType::Spear);
+	JPT_ENSURE(weapon > EType::Sword);
+	JPT_ENSURE(weapon < EType::Hammer);
+	JPT_ENSURE(weapon != EType::Axe);
 
 	// Math operations
 	--weapon;
-	JPT_ENSURE(weapon == 0, "");
-	JPT_ENSURE(weapon == "Sword", "");
-	JPT_ENSURE(weapon == EType::Sword, "");
+	JPT_ENSURE(weapon == 0);
+	JPT_ENSURE(weapon == "Sword");
+	JPT_ENSURE(weapon == EType::Sword);
 
 	++weapon;
-	JPT_ENSURE(weapon == 1, "");
-	JPT_ENSURE(weapon == "Spear", "");
-	JPT_ENSURE(weapon == EType::Spear, "");
+	JPT_ENSURE(weapon == 1);
+	JPT_ENSURE(weapon == "Spear");
+	JPT_ENSURE(weapon == EType::Spear);
 
 	// Assigning
 	weapon = EType::Axe;
-	JPT_ENSURE(weapon == 3, "");
-	JPT_ENSURE(weapon == "Axe", "");
-	JPT_ENSURE(weapon == EType::Axe, "");
+	JPT_ENSURE(weapon == 3);
+	JPT_ENSURE(weapon == "Axe");
+	JPT_ENSURE(weapon == EType::Axe);
 
 	// for (const auto& pair : fruit)
 	// Iterating. This works on sequential enums
@@ -148,19 +148,19 @@ bool UnitTest_Enum_Sequence()
 		EType e(i);
 		if (e == EType::Sword)
 		{
-			JPT_ENSURE(e == "Sword", "");
+			JPT_ENSURE(e == "Sword");
 		}
 		if (e == EType::Spear)
 		{
-			JPT_ENSURE(e == "Spear", "");
+			JPT_ENSURE(e == "Spear");
 		}
 		if (e == EType::Hammer)
 		{
-			JPT_ENSURE(e == "Hammer", "");
+			JPT_ENSURE(e == "Hammer");
 		}
 		if (e == EType::Axe)
 		{
-			JPT_ENSURE(e == "Axe", "");
+			JPT_ENSURE(e == "Axe");
 		}
 	}
 
@@ -191,28 +191,28 @@ bool UnitTest_Enum_Flag()
 	EFlag_Local flag(EFlag_Local::A | EFlag_Local::G | EFlag_Local::P);
 
 	// |
-	JPT_ENSURE(!flag.Has(EFlag_Local::B), "");
+	JPT_ENSURE(!flag.Has(EFlag_Local::B));
 	flag |= EFlag_Local::B;
 
 	// &
-	JPT_ENSURE(flag.Has(EFlag_Local::A), "");
-	JPT_ENSURE(flag.Has(EFlag_Local::B), "");
-	JPT_ENSURE(flag.Has(EFlag_Local::G), "");
-	JPT_ENSURE(flag.Has(EFlag_Local::P), "");
-	JPT_ENSURE(!flag.Has(EFlag_Local::C), "");
+	JPT_ENSURE(flag.Has(EFlag_Local::A));
+	JPT_ENSURE(flag.Has(EFlag_Local::B));
+	JPT_ENSURE(flag.Has(EFlag_Local::G));
+	JPT_ENSURE(flag.Has(EFlag_Local::P));
+	JPT_ENSURE(!flag.Has(EFlag_Local::C));
 
 	flag &= EFlag_Local::B;
-	JPT_ENSURE(flag == EFlag_Local::B, "");
-	JPT_ENSURE(flag.Has(EFlag_Local::B), "");
-	JPT_ENSURE(!flag.Has(EFlag_Local::A), "");
-	JPT_ENSURE(!flag.Has(EFlag_Local::G), "");
-	JPT_ENSURE(!flag.Has(EFlag_Local::P), "");
+	JPT_ENSURE(flag == EFlag_Local::B);
+	JPT_ENSURE(flag.Has(EFlag_Local::B));
+	JPT_ENSURE(!flag.Has(EFlag_Local::A));
+	JPT_ENSURE(!flag.Has(EFlag_Local::G));
+	JPT_ENSURE(!flag.Has(EFlag_Local::P));
 
 	// ^
 	flag |= EFlag_Local::A;
 	flag ^= EFlag_Local::B;
-	JPT_ENSURE(flag == EFlag_Local::A, "");
-	JPT_ENSURE(!flag.Has(EFlag_Local::B), "");
+	JPT_ENSURE(flag == EFlag_Local::A);
+	JPT_ENSURE(!flag.Has(EFlag_Local::B));
 
 	// ~
 	flag = ~flag;
@@ -220,11 +220,11 @@ bool UnitTest_Enum_Flag()
 	{
 		if (key == EFlag_Local::A)
 		{
-			JPT_ENSURE(!flag.Has(EFlag_Local::EValues(key)), "");
+			JPT_ENSURE(!flag.Has(EFlag_Local::EValues(key)));
 		}
 		else
 		{
-			JPT_ENSURE(flag.Has(EFlag_Local::EValues(key)), "");
+			JPT_ENSURE(flag.Has(EFlag_Local::EValues(key)));
 		}
 	}
 

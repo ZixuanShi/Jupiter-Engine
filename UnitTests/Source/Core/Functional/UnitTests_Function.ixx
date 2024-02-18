@@ -24,14 +24,14 @@ bool UnitTest_Function()
 {
     jpt::Function<bool(int32&)> function = TestFunction1;
     int32 n = 5;
-    JPT_ENSURE(function(n), "");
-    JPT_ENSURE(n == 5, "");
+    JPT_ENSURE(function(n));
+    JPT_ENSURE(n == 5);
 
     n = 10;
-    JPT_ENSURE(!function(n), "");
-	JPT_ENSURE(n == 100, "");
+    JPT_ENSURE(!function(n));
+	JPT_ENSURE(n == 100);
 
-    jpt::Function<bool(int32)> function2 = [](int32 n) { JPT_ENSURE(n == 5, ""); return true; };
+    jpt::Function<bool(int32)> function2 = [](int32 n) { JPT_ENSURE(n == 5); return true; };
     function2(5);
 
     return true;
@@ -51,12 +51,12 @@ bool UnitTest_Lambda()
         };
     jpt::Function<bool(int32&)> function = lambda;
     int32 n = 5;
-    JPT_ENSURE(function(n), "");
-    JPT_ENSURE(n == 5, "");
+    JPT_ENSURE(function(n));
+    JPT_ENSURE(n == 5);
 
     n = 10;
-    JPT_ENSURE(!function(n), "");
-    JPT_ENSURE(n == 100, "");
+    JPT_ENSURE(!function(n));
+    JPT_ENSURE(n == 100);
     
     return true;
 }
