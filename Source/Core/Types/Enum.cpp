@@ -7,18 +7,19 @@
 
 using namespace jpt;
 
-EnumData GenerateData(const char* pSource)
+template<jpt::Integral TInt>
+EnumData<TInt> GenerateData(const char* pSource)
 {
-	EnumData data;
+	EnumData<TInt> data;
 
 	// Parse source to individual tokens. Each token is a name=value pair. where value is optional.
 	jpt::String source = pSource;
 	source.Replace(" ", "");
 	const jpt::DynamicArray<jpt::String> tokens = source.Split(',');
-	data.count = static_cast<TEnumSize>(tokens.Size());
+	data.count = static_cast<TInt>(tokens.Size());
 
 	// Parse each token to extract name and value.
-	TEnumSize key = 0;
+	TInt key = 0;
 	for (size_t i = 0; i < tokens.Size(); ++i)
 	{
 		const jpt::String& token = tokens[i];
@@ -29,7 +30,7 @@ EnumData GenerateData(const char* pSource)
 		{
 			name = tokens[i].SubStr(0, equalIndex);
 			const jpt::String valueStr = tokens[i].SubStr(equalIndex + 1, tokens[i].Size() - equalIndex - 1);
-			key = jpt::CStrToInteger<char, TEnumSize>(valueStr.ConstBuffer());
+			key = jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer());
 		}
 
 		// Update min and max values
@@ -49,3 +50,9 @@ EnumData GenerateData(const char* pSource)
 
 	return data;
 }
+
+// Explicit template instantiations
+template EnumData<uint8>  GenerateData(const char* pSource);
+template EnumData<uint16> GenerateData(const char* pSource);
+template EnumData<uint32> GenerateData(const char* pSource);
+template EnumData<uint64> GenerateData(const char* pSource);

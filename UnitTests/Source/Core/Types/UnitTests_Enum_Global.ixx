@@ -8,13 +8,13 @@ module;
 export module UnitTests_Enum_Global;
 
 // Global Enum
-export JPT_ENUM(EFruit_Global,
+export JPT_ENUM_UINT8(EFruit_Global,
 	Apple = 5,
 	Banana,
 	Orange = 9,
 	Grape);
 
-export JPT_ENUM(EWeapon_Global,
+export JPT_ENUM_UINT8(EWeapon_Global,
 	Sword,
 	Spear,
 	Hammer,
@@ -24,13 +24,13 @@ export JPT_ENUM(EWeapon_Global,
 export class GlobalEnumContainer
 {
 public:
-	JPT_ENUM(EFruit_GlobalEnumContainer,
+	JPT_ENUM_UINT8(EFruit_Nested,
 		Apple = 5,
 		Banana,
 		Orange = 9,
 		Grape);
 
-	JPT_ENUM(EWeapon_GlobalEnumContainer,
+	JPT_ENUM_UINT8(EWeapon_Nested,
 		Sword,
 		Spear,
 		Hammer,
