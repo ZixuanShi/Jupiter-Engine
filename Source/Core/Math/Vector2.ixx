@@ -57,6 +57,30 @@ export namespace jpt
 	};
 
 	template<Numeric T>
+	constexpr Vector2<T> operator+(T scaler, Vector2<T> vector2)
+	{
+		return vector2 + scaler;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> operator-(T scaler, Vector2<T> vector2)
+	{
+		return vector2 - scaler;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> operator*(T scaler, Vector2<T> vector2)
+	{
+		return vector2 * scaler;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> operator/(T scaler, Vector2<T> vector2)
+	{
+		return vector2 / scaler;
+	}
+
+	template<Numeric T>
 	constexpr Vector2<T>::Vector2(T x, T y)
 		: x(x)
 		, y(y)

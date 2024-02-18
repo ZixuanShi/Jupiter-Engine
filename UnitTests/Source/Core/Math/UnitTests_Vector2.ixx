@@ -12,7 +12,10 @@ bool UnitTest_Vec2f()
 {
     jpt::Vec2f v;
 
-    jpt::Vec2f::Dot(v, v);
+    v + 1.0f;
+
+    1.0f + v;
+
 
     return true;
 }

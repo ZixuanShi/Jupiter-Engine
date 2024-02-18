@@ -32,7 +32,7 @@ EnumData<TInt> GenerateData(const char* pSource);
 	- Common Math operators
 	- Iteration through all values. Range-based is also supported
 
-	@param EnumName		The name of the enum. Like EFruit. Prefix with 'E' is recommended
+	@param EnumName		The name of the enum. Like EFruit. Prefix with 'E' is naming convention
 	@param TSize		The size of the enum. uint8, uint16, uint32, uint64. 
 						Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
 	@examples: 	

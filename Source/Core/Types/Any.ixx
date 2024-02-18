@@ -10,6 +10,7 @@ module;
 
 export module jpt.Any;
 
+import jpt.Allocator;
 import jpt.Byte;
 import jpt.Constants;
 import jpt.TypeTraits;
@@ -165,14 +166,14 @@ namespace jpt
 	constexpr void Any::Construct(T& value)
 	{
 		Adapt<T>();
-		new (m_pBuffer) T(value);
+		Allocator<T>::Construct(reinterpret_cast<T*>(m_pBuffer), value);
 	}
 
 	template<typename T>
 	constexpr void Any::Construct(T&& value)
 	{
 		Adapt<T>();
-		new (m_pBuffer) T(Move(value));
+		Allocator<T>::Construct(reinterpret_cast<T*>(m_pBuffer), Move(value));
 	}
 
 	template<typename T>
