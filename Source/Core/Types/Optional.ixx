@@ -21,7 +21,7 @@ export namespace jpt
 
 	private:
 		TValue m_value;
-		bool m_hasValue = false;
+		bool m_hasValue : 1 = false;
 
 	public:
 		constexpr Optional() = default;

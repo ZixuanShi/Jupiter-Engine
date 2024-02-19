@@ -3,50 +3,105 @@
 #include "Enum.h"
 
 #include "Core/Minimal/Macros.h"
+#include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
 using namespace jpt;
+
+import jpt.Optional;
+import jpt.StringView;
+ 
+/** @return		Each individual enum data tokens */
+DynamicArray<String> GetTokens(const char* pSource)
+{
+	jpt::String source = pSource;
+	source.Replace(" ", "");	
+	return source.Split(',');
+}
+
+enum class EOperation
+{
+	LeftShift,
+	Or
+};
+
+template<jpt::Integral TInt>
+Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView operatorStr, EOperation operation)
+{
+	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
+	if (const size_t shiftIndex = expression.Find(operatorStr.Buffer()); shiftIndex != jpt::npos)
+	{
+		const jpt::StringView left = expression.SubStr(0, shiftIndex);
+		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Size(), expression.Size() - shiftIndex - operatorStr.Size());
+		const TInt leftValue = jpt::CStrToInteger<char, TInt>(left.Buffer(), left.Size());
+		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.Buffer(), right.Size());
+
+		switch (operation)
+		{
+		case EOperation::LeftShift:
+			return (leftValue << rightValue);
+
+		case EOperation::Or:
+			return (leftValue | rightValue);
+
+		default:
+			break;
+		}
+	}
+
+	return Optional<TInt>();
+}
+
+template<jpt::Integral TInt>
+TInt Evaluate(jpt::StringView valueStr)
+{
+	// Remove parenthesis if present
+	jpt::StringView expression = valueStr;
+	if (expression.Front() == '(' && expression.Back() == ')')
+	{
+		expression = expression.SubStr(1, expression.Size() - 2);
+	}
+
+	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
+	if (Optional<TInt> result = EvaluateOperator<TInt>(expression, "<<", EOperation::LeftShift); result.HasValue())
+	{
+		return result.Value();
+	}
+	// Hex. starts with 0x
+	else if (const size_t hexIndex = expression.Find("0x"); hexIndex != jpt::npos)
+	{
+		//return jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer(), valueStr.Size(), 16);
+	}
+
+	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size());
+}
 
 template<jpt::Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource)
 {
 	EnumData<TInt> data;
 
-	// Parse source to individual tokens. Each token is a name=value pair. where value is optional.
-	jpt::String source = pSource;
-	source.Replace(" ", "");
-	const jpt::DynamicArray<jpt::String> tokens = source.Split(',');
+	const DynamicArray<jpt::String> tokens = GetTokens(pSource);
 	data.names.Resize(tokens.Size());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
-	for (size_t i = 0; i < tokens.Size(); ++i)
+	for (const jpt::String& token : tokens)
 	{
-		const jpt::String& token = tokens[i];
-		jpt::String name = token;
+		jpt::String name;
 
 		// If token contains an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
 		// Example: "Name", Name=5", "Name=(1<<2)"
-		if (const size_t equalIndex = tokens[i].Find('='); equalIndex != jpt::npos)
+		if (const size_t equalIndex = token.Find('='); equalIndex != jpt::npos)
 		{
-			name = tokens[i].SubStr(0, equalIndex);
+			name = token.SubStr(0, equalIndex);
 
-			const jpt::String valueStr = tokens[i].SubStr(equalIndex + 1, tokens[i].Size() - equalIndex - 1);
-
-			// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-			if (const size_t shiftIndex = valueStr.Find("<<"); shiftIndex != jpt::npos)
-			{
-				const jpt::String left  = valueStr.SubStr(1, shiftIndex - 1);
-				const jpt::String right = valueStr.SubStr(shiftIndex + 2, valueStr.Size() - shiftIndex - 3);
-				const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.ConstBuffer());
-				const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.ConstBuffer());
-				key = (leftValue << rightValue);
-			}
-			// valueStr is a number. Convert it to integer
-			else
-			{
-				key = jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer());
-			}
+			const jpt::String valueStr = token.SubStr(equalIndex + 1, token.Size() - equalIndex - 1);
+			key  = Evaluate<TInt>(valueStr);
+		}
+		else
+		{
+			name = token;
 		}
 
 		// Update min and max values

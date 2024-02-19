@@ -231,6 +231,19 @@ bool UnitTest_Enum_Flag()
 	return true;
 }
 
+//JPT_ENUM_UINT32(EColor_Local,
+//	Red    = 0xFF000000,
+//	Green  = 0x00FF0000,
+//	Blue   = 0x0000FF00,
+//	Alpha  = 0x000000FF,
+//	
+//	White  = Red | Green | Blue | Alpha,
+//	Black  = 0x00000000,
+//	Purple = Red | Blue,
+//	Yellow = Red | Green,
+//	Cyan   = Green | Blue,
+//	);
+
 export bool RunUnitTests_Enum()
 {
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
