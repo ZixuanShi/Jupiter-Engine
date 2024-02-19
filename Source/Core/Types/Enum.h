@@ -165,7 +165,6 @@ public:\
 	\
 	/** String value access */\
 	constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }\
-	constexpr operator const jpt::String&() const { return s_data.names[m_value]; }\
 };
 
 #define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)
