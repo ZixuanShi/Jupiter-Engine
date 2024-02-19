@@ -105,6 +105,7 @@ bool RunUnitTests_StringUtils_IntegerToCStr()
 	JPT_ENSURE(jpt::AreStringsSame(result, "123456"));
 	delete result;
 
+	// Hex
 	result = jpt::IntegerToCStr(0xFF00FF00, 0x10U);
 	JPT_ENSURE(jpt::AreStringsSame(result, "0xFF00FF00"));
 	delete result;
@@ -114,10 +115,16 @@ bool RunUnitTests_StringUtils_IntegerToCStr()
 
 bool RunUnitTests_StringUtils_CStrToInteger()
 {
+	// Decimal
 	JPT_ENSURE(jpt::CStrToInteger("123456") == 123456);
 
+	// Hex
+	uint32 result = jpt::CStrToInteger("0xF", 3, 16);
+	JPT_ENSURE(result == 0xF);
 
-
+	result = jpt::CStrToInteger("0xFF00FFAA", 10, 16);
+	JPT_ENSURE(result == 0xFF00FFAA);
+	
 	return true;
 }
 

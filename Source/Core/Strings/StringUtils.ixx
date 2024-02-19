@@ -78,9 +78,10 @@ export namespace jpt
 			valueCopy /= base;
 			++index;
 		}
+		// Hex prefix "0x"
 		if (base == static_cast<TInt>(0x10u))
 		{
-			index += 2;	// For "0x" prefix
+			index += 2;
 		}
 
 		// Allocate Result string, + 1 for the end terminater
@@ -110,6 +111,7 @@ export namespace jpt
 			value /= base;
 		}
 
+		// Hex
 		if (base == static_cast<TInt>(0x10u))
 		{
 			result[index--] = 'x';
@@ -130,32 +132,65 @@ export namespace jpt
 		return result;
 	}
 
-	/** @return Integral number converted from pBuffer */
+	/** @return Integral number converted from pBuffer
+		@param pBuffer		Source buffer containing integer data 
+		@param size			Desired size to parse from start of pBuffer
+		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, TInt base = 10)
 	{
 		TInt result = 0;
 		bool isNegative = false;
+		size_t start = 0;
 
-		for (size_t i = 0; i < size; ++i)
+		// Negative
+		if constexpr (std::is_signed_v<TInt>)
 		{
-			const TChar c = pBuffer[i];
-
-			// Negative
-			if constexpr (std::is_signed_v<TInt>)
+			if (pBuffer[0] == '-')
 			{
-				if (c == '-')
-				{
-					isNegative = true;
-					continue;
-				}
+				isNegative = true;
+				start = 1;
+			}
+		}
+
+		// Hex prefix
+		const bool isHex = (base == static_cast<TInt>(0x10u));
+		if (isHex)
+		{
+			start = 2;
+		}
+
+		for (size_t i = start; i < size; ++i)
+		{
+			TChar c = pBuffer[i];
+
+			if (c >= 'a' && c <= 'f')
+			{
+				c -= static_cast<TChar>(32);
 			}
 
-			// Parse number
-			JPT_ASSERT(c >= '0' && c <= '9', "Invalid character for converting to number");
-			const TInt number = c - static_cast<TChar>('0');
-			result *= 10;
-			result += number;
+			JPT_ASSERT((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'), "Invalid character for converting to hex");
+
+			TInt number = static_cast<TInt>(0);
+			if (c > static_cast<TChar>('9'))
+			{
+				number = c + static_cast<TChar>(10) - static_cast<TChar>('A');
+			}
+			else
+			{
+				number = c - static_cast<TChar>('0');
+			}
+
+			if (isHex)
+			{
+				result <<= 4;
+				result |= number;
+			}
+			else
+			{
+				result *= base;
+				result += number;
+			}
 		}
 
 		if constexpr (std::is_signed_v<TInt>)
