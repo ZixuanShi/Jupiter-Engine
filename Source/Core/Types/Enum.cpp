@@ -31,9 +31,9 @@ Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView oper
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
 	if (const size_t shiftIndex = expression.Find(operatorStr.Buffer()); shiftIndex != jpt::npos)
 	{
-		const jpt::StringView left = expression.SubStr(0, shiftIndex);
+		const jpt::StringView left  = expression.SubStr(0, shiftIndex);
 		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Size(), expression.Size() - shiftIndex - operatorStr.Size());
-		const TInt leftValue = jpt::CStrToInteger<char, TInt>(left.Buffer(), left.Size());
+		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.Buffer(),  left.Size());
 		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.Buffer(), right.Size());
 
 		switch (operation)
@@ -70,7 +70,7 @@ TInt Evaluate(jpt::StringView valueStr)
 	// Hex. starts with 0x
 	else if (const size_t hexIndex = expression.Find("0x"); hexIndex != jpt::npos)
 	{
-		//return jpt::CStrToInteger<char, TInt>(valueStr.ConstBuffer(), valueStr.Size(), 16);
+		
 	}
 
 	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size());
