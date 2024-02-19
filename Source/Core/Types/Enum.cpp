@@ -81,12 +81,12 @@ EnumData<TInt> GenerateData(const char* pSource)
 {
 	EnumData<TInt> data;
 
-	const DynamicArray<jpt::String> tokens = GetTokens(pSource);
+	DynamicArray<jpt::String> tokens = GetTokens(pSource);
 	data.names.Resize(tokens.Size());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
-	for (const jpt::String& token : tokens)
+	for (jpt::String& token : tokens)
 	{
 		jpt::String name;
 
@@ -101,7 +101,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 		}
 		else
 		{
-			name = token;
+			name = Move(token);
 		}
 
 		// Update min and max values
@@ -115,7 +115,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 		}
 
 		// This token has been processed. Store the name and increment the key.
-		data.names[key] = name;
+		data.names[key] = Move(name);
 		++key;
 	}
 

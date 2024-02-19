@@ -71,6 +71,10 @@
 		{\
 			JPT_ERROR("%s", __VA_ARGS__);\
 		}\
+		else\
+		{\
+			JPT_ERROR("Condition failed: %s", #condition);\
+		}\
 		return returnValue;\
 	}
 
