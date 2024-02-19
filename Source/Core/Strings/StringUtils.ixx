@@ -78,6 +78,11 @@ export namespace jpt
 			valueCopy /= base;
 			++index;
 		}
+		if (base == static_cast<TInt>(0x10u))
+		{
+			index += 2;	// For "0x" prefix
+		}
+
 		// Allocate Result string, + 1 for the end terminater
 		result = Allocator<TChar>::AllocateArray(index + 1);
 
@@ -103,6 +108,12 @@ export namespace jpt
 			// Update index and cut last digit of value
 			--index;
 			value /= base;
+		}
+
+		if (base == static_cast<TInt>(0x10u))
+		{
+			result[index--] = 'x';
+			result[index] = '0';
 		}
 
 		// If value was negative, add '-' at the beginning

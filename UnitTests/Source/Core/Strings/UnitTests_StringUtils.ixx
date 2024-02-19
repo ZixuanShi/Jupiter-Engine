@@ -99,8 +99,25 @@ bool RunUnitTests_IsValidDataCStr()
 	return true;
 }
 
+bool RunUnitTests_StringUtils_IntegerToCStr()
+{
+	const char* result = jpt::IntegerToCStr(123456);
+	JPT_ENSURE(jpt::AreStringsSame(result, "123456"));
+	delete result;
+
+	result = jpt::IntegerToCStr(0xFF00FF00, 0x10U);
+	JPT_ENSURE(jpt::AreStringsSame(result, "0xFF00FF00"));
+	delete result;
+
+	return true;
+}
+
 bool RunUnitTests_StringUtils_CStrToInteger()
 {
+	JPT_ENSURE(jpt::CStrToInteger("123456") == 123456);
+
+
+
 	return true;
 }
 
@@ -116,6 +133,7 @@ export bool RunUnitTests_StringUtils()
 	JPT_ENSURE(UnitTest_StrCpy<jpt::WString>());
 
 	JPT_ENSURE(RunUnitTests_IsValidDataCStr());
+	JPT_ENSURE(RunUnitTests_StringUtils_IntegerToCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_CStrToInteger());
 
 	return true;

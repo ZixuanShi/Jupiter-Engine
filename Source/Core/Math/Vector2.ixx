@@ -8,6 +8,8 @@ export module jpt.Vector2;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
+import jpt.String;
+import jpt.ToString;
 
 export namespace jpt
 {
@@ -54,6 +56,8 @@ export namespace jpt
 		constexpr static T Length2(Vector2 vector);
 		constexpr static T Distance(Vector2 left, Vector2 right);
 		constexpr static T Distance2(Vector2 left, Vector2 right);
+
+		constexpr jpt::String ToString() const;
 	};
 
 	template<Numeric T>
@@ -263,6 +267,17 @@ export namespace jpt
 	constexpr T Vector2<T>::Distance2(Vector2 left, Vector2 right)
 	{
 		return left.Distance2(right);
+	}
+
+	template<Numeric T>
+	constexpr jpt::String Vector2<T>::ToString() const
+	{
+		jpt::String result;
+		result += "x: ";
+		result += ToString(x);
+		result += ", y:";
+		result += ToString(y);
+		return result;
 	}
 
 	using Vec2f = Vector2<float>;
