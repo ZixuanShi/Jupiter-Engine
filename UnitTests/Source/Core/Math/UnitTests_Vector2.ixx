@@ -12,11 +12,9 @@ bool UnitTest_Vec2f()
 {
     jpt::Vec2f v;
 
-    v + 1.0f;
+    v += 1.0f;
 
-    1.0f + v;
-
-
+    //JPT_LOG(v);
     return true;
 }
 

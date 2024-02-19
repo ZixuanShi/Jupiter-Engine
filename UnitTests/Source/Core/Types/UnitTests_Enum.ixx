@@ -231,18 +231,27 @@ bool UnitTest_Enum_Flag()
 	return true;
 }
 
-//JPT_ENUM_UINT32(EColor_Local,
-//	Red    = 0xFF000000,
-//	Green  = 0x00FF0000,
-//	Blue   = 0x0000FF00,
-//	Alpha  = 0x000000FF,
-//	
-//	White  = Red | Green | Blue | Alpha,
-//	Black  = 0x00000000,
-//	Purple = Red | Blue,
-//	Yellow = Red | Green,
-//	Cyan   = Green | Blue,
-//	);
+JPT_ENUM_UINT32(EColor_Local,
+	Red    = 0xFF000000,
+	Green  = 0x00FF0000,
+	Blue   = 0x0000FF00,
+	Alpha  = 0x000000FF,
+	
+	//White  = Red | Green | Blue | Alpha,
+	//Black  = 0x00000000,
+	//Purple = Red | Blue,
+	Yellow = 0xFFFF0000,
+	//Cyan   = Green | Blue,
+);
+bool UnitTest_Enum_Hex()
+{
+	EColor_Local color(EColor_Local::Red);
+	color |= EColor_Local::Green;
+	
+	JPT_ENSURE(color == EColor_Local::Yellow);
+
+	return true;
+}
 
 export bool RunUnitTests_Enum()
 {
@@ -255,6 +264,7 @@ export bool RunUnitTests_Enum()
 	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>());
 
 	JPT_ENSURE(UnitTest_Enum_Flag());
+	JPT_ENSURE(UnitTest_Enum_Hex());
 
 	return true;
 }

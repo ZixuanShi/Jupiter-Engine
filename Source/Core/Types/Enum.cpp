@@ -68,9 +68,9 @@ TInt Evaluate(jpt::StringView valueStr)
 		return result.Value();
 	}
 	// Hex. starts with 0x
-	else if (const size_t hexIndex = expression.Find("0x"); hexIndex != jpt::npos)
+	else if (const size_t hexIndex = expression.Find("0x"); hexIndex == 0)
 	{
-		
+		return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size(), 16);
 	}
 
 	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size());

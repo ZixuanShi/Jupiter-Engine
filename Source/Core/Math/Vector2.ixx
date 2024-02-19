@@ -274,9 +274,9 @@ export namespace jpt
 	{
 		jpt::String result;
 		result += "x: ";
-		result += ToString(x);
+		result += jpt::ToString(x);
 		result += ", y:";
-		result += ToString(y);
+		result += jpt::ToString(y);
 		return result;
 	}
 
