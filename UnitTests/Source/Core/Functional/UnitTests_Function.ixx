@@ -64,8 +64,8 @@ bool UnitTest_Lambda()
 
 export bool RunUnitTests_Function()
 {
-    JPT_ENSURE(UnitTest_Function(), "UnitTest_Function Failed");
-    JPT_ENSURE(UnitTest_Lambda(), "UnitTest_Function Failed");
+    JPT_ENSURE(UnitTest_Function());
+    JPT_ENSURE(UnitTest_Lambda());
 
     return true;
 }

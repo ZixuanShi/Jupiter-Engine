@@ -18,19 +18,19 @@ bool UnitTest_TAllocatorrivialType()
 {
 	// Single
 	TNum* pSingle = jpt::Allocator<TNum>::Allocate();
-	JPT_ENSURE(pSingle != nullptr, "jpt::Allocator<TestType>::Allocate() returned a nullptr");
+	JPT_ENSURE(pSingle != nullptr);
 	jpt::Allocator<TNum>::Deallocate(pSingle);
 
 	// Single with value
 	TNum* pSingleWithValue = jpt::Allocator<TNum>::AllocateWithValue(static_cast<TNum>(42));
-	JPT_ENSURE(pSingleWithValue != nullptr, "jpt::Allocator<int>::AllocateWithValue(42) returned a nullptr");
-	JPT_ENSURE(*pSingleWithValue == static_cast<TNum>(42), "jpt::Allocator<int>::AllocateWithValue(42) assigned a wrong number");
+	JPT_ENSURE(pSingleWithValue != nullptr);
+	JPT_ENSURE(*pSingleWithValue == static_cast<TNum>(42));
 	jpt::Allocator<TNum>::Deallocate(pSingleWithValue);
 
 	// Array
 	constexpr size_t kArraySize = 10'000;
 	TNum* pArray = jpt::Allocator<TNum>::AllocateArray(kArraySize);
-	JPT_ENSURE(pArray != nullptr, "jpt::Allocator<TestType>::AllocateArray(kArraySize) returned a nullptr");
+	JPT_ENSURE(pArray != nullptr);
 
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
@@ -38,16 +38,16 @@ bool UnitTest_TAllocatorrivialType()
 	}
 	for (size_t i = 0; i < kArraySize; ++i)
 	{
-		JPT_ENSURE(pArray[i] == static_cast<TNum>(i), "jpt::Allocator<TestType>::AllocateArray(kArraySize) doesn't write data correctly");
+		JPT_ENSURE(pArray[i] == static_cast<TNum>(i));
 	}
 	jpt::Allocator<TNum>::DeallocateArray(pArray);
 
 	// Multi with value initializer list
 	TNum* pMultiWithValue = jpt::Allocator<TNum>::AllocateArray(10, { 0,1,2,3,4,5,6,7,8,9 });
-	JPT_ENSURE(pMultiWithValue != nullptr, "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) returned a nullptr");
+	JPT_ENSURE(pMultiWithValue != nullptr);
 	for (size_t i = 0; i < 10; ++i)
 	{
-		JPT_ENSURE(pMultiWithValue[i] == static_cast<TNum>(i), "jpt::Allocator<TestType>::jpt::Allocator<TestType>::AllocateMultiWithValue(10, { 0,1,2,3,4,5,6,7,8,9 }) doesn't write data correctly");
+		JPT_ENSURE(pMultiWithValue[i] == static_cast<TNum>(i));
 	}
 	jpt::Allocator<TNum>::Deallocate(pMultiWithValue);
 
@@ -155,12 +155,12 @@ bool UnitTest_TAllocator_NonTrivial()
 
 export bool RunUnitTests_Allocator()
 {
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<uint8>(), "UnitTest_TAllocatorrivialType<uint8> Failed");
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<int32>(), "UnitTest_TAllocatorrivialType<int32> Failed");
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<float>(), "UnitTest_TAllocatorrivialType<float> Failed");
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<double>(), "UnitTest_TAllocatorrivialType<float> Failed");
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<uint8>());
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<int32>());
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<float>());
+	JPT_ENSURE(UnitTest_TAllocatorrivialType<double>());
 
-	JPT_ENSURE(UnitTest_TAllocator_NonTrivial(), "UnitTest_TAllocator_NonTrivial Failed");
+	JPT_ENSURE(UnitTest_TAllocator_NonTrivial());
 
 	return true;
 }

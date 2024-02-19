@@ -153,12 +153,12 @@ bool UnitTest_StaticArray_HeapAllocating()
 
 export bool RunUnitTests_StaticArray()
 {
-    JPT_ENSURE(UnitTest_StaticArray_Constructing_Trivial(), "UnitTest_StaticArray_Constructing_Trivial Failed");
-    JPT_ENSURE(UnitTest_StaticArray_Constructing_NonTrivial(), "UnitTest_StaticArray_Constructing_NonTrivial Failed");
-    JPT_ENSURE(UnitTest_StaticArray_Copying_Trivial(), "UnitTest_StaticArray_Copying_Trivial Failed");
-    JPT_ENSURE(UnitTest_StaticArray_Copying_NonTrivial(), "UnitTest_StaticArray_Copying_NonTrivial Failed");
-    JPT_ENSURE(UnitTest_StaticArray_Moving(), "UnitTest_StaticArray_Moving Failed");
-    JPT_ENSURE(UnitTest_StaticArray_HeapAllocating(), "UnitTest_StaticArray_HeapAllocating Failed");
+    JPT_ENSURE(UnitTest_StaticArray_Constructing_Trivial());
+    JPT_ENSURE(UnitTest_StaticArray_Constructing_NonTrivial());
+    JPT_ENSURE(UnitTest_StaticArray_Copying_Trivial());
+    JPT_ENSURE(UnitTest_StaticArray_Copying_NonTrivial());
+    JPT_ENSURE(UnitTest_StaticArray_Moving());
+    JPT_ENSURE(UnitTest_StaticArray_HeapAllocating());
 
     return true;
 }

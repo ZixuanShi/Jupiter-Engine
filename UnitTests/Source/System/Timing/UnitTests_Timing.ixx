@@ -43,8 +43,8 @@ bool UnitTest_StopWatch()
 
 export bool RunUnitTests_Timing()
 {
-    JPT_ENSURE(UnitTest_Clock(), "UnitTest_Clock Failed");
-    JPT_ENSURE(UnitTest_StopWatch(), "UnitTest_StopWatch Failed");
+    JPT_ENSURE(UnitTest_Clock());
+    JPT_ENSURE(UnitTest_StopWatch());
 
     return true;
 }

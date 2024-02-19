@@ -233,15 +233,15 @@ bool UnitTest_HashMap_Function()
 
 export bool RunUnitTests_HashMap()
 {
-    JPT_ENSURE(UnitTest_HashMap_Trivial(), "UnitTest_HashMap_Trivial Failed");
-    JPT_ENSURE(UnitTest_HashMap_Trivial_Copy(), "UnitTest_HashMap_Trivial_Copy Failed");
-    JPT_ENSURE(UnitTest_HashMap_Trivial_Move(), "UnitTest_HashMap_Trivial_Move Failed");
+    JPT_ENSURE(UnitTest_HashMap_Trivial());
+    JPT_ENSURE(UnitTest_HashMap_Trivial_Copy());
+    JPT_ENSURE(UnitTest_HashMap_Trivial_Move());
 
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial(), "UnitTest_HashMap_Trivial Failed");
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Copy(), "UnitTest_HashMap_NonTrivial_Copy Failed");
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Move(), "UnitTest_HashMap_NonTrivial_Move Failed");
+    JPT_ENSURE(UnitTest_HashMap_NonTrivial());
+    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Copy());
+    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Move());
     
-    JPT_ENSURE(UnitTest_HashMap_Function(), "UnitTest_HashMap_Function Failed");
+    JPT_ENSURE(UnitTest_HashMap_Function());
 
     return true;
 }

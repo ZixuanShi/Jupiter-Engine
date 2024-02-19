@@ -27,7 +27,7 @@ bool UnitTest_Pair()
 
 export bool RunUnitTests_Pair()
 {
-	JPT_ENSURE(UnitTest_Pair(), "UnitTest_Pair Failed");
+	JPT_ENSURE(UnitTest_Pair());
 
 	return true;
 }

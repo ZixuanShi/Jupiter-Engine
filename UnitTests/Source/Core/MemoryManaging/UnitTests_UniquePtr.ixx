@@ -266,10 +266,10 @@ bool UnitTest_UniquePtr_Class()
 
 export bool RunUnitTests_UniquePtr()
 {
-	JPT_ENSURE(UnitTest_UniquePtr_Char(), "UnitTest_UniquePtr_Char Failed");
-	JPT_ENSURE(UnitTest_UniquePtr_Int(), "UnitTest_UniquePtr_Int Failed");
-	JPT_ENSURE(UnitTest_UniquePtr_String(), "UnitTest_UniquePtr_String Failed");
-	JPT_ENSURE(UnitTest_UniquePtr_Class(), "UnitTest_UniquePtr_Class Failed");
+	JPT_ENSURE(UnitTest_UniquePtr_Char());
+	JPT_ENSURE(UnitTest_UniquePtr_Int());
+	JPT_ENSURE(UnitTest_UniquePtr_String());
+	JPT_ENSURE(UnitTest_UniquePtr_Class());
 
 	return true;
 }

@@ -66,10 +66,10 @@ bool UnitTest_MinMax()
 
 export bool RunUnitTests_Math()
 {
-	JPT_ENSURE(UnitTest_Clamping(), "UnitTest_Clamping Failed");
-	JPT_ENSURE(UnitTest_Abs(), "UnitTest_Abs Failed");
-	JPT_ENSURE(UnitTest_AreValuesClose(), "UnitTest_AreValuesClose Failed");
-	JPT_ENSURE(UnitTest_MinMax(), "UnitTest_MinMax Failed");
+	JPT_ENSURE(UnitTest_Clamping());
+	JPT_ENSURE(UnitTest_Abs());
+	JPT_ENSURE(UnitTest_AreValuesClose());
+	JPT_ENSURE(UnitTest_MinMax());
 
 	return true;
 }

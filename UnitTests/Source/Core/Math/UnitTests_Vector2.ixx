@@ -22,7 +22,7 @@ bool UnitTest_Vec2f()
 
 export bool RunUnitTests_Vector2()
 {
-    JPT_ENSURE(UnitTest_Vec2f(), "UnitTest_Vec2f Failed");
+    JPT_ENSURE(UnitTest_Vec2f());
 
     return true;
 }

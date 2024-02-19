@@ -17,7 +17,7 @@ export bool RunUnitTests_Debugging()
 	/** Unit Test Functions */
 
 	// Timing
-	JPT_ENSURE(RunUnitTests_Logger(), "Logger Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Logger());
     
 
 	return true;

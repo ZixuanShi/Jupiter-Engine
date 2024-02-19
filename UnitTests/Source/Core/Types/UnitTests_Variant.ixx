@@ -113,9 +113,9 @@ bool UnitTest_Variant_Move()
 
 export bool RunUnitTests_Variant()
 {
-    JPT_ENSURE(UnitTest_Variant(), "UnitTest_Variant Failed");
-    JPT_ENSURE(UnitTest_Variant_Copy(), "UnitTest_Variant_Copy Failed");
-    JPT_ENSURE(UnitTest_Variant_Move(), "UnitTest_Variant_Move Failed");
+    JPT_ENSURE(UnitTest_Variant());
+    JPT_ENSURE(UnitTest_Variant_Copy());
+    JPT_ENSURE(UnitTest_Variant_Move());
 
     return true;
 }

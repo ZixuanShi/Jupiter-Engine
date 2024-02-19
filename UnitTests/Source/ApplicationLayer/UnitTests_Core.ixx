@@ -60,48 +60,48 @@ export bool RunUnitTests_Core()
 	/** Unit Test Functions */
 	
 	// Algorithms
-	JPT_ENSURE(RunUnitTests_Sorting(), "Sorting Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Searching(), "Algorithms Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Sorting());
+	JPT_ENSURE(RunUnitTests_Searching());
 
 	// Containers
-	JPT_ENSURE(RunUnitTests_HashMap(), "HashMap Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_LinkedList(), "LinkedList Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_DynamicArray(), "DynamicArray Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_StaticArray(), "StaticArray Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_HashMap());
+	JPT_ENSURE(RunUnitTests_LinkedList());
+	JPT_ENSURE(RunUnitTests_DynamicArray());
+	JPT_ENSURE(RunUnitTests_StaticArray());
 
 	// Functional
-	JPT_ENSURE(RunUnitTests_Slot(), "Slot Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Function(), "Function Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Slot());
+	JPT_ENSURE(RunUnitTests_Function());
 
 	// Minimal
-	JPT_ENSURE(RunUnitTests_Utilities(), "Utilities Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_TypeTraits(), "TypeTraits Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Macros(), "Macros Unit Tests Failed");
+	JPT_ENSURE(RunUnitTests_Utilities());
+	JPT_ENSURE(RunUnitTests_TypeTraits());
+	JPT_ENSURE(RunUnitTests_Macros());
 
 	// Math
-	JPT_ENSURE(RunUnitTests_Vector2(), "Vector2 Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Math(), "Math Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_RandomNumberGenerator(), "Random Number Generator Tests Failed");
+	JPT_ENSURE(RunUnitTests_Vector2());
+	JPT_ENSURE(RunUnitTests_Math());
+	JPT_ENSURE(RunUnitTests_RandomNumberGenerator());
 
 	// Memory Managing
-	JPT_ENSURE(RunUnitTests_Allocator(), "Allocator Tests Failed");
-	JPT_ENSURE(RunUnitTests_StrongPtr(), "StrongPtr Tests Failed");
-	JPT_ENSURE(RunUnitTests_UniquePtr(), "UniquePtr Tests Failed");
-	JPT_ENSURE(RunUnitTests_WeakPtr(), "WeakPtr Tests Failed");
+	JPT_ENSURE(RunUnitTests_Allocator());
+	JPT_ENSURE(RunUnitTests_StrongPtr());
+	JPT_ENSURE(RunUnitTests_UniquePtr());
+	JPT_ENSURE(RunUnitTests_WeakPtr());
 
 	// Strings
-	JPT_ENSURE(RunUnitTests_String(), "String Tests Failed");
-	JPT_ENSURE(RunUnitTests_StringUtils(), "StringUtils Tests Failed");
-	JPT_ENSURE(RunUnitTests_StringView(), "StringView Tests Failed");
+	JPT_ENSURE(RunUnitTests_String());
+	JPT_ENSURE(RunUnitTests_StringUtils());
+	JPT_ENSURE(RunUnitTests_StringView());
 
 	// Types
-	JPT_ENSURE(RunUnitTests_Any(), "Any Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Byte(), "Byte Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Variant(), "Variant Unit Tests Failed");
-	JPT_ENSURE(RunUnitTests_Optional(), "Optional Tests Failed");
-	JPT_ENSURE(RunUnitTests_Enum(), "Enum Tests Failed");
-	JPT_ENSURE(RunUnitTests_Tuple(), "Tuple Tests Failed");
-	JPT_ENSURE(RunUnitTests_Pair(), "Pair Tests Failed");
+	JPT_ENSURE(RunUnitTests_Any());
+	JPT_ENSURE(RunUnitTests_Byte());
+	JPT_ENSURE(RunUnitTests_Variant());
+	JPT_ENSURE(RunUnitTests_Optional());
+	JPT_ENSURE(RunUnitTests_Enum());
+	JPT_ENSURE(RunUnitTests_Tuple());
+	JPT_ENSURE(RunUnitTests_Pair());
 
 	return true;
 }

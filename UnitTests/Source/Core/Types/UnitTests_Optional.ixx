@@ -46,7 +46,7 @@ bool UnitTest_Optional()
 
 export bool RunUnitTests_Optional()
 {
-	JPT_ENSURE(UnitTest_Optional(), "UnitTest_Optional Failed");
+	JPT_ENSURE(UnitTest_Optional());
 
 	return true;
 }

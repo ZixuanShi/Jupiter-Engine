@@ -52,8 +52,8 @@ bool UnitTest_FixedSeedGenerateRandomNumbers()
 
 export bool RunUnitTests_RandomNumberGenerator()
 {
-	JPT_ENSURE(UnitTest_GenerateRandomNumbers(), "UnitTest_GenerateRandomNumbers Failed");
-	JPT_ENSURE(UnitTest_FixedSeedGenerateRandomNumbers(), "UnitTest_FixedSeedGenerateRandomNumbers Failed");
+	JPT_ENSURE(UnitTest_GenerateRandomNumbers());
+	JPT_ENSURE(UnitTest_FixedSeedGenerateRandomNumbers());
 
 	return true;
 }

@@ -99,18 +99,24 @@ bool RunUnitTests_IsValidDataCStr()
 	return true;
 }
 
+bool RunUnitTests_StringUtils_CStrToInteger()
+{
+	return true;
+}
+
 export bool RunUnitTests_StringUtils()
 {
-	JPT_ENSURE(UnitTest_StringLen<jpt::String>(), "UnitTest_StringLen Failed");
-	JPT_ENSURE(UnitTest_StringLen<jpt::WString>(), "UnitTest_StringLen Failed");
+	JPT_ENSURE(UnitTest_StringLen<jpt::String>());
+	JPT_ENSURE(UnitTest_StringLen<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ToCStr<jpt::String>(), "UnitTest_ToCStr Failed");
-	JPT_ENSURE(UnitTest_ToCStr<jpt::WString>(), "UnitTest_ToCStr Failed");
+	JPT_ENSURE(UnitTest_ToCStr<jpt::String>());
+	JPT_ENSURE(UnitTest_ToCStr<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_StrCpy<jpt::String>(), "UnitTest_ToCStr Failed");
-	JPT_ENSURE(UnitTest_StrCpy<jpt::WString>(), "UnitTest_ToCStr Failed");
+	JPT_ENSURE(UnitTest_StrCpy<jpt::String>());
+	JPT_ENSURE(UnitTest_StrCpy<jpt::WString>());
 
-	JPT_ENSURE(RunUnitTests_IsValidDataCStr(), "RunUnitTests_IsValidDataCStr Failed");
+	JPT_ENSURE(RunUnitTests_IsValidDataCStr());
+	JPT_ENSURE(RunUnitTests_StringUtils_CStrToInteger());
 
 	return true;
 }

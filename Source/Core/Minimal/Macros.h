@@ -56,33 +56,25 @@
 
 #pragma region Logging
 
-/**< Warning if condition is true */
-#define JPT_NOTIFY(condition, ...)\
-	if (!(condition))\
-	{\
-		JPT_WARNING(__VA_ARGS__);\
-	}
-
-/**< Error and return some value if condition is true */
+/**< Return, with Error logging */
 #define JPT_VERIFY(condition, returnValue, ...)\
 	if (!(condition))\
 	{\
-		if constexpr (JPT_HAS_ARGS(__VA_ARGS__))\
+		if (JPT_HAS_ARGS(__VA_ARGS__))\
 		{\
 			JPT_ERROR("%s", __VA_ARGS__);\
 		}\
 		else\
 		{\
-			JPT_ERROR("Condition failed: %s", #condition);\
+			JPT_ERROR("Failed: %s", #condition);\
 		}\
 		return returnValue;\
 	}
 
-/**< Error and return false if condition is true */
 #define JPT_ENSURE(condition, ...)\
 	JPT_VERIFY(condition, false, __VA_ARGS__)
 
-/**< Return if condition is true */
+/**< Slient Return */
 #define JPT_RETURN_IF(condition, returnValue)\
 	if ((condition))\
 	{\

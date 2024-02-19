@@ -103,9 +103,9 @@ bool UnitTest_Searching_LinkedList()
 
 export bool RunUnitTests_Searching()
 {
-    JPT_ENSURE(UnitTest_Searching_StaticArray(), "UnitTest_Searching_StaticArray Failed");
-    JPT_ENSURE(UnitTest_Searching_DynamicArray(), "UnitTest_Searching_DynamicArray Failed");
-    JPT_ENSURE(UnitTest_Searching_LinkedList(), "UnitTest_Searching_LinkedList Failed");
+    JPT_ENSURE(UnitTest_Searching_StaticArray());
+    JPT_ENSURE(UnitTest_Searching_DynamicArray());
+    JPT_ENSURE(UnitTest_Searching_LinkedList());
 
     return true;
 }

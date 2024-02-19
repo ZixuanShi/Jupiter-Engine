@@ -117,9 +117,9 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    JPT_ENSURE(UnitTest_Any(),      "UnitTest_Any Failed");
-    JPT_ENSURE(UnitTest_Any_Copy(), "UnitTest_Any_Copy Failed");
-    JPT_ENSURE(UnitTest_Any_Move(), "UnitTest_Any_Move Failed");
+    JPT_ENSURE(UnitTest_Any());
+    JPT_ENSURE(UnitTest_Any_Copy());
+    JPT_ENSURE(UnitTest_Any_Move());
 
     return true;
 }

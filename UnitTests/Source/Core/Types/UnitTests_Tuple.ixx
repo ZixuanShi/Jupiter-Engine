@@ -219,12 +219,12 @@ bool UnitTest_OneTypeTuple()
 
 export bool RunUnitTests_Tuple()
 {
-	JPT_ENSURE(UnitTest_Tuple(), "UnitTest_Tuple Failed");
-	JPT_ENSURE(UnitTest_EmptyTuple(), "UnitTest_EmptyTuple Failed");
-	JPT_ENSURE(UnitTest_OneTypeTuple(), "UnitTest_OneTypeTuple Failed");
-	JPT_ENSURE(UnitTest_ConstTuple(), "UnitTest_ConstTuple Failed");
-	JPT_ENSURE(UnitTest_ConstTDatauple(), "UnitTest_ConstTDatauple Failed");
-	JPT_ENSURE(UnitTest_Tie(), "UnitTest_Tie Failed");
+	JPT_ENSURE(UnitTest_Tuple());
+	JPT_ENSURE(UnitTest_EmptyTuple());
+	JPT_ENSURE(UnitTest_OneTypeTuple());
+	JPT_ENSURE(UnitTest_ConstTuple());
+	JPT_ENSURE(UnitTest_ConstTDatauple());
+	JPT_ENSURE(UnitTest_Tie());
 
 	return true;
 }

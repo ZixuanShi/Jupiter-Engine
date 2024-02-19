@@ -144,12 +144,12 @@ bool UnitTests_WeakPtr_Referencing()
 
 export bool RunUnitTests_WeakPtr()
 {
-	JPT_ENSURE(UnitTests_WeakPtr_Class(), "UnitTests_WeakPtr_Class Failed");
+	JPT_ENSURE(UnitTests_WeakPtr_Class());
 
 	JPT_ENSURE(weakStringPtr1.IsExpired());
 	JPT_ENSURE(weakStringPtr2.IsExpired());
 	JPT_ENSURE(weakStringPtr3.IsExpired());
-	JPT_ENSURE(UnitTests_WeakPtr_Referencing(), "UnitTests_WeakPtr_Class Failed");
+	JPT_ENSURE(UnitTests_WeakPtr_Referencing());
 	JPT_ENSURE(weakStringPtr1.IsExpired());
 	JPT_ENSURE(weakStringPtr2.IsExpired());
 	JPT_ENSURE(weakStringPtr3.IsExpired());

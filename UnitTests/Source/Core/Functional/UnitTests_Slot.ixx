@@ -124,9 +124,9 @@ bool UnitTest_Slot_Variant()
 
 export bool RunUnitTests_Slot()
 {
-    JPT_ENSURE(UnitTest_Slot_Void(), "UnitTest_Slot Failed");
-    JPT_ENSURE(UnitTest_Slot_Return(), "UnitTest_Slot_Return Failed");
-    JPT_ENSURE(UnitTest_Slot_Variant(), "UnitTest_Slot_Variant Failed");
+    JPT_ENSURE(UnitTest_Slot_Void());
+    JPT_ENSURE(UnitTest_Slot_Return());
+    JPT_ENSURE(UnitTest_Slot_Variant());
 
     return true;
 }

@@ -24,7 +24,7 @@ bool UnitTest_Move()
 
 export bool RunUnitTests_Utilities()
 {
-	JPT_ENSURE(UnitTest_Move(), "UnitTest_Move Failed");
+	JPT_ENSURE(UnitTest_Move());
 
 	return true;
 }

@@ -246,15 +246,15 @@ bool UnitTest_Enum_Flag()
 
 export bool RunUnitTests_Enum()
 {
-	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>(),  "UnitTest_Enum_Local Failed");
-	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>(),  "UnitTest_Enum_Global Failed");
-	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>());
 
-	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>(), "UnitTest_Enum_Local Failed");
-	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>(), "UnitTest_Enum_Global Failed");
-	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>(), "UnitTest_Enum_GlobalEnumContainer::EFruit_GlobalEnumContainer Failed");
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>());
 
-	JPT_ENSURE(UnitTest_Enum_Flag(), "UnitTest_Enum_EFlag_Local Failed");
+	JPT_ENSURE(UnitTest_Enum_Flag());
 
 	return true;
 }

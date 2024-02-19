@@ -15,7 +15,7 @@ bool UnitTest_Byte()
 
 export bool RunUnitTests_Byte()
 {
-    JPT_ENSURE(UnitTest_Byte(), "UnitTest_Byte Failed");
+    JPT_ENSURE(UnitTest_Byte());
 
     return true;
 }

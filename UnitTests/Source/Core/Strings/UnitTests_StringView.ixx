@@ -57,7 +57,7 @@ bool UnitTests_StringView()
 
 export bool RunUnitTests_StringView()
 {
-	JPT_ENSURE(UnitTests_StringView(), "UnitTests_StringView Failed");
+	JPT_ENSURE(UnitTests_StringView());
 
 	return true;
 }

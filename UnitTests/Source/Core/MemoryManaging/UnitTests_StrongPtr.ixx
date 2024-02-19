@@ -128,9 +128,9 @@ bool UnitTest_StrongPtr_Class2()
 
 export bool RunUnitTests_StrongPtr()
 {
-	JPT_ENSURE(UnitTest_StrongPtr_Char(), "UnitTest_UniquePtr_Char Failed");
-	JPT_ENSURE(UnitTest_StrongPtr_Class(), "UnitTest_StrongPtr_Class Failed");
-	JPT_ENSURE(UnitTest_StrongPtr_Class2(), "UnitTest_StrongPtr_Class2 Failed");
+	JPT_ENSURE(UnitTest_StrongPtr_Char());
+	JPT_ENSURE(UnitTest_StrongPtr_Class());
+	JPT_ENSURE(UnitTest_StrongPtr_Class2());
 
 	return true;
 }

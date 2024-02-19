@@ -105,9 +105,9 @@ bool UnitTests_Macro_ArgsCount()
 
 export bool RunUnitTests_Macros()
 {
-    JPT_ENSURE(UnitTest_Macro_String(), "UnitTest_Macro_String Failed");
-    JPT_ENSURE(UnitTest_Macro_VA_ARGS(), "UnitTest_Macro_VA_ARGS Failed");
-    JPT_ENSURE(UnitTests_Macro_ArgsCount(), "UnitTests_Macro_ArgsCount Failed");
+    JPT_ENSURE(UnitTest_Macro_String());
+    JPT_ENSURE(UnitTest_Macro_VA_ARGS());
+    JPT_ENSURE(UnitTests_Macro_ArgsCount());
 
     return true;
 }

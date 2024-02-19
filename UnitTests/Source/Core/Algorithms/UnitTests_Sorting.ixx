@@ -53,8 +53,8 @@ bool UnitTest_Sorting_Random()
 
 export bool RunUnitTests_Sorting()
 {
-    JPT_ENSURE(UnitTest_Sorting_Basic(), "UnitTest_Sorting_Basic Failed");
-    JPT_ENSURE(UnitTest_Sorting_Random(), "UnitTest_Sorting_Random Failed");
+    JPT_ENSURE(UnitTest_Sorting_Basic());
+    JPT_ENSURE(UnitTest_Sorting_Random());
 
     return true;
 }

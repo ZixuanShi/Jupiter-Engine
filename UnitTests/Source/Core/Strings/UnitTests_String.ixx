@@ -310,34 +310,34 @@ bool UnitTest_String_Split()
 
 export bool RunUnitTests_String()
 {
-	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>(), "UnitTest_DefaultStringConstructing Failed");
-	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>(), "UnitTest_DefaultStringConstructing Failed");
+	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
+	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ConvertingString<jpt::String>(), "UnitTest_ConvertingString Failed");
-	JPT_ENSURE(UnitTest_ConvertingString<jpt::WString>(), "UnitTest_ConvertingString Failed");
+	JPT_ENSURE(UnitTest_ConvertingString<jpt::String>());
+	JPT_ENSURE(UnitTest_ConvertingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_CopyingString<jpt::String>(), "UnitTest_ConvertingString Failed");
-	JPT_ENSURE(UnitTest_CopyingString<jpt::WString>(), "UnitTest_ConvertingString Failed");
+	JPT_ENSURE(UnitTest_CopyingString<jpt::String>());
+	JPT_ENSURE(UnitTest_CopyingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_MovingString<jpt::String>(), "UnitTest_MovingString Failed");
-	JPT_ENSURE(UnitTest_MovingString<jpt::WString>(), "UnitTest_MovingString Failed");
+	JPT_ENSURE(UnitTest_MovingString<jpt::String>());
+	JPT_ENSURE(UnitTest_MovingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_SubStr<jpt::String>(), "UnitTest_SubStr Failed");
-	JPT_ENSURE(UnitTest_SubStr<jpt::WString>(), "UnitTest_SubStr Failed");
+	JPT_ENSURE(UnitTest_SubStr<jpt::String>());
+	JPT_ENSURE(UnitTest_SubStr<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ToString<jpt::String>(), "UnitTest_ToString Failed");
-	JPT_ENSURE(UnitTest_ToString<jpt::WString>(), "UnitTest_ToString Failed");
-	JPT_ENSURE(UnitTest_ToString2(), "UnitTest_ToString2 Failed");
+	JPT_ENSURE(UnitTest_ToString<jpt::String>());
+	JPT_ENSURE(UnitTest_ToString<jpt::WString>());
+	JPT_ENSURE(UnitTest_ToString2());
 
-	JPT_ENSURE(UnitTest_StringFinding<jpt::String>(), "UnitTest_StringFinding Failed");
-	JPT_ENSURE(UnitTest_StringFinding<jpt::WString>(), "UnitTest_StringFinding Failed");
+	JPT_ENSURE(UnitTest_StringFinding<jpt::String>());
+	JPT_ENSURE(UnitTest_StringFinding<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_StringReplace<jpt::String>(), "UnitTest_StringReplace Failed");
-	JPT_ENSURE(UnitTest_StringReplace<jpt::WString>(), "UnitTest_StringReplace Failed");
+	JPT_ENSURE(UnitTest_StringReplace<jpt::String>());
+	JPT_ENSURE(UnitTest_StringReplace<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_String_Iterator(), "UnitTest_String_Iterator Failed");
-	JPT_ENSURE(UnitTest_String_Format(), "UnitTest_String_Format Failed");
-	JPT_ENSURE(UnitTest_String_Split(), "UnitTest_String_Split Failed");
+	JPT_ENSURE(UnitTest_String_Iterator());
+	JPT_ENSURE(UnitTest_String_Format());
+	JPT_ENSURE(UnitTest_String_Split());
 
 	return true;
 }

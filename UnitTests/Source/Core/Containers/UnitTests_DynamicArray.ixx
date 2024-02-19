@@ -267,8 +267,8 @@ bool UnitTest_DynamicArray_NonTrivial()
 
 export bool RunUnitTests_DynamicArray()
 {
-    JPT_ENSURE(UnitTest_DynamicArray_Trivial(), "UnitTest_DynamicArray_Trivial Failed");
-    JPT_ENSURE(UnitTest_DynamicArray_NonTrivial(), "UnitTest_DynamicArray_NonTrivial Failed");
+    JPT_ENSURE(UnitTest_DynamicArray_Trivial());
+    JPT_ENSURE(UnitTest_DynamicArray_NonTrivial());
 
     return true;
 }

@@ -24,7 +24,7 @@ public:
 
 bool JupiterUnitTestsApplication::Init()
 {
-	JPT_ENSURE(Super::Init(), "Failed Super::Init()");
+	JPT_ENSURE(Super::Init());
 
 	JPT_LOG("Core      Unit Tests %s", RunUnitTests_Core()      ? "Succeeded" : "Failed");
 	JPT_LOG("Debugging Unit Tests %s", RunUnitTests_Debugging() ? "Succeeded" : "Failed");

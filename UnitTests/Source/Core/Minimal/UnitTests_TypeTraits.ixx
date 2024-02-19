@@ -391,21 +391,21 @@ bool UnitTest_IsArray()
 
 export bool RunUnitTests_TypeTraits()
 {
-	JPT_ENSURE(UnitTest_RemoveTraits<int32>(), "UnitTest_RemoveTraits Failed");
-	JPT_ENSURE(UnitTest_RemoveTraits<jpt::String>(), "UnitTest_RemoveTraits Failed");
+	JPT_ENSURE(UnitTest_RemoveTraits<int32>());
+	JPT_ENSURE(UnitTest_RemoveTraits<jpt::String>());
 
-	JPT_ENSURE(UnitTest_Decay<int32>(), "UnitTest_Decay Failed");
-	JPT_ENSURE(UnitTest_Decay<jpt::String>(), "UnitTest_Decay Failed");
+	JPT_ENSURE(UnitTest_Decay<int32>());
+	JPT_ENSURE(UnitTest_Decay<jpt::String>());
 
-	JPT_ENSURE(UnitTest_IsLValueRefType(), "UnitTest_IsLValueRefType Failed");
-	JPT_ENSURE(UnitTest_IsLValueRefType(), "UnitTest_IsLValueRefType Failed");
-	JPT_ENSURE(UnitTest_IsRef(), "UnitTest_IsRef Failed");
-	JPT_ENSURE(UnitTest_IsSameType(), "UnitTest_IsSameType Failed");
-	JPT_ENSURE(UnitTest_NotSameType(), "UnitTest_NotSameType Failed");
-	JPT_ENSURE(UnitTest_IsAnyOf(), "UnitTest_IsAnyOf Failed");
-	JPT_ENSURE(UnitTest_NotAnyOf(), "UnitTest_NotAnyOf Failed");
-	JPT_ENSURE(UnitTest_IsEmptyObj(), "UnitTest_IsEmptyObj Failed");
-	JPT_ENSURE(UnitTest_IsArray(), "UnitTest_IsArray Failed");
+	JPT_ENSURE(UnitTest_IsLValueRefType());
+	JPT_ENSURE(UnitTest_IsLValueRefType());
+	JPT_ENSURE(UnitTest_IsRef());
+	JPT_ENSURE(UnitTest_IsSameType());
+	JPT_ENSURE(UnitTest_NotSameType());
+	JPT_ENSURE(UnitTest_IsAnyOf());
+	JPT_ENSURE(UnitTest_NotAnyOf());
+	JPT_ENSURE(UnitTest_IsEmptyObj());
+	JPT_ENSURE(UnitTest_IsArray());
 
 	return true;
 }

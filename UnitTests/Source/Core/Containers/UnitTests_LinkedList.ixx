@@ -107,8 +107,8 @@ bool UnitTest_LinkedList_NonTrivial()
 
 export bool RunUnitTests_LinkedList()
 {
-    JPT_ENSURE(UnitTest_LinkedList_Trivial(), "UnitTest_LinkedList_Trivial Failed");
-    JPT_ENSURE(UnitTest_LinkedList_NonTrivial(), "UnitTest_LinkedList_NonTrivial Failed");
+    JPT_ENSURE(UnitTest_LinkedList_Trivial());
+    JPT_ENSURE(UnitTest_LinkedList_NonTrivial());
 
     return true;
 }
