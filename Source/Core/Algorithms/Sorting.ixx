@@ -15,8 +15,11 @@ import jpt.Math;
 import jpt.Utilities;
 import jpt.Limits;
 
-namespace jpt
+namespace jpt_private
 {
+	using namespace jpt;
+
+#pragma region QuickSort
 	template<typename TContainer>
 	constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex)
 	{
@@ -24,8 +27,8 @@ namespace jpt
 
 		// Get each elements
 		typename TContainer::TData first = container[beginIndex];
-		typename TContainer::TData mid   = container[endIndex / 2];
-		typename TContainer::TData last  = container[beginIndex];
+		typename TContainer::TData mid = container[endIndex / 2];
+		typename TContainer::TData last = container[beginIndex];
 
 		// Compare and return mid index
 		if (first > mid)
@@ -51,7 +54,8 @@ namespace jpt
 	template<typename TContainer, typename Comparator>
 	constexpr size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, Comparator&& comparator)
 	{
-		Swap(container[GetPivot(container, beginIndex, endIndex)], container[endIndex]);
+		size_t pivotIndex = GetPivot(container, beginIndex, endIndex);
+		Swap(container[pivotIndex], container[endIndex]);
 
 		typename TContainer::TData pivot = container[endIndex];
 		size_t i = beginIndex - 1;	// i is the last element's index of region 1, which is less than the pivot
@@ -69,7 +73,7 @@ namespace jpt
 		}
 
 		// Everything is in its place except for the pivot. We swap the pivot with the first element of region 2.
-		const size_t pivotIndex = i + 1;
+		pivotIndex = i + 1;
 		Swap(container[pivotIndex], container[endIndex]);
 
 		// return the pivot, which becomes the beginning and end points of the next calls to Partition().
@@ -90,7 +94,11 @@ namespace jpt
 		QuickSort(container, beginIndex, pivot - 1, Move(comparator));
 		QuickSort(container, pivot + 1, endIndex, Move(comparator));
 	}
+#pragma endregion
+}
 
+namespace jpt
+{
 	template<Trivial T>
 	constexpr bool DefaultTrivialComparator(T a, T b) { return a < b; }
 
@@ -100,12 +108,12 @@ namespace jpt
 	export template<ContainingTrivial TContainer>
 	constexpr void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultTrivialComparator<typename TContainer::TData>)
 	{
-		QuickSort(container, 0, container.Size() - 1, Move(comparator));
+		jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
 	}
 
 	export template<ContainingNonTrivial TContainer>
 	constexpr void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultNonTrivialComparator<typename TContainer::TData>)
 	{
-		QuickSort(container, 0, container.Size() - 1, Move(comparator));
+		jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
 	}
 }
