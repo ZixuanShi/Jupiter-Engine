@@ -63,9 +63,9 @@ export namespace jpt
 
 	/** @return		How many args of parameter pack. Works on Macro's __VA_ARGS__ too */
 	template<typename ...Ts>
-	constexpr size_t GetArgsCount(Ts&&... args)
+	constexpr size_t GetArgsCount(Ts&&...)
 	{
-		return (0 + ... + (void(args), 1));
+		return sizeof...(Ts);
 	}
 	template<typename ...Ts>
 	constexpr bool HasAnyArgs(Ts&&... args)
