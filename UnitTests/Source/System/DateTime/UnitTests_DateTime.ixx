@@ -21,8 +21,11 @@ bool UnitTest_DateTime()
     JPT_LOG(now);
 
     now.year += 100;
-    now.second += 10;
+    now.second -= 60;
     JPT_LOG(now);
+
+    jpt::Timing::Point current = jpt::Timing::Now();
+    JPT_LOG(jpt::Timing::GetSecondsFrom(current));
 
     return true;
 }

@@ -32,7 +32,7 @@ export namespace jpt
 		template<ClockT T>
 		constexpr Precision GetSecondsFrom(const Point<T>& start)
 		{
-			const Point<T> currentTimePoint = T::now();
+			const Point<T> currentTimePoint = Now<T>();
 			return GetSecondsBetween(start, currentTimePoint);
 		}
 
@@ -48,25 +48,8 @@ export namespace jpt
 		template<ClockT T>
 		constexpr Precision GetMilliSecondsFrom(const Point<T>& start)
 		{
-			const Point<T> currentTimePoint = T::now();
+			const Point<T> currentTimePoint = Now<T>();
 			return GetMilliSecondsBetween(start, currentTimePoint);
 		}
-	}
-
-	String ToString(const std::chrono::time_point<Timing::Clock>& point)
-	{
-		static constexpr size_t kStringSize = 32;
-
-		std::time_t time = Timing::Clock::to_time_t(point);
-		std::tm t;
-		localtime_s(&t, &time);
-
-		// MM/DD/YYYY. HH:MM:SS
-		char buffer[kStringSize];
-		strftime(buffer, sizeof(buffer), "%m/%d/%Y. %X", &t);
-
-		jpt::String timeString;
-		timeString.CopyString(buffer, kStringSize);
-		return timeString;
 	}
 }
