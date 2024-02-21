@@ -29,6 +29,11 @@ namespace jpt_private
     }
 }
 
+void TestFunction3()
+{
+	JPT_LOG("void TestFunction3()");
+}
+
 bool UnitTest_Function()
 {
     // Global function
@@ -87,8 +92,7 @@ bool UnitTest_Lambda()
 }
 
 export bool RunUnitTests_Function()
-{  
-
+{
     JPT_ENSURE(UnitTest_Function());
     JPT_ENSURE(UnitTest_Lambda());
 
