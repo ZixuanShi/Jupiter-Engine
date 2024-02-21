@@ -24,6 +24,8 @@ module;
 export module UnitTests_<SubjectName>;
 
 import jpt.<SubjectName>;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 bool UnitTest_<SubjectName>()
 {
@@ -46,6 +48,9 @@ module;
 #include "Core/Minimal/Headers.h"
 
 export module UnitTests_<SubjectName>;
+
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 /** Unit Test Modules */
 

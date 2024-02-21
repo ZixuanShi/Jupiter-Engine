@@ -12,6 +12,8 @@ import jpt.TypeTraits;
 
 export namespace jpt
 {
+#pragma region Type Defs
+
 	template<typename T>
 	concept Numeric = std::is_arithmetic_v<T>;
 
@@ -23,15 +25,6 @@ export namespace jpt
 
 	template<typename T>
 	concept StringLiteral = IsSameType<T, char> || IsSameType<T, wchar_t>;
-
-	template<typename T>
-	concept MoveAssignable = std::is_move_assignable_v<T>;
-
-	template<typename T>
-	concept MoveConstructible = IsConstructible<T, T>;
-
-	template<typename T>
-	concept Movable = MoveConstructible<T> && MoveAssignable<T>;
 
 	template<typename T>
 	concept Primitive = std::is_fundamental_v<T>;
@@ -47,6 +40,37 @@ export namespace jpt
 		                 sizeof(T) > kLargeDataSize;
 
 	template<typename T>
+	concept HasSize = requires(T functor)
+	{
+		sizeof(T) > 0;
+	};
+
+	template<typename T>
+	concept Functoring = HasSize<T> && requires(T functor)
+	{
+		functor.operator();	
+	};
+
+	template<typename T>
+	concept Functional = std::is_function_v<T>;
+
+#pragma endregion
+
+#pragma region Constructing
+	
+	template<typename T>
+	concept MoveAssignable = std::is_move_assignable_v<T>;
+
+	template<typename T>
+	concept MoveConstructible = IsConstructible<T, T>;
+
+	template<typename T>
+	concept Movable = MoveConstructible<T> && MoveAssignable<T>;
+
+#pragma endregion
+
+#pragma region Comparing
+	template<typename T>
 	concept Comparable = requires(T left, T right)
 	{
 		left < right;
@@ -56,10 +80,12 @@ export namespace jpt
 	/** Avoid copy-constructing when comparing non-trivially copiable objects */
 	template<typename T>
 	concept ComparableTrivial = Comparable<T> && Trivial<T>;
-
 	template<typename T>
 	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
 
+#pragma endregion
+
+#pragma region Container
 	template<typename T>
 	concept Iterable = requires(T container)
 	{
@@ -81,4 +107,5 @@ export namespace jpt
 
 	template<typename TContainer>
 	concept ContainingNonTrivial = Containing<TContainer> && NonTrivial<typename TContainer::TData>;
+#pragma endregion
 }
