@@ -29,12 +29,6 @@ namespace jpt_private
     }
 }
 
-template<jpt::Functoring T>
-void TestHasSize(T&& t)
-{
-    t(5);
-}
-
 bool UnitTest_Function()
 {
     // Global function
@@ -57,22 +51,13 @@ bool UnitTest_Function()
 
         int32 Work(int32 n)
 		{
-            JPT_LOG("Foo::Work()");
 			return m_function(n);
 		}
-
-        void operator()(int n)
-        {
-			JPT_LOG("Foo::operator()");
-			JPT_LOG(n);
-        }
     };
 
     Foo foo;
     foo.m_function = jpt_private::TestFunction2;
     JPT_ENSURE(foo.Work(5) == 10);
-
-    TestHasSize(foo);
 
     return true;
 }
