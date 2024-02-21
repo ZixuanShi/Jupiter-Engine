@@ -19,16 +19,16 @@ import jpt.Utilities;
 
 bool UnitTest_Clock()
 {
-    jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::Clock>();
-    Sleep(3'000);
-    jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::Clock>();
+    jpt::TimePoint start = jpt::Now<jpt::Clock>();
+    Sleep(1'000);
+    jpt::TimePoint end = jpt::Now<jpt::Clock>();
 
-    double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
-    bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
+    double secondsBetween = jpt::GetSecondsBetween(start, end);
+    bool value = jpt::AreValuesClose(secondsBetween, 1.0, 0.1);
     JPT_ENSURE(value);
 
-    secondsBetween = jpt::Timing::GetSecondsFrom(start);
-    value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
+    secondsBetween = jpt::GetSecondsFrom(start);
+    value = jpt::AreValuesClose(secondsBetween, 1.0, 0.1);
     JPT_ENSURE(value);
 
     return true;
@@ -36,16 +36,16 @@ bool UnitTest_Clock()
 
 bool UnitTest_StopWatch()
 {
-    jpt::Timing::Point start = jpt::Timing::Now<jpt::Timing::StopWatch>();
-    Sleep(3'500);
-    jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::StopWatch>();
+    jpt::TimePoint start = jpt::Now<jpt::StopWatch>();
+    Sleep(1'000);
+    jpt::TimePoint end = jpt::Now<jpt::StopWatch>();
 
-    double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
-    bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
+    double secondsBetween = jpt::GetSecondsBetween(start, end);
+    bool value = jpt::AreValuesClose(secondsBetween, 1.0, 0.1);
     JPT_ENSURE(value);
 
-    secondsBetween = jpt::Timing::GetSecondsFrom(start);
-    value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
+    secondsBetween = jpt::GetSecondsFrom(start);
+    value = jpt::AreValuesClose(secondsBetween, 1.0, 0.1);
     JPT_ENSURE(value);
 
     return true;

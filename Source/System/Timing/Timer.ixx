@@ -12,12 +12,9 @@ import jpt.Timing.TypeDefs;
 
 namespace jpt
 {
-	using namespace Timing;
-
 	export class Timer
 	{
-		using TClock = StopWatch;
-		using Point = Point<TClock>;
+		using Point = TimePoint<StopWatch>;
 
 	private:
 		Point m_start;
@@ -31,7 +28,7 @@ namespace jpt
 
 	void Timer::Start()
 	{
-		m_start = Now<TClock>();
+		m_start = Now<StopWatch>();
 	}
 
 	Precision Timer::GetElapsed() const

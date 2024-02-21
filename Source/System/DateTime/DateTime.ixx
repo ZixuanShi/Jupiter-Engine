@@ -13,16 +13,16 @@ import jpt.DateTimePoint;
 
 export namespace jpt
 {
-	Timing::DateTimePoint GetDateTime(const std::chrono::time_point<Timing::Clock>& point)
+	DateTimePoint GetDateTime(const TimePoint<Clock>& point)
 	{
-		std::time_t time = Timing::Clock::to_time_t(point);
+		std::time_t time = Clock::to_time_t(point);
 		std::tm t;
 		localtime_s(&t, &time);
-		return Timing::DateTimePoint(&t);
+		return DateTimePoint(&t);
 	}
 
-	Timing::DateTimePoint GetCurrentDateTime()
+	DateTimePoint GetCurrentDateTime()
 	{
-		return GetDateTime(Timing::Now());
+		return GetDateTime(Now());
 	}
 }

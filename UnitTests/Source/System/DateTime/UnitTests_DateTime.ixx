@@ -24,8 +24,8 @@ bool UnitTest_DateTime()
     now.second -= 60;
     JPT_LOG(now);
 
-    jpt::Timing::Point current = jpt::Timing::Now();
-    JPT_LOG(jpt::Timing::GetSecondsFrom(current));
+    jpt::TimePoint current = jpt::Now();
+    JPT_LOG(jpt::GetSecondsFrom(current));
 
     return true;
 }
