@@ -38,14 +38,14 @@ bool UnitTest_Logger_Data()
 	JPT_LOG(foo.ToString().ConstBuffer());
 	JPT_LOG("%s", foo.ToString().ConstBuffer());
 
-	JPT_ENSURE(jpt::ToString(foo) != "I am a Foo object");
+	JPT_ENSURE(jpt::ToString(foo) == "I am a Foo object");
 
 	return true;
 }
 
 export bool RunUnitTests_Logger()
 {
-	//JPT_ENSURE(UnitTest_Logger_Data(), "UnitTest_Logger_Data Failed");
+	//JPT_ENSURE(UnitTest_Logger_Data());
 
 	return true;
 }

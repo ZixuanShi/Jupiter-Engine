@@ -26,13 +26,14 @@ export namespace jpt
 			uint32 minute      : 6  = 0;    /**< 63   */
 			uint32 second      : 6  = 0;    /**< 63   */
 			uint32 millisecond : 10 = 0;    /**< 1023 */
-
 			constexpr PointData() = default;
 			constexpr PointData(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second, uint32 _millisecond);
 			constexpr PointData(const tm* pTimeData);
 
 			constexpr bool IsValid() const;
-			constexpr String ToString() const;
+			String ToString() const;
+
+			tm ToTm() const;
 		};
 
 		constexpr PointData::PointData(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second, uint32 _millisecond)
@@ -56,7 +57,6 @@ export namespace jpt
 			, second(pTimeData->tm_sec        )
 		{
 			JPT_ASSERT(IsValid());
-			JPT_DELETE(pTimeData);
 		}
 
 		constexpr bool PointData::IsValid() const
@@ -73,10 +73,31 @@ export namespace jpt
 				   validHour && validMinute && validSecond && validMilliSecond;
 		}
 
-		constexpr String PointData::ToString() const
+		String PointData::ToString() const
 		{
+			static constexpr size_t kStringSize = 32;
+
+			const tm t = ToTm();
 			// MM/DD/YYYY. HH:MM:SS
-			return String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second);
+			char buffer[kStringSize];
+			strftime(buffer, sizeof(buffer), "%m/%d/%Y. %X", &t);
+
+			jpt::String timeString;
+			timeString.CopyString(buffer, kStringSize);
+			return timeString;
+		}
+
+		tm PointData::ToTm() const
+		{
+			tm timeData = {};
+			timeData.tm_year = year - 1900;
+			timeData.tm_mon = month - 1;
+			timeData.tm_mday = day;
+			timeData.tm_hour = hour;
+			timeData.tm_min = minute;
+			timeData.tm_sec = second;
+
+			return timeData;
 		}
 	}
 

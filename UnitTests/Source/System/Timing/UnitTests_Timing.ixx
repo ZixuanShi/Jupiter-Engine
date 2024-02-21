@@ -13,6 +13,7 @@ module;
 export module UnitTests_Timing;
 
 import jpt.Timing.Utils;
+import jpt.Timing.TypeDefs;
 import jpt.Math;
 import jpt.Utilities;
 
@@ -22,8 +23,12 @@ bool UnitTest_Clock()
     Sleep(3'000);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::Clock>();
 
-    const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
-    const bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
+    double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
+    bool value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
+    JPT_ENSURE(value);
+
+    secondsBetween = jpt::Timing::GetSecondsFrom(start);
+    value = jpt::AreValuesClose(secondsBetween, 3.0, 0.1);
     JPT_ENSURE(value);
 
     return true;
@@ -35,8 +40,12 @@ bool UnitTest_StopWatch()
     Sleep(3'500);
     jpt::Timing::Point end = jpt::Timing::Now<jpt::Timing::StopWatch>();
 
-    const double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
-    const bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
+    double secondsBetween = jpt::Timing::GetSecondsBetween(start, end);
+    bool value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
+    JPT_ENSURE(value);
+
+    secondsBetween = jpt::Timing::GetSecondsFrom(start);
+    value = jpt::AreValuesClose(secondsBetween, 3.5, 0.1);
     JPT_ENSURE(value);
 
     return true;
