@@ -23,10 +23,9 @@ export namespace jpt
 		uint32 hour        : 5  = 0;    /**< 31   */
 		uint32 minute      : 6  = 0;    /**< 63   */
 		uint32 second      : 6  = 0;    /**< 63   */
-		uint32 millisecond : 10 = 0;    /**< 1023 */
 
 		constexpr DateTimePoint() = default;
-		constexpr DateTimePoint(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second, uint32 _millisecond);
+		constexpr DateTimePoint(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second);
 		constexpr DateTimePoint(const tm* pTimeData);
 
 		constexpr bool IsValid() const;
@@ -34,14 +33,13 @@ export namespace jpt
 		tm ToTm() const;
 	};
 
-	constexpr DateTimePoint::DateTimePoint(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second, uint32 _millisecond)
+	constexpr DateTimePoint::DateTimePoint(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second)
 		: year       (_year       )
 		, month      (_month      )
 		, day        (_day        )
 		, hour       (_hour       )
 		, minute     (_minute     )
 		, second     (_second     )
-		, millisecond(_millisecond)
 	{
 		JPT_ASSERT(IsValid());
 	}
@@ -65,10 +63,9 @@ export namespace jpt
 		const bool validHour        = hour        >= 0 && hour        <= 23;
 		const bool validMinute      = minute      >= 0 && minute      <= 59;
 		const bool validSecond      = second      >= 0 && second      <= 59;
-		const bool validMilliSecond = millisecond >= 0 && millisecond <= 999;
 
 		return validYear && validMonth  && validDay    &&
-			   validHour && validMinute && validSecond && validMilliSecond;
+			   validHour && validMinute && validSecond;
 	}
 
 	String DateTimePoint::ToString() const
@@ -109,7 +106,6 @@ export namespace jpt
 			23,	   // hour  
 			59,	   // minute
 			59,	   // second
-			999,   // millisecond
 		};
 
 		static constexpr DateTimePoint kMin =
@@ -120,7 +116,6 @@ export namespace jpt
 			0,  // hour  
 			0,  // minute
 			0,  // second
-			0,  // millisecond
 		};
 	};
 }

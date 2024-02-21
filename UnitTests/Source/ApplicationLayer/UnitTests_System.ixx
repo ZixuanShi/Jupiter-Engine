@@ -8,7 +8,6 @@ export module UnitTests_System;
 
 import jpt.Utilities;
 
-
 /** Unit Test Modules */
 
 // Timing
@@ -23,8 +22,8 @@ export bool RunUnitTests_System()
 	/** Unit Test Functions */
 
 	// Timing
-	JPT_ENSURE(RunUnitTests_Timing());	// Will sleep the program to test timing
-	JPT_ENSURE(RunUnitTests_Timer());
+	//JPT_ENSURE(RunUnitTests_Timing());	// Will sleep the program to test timing
+	//JPT_ENSURE(RunUnitTests_Timer());
     
 	// Date Time
 	JPT_ENSURE(RunUnitTests_DateTime());

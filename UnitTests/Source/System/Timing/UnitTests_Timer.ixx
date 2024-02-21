@@ -17,6 +17,7 @@ import jpt.Timer;
 import jpt.Timing.TypeDefs;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.Math;
 
 bool UnitTest_Timer()
 {
@@ -26,7 +27,8 @@ bool UnitTest_Timer()
 
     Sleep(1000);
 
-    JPT_LOG(timer.GetElapsed());
+    JPT_ENSURE(jpt::AreValuesClose(timer.GetElapsed(), 1.0, 0.1));
+    JPT_ENSURE(jpt::AreValuesClose(timer.GetElapsedMs(), 1000.0, 10.0));
 
     return true;
 }

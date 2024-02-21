@@ -14,10 +14,8 @@ namespace jpt
 {
 	export class Timer
 	{
-		using Point = TimePoint<StopWatch>;
-
 	private:
-		Point m_start;
+		TimePoint<StopWatch> m_start;
 
 	public:
 		void Start();

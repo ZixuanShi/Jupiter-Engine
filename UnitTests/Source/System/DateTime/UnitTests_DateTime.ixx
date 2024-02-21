@@ -18,14 +18,10 @@ import jpt.Utilities;
 bool UnitTest_DateTime()
 {
     auto now = jpt::GetCurrentDateTime();
-    JPT_LOG(now);
-
-    now.year += 100;
-    now.second -= 60;
-    JPT_LOG(now);
+    //JPT_LOG(now);
 
     jpt::TimePoint current = jpt::Now();
-    JPT_LOG(jpt::GetSecondsFrom(current));
+    //JPT_LOG(jpt::GetSecondsFrom(current));
 
     return true;
 }
