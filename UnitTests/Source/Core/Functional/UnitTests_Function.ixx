@@ -8,6 +8,7 @@ export module UnitTests_Function;
 
 import jpt.Function;
 import jpt.TypeDefs;
+import jpt.Utilities;
 
 bool TestFunction1(int32& n)
 {

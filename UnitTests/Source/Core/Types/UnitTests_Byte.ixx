@@ -7,6 +7,7 @@ module;
 export module UnitTests_Byte;
 
 import jpt.Byte;
+import jpt.Utilities;
 
 bool UnitTest_Byte()
 {

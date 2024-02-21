@@ -8,6 +8,7 @@ export module UnitTests_Math;
 
 import jpt.TypeDefs;
 import jpt.Math;
+import jpt.Utilities;
 
 bool UnitTest_Clamping()
 {

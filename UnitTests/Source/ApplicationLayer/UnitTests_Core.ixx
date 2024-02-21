@@ -10,6 +10,7 @@ export module UnitTests_Core;
 
 // Minimal
 import UnitTests_Macros;
+import jpt.Utilities;
 
 // Algorithms
 import UnitTests_Sorting;

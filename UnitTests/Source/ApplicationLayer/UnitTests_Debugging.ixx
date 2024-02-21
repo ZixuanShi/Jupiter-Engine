@@ -10,7 +10,7 @@ export module UnitTests_Debugging;
 
 // Logging
 import UnitTests_Logger;
-
+import jpt.Utilities;
 
 export bool RunUnitTests_Debugging()
 {

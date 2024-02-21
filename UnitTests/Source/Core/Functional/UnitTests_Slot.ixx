@@ -11,6 +11,7 @@ import jpt.TypeDefs;
 import jpt.Variant;
 import jpt.DynamicArray;
 import jpt.ToString;
+import jpt.Utilities;
 
 void VoidFunc(int32& n)
 {
