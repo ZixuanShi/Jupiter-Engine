@@ -61,7 +61,6 @@ export namespace jpt
 		}
 	};
 
-	#define JPT_IGNORE(...) __VA_ARGS__
 	/** @return		How many args of parameter pack. Works on Macro's __VA_ARGS__ too */
 	template<typename ...Ts>
 	constexpr size_t GetArgsCount(Ts&&...)
@@ -69,8 +68,8 @@ export namespace jpt
 		return sizeof...(Ts);
 	}
 	template<typename ...Ts>
-	constexpr bool HasAnyArgs(Ts&&... args)
+	constexpr bool HasAnyArgs(Ts&&...)
 	{
-		return GetArgsCount(Forward<Ts>(args)...) > 0;
+		return sizeof...(Ts) > 0;
 	}
 }
