@@ -22,12 +22,12 @@ import jpt.Math;
 bool UnitTest_Clock()
 {
     jpt::DateTime now = jpt::Clock::GetCurrentDateTime();
-    jpt::DateTime tenMinsAgo = jpt::Clock::RawNow() - 60 * 50;
-    jpt::DateTime tenMinsDuration = now - tenMinsAgo;
+    jpt::DateTime ago = jpt::Clock::RawNow() - 60 * 50;
+    jpt::DateTime duration = now - ago;
 
-    JPT_LOG("10 minutes duration: " + tenMinsDuration.ToString());
-    JPT_LOG("10 minutes later: "    + (now + tenMinsDuration).ToString());
-    JPT_LOG("10 minutes before: "   + (now - tenMinsDuration).ToString());
+    JPT_LOG("50 minutes duration: " + duration.ToString());
+    JPT_LOG("50 minutes later: "    + (now + duration).ToString());
+    JPT_LOG("50 minutes before: "   + (now - duration).ToString());
 
     return true;
 }

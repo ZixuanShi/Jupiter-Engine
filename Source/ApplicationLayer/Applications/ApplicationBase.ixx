@@ -46,20 +46,20 @@ namespace jpt
 
 	void ApplicationBase::Run()
 	{
-		StopWatch timer;
-		timer.Start();
-
-		while (true)
-		{
-			PollInput();
-			Update();
-			Render();
-
-			if (timer.GetDuration() > 1.0)
-			{
-				break;
-			}
-		}
+		//StopWatch timer;
+		//timer.Start();
+		//
+		//while (true)
+		//{
+		//	PollInput();
+		//	Update();
+		//	Render();
+		//
+		//	if (timer.GetDuration() > 1.0)
+		//	{
+		//		break;
+		//	}
+		//}
 	}
 
 	void ApplicationBase::PollInput()

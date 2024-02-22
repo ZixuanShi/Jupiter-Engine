@@ -56,9 +56,11 @@ export namespace jpt
 		/** Comparison */
 		bool operator==(const DateTime& other) const;
 
-		/** Operators */
+		/** @return		Duration between this DateTime point to the other DateTime point */
 		DateTime operator-(const DateTime& other) const;
-		DateTime operator+(const DateTime& other) const;
+
+		/** @return		The DateTime point relative to this DateTime point of duration */
+		DateTime operator+(const DateTime& duration) const;
 
 		/** Utilities */
 		bool IsValid() const;
