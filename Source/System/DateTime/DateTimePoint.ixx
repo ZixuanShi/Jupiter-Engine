@@ -73,6 +73,7 @@ export namespace jpt
 		static constexpr size_t kStringSize = 32;
 
 		const tm t = ToTm();
+
 		// MM/DD/YYYY. HH:MM:SS
 		char buffer[kStringSize];
 		strftime(buffer, sizeof(buffer), "%m/%d/%Y. %X", &t);
@@ -84,7 +85,8 @@ export namespace jpt
 
 	tm DateTimePoint::ToTm() const
 	{
-		tm timeData = {};
+		tm timeData;
+
 		timeData.tm_year = year - 1900;
 		timeData.tm_mon  = month - 1;
 		timeData.tm_mday = day;

@@ -18,10 +18,14 @@ import jpt.Utilities;
 bool UnitTest_DateTime()
 {
     auto now = jpt::GetCurrentDateTime();
-    //JPT_LOG(now);
+    
+    auto cu = jpt::Now();
+    time_t current = time(nullptr);
+    time_t tenMinsAgo = current - 10 * 60;
 
-    jpt::TimePoint current = jpt::Now();
-    //JPT_LOG(jpt::GetSecondsFrom(current));
+    char ctimeStr[64];
+    ctime_s(ctimeStr, 64, &tenMinsAgo);
+    JPT_LOG(ctimeStr);
 
     return true;
 }

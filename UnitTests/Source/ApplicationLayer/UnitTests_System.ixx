@@ -21,8 +21,8 @@ export bool RunUnitTests_System()
 {
 	/** Unit Test Functions */
 
-	// Timing
-	//JPT_ENSURE(RunUnitTests_Timing());	// Will sleep the program to test timing
+	// Timing. Will sleep the program to test timing
+	//JPT_ENSURE(RunUnitTests_Timing());	
 	//JPT_ENSURE(RunUnitTests_Timer());
     
 	// Date Time
