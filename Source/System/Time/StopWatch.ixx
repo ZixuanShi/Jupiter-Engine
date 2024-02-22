@@ -8,52 +8,45 @@ module;
 export module jpt.StopWatch;
 
 import jpt.Time.TypeDefs;
+import jpt.Time.Utils;
 
 export namespace jpt
 {
 	/** Use for timing and benchmarking */
 	class StopWatch
 	{
-		using Clock = std::chrono::high_resolution_clock;
-
 	public:
-		using Point = std::chrono::time_point<Clock>;
+		using TClock = std::chrono::high_resolution_clock;
+		using Point  = std::chrono::time_point<TClock>;
+
+	private:
+		Point m_start;
 
 	public:
 		static Point Now();
 
-		static Precision GetSecondsBetween(const Point& begin, const Point& end);
-		static Precision GetSecondsFrom(const Point& begin);
-
-		static Precision GetMsBetween(const Point& begin, const Point& end);
-		static Precision GetMsFrom(const Point& begin);
+		void Start();
+		Precision GetDuration() const;
+		Precision GetDurationMs() const;
 	};
 
 	StopWatch::Point StopWatch::Now()
 	{
-		return Clock::now();
+		return TClock::now();
 	}
 
-	Precision StopWatch::GetSecondsBetween(const Point& begin, const Point& end)
+	void StopWatch::Start()
 	{
-		const std::chrono::duration<Precision> diff = end - begin;
-		return diff.count();
+		m_start = Now();
 	}
 
-	Precision StopWatch::GetSecondsFrom(const Point& begin)
+	Precision StopWatch::GetDuration() const
 	{
-		const auto end = Now();
-		const std::chrono::duration<Precision> diff = end - begin;
-		return diff.count();
+		return GetSecondsFrom(m_start);
 	}
 
-	Precision StopWatch::GetMsBetween(const Point& begin, const Point& end)
+	Precision StopWatch::GetDurationMs() const
 	{
-		return GetSecondsBetween(begin, end) * static_cast<Precision>(1000.0f);
-	}
-
-	Precision StopWatch::GetMsFrom(const Point& begin)
-	{
-		return GetSecondsFrom(begin) * static_cast<Precision>(1000.0f);
+		return GetMsFrom(m_start);
 	}
 }
