@@ -5,7 +5,6 @@ module;
 #include "Core/Minimal/Headers.h"
 
 export module UnitTests_Slot;
-JPT_DEOPTIMIZE
 
 import jpt.Slot;
 import jpt.TypeDefs;
@@ -13,7 +12,6 @@ import jpt.Variant;
 import jpt.DynamicArray;
 import jpt.ToString;
 import jpt.Utilities;
-
 
 void VoidFunc(int32& n)
 {
