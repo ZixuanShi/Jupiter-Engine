@@ -7,7 +7,7 @@ module;
 
 export module jpt.StopWatch;
 
-import jpt.Time.TypeDefs;
+export import jpt.Time.TypeDefs;
 
 export namespace jpt
 {

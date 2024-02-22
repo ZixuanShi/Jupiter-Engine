@@ -7,8 +7,8 @@ module;
 
 export module jpt.Clock;
 
-import jpt.Time.TypeDefs;
-import jpt.DateTime;
+export import jpt.Time.TypeDefs;
+export import jpt.DateTime;
 import jpt.TypeDefs;
 import jpt.String;
 

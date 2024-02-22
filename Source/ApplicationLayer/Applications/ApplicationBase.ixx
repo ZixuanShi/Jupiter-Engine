@@ -4,6 +4,8 @@ module;
 
 export module jpt.ApplicationBase;
 
+import jpt.StopWatch;
+
 namespace jpt
 {
 	/** Base abstract class for applications.
@@ -17,9 +19,15 @@ namespace jpt
 		virtual void Update();
 		virtual void Clean();
 
+		void Run();
+
 		/** Designed to be implemented in client project's application
 			@return An Application's reference to the client project. */
 		static ApplicationBase& GetInstance();
+
+	private:
+		void PollInput();
+		void Render();
 	};
 
 	bool ApplicationBase::Init()
@@ -34,5 +42,31 @@ namespace jpt
 	void ApplicationBase::Clean()
 	{
 
+	}
+
+	void ApplicationBase::Run()
+	{
+		StopWatch timer;
+		timer.Start();
+
+		while (true)
+		{
+			PollInput();
+			Update();
+			Render();
+
+			if (timer.GetDuration() > 1.0)
+			{
+				break;
+			}
+		}
+	}
+
+	void ApplicationBase::PollInput()
+	{
+	}
+
+	void ApplicationBase::Render()
+	{
 	}
 }

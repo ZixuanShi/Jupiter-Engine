@@ -2,7 +2,7 @@
 
 module;
 
-#if IS_DEBUG
+#if JPT_ENABLE_EDITOR_FEATURES
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
 	#include <crtdbg.h>
@@ -23,7 +23,7 @@ export namespace jpt
 {
 	int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
 	{
-#if IS_DEBUG
+#if JPT_ENABLE_EDITOR_FEATURES
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
@@ -31,7 +31,7 @@ export namespace jpt
 		jpt::ApplicationBase& app = jpt::ApplicationBase::GetInstance();
 		if (app.Init())
 		{
-			app.Update();
+			app.Run();
 		}
 
 		app.Clean();
