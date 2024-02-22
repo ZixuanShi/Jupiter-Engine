@@ -80,7 +80,7 @@ def get_data():
     global file_to_add_content
 
     subject_name = input("What's the unit test's subject's name?\n")
-    categories   = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Timing, etc)\n")
+    categories   = input("What's the categories of this subject relative to the Source folder? (i.e. Core/Types, Input/Controllers, System/Time, etc)\n")
     categories_list = categories.split('/')
 
     file_to_add_name = file_name_template.replace("<SubjectName>", subject_name)
