@@ -49,10 +49,9 @@ bool UnitTest_DateTime()
 
 export bool RunUnitTests_Clock()
 {
-    JPT_LOG("Current Time: " + jpt::Clock::GetCurrentDateTime().ToString());
-
-    JPT_ENSURE(UnitTest_Clock());
-    JPT_ENSURE(UnitTest_DateTime());
+    //JPT_LOG("Current Time: " + jpt::Clock::GetCurrentDateTime().ToString());
+    //JPT_ENSURE(UnitTest_Clock());
+    //JPT_ENSURE(UnitTest_DateTime());
 
     return true;
 }

@@ -42,11 +42,12 @@ bool UnitTest_Sorting_Random()
 
     for (size_t i = 0; i < kArraySize; ++i)
     {
-        if (i <= kArraySize)
+        if (i + 1 <= kArraySize - 1)
         {
             JPT_ENSURE(array[i] >= array[i + 1]);
         }
     }
+
 
     return true;
 }

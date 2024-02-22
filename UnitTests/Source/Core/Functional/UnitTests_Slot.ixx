@@ -5,6 +5,7 @@ module;
 #include "Core/Minimal/Headers.h"
 
 export module UnitTests_Slot;
+JPT_DEOPTIMIZE
 
 import jpt.Slot;
 import jpt.TypeDefs;
@@ -13,12 +14,8 @@ import jpt.DynamicArray;
 import jpt.ToString;
 import jpt.Utilities;
 
-void VoidFunc(int32& n)
-{
-    n *= 2;
-}
 
-void Tester(int32& n)
+void VoidFunc(int32& n)
 {
     n *= 2;
 }
@@ -47,14 +44,12 @@ bool UnitTest_Slot_Void()
 
     // Erasing
     slot.Erase(voidFuncIndex);  // index
-    JPT_ENSURE(slot.Erase(lambda));         // function pointer/lambda
-    JPT_ENSURE(slot.Erase(Tester) == false);
 
     // Re-adding. the indices should be the same as before
     voidFuncIndex = slot.Add(VoidFunc);
     lambdaVarIndex = slot.Add(lambda);
     JPT_ENSURE(voidFuncIndex == 0);
-    JPT_ENSURE(lambdaVarIndex == 2);
+    JPT_ENSURE(lambdaVarIndex == 3);
 
     slot.Erase(lambdaPlaceHolderIndex);
     jpt::Function<void(int32&)> function = VoidFunc;
@@ -63,7 +58,7 @@ bool UnitTest_Slot_Void()
 
     // Call all
     slot(n);
-    JPT_ENSURE(n == 64);
+    JPT_ENSURE(n == 128);
     
     return true;
 }

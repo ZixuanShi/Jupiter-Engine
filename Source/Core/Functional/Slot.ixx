@@ -36,10 +36,6 @@ export namespace jpt
 			@param	index		The index of the function to erase from this Slot */
 		constexpr void Erase(size_t index);
 
-		/** Enumerate Slot, try to find and erase this function.
-			@note	When possible, use handle and erase with index instead for performance */
-		constexpr bool Erase(TFunc&& function);
-
 		/** Clears all the functions in this slot. Reset array to empty */
 		constexpr void Clear();
 
@@ -92,21 +88,6 @@ export namespace jpt
 	{
 		JPT_ASSERT(index < m_functions.Size());
 		m_functions[index].Clear();
-	}
-
-	template<class TReturn, class ...TArgs>
-	constexpr bool Slot<TReturn(TArgs...)>::Erase(TFunc&& function)
-	{
-		for (size_t i = 0; i < m_functions.Size(); ++i)
-		{
-			if (m_functions[i] == function)
-			{
-				m_functions[i].Clear();
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	template<class TReturn, class ...TArgs>
