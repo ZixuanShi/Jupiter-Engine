@@ -18,6 +18,11 @@ void VoidFunc(int32& n)
     n *= 2;
 }
 
+void Tester(int32& n)
+{
+    n *= 3;
+}
+
 bool UnitTest_Slot_Void()
 {
     jpt::Slot<void(int32&)> slot;
@@ -30,24 +35,26 @@ bool UnitTest_Slot_Void()
     JPT_ENSURE(n == 2);
 
     // Lambda placeholder
-    size_t lambdaPlaceHolderIndex = slot.Add([](int32& n) {n *= 2; });
+    size_t lambdaPlaceHolderIndex = slot.Add([](int32& n) {n *= 4; });
     slot.Call(lambdaPlaceHolderIndex, n);
-    JPT_ENSURE(n == 4);
+    JPT_ENSURE(n == 8);
 
     // Lambda variable
-    auto lambda = [](int32& n) { n *= 2; };
+    auto lambda = [](int32& n) { n *= 5; };
     size_t lambdaVarIndex = slot.Add(lambda);
     slot.Call(lambdaVarIndex, n);
-    JPT_ENSURE(n == 8);
+    JPT_ENSURE(n == 40);
 
     // Erasing
     slot.Erase(voidFuncIndex);  // index
+    JPT_ENSURE(slot.Erase(lambda));         // function pointer/lambda
+    JPT_ENSURE(slot.Erase(Tester) == false);
 
     // Re-adding. the indices should be the same as before
     voidFuncIndex = slot.Add(VoidFunc);
     lambdaVarIndex = slot.Add(lambda);
     JPT_ENSURE(voidFuncIndex == 0);
-    JPT_ENSURE(lambdaVarIndex == 3);
+    JPT_ENSURE(lambdaVarIndex == 2);
 
     slot.Erase(lambdaPlaceHolderIndex);
     jpt::Function<void(int32&)> function = VoidFunc;
@@ -56,7 +63,7 @@ bool UnitTest_Slot_Void()
 
     // Call all
     slot(n);
-    JPT_ENSURE(n == 128);
+    JPT_ENSURE(n == 800);
     
     return true;
 }
