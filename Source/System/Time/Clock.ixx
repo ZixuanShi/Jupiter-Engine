@@ -8,17 +8,38 @@ module;
 export module jpt.Clock;
 
 import jpt.Time.TypeDefs;
+import jpt.DateTime;
+import jpt.TypeDefs;
+import jpt.String;
 
 export namespace jpt
 {
 	/** Use for simulating real-life time. Getting specific Year, Month, Day, Hour, Minute, Second */
 	class Clock
 	{
-	public:
 		using TClock = std::chrono::system_clock;
-		using Point  = std::chrono::time_point<TClock>;
 
 	public:
-		static Point Now() { return TClock::now(); }
+		using Point = std::chrono::time_point<TClock>;
+
+	public:
+		static Point Now();
+		static RawTimeType RawNow();
+		static DateTime GetCurrentDateTime();
 	};
+
+	Clock::Point Clock::Now()
+	{
+		return TClock::now();
+	}
+
+	RawTimeType Clock::RawNow()
+	{
+		return time(nullptr);
+	}
+
+	DateTime Clock::GetCurrentDateTime()
+	{
+		return DateTime(RawNow());
+	}
 }

@@ -8,7 +8,6 @@ module;
 export module jpt.StopWatch;
 
 import jpt.Time.TypeDefs;
-import jpt.Time.Utils;
 
 export namespace jpt
 {
@@ -24,6 +23,10 @@ export namespace jpt
 
 	public:
 		static Point Now();
+		static Precision GetSecondsBetween(const Point& begin, const Point& end);
+		static Precision GetSecondsFrom(const Point& begin);
+		static Precision GetMsBetween(const Point& begin, const Point& end);
+		static Precision GetMsFrom(const Point& begin);
 
 		void Start();
 		Precision GetDuration() const;
@@ -33,6 +36,28 @@ export namespace jpt
 	StopWatch::Point StopWatch::Now()
 	{
 		return TClock::now();
+	}
+
+	Precision StopWatch::GetSecondsBetween(const Point& begin, const Point& end)
+	{
+		const std::chrono::duration<Precision> diff = end - begin;
+		return diff.count();
+	}
+
+	Precision StopWatch::GetSecondsFrom(const Point& begin)
+	{
+		const auto end = Now();
+		return GetSecondsBetween(begin, end);
+	}
+
+	Precision StopWatch::GetMsBetween(const Point& begin, const Point& end)
+	{
+		return GetSecondsBetween(begin, end) * static_cast<Precision>(1000.0f);
+	}
+
+	Precision StopWatch::GetMsFrom(const Point& begin)
+	{
+		return GetSecondsFrom(begin) * static_cast<Precision>(1000.0f);
 	}
 
 	void StopWatch::Start()
