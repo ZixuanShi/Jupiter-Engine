@@ -23,14 +23,14 @@ export namespace jpt
 
 	public:
 		static Point Now();
-		static Precision GetSecondsBetween(const Point& begin, const Point& end);
-		static Precision GetSecondsFrom(const Point& begin);
-		static Precision GetMsBetween(const Point& begin, const Point& end);
-		static Precision GetMsFrom(const Point& begin);
+		static TimePrecision GetSecondsBetween(const Point& begin, const Point& end);
+		static TimePrecision GetSecondsFrom(const Point& begin);
+		static TimePrecision GetMsBetween(const Point& begin, const Point& end);
+		static TimePrecision GetMsFrom(const Point& begin);
 
 		void Start();
-		Precision GetDuration() const;
-		Precision GetDurationMs() const;
+		TimePrecision GetDuration() const;
+		TimePrecision GetDurationMs() const;
 	};
 
 	StopWatch::Point StopWatch::Now()
@@ -38,26 +38,26 @@ export namespace jpt
 		return TClock::now();
 	}
 
-	Precision StopWatch::GetSecondsBetween(const Point& begin, const Point& end)
+	TimePrecision StopWatch::GetSecondsBetween(const Point& begin, const Point& end)
 	{
-		const std::chrono::duration<Precision> diff = end - begin;
+		const std::chrono::duration<TimePrecision> diff = end - begin;
 		return diff.count();
 	}
 
-	Precision StopWatch::GetSecondsFrom(const Point& begin)
+	TimePrecision StopWatch::GetSecondsFrom(const Point& begin)
 	{
 		const auto end = Now();
 		return GetSecondsBetween(begin, end);
 	}
 
-	Precision StopWatch::GetMsBetween(const Point& begin, const Point& end)
+	TimePrecision StopWatch::GetMsBetween(const Point& begin, const Point& end)
 	{
-		return GetSecondsBetween(begin, end) * static_cast<Precision>(1000.0f);
+		return GetSecondsBetween(begin, end) * static_cast<TimePrecision>(1000.0f);
 	}
 
-	Precision StopWatch::GetMsFrom(const Point& begin)
+	TimePrecision StopWatch::GetMsFrom(const Point& begin)
 	{
-		return GetSecondsFrom(begin) * static_cast<Precision>(1000.0f);
+		return GetSecondsFrom(begin) * static_cast<TimePrecision>(1000.0f);
 	}
 
 	void StopWatch::Start()
@@ -65,12 +65,12 @@ export namespace jpt
 		m_start = Now();
 	}
 
-	Precision StopWatch::GetDuration() const
+	TimePrecision StopWatch::GetDuration() const
 	{
 		return GetSecondsFrom(m_start);
 	}
 
-	Precision StopWatch::GetDurationMs() const
+	TimePrecision StopWatch::GetDurationMs() const
 	{
 		return GetMsFrom(m_start);
 	}

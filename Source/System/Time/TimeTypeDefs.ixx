@@ -13,7 +13,7 @@ export module jpt.Time.TypeDefs;
 export namespace jpt
 {
 	using RawTimeType = time_t;
-	using Precision   = double;
+	using TimePrecision   = double;
 
 	JPT_ENUM_UINT8(EMonth,
 		January = 1,	// Start at 1 to match the tm_mon field in the C time library
