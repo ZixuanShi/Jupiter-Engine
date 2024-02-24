@@ -84,7 +84,7 @@ bool UnitTest_Vec2f_Functionalities()
 
     // Lerp
     JPT_ENSURE(v.Lerped(Vec2f(4.0f, 4.0f), 0.5f) == Vec2f(3.0f, 3.0f));
-    JPT_ENSURE(Vec2f::Lerped(v, Vec2f(4.0f, 4.0f), 0.5f) == Vec2f(3.0f, 3.0f));
+    JPT_ENSURE(Vec2f::Lerp(v, Vec2f(4.0f, 4.0f), 0.5f) == Vec2f(3.0f, 3.0f));
 
     return true;
 }

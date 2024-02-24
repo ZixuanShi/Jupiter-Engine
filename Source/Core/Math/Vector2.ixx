@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.String;
 import jpt.ToString;
 
-export namespace jpt
+namespace jpt
 {
 	template<Numeric T>
 	struct Vector2
@@ -63,8 +63,8 @@ export namespace jpt
 		constexpr void Normalize();
 		constexpr Vector2 Normalized() const;
 		constexpr void Lerp(Vector2 other, T t) const;
-		constexpr Vector2 SLerp(Vector2 other, T t) const;
 		constexpr Vector2 Lerped(Vector2 other, T t) const;
+		constexpr Vector2 Rotate(T angle) const;
 
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
@@ -72,7 +72,7 @@ export namespace jpt
 		constexpr static T Distance(Vector2 left, Vector2 right);
 		constexpr static T Distance2(Vector2 left, Vector2 right);
 		constexpr static Vector2 Normalized(Vector2 vector);
-		constexpr static Vector2 Lerped(Vector2 left, Vector2 right, T t);
+		constexpr static Vector2 Lerp(Vector2 left, Vector2 right, T t);
 
 		constexpr jpt::String ToString() const;
 	};
@@ -284,18 +284,14 @@ export namespace jpt
 	template<Numeric T>
 	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 other, T t) const
 	{
-		if (t <= 0.0f)
-		{
-			return *this;
-		}
-		else if (t >= 1.0f)
-		{
-			return other;
-		}
-		else
-		{
-			return *this + (other - *this) * t;
-		}
+		return *this + (other - *this) * t;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Rotate(T angle) const
+	{
+		// TODO: Implement
+		return Vector2();
 	}
 
 	template<Numeric T>
@@ -335,7 +331,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 left, Vector2 right, T t)
+	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 left, Vector2 right, T t)
 	{
 		return left.Lerped(right, t);
 	}

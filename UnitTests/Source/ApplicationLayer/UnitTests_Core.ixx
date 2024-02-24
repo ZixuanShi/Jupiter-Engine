@@ -31,6 +31,7 @@ import UnitTests_Utilities;
 import UnitTests_TypeTraits;
 
 // Math
+import UnitTests_Vector3;
 import UnitTests_Vector2;
 import UnitTests_Math;
 import UnitTests_RandomNumberGenerator;
@@ -80,6 +81,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Macros());
 
 	// Math
+	JPT_ENSURE(RunUnitTests_Vector3());
 	JPT_ENSURE(RunUnitTests_Vector2());
 	JPT_ENSURE(RunUnitTests_Math());
 	JPT_ENSURE(RunUnitTests_RandomNumberGenerator());
