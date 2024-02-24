@@ -20,20 +20,25 @@ import jpt.Math;
 
 bool UnitTest_StopWatch()
 {
+#if IS_PLATFORM_WIN64
     const jpt::StopWatch::Point start = jpt::StopWatch::Now();
+
     Sleep(1000);
+    
     const jpt::StopWatch::Point end = jpt::StopWatch::Now();
 
     JPT_LOG(jpt::StopWatch::GetSecondsBetween(start, end));
     JPT_LOG(jpt::StopWatch::GetSecondsFrom(start));
     JPT_LOG(jpt::StopWatch::GetMsBetween(start, end));
     JPT_LOG(jpt::StopWatch::GetMsFrom(start));
+#endif
 
     return true;
 }
 
 bool UnitTest_Timer()
 {
+#if IS_PLATFORM_WIN64
     jpt::StopWatch timer;
     timer.Start();
 
@@ -41,6 +46,7 @@ bool UnitTest_Timer()
 
     JPT_ENSURE(jpt::AreValuesClose(timer.GetDuration(), 1.0, 0.1));
     JPT_ENSURE(jpt::AreValuesClose(timer.GetDurationMs(), 1000.0, 100.0));
+#endif
 
     return true;
 }

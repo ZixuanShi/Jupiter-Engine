@@ -7,10 +7,6 @@ module;
 #include <time.h>
 #include <chrono>
 
-#if IS_PLATFORM_WIN64
-#include <Windows.h>
-#endif
-
 export module UnitTests_Clock;
 
 import jpt.Clock;

@@ -8,6 +8,7 @@ export module jpt.Vector2;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
+import jpt.Math;
 import jpt.String;
 import jpt.ToString;
 
@@ -16,8 +17,17 @@ export namespace jpt
 	template<Numeric T>
 	struct Vector2
 	{
+	public:
 		T x = static_cast<T>(0);
 		T y = static_cast<T>(0);
+
+	public:
+		static constexpr Vector2 Zero()  { return Vector2(static_cast<T>( 0), static_cast<T>(0 )); }
+		static constexpr Vector2 One()   { return Vector2(static_cast<T>( 1), static_cast<T>(1 )); }
+		static constexpr Vector2 Up()    { return Vector2(static_cast<T>( 0), static_cast<T>(1 )); }
+		static constexpr Vector2 Down()  { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
+		static constexpr Vector2 Left()  { return Vector2(static_cast<T>(-1), static_cast<T>(0 )); }
+		static constexpr Vector2 Right() { return Vector2(static_cast<T>( 1), static_cast<T>(0 )); }
 
 	public:
 		constexpr Vector2() = default;
@@ -50,12 +60,19 @@ export namespace jpt
 		constexpr T Length2() const;
 		constexpr T Distance(Vector2 other) const;
 		constexpr T Distance2(Vector2 other) const;
+		constexpr void Normalize();
+		constexpr Vector2 Normalized() const;
+		constexpr void Lerp(Vector2 other, T t) const;
+		constexpr Vector2 SLerp(Vector2 other, T t) const;
+		constexpr Vector2 Lerped(Vector2 other, T t) const;
 
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
 		constexpr static T Length2(Vector2 vector);
 		constexpr static T Distance(Vector2 left, Vector2 right);
 		constexpr static T Distance2(Vector2 left, Vector2 right);
+		constexpr static Vector2 Normalized(Vector2 vector);
+		constexpr static Vector2 Lerped(Vector2 left, Vector2 right, T t);
 
 		constexpr jpt::String ToString() const;
 	};
@@ -206,7 +223,7 @@ export namespace jpt
 	template<Numeric T>
 	constexpr bool Vector2<T>::operator==(Vector2 other) const
 	{
-		return x == other.x && y == other.y;
+		return AreValuesClose(x, other.x) && AreValuesClose(y, other.y);
 	}
 
 	template<Numeric T>
@@ -240,6 +257,48 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr void Vector2<T>::Normalize()
+	{
+		const T length = Length();
+		if (length != 0.0f)
+		{
+			x /= length;
+			y /= length;
+		}
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Normalized() const
+	{
+		Vector2<T> result = *this;
+		result.Normalize();
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr void Vector2<T>::Lerp(Vector2 other, T t) const
+	{
+		*this += (other - *this) * t;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 other, T t) const
+	{
+		if (t <= 0.0f)
+		{
+			return *this;
+		}
+		else if (t >= 1.0f)
+		{
+			return other;
+		}
+		else
+		{
+			return *this + (other - *this) * t;
+		}
+	}
+
+	template<Numeric T>
 	constexpr T Vector2<T>::Dot(Vector2 left, Vector2 right)
 	{
 		return (left.x * right.x) + (left.y * right.y);
@@ -270,6 +329,18 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Normalized(Vector2 vector)
+	{
+		return vector.Normalized();
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 left, Vector2 right, T t)
+	{
+		return left.Lerped(right, t);
+	}
+
+	template<Numeric T>
 	constexpr jpt::String Vector2<T>::ToString() const
 	{
 		jpt::String result;
@@ -279,9 +350,9 @@ export namespace jpt
 		result += jpt::ToString(y);
 		return result;
 	}
-
-	using Vec2f = Vector2<float>;
-	using Vec2d = Vector2<double>;
-	using Vec2i = Vector2<int32>;
-	using Vec2u = Vector2<uint32>;
 }
+
+export using Vec2f = jpt::Vector2<float>;
+export using Vec2d = jpt::Vector2<double>;
+export using Vec2i = jpt::Vector2<int32>;
+export using Vec2u = jpt::Vector2<uint32>;
