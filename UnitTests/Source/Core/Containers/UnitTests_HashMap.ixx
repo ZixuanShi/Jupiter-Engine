@@ -228,6 +228,9 @@ bool UnitTest_HashMap_Function()
     map["Func2"](i);
     JPT_ENSURE(i == 3);
 
+    lambda(i);
+    JPT_ENSURE(i == 5);
+
     return true;
 }
 

@@ -8,7 +8,7 @@ import jpt.Concepts;
 
 export namespace jpt
 {
-#pragma region Find
+#pragma region Linear Find
 	template<typename TContainer, typename TData>
 	constexpr auto Find(TContainer& container, const TData& dataToFind) -> decltype(container.begin())
 	{

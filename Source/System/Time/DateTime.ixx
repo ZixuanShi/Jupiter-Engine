@@ -28,6 +28,7 @@ export namespace jpt
 		uint32 second : 6  = 0;    /**< 63    Range 0 - 59   */
 
 	public:
+		/** Constructors */
 		DateTime() = default;
 		DateTime(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second);
 		DateTime(const tm& timeData);
