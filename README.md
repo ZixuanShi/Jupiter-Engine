@@ -1,5 +1,5 @@
 # Jupiter-Engine
-My own game engine. I wrote everything from scratch
+My own game engine. I plan, write, test everything from scratch by myself
 
 ## Folder Structure
 This applies to both Engine and Client Project directory
@@ -34,32 +34,3 @@ This applies to both Engine and Client Project directory
 | Scripting           | Node Based Visual Scripting, Lua Scripting                                                                           |
 | UIUX                | User Interface and Experience, Widgets, HUD                                                                          |
 | VFX                 | Visual Effects. Particles, Fog, Water, Smoke, Reflection                                                             |
-
-## Coding Standards
-- An object's life cycle should be named as the following:
-  - Init
-  - Update
-  - Clear
-  - OnEvent 
-
-- A class should follow this order
-    class Example
-    {
-    public:
-        TypeDefs
-        Enums
-
-    private:
-        Member Variables
-
-    public:
-        6 generated member functions
-
-        APIs
-
-    private:
-        Internal functions
-    }
-
-# Committing
-https://www.freecodecamp.org/news/how-to-write-better-git-commit-messages/
