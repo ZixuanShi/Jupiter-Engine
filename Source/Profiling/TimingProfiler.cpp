@@ -1,5 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+#if JPT_ENABLE_EDITOR_FEATURES
+
 #include "TimingProfiler.h"
 
 #include "Debugging/Logger.h"
@@ -20,3 +22,5 @@ TimingProfiler::~TimingProfiler()
 	const TimePrecision milliseconds = StopWatch::GetMsFrom(m_start);
 	JPT_SYSTEM_INFO("TimingProfiler: %s took %f ms", m_label, milliseconds);
 }
+
+#endif

@@ -4,6 +4,8 @@
 
 #include <chrono>
 
+#if JPT_ENABLE_EDITOR_FEATURES
+
 namespace jpt
 {
 	class TimingProfiler
@@ -18,7 +20,6 @@ namespace jpt
 	};
 }
 
-#if JPT_ENABLE_EDITOR_FEATURES
 	#define JPT_TIMING_PROFILER(label) jpt::TimingProfiler __timing_profiler__(label)
 #else
 	#define JPT_TIMING_PROFILER(label)

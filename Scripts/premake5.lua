@@ -1,3 +1,12 @@
+-- Client project should have a Generate.bat file that should be like this:
+
+-- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" vs2022 "<ProjectName>" "<ProjectDirectory>"
+
+-- Example:
+-- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" vs2022 "UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
+
 local project_name = _ARGS[1]
 local project_dir  = _ARGS[2]
 
@@ -110,8 +119,8 @@ project "Engine"
         (jupiter_dir .. "Source/**.ixx"),
     }
 
--- Unit Tests
-project "Benchmarks"
+-- Client Project
+project (project_name)
     filter "platforms:Win64"
         kind "WindowedApp"
 

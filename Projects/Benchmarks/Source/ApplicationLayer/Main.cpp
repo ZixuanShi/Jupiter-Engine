@@ -1,15 +1,15 @@
-﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "Core/Minimal/Headers.h"
 
 import jpt.CoreModules;
 import jpt.EntryPoints;
-import jpt.BenchmarksApplication;
+import BenchmarksApplication;
 
 /** Must Overrides Application GetInstance here */
 jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 {
-	static JupiterBenchmarksApplication s_instance;
+	static BenchmarksApplication s_instance;
 	return s_instance;
 }
 
@@ -21,8 +21,6 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_LOG(L"你好，世界 %s!", L"Jupiter Engine引擎");
-
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 #endif

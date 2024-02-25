@@ -4,11 +4,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module jpt.BenchmarksApplication;
+export module BenchmarksApplication;
 
 import jpt.ApplicationBase;
 
-export class JupiterBenchmarksApplication final : public jpt::ApplicationBase
+export class BenchmarksApplication final : public jpt::ApplicationBase
 {
 private:
 	using Super = jpt::ApplicationBase;
