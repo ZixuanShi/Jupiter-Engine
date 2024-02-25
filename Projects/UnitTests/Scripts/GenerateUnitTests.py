@@ -1,5 +1,7 @@
 # Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+# Generate a new unit test file for a subject and integrate it into the ApplicationLayer automatically.
+
 import os
 import subprocess
 
