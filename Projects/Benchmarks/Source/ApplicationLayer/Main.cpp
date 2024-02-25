@@ -21,6 +21,8 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
+	JPT_LOG("Benchmarking Results:");
+
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 #endif
