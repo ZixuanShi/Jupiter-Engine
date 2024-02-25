@@ -2,7 +2,7 @@ Goal:
 
 - Easily generate new project
     - Jupiter-Engine/Scripts/GenerateProject.py does all the work
-    - Generate Source, Import dummy asset, scripts generated projects
+    - Generate Source, scripts generated projects
 
 - Minimum duplication of code and scripts
 

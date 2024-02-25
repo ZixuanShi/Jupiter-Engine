@@ -1,9 +1,11 @@
+local project_name = _ARGS[1]
+local project_dir  = _ARGS[2]
+
 -- Jupiter workspace
-workspace "JupiterUnitTests"
+workspace (project_name)
     -- Globals for jupiter workspace
     local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
     local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
-    local project_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"   -- Needs to be changed if the Game Project moves.-- Config
 
     configurations 
     { 
@@ -17,7 +19,7 @@ workspace "JupiterUnitTests"
         "Win64",
     }
 
-    startproject ("UnitTests")
+    startproject (project_name)
 
     -- Paths
     location  (project_dir .. "Visual Studio Files")
@@ -109,7 +111,7 @@ project "Engine"
     }
 
 -- Unit Tests
-project "UnitTests"
+project "Benchmarks"
     filter "platforms:Win64"
         kind "WindowedApp"
 
