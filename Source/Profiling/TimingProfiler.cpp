@@ -11,8 +11,10 @@ import jpt.StopWatch;
 
 using namespace jpt;
 
-TimingProfiler::TimingProfiler(const char* label)
+TimingProfiler::TimingProfiler(const char* label, const char* file, int line)
 	: m_label(label)
+	, m_file(file)
+	, m_line(line)
 {
 	m_start = StopWatch::Now();
 }
@@ -20,7 +22,8 @@ TimingProfiler::TimingProfiler(const char* label)
 TimingProfiler::~TimingProfiler()
 {
 	const TimePrecision milliseconds = StopWatch::GetMsFrom(m_start);
-	JPT_SYSTEM_INFO("TimingProfiler: %s took %f ms", m_label, milliseconds);
+	const jpt::String message = jpt::String::Format<256>("TimingProfiler: %s took %f ms", m_label, milliseconds);
+	jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log, m_line, m_file, message.ConstBuffer());
 }
 
 #endif
