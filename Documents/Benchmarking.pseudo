@@ -1,0 +1,7 @@
+Profiling Config only
+
+Go through all available Benchmarks
+Store the results in a file separated by section
+
+Consider: 
+Json vs CSV
