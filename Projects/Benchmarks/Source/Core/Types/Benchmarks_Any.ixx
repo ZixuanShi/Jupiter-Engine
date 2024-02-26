@@ -20,7 +20,7 @@ import jpt.Any;
 
 void Benchmark_JptAny_Trivial()
 {
-	JPT_TIMING_PROFILER("jpt::Any Trivial Type");
+	JPT_SCOPED_TIMING_PROFILER(jpt_Any_trivial);
 
 	jpt::Any any;
 
@@ -32,7 +32,7 @@ void Benchmark_JptAny_Trivial()
 
 void Benchmark_StdAny_Trivial()
 {
-	JPT_TIMING_PROFILER("std::any Trivial Type");
+	JPT_SCOPED_TIMING_PROFILER(std_any_trivial);
 
 	std::any any;
 
@@ -44,7 +44,7 @@ void Benchmark_StdAny_Trivial()
 
 void Benchmark_JptAny_NonTrivial()
 {
-	JPT_TIMING_PROFILER("jpt::Any NonTrivial Type");
+	JPT_SCOPED_TIMING_PROFILER(jpt_Any_nontrivial);
 
 	jpt::Any any;
 
@@ -56,7 +56,7 @@ void Benchmark_JptAny_NonTrivial()
 
 void Benchmark_StdAny_NonTrivial()
 {
-	JPT_TIMING_PROFILER("std::any NonTrivial Type");
+	JPT_SCOPED_TIMING_PROFILER(std_any_nontrivial);
 
 	std::any any;
 

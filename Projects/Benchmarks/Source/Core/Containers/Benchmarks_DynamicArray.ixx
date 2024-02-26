@@ -17,7 +17,7 @@ import jpt.DynamicArray;
 
 void Benchmark_DynamicArray_Add_Int()
 {
-	JPT_TIMING_PROFILER("jpt::DynamicArray Add Int");
+	JPT_SCOPED_TIMING_PROFILER(jpt_DynamicArray_Add_Int);
 
 	jpt::DynamicArray<int32> dynamicArray;
 	dynamicArray.Reserve(1'000'000);
@@ -30,7 +30,7 @@ void Benchmark_DynamicArray_Add_Int()
 
 void Benchmark_Vector_Add_Int()
 {
-	JPT_TIMING_PROFILER("std::vector Add Int");
+	JPT_SCOPED_TIMING_PROFILER(std_vector_Add_Int);
 
 	std::vector<int32> vector;
 	vector.reserve(1'000'000);
@@ -43,7 +43,7 @@ void Benchmark_Vector_Add_Int()
 
 void Benchmark_DynamicArray_Add_String()
 {
-	JPT_TIMING_PROFILER("jpt::DynamicArray Add String");
+	JPT_SCOPED_TIMING_PROFILER(jpt_DynamicArray_Add_String);
 
 	jpt::DynamicArray<std::string> dynamicArray;
 	dynamicArray.Reserve(1'000'000);
@@ -56,7 +56,7 @@ void Benchmark_DynamicArray_Add_String()
 
 void Benchmark_Vector_Add_String()
 {
-	JPT_TIMING_PROFILER("std::vector Add String");
+	JPT_SCOPED_TIMING_PROFILER(std_vector_Add_String);
 
 	std::vector<std::string> vector;
 	vector.reserve(1'000'000);

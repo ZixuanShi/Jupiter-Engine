@@ -8,7 +8,8 @@
 
 namespace jpt
 {
-	class TimingProfiler
+	/** The profiler will stop and record profiling data when it goes out of scope */
+	class ScopedTimingProfiler
 	{
 	private:
 		const char* m_label;
@@ -17,12 +18,22 @@ namespace jpt
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_start;
 
 	public:
-		TimingProfiler(const char* label, const char* file, int line);
-		~TimingProfiler();
+		ScopedTimingProfiler(const char* label, const char* file, int line);
+		~ScopedTimingProfiler();
 	};
 }
 
-	#define JPT_TIMING_PROFILER(label) jpt::TimingProfiler __timing_profiler__(label, __FILE__, __LINE__)
+/** Use this macro to profile a scope of code regarding time
+	@example 
+	
+	void SomeFunction()
+		{
+			JPT_SCOPED_TIMING_PROFILER(topic_name_label);
+
+			// Your code here
+			// ...
+		} */
+#define JPT_SCOPED_TIMING_PROFILER(label) jpt::ScopedTimingProfiler timing_profilier_##label(#label, __FILE__, __LINE__)
 #else
-	#define JPT_TIMING_PROFILER(label)
+	#define JPT_SCOPED_TIMING_PROFILER(label)
 #endif

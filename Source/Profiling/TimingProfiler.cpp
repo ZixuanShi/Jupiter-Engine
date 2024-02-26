@@ -11,7 +11,7 @@ import jpt.StopWatch;
 
 using namespace jpt;
 
-TimingProfiler::TimingProfiler(const char* label, const char* file, int line)
+ScopedTimingProfiler::ScopedTimingProfiler(const char* label, const char* file, int line)
 	: m_label(label)
 	, m_file(file)
 	, m_line(line)
@@ -19,7 +19,7 @@ TimingProfiler::TimingProfiler(const char* label, const char* file, int line)
 	m_start = StopWatch::Now();
 }
 
-TimingProfiler::~TimingProfiler()
+ScopedTimingProfiler::~ScopedTimingProfiler()
 {
 	const TimePrecision milliseconds = StopWatch::GetMsFrom(m_start);
 	const jpt::String message = jpt::String::Format<256>("TimingProfiler: %s took %f ms", m_label, milliseconds);
