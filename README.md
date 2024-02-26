@@ -1,5 +1,4 @@
 # Jupiter-Engine
-My own game engine. I plan, write, test everything from scratch by myself
 
 ## Folder Structure
 This applies to both Engine and Client Project directory
