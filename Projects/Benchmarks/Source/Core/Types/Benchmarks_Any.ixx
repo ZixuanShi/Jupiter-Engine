@@ -50,7 +50,7 @@ void Benchmark_JptAny_NonTrivial()
 
 	for (int32 i = 0; i < 1000000; ++i)
 	{
-		any = std::to_string(i);
+		any = jpt::ToString(i);
 	}
 }
 
@@ -62,7 +62,7 @@ void Benchmark_StdAny_NonTrivial()
 
 	for (int32 i = 0; i < 1000000; ++i)
 	{
-		any = std::to_string(i);
+		any = jpt::ToString(i);
 	}
 }
 

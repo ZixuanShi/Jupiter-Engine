@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <mutex>
 
 #if IS_PLATFORM_WIN64
 	#include <Windows.h>
@@ -62,8 +63,12 @@ namespace jpt
 		return stamp;
 	}
 
+	std::mutex g_logMutex;
+
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
 	{
+		std::lock_guard<std::mutex> lock(g_logMutex);
+
 		String contentToLog = GetStamp(type, line, file);
 		contentToLog += pMessage;
 		contentToLog += "\n";
@@ -73,6 +78,8 @@ namespace jpt
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
 	{
+		std::lock_guard<std::mutex> lock(g_logMutex);
+
 		const String stamp = GetStamp(type, line, file);
 
 		const size_t wStampStrSize = stamp.Size() + 1;

@@ -10,6 +10,9 @@ import jpt.Utilities;
 
 /** Unit Test Modules */
 
+// FileIO
+import UnitTests_FileIO;
+
 // Time
 import UnitTests_Clock;
 import UnitTests_StopWatch;
@@ -17,6 +20,9 @@ import UnitTests_StopWatch;
 export bool RunUnitTests_System()
 {
 	/** Unit Test Functions */
+
+	// FileIO
+	JPT_ENSURE(RunUnitTests_FileIO());
 
 	// Time
 	JPT_ENSURE(RunUnitTests_Clock());

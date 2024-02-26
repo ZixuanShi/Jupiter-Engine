@@ -24,5 +24,5 @@ export void RunBenchmarks_Core()
 	RunBenchmarks_DynamicArray();
 
 	// Types
-	RunBenchmarks_Any();
+	//RunBenchmarks_Any();
 }
