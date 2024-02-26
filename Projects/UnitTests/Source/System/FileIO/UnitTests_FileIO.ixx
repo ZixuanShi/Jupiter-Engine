@@ -12,7 +12,11 @@ import jpt.Utilities;
 
 bool UnitTest_FileIO()
 {
-    jpt::FileIO::ReadFile("Configs/TestJson.json");
+    jpt::FileIO::Read("Engine:Configs/TestJson.json");
+    jpt::FileIO::Read("Engine:Configs/TestJson.json");
+
+    jpt::FileIO::Read("Client:Configs/TestJson.json");
+    jpt::FileIO::Read("Client:Configs/TestJson.json");
 
     return true;
 }

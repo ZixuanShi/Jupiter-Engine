@@ -4,16 +4,15 @@ module;
 
 export module jpt.File;
 
+import jpt.String;
+
 export namespace jpt
 {
-	enum class EFileDirectory
-	{
-		Client,	// Translates to client root or output based on building context
-		Engine,
-	};
-
 	class File
 	{
-
+	private:
+		String m_content;
+		String m_path;
+		size_t m_size;
 	};
 }
