@@ -15,7 +15,7 @@ import jpt.Byte;
 import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.Utilities;
-import jpt.Function;
+//import jpt.Function;
 
 namespace jpt
 {
@@ -43,7 +43,12 @@ namespace jpt
 	{
 	private:
 		Byte* m_pBuffer = nullptr;          /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
-		Function<void(Byte*)> m_destructor; /**< Function pointer to the destructor of the current type */
+
+		//Function<void(Byte*)> m_destructor; /**< Function pointer to the destructor of the current type */
+
+		using TDestructor = void(*)(Byte*);
+		TDestructor m_destructor = nullptr;
+
 		size_t m_currentTypeHash   = 0;     /**< Hash code of the current type. Used for comparing */
 		size_t m_currentBufferSize = 0;     /**< size of the current buffer */
 
@@ -86,12 +91,14 @@ namespace jpt
 
 	constexpr void Any::Destruct()
 	{
-		if (m_destructor.IsSet())
+		//if (m_destructor.IsSet())
+		if (m_destructor)
 		{
 			m_destructor(m_pBuffer);
 		}
 
-		m_destructor.Clear();
+		//m_destructor.Clear();
+		m_destructor = nullptr;
 		m_currentTypeHash = 0;
 	}
 
@@ -159,7 +166,8 @@ namespace jpt
 		other.m_pBuffer           = nullptr;
 		other.m_currentBufferSize = 0;
 		other.m_currentTypeHash   = 0;
-		other.m_destructor.Clear();
+		//other.m_destructor.Clear();
+		other.m_destructor = nullptr;
 	}
 
 	template<typename T>
