@@ -13,8 +13,6 @@ import jpt.Utilities;
 import jpt.Math;
 import jpt.TypeTraits;
 
-// This is a test
-
 export namespace jpt
 {
 	template<class>
