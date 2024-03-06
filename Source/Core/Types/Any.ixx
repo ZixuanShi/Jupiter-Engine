@@ -66,7 +66,7 @@ namespace jpt
 		template<typename T> constexpr       T& As();
 		template<typename T> constexpr const T& As() const;
 
-		template<typename T> constexpr bool Is();
+		template<typename T> constexpr bool Is() const;
 
 		template<typename T> constexpr void CopyAny(Any& other);
 		constexpr void MoveAny(Any&& other);
@@ -140,7 +140,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr bool Any::Is()
+	constexpr bool Any::Is() const
 	{
 		return m_currentTypeHash == typeid(T).hash_code();
 	}
