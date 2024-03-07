@@ -17,7 +17,7 @@ namespace jpt
 
 		virtual bool Init();
 		virtual void Update();
-		virtual void Clean();
+		virtual void Terminate();
 
 		void Run();
 
@@ -39,7 +39,7 @@ namespace jpt
 	{
 	}
 
-	void ApplicationBase::Clean()
+	void ApplicationBase::Terminate()
 	{
 
 	}

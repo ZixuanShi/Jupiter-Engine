@@ -34,7 +34,7 @@ export namespace jpt
 			app.Run();
 		}
 
-		app.Clean();
+		app.Terminate();
 
 		return 0;
 	}	
