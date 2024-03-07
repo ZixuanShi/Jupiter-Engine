@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#if JPT_ENABLE_EDITOR_FEATURES
+#if !IS_RELEASE
 
 #include "TimingProfiler.h"
 
@@ -26,4 +26,4 @@ ScopedTimingProfiler::~ScopedTimingProfiler()
 	jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log, m_line, m_file, message.ConstBuffer());
 }
 
-#endif
+#endif // !IS_RELEASE

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#if JPT_ENABLE_EDITOR_FEATURES
+#if !IS_RELEASE
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -77,4 +77,4 @@ namespace jpt
 	#define JPT_WARNING(message, ...)     JPT_IGNORE(message)	
 	#define JPT_ERROR(message, ...)		  JPT_IGNORE(message)	
 
-#endif // JPT_ENABLE_EDITOR_FEATURES
+#endif // !IS_RELEASE

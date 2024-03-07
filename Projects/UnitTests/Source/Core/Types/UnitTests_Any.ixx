@@ -23,6 +23,9 @@ bool UnitTest_Any()
     JPT_ENSURE(any.Is<int32>());
     JPT_ENSURE(!any.Is<char>());
 
+    any = 103;
+    JPT_ENSURE(any.As<int32>() == 103);
+
     // String
     any = jpt::String("Hello");
     JPT_ENSURE(!any.Is<int32>());
@@ -60,6 +63,8 @@ bool UnitTest_Any_Copy()
     JPT_ENSURE(!any.Is<int32>());
     JPT_ENSURE(any.As<jpt::String>() == str);
     JPT_ENSURE(any.Is<jpt::String>());
+
+    any = str;
 
     // CopyAny
     jpt::Any any2;

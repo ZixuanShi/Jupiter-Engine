@@ -45,8 +45,7 @@ namespace jpt
 	private:
 		Byte* m_pBuffer = nullptr;          /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
 		Destructor m_destructor = nullptr;	/**< Function pointer to the destructor of the current type */
-		size_t m_currentTypeHash   = 0;     /**< Hash code of the current type. Used for comparing */
-		size_t m_currentBufferSize = 0;     /**< size of the current buffer */
+		size_t m_currentTypeHash = 0;     /**< Hash code of the current type. Used for comparing */
 
 	public:
 		constexpr Any() = default;
@@ -69,6 +68,8 @@ namespace jpt
 	private:
 		template<typename T> constexpr void Construct(T& value);
 		template<typename T> constexpr void Construct(T&& value);
+
+		/** Adapt to new Type, the new type is guaranteed not the same as current type */
 		template<typename T> constexpr void Adapt();
 
 		constexpr void Destruct();
@@ -78,7 +79,8 @@ namespace jpt
 	{
 		Destruct();
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
-		m_currentBufferSize = 0;
+		m_destructor = nullptr;
+		m_currentTypeHash = 0;
 	}
 
 	constexpr void Any::Destruct()
@@ -87,9 +89,6 @@ namespace jpt
 		{
 			m_destructor(m_pBuffer);
 		}
-
-		m_destructor = nullptr;
-		m_currentTypeHash = 0;
 	}
 
 	template<typename T>
@@ -107,6 +106,12 @@ namespace jpt
 	template<typename T>
 	constexpr Any& Any::operator=(T& value)
 	{
+		if (Is<T>())
+		{
+			As<T>() = value;
+			return *this;
+		}
+
 		Destruct();
 		Construct(value);
 		return *this;
@@ -115,6 +120,12 @@ namespace jpt
 	template<typename T>
 	constexpr Any& Any::operator=(T&& value)
 	{
+		if (Is<T>())
+		{
+			As<T>() = Move(value);
+			return *this;
+		}
+
 		Destruct();
 		Construct(Move(value));
 		return *this;
@@ -148,15 +159,13 @@ namespace jpt
 
 	constexpr void Any::MoveAny(Any&& other)
 	{
-		m_pBuffer           = other.m_pBuffer;
-		m_currentBufferSize = other.m_currentBufferSize;
-		m_currentTypeHash   = other.m_currentTypeHash;
-		m_destructor 	    = Move(other.m_destructor);
+		m_pBuffer = other.m_pBuffer;
+		m_destructor = Move(other.m_destructor);
+		m_currentTypeHash = other.m_currentTypeHash;
 
-		other.m_pBuffer           = nullptr;
-		other.m_currentBufferSize = 0;
-		other.m_currentTypeHash   = 0;
+		other.m_pBuffer = nullptr;
 		other.m_destructor = nullptr;
+		other.m_currentTypeHash = 0;
 	}
 
 	template<typename T>
@@ -176,14 +185,8 @@ namespace jpt
 	template<typename T>
 	constexpr void Any::Adapt()
 	{
-		// Update buffer if the new is bigger than current buffer's size
-		const size_t newTypeSize = sizeof(T);
-		if (newTypeSize > m_currentBufferSize)
-		{
-			JPT_DELETE_ARRAY(m_pBuffer);
-			m_pBuffer = new Byte[newTypeSize];
-			m_currentBufferSize = newTypeSize;
-		}
+		JPT_DELETE_ARRAY(m_pBuffer);
+		m_pBuffer = new Byte[sizeof(T)];
 
 		// Assign destructor function to current T
 		m_destructor = [](Byte* pBuffer)

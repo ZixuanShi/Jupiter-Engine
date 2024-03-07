@@ -60,7 +60,6 @@ workspace (project_name)
         defines 
         { 
             "IS_DEBUG",
-            "JPT_ENABLE_EDITOR_FEATURES",
         }
         buildoptions { "/MTd" }
         optimize "Off"
@@ -70,7 +69,6 @@ workspace (project_name)
         defines 
         { 
             "IS_DEVELOPMENT",
-            "JPT_ENABLE_EDITOR_FEATURES",
         }
         buildoptions { "/MT" }
         optimize "Full"
@@ -80,7 +78,6 @@ workspace (project_name)
         defines 
         { 
             "IS_PROFILING",
-            "JPT_ENABLE_EDITOR_FEATURES",
         }
         buildoptions { "/MT" }
         optimize "Speed"

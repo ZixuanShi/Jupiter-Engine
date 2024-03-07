@@ -4,7 +4,7 @@
 
 #include <chrono>
 
-#if JPT_ENABLE_EDITOR_FEATURES
+#if !IS_RELEASE
 
 namespace jpt
 {
@@ -34,6 +34,7 @@ namespace jpt
 			// ...
 		} */
 #define JPT_SCOPED_TIMING_PROFILER(label) jpt::ScopedTimingProfiler timing_profilier_##label(#label, __FILE__, __LINE__)
+
 #else
 	#define JPT_SCOPED_TIMING_PROFILER(label)
 #endif

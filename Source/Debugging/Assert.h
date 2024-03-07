@@ -2,7 +2,7 @@
 
 #pragma once
 
-#if JPT_ENABLE_EDITOR_FEATURES
+#if IS_DEBUG || IS_DEVELOPMENT
 
 namespace jpt
 {
@@ -38,4 +38,4 @@ namespace jpt
 #else
 	#define JPT_ASSERT(expression, ...) 
 
-#endif // JPT_ENABLE_EDITOR_FEATURES
+#endif // IS_DEBUG || IS_DEVELOPMENT
