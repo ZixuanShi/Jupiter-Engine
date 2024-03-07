@@ -38,7 +38,14 @@ export namespace jpt
 
 			TReturn operator()(TArgs... args) const override final
 			{
-				return m_function(Forward<TArgs>(args)...);
+				if constexpr (IsSameType<TReturn, void>)
+				{
+					m_function(Forward<TArgs>(args)...);
+				}
+				else
+				{
+					return m_function(Forward<TArgs>(args)...);
+				}
 			}
 		};
 
@@ -56,7 +63,14 @@ export namespace jpt
 
 			TReturn operator()(TArgs... args) const override final
 			{
-				return (m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
+				if constexpr (IsSameType<TReturn, void>)
+				{
+					(m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
+				}
+				else
+				{
+					return (m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
+				}
 			}
 		};
 
@@ -144,7 +158,15 @@ export namespace jpt
 	constexpr TReturn Function<TReturn(TArgs...)>::operator()(TArgs...args) const
 	{
 		JPT_ASSERT(IsConnected(), "Function is not connected");
-		return (*m_pFunction)(args...);
+
+		if constexpr (IsSameType<TReturn, void>)
+		{
+			(*m_pFunction)(args...);
+		}
+		else
+		{
+			return (*m_pFunction)(args...);
+		}
 	}
 
 	template<class TReturn, class ...TArgs>

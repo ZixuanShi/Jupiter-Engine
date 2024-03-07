@@ -133,11 +133,30 @@ bool UnitTest_Function_MemberFunction()
     return true;
 }
 
+void VoidFunction()
+{
+	JPT_LOG("Hello Void Func");
+}
+
+bool RunUnitTests_Function_Void()
+{
+    /*jpt::Function<void()> func;
+
+    func.Connect([]() { JPT_LOG("Hello Void Lambda"); });
+    func();
+
+    func.Connect(&VoidFunction);
+    func();*/
+
+    return true;
+}
+
 export bool RunUnitTests_Function()
 {
     JPT_ENSURE(UnitTest_Function_Global());
     JPT_ENSURE(UnitTest_Function_Lambda());
     JPT_ENSURE(UnitTest_Function_MemberFunction());
+    JPT_ENSURE(RunUnitTests_Function_Void());
 
     return true;
 }
