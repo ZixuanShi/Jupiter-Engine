@@ -62,11 +62,24 @@ bool UnitTest_Slot()
 
 	// Calling
 	slot(1, 2);
-	jpt::DynamicArray<int32> results = slot.ReturnAll(1, 2);
-	JPT_ENSURE(results[0] == 3);
-	JPT_ENSURE(results[1] == -1);
-	JPT_ENSURE(results[2] == 2);
-	JPT_ENSURE(results[3] == 0)
+	jpt::DynamicArray<int32> results = slot.ReturnAll(6, 2);
+	JPT_ENSURE(results[0] == 8);
+	JPT_ENSURE(results[1] == 4);
+	JPT_ENSURE(results[2] == 12);
+	JPT_ENSURE(results[3] == 3);
+
+	slot.Erase(addIndex);
+	slot.Erase(subIndex);
+
+	size_t i = slot.Add([](int32 a, int32 b) { return a * 2 + b; });
+	JPT_ENSURE(i == 0);
+	slot.Erase(i);
+
+	results = slot.ReturnAll(6, 2);
+	JPT_ENSURE(results[0] == 0);
+	JPT_ENSURE(results[1] == 0);
+	JPT_ENSURE(results[2] == 12);
+	JPT_ENSURE(results[3] == 3);
 
 	return true;
 }
