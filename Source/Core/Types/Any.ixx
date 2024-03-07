@@ -45,7 +45,7 @@ namespace jpt
 	private:
 		Byte* m_pBuffer = nullptr;          /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
 		Destructor m_destructor = nullptr;	/**< Function pointer to the destructor of the current type */
-		size_t m_currentTypeHash = 0;     /**< Hash code of the current type. Used for comparing */
+		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
 
 	public:
 		constexpr Any() = default;
