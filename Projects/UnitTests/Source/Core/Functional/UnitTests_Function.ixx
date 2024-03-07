@@ -32,6 +32,12 @@ bool UnitTest_Function_Global()
     func.Connect(&Subtract);
     JPT_ENSURE(func(1, 2) == -1);
 
+    func = &Add;
+    JPT_ENSURE(func(2, 3) == 5);
+
+    func = &Subtract;
+    JPT_ENSURE(func(2, 3) == -1);
+
     return true;
 }
 
@@ -51,6 +57,18 @@ bool UnitTest_Function_Lambda()
         });
     JPT_ENSURE(func(1, 2) == -1);
 
+    func = [](int32 a, int32 b)
+        {
+			return a * b;
+		};
+    JPT_ENSURE(func(2, 3) == 6);
+
+    func = [](int32 a, int32 b)
+        {
+			return a / b;
+		};
+    JPT_ENSURE(func(6, 3) == 2);
+
     // lvalue lambda
     auto lambda1 = [](int32 a, int32 b)
         {
@@ -65,6 +83,12 @@ bool UnitTest_Function_Lambda()
     JPT_ENSURE(func(2, 3) == 6);
 
     func.Connect(lambda2);
+    JPT_ENSURE(func(6, 3) == 2);
+
+    func = lambda1;
+    JPT_ENSURE(func(2, 3) == 6);
+
+    func = lambda2;
     JPT_ENSURE(func(6, 3) == 2);
 
     return true;

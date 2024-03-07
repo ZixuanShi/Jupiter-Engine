@@ -31,8 +31,8 @@ export namespace jpt
 		{
 			TFunction m_function;
 
-			FunctionData(TFunction function) 
-				: m_function(function)	
+			FunctionData(TFunction function)
+				: m_function(function)
 			{
 			}
 
@@ -64,7 +64,17 @@ export namespace jpt
 		BaseFunction* m_pFunction = nullptr;
 
 	public:
+		constexpr Function() = default;
 		constexpr ~Function();
+
+		template<class TFunction>
+		constexpr Function(TFunction function);
+
+		template<class TFunction>
+		constexpr Function& operator=(TFunction function);
+
+		template<class TCaller>
+		constexpr Function(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...));
 	
 		/** Connects a global function or lambda to this jpt::Function
 			@example: func.Connect(&Add);
@@ -89,6 +99,29 @@ export namespace jpt
 	constexpr Function<TReturn(TArgs...)>::~Function()
 	{
 		Disconnect();
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TFunction>
+	constexpr Function<TReturn(TArgs...)>::Function(TFunction function)
+	{
+		Connect(function);
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TFunction>
+	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunction function)
+	{
+		Disconnect();
+		Connect(function);
+		return *this;
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TCaller>
+	constexpr Function<TReturn(TArgs...)>::Function(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...))
+	{
+		Connect(pCaller, pMemberFunction);
 	}
 
 	template<class TReturn, class ...TArgs>
