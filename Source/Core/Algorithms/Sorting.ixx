@@ -105,15 +105,15 @@ namespace jpt
 	template<NonTrivial T>
 	constexpr bool DefaultNonTrivialComparator(const T& a, const T& b) { return a < b; }
 
-	//export template<ContainingTrivial TContainer>
-	//constexpr void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultTrivialComparator<typename TContainer::TData>)
-	//{
-	//	jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
-	//}
+	export template<ContainingTrivial TContainer>
+	constexpr void Sort(TContainer& container, Function<bool(typename TContainer::TData, typename TContainer::TData)>&& comparator = DefaultTrivialComparator<typename TContainer::TData>)
+	{
+		jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
+	}
 
-	//export template<ContainingNonTrivial TContainer>
-	//constexpr void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultNonTrivialComparator<typename TContainer::TData>)
-	//{
-	//	jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
-	//}
+	export template<ContainingNonTrivial TContainer>
+	constexpr void Sort(TContainer& container, Function<bool(const typename TContainer::TData&, const typename TContainer::TData&)>&& comparator = DefaultNonTrivialComparator<typename TContainer::TData>)
+	{
+		jpt_private::QuickSort(container, 0, container.Size() - 1, Move(comparator));
+	}
 }

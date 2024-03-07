@@ -211,25 +211,25 @@ void Func(int32& num)
 
 bool UnitTest_HashMap_Function()
 {
-    //auto lambda = [](int32& num)->void
-    //    {
-    //        num += 2;
-    //    };
-    //
-    //jpt::HashMap<jpt::String, jpt::Function<void(int32&)>> map;
-    //map["Func1"] = Func;
-    //map["Func2"] = lambda;
+    auto lambda = [](int32& num)->void
+        {
+            num += 2;
+        };
+    
+    jpt::HashMap<jpt::String, jpt::Function<void(int32&)>> map;
+    map["Func1"] = Func;
+    map["Func2"] = lambda;
 
-    //int32 i = 0;
+    int32 i = 0;
 
-    //map["Func1"](i);
-    //JPT_ENSURE(i == 1);
-    //
-    //map["Func2"](i);
-    //JPT_ENSURE(i == 3);
+    map["Func1"](i);
+    JPT_ENSURE(i == 1);
+    
+    map["Func2"](i);
+    JPT_ENSURE(i == 3);
 
-    //lambda(i);
-    //JPT_ENSURE(i == 5);
+    lambda(i);
+    JPT_ENSURE(i == 5);
 
     return true;
 }
