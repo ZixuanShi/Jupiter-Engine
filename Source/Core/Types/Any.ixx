@@ -15,7 +15,6 @@ import jpt.Byte;
 import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.Utilities;
-//import jpt.Function;
 
 namespace jpt
 {
@@ -52,10 +51,6 @@ namespace jpt
 	public:
 		constexpr Any() = default;
 		constexpr ~Any();
-		constexpr Any(const Any&) = delete;
-		constexpr Any(Any&&) noexcept = delete;
-		constexpr Any& operator=(const Any&) = delete;
-		constexpr Any& operator=(Any&&) noexcept = delete;
 
 		template<typename T> constexpr Any(T& value);
 		template<typename T> constexpr Any(T&& value);
