@@ -4,6 +4,8 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
+#include <typeinfo>
+
 export module UnitTests_Function;
 
 import jpt.Function;
@@ -70,36 +72,39 @@ bool UnitTest_Function_Lambda()
 
 struct Test
 {
+    jpt::Function<bool(int32)> m_func;
     int32 m_value = 0;
+
+    Test(int32 value) 
+        : m_value(value) 
+    {
+        m_func.Connect([this](int32 a) { return IsEven(a); });
+    }
 
     int32 Add(int32 a) { return m_value + a; }
     int32 Subtract(int32 a) { return m_value - a; }
+    bool IsEven(int32 a) { return a % 2 == 0; }
 };
-
-bool UnitTest_Function_MemberFunction1()
-{
-	Test test(10);
-
-    using TSignature = int32(Test::*)(int32);
-    TSignature function = &Test::Add;
-
-    JPT_LOG((test.*function)(2));
-    JPT_LOG((Test().*function)(2));
-
-    void* ptr = &test;
-    JPT_LOG((static_cast<Test*>(ptr)->*function)(2));
-
-	return true;
-}
 
 bool UnitTest_Function_MemberFunction()
 {
-    //jpt::Function<int32(int32)> func;
+    jpt::Function<int32(int32)> func;
+    Test test(13);
 
-    //Test test(13);
-    //func.Connect(&test, &Test::Add);
+    func.Connect(&test, &Test::Add);
+    JPT_ENSURE(func(2) == 15);
 
-    //func.CallMember(1);
+    func.Connect(&test, &Test::Subtract);
+    JPT_ENSURE(func(2) == 11);
+
+    JPT_ENSURE(test.m_func(2) == true);
+    JPT_ENSURE(test.m_func(3) == false);
+    JPT_ENSURE(test.m_func(4) == true);
+
+    test.m_func.Connect(&test, &Test::IsEven);
+    JPT_ENSURE(test.m_func(2) == true);
+    JPT_ENSURE(test.m_func(3) == false);
+    JPT_ENSURE(test.m_func(4) == true);
 
     return true;
 }
@@ -109,7 +114,6 @@ export bool RunUnitTests_Function()
     JPT_ENSURE(UnitTest_Function_Global());
     JPT_ENSURE(UnitTest_Function_Lambda());
     JPT_ENSURE(UnitTest_Function_MemberFunction());
-    JPT_ENSURE(UnitTest_Function_MemberFunction1());
 
     return true;
 }

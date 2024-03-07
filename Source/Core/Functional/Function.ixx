@@ -20,43 +20,110 @@ export namespace jpt
 	class Function<TReturn(TArgs...)>
 	{
 	public:
-		using TSignature = TReturn(*)(TArgs...);
+		struct BaseFunction
+		{
+			virtual ~BaseFunction() {}
+			virtual TReturn operator()(TArgs... args) const = 0;
+		};
+
+		template<class TFunction>
+		struct FunctionData final : public BaseFunction
+		{
+			TFunction m_function;
+
+			FunctionData(TFunction function) 
+				: m_function(function)	
+			{
+			}
+
+			TReturn operator()(TArgs... args) const override final
+			{
+				return m_function(Forward<TArgs>(args)...);
+			}
+		};
+
+		template<class TCaller>
+		struct MemberFunctionData final : public BaseFunction
+		{
+			TCaller* m_pCaller;
+			TReturn(TCaller::*m_pMemberFunction)(TArgs...);
+
+			MemberFunctionData(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...)) 
+				: m_pCaller(pCaller)
+				, m_pMemberFunction(pMemberFunction) 
+			{
+			}
+
+			TReturn operator()(TArgs... args) const override final
+			{
+				return (m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
+			}
+		};
 
 	private:
-		TSignature m_function = nullptr;	/**< Pointer to the function to call */
+		BaseFunction* m_pFunction = nullptr;
 
 	public:
+		constexpr ~Function();
+	
 		/** Connects a global function or lambda to this jpt::Function
 			@example: func.Connect(&Add);
 			@example: func.Connect([](int32 a, int32 b) -> int32 { return a - b; }); */
 		template<class TFunction>
 		constexpr void Connect(TFunction function);
 
+		/** Connects a member function to this jpt::Function
+			@example: func.Connect(&foo, &Foo::Work); */
+		template<class TCaller>
+		constexpr void Connect(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...));
+
 		/** Calls the connected function 
 			@example: func(1, 2); */
 		constexpr TReturn operator()(TArgs... args) const;
 
 		constexpr void Disconnect();
-		constexpr bool IsConnected() const { return m_function != nullptr; }
+		constexpr bool IsConnected() const;
 	};
+
+	template<class TReturn, class ...TArgs>
+	constexpr Function<TReturn(TArgs...)>::~Function()
+	{
+		Disconnect();
+	}
 
 	template<class TReturn, class ...TArgs>
 	template<class TFunction>
 	constexpr void Function<TReturn(TArgs...)>::Connect(TFunction function)
 	{
-		m_function = function;
+		Disconnect();
+		m_pFunction = new FunctionData<TFunction>(function);
 	}
 
 	template<class TReturn, class ...TArgs>
-	constexpr TReturn Function<TReturn(TArgs...)>::operator()(TArgs ...args) const
+	template<class TCaller>
+	constexpr void Function<TReturn(TArgs...)>::Connect(TCaller* pCaller, TReturn(TCaller::*pMemberFunction)(TArgs...))
 	{
-		JPT_ASSERT(m_function != nullptr, "Function is not connected");
-		return m_function(Forward<TArgs>(args)...);
+		Disconnect();
+		m_pFunction = new MemberFunctionData<TCaller>(pCaller, pMemberFunction);
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr TReturn Function<TReturn(TArgs...)>::operator()(TArgs...args) const
+	{
+		JPT_ASSERT(IsConnected(), "Function is not connected");
+		return (*m_pFunction)(args...);
 	}
 
 	template<class TReturn, class ...TArgs>
 	constexpr void Function<TReturn(TArgs...)>::Disconnect()
 	{
-		m_function = nullptr;
+		delete m_pFunction;
+		m_pFunction = nullptr;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr bool Function<TReturn(TArgs...)>::IsConnected() const
+	{
+		return m_pFunction != nullptr;
 	}
 }

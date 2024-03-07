@@ -2,7 +2,7 @@
 
 module;
 
-#if JPT_ENABLE_EDITOR_FEATURES
+#if !IS_RELEASE
 	#define _CRTDBG_MAP_ALLOC
 	#include <stdlib.h>
 	#include <crtdbg.h>
@@ -23,7 +23,7 @@ export namespace jpt
 {
 	int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
 	{
-#if JPT_ENABLE_EDITOR_FEATURES
+#if !IS_RELEASE
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
