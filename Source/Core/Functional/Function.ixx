@@ -14,33 +14,37 @@ export namespace jpt
 	template<class>
 	class Function;
 
-	/** Wrapper for a function. Can be used as Callbacks */
+	/** Wrapper for a function that can hold a global function, a lambda, or a member function
+		@example: jpt::Function<int32(int32, int32)> func; */
 	template<class TReturn, class... TArgs>
 	class Function<TReturn(TArgs...)>
 	{
 	public:
-		using TFunctionPointer = TReturn(*)(TArgs...);
+		using TSignature = TReturn(*)(TArgs...);
 
 	private:
-		TFunctionPointer m_function = nullptr;
+		TSignature m_function = nullptr;	/**< Pointer to the function to call */
 
 	public:
-		constexpr Function() = default;
-
+		/** Connects a global function or lambda to this jpt::Function
+			@example: func.Connect(&Add);
+			@example: func.Connect([](int32 a, int32 b) -> int32 { return a - b; }); */
 		template<class TFunction>
-		constexpr void Connect(TFunction&& function);
+		constexpr void Connect(TFunction function);
 
+		/** Calls the connected function 
+			@example: func(1, 2); */
 		constexpr TReturn operator()(TArgs... args) const;
 
-		constexpr void Disconnect() { m_function = nullptr; }
+		constexpr void Disconnect();
 		constexpr bool IsConnected() const { return m_function != nullptr; }
 	};
 
 	template<class TReturn, class ...TArgs>
 	template<class TFunction>
-	constexpr void Function<TReturn(TArgs...)>::Connect(TFunction&& function)
+	constexpr void Function<TReturn(TArgs...)>::Connect(TFunction function)
 	{
-		m_function = Move(function);
+		m_function = function;
 	}
 
 	template<class TReturn, class ...TArgs>
@@ -48,5 +52,11 @@ export namespace jpt
 	{
 		JPT_ASSERT(m_function != nullptr, "Function is not connected");
 		return m_function(Forward<TArgs>(args)...);
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr void Function<TReturn(TArgs...)>::Disconnect()
+	{
+		m_function = nullptr;
 	}
 }
