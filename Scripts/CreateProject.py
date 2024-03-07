@@ -17,8 +17,8 @@ def get_info():
 def create_generator_bat():
 	generate_project_bat_content = """cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 
-set args = vs2022 "<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" %args%
+set args="<ProjectName>" "<ProjectDirectory>"
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" vs2022 %args%
 
 pause
 """
