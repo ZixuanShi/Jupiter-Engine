@@ -1,0 +1,12 @@
+{
+    "source": "Engine",
+    "data_int": 12,
+    "data_float": 1.55,
+    "data_string": "Hello from Jupiter Engine!",
+    "data_array": [5,4,3,2,1],
+    "data_map": 
+    {
+        "engine_key_1": "engine_key_1",
+        "engine_key_2": "engine_key_2"
+    }
+}

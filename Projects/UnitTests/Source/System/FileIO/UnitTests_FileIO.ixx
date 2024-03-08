@@ -10,20 +10,20 @@ import jpt.FileIO;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_FileIO()
+bool UnitTest_FileIO_Read()
 {
-    jpt::FileIO::Read("Engine:Configs/TestJson.json");
-    jpt::FileIO::Read("Engine:Configs/TestJson.json");
+    jpt::FileIO::Read(jpt::FileUtils::ESource::Engine, "Assets/Configs/TestJson.json");
+    jpt::FileIO::Read("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Assets/Configs/TestJson.json");
 
-    jpt::FileIO::Read("Client:Configs/TestJson.json");
-    jpt::FileIO::Read("Client:Configs/TestJson.json");
+    jpt::FileIO::Read(jpt::FileUtils::ESource::Client, "Assets/Configs/TestJson.json");
+    jpt::FileIO::Read("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/Assets/Configs/TestJson.json");
 
     return true;
 }
 
 export bool RunUnitTests_FileIO()
 {
-    JPT_ENSURE(UnitTest_FileIO());
+    JPT_ENSURE(UnitTest_FileIO_Read());
 
     return true;
 }

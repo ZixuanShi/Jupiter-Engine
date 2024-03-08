@@ -3,58 +3,65 @@
 module;
 
 #include "Core/Minimal/Macros.h"
+#include "Debugging/Logger.h"
+#include "Debugging/Assert.h"
 
 #include <mutex>
 
 export module jpt.FileIO;
 
-import jpt.File;
+import jpt.BaseFile;
+import jpt.FileUtils;
 import jpt.TypeDefs;
 import jpt.String;
 import jpt.StringView;
 import jpt.Optional;
+import jpt.StrongPtr;
+
+namespace jpt_private
+{
+	using namespace jpt;
+
+	String GetAbsolutePath(FileUtils::ESource source, StringView relativePath)
+	{
+		String result;
+
+		switch (source)
+		{
+			case FileUtils::ESource::Engine:
+			{
+				result += JPT_ENGINE_DIR;
+				break;
+			}
+			case FileUtils::ESource::Client:
+			{
+				result += JPT_CLIENT_DIR;
+				break;
+			}
+
+		default:
+			JPT_ASSERT(false, "Invalid source");
+			break;
+		}
+
+		result += relativePath.Buffer();
+		return result;
+	}
+}
 
 export namespace jpt
 {
 	namespace FileIO
 	{
-		/** */
-		Optional<File> Read(StringView filePath)
+		Optional<StrongPtr<BaseFile>> Read(const String& absolutePath)
 		{
-			JPT_IGNORE(filePath);
-			return Optional<File>();
-
-			//std::ifstream file(filePath.data(), std::ios::binary);
-			//if (!file.is_open())
-			//{
-			//	return {};
-			//}
-
-			//File data;
-			//file.seekg(0, std::ios::end);
-			//data.size = file.tellg();
-			//file.seekg(0, std::ios::beg);
-
-			//data.data.resize(data.size);
-			//file.read(data.data.data(), data.size);
-
-			//return data;
+			JPT_LOG(absolutePath.ConstBuffer());
+			return Optional<StrongPtr<BaseFile>>();
 		}
 
-		/** */
-		bool Write(StringView filePath, const File& data)
+		Optional<StrongPtr<BaseFile>> Read(FileUtils::ESource source, StringView relativePath)
 		{
-			JPT_IGNORE(filePath, data);
-			return true;
-
-			//std::ofstream file(filePath.data(), std::ios::binary);
-			//if (!file.is_open())
-			//{
-			//	return false;
-			//}
-
-			//file.write(data.data.data(), data.size);
-			//return true;
+			return Read(jpt_private::GetAbsolutePath(source, relativePath));
 		}
 	}
 }

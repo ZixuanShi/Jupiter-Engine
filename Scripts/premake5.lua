@@ -54,8 +54,8 @@ workspace (project_name)
     {
         ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),
         ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
-        ("JPT_PROJECT_DIR=\""   .. project_dir .."\""),
-        ("JPT_PROJECT_DIR_W=L\"".. project_dir .."\""),
+        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
+        ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
     }
 

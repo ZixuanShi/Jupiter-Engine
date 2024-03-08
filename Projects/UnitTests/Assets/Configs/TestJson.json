@@ -1,0 +1,12 @@
+{
+    "source": "Client",
+    "data_int": 42,
+    "data_float": 3.14,
+    "data_string": "Hello from Client!",
+    "data_array": [1, 2, 3, 4, 5],
+    "data_map": 
+    {
+        "key1": "value1",
+        "key2": "value2"
+    }
+}

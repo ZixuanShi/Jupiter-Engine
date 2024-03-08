@@ -2,17 +2,19 @@
 
 module;
 
-export module jpt.File;
+export module jpt.BaseFile;
 
 import jpt.String;
 
 export namespace jpt
 {
-	class File
+	class BaseFile
 	{
 	private:
-		String m_content;
-		String m_path;
-		size_t m_size;
+		String m_fileName;
+		String m_filePath;
+
+	public:
+		virtual ~BaseFile() = default;
 	};
 }
