@@ -140,13 +140,34 @@ void VoidFunction()
 
 bool RunUnitTests_Function_Void()
 {
-    /*jpt::Function<void()> func;
+    jpt::Function<void()> foo;
 
-    func.Connect([]() { JPT_LOG("Hello Void Lambda"); });
-    func();
+    int32 i = 42;
+    foo.Connect([&i]()
+        {
+            //JPT_LOG("Hello %d", i);
+            i *= 2;
+        });
 
-    func.Connect(&VoidFunction);
-    func();*/
+    foo();
+    foo();
+    JPT_ENSURE(i == 168);
+
+    return true;
+}
+
+bool RunUnitTests_Function_Functor()
+{
+    struct Functor
+	{
+		int32 operator()(int32 a, int32 b) { return a + b; }
+	};
+
+    jpt::Function<int32(int32, int32)> func;
+    Functor functor;
+
+    func.Connect(&functor, &Functor::operator());
+    JPT_ENSURE(func(1, 2) == 3);
 
     return true;
 }
@@ -157,6 +178,7 @@ export bool RunUnitTests_Function()
     JPT_ENSURE(UnitTest_Function_Lambda());
     JPT_ENSURE(UnitTest_Function_MemberFunction());
     JPT_ENSURE(RunUnitTests_Function_Void());
+    JPT_ENSURE(RunUnitTests_Function_Functor());
 
     return true;
 }

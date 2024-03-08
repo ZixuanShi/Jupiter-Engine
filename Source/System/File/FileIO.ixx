@@ -76,7 +76,7 @@ export namespace jpt
 
 			file.close();
 
-			JPT_LOG(content);
+			//JPT_LOG(content);
 			return Optional<StrongPtr<BaseFile>>();
 		}
 
