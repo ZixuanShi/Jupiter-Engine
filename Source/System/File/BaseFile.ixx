@@ -4,6 +4,7 @@ module;
 
 export module jpt.BaseFile;
 
+import jpt.FileUtils;
 import jpt.String;
 
 export namespace jpt
@@ -13,6 +14,7 @@ export namespace jpt
 	private:
 		String m_fileName;
 		String m_filePath;
+		FileUtils::EType m_fileType;
 
 	public:
 		virtual ~BaseFile() = default;

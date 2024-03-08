@@ -49,6 +49,30 @@ namespace jpt_private
 		result += relativePath.Buffer();
 		return result;
 	}
+
+	Optional<String> GetFileContent(const String& absolutePath)
+	{
+		std::ifstream file;
+		file.open(absolutePath.ConstBuffer());
+
+		if(!file.is_open())
+		{
+			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
+			return Optional<String>();
+		}
+
+		std::string line;
+		String content;
+		while (std::getline(file, line))
+		{
+			content += line.c_str();
+			content += '\n';
+		}
+
+		file.close();
+
+		return content;
+	}
 }
 
 export namespace jpt
@@ -57,27 +81,15 @@ export namespace jpt
 	{
 		Optional<StrongPtr<BaseFile>> Read(const String& absolutePath)
 		{
-			std::ifstream file;
-			file.open(absolutePath.ConstBuffer());
+			Optional<String> content = jpt_private::GetFileContent(absolutePath);
 
-			if (!file.is_open())
+			if (!content)
 			{
-				JPT_ERROR("Failed to open file");
 				return Optional<StrongPtr<BaseFile>>();
 			}
 
-			std::string line;
-			String content;
-			while (std::getline(file, line))
-			{
-				content += line.c_str();
-				content += '\n';
-			}
-
-			file.close();
-
-			//JPT_LOG(content);
-			return Optional<StrongPtr<BaseFile>>();
+			StrongPtr<BaseFile> file;
+			return file;
 		}
 
 		Optional<StrongPtr<BaseFile>> Read(FileUtils::ESource source, StringView relativePath)

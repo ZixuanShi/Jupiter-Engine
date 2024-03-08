@@ -19,6 +19,7 @@ export namespace jpt
 		};
 
 		JPT_ENUM_UINT8(EType,
+			Unknown,
 			txt,
 			json,
 		);
