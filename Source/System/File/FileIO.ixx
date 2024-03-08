@@ -6,7 +6,9 @@ module;
 #include "Debugging/Logger.h"
 #include "Debugging/Assert.h"
 
+#include <fstream>
 #include <mutex>
+#include <string>
 
 export module jpt.FileIO;
 
@@ -55,7 +57,26 @@ export namespace jpt
 	{
 		Optional<StrongPtr<BaseFile>> Read(const String& absolutePath)
 		{
-			JPT_LOG(absolutePath.ConstBuffer());
+			std::ifstream file;
+			file.open(absolutePath.ConstBuffer());
+
+			if (!file.is_open())
+			{
+				JPT_ERROR("Failed to open file");
+				return Optional<StrongPtr<BaseFile>>();
+			}
+
+			std::string line;
+			String content;
+			while (std::getline(file, line))
+			{
+				content += line.c_str();
+				content += '\n';
+			}
+
+			file.close();
+
+			JPT_LOG(content);
 			return Optional<StrongPtr<BaseFile>>();
 		}
 
