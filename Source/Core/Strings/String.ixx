@@ -35,6 +35,7 @@ export namespace jpt
 		using ConstIterator = const TChar*;
 
 	private:
+
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
 		size_t m_size = 0;           /**< How many characters in this string currently */
 		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing */

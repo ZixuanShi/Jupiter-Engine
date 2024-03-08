@@ -3,6 +3,7 @@
 module; 
 
 #include "Core/Minimal/Headers.h"
+#include "Profiling/TimingProfiler.h"
 
 export module UnitTests_String;
 
@@ -308,8 +309,24 @@ bool UnitTest_String_Split()
 	return true;
 }
 
+bool UnitTest_String_SSO()
+{
+	//jpt::String str = "Small Str";
+
+	//char buffer[16];
+	//std::memset(buffer, 0, 16);
+
+	//char* pBuffer = nullptr;
+
+	//char* pRightBuffer = buffer;
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
+	JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
+
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
 
@@ -338,6 +355,8 @@ export bool RunUnitTests_String()
 	JPT_ENSURE(UnitTest_String_Iterator());
 	JPT_ENSURE(UnitTest_String_Format());
 	JPT_ENSURE(UnitTest_String_Split());
+
+	JPT_ENSURE(UnitTest_String_SSO());
 
 	return true;
 }

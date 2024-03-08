@@ -78,7 +78,7 @@ workspace (project_name)
             "IS_DEVELOPMENT",
         }
         buildoptions { "/MT" }
-        optimize "Full"
+        optimize "Size"
         symbols "On"
 
     filter "configurations:Profiling"

@@ -32,12 +32,12 @@ export namespace jpt
 	template<typename T>
 	concept Trivial = std::is_trivially_constructible_v<T> &&
 					  std::is_trivially_copy_constructible_v<T> &&
-					  sizeof(T) <= kLargeDataSize;
+					  sizeof(T) <= kSmallDataSize;
 
 	template<typename T>
 	concept NonTrivial = !std::is_trivially_constructible_v<T> ||
 		                 !std::is_trivially_copy_constructible_v<T> ||
-		                 sizeof(T) > kLargeDataSize;
+		                 sizeof(T) > kSmallDataSize;
 
 	template<typename T>
 	concept HasSize = requires(T functor)

@@ -13,7 +13,7 @@ import jpt.Limits;
 export namespace jpt
 {
 	/** Any data sizeof(Type) larger than this will be considered large, and may trigger optimizations */
-	constexpr size_t kLargeDataSize = 16;
+	constexpr size_t kSmallDataSize = 16;
 
 	/**< If the value is not supported, you need to specialize template it in the corresponding file */
 	template<typename T> 
