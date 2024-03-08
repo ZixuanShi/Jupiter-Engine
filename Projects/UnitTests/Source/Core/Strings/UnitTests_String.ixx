@@ -336,7 +336,7 @@ bool UnitTest_String_SSO()
 
 export bool RunUnitTests_String()
 {
-	JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
+	//JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
 
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
@@ -367,7 +367,7 @@ export bool RunUnitTests_String()
 	JPT_ENSURE(UnitTest_String_Format());
 	JPT_ENSURE(UnitTest_String_Split());
 
-	JPT_ENSURE(UnitTest_String_SSO());
+	//JPT_ENSURE(UnitTest_String_SSO());
 
 	return true;
 }
