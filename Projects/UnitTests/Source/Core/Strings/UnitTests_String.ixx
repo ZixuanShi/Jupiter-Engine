@@ -311,14 +311,25 @@ bool UnitTest_String_Split()
 
 bool UnitTest_String_SSO()
 {
-	//jpt::String str = "Small Str";
+	char buffer[16] = { 0 };
+	jpt::StrCpy(buffer, 16, "Small Hello");
+	JPT_LOG(buffer);
 
-	//char buffer[16];
-	//std::memset(buffer, 0, 16);
+	std::memset(buffer, 0, 16);
+	JPT_LOG(buffer);
 
-	//char* pBuffer = nullptr;
+	char* pBuffer = new char[] {"Hello"};
+	JPT_LOG(pBuffer);
+	
+	if (pBuffer && pBuffer != buffer)
+	{
+		delete[] pBuffer;
+	}
+	JPT_LOG(pBuffer);
 
-	//char* pRightBuffer = buffer;
+	pBuffer = buffer;
+	JPT_LOG(pBuffer == buffer);
+	JPT_LOG(pBuffer);
 
 	return true;
 }
