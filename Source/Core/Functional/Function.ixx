@@ -161,11 +161,11 @@ export namespace jpt
 
 		if constexpr (IsSameType<TReturn, void>)
 		{
-			(*m_pFunction)(args...);
+			(*m_pFunction)(Forward<TArgs>(args)...);
 		}
 		else
 		{
-			return (*m_pFunction)(args...);
+			return (*m_pFunction)(Forward<TArgs>(args)...);
 		}
 	}
 

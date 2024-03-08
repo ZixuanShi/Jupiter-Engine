@@ -21,7 +21,7 @@ export void RunBenchmarks_Core()
 	/** Unit Test Functions */
 
 	// Containers
-	//RunBenchmarks_DynamicArray();
+	RunBenchmarks_DynamicArray();
 
 	// Types
 	RunBenchmarks_Any();

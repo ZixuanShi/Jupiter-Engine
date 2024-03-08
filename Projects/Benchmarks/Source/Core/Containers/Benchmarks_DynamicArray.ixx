@@ -45,12 +45,12 @@ void Benchmark_DynamicArray_Add_String()
 {
 	JPT_SCOPED_TIMING_PROFILER(jpt_DynamicArray_Add_String);
 
-	jpt::DynamicArray<std::string> dynamicArray;
+	jpt::DynamicArray<jpt::String> dynamicArray;
 	dynamicArray.Reserve(1'000'000);
 
 	for (int32 i = 0; i < 1'000'000; ++i)
 	{
-		dynamicArray.PushBack(std::to_string(i));
+		dynamicArray.PushBack(jpt::ToString(i));
 	}
 }
 
