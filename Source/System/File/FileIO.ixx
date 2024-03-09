@@ -37,7 +37,7 @@ namespace jpt_private
 			}
 			case FileUtils::ESource::Client:
 			{
-				result += JPT_CLIENT_DIR;
+				result += GetClientDir();
 				break;
 			}
 

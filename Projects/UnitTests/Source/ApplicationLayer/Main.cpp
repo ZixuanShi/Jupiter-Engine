@@ -4,14 +4,8 @@
 
 import jpt.CoreModules;
 import jpt.EntryPoints;
-import jpt.UnitTestsApplication;
 
-/** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
-{
-	static JupiterUnitTestsApplication s_instance;
-	return s_instance;
-}
+import UnitTestsApplication;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64

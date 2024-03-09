@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module jpt.UnitTestsApplication;
+export module UnitTestsApplication;
 
 import jpt.ApplicationBase;
 import jpt.Utilities;

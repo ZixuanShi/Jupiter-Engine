@@ -4,14 +4,8 @@
 
 import jpt.CoreModules;
 import jpt.EntryPoints;
-import BenchmarksApplication;
 
-/** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
-{
-	static BenchmarksApplication s_instance;
-	return s_instance;
-}
+import BenchmarksApplication;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64

@@ -54,8 +54,6 @@ workspace (project_name)
     {
         ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),
         ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
-        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
-        ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
     }
 
@@ -116,6 +114,11 @@ project "Engine"
         (jupiter_dir .. "Source"),
     }
 
+    defines
+    {
+        ("IS_CLIENT=0"),
+    }
+
     files 
     {
         (jupiter_dir .. "Source/**.h"),
@@ -144,6 +147,13 @@ project (project_name)
         "d3d12",
         "dxgi",
         "d3dcompiler",
+    }
+
+    defines
+    {
+        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
+        ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
+        ("IS_CLIENT=1"),
     }
 
     libdirs

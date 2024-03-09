@@ -15,7 +15,7 @@ def get_info():
 
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generator_bat():
-	generate_project_bat_content = """cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+	generate_project_bat_content = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 
 set args="<ProjectName>" "<ProjectDirectory>"
 call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" vs2022 %args%
@@ -37,14 +37,8 @@ def create_main_cpp():
 
 import jpt.CoreModules;
 import jpt.EntryPoints;
-import <ProjectName>Application;
 
-/** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
-{
-	static <ProjectName>Application s_instance;
-	return s_instance;
-}
+import <ProjectName>Application;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
@@ -63,6 +57,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, in
 	os.makedirs(project_directory + "/Source/ApplicationLayer")
 	with open(project_directory + "/Source/ApplicationLayer/Main.cpp", "w") as file:
 	    file.write(main_content)
+
+
+def create_application_communications_ixx():
+	communications_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+// This file overrides the global communication functions through out both engine and client
+
+export module ApplicationCommunications;
+
+import jpt.ApplicationBase;
+import jpt.FileUtils;
+
+import <ProjectName>Application;
+
+/** Must Overrides Application GetInstance here */
+jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
+{
+	static <ProjectName>Application s_instance;
+	return s_instance;
+}
+
+/** Must Overrides GetClientDir here */
+const char* jpt::GetClientDir()
+{
+	return JPT_CLIENT_DIR;
+}
+"""
+	communications_content = communications_content.replace("<ProjectName>", project_name)
+	with open(project_directory + "/Source/ApplicationLayer/ApplicationCommunications.ixx", "w") as file:
+		file.write(communications_content)
 
 
 def create_application_ixx():
@@ -92,4 +116,5 @@ if __name__ == "__main__":
 	get_info()
 	create_generator_bat()
 	create_main_cpp()
+	create_application_communications_ixx()
 	create_application_ixx()

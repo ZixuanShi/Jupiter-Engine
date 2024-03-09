@@ -24,4 +24,8 @@ export namespace jpt
 			json,
 		);
 	}
+
+	/** Designed to be implemented in client project's application
+		@return Client's project root directory. */
+	const char* GetClientDir();
 }
