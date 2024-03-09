@@ -117,16 +117,16 @@
 				// Do something with buffer
 			} */
 #define JPT_FORMAT_STRING(buffer, format, ...)\
-	va_list args;\
-	va_start(args, format);\
-	vsprintf_s(buffer, format, args);\
-	va_end(args)\
+		va_list args;						  \
+		va_start(args, format);               \
+		vsprintf_s(buffer, format, args);     \
+		va_end(args);                         
 
 #define JPT_FORMAT_WSTRING(buffer, format, ...)\
-	va_list args;\
-	va_start(args, format);\
-	vswprintf_s(buffer, format, args);\
-	va_end(args)\
+		va_list args;                          \
+		va_start(args, format);                \
+		vswprintf_s(buffer, format, args);     \
+		va_end(args);                          
 
 #pragma endregion
 

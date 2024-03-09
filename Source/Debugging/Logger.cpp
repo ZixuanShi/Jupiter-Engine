@@ -16,8 +16,6 @@
 	#include <Windows.h>
 #endif
 
-import jpt.String;
-
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 256;

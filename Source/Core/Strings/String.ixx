@@ -413,7 +413,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Clear()
 	{
-		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+		TAllocator::DeallocateArray(m_pBuffer);
+		m_pBuffer = nullptr;
 		m_size = 0;
 		m_capacity = 0;
 	}
@@ -614,20 +615,21 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
-		Clear();
+		TAllocator::DeallocateArray(m_pBuffer);
 
 		if (size == 0)
 		{
+			m_pBuffer = nullptr;
+			m_size     = 0;
+			m_capacity = 0;
 			return;
 		}
 
-		if (size > m_capacity)
-		{
-			ReAllocateBuffer(size);
-		}
-
+		m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
 		StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
-		m_size = size;
+
+		m_size     = size;
+		m_capacity = m_size;
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
@@ -645,7 +647,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(TChar* inCString, size_t size)
 	{
-		Clear();
+		TAllocator::DeallocateArray(m_pBuffer);
 
 		m_pBuffer  = inCString;
 		m_size     = size;
@@ -661,7 +663,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(BasicString<TChar>&& otherString)
 	{
-		Clear();
+		TAllocator::DeallocateArray(m_pBuffer);
 
 		m_pBuffer  = otherString.m_pBuffer;
 		m_size     = otherString.m_size;

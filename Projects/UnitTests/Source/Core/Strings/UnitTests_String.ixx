@@ -47,7 +47,13 @@ bool UnitTest_DefaultStringConstructing()
 	JPT_ENSURE(defaultStr.IsEmpty());
 	JPT_ENSURE(jpt::AreStringsSame(defaultStr.ConstBuffer(), JPT_GET_PROPER_STRING(TChar, )));
 	JPT_ENSURE(jpt::AreStringsSame(defaultStr.Buffer(), JPT_GET_PROPER_STRING(TChar, )));
-	
+
+	defaultStr = JPT_GET_PROPER_STRING(TChar, Jupiter Engine);
+	JPT_ENSURE(defaultStr == JPT_GET_PROPER_STRING(TChar, Jupiter Engine));
+	defaultStr = JPT_GET_PROPER_STRING(TChar, );
+	JPT_ENSURE(defaultStr.IsEmpty());
+	JPT_ENSURE(defaultStr.ConstBuffer() == nullptr);
+
 	defaultStr.Reserve(30);
 	JPT_ENSURE(defaultStr.Capacity() == 30);
 	JPT_ENSURE(defaultStr.IsEmpty());
