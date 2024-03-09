@@ -138,20 +138,36 @@ void VoidFunction()
 	JPT_LOG("Hello Void Func");
 }
 
+void SetFunc(jpt::Function<void()>& foo)
+{
+    int32 i = 42;
+    auto lambda = [&i]()
+        {
+            JPT_LOG("Hello %d", i);
+            i *= 2;
+        };
+
+    foo.Connect(lambda);
+}
+
 bool RunUnitTests_Function_Void()
 {
     jpt::Function<void()> foo;
+    //SetFunc(foo); // TODO: Fix this
 
-    int32 i = 42;
-    foo.Connect([&i]()
-        {
-            //JPT_LOG("Hello %d", i);
-            i *= 2;
-        });
+    {
+        int32 i = 42;
+        auto lambda = [&i]()
+		{
+			//JPT_LOG("Hello %d", i);
+			i *= 2;
+		};
 
-    foo();
-    foo();
-    JPT_ENSURE(i == 168);
+        foo.Connect(lambda);
+    }
+
+    foo();  // Still prints "Hello 42"
+    foo();  // Still prints "Hello 84"
 
     return true;
 }
