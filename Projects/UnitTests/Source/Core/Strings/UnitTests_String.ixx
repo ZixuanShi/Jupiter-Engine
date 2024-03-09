@@ -355,6 +355,7 @@ bool UnitTest_String_SSO()
 	//JPT_LOG(pBuffer == buffer);
 	//JPT_LOG(pBuffer);
 
+	Assign("");
 	Assign("Hello");
 	Assign("Hello World");
 	Assign("Hello World Str");
