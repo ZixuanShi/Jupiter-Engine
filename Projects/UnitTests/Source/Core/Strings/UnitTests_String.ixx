@@ -361,6 +361,7 @@ bool UnitTest_String_SSO()
 	Assign("Hello World Stri");
 	Assign("Hello World Jupiter Engine");
 	Assign("Big String JSIOAJFOAISJFIOAJSFJISAF");
+
 	if (jpt::GetCStrLength(pBuffer) >= jpt::kSmallDataSize)
 	{
 		delete[] pBuffer;

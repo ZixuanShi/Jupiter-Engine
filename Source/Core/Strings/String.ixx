@@ -35,7 +35,6 @@ export namespace jpt
 		using ConstIterator = const TChar*;
 
 	private:
-
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
 		size_t m_size = 0;           /**< How many characters in this string currently */
 		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing */
@@ -144,7 +143,7 @@ export namespace jpt
 	private:
 		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
 		   @param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
-		constexpr void UpdateBuffer(size_t inCapacity);
+		constexpr void ReAllocateBuffer(size_t inCapacity);
 
 		/** Inserts a C-String at the index by the given size */
 		constexpr void InsertStringAt(const TChar* CString, size_t index, size_t size);
@@ -588,7 +587,7 @@ export namespace jpt
 	{
 		if (capacity > m_capacity)
 		{
-			UpdateBuffer(capacity);
+			ReAllocateBuffer(capacity);
 		}
 	}
 
@@ -621,7 +620,7 @@ export namespace jpt
 		m_size = size;
 		JPT_EXIT_IF(IsEmpty());
 
-		UpdateBuffer(m_size);
+		ReAllocateBuffer(m_size);
 		JPT_ASSERT(m_pBuffer, "m_pBuffer shouldn't be nullptr");
 		StrCpy(m_pBuffer, m_size + sizeof(TChar), inCString);
 	}
@@ -665,10 +664,11 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr void BasicString<TChar, TAllocator>::UpdateBuffer(size_t inCapacity)
+	constexpr void BasicString<TChar, TAllocator>::ReAllocateBuffer(size_t inCapacity)
 	{
 		TChar* pNewBuffer = TAllocator::AllocateArray(inCapacity + sizeof(TChar));
 
+		// Copy the old buffer to the new one
 		if (m_pBuffer)
 		{
 			StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
@@ -685,7 +685,7 @@ export namespace jpt
 		const size_t newSize = m_size + size;
 		if (newSize > m_capacity)
 		{
-			UpdateBuffer(newSize);
+			ReAllocateBuffer(newSize);
 		}
 
 		StrCpy(m_pBuffer + index, size + sizeof(TChar), CString);
