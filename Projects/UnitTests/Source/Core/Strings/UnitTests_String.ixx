@@ -309,34 +309,69 @@ bool UnitTest_String_Split()
 	return true;
 }
 
+char smallBuffer[jpt::kSmallDataSize] = { 0 };
+char* pBuffer = nullptr;
+
+void Assign(const char* pSourceStr)
+{
+	const size_t length = jpt::GetCStrLength(pSourceStr);
+
+	if (length < jpt::kSmallDataSize)
+	{
+		jpt::StrCpy(smallBuffer, jpt::kSmallDataSize, pSourceStr);
+		pBuffer = smallBuffer;
+	}
+	else
+	{
+		if (jpt::GetCStrLength(pBuffer) >= jpt::kSmallDataSize)
+		{
+			delete[] pBuffer;
+		}
+
+		pBuffer = new char[length + 1];
+		jpt::StrCpy(pBuffer, length + 1, pSourceStr);
+	}
+}
+
 bool UnitTest_String_SSO()
 {
-	char buffer[16] = { 0 };
-	jpt::StrCpy(buffer, 16, "Small Hello");
-	JPT_LOG(buffer);
+	//char buffer[16] = { 0 };
+	//jpt::StrCpy(buffer, 16, "Small Hello");
+	//JPT_LOG(buffer);
 
-	std::memset(buffer, 0, 16);
-	JPT_LOG(buffer);
+	//std::memset(buffer, 0, 16);
+	//JPT_LOG(buffer);
 
-	char* pBuffer = new char[] {"Hello"};
-	JPT_LOG(pBuffer);
-	
-	if (pBuffer && pBuffer != buffer)
+	//char* pBuffer = new char[] {"Hello"};
+	//JPT_LOG(pBuffer);
+
+	//if (pBuffer && pBuffer != buffer)
+	//{
+	//	delete[] pBuffer;
+	//}
+	//JPT_LOG(pBuffer);
+
+	//pBuffer = buffer;
+	//JPT_LOG(pBuffer == buffer);
+	//JPT_LOG(pBuffer);
+
+	Assign("Hello");
+	Assign("Hello World");
+	Assign("Hello World Str");
+	Assign("Hello World Stri");
+	Assign("Hello World Jupiter Engine");
+	Assign("Big String JSIOAJFOAISJFIOAJSFJISAF");
+	if (jpt::GetCStrLength(pBuffer) >= jpt::kSmallDataSize)
 	{
 		delete[] pBuffer;
 	}
-	JPT_LOG(pBuffer);
-
-	pBuffer = buffer;
-	JPT_LOG(pBuffer == buffer);
-	JPT_LOG(pBuffer);
 
 	return true;
 }
 
 export bool RunUnitTests_String()
 {
-	//JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
+	JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
 
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
 	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
@@ -367,7 +402,7 @@ export bool RunUnitTests_String()
 	JPT_ENSURE(UnitTest_String_Format());
 	JPT_ENSURE(UnitTest_String_Split());
 
-	//JPT_ENSURE(UnitTest_String_SSO());
+	JPT_ENSURE(UnitTest_String_SSO());
 
 	return true;
 }
