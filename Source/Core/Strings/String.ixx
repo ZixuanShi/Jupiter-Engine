@@ -20,6 +20,11 @@ import jpt.StringUtils;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
 
+
+// SSO
+// - Refactor every StrCpy or StrNCpy to correspond small buffer when size is less than kSmallDataSize
+// - Reallocate, Allocate, Insert, SubStr, Copy, Move should also take care of small buffer when applicable
+
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
 
@@ -235,9 +240,7 @@ export namespace jpt
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr BasicString<_TChar, _TAllocator>::BasicString(TChar c)
 	{
-		TChar* cString = TAllocator::AllocateArray(2);
-		cString[0] = c;
-		cString[1] = '\0';
+		TChar cString[2] = { c, '\0' };
 		MoveString(cString, 1);
 	}
 
@@ -552,11 +555,8 @@ export namespace jpt
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void BasicString<_TChar, _TAllocator>::Append(TChar c)
 	{
-		TChar* cString = TAllocator::AllocateArray(2);
-		cString[0] = c;
-		cString[1] = '\0';
+		TChar cString[2] = { c, '\0' };
 		InsertStringAt(cString, m_size, 1);
-		TAllocator::DeallocateArray(cString);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
