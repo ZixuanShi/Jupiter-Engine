@@ -315,8 +315,8 @@ bool UnitTest_String_Split()
 	return true;
 }
 
-char smallBuffer[jpt::kSmallDataSize] = { 0 };
-char* pBuffer = nullptr;
+char g_smallBuffer[jpt::kSmallDataSize] = { 0 };
+char* g_pBuffer = nullptr;
 
 void Assign(const char* pSourceStr)
 {
@@ -324,18 +324,18 @@ void Assign(const char* pSourceStr)
 
 	if (length < jpt::kSmallDataSize)
 	{
-		jpt::StrCpy(smallBuffer, jpt::kSmallDataSize, pSourceStr);
-		pBuffer = smallBuffer;
+		jpt::StrCpy(g_smallBuffer, jpt::kSmallDataSize, pSourceStr);
+		g_pBuffer = g_smallBuffer;
 	}
 	else
 	{
-		if (jpt::GetCStrLength(pBuffer) >= jpt::kSmallDataSize)
+		if (jpt::GetCStrLength(g_pBuffer) >= jpt::kSmallDataSize)
 		{
-			delete[] pBuffer;
+			delete[] g_pBuffer;
 		}
 
-		pBuffer = new char[length + 1];
-		jpt::StrCpy(pBuffer, length + 1, pSourceStr);
+		g_pBuffer = new char[length + 1];
+		jpt::StrCpy(g_pBuffer, length + 1, pSourceStr);
 	}
 }
 
@@ -369,9 +369,9 @@ bool UnitTest_String_SSO()
 	Assign("Hello World Jupiter Engine");
 	Assign("Big String JSIOAJFOAISJFIOAJSFJISAF");
 
-	if (jpt::GetCStrLength(pBuffer) >= jpt::kSmallDataSize)
+	if (jpt::GetCStrLength(g_pBuffer) >= jpt::kSmallDataSize)
 	{
-		delete[] pBuffer;
+		delete[] g_pBuffer;
 	}
 
 	return true;
