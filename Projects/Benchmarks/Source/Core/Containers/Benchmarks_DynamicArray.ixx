@@ -13,6 +13,7 @@ export module Benchmarks_DynamicArray;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.String;
+import jpt.ToString;
 import jpt.DynamicArray;
 
 void Benchmark_DynamicArray_Add_Int()
