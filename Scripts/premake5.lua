@@ -38,7 +38,7 @@ workspace (project_name)
     startproject (project_name)
 
     -- Paths
-    location  (project_dir .. "_VS_Files")
+    location  (project_dir .. "_ProjectFiles")
     targetdir (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
     objdir    (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
 
@@ -104,7 +104,7 @@ workspace (project_name)
         
 -- Jupiter Engine
 project "Engine"
-    location  (jupiter_dir .. "_VS_Files")
+    location  (jupiter_dir .. "_ProjectFiles")
     targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
     objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
     kind "StaticLib"
