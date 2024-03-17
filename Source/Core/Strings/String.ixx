@@ -626,14 +626,18 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
-		TAllocator::DeallocateArray(m_pBuffer);
-
 		if (size == 0)
 		{
+			TAllocator::DeallocateArray(m_pBuffer);
 			m_pBuffer = nullptr;
+		}
+		else if (size == m_size)
+		{
+			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 		}
 		else if (size > 0)
 		{
+			TAllocator::DeallocateArray(m_pBuffer);
 			m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
 			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 		}

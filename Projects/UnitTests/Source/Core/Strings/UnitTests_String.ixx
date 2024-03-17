@@ -5,10 +5,13 @@ module;
 #include "Core/Minimal/Headers.h"
 #include "Profiling/TimingProfiler.h"
 
+#include <string>
+
 export module UnitTests_String;
 
 import jpt.DynamicArray;
 import jpt.Math;
+import jpt.RandomNumberGenerator;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.StringView;
@@ -416,7 +419,7 @@ export bool RunUnitTests_String()
 		jpt::String str;
 		for (int32 i = 0; i < 1'000'000; ++i)
 		{
-			str = jpt::ToString(0);
+			str = "Hello " + jpt::ToString(jpt::RNG::Global().RandInMax(9));
 		}
 	}
 
