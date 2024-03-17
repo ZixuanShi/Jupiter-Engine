@@ -631,13 +631,12 @@ export namespace jpt
 		if (size == 0)
 		{
 			m_pBuffer = nullptr;
-			m_size     = 0;
-			m_capacity = 0;
-			return;
 		}
-
-		m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
-		StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+		else if (size > 0)
+		{
+			m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
+			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+		}
 
 		m_size     = size;
 		m_capacity = m_size;

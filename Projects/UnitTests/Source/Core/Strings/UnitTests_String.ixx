@@ -410,5 +410,15 @@ export bool RunUnitTests_String()
 
 	JPT_ENSURE(UnitTest_String_SSO());
 
+	{
+		JPT_SCOPED_TIMING_PROFILER(str);
+
+		jpt::String str;
+		for (int32 i = 0; i < 1'000'000; ++i)
+		{
+			str = jpt::ToString(0);
+		}
+	}
+
 	return true;
 }
