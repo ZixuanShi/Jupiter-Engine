@@ -15,26 +15,23 @@ def get_info():
 
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generate_project_files_bat():
-	generate_project_bat_content = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+	generator_bat = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 
 set args="<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <VisualStudioVersion> %args%
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action> %args%
 
 pause
 """
 	os.makedirs(project_directory + "/Scripts")
-	generate_project_bat_content = generate_project_bat_content.replace("<ProjectName>", project_name)
-	generate_project_bat_content = generate_project_bat_content.replace("<ProjectDirectory>", project_directory)
-
-	# 2019
-	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2019.bat", "w") as file:
-		v2019 = generate_project_bat_content.replace("<VisualStudioVersion>", "vs2019")
-		file.write(v2019)
+	generator_bat = generator_bat.replace("<ProjectName>", project_name)
+	generator_bat = generator_bat.replace("<ProjectDirectory>", project_directory)
 
 	# 2022
 	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2022.bat", "w") as file:
-		v2022 = generate_project_bat_content.replace("<VisualStudioVersion>", "vs2022")
-		file.write(v2022)
+		vs2022 = generator_bat.replace("<action>", "vs2022")
+		file.write(vs2022)
+
+	# Add any other versions here
 
 
 # <ProjectDirectory>/Source/ApplicationLayer/Main.cpp and ProjectNameApplication.ixx
