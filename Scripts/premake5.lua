@@ -2,12 +2,12 @@
 
 -- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 -- set args="<ProjectName>" "<ProjectDirectory>"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Generated\premake5.exe" vs2022 %args%
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
 
 -- Example:
 -- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 -- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Generated\premake5.exe" vs2022 %args%
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
 
 local project_name = _ARGS[1]
 local project_dir  = _ARGS[2]
@@ -39,8 +39,8 @@ workspace (project_name)
 
     -- Paths
     location  (project_dir .. "_VS_Files")
-    targetdir (project_dir .. "_Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir    (project_dir .. "_Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    targetdir (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
+    objdir    (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
 
     -- Programming
     language   "C++"
@@ -105,8 +105,8 @@ workspace (project_name)
 -- Jupiter Engine
 project "Engine"
     location  (jupiter_dir .. "_VS_Files")
-    targetdir (jupiter_dir .. "_Generated/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir    (jupiter_dir .. "_Generated/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
+    objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
     kind "StaticLib"
 
     includedirs
@@ -158,7 +158,7 @@ project (project_name)
 
     libdirs
     {
-        (jupiter_dir .. "_Generated/Engine_" .. jupiter_outputpath .. "_Output/")
+        (jupiter_dir .. "_Bin/Engine_" .. jupiter_outputpath .. "_Output/")
     }
 
     files

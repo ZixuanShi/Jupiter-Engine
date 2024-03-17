@@ -18,7 +18,7 @@ def create_generator_bat():
 	generate_project_bat_content = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 
 set args="<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Generated\premake5.exe" vs2022 %args%
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
 
 pause
 """
@@ -48,6 +48,7 @@ import <ProjectName>Application;
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
+	JPT_LOG("Hello World %s", "<ProjectName>");
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 #endif
@@ -118,3 +119,5 @@ if __name__ == "__main__":
 	create_main_cpp()
 	create_application_communications_ixx()
 	create_application_ixx()
+
+	print("Successfully Created Project: " + project_name + " at " + project_directory)

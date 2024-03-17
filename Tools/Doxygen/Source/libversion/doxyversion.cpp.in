@@ -1,7 +1,0 @@
-#include "version.h"
-
-const char *getDoxygenVersion(void)
-{
-  static char versionString[] = "@DOXYGEN_VERSION@";
-  return versionString;
-}
