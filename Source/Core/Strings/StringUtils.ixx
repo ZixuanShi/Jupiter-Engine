@@ -45,12 +45,13 @@ export namespace jpt
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TChar* IntegerToCStr(TInt value, TInt base = 10)
+	constexpr TChar* IntegerToCStr(TInt value, EIntBase base = EIntBase::Decimal)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
 		TChar* result = nullptr;	// Final result string to return
 		size_t index = 0;			// The index I'm using for char array, will be used as length of this value and string as well
+		const TInt numBase = static_cast<TInt>(base);
 
 		// Process 0
 		if (value == 0)
@@ -75,11 +76,11 @@ export namespace jpt
 		TInt valueCopy = value;
 		while (valueCopy > 0)
 		{
-			valueCopy /= base;
+			valueCopy /= numBase;
 			++index;
 		}
 		// Hex prefix "0x"
-		if (base == static_cast<TInt>(0x10u))
+		if (numBase == static_cast<TInt>(0x10u))
 		{
 			index += 2;
 		}
@@ -94,7 +95,7 @@ export namespace jpt
 		// Process each digit
 		while (value > 0)
 		{
-			const TInt digit = value % base;
+			const TInt digit = value % numBase;
 
 			// For different base, process differently
 			if (digit > 9)
@@ -108,11 +109,11 @@ export namespace jpt
 
 			// Update index and cut last digit of value
 			--index;
-			value /= base;
+			value /= numBase;
 		}
 
 		// Hex
-		if (base == static_cast<TInt>(0x10u))
+		if (base == EIntBase::Hex)
 		{
 			result[index--] = 'x';
 			result[index] = '0';
@@ -137,11 +138,12 @@ export namespace jpt
 		@param size			Desired size to parse from start of pBuffer
 		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, TInt base = 10)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, EIntBase base = EIntBase::Decimal)
 	{
 		TInt result = 0;
 		bool isNegative = false;
 		size_t start = 0;
+		const TInt numBase = static_cast<TInt>(base);
 
 		// Negative
 		if constexpr (std::is_signed_v<TInt>)
@@ -154,8 +156,7 @@ export namespace jpt
 		}
 
 		// Hex prefix
-		const bool isHex = (base == static_cast<TInt>(0x10u));
-		if (isHex)
+		if (base == EIntBase::Hex)
 		{
 			start = 2;
 		}
@@ -181,15 +182,19 @@ export namespace jpt
 				number = c - static_cast<TChar>('0');
 			}
 
-			if (isHex)
+			if (base == EIntBase::Hex)
 			{
 				result <<= 4;
 				result |= number;
 			}
+			else if (base == EIntBase::Decimal)
+			{
+				result *= numBase;
+				result += number;
+			}
 			else
 			{
-				result *= base;
-				result += number;
+				JPT_ASSERT(false, "Unsupported base for converting to integer");
 			}
 		}
 

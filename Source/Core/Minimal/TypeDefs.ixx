@@ -18,3 +18,11 @@ export using int64    = int64_t;
 
 export using float32  = float;
 export using float64  = double;
+
+export enum class EIntBase : uint8
+{
+	Decimal = 10,
+	Hex     = 16,
+	Binary  = 2,
+	Octal   = 8
+};
