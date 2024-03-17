@@ -704,10 +704,7 @@ export namespace jpt
 	constexpr void BasicString<TChar, TAllocator>::InsertStringAt(const TChar* CString, size_t index, size_t size)
 	{
 		const size_t newSize = m_size + size;
-		if (newSize > m_capacity)
-		{
-			ReAllocateBuffer(newSize);
-		}
+		Reserve(newSize);
 
 		StrCpy(m_pBuffer + index, size + sizeof(TChar), CString);
 
