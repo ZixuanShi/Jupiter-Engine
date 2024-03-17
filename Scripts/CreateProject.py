@@ -14,19 +14,27 @@ def get_info():
 
 
 # <ProjectDirectory>/Scripts/GenerateProject.bat
-def create_generator_bat():
+def create_generate_project_files_bat():
 	generate_project_bat_content = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 
 set args="<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <VisualStudioVersion> %args%
 
 pause
 """
 	os.makedirs(project_directory + "/Scripts")
 	generate_project_bat_content = generate_project_bat_content.replace("<ProjectName>", project_name)
 	generate_project_bat_content = generate_project_bat_content.replace("<ProjectDirectory>", project_directory)
-	with open(project_directory + "/Scripts/GenerateProjects.bat", "w") as file:
-		file.write(generate_project_bat_content)
+
+	# 2019
+	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2019.bat", "w") as file:
+		v2019 = generate_project_bat_content.replace("<VisualStudioVersion>", "vs2019")
+		file.write(v2019)
+
+	# 2022
+	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2022.bat", "w") as file:
+		v2022 = generate_project_bat_content.replace("<VisualStudioVersion>", "vs2022")
+		file.write(v2022)
 
 
 # <ProjectDirectory>/Source/ApplicationLayer/Main.cpp and ProjectNameApplication.ixx
@@ -115,7 +123,7 @@ private:
 
 if __name__ == "__main__":
 	get_info()
-	create_generator_bat()
+	create_generate_project_files_bat()
 	create_main_cpp()
 	create_application_communications_ixx()
 	create_application_ixx()
