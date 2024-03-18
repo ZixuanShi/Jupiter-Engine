@@ -10,8 +10,8 @@ export namespace jpt
 	template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
 	template<typename T> struct RemoveConst                  { using Type = T;  };
 	template<typename T> struct RemoveConst<const T>         { using Type = T;  };
-	template<typename T> struct RTValueoLValueReference      { using Type = T;  };
-	template<typename T> struct RTValueoLValueReference<T&&> { using Type = T&; };
+	template<typename T> struct RValueToLValueReference      { using Type = T;  };
+	template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
 	template<typename T> struct Decay                        { using Type = T;  };
 	template<typename T> struct Decay<T&>                    { using Type = T;  };
 	template<typename T> struct Decay<T&&>                   { using Type = T;  };

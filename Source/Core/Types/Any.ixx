@@ -29,15 +29,7 @@ namespace jpt
 			JPT_LOG(any.As<int>()); // 42
 			any = jpt::String("Hello, World!");
 			JPT_LOG(any.Is<jpt::String>()); // true
-			JPT_LOG(any.As<jpt::String>()); // Hello, World!
-
-			// DON'T DO THIS
-			jpt::Any any2;
-			any2 = any; // This will cause a runtime infinite constructing loop and heap will overflow
-
-			// DO THIS
-			any2.CopyAny<jpt::String>(any);
-			any2.MoveAny(Move(any));       		*/
+			JPT_LOG(any.As<jpt::String>()); // Hello, World! */
 	export class Any
 	{
 		using Destructor = void(*)(Byte*);
@@ -50,24 +42,48 @@ namespace jpt
 	public:
 		constexpr Any() = default;
 		constexpr ~Any();
+		//constexpr Any(const Any& other);
+		//constexpr Any(Any&& other) noexcept;
+		//constexpr Any& operator=(const Any& other);
+		//constexpr Any& operator=(Any&& other) noexcept;
 
-		template<typename T> constexpr Any(T& value);
-		template<typename T> constexpr Any(T&& value);
+		template<typename T> 
+		requires NotSameType<T, Any>
+		constexpr Any(const T& value);
 
-		template<typename T> constexpr Any& operator=(T& value);
-		template<typename T> constexpr Any& operator=(T&& value);
+		template<typename T> 
+		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		constexpr Any(T&& value);
 
-		template<typename T> constexpr       T& As();
-		template<typename T> constexpr const T& As() const;
+		template<typename T> 
+		requires NotSameType<T, Any>
+		constexpr Any& operator=(const T& value);
 
-		template<typename T> constexpr bool Is() const;
+		template<typename T> 
+		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		constexpr Any& operator=(T&& value);
+
+		template<typename T> 
+		constexpr T& As();
+
+		template<typename T> 
+		constexpr const T& As() const;
+
+		template<typename T> 
+		constexpr bool Is() const;
 
 	private:
-		template<typename T> constexpr void Construct(T& value);
-		template<typename T> constexpr void Construct(T&& value);
+		template<typename T> 
+		requires NotSameType<T, Any>
+		constexpr void Construct(const T& value);
+
+		template<typename T> 
+		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		constexpr void Construct(T&& value);
 
 		/** Adapt to new Type, the new type is guaranteed not the same as current type */
-		template<typename T> constexpr void Adapt();
+		template<typename T> 
+		constexpr void Adapt();
 
 		constexpr void Destruct();
 	};
@@ -81,6 +97,24 @@ namespace jpt
 		m_currentTypeHash = 0;
 	}
 
+	//constexpr Any::Any(const Any& other)
+	//{
+	//}
+
+	//constexpr Any::Any(Any&& other) noexcept
+	//{
+	//}
+
+	//constexpr Any& Any::operator=(const Any& other)
+	//{
+	//	// TODO: insert return statement here
+	//}
+
+	//constexpr Any& Any::operator=(Any&& other) noexcept
+	//{
+	//	// TODO: insert return statement here
+	//}
+
 	constexpr void Any::Destruct()
 	{
 		if (m_destructor)
@@ -90,19 +124,22 @@ namespace jpt
 	}
 
 	template<typename T>
-	constexpr Any::Any(T& value)
+	requires NotSameType<T, Any>
+	constexpr Any::Any(const T& value)
 	{
 		Construct(value);
 	}
 
 	template<typename T>
+	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
 	constexpr Any::Any(T&& value)
 	{
 		Construct(Move(value));
 	}
 
 	template<typename T>
-	constexpr Any& Any::operator=(T& value)
+	requires NotSameType<T, Any>
+	constexpr Any& Any::operator=(const T& value) 
 	{
 		if (Is<T>())
 		{
@@ -116,6 +153,7 @@ namespace jpt
 	}
 
 	template<typename T>
+	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
 	constexpr Any& Any::operator=(T&& value)
 	{
 		if (Is<T>())
@@ -149,31 +187,16 @@ namespace jpt
 		return m_currentTypeHash == typeid(T).hash_code();
 	}
 
-	//template<typename T>
-	//constexpr void Any::CopyAny(Any& other)
-	//{
-	//	Construct(other.As<T>());
-	//}
-
-	//constexpr void Any::MoveAny(Any&& other)
-	//{
-	//	m_pBuffer = other.m_pBuffer;
-	//	m_destructor = Move(other.m_destructor);
-	//	m_currentTypeHash = other.m_currentTypeHash;
-
-	//	other.m_pBuffer = nullptr;
-	//	other.m_destructor = nullptr;
-	//	other.m_currentTypeHash = 0;
-	//}
-
 	template<typename T>
-	constexpr void Any::Construct(T& value)
+	requires NotSameType<T, Any>
+	constexpr void Any::Construct(const T& value)
 	{
 		Adapt<T>();
 		Allocator<T>::Construct(reinterpret_cast<T*>(m_pBuffer), value);
 	}
 
 	template<typename T>
+	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
 	constexpr void Any::Construct(T&& value)
 	{
 		Adapt<T>();

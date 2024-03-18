@@ -30,10 +30,10 @@ bool UnitTest_RemoveTraits()
 	value = jpt::IsSameType<typename jpt::RemoveConst<const T>::Type, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RTValueoLValueReference<T>::Type, T>;
+	value = jpt::IsSameType<typename jpt::RValueToLValueReference<T>::Type, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RTValueoLValueReference<T&&>::Type, T&>;
+	value = jpt::IsSameType<typename jpt::RValueToLValueReference<T&&>::Type, T&>;
 	JPT_ENSURE(value);
 
 	value = jpt::IsSameType<typename jpt::RemoveReference<const T&>::Type, const T>;

@@ -67,8 +67,8 @@ bool UnitTest_Any_Copy()
     any = str;
 
     // CopyAny
-    jpt::Any any2;
-    JPT_IGNORE(any2);
+    //jpt::Any any2;
+    //any2 = any;
 
     // Copy variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
