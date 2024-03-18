@@ -68,13 +68,12 @@ bool UnitTest_Any_Copy()
 
     // CopyAny
     jpt::Any any2;
-    any2.CopyAny<jpt::String>(any);
-    JPT_ENSURE(any.As<jpt::String>() == str);
-    JPT_ENSURE(any2.As<jpt::String>() == str);
+    JPT_IGNORE(any2);
 
     // Copy variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
     TVariant variant = jpt::String("Variant");
+    
     any = variant;
     const TVariant& variant2 = any.As<TVariant>();
     JPT_ENSURE(variant2.Is<jpt::String>());
@@ -103,13 +102,12 @@ bool UnitTest_Any_Move()
 
     // MoveAny
     jpt::Any any2;
-    any2.MoveAny(Move(any));
-    JPT_ENSURE(any2.As<jpt::String>() == "World");
-    JPT_ENSURE(!any.Is<jpt::String>());
+    JPT_IGNORE(any2);
 
     // Move variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
     TVariant variant = jpt::String("Variant");
+    
     any = Move(variant);
     const TVariant& variant2 = any.As<TVariant>();
     JPT_ENSURE(variant2.Is<jpt::String>());

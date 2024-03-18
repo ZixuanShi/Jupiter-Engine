@@ -62,11 +62,13 @@ bool UnitTest_Variant_Copy()
     JPT_ENSURE(originalVariant.As<int32>() == 42);
     JPT_ENSURE(copiedVariant.As<int32>() == 84);
 
-    copiedVariant = false;
+    bool b = false;
+    copiedVariant = b;
     JPT_ENSURE(copiedVariant.Is<bool>());
     JPT_ENSURE(copiedVariant.As<bool>() == false);
     
-    originalVariant = 'a';
+    char c = 'a';
+    originalVariant = c;
     JPT_ENSURE(originalVariant.Is<char>());
     JPT_ENSURE(originalVariant.As<char>() == 'a');
 

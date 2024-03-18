@@ -62,9 +62,6 @@ namespace jpt
 
 		template<typename T> constexpr bool Is() const;
 
-		template<typename T> constexpr void CopyAny(Any& other);
-		constexpr void MoveAny(Any&& other);
-
 	private:
 		template<typename T> constexpr void Construct(T& value);
 		template<typename T> constexpr void Construct(T&& value);
@@ -152,22 +149,22 @@ namespace jpt
 		return m_currentTypeHash == typeid(T).hash_code();
 	}
 
-	template<typename T>
-	constexpr void Any::CopyAny(Any& other)
-	{
-		Construct(other.As<T>());
-	}
+	//template<typename T>
+	//constexpr void Any::CopyAny(Any& other)
+	//{
+	//	Construct(other.As<T>());
+	//}
 
-	constexpr void Any::MoveAny(Any&& other)
-	{
-		m_pBuffer = other.m_pBuffer;
-		m_destructor = Move(other.m_destructor);
-		m_currentTypeHash = other.m_currentTypeHash;
+	//constexpr void Any::MoveAny(Any&& other)
+	//{
+	//	m_pBuffer = other.m_pBuffer;
+	//	m_destructor = Move(other.m_destructor);
+	//	m_currentTypeHash = other.m_currentTypeHash;
 
-		other.m_pBuffer = nullptr;
-		other.m_destructor = nullptr;
-		other.m_currentTypeHash = 0;
-	}
+	//	other.m_pBuffer = nullptr;
+	//	other.m_destructor = nullptr;
+	//	other.m_currentTypeHash = 0;
+	//}
 
 	template<typename T>
 	constexpr void Any::Construct(T& value)

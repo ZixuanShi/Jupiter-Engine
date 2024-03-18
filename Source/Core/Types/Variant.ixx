@@ -41,28 +41,29 @@ export namespace jpt
 		constexpr ~Variant();
 
 		/** Assign value to this variant */
-		template<typename T> constexpr Variant(const T& value) requires IsAnyOf<T, TArgs...>;
-		template<typename T> constexpr Variant(T&& value)      requires IsAnyOf<T, TArgs...>;
-		template<typename T> constexpr Variant& operator=(const T& value) requires IsAnyOf<T, TArgs...>;
-		template<typename T> constexpr Variant& operator=(T&& value)      requires IsAnyOf<T, TArgs...>;
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant(const T& value);
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant(T&& value);
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant& operator=(const T& value);
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant& operator=(T&& value);
 
 		/** @return		Reference to the current buffer data that casted to given T */
-		template<typename T> constexpr       T& As()       requires IsAnyOf<T, TArgs...>;
-		template<typename T> constexpr const T& As() const requires IsAnyOf<T, TArgs...>;
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr       T& As();
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr const T& As() const;
 
 		/** @return		true if this variant's current assigned type is same as the T */
-		template<typename T> constexpr bool Is() const requires IsAnyOf<T, TArgs...>;
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr bool Is() const;
 
 	private:
-		template<typename T> constexpr void Construct(const T& value) requires IsAnyOf<T, TArgs...>;
-		template<typename T> constexpr void Construct(T&& value)      requires IsAnyOf<T, TArgs...>;
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr void Construct(const T& value);
+		template<typename T> requires IsAnyOf<T, TArgs...> constexpr void Construct(T&& value);
 
 		template<typename TCurrent, typename ...TRest>
 		constexpr void Destruct();
 
 		/** @return		The index of the TypeToFind in TArgs */
 		template<typename TypeToFind, typename TCurrent, typename ...TRest>
-		constexpr TIndex GetIndexOfType() const requires IsAnyOf<TypeToFind, TArgs...>;
+		requires IsAnyOf<TypeToFind, TArgs...>
+		constexpr TIndex GetIndexOfType() const;
 
 		template<typename TCurrent, typename ...TRest> constexpr void CopyData(const Variant& other);
 		template<typename TCurrent, typename ...TRest> constexpr void MoveData(Variant&& other);
@@ -111,22 +112,25 @@ export namespace jpt
 	}
 
 	template<typename ...TArgs>
-	template<typename T>
-	constexpr Variant<TArgs...>::Variant(const T& value) requires IsAnyOf<T, TArgs...>
+	template<typename T> 
+	requires IsAnyOf<T, TArgs...>
+	constexpr Variant<TArgs...>::Variant(const T& value)
 	{
 		Construct<T>(value);
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr Variant<TArgs...>::Variant(T&& value) requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr Variant<TArgs...>::Variant(T&& value)
 	{
 		Construct<T>(Move(value));
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const T& value) requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const T& value)
 	{
 		Destruct<TArgs...>();
 		Construct<T>(value);
@@ -135,7 +139,8 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(T&& value) requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(T&& value)
 	{
 		Destruct<TArgs...>();
 		Construct<T>(Move(value));
@@ -144,7 +149,8 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr T& Variant<TArgs...>::As() requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr T& Variant<TArgs...>::As()
 	{
 		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
@@ -153,7 +159,8 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr const T& Variant<TArgs...>::As() const requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr const T& Variant<TArgs...>::As() const
 	{
 		JPT_ASSERT(Is<T>(), "Variant should be assigned to the given type T before calling As<T>() ");
 
@@ -162,14 +169,16 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr bool Variant<TArgs...>::Is() const requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr bool Variant<TArgs...>::Is() const
 	{
 		return m_currentIndex == GetIndexOfType<T, TArgs...>();
 	}
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr void Variant<TArgs...>::Construct(const T& value) requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr void Variant<TArgs...>::Construct(const T& value)
 	{
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), value);
 		m_currentIndex = GetIndexOfType<T, TArgs...>();
@@ -177,7 +186,8 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename T>
-	constexpr void Variant<TArgs...>::Construct(T&& value) requires IsAnyOf<T, TArgs...>
+	requires IsAnyOf<T, TArgs...>
+	constexpr void Variant<TArgs...>::Construct(T&& value)
 	{
 		Allocator<T>::Construct(reinterpret_cast<T*>(&m_buffer), Move(value));
 		m_currentIndex = GetIndexOfType<T, TArgs...>();
@@ -210,7 +220,8 @@ export namespace jpt
 
 	template<typename ...TArgs>
 	template<typename TypeToFind, typename TCurrent, typename ...TRest>
-	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const requires IsAnyOf<TypeToFind, TArgs...>
+	requires IsAnyOf<TypeToFind, TArgs...>
+	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const
 	{
 		if constexpr (IsSameType<TypeToFind, TCurrent>)
 		{
