@@ -30,11 +30,11 @@ export namespace jpt
 		/** Allocates plain heap memory for <Type>*/
 		static constexpr T* Allocate();
 		static constexpr T* AllocateArray(size_t count);
-		static constexpr T* AllocateArray(size_t count, std::initializer_list<T>&& values);
 
-		/** Allocates heap memory for one <Type>, with initializing value */
+		/** Allocates heap memory for <Type>, with initializing value */
 		template<typename ...TArgs>
 		static constexpr T* AllocateWithValue(TArgs&&... args);
+		static constexpr T* AllocateArrayWithValues(size_t count, std::initializer_list<T>&& values);
 
 		/** Deallocate memory for the passed in pointer */
 		static constexpr void Deallocate(T* pPointer);
@@ -64,7 +64,14 @@ export namespace jpt
 	}
 
 	template<typename T>
-	constexpr T* Allocator<T>::AllocateArray(size_t count, std::initializer_list<T>&& values)
+	template<typename ...TArgs>
+	constexpr T* Allocator<T>::AllocateWithValue(TArgs&& ...args)
+	{
+		return new T(Forward<TArgs>(args)...);
+	}
+
+	template<typename T>
+	constexpr T* Allocator<T>::AllocateArrayWithValues(size_t count, std::initializer_list<T>&& values)
 	{
 		T* pArray = new T[count];
 
@@ -76,13 +83,6 @@ export namespace jpt
 		}
 
 		return pArray;
-	}
-
-	template<typename T>
-	template<typename ...TArgs>
-	constexpr T* Allocator<T>::AllocateWithValue(TArgs&& ...args)
-	{
-		return new T(Forward<TArgs>(args)...);
 	}
 
 	template<typename T>

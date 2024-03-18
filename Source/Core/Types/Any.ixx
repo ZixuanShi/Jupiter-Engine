@@ -78,7 +78,8 @@ namespace jpt
 	constexpr Any::~Any()
 	{
 		Destruct();
-		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+		Allocator<Byte>::DeallocateArray(m_pBuffer);
+		m_pBuffer = nullptr;
 		m_destructor = nullptr;
 		m_currentTypeHash = 0;
 	}

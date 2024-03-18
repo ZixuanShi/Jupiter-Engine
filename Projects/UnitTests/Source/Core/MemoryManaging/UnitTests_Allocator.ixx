@@ -43,7 +43,7 @@ bool UnitTest_TAllocatorrivialType()
 	jpt::Allocator<TNum>::DeallocateArray(pArray);
 
 	// Multi with value initializer list
-	TNum* pMultiWithValue = jpt::Allocator<TNum>::AllocateArray(10, { 0,1,2,3,4,5,6,7,8,9 });
+	TNum* pMultiWithValue = jpt::Allocator<TNum>::AllocateArrayWithValues(10, { 0,1,2,3,4,5,6,7,8,9 });
 	JPT_ENSURE(pMultiWithValue != nullptr);
 	for (size_t i = 0; i < 10; ++i)
 	{
@@ -123,7 +123,7 @@ bool UnitTest_TAllocator_NonTrivial()
 	JPT_ENSURE(pFooWithArgs->ToString() == "FooBar");
 	allocator.Deallocate(pFooWithArgs);
 
-	Foo* pFooArray = allocator.AllocateArray(10, { Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9") });
+	Foo* pFooArray = allocator.AllocateArrayWithValues(10, { Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9") });
 	JPT_ENSURE(pFooArray != nullptr);
 	for (size_t i = 0; i < 10; ++i)
 	{
