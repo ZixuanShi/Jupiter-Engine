@@ -52,7 +52,7 @@ namespace jpt
 		constexpr Any(const T& value);
 
 		template<typename T> 
-		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 		constexpr Any(T&& value);
 
 		template<typename T> 
@@ -60,7 +60,7 @@ namespace jpt
 		constexpr Any& operator=(const T& value);
 
 		template<typename T> 
-		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 		constexpr Any& operator=(T&& value);
 
 		template<typename T> 
@@ -78,7 +78,7 @@ namespace jpt
 		constexpr void Construct(const T& value);
 
 		template<typename T> 
-		requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+		requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 		constexpr void Construct(T&& value);
 
 		/** Adapt to new Type, the new type is guaranteed not the same as current type */
@@ -99,6 +99,7 @@ namespace jpt
 
 	//constexpr Any::Any(const Any& other)
 	//{
+
 	//}
 
 	//constexpr Any::Any(Any&& other) noexcept
@@ -131,7 +132,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+	requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 	constexpr Any::Any(T&& value)
 	{
 		Construct(Move(value));
@@ -153,7 +154,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+	requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 	constexpr Any& Any::operator=(T&& value)
 	{
 		if (Is<T>())
@@ -196,7 +197,7 @@ namespace jpt
 	}
 
 	template<typename T>
-	requires IsSameType<T, typename RemoveReference<T>::Type> && NotSameType<T, Any>
+	requires NotSameType<T, Any> && IsSameType<T, typename RemoveReference<T>::Type>
 	constexpr void Any::Construct(T&& value)
 	{
 		Adapt<T>();
