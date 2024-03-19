@@ -16,9 +16,9 @@ export namespace jpt
 {
 	/** Returns a rvalue of the object */
 	template<MoveConstructible T>
-	constexpr typename RemoveReference<T>::Type&& Move(T&& object)
+	constexpr TRemoveReference<T>&& Move(T&& object)
 	{
-		using TCast = RemoveReference<T>::Type;
+		using TCast = TRemoveReference<T>;
 
 		static_assert(IsLValueRef<T>, "jpt::Move called on an Rvalue");
 		static_assert(!IsSameType<TCast&, const TCast&>, "jpt::Move called on a const object");
@@ -28,13 +28,13 @@ export namespace jpt
 
 	/** Returns LValue if obj is LValue, Returns RValue if obj is RValue */
 	template<class T>
-	constexpr T&& Forward(typename RemoveReference<T>::Type& obj)
+	constexpr T&& Forward(TRemoveReference<T>& obj)
 	{
 		return static_cast<T&&>(obj);
 	}
 
 	template<class T>
-	constexpr T&& Forward(typename RemoveReference<T>::Type&& obj)
+	constexpr T&& Forward(TRemoveReference<T>&& obj)
 	{
 		static_assert(!IsLValueRef<T>, "Bad forward call");
 		return static_cast<T&&>(obj);

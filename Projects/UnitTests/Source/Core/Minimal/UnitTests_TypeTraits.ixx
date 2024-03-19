@@ -11,70 +11,72 @@ import jpt.TypeTraits;
 import jpt.String;
 
 template<typename T>
-bool UnitTest_RemoveTraits()
+bool UnitTest_TRemoveTraits()
 {
 	bool value = false;
 
-	value = jpt::IsSameType<typename jpt::RemoveReference<T>::Type, T>;
+	value = jpt::IsSameType<jpt::TRValueToLValueReference<T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RemoveReference<T&>::Type, T>;
+	value = jpt::IsSameType<jpt::TRValueToLValueReference<T&&>, T&>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RemoveReference<T&&>::Type, T>;
+	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RemoveConst<T>::Type, T>;
+	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T&>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RemoveConst<const T>::Type, T>;
+	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T&&>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RValueToLValueReference<T>::Type, T>;
+	value = jpt::IsSameType<decltype(jpt::TRemoveReference<const T&>), const T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RValueToLValueReference<T&&>::Type, T&>;
+	value = jpt::IsSameType<decltype(jpt::TRemoveConst<const T>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::RemoveReference<const T&>::Type, const T>;
-	JPT_ENSURE(value);
+	// https://stackoverflow.com/questions/15887144/stdremove-const-with-const-references
+	{
+		value = !jpt::IsSameType<decltype(jpt::TRemoveConst<const T&>), T&>;
+		JPT_ENSURE(value);
 
-	typename jpt::RemoveConst<const T&>::Type foo = T();
-	value = jpt::IsSameType<decltype(foo), const T&>;
-	JPT_ENSURE(value);
+		T t = T();
+		const T& constRefT = t;
+		jpt::TRemoveReference<decltype(constRefT)> constT = t;
 
-	typename jpt::RemoveReference<decltype(foo)>::Type bar = foo;
-	value = jpt::IsSameType<decltype(bar), const T>;
-	JPT_ENSURE(value);
+		value = jpt::IsSameType<decltype(constT), const T>;
+		JPT_ENSURE(value);
 
-	typename jpt::RemoveConst<decltype(bar)>::Type baz = foo;
-	value = jpt::IsSameType<decltype(baz), T>;
-	JPT_ENSURE(value);
+		jpt::TRemoveConst<decltype(constT)> plainT = t;
+		value = jpt::IsSameType<decltype(plainT), T>;
+		JPT_ENSURE(value);
+	}
 
 	return true;
 }
 
 template<typename T>
-bool UnitTest_Decay()
+bool UnitTest_TDecay()
 {
 	bool value = false;
 
-	value = jpt::IsSameType<typename jpt::Decay<T>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::Decay<T&>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<T&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::Decay<T&&>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<T&&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::Decay<const T>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<const T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::Decay<const T&>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<const T&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<typename jpt::Decay<const T&&>::Type, T>;
+	value = jpt::IsSameType<jpt::TDecay<const T&&>, T>;
 	JPT_ENSURE(value);
 
 	return true;
@@ -211,7 +213,7 @@ bool UnitTest_IsAnyOf()
 	bool value = false;
 	auto helper = [](const auto& var) -> bool
 		{
-			return jpt::IsAnyOf<typename jpt::Decay<decltype(var)>::Type, int32, float, char, jpt::String>;
+			return jpt::IsAnyOf<jpt::TDecay<decltype(var)>, int32, float, char, jpt::String>;
 		};
 
 	Foo<int32, float, char> foo;
@@ -268,7 +270,7 @@ bool UnitTest_NotAnyOf()
 	bool value = false;
 	auto helper = [](const auto& var) -> bool
 		{
-			return jpt::NotAnyOf<typename jpt::Decay<decltype(var)>::Type, int32, float, char, jpt::String>;
+			return jpt::NotAnyOf<jpt::TDecay<decltype(var)>, int32, float, char, jpt::String>;
 		};
 
 	int32 num = 10;
@@ -391,11 +393,11 @@ bool UnitTest_IsArray()
 
 export bool RunUnitTests_TypeTraits()
 {
-	JPT_ENSURE(UnitTest_RemoveTraits<int32>());
-	JPT_ENSURE(UnitTest_RemoveTraits<jpt::String>());
+	JPT_ENSURE(UnitTest_TRemoveTraits<int32>());
+	JPT_ENSURE(UnitTest_TRemoveTraits<jpt::String>());
 
-	JPT_ENSURE(UnitTest_Decay<int32>());
-	JPT_ENSURE(UnitTest_Decay<jpt::String>());
+	JPT_ENSURE(UnitTest_TDecay<int32>());
+	JPT_ENSURE(UnitTest_TDecay<jpt::String>());
 
 	JPT_ENSURE(UnitTest_IsLValueRefType());
 	JPT_ENSURE(UnitTest_IsLValueRefType());
