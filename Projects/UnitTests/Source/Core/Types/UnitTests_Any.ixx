@@ -3,6 +3,8 @@
 module;
 
 #include "Core/Minimal/Headers.h"
+#include "Profiling/TimingProfiler.h"
+
 #include <typeinfo>
 
 export module UnitTests_Any;
@@ -120,7 +122,14 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    JPT_ENSURE(UnitTest_Any());
+    {
+        JPT_SCOPED_TIMING_PROFILER(UnitTest_Any);
+        for (size_t i = 0; i < 1000; ++i)
+        {
+            JPT_ENSURE(UnitTest_Any());
+        }
+    }
+
     JPT_ENSURE(UnitTest_Any_Copy());
     JPT_ENSURE(UnitTest_Any_Move());
 
