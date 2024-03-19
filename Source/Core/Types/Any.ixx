@@ -38,6 +38,7 @@ namespace jpt
 		Byte* m_pBuffer = nullptr;          /**< Dynamically resizing buffer that will hold any data when assigning & constructing */
 		Destructor m_destructor = nullptr;	/**< Function pointer to the destructor of the current type */
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
+		size_t m_size = 0;                  /**< Size of the current type */
 
 	public:
 		constexpr Any() = default;
@@ -185,7 +186,7 @@ namespace jpt
 	template<typename T>
 	constexpr bool Any::Is() const
 	{
-		return m_currentTypeHash == typeid(T).hash_code();
+		return m_size == sizeof(T) && m_currentTypeHash == typeid(T).hash_code();
 	}
 
 	template<typename T>
@@ -207,8 +208,15 @@ namespace jpt
 	template<typename T>
 	constexpr void Any::Adapt()
 	{
-		JPT_DELETE_ARRAY(m_pBuffer);
-		m_pBuffer = new Byte[sizeof(T)];
+		// At this point, the current type is guaranteed not the same as T
+		// But size might be the same. If it's not, we need to reallocate the buffer
+		const size_t newSize = sizeof(T);
+		if (newSize != m_size)
+		{
+			Allocator<Byte>::DeallocateArray(m_pBuffer);
+			m_pBuffer = Allocator<Byte>::AllocateArray(newSize);
+			m_size = newSize;
+		}
 
 		// Assign destructor function to current T
 		m_destructor = [](Byte* pBuffer)

@@ -122,7 +122,8 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    // [Log] TimingProfiler: UnitTest_Any took 0.310000 ms
+    // Before: [Log] TimingProfiler: UnitTest_Any took 163.653300 ms
+    // After:  [Log] TimingProfiler: UnitTest_Any took 125.973000 ms
     {
         JPT_SCOPED_TIMING_PROFILER(UnitTest_Any);
         for (size_t i = 0; i < 100000; ++i)
