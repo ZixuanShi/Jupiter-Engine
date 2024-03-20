@@ -34,22 +34,26 @@ export namespace jpt
 			JPT_LOG(any.As<jpt::String>()); // Hello, World! */
 	class Any
 	{
+		using Constructor = void(*)(Byte*, const Byte*);
 		using Destructor = void(*)(Byte*);
 
 	private:
 		Byte m_smallBuffer[kLocSmallDataSize]; /**< Small Object Optimization. Will hold data in this local stack buffer if it's small */
-		Byte* m_pBuffer = nullptr;          /**< Buffer pointer to the memory of hold object */
-		Destructor m_destructor = nullptr;	/**< Function pointer to the destructor of the current type */
+		Byte* m_pBuffer = nullptr;             /**< Buffer pointer to the memory of hold object */
+
+		Constructor m_constructor = nullptr; /**< Function pointer to the constructor of the current type */
+		Destructor m_destructor = nullptr;	 /**< Function pointer to the destructor of the current type */
+
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
 		size_t m_currentTypeSize = 0;       /**< Size of the current type */
 
 	public:
 		constexpr Any() = default;
 		constexpr ~Any();
-		constexpr Any(const Any& other);
-		constexpr Any(Any&& other) noexcept;
-		constexpr Any& operator=(const Any& other);
-		constexpr Any& operator=(Any&& other) noexcept;
+		Any(const Any& other);
+		Any(Any&& other) noexcept;
+		Any& operator=(const Any& other);
+		Any& operator=(Any&& other) noexcept;
 
 		template<typename T> 
 		requires NotSameType<T, Any>
@@ -77,6 +81,9 @@ export namespace jpt
 		constexpr bool Is() const;
 
 	private:
+		void CopyAny(const Any& other);
+		void MoveAny(Any&& other);
+
 		template<typename T> 
 		requires NotSameType<T, Any>
 		constexpr void ConstructType(const T& value);
@@ -87,6 +94,7 @@ export namespace jpt
 
 		/** Adapt to new Type, the new type is guaranteed not the same as current type */
 		template<typename T> 
+		requires NotSameType<T, Any>
 		constexpr void Adapt();
 
 		constexpr void DestructObject();
@@ -102,32 +110,39 @@ export namespace jpt
 		m_currentTypeHash = 0;
 	}
 
-	constexpr Any::Any(const Any& other)
+	Any::Any(const Any& other)
 	{
-		JPT_IGNORE(other);
+		CopyAny(other);
 	}
 
-	constexpr Any::Any(Any&& other) noexcept
+	Any::Any(Any&& other) noexcept
 	{
-		JPT_IGNORE(other);
+		MoveAny(Move(other));
 	}
 
-	constexpr Any& Any::operator=(const Any& other)
+	Any& Any::operator=(const Any& other)
 	{
 		if (this != &other)
 		{
 			DestructObject();
 			DeallocateBuffer();
 
-
+			CopyAny(other);
 		}
 
 		return *this;
 	}
 
-	constexpr Any& Any::operator=(Any&& other) noexcept
+	Any& Any::operator=(Any&& other) noexcept
 	{
-		JPT_IGNORE(other);
+		if (this != &other)
+		{
+			DestructObject();
+			DeallocateBuffer();
+
+			MoveAny(Move(other));
+		}
+
 		return *this;
 	}
 
@@ -146,6 +161,8 @@ export namespace jpt
 		{
 			Allocator<Byte>::DeallocateArray(m_pBuffer);
 		}
+
+		m_pBuffer = nullptr;
 	}
 
 	template<typename T>
@@ -212,6 +229,46 @@ export namespace jpt
 		return m_currentTypeSize == sizeof(T) && m_currentTypeHash == typeid(T).hash_code();
 	}
 
+	void Any::CopyAny(const Any& other)
+	{
+		m_currentTypeHash = other.m_currentTypeHash;
+		m_currentTypeSize = other.m_currentTypeSize;
+
+		if (m_currentTypeSize <= kLocSmallDataSize)
+		{
+			m_pBuffer = m_smallBuffer;
+			std::memcpy(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
+		}
+		else
+		{
+			m_pBuffer = Allocator<Byte>::AllocateArray(m_currentTypeSize);
+			std::memcpy(m_pBuffer, other.m_pBuffer, m_currentTypeSize);
+		}
+
+		m_constructor = other.m_constructor;
+		m_destructor  = other.m_destructor;
+
+		m_constructor(m_pBuffer, other.m_pBuffer);
+	}
+
+	void Any::MoveAny(Any&& other)
+	{
+		m_currentTypeHash = other.m_currentTypeHash;
+		m_currentTypeSize = other.m_currentTypeSize;
+
+		std::memcpy(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
+		m_pBuffer = other.m_pBuffer;
+
+		m_constructor = other.m_constructor;
+		m_destructor = other.m_destructor;
+
+		other.m_pBuffer     = nullptr;
+		other.m_constructor = nullptr;
+		other.m_destructor  = nullptr;
+		other.m_currentTypeHash = 0;
+		other.m_currentTypeSize = 0;
+	}
+
 	template<typename T>
 	requires NotSameType<T, Any>
 	constexpr void Any::ConstructType(const T& value)
@@ -229,6 +286,7 @@ export namespace jpt
 	}
 
 	template<typename T>
+	requires NotSameType<T, Any>
 	constexpr void Any::Adapt()
 	{
 		// At this point, the current type is guaranteed not the same as T
@@ -248,6 +306,11 @@ export namespace jpt
 				m_pBuffer = Allocator<Byte>::AllocateArray(newSize);
 			}
 		}
+
+		m_constructor = [](Byte* pBuffer, const Byte* pValue)
+			{
+				Allocator<T>::Construct(reinterpret_cast<T*>(pBuffer), *reinterpret_cast<const T*>(pValue));
+			};
 
 		// Assign destructor function to current T
 		m_destructor = [](Byte* pBuffer)

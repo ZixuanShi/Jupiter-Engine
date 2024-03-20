@@ -70,10 +70,12 @@ bool UnitTest_Any_Copy()
     any = str;
 
     // CopyAny
-    //jpt::Any any2;
-    //any2 = any;
-    //JPT_ENSURE(any2.Is<jpt::String>());
-    //JPT_ENSURE(any2.As<jpt::String>() == str);
+    jpt::Any any2;
+    any2 = any;
+    JPT_ENSURE(any2.Is<jpt::String>());
+    JPT_ENSURE(any2.As<jpt::String>() == str);
+    JPT_ENSURE(any.Is<jpt::String>());
+    JPT_ENSURE(any.As<jpt::String>() == str);
 
     // Copy variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
@@ -107,7 +109,10 @@ bool UnitTest_Any_Move()
 
     // MoveAny
     jpt::Any any2;
-    JPT_IGNORE(any2);
+    any2 = Move(any);
+    JPT_ENSURE(any2.Is<jpt::String>());
+    JPT_ENSURE(any2.As<jpt::String>() == "World");
+    JPT_ENSURE(!any.Is<jpt::String>());
 
     // Move variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
@@ -125,16 +130,9 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    JPT_SCOPED_TIMING_PROFILER(Jupiter_Any);
-    jpt::Any any;
-    for (size_t i = 0; i < 10'0000; ++i)
-    {
-        any = 42;
-
-        JPT_ENSURE(UnitTest_Any());
-        JPT_ENSURE(UnitTest_Any_Copy());
-        JPT_ENSURE(UnitTest_Any_Move());
-    }
+    JPT_ENSURE(UnitTest_Any());
+    JPT_ENSURE(UnitTest_Any_Copy());
+    JPT_ENSURE(UnitTest_Any_Move());
 
     return true;
 }
