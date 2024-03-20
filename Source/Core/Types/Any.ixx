@@ -42,7 +42,7 @@ export namespace jpt
 		Byte* m_pBuffer = nullptr;             /**< Buffer pointer to the memory of hold object */
 
 		Constructor m_constructor = nullptr; /**< Function pointer to the constructor of the current type */
-		Destructor m_destructor = nullptr;	 /**< Function pointer to the destructor of the current type */
+		Destructor m_destructor   = nullptr; /**< Function pointer to the destructor of the current type */
 
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
 		size_t m_currentTypeSize = 0;       /**< Size of the current type */
@@ -105,9 +105,11 @@ export namespace jpt
 	{
 		DestructObject();
 		DeallocateBuffer();
-		m_pBuffer = nullptr;
-		m_destructor = nullptr;
+		m_pBuffer     = nullptr;
+		m_constructor = nullptr;
+		m_destructor  = nullptr;
 		m_currentTypeHash = 0;
+		m_currentTypeSize = 0;
 	}
 
 	Any::Any(const Any& other)
@@ -161,8 +163,6 @@ export namespace jpt
 		{
 			Allocator<Byte>::DeallocateArray(m_pBuffer);
 		}
-
-		m_pBuffer = nullptr;
 	}
 
 	template<typename T>
@@ -260,7 +260,7 @@ export namespace jpt
 		m_pBuffer = other.m_pBuffer;
 
 		m_constructor = other.m_constructor;
-		m_destructor = other.m_destructor;
+		m_destructor  = other.m_destructor;
 
 		other.m_pBuffer     = nullptr;
 		other.m_constructor = nullptr;
@@ -292,7 +292,6 @@ export namespace jpt
 		// At this point, the current type is guaranteed not the same as T
 		// But size might be the same. If it's not, we need to reallocate the buffer
 		const size_t newSize = sizeof(T);
-
 		if (newSize != m_currentTypeSize)
 		{
 			DeallocateBuffer();
@@ -311,8 +310,6 @@ export namespace jpt
 			{
 				Allocator<T>::Construct(reinterpret_cast<T*>(pBuffer), *reinterpret_cast<const T*>(pValue));
 			};
-
-		// Assign destructor function to current T
 		m_destructor = [](Byte* pBuffer)
 			{
 				if constexpr (!IsTriviallyDestructible<T>)
@@ -321,7 +318,6 @@ export namespace jpt
 				}
 			};
 
-		// Update holding data type info
 		m_currentTypeHash = typeid(T).hash_code();
 		m_currentTypeSize = newSize;
 	}
