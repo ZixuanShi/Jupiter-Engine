@@ -46,6 +46,10 @@ export namespace jpt
 	public:
 		constexpr Any() = default;
 		constexpr ~Any();
+		constexpr Any(const Any& other);
+		constexpr Any(Any&& other) noexcept;
+		constexpr Any& operator=(const Any& other);
+		constexpr Any& operator=(Any&& other) noexcept;
 
 		template<typename T> 
 		requires NotSameType<T, Any>
@@ -96,6 +100,35 @@ export namespace jpt
 		m_pBuffer = nullptr;
 		m_destructor = nullptr;
 		m_currentTypeHash = 0;
+	}
+
+	constexpr Any::Any(const Any& other)
+	{
+		JPT_IGNORE(other);
+	}
+
+	constexpr Any::Any(Any&& other) noexcept
+	{
+		JPT_IGNORE(other);
+	}
+
+	constexpr Any& Any::operator=(const Any& other)
+	{
+		if (this != &other)
+		{
+			DestructObject();
+			DeallocateBuffer();
+
+
+		}
+
+		return *this;
+	}
+
+	constexpr Any& Any::operator=(Any&& other) noexcept
+	{
+		JPT_IGNORE(other);
+		return *this;
 	}
 
 	constexpr void Any::DestructObject()
@@ -205,15 +238,15 @@ export namespace jpt
 		if (newSize != m_currentTypeSize)
 		{
 			DeallocateBuffer();
-		}
 
-		if constexpr (newSize <= kLocSmallDataSize)
-		{
-			m_pBuffer = m_smallBuffer;
-		}
-		else
-		{
-			m_pBuffer = Allocator<Byte>::AllocateArray(newSize);
+			if constexpr (newSize <= kLocSmallDataSize)
+			{
+				m_pBuffer = m_smallBuffer;
+			}
+			else
+			{
+				m_pBuffer = Allocator<Byte>::AllocateArray(newSize);
+			}
 		}
 
 		// Assign destructor function to current T

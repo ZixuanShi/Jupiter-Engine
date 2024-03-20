@@ -72,6 +72,8 @@ bool UnitTest_Any_Copy()
     // CopyAny
     //jpt::Any any2;
     //any2 = any;
+    //JPT_ENSURE(any2.Is<jpt::String>());
+    //JPT_ENSURE(any2.As<jpt::String>() == str);
 
     // Copy variant
     using TVariant = jpt::Variant<int32, char, bool, jpt::String>;
