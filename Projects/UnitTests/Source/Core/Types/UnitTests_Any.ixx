@@ -5,6 +5,7 @@ module;
 #include "Core/Minimal/Headers.h"
 #include "Profiling/TimingProfiler.h"
 
+#include <any>
 #include <typeinfo>
 
 export module UnitTests_Any;
@@ -122,16 +123,15 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    // Before: [Log] TimingProfiler: UnitTest_Any took 163.653300 ms
-    // After:  [Log] TimingProfiler: UnitTest_Any took 125.973000 ms
+    JPT_SCOPED_TIMING_PROFILER(Jupiter_Any);
+    jpt::Any any;
+    for (size_t i = 0; i < 10'0000; ++i)
     {
-        JPT_SCOPED_TIMING_PROFILER(UnitTest_Any);
-        for (size_t i = 0; i < 100000; ++i)
-        {
-            JPT_ENSURE(UnitTest_Any());
-            JPT_ENSURE(UnitTest_Any_Copy());
-            JPT_ENSURE(UnitTest_Any_Move());
-        }
+        any = 42;
+
+        JPT_ENSURE(UnitTest_Any());
+        JPT_ENSURE(UnitTest_Any_Copy());
+        JPT_ENSURE(UnitTest_Any_Move());
     }
 
     return true;
