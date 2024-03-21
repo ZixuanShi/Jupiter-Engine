@@ -6,7 +6,7 @@ module;
 #include "Debugging/Assert.h"
 
 #include <typeinfo>
-#include <string>
+#include <cstring>
 
 export module jpt.Any;
 
@@ -35,14 +35,14 @@ export namespace jpt
 	class Any
 	{
 		using Constructor = void(*)(Byte*, const Byte*);
-		using Destructor = void(*)(Byte*);
+		using Destructor  = void(*)(Byte*);
 
 	private:
 		Byte m_smallBuffer[kLocSmallDataSize]; /**< Small Object Optimization. Will hold data in this local stack buffer if it's small */
 		Byte* m_pBuffer = nullptr;             /**< Buffer pointer to the memory of hold object */
 
 		Constructor m_constructor = nullptr; /**< Function pointer to the constructor of the current type */
-		Destructor m_destructor   = nullptr; /**< Function pointer to the destructor of the current type */
+		Destructor  m_destructor  = nullptr; /**< Function pointer to the destructor of the current type */
 
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
 		size_t m_currentTypeSize = 0;       /**< Size of the current type */
@@ -256,7 +256,7 @@ export namespace jpt
 		m_currentTypeHash = other.m_currentTypeHash;
 		m_currentTypeSize = other.m_currentTypeSize;
 
-		std::memcpy(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
+		std::memmove(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
 		m_pBuffer = other.m_pBuffer;
 
 		m_constructor = other.m_constructor;
