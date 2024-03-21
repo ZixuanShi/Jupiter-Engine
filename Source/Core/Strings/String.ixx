@@ -107,7 +107,10 @@ export namespace jpt
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
 
-		/** Insert a string at the index */
+		/** Insert a string at the index
+			@param CString:		Content of new string to insert
+			@param index:		Where to insert in this string
+			@param size:		[optional] Length of the string to insert */
 		constexpr void Insert(TChar c, size_t index);
 		constexpr void Insert(const TChar* CString, size_t index);
 		constexpr void Insert(const TChar* CString, size_t index, size_t size);
