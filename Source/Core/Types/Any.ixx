@@ -26,9 +26,11 @@ export namespace jpt
 			
 			// Assigning and retrieving values
 			jpt::Any any;
+			
 			any = 42;
 			JPT_LOG(any.Is<int>()); // true
 			JPT_LOG(any.As<int>()); // 42
+
 			any = jpt::String("Hello, World!");
 			JPT_LOG(any.Is<jpt::String>()); // true
 			JPT_LOG(any.As<jpt::String>()); // Hello, World! */
