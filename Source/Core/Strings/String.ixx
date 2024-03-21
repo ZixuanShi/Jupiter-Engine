@@ -107,6 +107,11 @@ export namespace jpt
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
 
+		/** Insert a string at the index */
+		constexpr void Insert(TChar c, size_t index);
+		constexpr void Insert(const TChar* CString, size_t index);
+		constexpr void Insert(const TChar* CString, size_t index, size_t size);
+
 		/** Appends a new string to the end of buffer */
 		constexpr void Append(const TChar* CString, size_t newStringSize);
 		constexpr void Append(const TChar* CString);
@@ -541,6 +546,32 @@ export namespace jpt
 		}
 
 		return result;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::Insert(TChar c, size_t index)
+	{
+		TChar cString[2] = { c, '\0' };
+		Insert(cString, index, 1);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index)
+	{
+		Insert(CString, index, GetCStrLength(CString));
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index, size_t size)
+	{
+		JPT_ASSERT(index <= m_size, "Index out of bound");
+		JPT_EXIT_IF(size == 0);
+
+		BasicString pre = SubStr(0, index);
+		BasicString mid(CString, size);
+		BasicString suff = SubStr(index);
+
+		*this = Move(pre) + Move(mid) + Move(suff);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

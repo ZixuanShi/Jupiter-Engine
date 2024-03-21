@@ -423,5 +423,9 @@ export bool RunUnitTests_String()
 	//	}
 	//}
 
+	jpt::String str = "Hello World";
+	str.Insert("Jupiter ", 6);
+	JPT_LOG(str);
+
 	return true;
 }
