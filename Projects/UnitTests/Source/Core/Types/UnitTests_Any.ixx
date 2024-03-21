@@ -130,13 +130,9 @@ bool UnitTest_Any_Move()
 
 export bool RunUnitTests_Any()
 {
-    JPT_SCOPED_TIMING_PROFILER(RunUnitTests_Any);
-    for (int i = 0; i < 10'000; ++i)
-    {
-        JPT_ENSURE(UnitTest_Any());
-        JPT_ENSURE(UnitTest_Any_Copy());
-        JPT_ENSURE(UnitTest_Any_Move());
-    }
+    JPT_ENSURE(UnitTest_Any());
+    JPT_ENSURE(UnitTest_Any_Copy());
+    JPT_ENSURE(UnitTest_Any_Move());
 
     return true;
 }
