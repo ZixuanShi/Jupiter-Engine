@@ -150,8 +150,8 @@ export namespace jpt
 		   @param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
 		constexpr void ReAllocateBuffer(size_t inCapacity);
 
-		/** Inserts a C-String at the index by the given size */
-		constexpr void InsertStringAt(const TChar* CString, size_t index, size_t size);
+		/** Implementation of appending a C-String at the index by the given size */
+		constexpr void AppendImpl(const TChar* CString, size_t size);
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
@@ -547,7 +547,7 @@ export namespace jpt
 	constexpr void BasicString<TChar, TAllocator>::Append(const TChar* CString, size_t newStringSize)
 	{
 		JPT_EXIT_IF(newStringSize == 0);
-		InsertStringAt(CString, m_size, newStringSize);
+		AppendImpl(CString, newStringSize);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
@@ -560,14 +560,14 @@ export namespace jpt
 	constexpr void BasicString<TChar, TAllocator>::Append(const BasicString<TChar>& otherString)
 	{
 		JPT_EXIT_IF(otherString.IsEmpty());
-		InsertStringAt(otherString.ConstBuffer(), m_size, otherString.m_size);
+		AppendImpl(otherString.ConstBuffer(), otherString.m_size);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void BasicString<_TChar, _TAllocator>::Append(TChar c)
 	{
 		TChar cString[2] = { c, '\0' };
-		InsertStringAt(cString, m_size, 1);
+		AppendImpl(cString, 1);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
@@ -705,12 +705,12 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr void BasicString<TChar, TAllocator>::InsertStringAt(const TChar* CString, size_t index, size_t size)
+	constexpr void BasicString<TChar, TAllocator>::AppendImpl(const TChar* CString, size_t size)
 	{
 		const size_t newSize = m_size + size;
 		Reserve(newSize);
 
-		StrCpy(m_pBuffer + index, size + sizeof(TChar), CString);
+		StrCpy(m_pBuffer + m_size, size + sizeof(TChar), CString);
 
 		m_size = newSize;
 	}
