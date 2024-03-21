@@ -318,6 +318,21 @@ bool UnitTest_String_Split()
 	return true;
 }
 
+template<class TString>
+bool UnitTest_String_Insert()
+{
+	using TChar = TString::TChar;
+
+	TString string = JPT_GET_PROPER_STRING(TChar, Hello World);
+	string.Insert(JPT_GET_PROPER_STRING(TChar, Jupiter), 6);
+	JPT_ENSURE(string == JPT_GET_PROPER_STRING(TChar, Hello JupiterWorld));
+
+	string.Insert(JPT_GET_PROPER_STRING(TChar, Hey), 0);
+	JPT_ENSURE(string == JPT_GET_PROPER_STRING(TChar, HeyHello JupiterWorld));
+
+	return true;
+}
+
 char g_smallBuffer[jpt::kSmallDataSize] = { 0 };
 char* g_pBuffer = nullptr;
 
@@ -407,25 +422,14 @@ export bool RunUnitTests_String()
 	JPT_ENSURE(UnitTest_StringReplace<jpt::String>());
 	JPT_ENSURE(UnitTest_StringReplace<jpt::WString>());
 
+	JPT_ENSURE(UnitTest_String_Insert<jpt::String>());
+	JPT_ENSURE(UnitTest_String_Insert<jpt::WString>());
+
 	JPT_ENSURE(UnitTest_String_Iterator());
 	JPT_ENSURE(UnitTest_String_Format());
 	JPT_ENSURE(UnitTest_String_Split());
 
 	JPT_ENSURE(UnitTest_String_SSO());
-
-	//{
-	//	JPT_SCOPED_TIMING_PROFILER(str);
-
-	//	jpt::String str;
-	//	for (int32 i = 0; i < 1'000'000; ++i)
-	//	{
-	//		str = "Hello " + jpt::ToString(jpt::RNG::Global().RandInMax(9));
-	//	}
-	//}
-
-	jpt::String str = "Hello World";
-	str.Insert("Jupiter ", 6);
-	JPT_LOG(str);
 
 	return true;
 }
