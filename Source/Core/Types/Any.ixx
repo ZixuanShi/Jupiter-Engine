@@ -20,20 +20,7 @@ static constexpr size_t kLocSmallDataSize = 8;
 
 export namespace jpt
 {
-	/** Can hold any type 
-		@note	When copying or moving another Any object. Do not use the default member copy/move constructor/operator=. Instead use CopyAny or MoveAny
-		@example 
-			
-			// Assigning and retrieving values
-			jpt::Any any;
-			
-			any = 42;
-			JPT_LOG(any.Is<int>()); // true
-			JPT_LOG(any.As<int>()); // 42
-
-			any = jpt::String("Hello, World!");
-			JPT_LOG(any.Is<jpt::String>()); // true
-			JPT_LOG(any.As<jpt::String>()); // Hello, World! */
+	/** Can hold any type */
 	class Any
 	{
 		using Constructor = void(*)(Byte*, const Byte*);
