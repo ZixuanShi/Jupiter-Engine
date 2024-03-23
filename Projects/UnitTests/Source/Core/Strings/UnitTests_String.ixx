@@ -354,87 +354,71 @@ bool UnitTest_WString_Insert()
 	return true;
 }
 
-//bool UnitTest_String_TrimLeft()
-//{
-//	jpt::String str = "   Hello Jupiter Engine";
-//	str.TrimLeft();
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "   Hello Jupiter Engine";
-//	str.TrimLeft(5);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "   Hello Jupiter Engine";
-//	str.TrimLeft(10);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "   Hello Jupiter Engine";
-//	str.TrimLeft(15);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	return true;
-//}
-//bool UnitTest_WString_TrimLeft()
-//{
-//	jpt::WString str = L"   Hello Jupiter Engine";
-//	str.TrimLeft();
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"   Hello Jupiter Engine";
-//	str.TrimLeft(5);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"   Hello Jupiter Engine";
-//	str.TrimLeft(10);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"   Hello Jupiter Engine";
-//	str.TrimLeft(15);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	return true;
-//}
-//
-//bool UnitTest_String_TrimRight()
-//{
-//	jpt::String str = "Hello Jupiter Engine   ";
-//	str.TrimRight();
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "Hello Jupiter Engine   ";
-//	str.TrimRight(5);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "Hello Jupiter Engine   ";
-//	str.TrimRight(10);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	str = "Hello Jupiter Engine   ";
-//	str.TrimRight(15);
-//	JPT_ENSURE(str == "Hello Jupiter Engine");
-//
-//	return true;
-//}
-//bool UnitTest_WString_TrimRight()
-//{
-//	jpt::WString str = L"Hello Jupiter Engine   ";
-//	str.TrimRight();
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"Hello Jupiter Engine   ";
-//	str.TrimRight(5);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"Hello Jupiter Engine   ";
-//	str.TrimRight(10);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	str = L"Hello Jupiter Engine   ";
-//	str.TrimRight(15);
-//	JPT_ENSURE(str == L"Hello Jupiter Engine");
-//
-//	return true;
-//}
+bool UnitTest_String_TrimLeft()
+{
+	jpt::String str = "   Hello Jupiter Engine";
+	str.TrimLeft();
+	JPT_ENSURE(str == "Hello Jupiter Engine");
+
+	str = "   Hello Jupiter Engine";
+	str.TrimLeft(3);
+	JPT_ENSURE(str == "Hello Jupiter Engine");
+
+	str = "   Hello Jupiter Engine";
+	str.TrimLeft(9);
+	JPT_ENSURE(str == "Jupiter Engine");
+
+	return true;
+}
+bool UnitTest_WString_TrimLeft()
+{
+	jpt::WString str = L"   Hello Jupiter Engine";
+	str.TrimLeft();
+	JPT_ENSURE(str == L"Hello Jupiter Engine");
+
+	str = L"   Hello Jupiter Engine";
+	str.TrimLeft(3);
+	JPT_ENSURE(str == L"Hello Jupiter Engine");
+
+	str = L"   Hello Jupiter Engine";
+	str.TrimLeft(9);
+	JPT_ENSURE(str == L"Jupiter Engine");
+
+	return true;
+}
+
+bool UnitTest_String_TrimRight()
+{
+	jpt::String str = "Hello Jupiter Engine   ";
+	str.TrimRight();
+	JPT_ENSURE(str == "Hello Jupiter Engine");
+
+	str = "Hello Jupiter Engine";
+	str.TrimRight(5);
+	JPT_ENSURE(str == "Hello");
+
+	str = "Hello Jupiter Engine";
+	str.TrimRight(13);
+	JPT_ENSURE(str == "Hello Jupiter");
+
+	return true;
+}
+bool UnitTest_WString_TrimRight()
+{
+	jpt::WString str = L"Hello Jupiter Engine   ";
+	str.TrimRight();
+	JPT_ENSURE(str == L"Hello Jupiter Engine");
+
+	str = L"Hello Jupiter Engine";
+	str.TrimRight(5);
+	JPT_ENSURE(str == L"Hello");
+
+	str = L"Hello Jupiter Engine";
+	str.TrimRight(13);
+	JPT_ENSURE(str == L"Hello Jupiter");
+
+	return true;
+}
 
 bool UnitTest_String_Iterator()
 {
@@ -569,8 +553,11 @@ export bool RunUnitTests_String()
 	JPT_ENSURE(UnitTest_String_Insert());
 	JPT_ENSURE(UnitTest_WString_Insert());
 
-	//JPT_ENSURE(UnitTest_String_TrimLeft());
-	//JPT_ENSURE(UnitTest_WString_TrimLeft());
+	JPT_ENSURE(UnitTest_String_TrimLeft());
+	JPT_ENSURE(UnitTest_WString_TrimLeft());
+
+	JPT_ENSURE(UnitTest_String_TrimRight());
+	JPT_ENSURE(UnitTest_WString_TrimRight());
 
 	JPT_ENSURE(UnitTest_String_Iterator());
 	JPT_ENSURE(UnitTest_String_Format());

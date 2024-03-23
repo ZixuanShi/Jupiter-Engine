@@ -108,6 +108,11 @@ export namespace jpt
 		/** @return		A sub string within the given range at index and length */
 		constexpr BasicString SubStr(size_t index, size_t count = npos) const;
 
+		/** Trim string from the left or right at given index
+			@param index:	[optional] The index to trim to. Default to npos if just trim out white spaces */
+		constexpr void TrimLeft(size_t index = npos);
+		constexpr void TrimRight(size_t index = npos);
+
 		/** Insert a string at the index
 			@param CString:		Content of new string to insert
 			@param index:		Where to insert in this string
@@ -528,6 +533,48 @@ export namespace jpt
 		jpt::BasicString<TChar> result;
 		result.MoveString(subStrBuffer, count);
 		return result;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::TrimLeft(size_t index /* = npos*/)
+	{
+		// If index == npos, trim all the white spaces from the left
+		if (index == npos)
+		{
+			size_t i = 0;
+			while (i < m_size && m_pBuffer[i] == ' ')
+			{
+				++i;
+			}
+
+			*this = SubStr(i);
+			return;
+		}
+
+		// Trim from the left to the index
+		JPT_ASSERT(index <= m_size, "Index out of bound");
+		*this = SubStr(index);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void BasicString<_TChar, _TAllocator>::TrimRight(size_t index /* = npos*/)
+	{
+		// If index == npos, trim all the white spaces from the right
+		if (index == npos)
+		{
+			size_t i = m_size - 1;
+			while (i >= 0 && m_pBuffer[i] == ' ')
+			{
+				--i;
+			}
+
+			*this = SubStr(0, i + 1);
+			return;
+		}
+
+		// Trim from right to the index
+		JPT_ASSERT(index <= m_size, "Index out of bound");
+		*this = SubStr(0, index);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
