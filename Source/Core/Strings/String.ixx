@@ -596,11 +596,13 @@ export namespace jpt
 		JPT_ASSERT(index <= m_size, "Index out of bound");
 		JPT_EXIT_IF(size == 0);
 
-		BasicString pre = SubStr(0, index);
-		BasicString mid(CString, size);
 		BasicString suff = SubStr(index);
 
-		*this = Move(pre) + Move(mid) + Move(suff);
+		TrimRight(index);
+		Reserve(m_size + size);
+
+		Append(CString, size);
+		Append(suff);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

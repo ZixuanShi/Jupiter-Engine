@@ -322,34 +322,44 @@ bool UnitTest_WString_Split()
 bool UnitTest_String_Insert()
 {
 	jpt::String str = "Hello Jupiter Engine";
+
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 26);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 32);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 38);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 44);
 
 	return true;
 }
 bool UnitTest_WString_Insert()
 {
 	jpt::WString str = L"Hello Jupiter Engine";
+
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 26);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 32);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 38);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World World World Jupiter Engine");
+	JPT_ENSURE(str.Size() == 44);
 
 	return true;
 }
