@@ -226,7 +226,7 @@ export namespace jpt
 		if (m_currentTypeSize <= kLocSmallDataSize)
 		{
 			m_pBuffer = m_smallBuffer;
-			std::memcpy(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
+			std::memcpy(m_pBuffer, other.m_smallBuffer, kLocSmallDataSize);
 		}
 		else
 		{
