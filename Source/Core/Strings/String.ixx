@@ -21,10 +21,6 @@ import jpt.TypeDefs;
 import jpt.DynamicArray;
 
 
-// SSO
-// - Refactor every StrCpy or StrNCpy to correspond small buffer when size is less than kSmallDataSize
-// - Reallocate, Allocate, Insert, SubStr, Copy, Move should also take care of small buffer when applicable
-
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
 
@@ -704,14 +700,14 @@ export namespace jpt
 
 			if (size < kSmallDataSize)
 			{
-				StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
 				m_pBuffer = m_smallBuffer;
 			}
 			else 
 			{
 				m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
-				StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 			}
+
+			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 		}
 
 		m_size     = size;
@@ -733,6 +729,12 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(TChar* inCString, size_t size)
 	{
+		if (size == 0)
+		{
+			Clear();
+			return;
+		}
+
 		DeallocateBuffer();
 
 		if (size > 0 && size < kSmallDataSize)
@@ -759,14 +761,18 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(BasicString<TChar>&& otherString)
 	{
+		if (otherString.IsEmpty())
+		{
+			Clear();
+			return;
+		}
+
 		DeallocateBuffer();
 
-		if (!otherString.IsEmpty() && 
-			otherString.Size() < kSmallDataSize)
+		if (otherString.Size() < kSmallDataSize)
 		{
 			StrCpy(m_smallBuffer, otherString.m_size + sizeof(TChar), otherString.m_pBuffer);
 			m_pBuffer = m_smallBuffer;
-
 			otherString.DeallocateBuffer();
 		}
 		else
