@@ -530,48 +530,53 @@ bool UnitTest_String_SSO()
 
 export bool RunUnitTests_String()
 {
-	JPT_ENSURE(UnitTest_String_Constructing());
-	JPT_ENSURE(UnitTest_WString_Constructing());
+	JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
 
-	JPT_ENSURE(UnitTest_String_Copying());
-	JPT_ENSURE(UnitTest_WString_Copying());
+	for (size_t i = 0; i < 1000; ++i)
+	{
+		JPT_ENSURE(UnitTest_String_Constructing());
+		JPT_ENSURE(UnitTest_WString_Constructing());
 
-	JPT_ENSURE(UnitTest_String_Moving());
-	JPT_ENSURE(UnitTest_WString_Moving());
+		JPT_ENSURE(UnitTest_String_Copying());
+		JPT_ENSURE(UnitTest_WString_Copying());
 
-	JPT_ENSURE(UnitTest_String_Concatenating());
-	JPT_ENSURE(UnitTest_WString_Concatenating());
+		JPT_ENSURE(UnitTest_String_Moving());
+		JPT_ENSURE(UnitTest_WString_Moving());
 
-	JPT_ENSURE(UnitTest_String_Comparison());
-	JPT_ENSURE(UnitTest_WString_Comparison());
+		JPT_ENSURE(UnitTest_String_Concatenating());
+		JPT_ENSURE(UnitTest_WString_Concatenating());
 
-	JPT_ENSURE(UnitTest_String_Find());
-	JPT_ENSURE(UnitTest_WString_Find());
+		JPT_ENSURE(UnitTest_String_Comparison());
+		JPT_ENSURE(UnitTest_WString_Comparison());
 
-	JPT_ENSURE(UnitTest_String_Replace());
-	JPT_ENSURE(UnitTest_WString_Replace());
+		JPT_ENSURE(UnitTest_String_Find());
+		JPT_ENSURE(UnitTest_WString_Find());
 
-	JPT_ENSURE(UnitTest_String_ConvertToNumber());
-	JPT_ENSURE(UnitTest_WString_ConvertToNumber());
+		JPT_ENSURE(UnitTest_String_Replace());
+		JPT_ENSURE(UnitTest_WString_Replace());
 
-	JPT_ENSURE(UnitTest_String_Contains());
-	JPT_ENSURE(UnitTest_WString_Contains());
+		JPT_ENSURE(UnitTest_String_ConvertToNumber());
+		JPT_ENSURE(UnitTest_WString_ConvertToNumber());
 
-	JPT_ENSURE(UnitTest_String_Split());
-	JPT_ENSURE(UnitTest_WString_Split());
+		JPT_ENSURE(UnitTest_String_Contains());
+		JPT_ENSURE(UnitTest_WString_Contains());
 
-	JPT_ENSURE(UnitTest_String_Insert());
-	JPT_ENSURE(UnitTest_WString_Insert());
+		JPT_ENSURE(UnitTest_String_Split());
+		JPT_ENSURE(UnitTest_WString_Split());
 
-	JPT_ENSURE(UnitTest_String_TrimLeft());
-	JPT_ENSURE(UnitTest_WString_TrimLeft());
+		JPT_ENSURE(UnitTest_String_Insert());
+		JPT_ENSURE(UnitTest_WString_Insert());
 
-	JPT_ENSURE(UnitTest_String_TrimRight());
-	JPT_ENSURE(UnitTest_WString_TrimRight());
+		JPT_ENSURE(UnitTest_String_TrimLeft());
+		JPT_ENSURE(UnitTest_WString_TrimLeft());
 
-	JPT_ENSURE(UnitTest_String_Iterator());
-	JPT_ENSURE(UnitTest_String_Format());
-	JPT_ENSURE(UnitTest_String_SSO());
+		JPT_ENSURE(UnitTest_String_TrimRight());
+		JPT_ENSURE(UnitTest_WString_TrimRight());
+
+		JPT_ENSURE(UnitTest_String_Iterator());
+		JPT_ENSURE(UnitTest_String_Format());
+		JPT_ENSURE(UnitTest_String_SSO());
+	}
 
 	return true;
 }

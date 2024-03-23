@@ -701,8 +701,17 @@ export namespace jpt
 		else
 		{
 			DeallocateBuffer();
-			m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
-			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+
+			if (size < kSmallDataSize)
+			{
+				StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
+				m_pBuffer = m_smallBuffer;
+			}
+			else 
+			{
+				m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
+				StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+			}
 		}
 
 		m_size     = size;
@@ -726,7 +735,17 @@ export namespace jpt
 	{
 		DeallocateBuffer();
 
-		m_pBuffer  = inCString;
+		if (size > 0 && size < kSmallDataSize)
+		{
+			StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
+			m_pBuffer = m_smallBuffer;
+			delete[] inCString;
+		}
+		else
+		{
+			m_pBuffer = inCString;
+		}
+
 		m_size     = size;
 		m_capacity = m_size;
 	}
@@ -742,7 +761,19 @@ export namespace jpt
 	{
 		DeallocateBuffer();
 
-		m_pBuffer  = otherString.m_pBuffer;
+		if (!otherString.IsEmpty() && 
+			otherString.Size() < kSmallDataSize)
+		{
+			StrCpy(m_smallBuffer, otherString.m_size + sizeof(TChar), otherString.m_pBuffer);
+			m_pBuffer = m_smallBuffer;
+
+			otherString.DeallocateBuffer();
+		}
+		else
+		{
+			m_pBuffer = otherString.m_pBuffer;
+		}
+
 		m_size     = otherString.m_size;
 		m_capacity = otherString.m_capacity;
 
