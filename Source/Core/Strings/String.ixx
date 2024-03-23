@@ -330,7 +330,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i, StringToFindSize);
-			if (current == StringToFind)
+			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Size(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
@@ -395,7 +395,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i - StringToFindSize, StringToFindSize);
-			if (current == StringToFind)
+			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Size(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
