@@ -522,22 +522,11 @@ export namespace jpt
 			return BasicString<TChar>();
 		}
 
+		TChar* subStrBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
+		StrNCpy(subStrBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
+
 		jpt::BasicString<TChar> result;
-		if (count < kSmallDataSize)
-		{
-			TChar smallBuffer[kSmallDataSize] = { 0 };
-			StrNCpy(smallBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
-
-			result.CopyString(smallBuffer, count);
-		}
-		else
-		{
-			TChar* subStrBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
-			StrNCpy(subStrBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
-
-			result.MoveString(subStrBuffer, count);
-		}
-
+		result.MoveString(subStrBuffer, count);
 		return result;
 	}
 
