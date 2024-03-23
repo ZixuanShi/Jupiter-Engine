@@ -34,12 +34,12 @@ export namespace jpt
 		constexpr BasicStringView(const TChar* CString, size_t size);
 		constexpr BasicStringView(const TChar* CString);
 		constexpr BasicStringView(const BasicStringView& other);
-		constexpr BasicStringView(const BasicString<TChar>& string);
+		constexpr BasicStringView(const StringBase<TChar>& string);
 
 		// operator=
 		BasicStringView& operator=(const TChar* CString);
 		BasicStringView& operator=(const BasicStringView& other);
-		BasicStringView& operator=(const BasicString<TChar>& string);
+		BasicStringView& operator=(const StringBase<TChar>& string);
 
 		// Element Access
 		constexpr const TChar* Buffer()         const { return m_pBuffer;             } 
@@ -83,7 +83,7 @@ export namespace jpt
 		return AreStringsSame(a.Buffer(), b, a.Size(), GetCStrLength(b));
 	}
 	template<StringLiteral TChar>
-	constexpr bool operator==(const BasicStringView<TChar>& a, const BasicString<TChar>& b)
+	constexpr bool operator==(const BasicStringView<TChar>& a, const StringBase<TChar>& b)
 	{
 		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Size(), b.Size());
 	}
@@ -110,7 +110,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicStringView<TChar>::BasicStringView(const BasicString<TChar>& string)
+	constexpr BasicStringView<TChar>::BasicStringView(const StringBase<TChar>& string)
 		: m_pBuffer(string.ConstBuffer())
 		, m_size(string.Size())
 	{
@@ -141,7 +141,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const BasicString<TChar>& string)
+	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const StringBase<TChar>& string)
 	{
 		if (m_pBuffer != string.ConstBuffer())
 		{

@@ -39,7 +39,7 @@ export namespace jpt
 	}
 
 	// int, uint
-	template<BasicStringType TString = jpt::String, Integral TInt>
+	template<StringType TString = jpt::String, Integral TInt>
 	constexpr TString ToString(TInt integer)
 	{
 		using TChar = TString::TChar;
@@ -51,7 +51,7 @@ export namespace jpt
 	}
 
 	// float, double
-	template<BasicStringType TString = jpt::String, Floating TFloat>
+	template<StringType TString = jpt::String, Floating TFloat>
 	constexpr TString ToString(TFloat value)
 	{
 		using TChar = TString::TChar;
@@ -63,7 +63,7 @@ export namespace jpt
 	}
 
 	// bool
-	template<BasicStringType TString = jpt::String>
+	template<StringType TString = jpt::String>
 	constexpr TString ToString(bool value)
 	{
 		using TChar = TString::TChar;
@@ -81,7 +81,7 @@ export namespace jpt
 	}
 
 	// char
-	template<BasicStringType TString = jpt::String>
+	template<StringType TString = jpt::String>
 	constexpr TString ToString(typename TString::TChar c)
 	{
 		return TString(c);
