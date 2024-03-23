@@ -820,7 +820,15 @@ export namespace jpt
 		JPT_EXIT_IF(size == 0);
 
 		const size_t newSize = m_size + size;
-		Reserve(newSize);
+		if (newSize < kSmallDataSize)
+		{
+			DeallocateBuffer();
+			m_pBuffer = m_smallBuffer;
+		}
+		else
+		{
+			Reserve(newSize);
+		}
 
 		StrCpy(m_pBuffer + m_size, size + sizeof(TChar), CString);
 
