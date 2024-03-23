@@ -18,7 +18,7 @@
 
 namespace jpt
 {
-	static constexpr size_t kMaxMessageSize = 256;
+	static constexpr size_t kMaxMessageSize = 1024;
 
 	const char* locGetLogStr(Logger::ELogType type)
 	{

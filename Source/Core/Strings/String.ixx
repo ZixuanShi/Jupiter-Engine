@@ -213,7 +213,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const TChar* otherString)
 	{
-		return AreStringsSame(string.ConstBuffer(), otherString, string.Size());
+		return AreStringsSame(string.ConstBuffer(), otherString, string.Size(), GetCStrLength(otherString));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
