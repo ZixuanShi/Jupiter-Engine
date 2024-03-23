@@ -652,8 +652,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Reserve(size_t capacity)
 	{
-		if (capacity >= kSmallDataSize && 
-			capacity > m_capacity)
+		if (capacity > m_capacity)
 		{
 			ReAllocateBuffer(capacity);
 		}
@@ -688,10 +687,8 @@ export namespace jpt
 		if (size == 0)
 		{
 			Clear();
-			return;
 		}
-
-		if (size == m_size)
+		else if (size == m_size)
 		{
 			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 		}
@@ -730,15 +727,13 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(TChar* inCString, size_t size)
 	{
-		if (size == 0)
-		{
-			Clear();
-			return;
-		}
-
 		DeallocateBuffer();
 
-		if (size > 0 && size < kSmallDataSize)
+		if (size == 0)
+		{
+			m_pBuffer = nullptr;
+		}
+		else if (size < kSmallDataSize)
 		{
 			StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
 			m_pBuffer = m_smallBuffer;
@@ -762,15 +757,13 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::MoveString(BasicString<TChar>&& otherString)
 	{
-		if (otherString.IsEmpty())
-		{
-			Clear();
-			return;
-		}
-
 		DeallocateBuffer();
 
-		if (otherString.Size() < kSmallDataSize)
+		if (otherString.IsEmpty())
+		{
+			m_pBuffer = nullptr;
+		}
+		else if (otherString.Size() < kSmallDataSize)
 		{
 			StrCpy(m_smallBuffer, otherString.m_size + sizeof(TChar), otherString.m_pBuffer);
 			m_pBuffer = m_smallBuffer;
@@ -792,7 +785,16 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::ReAllocateBuffer(size_t inCapacity)
 	{
-		TChar* pNewBuffer = TAllocator::AllocateArray(inCapacity + sizeof(TChar));
+		TChar* pNewBuffer = nullptr;
+
+		if (inCapacity < kSmallDataSize)
+		{
+			pNewBuffer = m_smallBuffer;
+		}
+		else
+		{
+			pNewBuffer = TAllocator::AllocateArray(inCapacity + sizeof(TChar));
+		}
 
 		// Copy the old buffer to the new one
 		if (m_pBuffer)
@@ -823,7 +825,6 @@ export namespace jpt
 		const size_t newSize = m_size + size;
 		if (newSize < kSmallDataSize)
 		{
-			DeallocateBuffer();
 			m_pBuffer = m_smallBuffer;
 		}
 		else
