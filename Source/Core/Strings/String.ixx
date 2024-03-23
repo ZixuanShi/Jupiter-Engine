@@ -99,7 +99,7 @@ export namespace jpt
 			@param startIndex:		[optional] The start index to start searching. Default to 0
 			@param endIndex:		[optional] The end index to stop operation. Default to size() */
 		constexpr BasicString& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
-		constexpr BasicString GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		constexpr BasicString GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		/** Splits this string to substrings by a keyword */
 		constexpr DynamicArray<BasicString> Split(const TChar* pKeyword) const;
@@ -464,7 +464,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
-	constexpr BasicString<_TChar, _TAllocator> BasicString<_TChar, _TAllocator>::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex)
+	constexpr BasicString<_TChar, _TAllocator> BasicString<_TChar, _TAllocator>::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
 	{
 		BasicString copy = *this;
 		copy.Replace(StringToFind, StringToReplace, startIndex, endIndex);
