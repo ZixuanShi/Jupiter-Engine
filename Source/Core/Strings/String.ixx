@@ -199,40 +199,27 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicString<TChar> operator+(const TChar* leftString, const BasicString<TChar>& rightString)
+	constexpr BasicString<TChar> operator+(const TChar* CString, const BasicString<TChar>& string)
 	{
-		return jpt::BasicString<TChar>(leftString) += rightString;
+		return jpt::BasicString<TChar>(CString) += string;
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicString<TChar> operator+(const TChar* leftString, BasicString<TChar>&& rightString)
+	constexpr BasicString<TChar> operator+(const TChar* CString, BasicString<TChar>&& rightString)
 	{
-		return jpt::BasicString<TChar>(leftString) += Move(rightString);
+		return jpt::BasicString<TChar>(CString) += Move(rightString);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const TChar* otherString)
+	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const TChar* CString)
 	{
-		return AreStringsSame(string.ConstBuffer(), otherString, string.Size(), GetCStrLength(otherString));
+		return AreStringsSame(string.ConstBuffer(), CString, string.Size(), GetCStrLength(CString));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr bool operator==(const BasicString<TChar, TAllocator>& string, const BasicString<TChar>& otherString)
+	constexpr bool operator==(const BasicString<TChar, TAllocator>& lhs, const BasicString<TChar>& rhs)
 	{
-		if (string.Size() != otherString.Size())
-		{
-			return false;
-		}
-
-		for (size_t i = 0; i < string.Size(); ++i)
-		{
-			if (string[i] != otherString[i])
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return AreStringsSame(lhs.ConstBuffer(), rhs.ConstBuffer(), lhs.Size(), rhs.Size());
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
