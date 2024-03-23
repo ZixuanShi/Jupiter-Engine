@@ -703,9 +703,11 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
+		DeallocateBuffer();
+
 		if (size == 0)
 		{
-			Clear();
+			m_pBuffer = nullptr;
 		}
 		else if (size == m_size)
 		{
@@ -713,8 +715,6 @@ export namespace jpt
 		}
 		else
 		{
-			DeallocateBuffer();
-
 			if (size < kSmallDataSize)
 			{
 				StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
@@ -756,7 +756,7 @@ export namespace jpt
 		{
 			StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
 			m_pBuffer = m_smallBuffer;
-			delete[] inCString;
+			TAllocator::DeallocateArray(inCString);
 		}
 		else
 		{
