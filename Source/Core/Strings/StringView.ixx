@@ -19,7 +19,7 @@ export namespace jpt
 	/** Describes an object that can refer to a constant contiguous sequence 
 		of TChar with the first element of the sequence at position zero. */
 	template<StringLiteral _TChar>
-	class BasicStringView
+	class StringViewBase
 	{
 	public:
 		using TChar = _TChar;
@@ -30,16 +30,16 @@ export namespace jpt
 
 	public:
 		// Constructors
-		constexpr BasicStringView() = default;
-		constexpr BasicStringView(const TChar* CString, size_t size);
-		constexpr BasicStringView(const TChar* CString);
-		constexpr BasicStringView(const BasicStringView& other);
-		constexpr BasicStringView(const StringBase<TChar>& string);
+		constexpr StringViewBase() = default;
+		constexpr StringViewBase(const TChar* CString, size_t size);
+		constexpr StringViewBase(const TChar* CString);
+		constexpr StringViewBase(const StringViewBase& other);
+		constexpr StringViewBase(const StringBase<TChar>& string);
 
 		// operator=
-		BasicStringView& operator=(const TChar* CString);
-		BasicStringView& operator=(const BasicStringView& other);
-		BasicStringView& operator=(const StringBase<TChar>& string);
+		StringViewBase& operator=(const TChar* CString);
+		StringViewBase& operator=(const StringViewBase& other);
+		StringViewBase& operator=(const StringBase<TChar>& string);
 
 		// Element Access
 		constexpr const TChar* Buffer()         const { return m_pBuffer;             } 
@@ -55,7 +55,7 @@ export namespace jpt
 		// Operations
 
 		/** @return		A sub string within the given range at index and length */
-		constexpr BasicStringView SubStr(size_t index, size_t count = npos) const;
+		constexpr StringViewBase SubStr(size_t index, size_t count = npos) const;
 
 		/** @return     true if the string view starts with the given prefix */
 		constexpr bool StartsWith(const TChar* CString, size_t count) const;
@@ -73,51 +73,51 @@ export namespace jpt
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
 	template<StringLiteral TChar>
-	constexpr bool operator==(const BasicStringView<TChar>& a, const BasicStringView<TChar>& b)
+	constexpr bool operator==(const StringViewBase<TChar>& a, const StringViewBase<TChar>& b)
 	{
 		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size(), b.Size());
 	}
 	template<StringLiteral TChar>
-	constexpr bool operator==(const BasicStringView<TChar>& a, const TChar* b)
+	constexpr bool operator==(const StringViewBase<TChar>& a, const TChar* b)
 	{
 		return AreStringsSame(a.Buffer(), b, a.Size(), GetCStrLength(b));
 	}
 	template<StringLiteral TChar>
-	constexpr bool operator==(const BasicStringView<TChar>& a, const StringBase<TChar>& b)
+	constexpr bool operator==(const StringViewBase<TChar>& a, const StringBase<TChar>& b)
 	{
 		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Size(), b.Size());
 	}
 
 	// Member Functions Definitions --------------------------------------------------------------------------------------------------------
 	template<StringLiteral TChar>
-	constexpr BasicStringView<TChar>::BasicStringView(const TChar* CString, size_t size)
+	constexpr StringViewBase<TChar>::StringViewBase(const TChar* CString, size_t size)
 		: m_pBuffer(CString)
 		, m_size(size)
 	{
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicStringView<TChar>::BasicStringView(const TChar* CString)
-		: BasicStringView(CString, GetCStrLength(CString))
+	constexpr StringViewBase<TChar>::StringViewBase(const TChar* CString)
+		: StringViewBase(CString, GetCStrLength(CString))
 	{
 	}
 
 	template<StringLiteral _TChar>
-	constexpr BasicStringView<_TChar>::BasicStringView(const BasicStringView& other)
+	constexpr StringViewBase<_TChar>::StringViewBase(const StringViewBase& other)
 		: m_pBuffer(other.m_pBuffer)
 		, m_size(other.m_size)
 	{
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicStringView<TChar>::BasicStringView(const StringBase<TChar>& string)
+	constexpr StringViewBase<TChar>::StringViewBase(const StringBase<TChar>& string)
 		: m_pBuffer(string.ConstBuffer())
 		, m_size(string.Size())
 	{
 	}
 
 	template<StringLiteral TChar>
-	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const TChar* CString)
+	StringViewBase<TChar>& StringViewBase<TChar>::operator=(const TChar* CString)
 	{
 		if (m_pBuffer != CString)
 		{
@@ -129,7 +129,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const BasicStringView& other)
+	StringViewBase<TChar>& StringViewBase<TChar>::operator=(const StringViewBase& other)
 	{
 		if (this != &other)
 		{
@@ -141,7 +141,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	BasicStringView<TChar>& BasicStringView<TChar>::operator=(const StringBase<TChar>& string)
+	StringViewBase<TChar>& StringViewBase<TChar>::operator=(const StringBase<TChar>& string)
 	{
 		if (m_pBuffer != string.ConstBuffer())
 		{
@@ -153,7 +153,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar>
-	constexpr BasicStringView<TChar> BasicStringView<TChar>::SubStr(size_t index, size_t count) const
+	constexpr StringViewBase<TChar> StringViewBase<TChar>::SubStr(size_t index, size_t count) const
 	{
 		if (count == npos)
 		{
@@ -162,23 +162,23 @@ export namespace jpt
 
 		JPT_ASSERT((index + count) <= m_size, "SubStr cannot exceeds string's bound");
 
-		return BasicStringView(m_pBuffer + index, count);
+		return StringViewBase(m_pBuffer + index, count);
 	}
 
 	template<StringLiteral _TChar>
-	constexpr bool BasicStringView<_TChar>::StartsWith(const TChar* CString, size_t count) const
+	constexpr bool StringViewBase<_TChar>::StartsWith(const TChar* CString, size_t count) const
 	{
 		return AreStringsSame(m_pBuffer, CString, count);
 	}
 
 	template<StringLiteral _TChar>
-	constexpr bool BasicStringView<_TChar>::EndsWith(const TChar* CString, size_t count) const
+	constexpr bool StringViewBase<_TChar>::EndsWith(const TChar* CString, size_t count) const
 	{
 		return AreStringsSame(m_pBuffer + m_size - count, CString, count);
 	}
 
 	template<StringLiteral _TChar>
-	constexpr size_t BasicStringView<_TChar>::Find(TChar TCharoFind, size_t startIndex, size_t endIndex) const
+	constexpr size_t StringViewBase<_TChar>::Find(TChar TCharoFind, size_t startIndex, size_t endIndex) const
 	{
 		ClampTo(endIndex, size_t(0), m_size);
 
@@ -199,12 +199,12 @@ export namespace jpt
 	}
 
 	template<StringLiteral _TChar>
-	constexpr size_t BasicStringView<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
+	constexpr size_t StringViewBase<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
 		const size_t StringToFindSize = GetCStrLength(pStringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_size);
 
-		BasicStringView current;
+		StringViewBase current;
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
 			if ((i + StringToFindSize) > endIndex)
@@ -222,6 +222,6 @@ export namespace jpt
 		return npos;
 	}
 
-	using StringView = BasicStringView<char>;
-	using WStringView = BasicStringView<wchar_t>;
+	using StringView = StringViewBase<char>;
+	using WStringView = StringViewBase<wchar_t>;
 }
