@@ -652,7 +652,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Reserve(size_t capacity)
 	{
-		if (capacity > m_capacity)
+		if (capacity >= kSmallDataSize && 
+			capacity > m_capacity)
 		{
 			ReAllocateBuffer(capacity);
 		}
