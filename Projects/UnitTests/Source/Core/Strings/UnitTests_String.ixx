@@ -397,39 +397,43 @@ bool UnitTest_String_SSO()
 
 export bool RunUnitTests_String()
 {
-	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
-	JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
+	JPT_SCOPED_TIMING_PROFILER(str);
+	for (size_t i = 0; i < 1'000; ++i)
+	{
+		JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::String>());
+		JPT_ENSURE(UnitTest_DefaultStringConstructing<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ConvertingString<jpt::String>());
-	JPT_ENSURE(UnitTest_ConvertingString<jpt::WString>());
+		JPT_ENSURE(UnitTest_ConvertingString<jpt::String>());
+		JPT_ENSURE(UnitTest_ConvertingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_CopyingString<jpt::String>());
-	JPT_ENSURE(UnitTest_CopyingString<jpt::WString>());
+		JPT_ENSURE(UnitTest_CopyingString<jpt::String>());
+		JPT_ENSURE(UnitTest_CopyingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_MovingString<jpt::String>());
-	JPT_ENSURE(UnitTest_MovingString<jpt::WString>());
+		JPT_ENSURE(UnitTest_MovingString<jpt::String>());
+		JPT_ENSURE(UnitTest_MovingString<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_SubStr<jpt::String>());
-	JPT_ENSURE(UnitTest_SubStr<jpt::WString>());
+		JPT_ENSURE(UnitTest_SubStr<jpt::String>());
+		JPT_ENSURE(UnitTest_SubStr<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ToString<jpt::String>());
-	JPT_ENSURE(UnitTest_ToString<jpt::WString>());
-	JPT_ENSURE(UnitTest_ToString2());
+		JPT_ENSURE(UnitTest_ToString<jpt::String>());
+		JPT_ENSURE(UnitTest_ToString<jpt::WString>());
+		JPT_ENSURE(UnitTest_ToString2());
 
-	JPT_ENSURE(UnitTest_StringFinding<jpt::String>());
-	JPT_ENSURE(UnitTest_StringFinding<jpt::WString>());
+		JPT_ENSURE(UnitTest_StringFinding<jpt::String>());
+		JPT_ENSURE(UnitTest_StringFinding<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_StringReplace<jpt::String>());
-	JPT_ENSURE(UnitTest_StringReplace<jpt::WString>());
+		JPT_ENSURE(UnitTest_StringReplace<jpt::String>());
+		JPT_ENSURE(UnitTest_StringReplace<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_String_Insert<jpt::String>());
-	JPT_ENSURE(UnitTest_String_Insert<jpt::WString>());
+		JPT_ENSURE(UnitTest_String_Insert<jpt::String>());
+		JPT_ENSURE(UnitTest_String_Insert<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_String_Iterator());
-	JPT_ENSURE(UnitTest_String_Format());
-	JPT_ENSURE(UnitTest_String_Split());
+		JPT_ENSURE(UnitTest_String_Iterator());
+		JPT_ENSURE(UnitTest_String_Format());
+		JPT_ENSURE(UnitTest_String_Split());
 
-	JPT_ENSURE(UnitTest_String_SSO());
+		JPT_ENSURE(UnitTest_String_SSO());
+	}
 
 	return true;
 }

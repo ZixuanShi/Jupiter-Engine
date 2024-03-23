@@ -755,6 +755,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::AppendImpl(const TChar* CString, size_t size)
 	{
+		JPT_EXIT_IF(size == 0);
+
 		const size_t newSize = m_size + size;
 		Reserve(newSize);
 
