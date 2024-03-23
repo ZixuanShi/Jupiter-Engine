@@ -156,10 +156,6 @@ export namespace jpt
 		constexpr TFloat ToFloat() const;
 
 	private:
-		/* Called when the current buffer is not big enough to hold a new string to append. Update the buffer to a larger sizeand increase capacity
-		   @param inCapacity: The capacity for the new buffer. Typically current m_size * kCapacityMultiplier */
-		constexpr void ReAllocateBuffer(size_t inCapacity);
-
 		constexpr void DeallocateBuffer();
 
 		/** Implementation of appending a C-String at the index by the given size */
@@ -523,11 +519,23 @@ export namespace jpt
 			return BasicString<TChar>();
 		}
 
-		TChar* subStrBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
-		StrNCpy(subStrBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
+		BasicString<TChar> result;
 
-		jpt::BasicString<TChar> result;
-		result.MoveString(subStrBuffer, count);
+		if (count < kSmallDataSize)
+		{
+			TChar subStrBuffer[kSmallDataSize] = { 0 };
+			StrNCpy(subStrBuffer, kSmallDataSize, &m_pBuffer[index], count);
+
+			result.CopyString(subStrBuffer, count);
+		}
+		else
+		{
+			TChar* pBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
+			StrNCpy(pBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
+
+			result.MoveString(pBuffer, count);
+		}
+
 		return result;
 	}
 
@@ -652,9 +660,20 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void BasicString<TChar, TAllocator>::Reserve(size_t capacity)
 	{
-		if (capacity > m_capacity)
+		if (capacity >= kSmallDataSize &&
+			capacity > m_capacity)
 		{
-			ReAllocateBuffer(capacity);
+			TChar* pNewBuffer = TAllocator::AllocateArray(capacity + sizeof(TChar));
+
+			// Copy the old buffer to the new one
+			if (m_pBuffer)
+			{
+				StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
+				DeallocateBuffer();
+			}
+
+			m_pBuffer = pNewBuffer;
+			m_capacity = capacity;
 		}
 	}
 
@@ -698,14 +717,14 @@ export namespace jpt
 
 			if (size < kSmallDataSize)
 			{
+				StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
 				m_pBuffer = m_smallBuffer;
 			}
 			else 
 			{
 				m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
+				StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 			}
-
-			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
 		}
 
 		m_size     = size;
@@ -782,31 +801,6 @@ export namespace jpt
 		otherString.m_capacity = 0;
 	}
 
-	template<StringLiteral TChar, class TAllocator>
-	constexpr void BasicString<TChar, TAllocator>::ReAllocateBuffer(size_t inCapacity)
-	{
-		TChar* pNewBuffer = nullptr;
-
-		if (inCapacity < kSmallDataSize)
-		{
-			pNewBuffer = m_smallBuffer;
-		}
-		else
-		{
-			pNewBuffer = TAllocator::AllocateArray(inCapacity + sizeof(TChar));
-		}
-
-		// Copy the old buffer to the new one
-		if (m_pBuffer)
-		{
-			StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
-			DeallocateBuffer();
-		}
-
-		m_pBuffer = pNewBuffer;
-		m_capacity = inCapacity;
-	}
-
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void BasicString<_TChar, _TAllocator>::DeallocateBuffer()
 	{
@@ -827,11 +821,8 @@ export namespace jpt
 		{
 			m_pBuffer = m_smallBuffer;
 		}
-		else
-		{
-			Reserve(newSize);
-		}
 
+		Reserve(newSize);
 		StrCpy(m_pBuffer + m_size, size + sizeof(TChar), CString);
 
 		m_size = newSize;
