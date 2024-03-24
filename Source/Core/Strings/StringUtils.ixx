@@ -353,8 +353,6 @@ export namespace jpt
 		}
 	}
 
-	
-
 #pragma endregion
 
 #pragma region Comparisons

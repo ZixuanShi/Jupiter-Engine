@@ -682,7 +682,16 @@ export namespace jpt
 	constexpr StringBase<_TChar, _TAllocator> StringBase<_TChar, _TAllocator>::Format(const TChar* format, ...)
 	{
 		TChar buffer[kSize];
-		JPT_FORMAT_STRING(buffer, format, ...);
+
+		if constexpr (IsSameType<TChar, char>)
+		{
+			JPT_FORMAT_STRING(buffer, format, ...);
+		}
+		else if constexpr (IsSameType<TChar, wchar_t>)
+		{
+			JPT_FORMAT_WSTRING(buffer, format, ...);
+		}
+
 		return StringBase(buffer);
 	}
 
@@ -711,19 +720,19 @@ export namespace jpt
 		}
 		else if (size == m_size)
 		{
-			StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+			StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
 		}
 		else
 		{
 			if (size < kSmallDataSize)
 			{
-				StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
+				StrNCpy(m_smallBuffer, size + sizeof(TChar), inCString, size);
 				m_pBuffer = m_smallBuffer;
 			}
 			else 
 			{
 				m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
-				StrCpy(m_pBuffer, size + sizeof(TChar), inCString);
+				StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
 			}
 		}
 
@@ -754,7 +763,7 @@ export namespace jpt
 		}
 		else if (size < kSmallDataSize)
 		{
-			StrCpy(m_smallBuffer, size + sizeof(TChar), inCString);
+			StrNCpy(m_smallBuffer, size + sizeof(TChar), inCString, size);
 			m_pBuffer = m_smallBuffer;
 			TAllocator::DeallocateArray(inCString);
 		}

@@ -454,6 +454,30 @@ bool UnitTest_String_Iterator()
 
 	return true;
 }
+bool UnitTest_WString_Iterator()
+{
+	jpt::WString str(L"0123456789");
+
+	int32 i = 0;
+	for (wchar_t c : str)
+	{
+		//JPT_LOG(c);
+
+		jpt::WString s = jpt::ToString<jpt::WString>(i);
+		JPT_ENSURE(s[0] == c);
+
+		++i;
+	}
+
+	str = L"Jupiter Jupiter Jupiter Jupiter ";
+	for (auto itr = str.begin(); itr < str.end(); itr += 8)
+	{
+		jpt::WString strView(&*itr, 8);
+		JPT_ENSURE(strView == L"Jupiter ");
+	}
+
+	return true;
+}
 
 bool UnitTest_String_Format()
 {
@@ -465,65 +489,13 @@ bool UnitTest_String_Format()
 
 	return true;
 }
-
-char g_smallBuffer[jpt::kSmallDataSize] = { 0 };
-char* g_pBuffer = nullptr;
-
-void Assign(const char* pSourceStr)
+bool UnitTest_WString_Format()
 {
-	const size_t length = jpt::GetCStrLength(pSourceStr);
+	jpt::WString str = jpt::WString::Format<32>(L"%s %d %s", L"Hello", 42, L"World");
+	JPT_ENSURE(str == L"Hello 42 World");
 
-	if (length < jpt::kSmallDataSize)
-	{
-		jpt::StrCpy(g_smallBuffer, jpt::kSmallDataSize, pSourceStr);
-		g_pBuffer = g_smallBuffer;
-	}
-	else
-	{
-		if (jpt::GetCStrLength(g_pBuffer) >= jpt::kSmallDataSize)
-		{
-			delete[] g_pBuffer;
-		}
-
-		g_pBuffer = new char[length + 1];
-		jpt::StrCpy(g_pBuffer, length + 1, pSourceStr);
-	}
-}
-
-bool UnitTest_String_SSO()
-{
-	//char buffer[16] = { 0 };
-	//jpt::StrCpy(buffer, 16, "Small Hello");
-	//JPT_LOG(buffer);
-
-	//std::memset(buffer, 0, 16);
-	//JPT_LOG(buffer);
-
-	//char* pBuffer = new char[] {"Hello"};
-	//JPT_LOG(pBuffer);
-
-	//if (pBuffer && pBuffer != buffer)
-	//{
-	//	delete[] pBuffer;
-	//}
-	//JPT_LOG(pBuffer);
-
-	//pBuffer = buffer;
-	//JPT_LOG(pBuffer == buffer);
-	//JPT_LOG(pBuffer);
-
-	Assign("");
-	Assign("Hello");
-	Assign("Hello World");
-	Assign("Hello World Str");
-	Assign("Hello World Stri");
-	Assign("Hello World Jupiter Engine");
-	Assign("Big String JSIOAJFOAISJFIOAJSFJISAF");
-
-	if (jpt::GetCStrLength(g_pBuffer) >= jpt::kSmallDataSize)
-	{
-		delete[] g_pBuffer;
-	}
+	str = jpt::WString::Format<128>(L"%s, %s %d, %d, %d:%d:%d %s - %s", L"Thursday", L"December", 28, 2023, 10, 16, 56, L"PM", L"Jupiter Engine's Birthday");
+	JPT_ENSURE(str == L"Thursday, December 28, 2023, 10:16:56 PM - Jupiter Engine's Birthday");
 
 	return true;
 }
@@ -574,8 +546,10 @@ export bool RunUnitTests_String()
 		JPT_ENSURE(UnitTest_WString_TrimRight());
 
 		JPT_ENSURE(UnitTest_String_Iterator());
+		JPT_ENSURE(UnitTest_WString_Iterator());
+
 		JPT_ENSURE(UnitTest_String_Format());
-		JPT_ENSURE(UnitTest_String_SSO());
+		JPT_ENSURE(UnitTest_WString_Format());
 	}
 
 	return true;
