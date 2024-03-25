@@ -161,43 +161,6 @@ bool UnitTest_IsSameType()
 	return true;
 }
 
-bool UnitTest_NotSameType()
-{
-	bool value = false;
-
-	value = jpt::NotSameType<int32, int32>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<int32, int32&>;
-	JPT_ENSURE(value);
-
-	value = jpt::NotSameType<int32&, int32&>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<int32, float>;
-	JPT_ENSURE(value);
-
-	value = jpt::NotSameType<float, float>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<jpt::String, jpt::String>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<jpt::String&, jpt::String&>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<jpt::String&&, jpt::String&&>;
-	JPT_ENSURE(!value);
-
-	value = jpt::NotSameType<jpt::String&, jpt::String&&>;
-	JPT_ENSURE(value);
-
-	value = jpt::NotSameType<jpt::String, jpt::String&&>;
-	JPT_ENSURE(value);
-
-	return true;
-}
-
 template<typename ...TArgs>
 struct Foo
 {
@@ -261,59 +224,6 @@ bool UnitTest_IsAnyOf()
 	JPT_ENSURE(!value);
 	value = helper(false);
 	JPT_ENSURE(!value);
-
-	return true;
-}
-
-bool UnitTest_NotAnyOf()
-{
-	bool value = false;
-	auto helper = [](const auto& var) -> bool
-		{
-			return jpt::NotAnyOf<jpt::TDecay<decltype(var)>, int32, float, char, jpt::String>;
-		};
-
-	int32 num = 10;
-	value = helper(num);
-	JPT_ENSURE(!value);
-	value = helper(10);
-	JPT_ENSURE(!value);
-
-	float f = 10.0f;
-	value = helper(f);
-	JPT_ENSURE(!value);
-	value = helper(10.0f);
-	JPT_ENSURE(!value);
-
-	double d = 10.0;
-	value = helper(d);
-	JPT_ENSURE(value);
-	value = helper(10.0);
-	JPT_ENSURE(value);
-
-	const char* cstr = "Hello";
-	value = helper(cstr);
-	JPT_ENSURE(value);
-	value = helper("Hello");
-	JPT_ENSURE(value);
-
-	jpt::String str = "Hello";
-	value = helper(str);
-	JPT_ENSURE(!value);
-	value = helper(jpt::String("Hello"));
-	JPT_ENSURE(!value);
-
-	jpt::WString wstr = L"Hello";
-	value = helper(wstr);
-	JPT_ENSURE(value);
-	value = helper(jpt::WString(L"Hello"));
-	JPT_ENSURE(value);
-
-	bool b = false;
-	value = helper(b);
-	JPT_ENSURE(value);
-	value = helper(false);
-	JPT_ENSURE(value);
 
 	return true;
 }
@@ -403,9 +313,7 @@ export bool RunUnitTests_TypeTraits()
 	JPT_ENSURE(UnitTest_IsLValueRefType());
 	JPT_ENSURE(UnitTest_IsRef());
 	JPT_ENSURE(UnitTest_IsSameType());
-	JPT_ENSURE(UnitTest_NotSameType());
 	JPT_ENSURE(UnitTest_IsAnyOf());
-	JPT_ENSURE(UnitTest_NotAnyOf());
 	JPT_ENSURE(UnitTest_IsEmptyObj());
 	JPT_ENSURE(UnitTest_IsArray());
 

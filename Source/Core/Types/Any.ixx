@@ -45,19 +45,19 @@ export namespace jpt
 		Any& operator=(Any&& other) noexcept;
 
 		template<typename T> 
-		requires NotSameType<T, Any>
+		requires (!IsSameType<T, Any>)
 		constexpr Any(const T& value);
 
 		template<typename T> 
-		requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+		requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 		constexpr Any(T&& value);
 
 		template<typename T> 
-		requires NotSameType<T, Any>
+		requires (!IsSameType<T, Any>)
 		constexpr Any& operator=(const T& value);
 
 		template<typename T> 
-		requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+		requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 		constexpr Any& operator=(T&& value);
 
 		template<typename T> 
@@ -74,16 +74,16 @@ export namespace jpt
 		void MoveAny(Any&& other);
 
 		template<typename T> 
-		requires NotSameType<T, Any>
+		requires (!IsSameType<T, Any>)
 		constexpr void ConstructType(const T& value);
 
 		template<typename T> 
-		requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+		requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 		constexpr void ConstructType(T&& value);
 
 		/** Adapt to new Type, the new type is guaranteed not the same as current type */
 		template<typename T> 
-		requires NotSameType<T, Any>
+		requires (!IsSameType<T, Any>)
 		constexpr void Adapt();
 
 		constexpr void DestructObject();
@@ -155,21 +155,21 @@ export namespace jpt
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any>
+	requires (!IsSameType<T, Any>)
 	constexpr Any::Any(const T& value)
 	{
 		ConstructType(value);
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+	requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 	constexpr Any::Any(T&& value)
 	{
 		ConstructType(Move(value));
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any>
+	requires (!IsSameType<T, Any>)
 	constexpr Any& Any::operator=(const T& value) 
 	{
 		if (Is<T>())
@@ -184,7 +184,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+	requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 	constexpr Any& Any::operator=(T&& value)
 	{
 		if (Is<T>())
@@ -259,7 +259,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any>
+	requires (!IsSameType<T, Any>)
 	constexpr void Any::ConstructType(const T& value)
 	{
 		Adapt<T>();
@@ -267,7 +267,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any> && IsSameType<T, TRemoveReference<T>>
+	requires (!IsSameType<T, Any>) && IsSameType<T, TRemoveReference<T>>
 	constexpr void Any::ConstructType(T&& value)
 	{
 		Adapt<T>();
@@ -275,7 +275,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	requires NotSameType<T, Any>
+	requires (!IsSameType<T, Any>)
 	constexpr void Any::Adapt()
 	{
 		// At this point, the current type is guaranteed not the same as T

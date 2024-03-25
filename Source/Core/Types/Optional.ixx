@@ -12,7 +12,7 @@ import jpt.Utilities;
 export namespace jpt
 {
 	/** Represents an optionally contained value. The value will only be valid when has_value() returns true
-			This is useful in many scenarios, such as return a optional result from function that may fail. */
+		This is useful in many scenarios, such as return a optional result from function that may fail. */
 	template<typename _TValue>
 	class Optional
 	{
@@ -42,10 +42,10 @@ export namespace jpt
 		constexpr bool HasValue() const { return m_hasValue; }
 		constexpr operator bool() const { return m_hasValue; }
 
-		constexpr const TValue& Value()  const { JPT_ASSERT(m_hasValue); return m_value;  }
-		constexpr       TValue& Value()        { JPT_ASSERT(m_hasValue); return m_value;  }
-		constexpr const TValue* GetPtr() const { JPT_ASSERT(m_hasValue); return &m_value; }
-		constexpr       TValue* GetPtr()       { JPT_ASSERT(m_hasValue); return &m_value; }
+		constexpr const TValue& Value()  const { JPT_ASSERT(m_hasValue, "Accessing optional data when it's not set"); return m_value;  }
+		constexpr       TValue& Value()        { JPT_ASSERT(m_hasValue, "Accessing optional data when it's not set"); return m_value;  }
+		constexpr const TValue* GetPtr() const { JPT_ASSERT(m_hasValue, "Accessing optional data when it's not set"); return &m_value; }
+		constexpr       TValue* GetPtr()       { JPT_ASSERT(m_hasValue, "Accessing optional data when it's not set"); return &m_value; }
 
 	private:
 		constexpr void CopyData(const Optional& other);
