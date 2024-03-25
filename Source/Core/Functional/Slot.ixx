@@ -123,7 +123,7 @@ export namespace jpt
 	template<class TReturn, class ...TArgs>
 	constexpr DynamicArray<TReturn> Slot<TReturn(TArgs...)>::ReturnAll(TArgs ...args)
 	{
-		static_assert(!IsSameType<TReturn, void>, "Can't return from void");
+		static_assert(!AreSameType<TReturn, void>, "Can't return from void");
 
 		DynamicArray<TReturn> results;
 

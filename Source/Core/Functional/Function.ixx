@@ -38,7 +38,7 @@ export namespace jpt
 
 			TReturn operator()(TArgs... args) const override final
 			{
-				if constexpr (IsSameType<TReturn, void>)
+				if constexpr (AreSameType<TReturn, void>)
 				{
 					m_function(Forward<TArgs>(args)...);
 				}
@@ -63,7 +63,7 @@ export namespace jpt
 
 			TReturn operator()(TArgs... args) const override final
 			{
-				if constexpr (IsSameType<TReturn, void>)
+				if constexpr (AreSameType<TReturn, void>)
 				{
 					(m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
 				}
@@ -159,7 +159,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(IsConnected(), "Function is not connected");
 
-		if constexpr (IsSameType<TReturn, void>)
+		if constexpr (AreSameType<TReturn, void>)
 		{
 			(*m_pFunction)(Forward<TArgs>(args)...);
 		}

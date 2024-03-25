@@ -23,7 +23,7 @@ export namespace jpt
 
 	// Add any additional primitive types if implemented later
 	template<typename T>
-	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || IsSameType<T, bool> || StringLiteral<T>;
+	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || AreSameType<T, bool> || StringLiteral<T>;
 
 	// Any non-primitive object that has ToString() implemented
 	template<EnabledToString T>
@@ -91,7 +91,7 @@ export namespace jpt
 	template<Containing TContainer>
 	constexpr String ToString(const TContainer& container)
 	{
-		if constexpr (IsSameType<TContainer, String>)
+		if constexpr (AreSameType<TContainer, String>)
 		{
 			return container;
 		}

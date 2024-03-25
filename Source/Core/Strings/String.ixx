@@ -683,11 +683,11 @@ export namespace jpt
 	{
 		TChar buffer[kSize];
 
-		if constexpr (IsSameType<TChar, char>)
+		if constexpr (AreSameType<TChar, char>)
 		{
 			JPT_FORMAT_STRING(buffer, format, ...);
 		}
-		else if constexpr (IsSameType<TChar, wchar_t>)
+		else if constexpr (AreSameType<TChar, wchar_t>)
 		{
 			JPT_FORMAT_WSTRING(buffer, format, ...);
 		}
@@ -841,7 +841,7 @@ export namespace jpt
 	using WString = StringBase<wchar_t>;	// Wide string
 
 	template<typename T>
-	concept StringType = IsSameType<T, String> || IsSameType<T, WString>;
+	concept StringType = AreSameType<T, String> || AreSameType<T, WString>;
 
 	template<>
 	struct Hash<String>

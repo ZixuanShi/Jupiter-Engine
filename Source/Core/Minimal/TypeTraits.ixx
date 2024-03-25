@@ -58,9 +58,9 @@ export namespace jpt
 	template<typename T> constexpr bool IsRef<T&&>       = true;
 
 	// Same type checking
-	// Example: jpt::IsSameType<int32, float>
-	template<typename A, typename B> constexpr bool IsSameType       = false;
-	template<typename A>             constexpr bool IsSameType<A, A> = true;
+	// Example: jpt::AreSameType<int32, float>
+	template<typename A, typename B> constexpr bool AreSameType       = false;
+	template<typename A>             constexpr bool AreSameType<A, A> = true;
 
 	/** @return true if the Type is within any of the passed ...Types
 		@example:
@@ -68,7 +68,7 @@ export namespace jpt
 				double bar = 42.0;
 				jpt::IsAnyOf<decltype(foo), float, char, int>; // true
 				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
-	template<typename T, typename ...TOthers> constexpr bool IsAnyOf  = (IsSameType<T, TOthers> || ...);
+	template<typename T, typename ...TOthers> constexpr bool IsAnyOf  = (AreSameType<T, TOthers> || ...);
 
 	// Is Array
 	/** @note	This doesn't work on heap allocated array

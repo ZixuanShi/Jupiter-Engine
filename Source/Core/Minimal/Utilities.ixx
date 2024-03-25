@@ -21,7 +21,7 @@ export namespace jpt
 		using TCast = TRemoveReference<T>;
 
 		static_assert(IsLValueRef<T>, "jpt::Move called on an Rvalue");
-		static_assert(!IsSameType<TCast&, const TCast&>, "jpt::Move called on a const object");
+		static_assert(!AreSameType<TCast&, const TCast&>, "jpt::Move called on a const object");
 
 		return static_cast<TCast&&>(object);
 	}

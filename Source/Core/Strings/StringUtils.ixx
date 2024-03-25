@@ -222,11 +222,11 @@ export namespace jpt
 		TChar* buffer = new TChar[kMaxSize];
 		const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);	// controls how many precision digits to keep
 
-		if constexpr (IsSameType<TChar, char>)
+		if constexpr (AreSameType<TChar, char>)
 		{
 			snprintf(buffer, kMaxSize, format, value);
 		}
-		else if (IsSameType<TChar, wchar_t>)
+		else if (AreSameType<TChar, wchar_t>)
 		{
 			swprintf(buffer, kMaxSize, format, value);
 		}
@@ -329,11 +329,11 @@ export namespace jpt
 	template<StringLiteral TChar>
 	constexpr void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource)
 	{
-		if constexpr (IsSameType<TChar, char>)
+		if constexpr (AreSameType<TChar, char>)
 		{
 			strcpy_s(pDestination, sizeInBytes, pSource);
 		}
-		else if (IsSameType<TChar, wchar_t>)
+		else if (AreSameType<TChar, wchar_t>)
 		{
 			wcscpy_s(pDestination, sizeInBytes, pSource);
 		}
@@ -343,11 +343,11 @@ export namespace jpt
 	template<StringLiteral TChar>
 	constexpr void StrNCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource, size_t maxCount)
 	{
-		if constexpr (IsSameType<TChar, char>)
+		if constexpr (AreSameType<TChar, char>)
 		{
 			strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}
-		else if (IsSameType<TChar, wchar_t>)
+		else if (AreSameType<TChar, wchar_t>)
 		{
 			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
 		}

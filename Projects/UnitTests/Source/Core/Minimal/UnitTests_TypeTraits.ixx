@@ -15,41 +15,41 @@ bool UnitTest_TRemoveTraits()
 {
 	bool value = false;
 
-	value = jpt::IsSameType<jpt::TRValueToLValueReference<T>, T>;
+	value = jpt::AreSameType<jpt::TRValueToLValueReference<T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TRValueToLValueReference<T&&>, T&>;
+	value = jpt::AreSameType<jpt::TRValueToLValueReference<T&&>, T&>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T>), T>;
+	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T&>), T>;
+	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T&>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<decltype(jpt::TRemoveReference<T&&>), T>;
+	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T&&>), T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<decltype(jpt::TRemoveReference<const T&>), const T>;
+	value = jpt::AreSameType<decltype(jpt::TRemoveReference<const T&>), const T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<decltype(jpt::TRemoveConst<const T>), T>;
+	value = jpt::AreSameType<decltype(jpt::TRemoveConst<const T>), T>;
 	JPT_ENSURE(value);
 
 	// https://stackoverflow.com/questions/15887144/stdremove-const-with-const-references
 	{
-		value = !jpt::IsSameType<decltype(jpt::TRemoveConst<const T&>), T&>;
+		value = !jpt::AreSameType<decltype(jpt::TRemoveConst<const T&>), T&>;
 		JPT_ENSURE(value);
 
 		T t = T();
 		const T& constRefT = t;
 		jpt::TRemoveReference<decltype(constRefT)> constT = t;
 
-		value = jpt::IsSameType<decltype(constT), const T>;
+		value = jpt::AreSameType<decltype(constT), const T>;
 		JPT_ENSURE(value);
 
 		jpt::TRemoveConst<decltype(constT)> plainT = t;
-		value = jpt::IsSameType<decltype(plainT), T>;
+		value = jpt::AreSameType<decltype(plainT), T>;
 		JPT_ENSURE(value);
 	}
 
@@ -61,22 +61,22 @@ bool UnitTest_TDecay()
 {
 	bool value = false;
 
-	value = jpt::IsSameType<jpt::TDecay<T>, T>;
+	value = jpt::AreSameType<jpt::TDecay<T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TDecay<T&>, T>;
+	value = jpt::AreSameType<jpt::TDecay<T&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TDecay<T&&>, T>;
+	value = jpt::AreSameType<jpt::TDecay<T&&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TDecay<const T>, T>;
+	value = jpt::AreSameType<jpt::TDecay<const T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TDecay<const T&>, T>;
+	value = jpt::AreSameType<jpt::TDecay<const T&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::TDecay<const T&&>, T>;
+	value = jpt::AreSameType<jpt::TDecay<const T&&>, T>;
 	JPT_ENSURE(value);
 
 	return true;
@@ -124,38 +124,38 @@ bool UnitTest_IsRef()
 	return true;
 }
 
-bool UnitTest_IsSameType()
+bool UnitTest_AreSameType()
 {
 	bool value = false;
 
-	value = jpt::IsSameType<int32, int32>;
+	value = jpt::AreSameType<int32, int32>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<int32, int32&>;
+	value = jpt::AreSameType<int32, int32&>;
 	JPT_ENSURE(!value);
 
-	value = jpt::IsSameType<int32&, int32&>;
+	value = jpt::AreSameType<int32&, int32&>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<int32, float>;
+	value = jpt::AreSameType<int32, float>;
 	JPT_ENSURE(!value);
 
-	value = jpt::IsSameType<float, float>;
+	value = jpt::AreSameType<float, float>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::String, jpt::String>;
+	value = jpt::AreSameType<jpt::String, jpt::String>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::String&, jpt::String&>;
+	value = jpt::AreSameType<jpt::String&, jpt::String&>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::String&&, jpt::String&&>;
+	value = jpt::AreSameType<jpt::String&&, jpt::String&&>;
 	JPT_ENSURE(value);
 
-	value = jpt::IsSameType<jpt::String&, jpt::String&&>;
+	value = jpt::AreSameType<jpt::String&, jpt::String&&>;
 	JPT_ENSURE(!value);
 
-	value = jpt::IsSameType<jpt::String, jpt::String&&>;
+	value = jpt::AreSameType<jpt::String, jpt::String&&>;
 	JPT_ENSURE(!value);
 
 	return true;
@@ -312,7 +312,7 @@ export bool RunUnitTests_TypeTraits()
 	JPT_ENSURE(UnitTest_IsLValueRefType());
 	JPT_ENSURE(UnitTest_IsLValueRefType());
 	JPT_ENSURE(UnitTest_IsRef());
-	JPT_ENSURE(UnitTest_IsSameType());
+	JPT_ENSURE(UnitTest_AreSameType());
 	JPT_ENSURE(UnitTest_IsAnyOf());
 	JPT_ENSURE(UnitTest_IsEmptyObj());
 	JPT_ENSURE(UnitTest_IsArray());

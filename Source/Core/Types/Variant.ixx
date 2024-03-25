@@ -223,7 +223,7 @@ export namespace jpt
 	requires IsAnyOf<TypeToFind, TArgs...>
 	constexpr Variant<TArgs...>::TIndex Variant<TArgs...>::GetIndexOfType() const
 	{
-		if constexpr (IsSameType<TypeToFind, TCurrent>)
+		if constexpr (AreSameType<TypeToFind, TCurrent>)
 		{
 			return kTypesCount - sizeof...(TRest) - 1;
 		}

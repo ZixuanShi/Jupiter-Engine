@@ -89,11 +89,11 @@
 	[]() -> const TChar* \
 	{\
 		const TChar* pString = nullptr; \
-		if constexpr (jpt::IsSameType<TChar, char>)\
+		if constexpr (jpt::AreSameType<TChar, char>)\
 		{\
 			pString = #SourceStr;\
 		}\
-		else if constexpr (jpt::IsSameType<TChar, wchar_t>)\
+		else if constexpr (jpt::AreSameType<TChar, wchar_t>)\
 		{\
 			pString = JPT_TO_WSTRING(#SourceStr);\
 		}\
