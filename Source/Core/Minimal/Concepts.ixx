@@ -24,7 +24,7 @@ export namespace jpt
 	concept Floating = std::is_floating_point_v<T>;
 
 	template<typename T>
-	concept StringLiteral = IsSameType<T, char> || IsSameType<T, wchar_t>;
+	concept StringLiteral = AreSameType<T, char> || AreSameType<T, wchar_t>;
 
 	template<typename T>
 	concept Primitive = std::is_fundamental_v<T>;
@@ -38,21 +38,6 @@ export namespace jpt
 	concept NonTrivial = !std::is_trivially_constructible_v<T> ||
 		                 !std::is_trivially_copy_constructible_v<T> ||
 		                 sizeof(T) > kSmallDataSize;
-
-	template<typename T>
-	concept HasSize = requires(T functor)
-	{
-		sizeof(T) > 0;
-	};
-
-	template<typename T>
-	concept Functoring = HasSize<T> && requires(T functor)
-	{
-		functor.operator();	
-	};
-
-	template<typename T>
-	concept Functional = std::is_function_v<T>;
 
 #pragma endregion
 
