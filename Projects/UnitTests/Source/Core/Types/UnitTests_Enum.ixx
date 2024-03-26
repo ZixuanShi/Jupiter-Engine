@@ -10,62 +10,62 @@ export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
 
-JPT_ENUM_UINT8(EFruit_Local,
+JPT_ENUM_UINT8(Fruit_Local,
 	Apple = 5,
 	Banana,
 	Orange = 9,
 	Grape);
-template<typename EType>
+template<typename Type>
 bool UnitTest_Enum_NonSequence()
 {
 	// Static data
-	JPT_ENSURE(EType::Count() == 4);
-	JPT_ENSURE(EType::Min() == EType::Apple);
-	JPT_ENSURE(EType::Max() == EType::Grape);
+	JPT_ENSURE(Type::Count() == 4);
+	JPT_ENSURE(Type::Min() == Type::Apple);
+	JPT_ENSURE(Type::Max() == Type::Grape);
 
 	// Comparing
-	EType fruit(EType::Banana);
+	Type fruit(Type::Banana);
 	JPT_ENSURE(fruit == 6);
 	JPT_ENSURE(fruit == "Banana");
-	JPT_ENSURE(fruit == EType::Banana);
-	JPT_ENSURE(fruit > EType::Apple);
-	JPT_ENSURE(fruit < EType::Orange);
-	JPT_ENSURE(fruit != EType::Grape);
+	JPT_ENSURE(fruit == Type::Banana);
+	JPT_ENSURE(fruit > Type::Apple);
+	JPT_ENSURE(fruit < Type::Orange);
+	JPT_ENSURE(fruit != Type::Grape);
 
 	// Math operations
 	--fruit;
 	JPT_ENSURE(fruit == 5);
 	JPT_ENSURE(fruit == "Apple");
-	JPT_ENSURE(fruit == EType::Apple);
+	JPT_ENSURE(fruit == Type::Apple);
 
 	++fruit;
 	JPT_ENSURE(fruit == 6);
 	JPT_ENSURE(fruit == "Banana");
-	JPT_ENSURE(fruit == EType::Banana);
+	JPT_ENSURE(fruit == Type::Banana);
 
 	fruit += 3;
 	JPT_ENSURE(fruit == 9);
 	JPT_ENSURE(fruit == "Orange");
-	JPT_ENSURE(fruit == EType::Orange);
+	JPT_ENSURE(fruit == Type::Orange);
 
 	fruit -= 3;
 	JPT_ENSURE(fruit == 6);
 	JPT_ENSURE(fruit == "Banana");
-	JPT_ENSURE(fruit == EType::Banana);
+	JPT_ENSURE(fruit == Type::Banana);
 
 	JPT_ENSURE(fruit + 3 == 9);
 	JPT_ENSURE(fruit + 3 == "Orange");
-	JPT_ENSURE(fruit + 3 == EType::Orange);
+	JPT_ENSURE(fruit + 3 == Type::Orange);
 
 	JPT_ENSURE(fruit - 1 == 5);
 	JPT_ENSURE(fruit - 1 == "Apple");
-	JPT_ENSURE(fruit - 1 == EType::Apple);
+	JPT_ENSURE(fruit - 1 == Type::Apple);
 
 	// Assigning
-	fruit = EType::Orange;
+	fruit = Type::Orange;
 	JPT_ENSURE(fruit == 9);
 	JPT_ENSURE(fruit == "Orange");
-	JPT_ENSURE(fruit == EType::Orange);
+	JPT_ENSURE(fruit == Type::Orange);
 
 	// Iterating
 	// for (const auto& pair : fruit)
@@ -89,76 +89,76 @@ bool UnitTest_Enum_NonSequence()
 	size_t i = 5;
 	fruit = i;
 	JPT_ENSURE(fruit == 5);
-	JPT_ENSURE(fruit == EType::Apple);
+	JPT_ENSURE(fruit == Type::Apple);
 	JPT_ENSURE(fruit == "Apple");
 
 	// int64
 	int64 j = 9;
 	fruit = j;
 	JPT_ENSURE(fruit == 9);
-	JPT_ENSURE(fruit == EType::Orange);
+	JPT_ENSURE(fruit == Type::Orange);
 	JPT_ENSURE(fruit == "Orange");
 
 	return true;
 }
 
-JPT_ENUM_UINT8(EWeapon_Local,
+JPT_ENUM_UINT8(Weapon_Local,
 	Sword,
 	Spear,
 	Hammer,
 	Axe);
-template<typename EType>
+template<typename Type>
 bool UnitTest_Enum_Sequence()
 {
 	// Static data
-	JPT_ENSURE(EType::Count() == 4);
-	JPT_ENSURE(EType::Min() == EType::Sword);
-	JPT_ENSURE(EType::Max() == EType::Axe);
+	JPT_ENSURE(Type::Count() == 4);
+	JPT_ENSURE(Type::Min() == Type::Sword);
+	JPT_ENSURE(Type::Max() == Type::Axe);
 
 	// Comparing
-	EType weapon(EType::Spear);
+	Type weapon(Type::Spear);
 	JPT_ENSURE(weapon == 1);
 	JPT_ENSURE(weapon == "Spear");
-	JPT_ENSURE(weapon == EType::Spear);
-	JPT_ENSURE(weapon > EType::Sword);
-	JPT_ENSURE(weapon < EType::Hammer);
-	JPT_ENSURE(weapon != EType::Axe);
+	JPT_ENSURE(weapon == Type::Spear);
+	JPT_ENSURE(weapon > Type::Sword);
+	JPT_ENSURE(weapon < Type::Hammer);
+	JPT_ENSURE(weapon != Type::Axe);
 
 	// Math operations
 	--weapon;
 	JPT_ENSURE(weapon == 0);
 	JPT_ENSURE(weapon == "Sword");
-	JPT_ENSURE(weapon == EType::Sword);
+	JPT_ENSURE(weapon == Type::Sword);
 
 	++weapon;
 	JPT_ENSURE(weapon == 1);
 	JPT_ENSURE(weapon == "Spear");
-	JPT_ENSURE(weapon == EType::Spear);
+	JPT_ENSURE(weapon == Type::Spear);
 
 	// Assigning
-	weapon = EType::Axe;
+	weapon = Type::Axe;
 	JPT_ENSURE(weapon == 3);
 	JPT_ENSURE(weapon == "Axe");
-	JPT_ENSURE(weapon == EType::Axe);
+	JPT_ENSURE(weapon == Type::Axe);
 
 	// for (const auto& pair : fruit)
 	// Iterating. This works on sequential enums
-	for (auto i = EType::Min(); i < EType::Max(); ++i)
+	for (auto i = Type::Min(); i < Type::Max(); ++i)
 	{
-		EType e(i);
-		if (e == EType::Sword)
+		Type e(i);
+		if (e == Type::Sword)
 		{
 			JPT_ENSURE(e == "Sword");
 		}
-		if (e == EType::Spear)
+		if (e == Type::Spear)
 		{
 			JPT_ENSURE(e == "Spear");
 		}
-		if (e == EType::Hammer)
+		if (e == Type::Hammer)
 		{
 			JPT_ENSURE(e == "Hammer");
 		}
-		if (e == EType::Axe)
+		if (e == Type::Axe)
 		{
 			JPT_ENSURE(e == "Axe");
 		}
@@ -220,18 +220,18 @@ bool UnitTest_Enum_Flag()
 	{
 		if (key == EFlag_Local::A)
 		{
-			JPT_ENSURE(!flag.Has(EFlag_Local::EValues(key)));
+			JPT_ENSURE(!flag.Has(EFlag_Local::Values(key)));
 		}
 		else
 		{
-			JPT_ENSURE(flag.Has(EFlag_Local::EValues(key)));
+			JPT_ENSURE(flag.Has(EFlag_Local::Values(key)));
 		}
 	}
 
 	return true;
 }
 
-JPT_ENUM_UINT32(EColor_Local,
+JPT_ENUM_UINT32(Color_Local,
 	Red    = 0xFF000000,
 	Green  = 0x00FF0000,
 	Blue   = 0x0000FF00,
@@ -245,23 +245,23 @@ JPT_ENUM_UINT32(EColor_Local,
 );
 bool UnitTest_Enum_Hex()
 {
-	EColor_Local color(EColor_Local::Red);
-	color |= EColor_Local::Green;
+	Color_Local color(Color_Local::Red);
+	color |= Color_Local::Green;
 	
-	JPT_ENSURE(color == EColor_Local::Yellow);
+	JPT_ENSURE(color == Color_Local::Yellow);
 
 	return true;
 }
 
 export bool RunUnitTests_Enum()
 {
-	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>());
-	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>());
-	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<Fruit_Local>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<Fruit_Global>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::Fruit_Nested>());
 
-	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>());
-	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>());
-	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<Weapon_Local>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<Weapon_Global>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::Weapon_Nested>());
 
 	JPT_ENSURE(UnitTest_Enum_Flag());
 	JPT_ENSURE(UnitTest_Enum_Hex());

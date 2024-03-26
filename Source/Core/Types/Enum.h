@@ -32,24 +32,24 @@ EnumData<TInt> GenerateData(const char* pSource);
 	- Common Math operators
 	- Iteration through all values. Range-based is also supported
 
-	@param EnumName		The name of the enum. Like EFruit. Prefix with 'E' is naming convention
+	@param EnumName		The name of the enum. Like Fruit, Weapon, etc
 	@param TSize		The size of the enum. uint8, uint16, uint32, uint64. 
 						Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
 	@examples: 	
 		// Local Enum for current file
-		JPT_ENUM_UINT8(ELocal, 
+		JPT_ENUM_UINT8(Local, 
 		A, 
 		B = 2, 
 		C = 5);
 
 		// Local Enum flag
-		JPT_ENUM_UINT8(ELocalFlag,
+		JPT_ENUM_UINT8(LocalFlag,
 		A = (1 << 0),
 		B = (1 << 1),
 		C = (1 << 2));
 		
 		// Global Enum for all files as module
-		export JPT_ENUM_UINT8(EGlobal, 
+		export JPT_ENUM_UINT8(Global, 
 		A, 
 		B = 2, 
 		C = 5);
@@ -58,7 +58,7 @@ EnumData<TInt> GenerateData(const char* pSource);
 		export class GlobalEnumContainer
 		{
 		public:
-			JPT_ENUM_UINT64(ENested, 
+			JPT_ENUM_UINT64(Nested, 
 			A, 
 			B = 2, 
 			C = 5);
@@ -67,7 +67,7 @@ EnumData<TInt> GenerateData(const char* pSource);
 class EnumName                                                                                                                          \
 {                                                                                                                                       \
 public:                                                                                                                                 \
-    enum EValues : TSize                                                                                                                \
+    enum Values : TSize                                                                                                                 \
     {                                                                                                                                   \
         __VA_ARGS__                                                                                                                     \
     };                                                                                                                                  \
@@ -89,8 +89,8 @@ public:                                                                         
 public:                                                                                                                                 \
     /** Member Constructor & operator= */                                                                                               \
     constexpr EnumName() = default;                                                                                                     \
-    constexpr EnumName(EnumName::EValues value)	: m_value(value) {}                                                                     \
-    constexpr EnumName& operator=(EnumName::EValues value) { m_value = value; return *this; }                                           \
+    constexpr EnumName(EnumName::Values value)	: m_value(value) {}                                                                     \
+    constexpr EnumName& operator=(EnumName::Values value) { m_value = value; return *this; }                                            \
                                                                                                                                         \
     template<jpt::Integral TInt = TSize>                                                                                                \
     constexpr EnumName(TInt integer)                                                                                                    \
@@ -136,18 +136,18 @@ public:                                                                         
     constexpr EnumName operator-(TInt offset) {	EnumName copy = *this; return copy -= offset; }                                         \
                                                                                                                                         \
     /** Bitwise */                                                                                                                      \
-    constexpr EnumName& operator&=(EValues value) { m_value &= value; return *this; }                                                   \
-    constexpr EnumName& operator|=(EValues value) { m_value |= value; return *this; }                                                   \
-    constexpr EnumName& operator^=(EValues value) { m_value ^= value; return *this; }                                                   \
+    constexpr EnumName& operator&=(Values value) { m_value &= value; return *this; }                                                    \
+    constexpr EnumName& operator|=(Values value) { m_value |= value; return *this; }                                                    \
+    constexpr EnumName& operator^=(Values value) { m_value ^= value; return *this; }                                                    \
 																																		\
-    constexpr TSize operator&(EValues value) const { return m_value & value; }                                                          \
-    constexpr TSize operator|(EValues value) const { return m_value | value; }                                                          \
-    constexpr TSize operator^(EValues value) const { return m_value ^ value; }                                                          \
+    constexpr TSize operator&(Values value) const { return m_value & value; }                                                           \
+    constexpr TSize operator|(Values value) const { return m_value | value; }                                                           \
+    constexpr TSize operator^(Values value) const { return m_value ^ value; }                                                           \
     constexpr TSize operator~() const { return ~m_value; }                                                                              \
 																																		\
-    constexpr bool Has(EValues value) const { return (m_value & value) != 0; }                                                          \
-    constexpr void Insert(EValues value) { m_value |= value; }                                                                          \
-    constexpr void Toggle(EValues value) { m_value ^= value; }                                                                          \
+    constexpr bool Has(Values value) const { return (m_value & value) != 0; }                                                           \
+    constexpr void Insert(Values value) { m_value |= value; }                                                                           \
+    constexpr void Toggle(Values value) { m_value ^= value; }                                                                           \
                                                                                                                                         \
     /** Iteration */                                                                                                                    \
     /** Supports range-based, iterated, and numeric if items are linear and contigous */                                                \

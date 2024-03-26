@@ -45,7 +45,7 @@ export namespace jpt
 		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
 		@return A char pointer pointing to the memory where we store the converted number's string literal */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TChar* IntegerToCStr(TInt value, EIntBase base = EIntBase::Decimal)
+	constexpr TChar* IntegerToCStr(TInt value, IntBase base = IntBase::Decimal)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
@@ -113,7 +113,7 @@ export namespace jpt
 		}
 
 		// Hex
-		if (base == EIntBase::Hex)
+		if (base == IntBase::Hex)
 		{
 			result[index--] = 'x';
 			result[index] = '0';
@@ -138,7 +138,7 @@ export namespace jpt
 		@param size			Desired size to parse from start of pBuffer
 		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, EIntBase base = EIntBase::Decimal)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, IntBase base = IntBase::Decimal)
 	{
 		TInt result = 0;
 		bool isNegative = false;
@@ -156,7 +156,7 @@ export namespace jpt
 		}
 
 		// Hex prefix
-		if (base == EIntBase::Hex)
+		if (base == IntBase::Hex)
 		{
 			start = 2;
 		}
@@ -182,12 +182,12 @@ export namespace jpt
 				number = c - static_cast<TChar>('0');
 			}
 
-			if (base == EIntBase::Hex)
+			if (base == IntBase::Hex)
 			{
 				result <<= 4;
 				result |= number;
 			}
-			else if (base == EIntBase::Decimal)
+			else if (base == IntBase::Decimal)
 			{
 				result *= numBase;
 				result += number;
