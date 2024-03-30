@@ -218,6 +218,12 @@ bool UnitTest_String_Replace()
 	str.Replace("Goodbye World Mars Universe", "Hello World Jupiter Engine");
 	JPT_ENSURE(str == "Hello World Jupiter Engine");
 
+	str.Replace("e", "En");
+	JPT_ENSURE(str == "HEnllo World JupitEnr EnginEn");
+
+	str.Replace("En", "End", 10, 24);
+	JPT_ENSURE(str == "HEnllo World JupitEndr EndginEn");
+
 	return true;
 }
 bool UnitTest_WString_Replace()
@@ -234,6 +240,12 @@ bool UnitTest_WString_Replace()
 
 	str.Replace(L"Goodbye World Mars Universe", L"Hello World Jupiter Engine");
 	JPT_ENSURE(str == L"Hello World Jupiter Engine");
+
+	str.Replace(L"e", L"En");
+	JPT_ENSURE(str == L"HEnllo World JupitEnr EnginEn");
+
+	str.Replace(L"En", L"End", 10, 24);
+	JPT_ENSURE(str == L"HEnllo World JupitEndr EndginEn");
 
 	return true;
 }

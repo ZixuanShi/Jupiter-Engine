@@ -426,7 +426,7 @@ export namespace jpt
 		}
 
 		const StringBase<TChar> replaced(StringToReplace);
-		const size_t StringToFindSize = GetCStrLength(StringToFind);
+		const size_t stringToFindSize = GetCStrLength(StringToFind);
 
 		size_t foundPos = startIndex;
 		while (true)
@@ -438,10 +438,12 @@ export namespace jpt
 			}
 
 			StringBase<TChar> pre = SubStr(0, foundPos);
-			StringBase<TChar> suff = SubStr(foundPos + StringToFindSize);
+			StringBase<TChar> suff = SubStr(foundPos + stringToFindSize);
 
 			*this = Move(pre) + replaced + Move(suff);
+
 			startIndex = foundPos + replaced.Size();	// In case 'StringToReplace' contains 'StringToFind', like replacing 'x' with 'yx'		
+			endIndex += replaced.Size() - stringToFindSize;
 		}
 
 		return *this;

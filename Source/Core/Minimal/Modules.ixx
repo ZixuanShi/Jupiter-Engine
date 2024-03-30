@@ -32,6 +32,7 @@ export import jpt.UniquePtr;
 export import jpt.WeakPtr;
 
 // Strings
+export import jpt.String;
 export import jpt.StringView;
 export import jpt.ToString;
 
