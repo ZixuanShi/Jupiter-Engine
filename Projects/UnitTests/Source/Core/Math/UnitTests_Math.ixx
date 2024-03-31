@@ -7,6 +7,7 @@ module;
 export module UnitTests_Math;
 
 import jpt.TypeDefs;
+import jpt.TypeTraits;
 import jpt.Math;
 import jpt.Utilities;
 
@@ -40,6 +41,19 @@ bool UnitTest_AreValuesClose()
 	return true;
 }
 
+class Foo
+{
+public:
+	Foo() {}
+	Foo(const Foo&) {}
+
+	bool operator>(const Foo&) const { return true; }
+	bool operator<(const Foo&) const { return true; }
+	bool operator==(const Foo&) const { return true; }
+};
+template<>
+constexpr bool jpt::IsTrivial<Foo> = true;
+
 bool UnitTest_MinMax()
 {
 	JPT_ENSURE(jpt::Min(1, 5) == 1);
@@ -49,16 +63,6 @@ bool UnitTest_MinMax()
 	JPT_ENSURE(jpt::Max(2, 5, 10) == 10);
 	JPT_ENSURE(jpt::Max(5, 1, 2, 5) == 5);
 
-	class Foo
-	{
-	public:
-		Foo() {}
-		Foo(const Foo&) {}
-
-		bool operator>(const Foo&) const  {return true;}
-		bool operator<(const Foo&) const  {return true;}
-		bool operator==(const Foo&) const {return true;}
-	};
 	Foo f1, f2;
 	JPT_ENSURE(jpt::Max(f1, f2) == f1);
 
