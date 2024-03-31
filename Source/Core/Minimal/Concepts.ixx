@@ -46,7 +46,7 @@ export namespace jpt
 	concept MoveAssignable = std::is_move_assignable_v<T>;
 
 	template<typename T>
-	concept MoveConstructible = IsConstructible<T, T>;
+	concept MoveConstructible = std::is_constructible_v<T, T>;
 
 	template<typename T>
 	concept Movable = MoveConstructible<T> && MoveAssignable<T>;

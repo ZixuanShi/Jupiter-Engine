@@ -105,7 +105,7 @@ export namespace jpt
 	template<typename _TData, size_t kSize>
 	constexpr StaticArray<_TData, kSize>::~StaticArray()
 	{
-		if constexpr (!IsTriviallyDestructible<TData>)
+		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
 			for (size_t i = 0; i < kSize; ++i)
 			{
@@ -117,7 +117,7 @@ export namespace jpt
 	template<typename _TData, size_t kSize>
 	constexpr void StaticArray<_TData, kSize>::CopyData(const TData* pBegin)
 	{
-		if constexpr (IsTriviallyCopyable<TData>)
+		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
 			std::memcpy(m_buffer, pBegin, kSize * sizeof(TData));
 		}

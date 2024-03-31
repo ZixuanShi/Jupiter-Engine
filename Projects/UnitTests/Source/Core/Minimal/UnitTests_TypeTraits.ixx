@@ -228,57 +228,6 @@ bool UnitTest_IsAnyOf()
 	return true;
 }
 
-bool UnitTest_IsEmptyObj()
-{
-	class Foo
-	{
-	};
-
-	JPT_ENSURE(jpt::IsEmptyObj<Foo>);
-
-	class Bar
-	{
-		int32 m_data = 10;
-	};
-	JPT_ENSURE(!jpt::IsEmptyObj<Bar>);
-
-	class Baz
-	{
-	public:
-		Baz() = default;
-		Baz(int32 data) {JPT_IGNORE(data); }
-	};
-	JPT_ENSURE(jpt::IsEmptyObj<Baz>);
-
-	class A
-	{
-	public:
-		virtual ~A() = default;
-	};
-	JPT_ENSURE(!jpt::IsEmptyObj<A>);
-
-	class B : public A
-	{
-	};
-	JPT_ENSURE(!jpt::IsEmptyObj<B>);
-
-	class C
-	{
-	public:
-		void Work() {}
-	};
-	JPT_ENSURE(jpt::IsEmptyObj<C>);
-
-	class D
-	{
-	public:
-		static void Work() {}
-	};
-	JPT_ENSURE(jpt::IsEmptyObj<D>);
-
-	return true;
-}
-
 bool UnitTest_IsArray()
 {
 	int32 num = 0;
@@ -314,7 +263,6 @@ export bool RunUnitTests_TypeTraits()
 	JPT_ENSURE(UnitTest_IsRef());
 	JPT_ENSURE(UnitTest_AreSameType());
 	JPT_ENSURE(UnitTest_IsAnyOf());
-	JPT_ENSURE(UnitTest_IsEmptyObj());
 	JPT_ENSURE(UnitTest_IsArray());
 
 	return true;

@@ -89,33 +89,10 @@ export namespace jpt
 #pragma endregion
 
 #pragma region Type Properties
-	/** @return		Whether the given type is empty or not. */
-	template<typename T>
-	constexpr bool IsEmptyObj = __is_empty(T);
-
-	template<typename T, typename... Args>
-	constexpr bool IsConstructible = __is_constructible(T, Args...);
-
-	template<typename T, typename... Args>
-	constexpr bool IsTriviallyConstructible = __is_trivially_constructible(T, Args...);
-
-	template<typename FromT, typename ToT>
-	constexpr bool IsConvertibleTo = __is_convertible_to(FromT, ToT);
-
-	template<typename T>
-	constexpr bool IsTriviallyCopyable = __is_trivially_copyable(T);
-
-	template<typename T>
-	constexpr bool IsTriviallyMoveConstructible = __is_trivially_constructible(T, T);
-
-	template<typename T>
-	constexpr bool IsTriviallyMoveAssignable = __is_trivially_assignable(TAddLValueReference<T>, T);
-
-	template<typename T>
-	constexpr bool IsTriviallyDestructible = __is_trivially_destructible(T);
 
 	template<typename T>
 	constexpr bool IsTrivial = std::is_trivial_v<T>;
+
 #pragma endregion
 
 #pragma region EnableIf

@@ -185,7 +185,7 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Clear()
 	{
-		if constexpr (!IsTriviallyDestructible<TData>)
+		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
 			for (size_t i = 0; i < m_size; ++i)
 			{
@@ -269,7 +269,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Calling Erase() with an invalid index");
 
-		if constexpr (!IsTriviallyDestructible<TData>)
+		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
 			TAllocator::Destruct(m_pBuffer + index);
 		}
@@ -300,7 +300,7 @@ export namespace jpt
 
 		if (m_pBuffer)
 		{
-			if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
+			if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 			{
 				std::memmove(pNewBuffer, m_pBuffer, m_size * sizeof(TData));
 			}
@@ -336,7 +336,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_size, "Distance went beyond the bound of this vector. Use reserve first");
 
-		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
+		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
 			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_size - index) * sizeof(TData));
 		}
@@ -354,7 +354,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index - distance >= 0, "Distance went beyond the start of this vector. Use smaller index or distance");
 
-		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
+		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
 			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_size - index) * sizeof(TData));
 		}
@@ -387,7 +387,7 @@ export namespace jpt
 		m_size = size;
 		UpdateBuffer(m_size);
 
-		if constexpr (IsTriviallyCopyable<TData>)
+		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
 			std::memcpy(m_pBuffer, pBegin, m_size * sizeof(TData));
 		}

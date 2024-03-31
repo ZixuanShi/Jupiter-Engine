@@ -204,7 +204,7 @@ export namespace jpt
 
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
-			if constexpr (!IsTriviallyDestructible<TCurrent>)
+			if constexpr (!std::is_trivially_destructible_v<TCurrent>)
 			{
 				Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
 			}

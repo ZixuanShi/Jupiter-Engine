@@ -301,7 +301,7 @@ export namespace jpt
 			};
 		m_destructor = [](Byte* pBuffer)
 			{
-				if constexpr (!IsTriviallyDestructible<T>)
+				if constexpr (!std::is_trivially_destructible_v<T>)
 				{
 					reinterpret_cast<T*>(pBuffer)->~T();
 				}

@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <type_traits>
+
 export module jpt_private.LinearNodeIterator;
 
 import jpt.TypeDefs;
@@ -25,7 +29,7 @@ export namespace jpt_private
 	template<typename TData>
 	constexpr LinearNode<TData>::~LinearNode()
 	{
-		if constexpr (!jpt::IsTriviallyDestructible<TData>)
+		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
 			data.~TData();
 		}
