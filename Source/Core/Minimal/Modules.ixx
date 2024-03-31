@@ -7,6 +7,10 @@
 
 export module jpt.CoreModules;
 
+// Algorithms
+export import jpt.Searching;
+export import jpt.Sorting;
+
 // Containers
 export import jpt.StaticArray;
 export import jpt.DynamicArray;
@@ -24,8 +28,8 @@ export import jpt.TypeTraits;
 export import jpt.Utilities;
 
 // Math
-export import jpt.Math;
 export import jpt.Limits;
+export import jpt.Math;
 export import jpt.RandomNumberGenerator;
 export import jpt.Vector2;
 export import jpt.Vector3;
@@ -42,6 +46,9 @@ export import jpt.StringView;
 export import jpt.ToString;
 
 // Types
+export import jpt.Any;
+export import jpt.Byte;
 export import jpt.Optional;
-export import jpt.Tuple;
 export import jpt.Pair;
+export import jpt.Tuple;
+export import jpt.Variant;
