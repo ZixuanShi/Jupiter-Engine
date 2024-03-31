@@ -18,6 +18,15 @@ for i = 1, #_ARGS do
     print("Argument " .. i .. " = " .. _ARGS[i])
 end
 
+function HasArg(name)
+    for i = 1, #_ARGS do
+        if _ARGS[i] == name then
+            return true
+        end
+    end
+    return false
+end
+
 -- Jupiter workspace
 workspace (project_name)
     configurations 
