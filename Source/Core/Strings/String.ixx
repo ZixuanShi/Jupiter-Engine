@@ -31,6 +31,7 @@ export namespace jpt
 	{
 	public:
 		using TChar         = _TChar;
+		using TData         = _TChar;
 		using TAllocator    = _TAllocator;
 		using Iterator      = TChar*;
 		using ConstIterator = const TChar*;
