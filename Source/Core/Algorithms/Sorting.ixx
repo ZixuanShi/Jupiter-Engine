@@ -57,7 +57,7 @@ namespace jpt_private
 		size_t pivotIndex = GetPivot(pBuffer, beginIndex, endIndex);
 		Swap(pBuffer[pivotIndex], pBuffer[endIndex]);
 
-		T pivot = pBuffer[endIndex];
+		const T pivot = pBuffer[endIndex];
 		size_t i = beginIndex - 1;	// i is the last element's index of region 1, which is less than the pivot
 
 		// j is the current processing element's index
