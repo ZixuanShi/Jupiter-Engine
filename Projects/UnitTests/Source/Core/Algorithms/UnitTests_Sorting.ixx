@@ -7,6 +7,7 @@ module;
 
 export module UnitTests_Sorting;
 
+import jpt.Function;
 import jpt.Sorting;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
@@ -64,6 +65,7 @@ bool UnitTest_Sorting_Random()
 bool UnitTest_Sorting_StackArray()
 {
     int32 array[] = { 5,2,4,6,1,3 };
+
     jpt::Sort(array, 6);
     JPT_ENSURE((array[0] == 1 && 
                 array[1] == 2 && 
@@ -71,6 +73,32 @@ bool UnitTest_Sorting_StackArray()
                 array[3] == 4 && 
                 array[4] == 5 && 
                 array[5] == 6));
+
+    jpt::Sort(array, 6, [](int32 a, int32 b) { return a > b; });
+    JPT_ENSURE((array[0] == 6 &&
+				array[1] == 5 &&
+				array[2] == 4 &&
+				array[3] == 3 &&
+				array[4] == 2 &&
+				array[5] == 1));
+
+    jpt::Function<bool(int32, int32)> compare = [](int32 a, int32 b) { return a < b; };
+    jpt::Sort(array, 6, compare);
+    JPT_ENSURE((array[0] == 1 &&
+                array[1] == 2 &&
+                array[2] == 3 &&
+                array[3] == 4 &&
+                array[4] == 5 &&
+                array[5] == 6));
+
+    compare = [](int32 a, int32 b) { return a > b; };
+    jpt::Sort(array, 6, compare);
+    JPT_ENSURE((array[0] == 6 &&
+		        array[1] == 5 &&
+		        array[2] == 4 &&
+		        array[3] == 3 &&
+		        array[4] == 2 &&
+		        array[5] == 1));
     
     return true;
 }
