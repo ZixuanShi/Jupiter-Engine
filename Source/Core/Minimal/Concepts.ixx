@@ -84,8 +84,15 @@ export namespace jpt
 		container.Size();
 	};
 
+	template<typename T>
+	concept Bufferred = requires(T container)
+	{
+		container.Buffer();
+		container.ConstBuffer();
+	};
+
 	template<typename TContainer>
-	concept Containing = Iterable<TContainer> && Sized<TContainer>;
+	concept Containing = Iterable<TContainer> && Sized<TContainer> && Bufferred<TContainer>;
 
 	template<typename TContainer>
 	concept ContainingTrivial = Containing<TContainer> && Trivial<typename TContainer::TData>;
