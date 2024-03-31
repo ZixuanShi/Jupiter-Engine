@@ -61,10 +61,25 @@ bool UnitTest_Sorting_Random()
     return true;
 }
 
+bool UnitTest_Sorting_StackArray()
+{
+    int32 array[] = { 5,2,4,6,1,3 };
+    jpt::Sort(array, 6);
+    JPT_ENSURE((array[0] == 1 && 
+                array[1] == 2 && 
+                array[2] == 3 && 
+                array[3] == 4 && 
+                array[4] == 5 && 
+                array[5] == 6));
+    
+    return true;
+}
+
 export bool RunUnitTests_Sorting()
 {
     JPT_ENSURE(UnitTest_Sorting_Basic());
     JPT_ENSURE(UnitTest_Sorting_Random());
+    JPT_ENSURE(UnitTest_Sorting_StackArray());
 
     return true;
 }
