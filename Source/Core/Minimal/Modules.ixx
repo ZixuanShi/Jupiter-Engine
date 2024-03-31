@@ -24,6 +24,7 @@ export import jpt.Math;
 export import jpt.Limits;
 export import jpt.RandomNumberGenerator;
 export import jpt.Vector2;
+export import jpt.Vector3;
 
 // Memory Managing
 export import jpt.Allocator;

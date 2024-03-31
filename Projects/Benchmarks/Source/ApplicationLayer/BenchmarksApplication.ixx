@@ -24,6 +24,8 @@ bool BenchmarksApplication::Init()
 {
 	JPT_ENSURE(Super::Init());
 
+	JPT_ASSERT(IS_PROFILING, "Benchmarks project should only run on Profiling config");
+
 	RunBenchmarks_Core();
 
 	return true;

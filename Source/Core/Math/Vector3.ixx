@@ -8,6 +8,7 @@ export module jpt.Vector3;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
+import jpt.TypeTraits;
 import jpt.Math;
 import jpt.String;
 import jpt.ToString;
@@ -391,3 +392,8 @@ export using Vec3f = jpt::Vector3<float>;
 export using Vec3d = jpt::Vector3<double>;
 export using Vec3i = jpt::Vector3<int32>;
 export using Vec3u = jpt::Vector3<uint32>;
+
+template<> constexpr bool jpt::IsTrivial<Vec3f> = true;
+template<> constexpr bool jpt::IsTrivial<Vec3d> = true;
+template<> constexpr bool jpt::IsTrivial<Vec3i> = true;
+template<> constexpr bool jpt::IsTrivial<Vec3u> = true;

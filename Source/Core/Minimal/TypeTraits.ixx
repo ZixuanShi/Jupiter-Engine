@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <type_traits>
+
 export module jpt.TypeTraits;
 
 namespace jpt_private
@@ -111,7 +115,7 @@ export namespace jpt
 	constexpr bool IsTriviallyDestructible = __is_trivially_destructible(T);
 
 	template<typename T>
-	constexpr bool IsTrivial = __is_trivially_constructible(T) && __is_trivially_copyable(T);
+	constexpr bool IsTrivial = std::is_trivial_v<T>;
 #pragma endregion
 
 #pragma region EnableIf

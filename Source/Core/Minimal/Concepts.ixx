@@ -29,14 +29,13 @@ export namespace jpt
 	template<typename T>
 	concept Primitive = std::is_fundamental_v<T>;
 
+	// If a simple struct is deduced as non-trivial, you can override jpt::IsTrivial<T> to return true in your struct. Refer to Vector2
 	template<typename T>
-	concept Trivial = std::is_trivially_constructible_v<T> &&
-					  std::is_trivially_copy_constructible_v<T> &&
+	concept Trivial = jpt::IsTrivial<T> &&
 					  sizeof(T) <= kSmallDataSize;
 
 	template<typename T>
-	concept NonTrivial = !std::is_trivially_constructible_v<T> ||
-		                 !std::is_trivially_copy_constructible_v<T> ||
+	concept NonTrivial = !jpt::IsTrivial<T> ||
 		                 sizeof(T) > kSmallDataSize;
 
 #pragma endregion
@@ -84,15 +83,8 @@ export namespace jpt
 		container.Size();
 	};
 
-	template<typename T>
-	concept Bufferred = requires(T container)
-	{
-		container.Buffer();
-		container.ConstBuffer();
-	};
-
 	template<typename TContainer>
-	concept Containing = Iterable<TContainer> && Sized<TContainer> && Bufferred<TContainer>;
+	concept Containing = Iterable<TContainer> && Sized<TContainer>;
 
 	template<typename TContainer>
 	concept ContainingTrivial = Containing<TContainer> && Trivial<typename TContainer::TData>;

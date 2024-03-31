@@ -11,6 +11,9 @@ export module Benchmarks_Core;
 // Containers
 import Benchmarks_DynamicArray;
 
+// Math
+import Benchmarks_Math;
+
 // Types
 import Benchmarks_Any;
 
@@ -22,6 +25,9 @@ export void RunBenchmarks_Core()
 
 	// Containers
 	RunBenchmarks_DynamicArray();
+
+	// Math
+	RunBenchmarks_Math();
 
 	// Types
 	RunBenchmarks_Any();
