@@ -19,7 +19,6 @@ namespace jpt_private
 {
 	using namespace jpt;
 
-
 #pragma region QuickSort
 	template<typename T>
 	constexpr size_t GetPivot(T* pBuffer, size_t beginIndex, size_t endIndex)
@@ -105,39 +104,6 @@ export namespace jpt
 
 	template<NonTrivial T>
 	constexpr bool DefaultNonTrivialComparator(const T& a, const T& b) { return a < b; }
-
-#pragma region InsertionSort
-	template<typename T, typename TComparator>
-	constexpr void InsertionSort(T* pBuffer, size_t size, TComparator&& comparator)
-	{
-		// Bounds check
-		if (size == 0)
-		{
-			return;
-		}
-
-		// Iterate through the array
-		for (size_t i = 1; i < size; ++i)
-		{
-			// Get the current element
-			T current = pBuffer[i];
-
-			// Find the index of the element to the left of the current element
-			size_t j = i - 1;
-
-			// Iterate through the array to the left of the current element
-			while (j >= 0 && comparator(current, pBuffer[j]))
-			{
-				// Shift the element to the right
-				pBuffer[j + 1] = pBuffer[j];
-				--j;
-			}
-
-			// Insert the current element into the correct position
-			pBuffer[j + 1] = current;
-		}
-	}
-#pragma endregion
 
 	template<Trivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
