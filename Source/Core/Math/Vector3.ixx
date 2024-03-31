@@ -394,6 +394,5 @@ export using Vec3i = jpt::Vector3<int32>;
 export using Vec3u = jpt::Vector3<uint32>;
 
 template<> constexpr bool jpt::IsTrivial<Vec3f> = true;
-template<> constexpr bool jpt::IsTrivial<Vec3d> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3i> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3u> = true;

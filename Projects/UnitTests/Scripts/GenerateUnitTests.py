@@ -102,10 +102,10 @@ def save_unit_test_file():
         file.write(file_to_add_content)
 
 
-# Run GenerateProjects.bat to adopt the new unit test in Visual Studio
+# Run GenerateProjectFiles_vs2022.bat to adopt the new unit test in Visual Studio
 def regenerate_visual_studio_projects():
     os.chdir(script_dir)
-    subprocess.run(script_dir + "/GenerateProjects.bat")
+    subprocess.run(script_dir + "/GenerateProjectFiles_vs2022.bat")
 
 
 # Modify corresponding main_category_UnitTests.ixx to integrate the new unit test module automatically

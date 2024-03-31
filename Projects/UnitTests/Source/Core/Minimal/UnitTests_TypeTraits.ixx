@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_TypeTraits;
 
+import jpt.CoreModules;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.String;
@@ -250,6 +251,58 @@ bool UnitTest_IsArray()
 	return true;
 }
 
+struct SimpleStruct1
+{
+	int32 a;
+	float32 b;
+};
+struct SimpleStruct2
+{
+	SimpleStruct2(int32 n) { JPT_IGNORE(n); };
+};
+template<>
+constexpr bool jpt::IsTrivial<SimpleStruct2> = true;
+
+struct ComplexStruct1
+{
+	int32 a;
+	jpt::String str;
+};
+struct ComplexStruct2
+{
+	ComplexStruct2(int32 n) { JPT_IGNORE(n); };
+};
+
+bool UnitTest_IsTrivial()
+{
+	JPT_ENSURE(jpt::IsTrivial<int32>);
+	JPT_ENSURE(jpt::IsTrivial<int64>);
+	JPT_ENSURE(jpt::IsTrivial<uint32>);
+	JPT_ENSURE(jpt::IsTrivial<uint64>);
+	JPT_ENSURE(jpt::IsTrivial<float32>);
+	JPT_ENSURE(jpt::IsTrivial<float64>);
+	JPT_ENSURE(jpt::IsTrivial<Vec2f>);
+	JPT_ENSURE(jpt::IsTrivial<Vec3f>);
+	JPT_ENSURE(jpt::IsTrivial<SimpleStruct1>);
+	JPT_ENSURE(jpt::IsTrivial<SimpleStruct2>);
+
+	JPT_ENSURE(!jpt::IsTrivial<jpt::String>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::WString>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::StringView>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::WStringView>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::DynamicArray<int32>>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::DynamicArray<jpt::String>>);
+	JPT_ENSURE(!(jpt::IsTrivial<jpt::StaticArray<jpt::String, 5>>));
+	JPT_ENSURE(!(jpt::IsTrivial<jpt::StaticArray<int32, 5>>));
+	JPT_ENSURE(!(jpt::IsTrivial<jpt::HashMap<jpt::String, int32>>));
+	JPT_ENSURE(!jpt::IsTrivial<jpt::Function<void()>>);
+	JPT_ENSURE(!jpt::IsTrivial<jpt::Slot<void()>>);
+	JPT_ENSURE(!jpt::IsTrivial<ComplexStruct1>);
+	JPT_ENSURE(!jpt::IsTrivial<ComplexStruct2>);
+
+	return true;
+}
+
 export bool RunUnitTests_TypeTraits()
 {
 	JPT_ENSURE(UnitTest_TRemoveTraits<int32>());
@@ -264,6 +317,7 @@ export bool RunUnitTests_TypeTraits()
 	JPT_ENSURE(UnitTest_AreSameType());
 	JPT_ENSURE(UnitTest_IsAnyOf());
 	JPT_ENSURE(UnitTest_IsArray());
+	JPT_ENSURE(UnitTest_IsTrivial());
 
 	return true;
 }

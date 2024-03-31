@@ -12,6 +12,10 @@ export import jpt.StaticArray;
 export import jpt.DynamicArray;
 export import jpt.HashMap;
 
+// Functional
+export import jpt.Function;
+export import jpt.Slot;
+
 // Minimals
 export import jpt.Concepts;
 export import jpt.Constants;

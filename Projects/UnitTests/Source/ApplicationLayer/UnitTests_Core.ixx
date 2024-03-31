@@ -6,11 +6,9 @@ module;
 
 export module UnitTests_Core;
 
-/** Unit Test Modules */
-
-// Minimal
-import UnitTests_Macros;
 import jpt.Utilities;
+
+/** Unit Test Modules */
 
 // Algorithms
 import UnitTests_Sorting;
@@ -26,10 +24,6 @@ import UnitTests_StaticArray;
 import UnitTests_Slot;
 import UnitTests_Function;
 
-// Utilities
-import UnitTests_Utilities;
-import UnitTests_TypeTraits;
-
 // Math
 import UnitTests_Vector3;
 import UnitTests_Vector2;
@@ -41,6 +35,12 @@ import UnitTests_Allocator;
 import UnitTests_StrongPtr;
 import UnitTests_UniquePtr;
 import UnitTests_WeakPtr;
+
+// Minimal
+import UnitTests_Concepts;
+import UnitTests_Macros;
+import UnitTests_Utilities;
+import UnitTests_TypeTraits;
 
 // Strings
 import UnitTests_StringUtils;
@@ -76,6 +76,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Function());
 
 	// Minimal
+	JPT_ENSURE(RunUnitTests_Concepts());
 	JPT_ENSURE(RunUnitTests_Utilities());
 	JPT_ENSURE(RunUnitTests_TypeTraits());
 	JPT_ENSURE(RunUnitTests_Macros());
