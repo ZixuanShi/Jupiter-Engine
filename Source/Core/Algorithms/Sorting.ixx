@@ -105,6 +105,7 @@ export namespace jpt
 	template<NonTrivial T>
 	constexpr bool DefaultNonTrivialComparator(const T& a, const T& b) { return a < b; }
 
+	// Raw buffer, Trivial
 	template<Trivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
@@ -116,6 +117,7 @@ export namespace jpt
 		jpt_private::QuickSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
+	// Raw buffer, NonTrivial
 	template<NonTrivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
@@ -127,6 +129,7 @@ export namespace jpt
 		jpt_private::QuickSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
+	// Container, Trivial
 	template<ContainingTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
@@ -138,6 +141,7 @@ export namespace jpt
 		jpt_private::QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}	
 
+	// Container, NonTrivial
 	template<ContainingNonTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{

@@ -10,6 +10,7 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Math;
 import jpt.Utilities;
+import jpt.Sorting;
 
 bool UnitTest_Clamping()
 {
@@ -65,6 +66,9 @@ bool UnitTest_MinMax()
 
 	Foo f1, f2;
 	JPT_ENSURE(jpt::Max(f1, f2) == f1);
+
+	Foo foos[3];
+	jpt::Sort(foos, 3);
 
 	return true;
 }
