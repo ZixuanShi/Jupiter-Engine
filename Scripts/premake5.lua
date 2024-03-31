@@ -167,10 +167,3 @@ project (project_name)
         (project_dir .. "Source/**.cpp"),
         (project_dir .. "Source/**.ixx"),
     }
-
-    -- TODO: Post build commands for copying assets only when building release
-    -- postbuildcommands
-    -- {
-    --     "xcopy \"" .. project_dir .. "Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-    --     "xcopy \"" .. jupiter_dir .. "Assets\\Common\"" .. " \"$(OutDir)Assets\\Common\"  /e /s /h /i /y",    -- Engine Common Assets
-    -- }
