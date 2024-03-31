@@ -11,6 +11,7 @@ def get_info():
 	global project_directory
 	project_name = input("Enter Project Name: ")
 	project_directory = input("Enter Project Directory: ") + "/" + project_name + "/"
+	project_directory = project_directory.replace("\\", "/")
 
 
 # <ProjectDirectory>/Scripts/GenerateProject.bat

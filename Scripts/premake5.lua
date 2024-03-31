@@ -11,6 +11,8 @@
 
 local project_name = _ARGS[1]
 local project_dir  = _ARGS[2]
+local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
+local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 for i = 1, #_ARGS do
     print("Argument " .. i .. " = " .. _ARGS[i])
@@ -18,10 +20,6 @@ end
 
 -- Jupiter workspace
 workspace (project_name)
-    -- Globals for jupiter workspace
-    local jupiter_outputpath = "%{cfg.platform}_%{cfg.buildcfg}"
-    local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
-
     configurations 
     { 
         "Debug",        -- Debugging. No optimization will be performed
@@ -39,8 +37,8 @@ workspace (project_name)
 
     -- Paths
     location  (project_dir .. "_ProjectFiles")
-    targetdir (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir    (project_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    targetdir (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
+    objdir    (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
 
     -- Programming
     language   "C++"
@@ -105,8 +103,8 @@ workspace (project_name)
 -- Jupiter Engine
 project "Engine"
     location  (jupiter_dir .. "_ProjectFiles")
-    targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Output")
-    objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. jupiter_outputpath .. "_Intermediate")
+    targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
+    objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
     kind "StaticLib"
 
     includedirs
@@ -158,7 +156,7 @@ project (project_name)
 
     libdirs
     {
-        (jupiter_dir .. "_Bin/Engine_" .. jupiter_outputpath .. "_Output/")
+        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output/")
     }
 
     files
