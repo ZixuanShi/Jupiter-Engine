@@ -114,6 +114,32 @@ export namespace jpt
 	}
 #pragma endregion
 
+#pragma region IntroSort
+
+	template<typename T, typename TComparator>
+	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	{
+		static constexpr size_t kInsertionSortThreshold = 128;
+
+		if (beginIndex >= endIndex || endIndex == LimitsOf<size_t>::kMax)
+		{
+			return;
+		}
+
+		if (endIndex - beginIndex <= kInsertionSortThreshold)
+		{
+			InsertionSort(pBuffer, beginIndex, endIndex, Move(comparator));
+		}
+		else
+		{
+			const size_t pivot = Partition(pBuffer, beginIndex, endIndex, Move(comparator));
+			IntroSort(pBuffer, beginIndex, pivot - 1, Move(comparator));
+			IntroSort(pBuffer, pivot + 1, endIndex, Move(comparator));
+		}
+	}
+
+#pragma endregion
+
 	template<Trivial T>
 	constexpr bool DefaultTrivialComparator(T a, T b) { return a < b; }
 
@@ -124,47 +150,47 @@ export namespace jpt
 	template<Trivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
-		QuickSort(pBuffer, 0, size - 1, DefaultTrivialComparator<T>);
+		IntroSort(pBuffer, 0, size - 1, DefaultTrivialComparator<T>);
 	}
 	template<Trivial T, typename TComparator>
 	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
 	{
-		QuickSort(pBuffer, 0, size - 1, Move(comparator));
+		IntroSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
 	// Raw buffer, NonTrivial
 	template<NonTrivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
-		QuickSort(pBuffer, 0, size - 1, DefaultNonTrivialComparator<T>);
+		IntroSort(pBuffer, 0, size - 1, DefaultNonTrivialComparator<T>);
 	}
 	template<NonTrivial T, typename TComparator>
 	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
 	{
-		QuickSort(pBuffer, 0, size - 1, Move(comparator));
+		IntroSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
 	// Container, Trivial
 	template<ContainingTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
-		QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
+		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
 	}
 	template<ContainingTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
-		QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
+		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}	
 
 	// Container, NonTrivial
 	template<ContainingNonTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
-		QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
+		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
 	}
 	template<ContainingNonTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
-		QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
+		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}
 }
