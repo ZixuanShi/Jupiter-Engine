@@ -40,7 +40,7 @@ void Benchmark_Sortring_Trivial_Big_InsertionSort()
 		arr.EmplaceBack(jpt::RNG::Global().RandInMax(100));
 	}
 
-	jpt::InsertionSort(arr.Buffer(), arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
+	jpt::InsertionSort(arr.Buffer(), 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
 }
 
 export void RunBenchmarks_Sorting()
