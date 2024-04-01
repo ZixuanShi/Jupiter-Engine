@@ -12,8 +12,8 @@ export module Benchmarks_Sorting;
 import jpt.CoreModules;
 
 static constexpr size_t kBigArraySize = 100'000;
-static constexpr size_t kMedianArraySize = 100;
-static constexpr size_t kSmallArraySize = 10;
+static constexpr size_t kMedianArraySize = 128;
+static constexpr size_t kSmallArraySize = 32;
 
 jpt::DynamicArray<int32> GenerateRandomArray(size_t size)
 {
