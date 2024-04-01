@@ -15,20 +15,18 @@ import jpt.Math;
 import jpt.Utilities;
 import jpt.Limits;
 
-namespace jpt_private
+export namespace jpt
 {
-	using namespace jpt;
-
 #pragma region InsertionSort
 	template<typename T, typename TComparator>
-	constexpr void InsertionSort(T* pBuffer, size_t count, TComparator&& comparator)
+	constexpr void InsertionSort(T* pBuffer, size_t startIndex, size_t endIndex, TComparator&& comparator)
 	{
-		for (size_t i = 1; i < count; ++i)
+		for (size_t i = startIndex + 1; i <= endIndex; ++i)
 		{
 			const T key = pBuffer[i];
 			int64 j = static_cast<int64>(i) - 1;
 
-			while (j >= 0 && comparator(key, pBuffer[j]))
+			while (j >= static_cast<int64>(startIndex) && comparator(key, pBuffer[j]))
 			{
 				pBuffer[j + 1] = pBuffer[j];
 				--j;
@@ -47,8 +45,8 @@ namespace jpt_private
 
 		// Get each elements
 		const T first = pBuffer[beginIndex];
-		const T mid   = pBuffer[endIndex / 2];
-		const T last  = pBuffer[beginIndex];
+		const T mid = pBuffer[endIndex / 2];
+		const T last = pBuffer[beginIndex];
 
 		// Compare and return mid index
 		if (first > mid)
@@ -115,10 +113,7 @@ namespace jpt_private
 		QuickSort(pBuffer, pivot + 1, endIndex, Move(comparator));
 	}
 #pragma endregion
-}
 
-export namespace jpt
-{
 	template<Trivial T>
 	constexpr bool DefaultTrivialComparator(T a, T b) { return a < b; }
 
@@ -129,47 +124,47 @@ export namespace jpt
 	template<Trivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
-		jpt_private::QuickSort(pBuffer, 0, size - 1, DefaultTrivialComparator<T>);
+		QuickSort(pBuffer, 0, size - 1, DefaultTrivialComparator<T>);
 	}
 	template<Trivial T, typename TComparator>
 	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
 	{
-		jpt_private::QuickSort(pBuffer, 0, size - 1, Move(comparator));
+		QuickSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
 	// Raw buffer, NonTrivial
 	template<NonTrivial T>
 	constexpr void Sort(T* pBuffer, size_t size)
 	{
-		jpt_private::QuickSort(pBuffer, 0, size - 1, DefaultNonTrivialComparator<T>);
+		QuickSort(pBuffer, 0, size - 1, DefaultNonTrivialComparator<T>);
 	}
 	template<NonTrivial T, typename TComparator>
 	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
 	{
-		jpt_private::QuickSort(pBuffer, 0, size - 1, Move(comparator));
+		QuickSort(pBuffer, 0, size - 1, Move(comparator));
 	}
 
 	// Container, Trivial
 	template<ContainingTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
-		jpt_private::QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
+		QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
 	}
 	template<ContainingTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
-		jpt_private::QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
+		QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}	
 
 	// Container, NonTrivial
 	template<ContainingNonTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
-		jpt_private::QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
+		QuickSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
 	}
 	template<ContainingNonTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
-		jpt_private::QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
+		QuickSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}
 }

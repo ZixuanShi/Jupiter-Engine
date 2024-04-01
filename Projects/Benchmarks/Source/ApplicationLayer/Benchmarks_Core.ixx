@@ -8,6 +8,9 @@ export module Benchmarks_Core;
 
 /** Benchmark Modules */
 
+// Algorithms
+import Benchmarks_Sorting;
+
 // Containers
 import Benchmarks_DynamicArray;
 
@@ -23,12 +26,15 @@ export void RunBenchmarks_Core()
 {
 	/** Unit Test Functions */
 
+	// Algorithms
+	RunBenchmarks_Sorting();
+
 	// Containers
-	RunBenchmarks_DynamicArray();
+	//RunBenchmarks_DynamicArray();
 
 	// Math
-	RunBenchmarks_Math();
+	//RunBenchmarks_Math();
 
 	// Types
-	RunBenchmarks_Any();
+	//RunBenchmarks_Any();
 }

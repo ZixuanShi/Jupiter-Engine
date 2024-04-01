@@ -62,6 +62,25 @@ export namespace jpt
 	};
 
 	template<typename TData, size_t kSize>
+	constexpr bool operator==(const StaticArray<TData, kSize>& a, const StaticArray<TData, kSize>& b)
+	{
+		if (a.Size() != b.Size())
+		{
+			return false;
+		}
+
+		for (size_t i = 0; i < a.Size(); ++i)
+		{
+			if (a[i] != b[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	template<typename TData, size_t kSize>
 	constexpr StaticArray<TData, kSize>::StaticArray(const std::initializer_list<TData>& initializerList)
 	{
 		JPT_ASSERT(initializerList.size() == kSize, "Initializer list size doesn't match");
