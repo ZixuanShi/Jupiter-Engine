@@ -6,6 +6,8 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
+#include <cmath>
+
 export module jpt.Sorting;
 
 import jpt.Concepts;
@@ -162,25 +164,39 @@ export namespace jpt
 #pragma region IntroSort
 
 	template<typename T, typename TComparator>
-	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, size_t depth, TComparator&& comparator)
 	{
-		static constexpr size_t kInsertionSortThreshold = 128;
+		static constexpr size_t kInsertionSortThreshold = 16;
 
 		if (beginIndex >= endIndex || endIndex == LimitsOf<size_t>::kMax)
 		{
 			return;
 		}
 
+		// If the size of the partition is less than or equal to kInsertionSortThreshold, use insertion sort
 		if (endIndex - beginIndex <= kInsertionSortThreshold)
 		{
 			InsertionSort(pBuffer, beginIndex, endIndex, Move(comparator));
 		}
+		// If the depth is 0, use heap sort
+		else if (depth == 0)
+		{
+			HeapSort(pBuffer, endIndex - beginIndex + 1, Move(comparator));
+		}
+		// Otherwise, use quick sort
 		else
 		{
 			const size_t pivot = Partition(pBuffer, beginIndex, endIndex, Move(comparator));
-			IntroSort(pBuffer, beginIndex, pivot - 1, Move(comparator));
-			IntroSort(pBuffer, pivot + 1, endIndex, Move(comparator));
+			IntroSort(pBuffer, beginIndex, pivot - 1, depth - 1, Move(comparator));
+			IntroSort(pBuffer, pivot + 1, endIndex, depth - 1, Move(comparator));
 		}
+	}
+
+	template<typename T, typename TComparator>
+	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	{
+		const size_t depth = static_cast<size_t>(std::log2(endIndex - beginIndex + 1) * 2);
+		IntroSort(pBuffer, beginIndex, endIndex, depth, Move(comparator));
 	}
 
 #pragma endregion
