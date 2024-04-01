@@ -514,7 +514,7 @@ bool UnitTest_WString_Format()
 
 export bool RunUnitTests_String()
 {
-	JPT_SCOPED_TIMING_PROFILER(UnitTests_String);
+	JPT_SCOPED_TIMING_PROFILER("String");
 
 	for (size_t i = 0; i < 1000; ++i)
 	{

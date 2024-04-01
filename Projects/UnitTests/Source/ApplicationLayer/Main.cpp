@@ -16,7 +16,7 @@ import UnitTestsApplication;
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_SCOPED_TIMING_PROFILER(main);
+	JPT_SCOPED_TIMING_PROFILER("Main");
 
 	JPT_LOG(L"你好，世界 %s!", L"Jupiter Engine引擎");
 
