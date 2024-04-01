@@ -45,7 +45,7 @@ export namespace jpt
 
 		// Element Access
 		constexpr const TData* ConstBuffer() const { return m_pBuffer; }
-		constexpr       TData* Buffer()      const { return m_pBuffer; }
+		constexpr       TData* Buffer()            { return m_pBuffer; }
 		constexpr       TData& Front()             { return m_pBuffer[0]; }
 		constexpr const TData& Front()       const { return m_pBuffer[0]; }
 		constexpr       TData& Back()              { return m_pBuffer[m_size - 1]; }
