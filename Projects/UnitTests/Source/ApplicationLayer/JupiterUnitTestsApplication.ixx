@@ -6,6 +6,7 @@ module;
 
 export module UnitTestsApplication;
 
+import jpt.CoreModules;
 import jpt.ApplicationBase;
 import jpt.Utilities;
 

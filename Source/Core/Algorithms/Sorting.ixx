@@ -19,6 +19,26 @@ namespace jpt_private
 {
 	using namespace jpt;
 
+#pragma region InsertionSort
+	template<typename T, typename TComparator>
+	constexpr void InsertionSort(T* pBuffer, size_t count, TComparator&& comparator)
+	{
+		for (size_t i = 1; i < count; ++i)
+		{
+			const T key = pBuffer[i];
+			int64 j = static_cast<int64>(i) - 1;
+
+			while (j >= 0 && comparator(key, pBuffer[j]))
+			{
+				pBuffer[j + 1] = pBuffer[j];
+				--j;
+			}
+
+			pBuffer[j + 1] = key;
+		}
+	}
+#pragma endregion
+
 #pragma region QuickSort
 	template<typename T>
 	constexpr size_t GetPivot(T* pBuffer, size_t beginIndex, size_t endIndex)
