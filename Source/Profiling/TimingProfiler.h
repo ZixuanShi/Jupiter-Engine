@@ -33,7 +33,7 @@ namespace jpt
 			// Your code here
 			// ...
 		} */
-#define JPT_SCOPED_TIMING_PROFILER(label) jpt::ScopedTimingProfiler timing_profilier_##label(#label, __FILE__, __LINE__)
+#define JPT_SCOPED_TIMING_PROFILER(label) jpt::ScopedTimingProfiler timing_profilier(label, __FILE__, __LINE__)
 
 #else
 	#define JPT_SCOPED_TIMING_PROFILER(label)

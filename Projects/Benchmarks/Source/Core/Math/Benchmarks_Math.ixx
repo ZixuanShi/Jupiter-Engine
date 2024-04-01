@@ -13,7 +13,7 @@ import jpt.Math;
 
 void Benchmark_Math_Min()
 {
-	JPT_SCOPED_TIMING_PROFILER(Min);
+	JPT_SCOPED_TIMING_PROFILER("Min");
 }
 
 export void RunBenchmarks_Math()
