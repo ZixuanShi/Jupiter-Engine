@@ -114,6 +114,51 @@ export namespace jpt
 	}
 #pragma endregion
 
+#pragma region HeapSort
+
+	template<typename T, typename TComparator>
+	constexpr void Heapify(T* pBuffer, size_t size, size_t index, TComparator&& comparator)
+	{
+		size_t largest = index;
+		const size_t left = 2 * index + 1;
+		const size_t right = 2 * index + 2;
+
+		if (left < size && comparator(pBuffer[largest], pBuffer[left]))
+		{
+			largest = left;
+		}
+
+		if (right < size && comparator(pBuffer[largest], pBuffer[right]))
+		{
+			largest = right;
+		}
+
+		if (largest != index)
+		{
+			Swap(pBuffer[index], pBuffer[largest]);
+			Heapify(pBuffer, size, largest, Move(comparator));
+		}
+	}
+
+	template<typename T, typename TComparator>
+	constexpr void HeapSort(T* pBuffer, size_t size, TComparator&& comparator)
+	{
+		// Build the heap
+		for (int64 i = size / 2 - 1; i >= 0; --i)
+		{
+			Heapify(pBuffer, size, i, Move(comparator));
+		}
+
+		// Extract elements from the heap
+		for (int64 i = size - 1; i > 0; --i)
+		{
+			Swap(pBuffer[0], pBuffer[i]);
+			Heapify(pBuffer, i, 0, Move(comparator));
+		}
+	}
+
+#pragma endregion
+
 #pragma region IntroSort
 
 	template<typename T, typename TComparator>

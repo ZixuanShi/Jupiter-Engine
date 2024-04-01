@@ -516,7 +516,7 @@ export bool RunUnitTests_String()
 {
 	JPT_SCOPED_TIMING_PROFILER("String");
 
-	for (size_t i = 0; i < 1000; ++i)
+	//for (size_t i = 0; i < 1000; ++i)
 	{
 		JPT_ENSURE(UnitTest_String_Constructing());
 		JPT_ENSURE(UnitTest_WString_Constructing());

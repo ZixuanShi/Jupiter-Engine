@@ -16,7 +16,47 @@ import jpt.DynamicArray;
 import jpt.String;
 import jpt.RandomNumberGenerator;
 
-bool UnitTest_Sorting_Basic()
+bool UnitTest_QuickSort()
+{
+    jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::QuickSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0,1,2,3,4,5,6,7,8,9 }));
+
+    return true;
+}
+
+bool UnitTest_InsertionSort()
+{
+    jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::InsertionSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+
+    return true;
+}
+
+bool UnitTest_HeapSort()
+{
+    jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::HeapSort(arr.Buffer(), 10, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+
+    return true;
+}
+
+bool UnitTest_IntroSort()
+{
+    jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::IntroSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
+
+    return true;
+}
+
+bool UnitTest_Sorting_Partial()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -181,7 +221,12 @@ bool UnitTest_Sorting_NonTrivial()
 
 export bool RunUnitTests_Sorting()
 {
-    JPT_ENSURE(UnitTest_Sorting_Basic());
+    JPT_ENSURE(UnitTest_QuickSort());
+    JPT_ENSURE(UnitTest_InsertionSort());
+    JPT_ENSURE(UnitTest_HeapSort());
+    JPT_ENSURE(UnitTest_IntroSort());
+
+    JPT_ENSURE(UnitTest_Sorting_Partial());
     JPT_ENSURE(UnitTest_Sorting_Random());
     JPT_ENSURE(UnitTest_Sorting_StackArray());
     JPT_ENSURE(UnitTest_Sorting_NonTrivial());
