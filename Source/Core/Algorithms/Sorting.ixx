@@ -19,65 +19,109 @@ import jpt.Limits;
 
 export namespace jpt
 {
+	template<typename T = void>
+	struct Comparator_Less
+	{
+		template<NonTrivial U = T>
+		constexpr bool operator()(const U& lhs, const U& rhs)
+		{
+			return lhs < rhs;
+		}
+
+		template<Trivial U = T>
+		constexpr bool operator()(U lhs, U rhs)
+		{
+			return lhs < rhs;
+		}
+	};
+
+	template<typename T = void>
+	struct Comparator_Greater
+	{
+		template<NonTrivial U = T>
+		constexpr bool operator()(const U& lhs, const U& rhs)
+		{
+			return lhs > rhs;
+		}
+
+		template<Trivial U = T>
+		constexpr bool operator()(U lhs, U rhs)
+		{
+			return lhs > rhs;
+		}
+	};
+
 #pragma region InsertionSort
-	template<typename T, typename TComparator>
-	constexpr void InsertionSort(T* pBuffer, size_t startIndex, size_t endIndex, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void InsertionSort(TContainer& container, size_t startIndex, size_t endIndex, TComparator&& comparator)
 	{
 		for (size_t i = startIndex + 1; i <= endIndex; ++i)
 		{
-			const T key = pBuffer[i];
-			int64 j = static_cast<int64>(i) - 1;
+			const auto key = container[i];
+			int64 j = static_cast<int64>(i);
 
-			while (j >= static_cast<int64>(startIndex) && comparator(key, pBuffer[j]))
+			while (j > static_cast<int64>(startIndex) && comparator(key, container[j - 1]))
 			{
-				pBuffer[j + 1] = pBuffer[j];
+				container[j] = container[j - 1];
 				--j;
 			}
 
-			pBuffer[j + 1] = key;
+			container[j] = key;
 		}
 	}
 #pragma endregion
 
 #pragma region QuickSort
-	template<typename T>
-	constexpr size_t GetPivot(T* pBuffer, size_t beginIndex, size_t endIndex)
+	template<Indexable TContainer>
+	constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex)
 	{
 		// Mid of three pivot selection
 
 		// Get each elements
-		const T first = pBuffer[beginIndex];
-		const T mid = pBuffer[endIndex / 2];
-		const T last = pBuffer[beginIndex];
+		const auto first = container[beginIndex];
+		const auto mid   = container[endIndex / 2];
+		const auto last  = container[beginIndex];
 
 		// Compare and return mid index
 		if (first > mid)
 		{
 			if (mid > last)
+			{
 				return endIndex / 2;
+			}
 			else if (first > last)
+			{
 				return endIndex;
+			}
 			else
+			{
 				return beginIndex;
+			}
 		}
 		else
 		{
 			if (first > last)
+			{
 				return beginIndex;
+			}
 			else if (mid > last)
+			{
 				return endIndex;
+			}
 			else
+			{
 				return endIndex / 2;
+			}
 		}
 	}
 
-	template<typename T, typename TComparator>
-	constexpr size_t Partition(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
-		size_t pivotIndex = GetPivot(pBuffer, beginIndex, endIndex);
-		Swap(pBuffer[pivotIndex], pBuffer[endIndex]);
+		size_t pivotIndex = GetPivot(container, beginIndex, endIndex);
+		Swap(container[pivotIndex], container[endIndex]);
 
-		const T pivot = pBuffer[endIndex];
+		const auto pivot = container[endIndex];
 		size_t i = beginIndex - 1;	// i is the last element's index of region 1, which is less than the pivot
 
 		// j is the current processing element's index
@@ -85,23 +129,23 @@ export namespace jpt
 		{
 			// if current element should be placed to region one
 			// Swap last element in region 1 with current processing element.
-			if (comparator(pBuffer[j], pivot))
+			if (comparator(container[j], pivot))
 			{
 				++i;
-				Swap(pBuffer[i], pBuffer[j]);
+				Swap(container[i], container[j]);
 			}
 		}
 
 		// Everything is in its place except for the pivot. We swap the pivot with the first element of region 2.
 		pivotIndex = i + 1;
-		Swap(pBuffer[pivotIndex], pBuffer[endIndex]);
+		Swap(container[pivotIndex], container[endIndex]);
 
 		// return the pivot, which becomes the beginning and end points of the next calls to Partition().
 		return pivotIndex;
 	}
 
-	template<typename T, typename TComparator>
-	constexpr void QuickSort(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void QuickSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
 		// Bounds check
 		if (beginIndex >= endIndex || endIndex == LimitsOf<size_t>::kMax)
@@ -110,52 +154,52 @@ export namespace jpt
 		}
 
 		// Recursively sort the left and right partitions
-		const size_t pivot = Partition(pBuffer, beginIndex, endIndex, Move(comparator));
-		QuickSort(pBuffer, beginIndex, pivot - 1, Move(comparator));
-		QuickSort(pBuffer, pivot + 1, endIndex, Move(comparator));
+		const size_t pivot = Partition(container, beginIndex, endIndex, Move(comparator));
+		QuickSort(container, beginIndex, pivot - 1, Move(comparator));
+		QuickSort(container, pivot + 1, endIndex, Move(comparator));
 	}
 #pragma endregion
 
 #pragma region HeapSort
 
-	template<typename T, typename TComparator>
-	constexpr void Heapify(T* pBuffer, size_t size, size_t index, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void Heapify(TContainer& container, size_t size, size_t index, TComparator&& comparator)
 	{
 		size_t largest = index;
 		const size_t left = 2 * index + 1;
 		const size_t right = 2 * index + 2;
 
-		if (left < size && comparator(pBuffer[largest], pBuffer[left]))
+		if (left < size && comparator(container[largest], container[left]))
 		{
 			largest = left;
 		}
 
-		if (right < size && comparator(pBuffer[largest], pBuffer[right]))
+		if (right < size && comparator(container[largest], container[right]))
 		{
 			largest = right;
 		}
 
 		if (largest != index)
 		{
-			Swap(pBuffer[index], pBuffer[largest]);
-			Heapify(pBuffer, size, largest, Move(comparator));
+			Swap(container[index], container[largest]);
+			Heapify(container, size, largest, Move(comparator));
 		}
 	}
 
-	template<typename T, typename TComparator>
-	constexpr void HeapSort(T* pBuffer, size_t size, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void HeapSort(TContainer& container, size_t size, TComparator&& comparator)
 	{
 		// Build the heap
 		for (int64 i = size / 2 - 1; i >= 0; --i)
 		{
-			Heapify(pBuffer, size, i, Move(comparator));
+			Heapify(container, size, i, Move(comparator));
 		}
 
 		// Extract elements from the heap
 		for (int64 i = size - 1; i > 0; --i)
 		{
-			Swap(pBuffer[0], pBuffer[i]);
-			Heapify(pBuffer, i, 0, Move(comparator));
+			Swap(container[0], container[i]);
+			Heapify(container, i, 0, Move(comparator));
 		}
 	}
 
@@ -163,8 +207,8 @@ export namespace jpt
 
 #pragma region IntroSort
 
-	template<typename T, typename TComparator>
-	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, size_t depth, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void IntroSort(TContainer& container, size_t beginIndex, size_t endIndex, size_t depth, TComparator&& comparator)
 	{
 		static constexpr size_t kInsertionSortThreshold = 16;
 
@@ -176,82 +220,56 @@ export namespace jpt
 		// If the size of the partition is less than or equal to kInsertionSortThreshold, use insertion sort
 		if (endIndex - beginIndex <= kInsertionSortThreshold)
 		{
-			InsertionSort(pBuffer, beginIndex, endIndex, Move(comparator));
+			InsertionSort(container, beginIndex, endIndex, Move(comparator));
 		}
 		// If the depth is 0, use heap sort
 		else if (depth == 0)
 		{
-			HeapSort(pBuffer, endIndex - beginIndex + 1, Move(comparator));
+			HeapSort(container, endIndex - beginIndex + 1, Move(comparator));
 		}
 		// Otherwise, use quick sort
 		else
 		{
-			const size_t pivot = Partition(pBuffer, beginIndex, endIndex, Move(comparator));
-			IntroSort(pBuffer, beginIndex, pivot - 1, depth - 1, Move(comparator));
-			IntroSort(pBuffer, pivot + 1, endIndex, depth - 1, Move(comparator));
+			const size_t pivot = Partition(container, beginIndex, endIndex, Move(comparator));
+			IntroSort(container, beginIndex, pivot - 1, depth - 1, Move(comparator));
+			IntroSort(container, pivot + 1, endIndex, depth - 1, Move(comparator));
 		}
 	}
 
-	template<typename T, typename TComparator>
-	constexpr void IntroSort(T* pBuffer, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+	template<Indexable TContainer, typename TComparator>
+	constexpr void IntroSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
 		const size_t depth = static_cast<size_t>(std::log2(endIndex - beginIndex + 1) * 2);
-		IntroSort(pBuffer, beginIndex, endIndex, depth, Move(comparator));
+		IntroSort(container, beginIndex, endIndex, depth, Move(comparator));
 	}
 
 #pragma endregion
 
-	template<Trivial T>
-	constexpr bool DefaultTrivialComparator(T a, T b) { return a < b; }
-
-	template<NonTrivial T>
-	constexpr bool DefaultNonTrivialComparator(const T& a, const T& b) { return a < b; }
-
-	// Raw buffer, Trivial
-	template<Trivial T>
-	constexpr void Sort(T* pBuffer, size_t size)
+	// Jupiter's containers with Size() function
+	template<typename TContainer, typename TComparator = Comparator_Less<void>> requires Sized<TContainer> && Indexable<TContainer>
+	constexpr void Sort(TContainer& container, TComparator&& comparator = TComparator())
 	{
-		IntroSort(pBuffer, 0, size - 1, DefaultTrivialComparator<T>);
-	}
-	template<Trivial T, typename TComparator>
-	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
-	{
-		IntroSort(pBuffer, 0, size - 1, Move(comparator));
+		IntroSort(container, 0, container.Size() - 1, Move(comparator));
 	}
 
-	// Raw buffer, NonTrivial
-	template<NonTrivial T>
-	constexpr void Sort(T* pBuffer, size_t size)
+	// C++ style plain array
+	template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
+	constexpr void Sort(TContainer& container, TComparator&& comparator = TComparator())
 	{
-		IntroSort(pBuffer, 0, size - 1, DefaultNonTrivialComparator<T>);
-	}
-	template<NonTrivial T, typename TComparator>
-	constexpr void Sort(T* pBuffer, size_t size, TComparator&& comparator)
-	{
-		IntroSort(pBuffer, 0, size - 1, Move(comparator));
+		IntroSort(container, 0, JPT_ARRAY_COUNT(container) - 1, Move(comparator));
 	}
 
-	// Container, Trivial
-	template<IndexableTrivial TContainer>
-	constexpr void Sort(TContainer& container)
+	// Container/Plain Array with start/end index
+	template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
+	constexpr void Sort(TContainer& container, size_t startIndex, size_t endIndex, TComparator&& comparator = TComparator())
 	{
-		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
+		IntroSort(container, startIndex, endIndex, Move(comparator));
 	}
-	template<IndexableTrivial TContainer, typename TComparator>
-	constexpr void Sort(TContainer& container, TComparator&& comparator)
-	{
-		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
-	}	
 
-	// Container, NonTrivial
-	template<IndexableNonTrivial TContainer>
-	constexpr void Sort(TContainer& container)
+	// Container/Plain Array from 0 to end index
+	template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
+	constexpr void Sort(TContainer& container, size_t size, TComparator&& comparator = TComparator())
 	{
-		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
-	}
-	template<IndexableNonTrivial TContainer, typename TComparator>
-	constexpr void Sort(TContainer& container, TComparator&& comparator)
-	{
-		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
+		IntroSort(container, 0, size - 1, Move(comparator));
 	}
 }

@@ -20,7 +20,7 @@ bool UnitTest_QuickSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::QuickSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    jpt::QuickSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0,1,2,3,4,5,6,7,8,9 }));
 
     return true;
@@ -30,7 +30,7 @@ bool UnitTest_InsertionSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::InsertionSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    jpt::InsertionSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
@@ -40,7 +40,7 @@ bool UnitTest_HeapSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::HeapSort(arr.Buffer(), 10, [](int32 a, int32 b) {return a < b; });
+    jpt::HeapSort(arr, 10, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
@@ -50,7 +50,7 @@ bool UnitTest_IntroSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::IntroSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    jpt::IntroSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
@@ -60,28 +60,28 @@ bool UnitTest_Sorting_Partial()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::InsertionSort(arr.Buffer(), 2, 7, [](int32 a, int32 b) {return a < b; });
+    jpt::InsertionSort(arr, 2, 7, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 0, 1, 4, 5, 6, 9, 7, 8 }));
 
-    jpt::QuickSort(arr.Buffer(), 2, 7, [](int32 a, int32 b) {return a < b; });
+    jpt::QuickSort(arr, 2, 7, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 0, 1, 4, 5, 6, 9, 7, 8 }));
 
-    jpt::InsertionSort(arr.Buffer(), 2, 7, [](int32 a, int32 b) {return a > b; });
+    jpt::InsertionSort(arr, 2, 7, [](int32 a, int32 b) {return a > b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 9, 6, 5, 4, 1, 0, 7, 8 }));
 
-    jpt::QuickSort(arr.Buffer(), 2, 7, [](int32 a, int32 b) {return a > b; });
+    jpt::QuickSort(arr, 2, 7, [](int32 a, int32 b) {return a > b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 9, 6, 5, 4, 1, 0, 7, 8 }));
 
-    jpt::InsertionSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a > b; });
+    jpt::InsertionSort(arr, 0, 9, [](int32 a, int32 b) {return a > b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 }));
 
-    jpt::QuickSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a > b; });
+    jpt::QuickSort(arr, 0, 9, [](int32 a, int32 b) {return a > b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 }));
 
-    jpt::InsertionSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    jpt::InsertionSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
-    jpt::QuickSort(arr.Buffer(), 0, 9, [](int32 a, int32 b) {return a < b; });
+    jpt::QuickSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
@@ -129,7 +129,7 @@ bool UnitTest_Sorting_StackArray()
 {
     int32 arr[] = { 5,2,4,6,1,3 };
 
-    jpt::Sort(arr, 6);
+    jpt::Sort(arr);
     JPT_ENSURE((arr[0] == 1 && 
                 arr[1] == 2 && 
                 arr[2] == 3 && 
@@ -137,7 +137,7 @@ bool UnitTest_Sorting_StackArray()
                 arr[4] == 5 && 
                 arr[5] == 6));
 
-    jpt::Sort(arr, 6, [](int32 a, int32 b) { return a > b; });
+    jpt::Sort(arr, [](int32 a, int32 b) { return a > b; });
     JPT_ENSURE((arr[0] == 6 &&
 				arr[1] == 5 &&
 				arr[2] == 4 &&
@@ -146,7 +146,7 @@ bool UnitTest_Sorting_StackArray()
 				arr[5] == 1));
 
     jpt::Function<bool(int32, int32)> compare = [](int32 a, int32 b) { return a < b; };
-    jpt::Sort(arr, 6, compare);
+    jpt::Sort(arr, compare);
     JPT_ENSURE((arr[0] == 1 &&
                 arr[1] == 2 &&
                 arr[2] == 3 &&
@@ -155,14 +155,31 @@ bool UnitTest_Sorting_StackArray()
                 arr[5] == 6));
 
     compare = [](int32 a, int32 b) { return a > b; };
-    jpt::Sort(arr, 6, compare);
+    jpt::Sort(arr, compare);
     JPT_ENSURE((arr[0] == 6 &&
 		        arr[1] == 5 &&
 		        arr[2] == 4 &&
 		        arr[3] == 3 &&
 		        arr[4] == 2 &&
 		        arr[5] == 1));
+
+    compare = [](int32 a, int32 b) { return a < b; };
+    jpt::Sort(arr, 3, compare);
+    JPT_ENSURE((arr[0] == 4 &&
+		        arr[1] == 5 &&
+		        arr[2] == 6 &&
+		        arr[3] == 3 &&
+		        arr[4] == 2 &&
+		        arr[5] == 1));
     
+    jpt::Sort(arr, 3, 5, [](int32 a, int32 b) { return a < b; });
+    JPT_ENSURE((arr[0] == 4 &&
+		        arr[1] == 5 &&
+		        arr[2] == 6 &&
+		        arr[3] == 1 &&
+		        arr[4] == 2 &&
+		        arr[5] == 3));
+
     return true;
 }
 
