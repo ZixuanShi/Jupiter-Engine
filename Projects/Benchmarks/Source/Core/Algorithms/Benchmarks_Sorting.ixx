@@ -33,7 +33,7 @@ void Benchmark_Sortring_QuickSort(size_t arraySize, const char* pLabel)
 	JPT_SCOPED_TIMING_PROFILER(pLabel);
 
 	jpt::DynamicArray<int32> arr = GenerateRandomArray(arraySize);
-	jpt::QuickSort(arr.Buffer(), 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
+	jpt::QuickSort(arr, 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
 }
 
 void Benchmark_Sortring_InsertionSort(size_t arraySize, const char* pLabel)
@@ -41,7 +41,7 @@ void Benchmark_Sortring_InsertionSort(size_t arraySize, const char* pLabel)
 	JPT_SCOPED_TIMING_PROFILER(pLabel);
 
 	jpt::DynamicArray<int32> arr = GenerateRandomArray(arraySize);
-	jpt::InsertionSort(arr.Buffer(), 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
+	jpt::InsertionSort(arr, 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
 }
 
 void Benchmark_Sortring_HeapSort(size_t arraySize, const char* pLabel)
@@ -49,7 +49,7 @@ void Benchmark_Sortring_HeapSort(size_t arraySize, const char* pLabel)
 	JPT_SCOPED_TIMING_PROFILER(pLabel);
 
 	jpt::DynamicArray<int32> arr = GenerateRandomArray(arraySize);
-	jpt::HeapSort(arr.Buffer(), arr.Size(), [](int32 a, int32 b) {return a < b; });
+	jpt::HeapSort(arr, arr.Size(), [](int32 a, int32 b) {return a < b; });
 }
 
 void Benchmark_Sortring_IntroSort(size_t arraySize, const char* pLabel)
@@ -57,7 +57,7 @@ void Benchmark_Sortring_IntroSort(size_t arraySize, const char* pLabel)
 	JPT_SCOPED_TIMING_PROFILER(pLabel);
 
 	jpt::DynamicArray<int32> arr = GenerateRandomArray(arraySize);
-	jpt::IntroSort(arr.Buffer(), 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
+	jpt::IntroSort(arr, 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
 }
 
 export void RunBenchmarks_Sorting()
