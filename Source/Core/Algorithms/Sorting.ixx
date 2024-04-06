@@ -232,24 +232,24 @@ export namespace jpt
 	}
 
 	// Container, Trivial
-	template<ContainingTrivial TContainer>
+	template<IndexableTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
 		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultTrivialComparator<typename TContainer::TData>);
 	}
-	template<ContainingTrivial TContainer, typename TComparator>
+	template<IndexableTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
 		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));
 	}	
 
 	// Container, NonTrivial
-	template<ContainingNonTrivial TContainer>
+	template<IndexableNonTrivial TContainer>
 	constexpr void Sort(TContainer& container)
 	{
 		IntroSort(container.Buffer(), 0, container.Size() - 1, DefaultNonTrivialComparator<typename TContainer::TData>);
 	}
-	template<ContainingNonTrivial TContainer, typename TComparator>
+	template<IndexableNonTrivial TContainer, typename TComparator>
 	constexpr void Sort(TContainer& container, TComparator&& comparator)
 	{
 		IntroSort(container.Buffer(), 0, container.Size() - 1, Move(comparator));

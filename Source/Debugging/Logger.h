@@ -44,7 +44,7 @@ namespace jpt
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
 		}
-		template<Containing TContainer>
+		template<Bufferred TContainer>
 		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)
 		{
 			ProcessMessage(type, line, file, jpt::ToString(container).ConstBuffer());

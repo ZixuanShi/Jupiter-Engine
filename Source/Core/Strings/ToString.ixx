@@ -88,7 +88,7 @@ export namespace jpt
 	}
 
 	// Containers
-	template<Containing TContainer>
+	template<Iterable TContainer>
 	constexpr String ToString(const TContainer& container)
 	{
 		if constexpr (AreSameType<TContainer, String>)

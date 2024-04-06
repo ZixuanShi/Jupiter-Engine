@@ -77,17 +77,29 @@ export namespace jpt
 		container.end();
 	};
 
-	template<typename TContainer>
-	concept Containing = Iterable<TContainer> && requires(TContainer container)
+	template<typename T>
+	concept Indexable = requires(T& obj, size_t i)
 	{
-		typename TContainer::TData;
-		container.Size();
+		obj[i];
+	};
+
+	template<typename T>
+	concept Bufferred = requires(T obj)
+	{
+		obj.Buffer();
+		obj.ConstBuffer();
+	};
+
+	template<typename T>
+	concept Sized = requires(T obj)
+	{
+		obj.Size();
 	};
 
 	template<typename TContainer>
-	concept ContainingTrivial = Containing<TContainer> && Trivial<typename TContainer::TData>;
+	concept IndexableTrivial = Indexable<TContainer> && Trivial<typename TContainer::TData>;
 
 	template<typename TContainer>
-	concept ContainingNonTrivial = Containing<TContainer> && NonTrivial<typename TContainer::TData>;
+	concept IndexableNonTrivial = Indexable<TContainer> && NonTrivial<typename TContainer::TData>;
 #pragma endregion
 }
