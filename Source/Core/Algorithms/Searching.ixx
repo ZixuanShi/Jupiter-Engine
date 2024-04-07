@@ -8,7 +8,9 @@ import jpt.Concepts;
 
 export namespace jpt
 {
-#pragma region Linear Find
+#pragma region Linear
+
+#pragma region Find
 	template<typename TContainer, typename TData>
 	constexpr auto Find(TContainer& container, const TData& dataToFind) -> decltype(container.begin())
 	{
@@ -64,8 +66,7 @@ export namespace jpt
 
 		return container.cend();
 	}
-
-#pragma endregion
+#pragma endregion Find
 
 #pragma region Contains
 	template<Iterable TContainer, typename TData>
@@ -79,5 +80,7 @@ export namespace jpt
 	{
 		return FindIf(container, Forward<TFinderFunction>(finderFunc)) != container.end();
 	}
-#pragma endregion
+#pragma endregion Contains
+
+#pragma endregion Linear
 }

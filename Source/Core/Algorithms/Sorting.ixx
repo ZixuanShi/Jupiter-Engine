@@ -53,14 +53,14 @@ export namespace jpt
 
 #pragma region InsertionSort
 	template<Indexable TContainer, typename TComparator>
-	constexpr void InsertionSort(TContainer& container, size_t startIndex, size_t endIndex, TComparator&& comparator)
+	constexpr void InsertionSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
-		for (size_t i = startIndex + 1; i <= endIndex; ++i)
+		for (size_t i = beginIndex + 1; i <= endIndex; ++i)
 		{
 			const auto key = container[i];
 			int64 j = static_cast<int64>(i);
 
-			while (j > static_cast<int64>(startIndex) && comparator(key, container[j - 1]))
+			while (j > static_cast<int64>(beginIndex) && comparator(key, container[j - 1]))
 			{
 				container[j] = container[j - 1];
 				--j;
@@ -163,18 +163,18 @@ export namespace jpt
 #pragma region HeapSort
 
 	template<Indexable TContainer, typename TComparator>
-	constexpr void Heapify(TContainer& container, size_t size, size_t index, TComparator&& comparator)
+	constexpr void Heapify(TContainer& container, size_t beginIndex, size_t endIndex, size_t index, TComparator&& comparator)
 	{
 		size_t largest = index;
-		const size_t left = 2 * index + 1;
-		const size_t right = 2 * index + 2;
+		const size_t left = 2 * (index - beginIndex) + 1 + beginIndex;
+		const size_t right = 2 * (index - beginIndex) + 2 + beginIndex;
 
-		if (left < size && comparator(container[largest], container[left]))
+		if (left <= endIndex && comparator(container[largest], container[left]))
 		{
 			largest = left;
 		}
 
-		if (right < size && comparator(container[largest], container[right]))
+		if (right <= endIndex && comparator(container[largest], container[right]))
 		{
 			largest = right;
 		}
@@ -182,24 +182,29 @@ export namespace jpt
 		if (largest != index)
 		{
 			Swap(container[index], container[largest]);
-			Heapify(container, size, largest, Move(comparator));
+			Heapify(container, beginIndex, endIndex, largest, Move(comparator));
 		}
 	}
 
 	template<Indexable TContainer, typename TComparator>
-	constexpr void HeapSort(TContainer& container, size_t size, TComparator&& comparator)
+	constexpr void HeapSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
-		// Build the heap
-		for (int64 i = size / 2 - 1; i >= 0; --i)
+		if (beginIndex >= endIndex)
 		{
-			Heapify(container, size, i, Move(comparator));
+			return;
+		}
+
+		// Build the heap
+		for (int64 i = (beginIndex + endIndex) / 2; i >= static_cast<int64>(beginIndex); --i)
+		{
+			Heapify(container, beginIndex, endIndex, i, Move(comparator));
 		}
 
 		// Extract elements from the heap
-		for (int64 i = size - 1; i > 0; --i)
+		for (int64 i = endIndex; i > static_cast<int64>(beginIndex); --i)
 		{
-			Swap(container[0], container[i]);
-			Heapify(container, i, 0, Move(comparator));
+			Swap(container[beginIndex], container[i]);
+			Heapify(container, beginIndex, i - 1, beginIndex, Move(comparator));
 		}
 	}
 
@@ -225,7 +230,7 @@ export namespace jpt
 		// If the depth is 0, use heap sort
 		else if (depth == 0)
 		{
-			HeapSort(container, endIndex - beginIndex + 1, Move(comparator));
+			HeapSort(container, beginIndex, endIndex, Move(comparator));
 		}
 		// Otherwise, use quick sort
 		else
@@ -261,9 +266,9 @@ export namespace jpt
 
 	// Container/Plain Array with start/end index
 	template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
-	constexpr void Sort(TContainer& container, size_t startIndex, size_t endIndex, TComparator&& comparator = TComparator())
+	constexpr void Sort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator = TComparator())
 	{
-		IntroSort(container, startIndex, endIndex, Move(comparator));
+		IntroSort(container, beginIndex, endIndex, Move(comparator));
 	}
 
 	// Container/Plain Array from 0 to end index
