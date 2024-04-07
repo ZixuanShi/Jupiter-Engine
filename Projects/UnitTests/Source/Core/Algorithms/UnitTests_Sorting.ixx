@@ -20,8 +20,11 @@ bool UnitTest_QuickSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
+    jpt::QuickSort(arr, 4, 8, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 1, 0, 4, 5, 6, 7, 9, 8 }));
+
     jpt::QuickSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
-    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0,1,2,3,4,5,6,7,8,9 }));
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
 }
@@ -29,6 +32,9 @@ bool UnitTest_QuickSort()
 bool UnitTest_InsertionSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::InsertionSort(arr, 4, 8, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 1, 0, 4, 5, 6, 7, 9, 8 }));
 
     jpt::InsertionSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
@@ -40,8 +46,11 @@ bool UnitTest_HeapSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
-    jpt::HeapSort(arr, 4, 9, [](int32 a, int32 b) {return a < b; });
-    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 1, 0, 4, 5, 6, 7, 8, 9 }));
+    jpt::HeapSort(arr, 4, 8, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 1, 0, 4, 5, 6, 7, 9, 8 }));
+
+    jpt::HeapSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
 
     return true;
 }
@@ -49,6 +58,9 @@ bool UnitTest_HeapSort()
 bool UnitTest_IntroSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
+
+    jpt::IntroSort(arr, 4, 8, [](int32 a, int32 b) {return a < b; });
+    JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 2, 3, 1, 0, 4, 5, 6, 7, 9, 8 }));
 
     jpt::IntroSort(arr, 0, 9, [](int32 a, int32 b) {return a < b; });
     JPT_ENSURE((arr == jpt::StaticArray<int32, 10>{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }));
