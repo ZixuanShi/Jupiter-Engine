@@ -189,18 +189,11 @@ export namespace jpt
 	template<Indexable TContainer, typename TComparator>
 	constexpr void HeapSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
-		if (beginIndex >= endIndex)
-		{
-			return;
-		}
-
-		// Build the heap
 		for (int64 i = (beginIndex + endIndex) / 2; i >= static_cast<int64>(beginIndex); --i)
 		{
 			Heapify(container, beginIndex, endIndex, i, Move(comparator));
 		}
 
-		// Extract elements from the heap
 		for (int64 i = endIndex; i > static_cast<int64>(beginIndex); --i)
 		{
 			Swap(container[beginIndex], container[i]);
