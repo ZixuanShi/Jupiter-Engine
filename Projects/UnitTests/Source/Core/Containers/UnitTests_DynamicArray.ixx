@@ -47,12 +47,12 @@ bool UnitTest_DynamicArray_Trivial()
     }
 
     // Inserting
-    dynamicArray.Insert(1, 1);
+    dynamicArray.Add(1, 1);
     int32 data = dynamicArray.Emplace(3, 3);
     JPT_ENSURE(data == 3);
-    dynamicArray.PushBack(5);
-    dynamicArray.PushBack(6);
-    dynamicArray.PushBack(6);
+    dynamicArray.AddBack(5);
+    dynamicArray.AddBack(6);
+    dynamicArray.AddBack(6);
     data = dynamicArray.EmplaceBack(6);
     JPT_ENSURE(data == 6);
 
@@ -161,12 +161,12 @@ bool UnitTest_DynamicArray_NonTrivial()
     }
 
     // Inserting
-    dynamicArray.Insert(1, locHelper(1));
+    dynamicArray.Add(1, locHelper(1));
     const jpt::String& data1 = dynamicArray.Emplace(3, "Three");
     JPT_ENSURE(data1 == "Three");
-    dynamicArray.PushBack(locHelper(5));
-    dynamicArray.PushBack(locHelper(6));
-    dynamicArray.PushBack(locHelper(6));
+    dynamicArray.AddBack(locHelper(5));
+    dynamicArray.AddBack(locHelper(6));
+    dynamicArray.AddBack(locHelper(6));
     const jpt::String& data2 = dynamicArray.EmplaceBack("Six");
     JPT_ENSURE(data2 == "Six");
 

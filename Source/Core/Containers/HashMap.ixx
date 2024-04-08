@@ -50,7 +50,7 @@ export namespace jpt
 		
 		// Element access
 		/** If key exists, return reference to it's associated value, caller may update it outside
-			If key doesn't exist, insert a default value, return the inserted value too */
+			If key doesn't exist, Add a default value, return the inserted value too */
 		constexpr       TValue& operator[](const TKey& key);
 
 		/** If key exists, return reference to it's associated value, caller can't update it outside
@@ -74,8 +74,8 @@ export namespace jpt
 		constexpr void Clear();
 
 		// Inserting
-		constexpr TValue& Insert(const TKey& key, const TValue& value);
-		constexpr TValue& Insert(const TData& element);
+		constexpr TValue& Add(const TKey& key, const TValue& value);
+		constexpr TValue& Add(const TData& element);
 
 		// Erasing
 		constexpr void Erase(const TKey& key);
@@ -149,7 +149,7 @@ export namespace jpt
 		Iterator itr = Find(key);
 		if (itr == end())
 		{
-			return Insert(key, TValue());
+			return Add(key, TValue());
 		}
 
 		return itr->second;
@@ -219,7 +219,7 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr TValue& HashMap<TKey, TValue>::Insert(const TKey& key, const TValue& value)
+	constexpr TValue& HashMap<TKey, TValue>::Add(const TKey& key, const TValue& value)
 	{
 		// Grow if needed
 		if (m_size >= m_buckets.Size() * kGrowMultiplier)
@@ -246,9 +246,9 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr TValue& HashMap<TKey, TValue>::Insert(const TData& element)
+	constexpr TValue& HashMap<TKey, TValue>::Add(const TData& element)
 	{
-		return Insert(element.first, element.second);
+		return Add(element.first, element.second);
 	}
 
 	template<typename _TKey, typename _TValue>
@@ -360,7 +360,7 @@ export namespace jpt
 	{
 		for (const TData& data : container)
 		{
-			Insert(data);
+			Add(data);
 		}
 	}
 

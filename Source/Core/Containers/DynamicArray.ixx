@@ -74,10 +74,10 @@ export namespace jpt
 		constexpr void Resize(size_t size, const TData& data = TData());
 
 		// Inserting
-		constexpr void Insert(size_t index, const TData& data);
-		constexpr void Insert(size_t index, TData&& data);
-		constexpr void PushBack(const TData& data);
-		constexpr void PushBack(TData&& data);
+		constexpr void Add(size_t index, const TData& data);
+		constexpr void Add(size_t index, TData&& data);
+		constexpr void AddBack(const TData& data);
+		constexpr void AddBack(TData&& data);
 		template<typename ...TArgs>
 		constexpr TData& Emplace(size_t index, TArgs&&... args);
 		template<typename ...TArgs>
@@ -102,7 +102,7 @@ export namespace jpt
 		constexpr void ShiftDataToBegin(size_t index, size_t distance = 1);
 
 		/** Called before inserting operation */
-		constexpr void UpdateBufferForInsert(size_t index);
+		constexpr void UpdateBufferForAdd(size_t index);
 	};
 
 	template<typename TData, typename TAllocator>
@@ -222,36 +222,36 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::Insert(size_t index, const TData& data)
+	constexpr void DynamicArray<TData, TAllocator>::Add(size_t index, const TData& data)
 	{
-		UpdateBufferForInsert(index);
+		UpdateBufferForAdd(index);
 		TAllocator::Construct(m_pBuffer + index, data);
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::Insert(size_t index, TData&& data)
+	constexpr void DynamicArray<TData, TAllocator>::Add(size_t index, TData&& data)
 	{
-		UpdateBufferForInsert(index);
+		UpdateBufferForAdd(index);
 		TAllocator::Construct(m_pBuffer + index, Move(data));
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::PushBack(const TData& data)
+	constexpr void DynamicArray<TData, TAllocator>::AddBack(const TData& data)
 	{
-		Insert(m_size, data);
+		Add(m_size, data);
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::PushBack(TData&& data)
+	constexpr void DynamicArray<TData, TAllocator>::AddBack(TData&& data)
 	{
-		Insert(m_size, Move(data));
+		Add(m_size, Move(data));
 	}
 
 	template<typename TData, typename TAllocator>
 	template<typename ...TArgs>
 	constexpr DynamicArray<TData, TAllocator>::TData& DynamicArray<TData, TAllocator>::Emplace(size_t index, TArgs&& ...args)
 	{
-		UpdateBufferForInsert(index);
+		UpdateBufferForAdd(index);
 		TAllocator::Construct(m_pBuffer + index, Forward<TArgs>(args)...);
 		return m_pBuffer[index];
 	}
@@ -367,7 +367,7 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForInsert(size_t index)
+	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForAdd(size_t index)
 	{
 		JPT_ASSERT(index <= m_size, "Calling DynamicArray::Insert() with an invalid index");
 

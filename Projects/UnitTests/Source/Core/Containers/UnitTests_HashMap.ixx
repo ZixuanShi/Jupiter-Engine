@@ -17,10 +17,10 @@ bool UnitTest_HashMap_Trivial()
 {
     jpt::HashMap<char, int32> map;
 
-    // Inserting
-    map.Insert('a', 0);
-    map.Insert('b', 1);
-    map.Insert('c', 2);
+    // Adding
+    map.Add('a', 0);
+    map.Add('b', 1);
+    map.Add('c', 2);
     map['a'] = 3;
     map['d'] = 4;
     map['e'] = 5;
@@ -114,9 +114,9 @@ bool UnitTest_HashMap_NonTrivial()
     jpt::HashMap<jpt::String, jpt::String> map;
 
     // Inserting
-    map.Insert("Champ A", "Aatrox");
-    map.Insert("Champ B", "Darius");
-    map.Insert("Champ C", "Jax");
+    map.Add("Champ A", "Aatrox");
+    map.Add("Champ B", "Darius");
+    map.Add("Champ C", "Jax");
     map["Champ A"] =  "Morde";
     map["Champ D"] =  "Nasus";
     map["Champ E"] =  "Zac";

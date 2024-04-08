@@ -43,12 +43,12 @@ bool UnitTest_LinkedList_Trivial()
     int32& result2 = list.EmplaceFront(0);
     JPT_ENSURE(result2 == 0);
     result2 = 5;
-    list.PushBack(2);
-    list.PushFront(-1);
+    list.AddBack(2);
+    list.AddFront(-1);
 
     list.EmplaceAfter(list.begin() + 3, 1);
-    list.InsertBefore(list.begin() + 2, 3);
-    list.InsertAfter(list.begin() + (list.Size() - 1), 11);
+    list.AddBefore(list.begin() + 2, 3);
+    list.AddAfter(list.begin() + (list.Size() - 1), 11);
     list.EmplaceBefore(list.begin() + 5, 0);
 
     list.PopBack();
@@ -79,12 +79,12 @@ bool UnitTest_LinkedList_NonTrivial()
     jpt::String& result2 = list.EmplaceFront(locHelper(0));
     JPT_ENSURE(result2 == locHelper(0));
     result2 = locHelper(5);
-    list.PushBack(locHelper(2));
-    list.PushFront(locHelper(1));
+    list.AddBack(locHelper(2));
+    list.AddFront(locHelper(1));
 
     list.EmplaceAfter(list.begin() + 3, locHelper(1));
-    list.InsertBefore(list.begin() + 2, locHelper(3));
-    list.InsertAfter(list.begin() + (list.Size() - 1), locHelper(11));
+    list.AddBefore(list.begin() + 2, locHelper(3));
+    list.AddAfter(list.begin() + (list.Size() - 1), locHelper(11));
     list.EmplaceBefore(list.begin() + 5, locHelper(0));
 
     list.PopBack();

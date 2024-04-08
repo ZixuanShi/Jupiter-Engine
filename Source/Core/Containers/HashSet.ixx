@@ -39,7 +39,7 @@ export namespace jpt
 		constexpr void Resize(size_t capacity);
 
 		// Modifiers
-		constexpr TData& Insert(const TData& data);
+		constexpr TData& Add(const TData& data);
 
 	private:
 		constexpr size_t GetBucketIndex(const TData& key) const;
@@ -68,7 +68,7 @@ export namespace jpt
 	}
 
 	template<typename _TData>
-	constexpr HashSet<_TData>::TData& HashSet<_TData>::Insert(const TData& data)
+	constexpr HashSet<_TData>::TData& HashSet<_TData>::Add(const TData& data)
 	{
 		// Grow if needed
 		if (m_buckets.IsEmpty())
