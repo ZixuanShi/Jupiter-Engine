@@ -9,6 +9,7 @@ module;
 
 export module jpt.HashMap;
 
+import jpt.Constants;
 import jpt.Pair;
 import jpt.DynamicArray;
 import jpt.LinkedList;
@@ -221,7 +222,6 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue>::Insert(const TKey& key, const TValue& value)
 	{
 		// Grow if needed
-		static constexpr size_t kGrowMultiplier = 2;
 		if (m_size >= m_buckets.Size() * kGrowMultiplier)
 		{
 			Resize(m_size * kGrowMultiplier);

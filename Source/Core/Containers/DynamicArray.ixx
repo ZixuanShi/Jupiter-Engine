@@ -12,6 +12,7 @@ export module jpt.DynamicArray;
 
 import jpt.Allocator;
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.Utilities;
 import jpt.Math;
@@ -368,8 +369,6 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForInsert(size_t index)
 	{
-		static constexpr size_t kGrowMultiplier = 2;
-
 		JPT_ASSERT(index <= m_size, "Calling DynamicArray::Insert() with an invalid index");
 
 		if (m_size >= m_capacity)

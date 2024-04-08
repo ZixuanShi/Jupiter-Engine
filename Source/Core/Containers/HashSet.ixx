@@ -9,9 +9,26 @@ module;
 
 export module jpt.HashSet;
 
-static constexpr size_t kLocGrowMultiplier = 2;
+import jpt.Constants;
+import jpt.DynamicArray;
+import jpt.LinkedList;
 
 export namespace jpt
 {
+	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
+	template<typename _TData>
+	class HashSet
+	{
+	public:
+		using TData    = _TData;
+		using TBucket  = LinkedList<TData>;
+		using TBuckets = DynamicArray<TBucket>;
 
+	private:
+		TBuckets m_buckets;
+		size_t   m_size = 0;
+
+	public:
+
+	};
 }

@@ -19,5 +19,9 @@ export namespace jpt
 	template<typename T> 
 	constexpr T kInvalidValue = Limits<T>::kMax;
 
+	/** Short version of invalid value regarding indexing */
 	constexpr size_t npos = kInvalidValue<size_t>;
+
+	/** Grow multiplier for dynamic containers */
+	constexpr size_t kGrowMultiplier = 2;
 }

@@ -15,6 +15,7 @@ import UnitTests_Sorting;
 import UnitTests_Searching;
 
 // Containers
+import UnitTests_HashSet;
 import UnitTests_HashMap;
 import UnitTests_LinkedList;
 import UnitTests_DynamicArray;
@@ -66,6 +67,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Searching());
 
 	// Containers
+	JPT_ENSURE(RunUnitTests_HashSet());
 	JPT_ENSURE(RunUnitTests_HashMap());
 	JPT_ENSURE(RunUnitTests_LinkedList());
 	JPT_ENSURE(RunUnitTests_DynamicArray());
