@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.ChainedBucketIterator;
+export module jpt_private.HashMapIterator;
 
 import jpt.TypeDefs;
 import jpt.Pair;
@@ -13,7 +13,7 @@ export namespace jpt_private
 {
 	/** Unordered Map iterator */
 	template<typename TKey, typename TValue>
-	class ChainedBucketIterator
+	class HashMapIterator
 	{
 		using TData    = jpt::Pair<TKey, TValue>;
 		using TBucket  = jpt::LinkedList<TData>;
@@ -25,21 +25,21 @@ export namespace jpt_private
 		size_t m_index = 0;
 
 	public:
-		constexpr ChainedBucketIterator() = default;
-		constexpr ChainedBucketIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator);
+		constexpr HashMapIterator() = default;
+		constexpr HashMapIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator);
 
-		constexpr ChainedBucketIterator& operator++();
-		constexpr ChainedBucketIterator operator++(int32);
+		constexpr HashMapIterator& operator++();
+		constexpr HashMapIterator operator++(int32);
 
-		constexpr ChainedBucketIterator& operator+=(size_t offset);
-		constexpr ChainedBucketIterator operator+(size_t offset);
+		constexpr HashMapIterator& operator+=(size_t offset);
+		constexpr HashMapIterator operator+(size_t offset);
 
 		constexpr       TData* operator->()       { return &m_iterator; }
 		constexpr const TData* operator->() const { return &m_iterator; }
 		constexpr       TData& operator*()        { return *m_iterator; }
 		constexpr const TData& operator*()  const { return *m_iterator; }
 
-		constexpr bool operator==(const ChainedBucketIterator& other) const;
+		constexpr bool operator==(const HashMapIterator& other) const;
 
 	private:
 		constexpr bool HasReachedEnd() const;
@@ -47,7 +47,7 @@ export namespace jpt_private
 	};
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue>::ChainedBucketIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator)
+	constexpr HashMapIterator<TKey, TValue>::HashMapIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator)
 		: m_pBuckets(pBuckets)
 		, m_index(index)
 		, m_iterator(iterator)
@@ -56,7 +56,7 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue>& ChainedBucketIterator<TKey, TValue>::operator++()
+	constexpr HashMapIterator<TKey, TValue>& HashMapIterator<TKey, TValue>::operator++()
 	{
 		++m_iterator;
 		FindNextValidIterator();
@@ -64,16 +64,16 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue> ChainedBucketIterator<TKey, TValue>::operator++(int32)
+	constexpr HashMapIterator<TKey, TValue> HashMapIterator<TKey, TValue>::operator++(int32)
 	{
-		ChainedBucketIterator iterator = *this;
+		HashMapIterator iterator = *this;
 		++m_iterator;
 		FindNextValidIterator();
 		return iterator;
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue>& ChainedBucketIterator<TKey, TValue>::operator+=(size_t offset)
+	constexpr HashMapIterator<TKey, TValue>& HashMapIterator<TKey, TValue>::operator+=(size_t offset)
 	{
 		for (size_t i = 0; i < offset; ++i)
 		{
@@ -84,14 +84,14 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ChainedBucketIterator<TKey, TValue> ChainedBucketIterator<TKey, TValue>::operator+(size_t offset)
+	constexpr HashMapIterator<TKey, TValue> HashMapIterator<TKey, TValue>::operator+(size_t offset)
 	{
-		ChainedBucketIterator iterator = *this;
+		HashMapIterator iterator = *this;
 		return iterator += offset;
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr bool ChainedBucketIterator<TKey, TValue>::operator==(const ChainedBucketIterator& other) const
+	constexpr bool HashMapIterator<TKey, TValue>::operator==(const HashMapIterator& other) const
 	{
 		return m_pBuckets == other.m_pBuckets && 
 			   m_index    == other.m_index    && 
@@ -99,13 +99,13 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr bool ChainedBucketIterator<TKey, TValue>::HasReachedEnd() const
+	constexpr bool HashMapIterator<TKey, TValue>::HasReachedEnd() const
 	{ 
 		return m_index == m_pBuckets->Size(); 
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr void ChainedBucketIterator<TKey, TValue>::FindNextValidIterator()
+	constexpr void HashMapIterator<TKey, TValue>::FindNextValidIterator()
 	{
 		while (!m_iterator.GetNode() && !HasReachedEnd())
 		{
@@ -123,7 +123,7 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	class ConstChainedBucketIterator
+	class ConstHashMapIterator
 	{
 		using TData    = jpt::Pair<TKey, TValue>;
 		using TBucket  = jpt::LinkedList<TData>;
@@ -135,19 +135,19 @@ export namespace jpt_private
 		size_t m_index = 0;
 
 	public:
-		constexpr ConstChainedBucketIterator() = default;
-		constexpr ConstChainedBucketIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator);
+		constexpr ConstHashMapIterator() = default;
+		constexpr ConstHashMapIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator);
 
-		constexpr ConstChainedBucketIterator& operator++();
-		constexpr ConstChainedBucketIterator operator++(int32);
+		constexpr ConstHashMapIterator& operator++();
+		constexpr ConstHashMapIterator operator++(int32);
 
-		constexpr ConstChainedBucketIterator& operator+=(size_t offset);
-		constexpr ConstChainedBucketIterator operator+(size_t offset);
+		constexpr ConstHashMapIterator& operator+=(size_t offset);
+		constexpr ConstHashMapIterator operator+(size_t offset);
 
 		constexpr const TData* operator->() const { return &m_iterator; }
 		constexpr const TData& operator*()  const { return *m_iterator; }
 
-		constexpr bool operator==(const ConstChainedBucketIterator& other) const;
+		constexpr bool operator==(const ConstHashMapIterator& other) const;
 
 	private:
 		constexpr bool HasReachedEnd() const;
@@ -155,7 +155,7 @@ export namespace jpt_private
 	};
 
 	template<typename TKey, typename TValue>
-	constexpr ConstChainedBucketIterator<TKey, TValue>::ConstChainedBucketIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator)
+	constexpr ConstHashMapIterator<TKey, TValue>::ConstHashMapIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator)
 		: m_pBuckets(pBuckets)
 		, m_index(index)
 		, m_iterator(iterator)
@@ -164,7 +164,7 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ConstChainedBucketIterator<TKey, TValue>& ConstChainedBucketIterator<TKey, TValue>::operator++()
+	constexpr ConstHashMapIterator<TKey, TValue>& ConstHashMapIterator<TKey, TValue>::operator++()
 	{
 		++m_iterator;
 		FindNextValidIterator();
@@ -172,16 +172,16 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ConstChainedBucketIterator<TKey, TValue> ConstChainedBucketIterator<TKey, TValue>::operator++(int32)
+	constexpr ConstHashMapIterator<TKey, TValue> ConstHashMapIterator<TKey, TValue>::operator++(int32)
 	{
-		ConstChainedBucketIterator iterator = *this;
+		ConstHashMapIterator iterator = *this;
 		++m_iterator;
 		FindNextValidIterator();
 		return iterator;
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ConstChainedBucketIterator<TKey, TValue>& ConstChainedBucketIterator<TKey, TValue>::operator+=(size_t offset)
+	constexpr ConstHashMapIterator<TKey, TValue>& ConstHashMapIterator<TKey, TValue>::operator+=(size_t offset)
 	{
 		for (size_t i = 0; i < offset; ++i)
 		{
@@ -192,14 +192,14 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr ConstChainedBucketIterator<TKey, TValue> ConstChainedBucketIterator<TKey, TValue>::operator+(size_t offset)
+	constexpr ConstHashMapIterator<TKey, TValue> ConstHashMapIterator<TKey, TValue>::operator+(size_t offset)
 	{
-		ConstChainedBucketIterator iterator = *this;
+		ConstHashMapIterator iterator = *this;
 		return iterator += offset;
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr bool ConstChainedBucketIterator<TKey, TValue>::operator==(const ConstChainedBucketIterator& other) const
+	constexpr bool ConstHashMapIterator<TKey, TValue>::operator==(const ConstHashMapIterator& other) const
 	{
 		return m_pBuckets == other.m_pBuckets &&
 			   m_index    == other.m_index    &&
@@ -207,13 +207,13 @@ export namespace jpt_private
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr bool ConstChainedBucketIterator<TKey, TValue>::HasReachedEnd() const
+	constexpr bool ConstHashMapIterator<TKey, TValue>::HasReachedEnd() const
 	{
 		return m_index == m_pBuckets->Size();
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr void ConstChainedBucketIterator<TKey, TValue>::FindNextValidIterator()
+	constexpr void ConstHashMapIterator<TKey, TValue>::FindNextValidIterator()
 	{
 		while (!m_iterator.GetNode() && !HasReachedEnd())
 		{

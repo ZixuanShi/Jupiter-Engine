@@ -34,6 +34,8 @@ export namespace jpt
 		constexpr HashSet() = default;
 		constexpr ~HashSet();
 
+		// Iterators
+
 		// Capacity
 		constexpr size_t Size()  const { return m_size; }
 		constexpr bool IsEmpty() const { return m_size == 0; }

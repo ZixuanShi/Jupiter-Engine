@@ -18,7 +18,7 @@ import jpt.Utilities;
 import jpt.Math;
 import jpt.Searching;
 
-import jpt_private.ChainedBucketIterator;
+import jpt_private.HashMapIterator;
 
 export namespace jpt
 {
@@ -32,8 +32,8 @@ export namespace jpt
 		using TData         = Pair<TKey, TValue>;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
-		using Iterator	    = jpt_private::ChainedBucketIterator<TKey, TValue>;
-		using ConstIterator = jpt_private::ConstChainedBucketIterator<TKey, TValue>;
+		using Iterator	    = jpt_private::HashMapIterator<TKey, TValue>;
+		using ConstIterator = jpt_private::ConstHashMapIterator<TKey, TValue>;
 
 	private:
 		TBuckets m_buckets; 
