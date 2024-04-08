@@ -29,7 +29,7 @@ export namespace jpt
 
 	public:
 		template<class T>
-		constexpr size_t Add(T function);
+		constexpr size_t Add(const T& function) requires (!AreSameType<T, TFunction>);
 
 		template<class TCaller>
 		constexpr size_t Add(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...));
@@ -48,7 +48,7 @@ export namespace jpt
 
 	template<class TReturn, class ...TArgs>
 	template<class T>
-	constexpr size_t Slot<TReturn(TArgs...)>::Add(T function)
+	constexpr size_t Slot<TReturn(TArgs...)>::Add(const T& function) requires (!AreSameType<T, TFunction>)
 	{
 		for (size_t i = 0; i < m_functions.Size(); ++i)
 		{

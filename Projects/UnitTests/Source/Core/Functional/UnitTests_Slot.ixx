@@ -107,10 +107,27 @@ bool UnitTest_Slot_Void()
 	return true;
 }
 
+bool UnitTest_Slot_Function()
+{
+	//jpt::Slot<int32(int32, int32)> slot;
+
+	//jpt::Function<int32(int32, int32)> adder(&Add);
+	//Test test;
+	//jpt::Function<int32(int32, int32)> subber(&test, &Test::Subtract);
+	//jpt::Function<int32(int32, int32)> multer = [](int32 a, int32 b) { return a * b; };
+
+	//slot.Add(adder);
+
+	//slot(1, 2);
+
+	return true;
+}
+
 export bool RunUnitTests_Slot()
 {
 	JPT_ENSURE(UnitTest_Slot());
 	JPT_ENSURE(UnitTest_Slot_Void());
+	JPT_ENSURE(UnitTest_Slot_Function());
 
     return true;
 }
