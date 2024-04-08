@@ -15,6 +15,7 @@ import BenchmarksApplication;
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
+	JPT_SCOPED_TIMING_PROFILER("Main");
 	JPT_LOG("Benchmarking Results:");
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);

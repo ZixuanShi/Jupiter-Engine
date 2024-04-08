@@ -19,6 +19,7 @@ import Benchmarks_Math;
 
 // Types
 import Benchmarks_Any;
+import Benchmarks_Enum;
 
 import jpt.Utilities;
 
@@ -27,7 +28,7 @@ export void RunBenchmarks_Core()
 	/** Unit Test Functions */
 
 	// Algorithms
-	RunBenchmarks_Sorting();
+	//RunBenchmarks_Sorting();
 
 	// Containers
 	//RunBenchmarks_DynamicArray();
@@ -37,4 +38,5 @@ export void RunBenchmarks_Core()
 
 	// Types
 	//RunBenchmarks_Any();
+	RunBenchmarks_Enum();
 }
