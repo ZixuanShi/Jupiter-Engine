@@ -188,6 +188,30 @@ bool RunUnitTests_Function_Functor()
     return true;
 }
 
+bool RunUnitTests_Function_Copy()
+{
+    jpt::Function<int32(int32, int32)> func1;
+    func1.Connect(&Add);
+
+    jpt::Function<int32(int32, int32)> func2(func1);
+    JPT_ENSURE(func1(1, 2) == 3);
+    JPT_ENSURE(func2(1, 2) == 3);
+
+    Test test(13);
+    jpt::Function<int32(int32)> func3;
+    func3.Connect(&test, &Test::Add);
+
+    jpt::Function<int32(int32)> func4(func3);
+    JPT_ENSURE(func3(2) == 15);
+    JPT_ENSURE(func4(2) == 15);
+
+    func3.Connect(&test, &Test::Subtract);
+    JPT_ENSURE(func3(2) == 11);
+    JPT_ENSURE(func4(2) == 15);
+
+    return true;
+}
+
 export bool RunUnitTests_Function()
 {
     JPT_ENSURE(UnitTest_Function_Global());
@@ -195,6 +219,7 @@ export bool RunUnitTests_Function()
     JPT_ENSURE(UnitTest_Function_MemberFunction());
     JPT_ENSURE(RunUnitTests_Function_Void());
     JPT_ENSURE(RunUnitTests_Function_Functor());
+    JPT_ENSURE(RunUnitTests_Function_Copy());
 
     return true;
 }
