@@ -10,6 +10,10 @@ module;
 export module Benchmarks_Sorting;
 
 import jpt.CoreModules;
+import jpt.QuickSort;
+import jpt.InsertionSort;
+import jpt.HeapSort;
+import jpt.IntroSort;
 
 static constexpr size_t kBigArraySize    = 100'000;
 static constexpr size_t kMedianArraySize = 256;
@@ -49,7 +53,7 @@ void Benchmark_Sortring_HeapSort(size_t arraySize, const char* pLabel)
 	JPT_SCOPED_TIMING_PROFILER(pLabel);
 
 	jpt::DynamicArray<int32> arr = GenerateRandomArray(arraySize);
-	jpt::HeapSort(arr, arr.Size(), [](int32 a, int32 b) {return a < b; });
+	jpt::HeapSort(arr, 0, arr.Size() - 1, [](int32 a, int32 b) {return a < b; });
 }
 
 void Benchmark_Sortring_IntroSort(size_t arraySize, const char* pLabel)
