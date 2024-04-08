@@ -67,11 +67,11 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Searching());
 
 	// Containers
-	JPT_ENSURE(RunUnitTests_HashSet());
-	JPT_ENSURE(RunUnitTests_HashMap());
-	JPT_ENSURE(RunUnitTests_LinkedList());
-	JPT_ENSURE(RunUnitTests_DynamicArray());
 	JPT_ENSURE(RunUnitTests_StaticArray());
+	JPT_ENSURE(RunUnitTests_DynamicArray());
+	JPT_ENSURE(RunUnitTests_LinkedList());
+	JPT_ENSURE(RunUnitTests_HashMap());
+	JPT_ENSURE(RunUnitTests_HashSet());
 
 	// Functional
 	JPT_ENSURE(RunUnitTests_Slot());

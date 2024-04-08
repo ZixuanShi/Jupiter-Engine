@@ -230,25 +230,19 @@ export namespace jpt
 		TBucket& bucket = GetBucket(key);
 
 		// Check if the key already exists. If it does, update the value and return it
-		bool found = false;
 		for (TData& element : bucket)
 		{
 			if (element.first == key)
 			{
-				found = true;
 				element.second = value;
 				return element.second;
 			}
 		}
 
 		// If the key does not exist, add and return it
-		if (!found)
-		{
-			bucket.EmplaceBack(Pair{ key ,value });
-			++m_size;
-		}
-
-		return bucket.Back().second;
+		++m_size;
+		TData& inserted = bucket.EmplaceBack(Pair{ key, value });
+		return inserted.second;
 	}
 
 	template<typename TKey, typename TValue>

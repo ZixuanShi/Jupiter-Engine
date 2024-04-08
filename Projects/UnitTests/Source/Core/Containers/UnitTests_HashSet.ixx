@@ -12,6 +12,11 @@ import jpt.Utilities;
 
 bool UnitTest_HashSet()
 {
+    jpt::HashSet<int32> hashSet;
+
+    hashSet.Insert(1);
+    hashSet.Insert(2);
+    hashSet.Insert(3);
 
     return true;
 }
