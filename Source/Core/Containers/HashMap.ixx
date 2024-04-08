@@ -19,8 +19,6 @@ import jpt.Searching;
 
 import jpt_private.ChainedBucketIterator;
 
-static constexpr size_t kLocGrowMultiplier = 2;
-
 export namespace jpt
 {
 	/** Unordered map implementation with Chainning hash collision-handling  */
@@ -223,9 +221,10 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue>::Insert(const TKey& key, const TValue& value)
 	{
 		// Grow if needed
-		if (m_size >= m_buckets.Size() * kLocGrowMultiplier)
+		static constexpr size_t kGrowMultiplier = 2;
+		if (m_size >= m_buckets.Size() * kGrowMultiplier)
 		{
-			Resize(m_size * kLocGrowMultiplier);
+			Resize(m_size * kGrowMultiplier);
 		}
 
 		TBucket& bucket = GetBucket(key);

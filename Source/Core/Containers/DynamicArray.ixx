@@ -16,8 +16,6 @@ import jpt.TypeTraits;
 import jpt.Utilities;
 import jpt.Math;
 
-static constexpr size_t kLocGrowMultiplier = 2;
-
 export namespace jpt
 {
 	/** A sequence container that encapsulates dynamic size arrays. */
@@ -370,11 +368,13 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForInsert(size_t index)
 	{
+		static constexpr size_t kGrowMultiplier = 2;
+
 		JPT_ASSERT(index <= m_size, "Calling DynamicArray::Insert() with an invalid index");
 
 		if (m_size >= m_capacity)
 		{
-			UpdateBuffer(m_size * kLocGrowMultiplier);
+			UpdateBuffer(m_size * kGrowMultiplier);
 		}
 
 		ShiftDataToEnd(index);
