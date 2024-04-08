@@ -18,6 +18,25 @@ bool UnitTest_HashSet()
     hashSet.Add(2);
     hashSet.Add(3);
 
+    JPT_ENSURE(hashSet.Contains(1));
+    JPT_ENSURE(hashSet.Contains(2));
+    JPT_ENSURE(hashSet.Contains(3));
+    JPT_ENSURE(!hashSet.Contains(4));
+    JPT_ENSURE(hashSet.Size() == 3);
+
+    hashSet.Erase(2);
+
+    JPT_ENSURE(hashSet.Contains(1));
+    JPT_ENSURE(!hashSet.Contains(2));
+    JPT_ENSURE(hashSet.Contains(3));
+    JPT_ENSURE(hashSet.Size() == 2);
+
+    hashSet.Clear();
+
+    JPT_ENSURE(!hashSet.Contains(1));
+    JPT_ENSURE(!hashSet.Contains(2));
+    JPT_ENSURE(!hashSet.Contains(3));
+    JPT_ENSURE(hashSet.IsEmpty());
 
     return true;
 }

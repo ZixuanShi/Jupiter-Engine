@@ -114,6 +114,11 @@ export namespace jpt
 	template<typename _TData>
 	constexpr void HashSet<_TData>::Erase(const TData& key)
 	{
+		if (IsEmpty())
+		{
+			return;
+		}
+
 		TBucket& bucket = GetBucket(key);
 
 		for (auto it = bucket.begin(); it != bucket.end(); ++it)
@@ -130,6 +135,21 @@ export namespace jpt
 	template<typename _TData>
 	constexpr bool HashSet<_TData>::Contains(const TData& key) const
 	{
+		if (IsEmpty())
+		{
+			return false;
+		}
+
+		const TBucket& bucket = GetBucket(key);
+
+		for (const TData& element : bucket)
+		{
+			if (element == key)
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 

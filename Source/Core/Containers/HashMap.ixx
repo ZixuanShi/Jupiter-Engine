@@ -254,6 +254,11 @@ export namespace jpt
 	template<typename _TKey, typename _TValue>
 	constexpr void HashMap<_TKey, _TValue>::Erase(const TKey& key)
 	{
+		if (IsEmpty())
+		{
+			return;
+		}
+
 		TBucket& bucket = GetBucket(key);
 
 		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
