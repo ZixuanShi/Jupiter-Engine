@@ -8,6 +8,10 @@ module;
 export module UnitTests_Sorting;
 
 import jpt.Function;
+import jpt.InsertionSort;
+import jpt.HeapSort;
+import jpt.QuickSort;
+import jpt.IntroSort;
 import jpt.Sorting;
 import jpt.TypeDefs;
 import jpt.TypeTraits;

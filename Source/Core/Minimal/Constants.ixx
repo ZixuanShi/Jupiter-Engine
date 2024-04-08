@@ -17,7 +17,7 @@ export namespace jpt
 
 	/**< If the value is not supported, you need to specialize template it in the corresponding file */
 	template<typename T> 
-	constexpr T kInvalidValue = LimitsOf<T>::kMax;
+	constexpr T kInvalidValue = Limits<T>::kMax;
 
 	constexpr size_t npos = kInvalidValue<size_t>;
 }

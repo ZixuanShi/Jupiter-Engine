@@ -15,8 +15,8 @@ import jpt.Limits;
 template<jpt::Integral TInt>
 struct EnumData
 {
-	TInt min = jpt::LimitsOf<TInt>::kMax;	/**< The min value of this enum */
-	TInt max = jpt::LimitsOf<TInt>::kMin;	/**< The max value of this enum */
+	TInt min = jpt::Limits<TInt>::kMax;	/**< The min value of this enum */
+	TInt max = jpt::Limits<TInt>::kMin;	/**< The max value of this enum */
 	jpt::HashMap<TInt, jpt::String> names;	/**< The names map of the enum values */
 };
 
