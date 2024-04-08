@@ -24,6 +24,7 @@ export namespace jpt
 		{
 			virtual ~BaseFunction() {}
 			virtual TReturn operator()(TArgs... args) const = 0;
+			virtual BaseFunction* Clone() const = 0;
 		};
 
 		template<class TFunction>
@@ -36,7 +37,7 @@ export namespace jpt
 			{
 			}
 
-			TReturn operator()(TArgs... args) const override final
+			virtual TReturn operator()(TArgs... args) const override final
 			{
 				if constexpr (AreSameType<TReturn, void>)
 				{
@@ -46,6 +47,11 @@ export namespace jpt
 				{
 					return m_function(Forward<TArgs>(args)...);
 				}
+			}
+
+			virtual BaseFunction* Clone() const override final
+			{
+				return new FunctionData(m_function);
 			}
 		};
 
@@ -61,7 +67,7 @@ export namespace jpt
 			{
 			}
 
-			TReturn operator()(TArgs... args) const override final
+			virtual TReturn operator()(TArgs... args) const override final
 			{
 				if constexpr (AreSameType<TReturn, void>)
 				{
@@ -72,6 +78,11 @@ export namespace jpt
 					return (m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
 				}
 			}
+
+			virtual BaseFunction* Clone() const override final
+			{
+				return new MemberFunctionData(m_pCaller, m_pMemberFunction);
+			}
 		};
 
 	private:
@@ -79,6 +90,10 @@ export namespace jpt
 
 	public:
 		constexpr Function() = default;
+		constexpr Function(const Function& other);
+		constexpr Function(Function&& other);
+		constexpr Function& operator=(const Function& other);
+		constexpr Function& operator=(Function&& other);
 		constexpr ~Function();
 
 		template<class TFunction>
@@ -108,6 +123,50 @@ export namespace jpt
 		constexpr void Disconnect();
 		constexpr bool IsConnected() const;
 	};
+
+	template<class TReturn, class ...TArgs>
+	constexpr Function<TReturn(TArgs...)>::Function(const Function& other)
+	{
+		if (other.IsConnected())
+		{
+			m_pFunction = other.m_pFunction->Clone();
+		}
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr Function<TReturn(TArgs...)>::Function(Function&& other)
+	{
+		m_pFunction = other.m_pFunction;
+		other.m_pFunction = nullptr;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(const Function& other)
+	{
+		if (this != &other)
+		{
+			Disconnect();
+			if (other.IsConnected())
+			{
+				m_pFunction = other.m_pFunction->Clone();
+			}
+		}
+
+		return *this;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(Function&& other)
+	{
+		if (this != &other)
+		{
+			Disconnect();
+			m_pFunction = other.m_pFunction;
+			other.m_pFunction = nullptr;
+		}
+
+		return *this;
+	}
 
 	template<class TReturn, class ...TArgs>
 	constexpr Function<TReturn(TArgs...)>::~Function()
