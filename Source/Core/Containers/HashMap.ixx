@@ -261,6 +261,7 @@ export namespace jpt
 			if (itr->first == key)
 			{
 				bucket.Erase(itr);
+				--m_size;
 				return;
 			}
 		}

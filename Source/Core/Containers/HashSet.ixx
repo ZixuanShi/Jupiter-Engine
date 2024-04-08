@@ -32,6 +32,7 @@ export namespace jpt
 
 	public:
 		constexpr HashSet() = default;
+		constexpr ~HashSet();
 
 		// Capacity
 		constexpr size_t Size()  const { return m_size; }
@@ -39,13 +40,24 @@ export namespace jpt
 		constexpr void Resize(size_t capacity);
 
 		// Modifiers
+		constexpr void Clear();
 		constexpr TData& Add(const TData& data);
+		constexpr void Erase(const TData& key);
+
+		// Searching
+		constexpr bool Contains(const TData& key) const;
 
 	private:
 		constexpr size_t GetBucketIndex(const TData& key) const;
 		constexpr       TBucket& GetBucket(const TData& key);
 		constexpr const TBucket& GetBucket(const TData& key) const;
 	};
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::~HashSet()
+	{
+		Clear();
+	}
 
 	template<typename _TData>
 	constexpr void HashSet<_TData>::Resize(size_t capacity)
@@ -65,6 +77,13 @@ export namespace jpt
 		}
 
 		m_buckets = Move(newBuckets);
+	}
+
+	template<typename _TData>
+	constexpr void HashSet<_TData>::Clear()
+	{
+		m_buckets.Clear();
+		m_size = 0;	
 	}
 
 	template<typename _TData>
@@ -90,6 +109,28 @@ export namespace jpt
 		// If the key does not exist, add and return it
 		++m_size;
 		return bucket.EmplaceBack(data);
+	}
+
+	template<typename _TData>
+	constexpr void HashSet<_TData>::Erase(const TData& key)
+	{
+		TBucket& bucket = GetBucket(key);
+
+		for (auto it = bucket.begin(); it != bucket.end(); ++it)
+		{
+			if (*it == key)
+			{
+				bucket.Erase(it);
+				--m_size;
+				return;
+			}
+		}
+	}
+
+	template<typename _TData>
+	constexpr bool HashSet<_TData>::Contains(const TData& key) const
+	{
+		return false;
 	}
 
 	template<typename _TData>
