@@ -123,7 +123,17 @@ bool UnitTest_Slot_Function()
 
 	int32 i = 2;
 	slot(i);
+	JPT_ENSURE(i == 3);
 
+	slot.Erase(2);	// Erase subbstracter
+
+	i = 2;
+	slot(i);
+	JPT_ENSURE(i == 4);
+
+	JPT_ENSURE(slot.Add(subbstracter) == 2);
+	i = 2;
+	slot(i);
 	JPT_ENSURE(i == 3);
 
 	return true;
