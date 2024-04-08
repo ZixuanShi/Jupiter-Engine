@@ -109,16 +109,22 @@ bool UnitTest_Slot_Void()
 
 bool UnitTest_Slot_Function()
 {
-	//jpt::Slot<int32(int32, int32)> slot;
+	jpt::Slot<void(int32&)> slot;
 
-	//jpt::Function<int32(int32, int32)> adder(&Add);
-	//Test test;
-	//jpt::Function<int32(int32, int32)> subber(&test, &Test::Subtract);
-	//jpt::Function<int32(int32, int32)> multer = [](int32 a, int32 b) { return a * b; };
+	jpt::Function<void(int32&)> adder        = [](int32& i) { i += 2; };
+	jpt::Function<void(int32&)> subbstracter = [](int32& i) { i -= 2; };
+	jpt::Function<void(int32&)> multiplier   = [](int32& i) { i *= 2; };
+	jpt::Function<void(int32&)> divider      = [](int32& i) { i /= 2; };
 
-	//slot.Add(adder);
+	slot.Add(adder);
+	slot.Add(multiplier);
+	slot.Add(subbstracter);
+	slot.Add(divider);
 
-	//slot(1, 2);
+	int32 i = 2;
+	slot(i);
+
+	JPT_ENSURE(i == 3);
 
 	return true;
 }

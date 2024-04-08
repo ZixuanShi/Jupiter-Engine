@@ -28,6 +28,8 @@ export namespace jpt
 		DynamicArray<TFunction> m_functions;
 
 	public:
+		constexpr size_t Add(const TFunction& function);
+
 		template<class T>
 		constexpr size_t Add(const T& function) requires (!AreSameType<T, TFunction>);
 
@@ -47,6 +49,22 @@ export namespace jpt
 	};
 
 	template<class TReturn, class ...TArgs>
+	constexpr size_t Slot<TReturn(TArgs...)>::Add(const TFunction& function)
+	{
+		for (size_t i = 0; i < m_functions.Size(); ++i)
+		{
+			if (!m_functions[i].IsConnected())
+			{
+				m_functions[i] = function;
+				return i;
+			}
+		}
+
+		m_functions.PushBack(function);
+		return m_functions.Size() - 1;
+	}
+
+	template<class TReturn, class ...TArgs>
 	template<class T>
 	constexpr size_t Slot<TReturn(TArgs...)>::Add(const T& function) requires (!AreSameType<T, TFunction>)
 	{
@@ -59,8 +77,7 @@ export namespace jpt
 			}
 		}
 
-		m_functions.EmplaceBack();
-		m_functions.Back().Connect(function);
+		m_functions.EmplaceBack(function);
 		return m_functions.Size() - 1;
 	}
 
@@ -77,8 +94,7 @@ export namespace jpt
 			}
 		}
 
-		m_functions.EmplaceBack();
-		m_functions.Back().Connect(pCaller, pMemberFunction);
+		m_functions.EmplaceBack(pCaller, pMemberFunction);
 		return m_functions.Size() - 1;
 	}
 
