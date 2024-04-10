@@ -236,8 +236,10 @@ export namespace jpt
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr StringBase<_TChar, _TAllocator>::StringBase(TChar c)
 	{
-		TChar cString[2] = { c, '\0' };
-		MoveString(cString, 1);
+		TChar* pBuffer = TAllocator::AllocateArray(2);
+		pBuffer[0] = c;
+		pBuffer[1] = '\0';
+		MoveString(pBuffer, 1);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
