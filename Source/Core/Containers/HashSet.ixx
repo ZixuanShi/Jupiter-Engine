@@ -15,6 +15,8 @@ import jpt.LinkedList;
 import jpt.Utilities;
 import jpt.Math;
 
+import jpt_private.HashSetIterator;
+
 export namespace jpt
 {
 	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
@@ -22,9 +24,11 @@ export namespace jpt
 	class HashSet
 	{
 	public:
-		using TData    = _TData;
-		using TBucket  = LinkedList<TData>;
-		using TBuckets = DynamicArray<TBucket>;
+		using TData         = _TData;
+		using TBucket       = LinkedList<TData>;
+		using TBuckets      = DynamicArray<TBucket>;
+		using Iterator      = jpt_private::HashSetIterator<TData>;
+		using ConstIterator = jpt_private::ConstHashSetIterator<TData>;
 
 	private:
 		TBuckets m_buckets;
@@ -35,6 +39,12 @@ export namespace jpt
 		constexpr ~HashSet();
 
 		// Iterators
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
 		constexpr size_t Size()  const { return m_size; }
@@ -59,6 +69,54 @@ export namespace jpt
 	constexpr HashSet<_TData>::~HashSet()
 	{
 		Clear();
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::Iterator HashSet<_TData>::begin() noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::Iterator HashSet<_TData>::end() noexcept
+	{
+		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::ConstIterator HashSet<_TData>::begin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::ConstIterator HashSet<_TData>::end() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::ConstIterator HashSet<_TData>::cbegin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::ConstIterator HashSet<_TData>::cend() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
 	template<typename _TData>
