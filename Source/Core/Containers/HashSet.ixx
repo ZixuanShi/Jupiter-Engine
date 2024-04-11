@@ -9,6 +9,7 @@ module;
 
 export module jpt.HashSet;
 
+import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.LinkedList;
@@ -36,6 +37,11 @@ export namespace jpt
 
 	public:
 		constexpr HashSet() = default;
+		constexpr HashSet(const std::initializer_list<TData>& list);
+		constexpr HashSet(const HashSet& other);
+		constexpr HashSet(HashSet&& other) noexcept;
+		constexpr HashSet& operator=(const HashSet& other);
+		constexpr HashSet& operator=(HashSet&& other) noexcept;
 		constexpr ~HashSet();
 
 		// Iterators
@@ -63,7 +69,53 @@ export namespace jpt
 		constexpr size_t GetBucketIndex(const TData& key) const;
 		constexpr       TBucket& GetBucket(const TData& key);
 		constexpr const TBucket& GetBucket(const TData& key) const;
+
+		template<Iterable TContainer>
+		constexpr void CopyData(const TContainer& container);
+		constexpr void MoveSet(HashSet&& other);
 	};
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::HashSet(const std::initializer_list<TData>& list)
+	{
+		CopyData(list);
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::HashSet(const HashSet& other)
+	{
+		CopyData(other);
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>::HashSet(HashSet&& other) noexcept
+	{
+		MoveSet(Move(other));
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>& HashSet<_TData>::operator=(const HashSet& other)
+	{
+		if (this != &other)
+		{
+			Clear();
+			CopyData(other);
+		}
+
+		return *this;
+	}
+
+	template<typename _TData>
+	constexpr HashSet<_TData>& HashSet<_TData>::operator=(HashSet&& other) noexcept
+	{
+		if (this != &other)
+		{
+			Clear();
+			MoveSet(Move(other));
+		}
+
+		return *this;
+	}
 
 	template<typename _TData>
 	constexpr HashSet<_TData>::~HashSet()
@@ -229,5 +281,24 @@ export namespace jpt
 	constexpr const HashSet<_TData>::TBucket& HashSet<_TData>::GetBucket(const TData& key) const
 	{
 		return m_buckets[GetBucketIndex(key)];
+	}
+
+	template<typename _TData>
+	template<Iterable TContainer>
+	constexpr void HashSet<_TData>::CopyData(const TContainer& container)
+	{
+		for (const TData& data : container)
+		{
+			Add(data);
+		}
+	}
+
+	template<typename _TData>
+	constexpr void HashSet<_TData>::MoveSet(HashSet&& other)
+	{
+		m_buckets = Move(other.m_buckets);
+		m_size = other.m_size;
+
+		other.m_size = 0;
 	}
 }
