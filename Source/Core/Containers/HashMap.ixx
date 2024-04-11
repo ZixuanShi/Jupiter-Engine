@@ -72,12 +72,8 @@ export namespace jpt
 
 		// Modifiers
 		constexpr void Clear();
-
-		// Inserting
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
-
-		// Erasing
 		constexpr void Erase(const TKey& key);
 
 		// Searching
