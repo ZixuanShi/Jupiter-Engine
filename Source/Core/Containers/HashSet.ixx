@@ -16,7 +16,7 @@ import jpt.LinkedList;
 import jpt.Utilities;
 import jpt.Math;
 
-import jpt_private.HashSetIterator;
+import jpt_private.HashTableIterator;
 
 export namespace jpt
 {
@@ -28,8 +28,8 @@ export namespace jpt
 		using TData         = _TData;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets      = DynamicArray<TBucket>;
-		using Iterator      = jpt_private::HashSetIterator<TData>;
-		using ConstIterator = jpt_private::ConstHashSetIterator<TData>;
+		using Iterator      = jpt_private::HashTableIterator<TData>;
+		using ConstIterator = jpt_private::ConstHashTableIterator<TData>;
 
 	private:
 		TBuckets m_buckets;
