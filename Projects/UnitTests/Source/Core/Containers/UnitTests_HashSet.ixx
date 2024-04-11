@@ -149,6 +149,44 @@ bool UnitTest_HashSet_Copy_String()
 	return true;
 }
 
+bool UnitTest_HashSet_CopyAssign()
+{
+    jpt::HashSet<int32> hashSet{ 0,1,2,3 };
+    jpt::HashSet<int32> copy{ 4,5,6,7 };
+
+    copy = hashSet;
+
+    for (int32 i = 0; i < 4; ++i)
+    {
+        JPT_ENSURE(hashSet.Contains(i));
+		JPT_ENSURE(copy.Contains(i));
+    }
+
+    return true;
+}
+
+bool UnitTest_HashSet_CopyAssign_String()
+{
+    jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
+    jpt::HashSet<jpt::String> copy{ "Engine", "Game" };
+
+    copy = hashSet;
+
+    JPT_ENSURE(copy.Contains("Hello"));
+    JPT_ENSURE(copy.Contains("World"));
+    JPT_ENSURE(copy.Contains("Jupiter"));
+    JPT_ENSURE(!copy.Contains("Engine"));
+    JPT_ENSURE(!copy.Contains("Game"));
+
+    JPT_ENSURE(hashSet.Contains("Hello"));
+    JPT_ENSURE(hashSet.Contains("World"));
+    JPT_ENSURE(hashSet.Contains("Jupiter"));
+    JPT_ENSURE(!hashSet.Contains("Engine"));
+    JPT_ENSURE(!hashSet.Contains("Game"));
+
+    return true;
+}
+
 bool UnitTest_HashSet_Move()
 {
     jpt::HashSet<int32> hashSet{ 0,1,2,3 };
@@ -177,7 +215,6 @@ bool UnitTest_HashSet_Move()
     return true;
 }
 
-
 bool UnitTest_HashSet_Move_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
@@ -198,6 +235,41 @@ bool UnitTest_HashSet_Move_String()
     return true;
 }
 
+bool UnitTest_HashSet_MoveAssign()
+{
+    jpt::HashSet<int32> hashSet{ 0,1,2,3 };
+    jpt::HashSet<int32> moved{ 4,5,6,7 };
+
+    moved = jpt::Move(hashSet);
+
+    for (int32 i = 0; i < 4; ++i)
+    {
+        JPT_ENSURE(moved.Contains(i));
+    }
+
+    JPT_ENSURE(hashSet.IsEmpty());
+
+    return true;
+}
+
+bool UnitTest_HashSet_MoveAssign_String()
+{
+    jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
+    jpt::HashSet<jpt::String> moved{ "Engine", "Game" };
+
+    moved = jpt::Move(hashSet);
+
+    JPT_ENSURE(moved.Contains("Hello"));
+    JPT_ENSURE(moved.Contains("World"));
+    JPT_ENSURE(moved.Contains("Jupiter"));
+    JPT_ENSURE(!moved.Contains("Engine"));
+    JPT_ENSURE(!moved.Contains("Game"));
+
+    JPT_ENSURE(hashSet.IsEmpty());
+
+    return true;
+}
+
 export bool RunUnitTests_HashSet()
 {
     JPT_ENSURE(UnitTest_HashSet());
@@ -206,8 +278,14 @@ export bool RunUnitTests_HashSet()
     JPT_ENSURE(UnitTest_HashSet_Copy());
     JPT_ENSURE(UnitTest_HashSet_Copy_String());
 
+    JPT_ENSURE(UnitTest_HashSet_CopyAssign());
+    JPT_ENSURE(UnitTest_HashSet_CopyAssign_String());
+
     JPT_ENSURE(UnitTest_HashSet_Move());
     JPT_ENSURE(UnitTest_HashSet_Move_String());
+
+    JPT_ENSURE(UnitTest_HashSet_MoveAssign());
+    JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
 
     return true;
 }

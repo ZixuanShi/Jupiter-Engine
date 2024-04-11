@@ -37,7 +37,6 @@ export namespace jpt
 		constexpr HashSet(HashSet&& other) noexcept;
 		constexpr HashSet& operator=(const HashSet& other);
 		constexpr HashSet& operator=(HashSet&& other) noexcept;
-		constexpr ~HashSet();
 
 		// Modifiers
 		constexpr virtual void Add(const TData& data) override;
@@ -87,12 +86,6 @@ export namespace jpt
 		}
 
 		return *this;
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>::~HashSet()
-	{
-		Super::Clear();
 	}
 
 	template<typename _TData>
