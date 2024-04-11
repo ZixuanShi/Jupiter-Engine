@@ -19,6 +19,8 @@ bool UnitTest_HashSet()
     hashSet.Add(2);
     hashSet.Add(3);
 
+    JPT_LOG(hashSet);
+
     JPT_ENSURE(hashSet.Contains(1));
     JPT_ENSURE(hashSet.Contains(2));
     JPT_ENSURE(hashSet.Contains(3));
