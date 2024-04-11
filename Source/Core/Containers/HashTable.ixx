@@ -109,7 +109,7 @@ namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			MoveSet(Move(other));
+			MoveTable(Move(other));
 		}
 
 		return *this;
