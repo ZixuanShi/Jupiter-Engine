@@ -274,16 +274,16 @@ export bool RunUnitTests_HashSet()
     JPT_ENSURE(UnitTest_HashSet_String());
 
     JPT_ENSURE(UnitTest_HashSet_Copy());
-    //JPT_ENSURE(UnitTest_HashSet_Copy_String());
+    JPT_ENSURE(UnitTest_HashSet_Copy_String());
 
-    //JPT_ENSURE(UnitTest_HashSet_CopyAssign());
-    //JPT_ENSURE(UnitTest_HashSet_CopyAssign_String());
+    JPT_ENSURE(UnitTest_HashSet_CopyAssign());
+    JPT_ENSURE(UnitTest_HashSet_CopyAssign_String());
 
-    //JPT_ENSURE(UnitTest_HashSet_Move());
-    //JPT_ENSURE(UnitTest_HashSet_Move_String());
+    JPT_ENSURE(UnitTest_HashSet_Move());
+    JPT_ENSURE(UnitTest_HashSet_Move_String());
 
-    //JPT_ENSURE(UnitTest_HashSet_MoveAssign());
-    //JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
+    JPT_ENSURE(UnitTest_HashSet_MoveAssign());
+    JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
 
     return true;
 }
