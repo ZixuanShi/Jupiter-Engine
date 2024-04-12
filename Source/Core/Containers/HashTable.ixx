@@ -60,7 +60,6 @@ namespace jpt
 
 		// Modifiers
 		constexpr void Clear();
-		constexpr virtual void Add(const TData& data) = 0;
 
 	protected:
 		constexpr size_t GetBucketIndex(const TData& key) const;
@@ -68,7 +67,7 @@ namespace jpt
 		constexpr const TBucket& GetBucket(const TData& key) const;
 
 		template<Iterable TContainer>
-		constexpr void CopyData(const TContainer& container);
+		constexpr void CopyData(const TContainer& container, size_t size);
 
 		constexpr void MoveTable(HashTable&& other);
 	};
@@ -76,13 +75,13 @@ namespace jpt
 	template<typename _TData>
 	constexpr HashTable<_TData>::HashTable(const std::initializer_list<TData>& list)
 	{
-		CopyData(list);
+		CopyData(list, list.size());
 	}
 
 	template<typename _TData>
 	constexpr HashTable<_TData>::HashTable(const HashTable& other)
 	{
-		CopyData(other);
+		CopyData(other, other.Size());
 	}
 
 	template<typename _TData>
@@ -97,7 +96,7 @@ namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			CopyData(other);
+			CopyData(other, other.Size());
 		}
 
 		return *this;
@@ -216,12 +215,17 @@ namespace jpt
 
 	template<typename _TData>
 	template<Iterable TContainer>
-	constexpr void HashTable<_TData>::CopyData(const TContainer& container)
+	constexpr void HashTable<_TData>::CopyData(const TContainer& container, size_t size)
 	{
-		for (const TData& element : container)
+		Resize(size);
+
+		for (const TData& data : container)
 		{
-			Add(element);
+			TBucket& bucket = GetBucket(data);
+			bucket.EmplaceBack(data);
 		}
+
+		m_size += size;
 	}
 
 	template<typename _TData>

@@ -31,16 +31,10 @@ export namespace jpt
 		using TBucket = typename Super::TBucket;
 
 	public:
-		constexpr HashSet() = default;
-		constexpr HashSet(const std::initializer_list<TData>& list);
-		constexpr HashSet(const HashSet& other);
-		constexpr HashSet(HashSet&& other) noexcept;
-		constexpr HashSet& operator=(const HashSet& other);
-		constexpr HashSet& operator=(HashSet&& other) noexcept;
-		constexpr ~HashSet();
+		using Super::Super;
 
 		// Modifiers
-		constexpr virtual void Add(const TData& data) override;
+		constexpr void Add(const TData& data);
 		constexpr void Erase(const TData& data);
 
 		// Searching
@@ -48,48 +42,10 @@ export namespace jpt
 	};
 
 	template<typename _TData>
-	constexpr HashSet<_TData>::HashSet(const std::initializer_list<TData>& list)
-	{
-		Super::CopyData(list);
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>::HashSet(const HashSet& other)
-	{
-		Super::CopyData(other);
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>::HashSet(HashSet&& other) noexcept
-	{
-		Super::MoveTable(Move(other));
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>& HashSet<_TData>::operator=(const HashSet& other)
-	{
-		Super::operator=(other);
-		return *this;
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>& HashSet<_TData>::operator=(HashSet&& other) noexcept
-	{
-		Super::operator=(Move(other));
-		return *this;
-	}
-
-	template<typename _TData>
-	constexpr HashSet<_TData>::~HashSet()
-	{
-		Super::Clear();
-	}
-
-	template<typename _TData>
 	constexpr void HashSet<_TData>::Add(const TData& data)
 	{
 		// Grow if needed
-		if (Super::m_buckets.IsEmpty())
+		if (Super::m_size >= Super::m_buckets.Size() * kGrowMultiplier)
 		{
 			Super::Resize(Super::m_size * kGrowMultiplier);
 		}
