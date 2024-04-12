@@ -62,9 +62,14 @@ namespace jpt
 		constexpr void Clear();
 
 	protected:
-		constexpr size_t GetBucketIndex(const TData& key) const;
-		constexpr       TBucket& GetBucket(const TData& key);
-		constexpr const TBucket& GetBucket(const TData& key) const;
+		template<typename TKey = TData>
+		constexpr size_t GetBucketIndex(const TKey& key) const;
+
+		template<typename TKey = TData>
+		constexpr       TBucket& GetBucket(const TKey& key);
+
+		template<typename TKey = TData>
+		constexpr const TBucket& GetBucket(const TKey& key) const;
 
 		template<Iterable TContainer>
 		constexpr void CopyData(const TContainer& container, size_t size);
@@ -72,26 +77,26 @@ namespace jpt
 		constexpr void MoveTable(HashTable&& other);
 	};
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::HashTable(const std::initializer_list<TData>& list)
+	template<typename TData>
+	constexpr HashTable<TData>::HashTable(const std::initializer_list<TData>& list)
 	{
 		CopyData(list, list.size());
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::HashTable(const HashTable& other)
+	template<typename TData>
+	constexpr HashTable<TData>::HashTable(const HashTable& other)
 	{
 		CopyData(other, other.Size());
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::HashTable(HashTable&& other) noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::HashTable(HashTable&& other) noexcept
 	{
 		MoveTable(Move(other));
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>& HashTable<_TData>::operator=(const HashTable& other)
+	template<typename TData>
+	constexpr HashTable<TData>& HashTable<TData>::operator=(const HashTable& other)
 	{
 		if (this != &other)
 		{
@@ -102,8 +107,8 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>& HashTable<_TData>::operator=(HashTable&& other) noexcept
+	template<typename TData>
+	constexpr HashTable<TData>& HashTable<TData>::operator=(HashTable&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -114,14 +119,14 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::~HashTable()
+	template<typename TData>
+	constexpr HashTable<TData>::~HashTable()
 	{
 		Clear();
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::Iterator HashTable<_TData>::begin() noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::Iterator HashTable<TData>::begin() noexcept
 	{
 		if (IsEmpty())
 		{
@@ -130,14 +135,14 @@ namespace jpt
 		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::Iterator HashTable<_TData>::end() noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::Iterator HashTable<TData>::end() noexcept
 	{
 		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::ConstIterator HashTable<_TData>::begin() const noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::ConstIterator HashTable<TData>::begin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -146,14 +151,14 @@ namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::ConstIterator HashTable<_TData>::end() const noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::ConstIterator HashTable<TData>::end() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::ConstIterator HashTable<_TData>::cbegin() const noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::ConstIterator HashTable<TData>::cbegin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -162,14 +167,14 @@ namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::ConstIterator HashTable<_TData>::cend() const noexcept
+	template<typename TData>
+	constexpr HashTable<TData>::ConstIterator HashTable<TData>::cend() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TData>
-	constexpr void HashTable<_TData>::Resize(size_t capacity)
+	template<typename TData>
+	constexpr void HashTable<TData>::Resize(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 
@@ -188,34 +193,37 @@ namespace jpt
 		m_buckets = Move(newBuckets);
 	}
 
-	template<typename _TData>
-	constexpr void HashTable<_TData>::Clear()
+	template<typename TData>
+	constexpr void HashTable<TData>::Clear()
 	{
 		m_buckets.Clear();
 		m_size = 0;
 	}
 
-	template<typename _TData>
-	constexpr size_t HashTable<_TData>::GetBucketIndex(const TData& key) const
+	template<typename TData>
+	template<typename TKey>
+	constexpr size_t HashTable<TData>::GetBucketIndex(const TKey& key) const
 	{
-		return Hash<TData>()(key) % m_buckets.Size();
+		return Hash<TKey>()(key) % m_buckets.Size();
 	}
 
-	template<typename _TData>
-	constexpr HashTable<_TData>::TBucket& HashTable<_TData>::GetBucket(const TData& key)
-	{
-		return m_buckets[GetBucketIndex(key)];
-	}
-
-	template<typename _TData>
-	constexpr const HashTable<_TData>::TBucket& HashTable<_TData>::GetBucket(const TData& key) const
+	template<typename TData>
+	template<typename TKey>
+	constexpr HashTable<TData>::TBucket& HashTable<TData>::GetBucket(const TKey& key)
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename _TData>
+	template<typename TData>
+	template<typename TKey>
+	constexpr const HashTable<TData>::TBucket& HashTable<TData>::GetBucket(const TKey& key) const
+	{
+		return m_buckets[GetBucketIndex(key)];
+	}
+
+	template<typename TData>
 	template<Iterable TContainer>
-	constexpr void HashTable<_TData>::CopyData(const TContainer& container, size_t size)
+	constexpr void HashTable<TData>::CopyData(const TContainer& container, size_t size)
 	{
 		Resize(size);
 
@@ -228,8 +236,8 @@ namespace jpt
 		m_size += size;
 	}
 
-	template<typename _TData>
-	constexpr void HashTable<_TData>::MoveTable(HashTable&& other)
+	template<typename TData>
+	constexpr void HashTable<TData>::MoveTable(HashTable&& other)
 	{
 		m_buckets = Move(other.m_buckets);
 		m_size = other.m_size;
