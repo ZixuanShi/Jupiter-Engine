@@ -268,6 +268,24 @@ bool UnitTest_HashSet_MoveAssign_String()
     return true;
 }
 
+bool UnitTest_HashSet_Grow()
+{
+    jpt::HashSet<int32> hashSet;
+
+    for (int32 i = 0; i < 1000; ++i)
+    {
+        hashSet.Add(i);
+    }
+
+    for (int32 i = 0; i < 1000; ++i)
+    {
+        JPT_ENSURE(hashSet.Contains(i));
+    }
+
+    return true;
+}
+
+
 export bool RunUnitTests_HashSet()
 {
     JPT_ENSURE(UnitTest_HashSet());
@@ -284,6 +302,8 @@ export bool RunUnitTests_HashSet()
 
     JPT_ENSURE(UnitTest_HashSet_MoveAssign());
     JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
+
+    JPT_ENSURE(UnitTest_HashSet_Grow());
 
     return true;
 }

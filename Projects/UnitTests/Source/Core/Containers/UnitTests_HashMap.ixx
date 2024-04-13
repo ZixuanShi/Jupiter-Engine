@@ -252,6 +252,23 @@ bool UnitTest_HashMap_Erase()
     return true;
 }
 
+bool UnitTest_HashMap_Grow()
+{
+    jpt::HashMap<int32, int32> hashMap;
+
+    for (int32 i = 0; i < 1000; ++i)
+	{
+		hashMap.Add(i, i);
+	}
+
+    for (int32 i = 0; i < 1000; ++i)
+    {
+        JPT_ENSURE(hashMap.Contains(i));
+    }
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -264,6 +281,7 @@ export bool RunUnitTests_HashMap()
     
     JPT_ENSURE(UnitTest_HashMap_Function());
     JPT_ENSURE(UnitTest_HashMap_Erase());
+    JPT_ENSURE(UnitTest_HashMap_Grow());
 
     return true;
 }

@@ -322,19 +322,18 @@ export namespace jpt
 	{
 		static constexpr size_t kMinCapacity = 8;
 
-		TBuckets newBuckets;
-		newBuckets.Resize(Max(kMinCapacity, capacity));
+		TBuckets newBuckets = m_buckets;
+		Clear();
+		m_buckets.Resize(Max(kMinCapacity, capacity));
 
-		for (const TBucket& bucket : m_buckets)
+		for (const TBucket& bucket : newBuckets)
 		{
 			for (const TData& element : bucket)
 			{
 				const size_t index = GetBucketIndex(element.first);
-				newBuckets[index].EmplaceBack(element);
+				m_buckets[index].EmplaceBack(element);
 			}
 		}
-
-		m_buckets = Move(newBuckets);
 	}
 
 	template<typename _TKey, typename _TValue>
