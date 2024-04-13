@@ -13,23 +13,25 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.LinkedList;
-import jpt.Utilities;
 import jpt.Math;
+import jpt.TypeTraits;
+import jpt.Utilities;
 
 import jpt_private.HashTableIterator;
 
 namespace jpt
 {
 	/** Base class for Hash Table structures. Serves as base for HashSet and HashMap */
-	export template<typename _TData>
+	export template<typename _TKey, typename _TValue>
 	class HashTable
 	{
 	public:
-		using TData         = _TData;
-		using TBucket       = LinkedList<TData>;
+		using TKey          = _TKey;
+		using TValue        = _TValue;
+		using TBucket       = LinkedList<TValue>;
 		using TBuckets      = DynamicArray<TBucket>;
-		using Iterator      = jpt_private::HashTableIterator<TData>;
-		using ConstIterator = jpt_private::ConstHashTableIterator<TData>;
+		using Iterator      = jpt_private::HashTableIterator<TValue>;
+		using ConstIterator = jpt_private::ConstHashTableIterator<TValue>;
 
 	protected:
 		TBuckets m_buckets;
@@ -38,7 +40,7 @@ namespace jpt
 	public:
 		// Constructors
 		constexpr HashTable() noexcept = default;
-		constexpr HashTable(const std::initializer_list<TData>& list);
+		constexpr HashTable(const std::initializer_list<TValue>& list);
 		constexpr HashTable(const HashTable& other);
 		constexpr HashTable(HashTable&& other) noexcept;
 		constexpr HashTable& operator=(const HashTable& other);
@@ -62,13 +64,8 @@ namespace jpt
 		constexpr void Clear();
 
 	protected:
-		template<typename TKey = TData>
 		constexpr size_t GetBucketIndex(const TKey& key) const;
-
-		template<typename TKey = TData>
 		constexpr       TBucket& GetBucket(const TKey& key);
-
-		template<typename TKey = TData>
 		constexpr const TBucket& GetBucket(const TKey& key) const;
 
 		template<Iterable TContainer>
@@ -77,26 +74,26 @@ namespace jpt
 		constexpr void MoveTable(HashTable&& other);
 	};
 
-	template<typename TData>
-	constexpr HashTable<TData>::HashTable(const std::initializer_list<TData>& list)
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::HashTable(const std::initializer_list<TValue>& list)
 	{
 		CopyData(list, list.size());
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::HashTable(const HashTable& other)
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::HashTable(const HashTable& other)
 	{
 		CopyData(other, other.Size());
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::HashTable(HashTable&& other) noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::HashTable(HashTable&& other) noexcept
 	{
 		MoveTable(Move(other));
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>& HashTable<TData>::operator=(const HashTable& other)
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>& HashTable<TKey, TValue>::operator=(const HashTable& other)
 	{
 		if (this != &other)
 		{
@@ -107,8 +104,8 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>& HashTable<TData>::operator=(HashTable&& other) noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>& HashTable<TKey, TValue>::operator=(HashTable&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -119,14 +116,14 @@ namespace jpt
 		return *this;
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::~HashTable()
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::~HashTable()
 	{
 		Clear();
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::Iterator HashTable<TData>::begin() noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::Iterator HashTable<TKey, TValue>::begin() noexcept
 	{
 		if (IsEmpty())
 		{
@@ -135,14 +132,14 @@ namespace jpt
 		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::Iterator HashTable<TData>::end() noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::Iterator HashTable<TKey, TValue>::end() noexcept
 	{
 		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::ConstIterator HashTable<TData>::begin() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::ConstIterator HashTable<TKey, TValue>::begin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -151,14 +148,14 @@ namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::ConstIterator HashTable<TData>::end() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::ConstIterator HashTable<TKey, TValue>::end() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::ConstIterator HashTable<TData>::cbegin() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::ConstIterator HashTable<TKey, TValue>::cbegin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -167,14 +164,14 @@ namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
 	}
 
-	template<typename TData>
-	constexpr HashTable<TData>::ConstIterator HashTable<TData>::cend() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::ConstIterator HashTable<TKey, TValue>::cend() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename TData>
-	constexpr void HashTable<TData>::Resize(size_t capacity)
+	template<typename TKey, typename TValue>
+	constexpr void HashTable<TKey, TValue>::Resize(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 
@@ -183,7 +180,7 @@ namespace jpt
 
 		for (const TBucket& bucket : m_buckets)
 		{
-			for (const TData& element : bucket)
+			for (const TValue& element : bucket)
 			{
 				const size_t index = GetBucketIndex(element);
 				newBuckets[index].EmplaceBack(element);
@@ -193,41 +190,38 @@ namespace jpt
 		m_buckets = Move(newBuckets);
 	}
 
-	template<typename TData>
-	constexpr void HashTable<TData>::Clear()
+	template<typename TKey, typename TValue>
+	constexpr void HashTable<TKey, TValue>::Clear()
 	{
 		m_buckets.Clear();
 		m_size = 0;
 	}
 
-	template<typename TData>
-	template<typename TKey>
-	constexpr size_t HashTable<TData>::GetBucketIndex(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr size_t HashTable<TKey, TValue>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash<TKey>()(key) % m_buckets.Size();
 	}
 
-	template<typename TData>
-	template<typename TKey>
-	constexpr HashTable<TData>::TBucket& HashTable<TData>::GetBucket(const TKey& key)
+	template<typename TKey, typename TValue>
+	constexpr HashTable<TKey, TValue>::TBucket& HashTable<TKey, TValue>::GetBucket(const TKey& key)
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename TData>
-	template<typename TKey>
-	constexpr const HashTable<TData>::TBucket& HashTable<TData>::GetBucket(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr const HashTable<TKey, TValue>::TBucket& HashTable<TKey, TValue>::GetBucket(const TKey& key) const
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename TData>
+	template<typename TKey, typename TValue>
 	template<Iterable TContainer>
-	constexpr void HashTable<TData>::CopyData(const TContainer& container, size_t size)
+	constexpr void HashTable<TKey, TValue>::CopyData(const TContainer& container, size_t size)
 	{
 		Resize(size);
 
-		for (const TData& data : container)
+		for (const TValue& data : container)
 		{
 			TBucket& bucket = GetBucket(data);
 			bucket.EmplaceBack(data);
@@ -236,8 +230,8 @@ namespace jpt
 		m_size += size;
 	}
 
-	template<typename TData>
-	constexpr void HashTable<TData>::MoveTable(HashTable&& other)
+	template<typename TKey, typename TValue>
+	constexpr void HashTable<TKey, TValue>::MoveTable(HashTable&& other)
 	{
 		m_buckets = Move(other.m_buckets);
 		m_size = other.m_size;

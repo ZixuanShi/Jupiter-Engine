@@ -13,8 +13,8 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.LinkedList;
-import jpt.Utilities;
 import jpt.Math;
+import jpt.Utilities;
 
 import jpt_private.HashTable;
 import jpt_private.HashTableIterator;
@@ -22,27 +22,27 @@ import jpt_private.HashTableIterator;
 export namespace jpt
 {
 	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
-	template<typename _TData>
-	class HashSet final : public HashTable<_TData>
+	template<typename _TValue>
+	class HashSet final : public HashTable<_TValue, _TValue>
 	{
 	public:
-		using TData   = _TData;
-		using Super   = HashTable<TData>;
+		using TValue  = _TValue;
+		using Super   = HashTable<TValue, TValue>;
 		using TBucket = typename Super::TBucket;
 
 	public:
 		using Super::Super;
 
 		// Modifiers
-		constexpr void Add(const TData& data);
-		constexpr void Erase(const TData& data);
+		constexpr void Add(const TValue& data);
+		constexpr void Erase(const TValue& data);
 
 		// Searching
-		constexpr bool Contains(const TData& key) const;
+		constexpr bool Contains(const TValue& key) const;
 	};
 
-	template<typename _TData>
-	constexpr void HashSet<_TData>::Add(const TData& data)
+	template<typename TValue>
+	constexpr void HashSet<TValue>::Add(const TValue& data)
 	{
 		// Grow if needed
 		if (Super::m_size >= Super::m_buckets.Size() * kGrowMultiplier)
@@ -53,7 +53,7 @@ export namespace jpt
 		TBucket& bucket = Super::GetBucket(data);
 
 		// Check if the key already exists. If it does, return
-		for (TData& element : bucket)
+		for (TValue& element : bucket)
 		{
 			if (element == data)
 			{
@@ -66,8 +66,8 @@ export namespace jpt
 		bucket.EmplaceBack(data);
 	}
 
-	template<typename _TData>
-	constexpr void HashSet<_TData>::Erase(const TData& key)
+	template<typename TValue>
+	constexpr void HashSet<TValue>::Erase(const TValue& key)
 	{
 		if (Super::IsEmpty())
 		{
@@ -87,8 +87,8 @@ export namespace jpt
 		}
 	}
 
-	template<typename _TData>
-	constexpr bool HashSet<_TData>::Contains(const TData& key) const
+	template<typename TValue>
+	constexpr bool HashSet<TValue>::Contains(const TValue& key) const
 	{
 		if (Super::IsEmpty())
 		{
@@ -97,7 +97,7 @@ export namespace jpt
 
 		const TBucket& bucket = Super::GetBucket(key);
 
-		for (const TData& element : bucket)
+		for (const TValue& element : bucket)
 		{
 			if (element == key)
 			{
