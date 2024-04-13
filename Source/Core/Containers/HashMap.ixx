@@ -86,20 +86,20 @@ export namespace jpt
 		constexpr const TBucket& GetBucket(const TKey& key) const;
 
 		template<Iterable TContainer>
-		constexpr void CopyData(const TContainer& container);
+		constexpr void CopyData(const TContainer& container, size_t size);
 		constexpr void MoveMap(HashMap&& other);
 	};
 
 	template<typename _TKey, typename _TValue>
 	constexpr HashMap<_TKey, _TValue>::HashMap(const std::initializer_list<TData>& list)
 	{
-		CopyData(list);
+		CopyData(list, list.size());
 	}
 
 	template<typename _TKey, typename _TValue>
 	constexpr HashMap<_TKey, _TValue>::HashMap(const HashMap& other)
 	{
-		CopyData(other);
+		CopyData(other, other.Size());
 	}
 
 	template<typename _TKey, typename _TValue>
@@ -114,7 +114,7 @@ export namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			CopyData(other);
+			CopyData(other, other.Size());
 		}
 
 		return *this;
@@ -357,12 +357,17 @@ export namespace jpt
 
 	template<typename _TKey, typename _TValue>
 	template<Iterable TContainer>
-	constexpr void HashMap<_TKey, _TValue>::CopyData(const TContainer& container)
+	constexpr void HashMap<_TKey, _TValue>::CopyData(const TContainer& container, size_t size)
 	{
-		for (const TData& data : container)
+		Resize(size);
+
+		for (const TData& element : container)
 		{
-			Add(data);
+			TBucket& bucket = GetBucket(element.first);
+			bucket.EmplaceBack(element);
 		}
+
+		m_size += size;
 	}
 
 	template<typename _TKey, typename _TValue>
