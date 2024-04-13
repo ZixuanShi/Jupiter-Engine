@@ -70,10 +70,10 @@ export namespace jpt
 		constexpr void Resize(size_t capacity);
 
 		// Modifiers
-		constexpr void Clear();
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
 		constexpr void Erase(const TKey& key);
+		constexpr void Clear();
 
 		// Searching
 		constexpr Iterator      Find(const TKey& key);
@@ -90,26 +90,26 @@ export namespace jpt
 		constexpr void MoveMap(HashMap&& other);
 	};
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::HashMap(const std::initializer_list<TData>& list)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::HashMap(const std::initializer_list<TData>& list)
 	{
 		CopyData(list, list.size());
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::HashMap(const HashMap& other)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::HashMap(const HashMap& other)
 	{
 		CopyData(other, other.Size());
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::HashMap(HashMap&& other) noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::HashMap(HashMap&& other) noexcept
 	{
 		MoveMap(Move(other));
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>& HashMap<_TKey, _TValue>::operator=(const HashMap& other)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>& HashMap<TKey, TValue>::operator=(const HashMap& other)
 	{
 		if (this != &other)
 		{
@@ -120,8 +120,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>& HashMap<_TKey, _TValue>::operator=(HashMap&& other) noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>& HashMap<TKey, TValue>::operator=(HashMap&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -132,14 +132,14 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::~HashMap()
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::~HashMap()
 	{
 		Clear();
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::TValue& HashMap<_TKey, _TValue>::operator[](const TKey& key)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::TValue& HashMap<TKey, TValue>::operator[](const TKey& key)
 	{
 		Iterator itr = Find(key);
 		if (itr == end())
@@ -150,16 +150,16 @@ export namespace jpt
 		return itr->second;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr const HashMap<_TKey, _TValue>::TValue& HashMap<_TKey, _TValue>::operator[](const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr const HashMap<TKey, TValue>::TValue& HashMap<TKey, TValue>::operator[](const TKey& key) const
 	{
 		ConstIterator itr = Find(key);
 		JPT_ASSERT(itr != cend());
 		return itr->second;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::begin() noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::begin() noexcept
 	{
 		if (IsEmpty())
 		{
@@ -168,14 +168,14 @@ export namespace jpt
 		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::end() noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::end() noexcept
 	{
 		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::begin() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::ConstIterator HashMap<TKey, TValue>::begin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -184,14 +184,14 @@ export namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::end() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::ConstIterator HashMap<TKey, TValue>::end() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::cbegin() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::ConstIterator HashMap<TKey, TValue>::cbegin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -200,14 +200,14 @@ export namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::cend() const noexcept
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::ConstIterator HashMap<TKey, TValue>::cend() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Clear()
+	template<typename TKey, typename TValue>
+	constexpr void HashMap<TKey, TValue>::Clear()
 	{
 		m_buckets.Clear(); 
 		m_size = 0;
@@ -246,8 +246,8 @@ export namespace jpt
 		return Add(element.first, element.second);
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Erase(const TKey& key)
+	template<typename TKey, typename TValue>
+	constexpr void HashMap<TKey, TValue>::Erase(const TKey& key)
 	{
 		if (IsEmpty())
 		{
@@ -267,8 +267,8 @@ export namespace jpt
 		}
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::Iterator HashMap<_TKey, _TValue>::Find(const TKey& key)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::Find(const TKey& key)
 	{
 		if (IsEmpty())
 		{
@@ -289,8 +289,8 @@ export namespace jpt
 		return end();
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::ConstIterator HashMap<_TKey, _TValue>::Find(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::ConstIterator HashMap<TKey, TValue>::Find(const TKey& key) const
 	{
 		if (IsEmpty())
 		{
@@ -311,14 +311,14 @@ export namespace jpt
 		return cend();
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr bool HashMap<_TKey, _TValue>::Contains(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr bool HashMap<TKey, TValue>::Contains(const TKey& key) const
 	{
 		return Find(key) != cend();
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::Resize(size_t capacity)
+	template<typename TKey, typename TValue>
+	constexpr void HashMap<TKey, TValue>::Resize(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 
@@ -336,27 +336,27 @@ export namespace jpt
 		}
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr size_t HashMap<_TKey, _TValue>::GetBucketIndex(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr size_t HashMap<TKey, TValue>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash<TKey>()(key) % m_buckets.Size();
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key)
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::TBucket& HashMap<TKey, TValue>::GetBucket(const TKey& key)
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr const HashMap<_TKey, _TValue>::TBucket& HashMap<_TKey, _TValue>::GetBucket(const TKey& key) const
+	template<typename TKey, typename TValue>
+	constexpr const HashMap<TKey, TValue>::TBucket& HashMap<TKey, TValue>::GetBucket(const TKey& key) const
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename _TKey, typename _TValue>
+	template<typename TKey, typename TValue>
 	template<Iterable TContainer>
-	constexpr void HashMap<_TKey, _TValue>::CopyData(const TContainer& container, size_t size)
+	constexpr void HashMap<TKey, TValue>::CopyData(const TContainer& container, size_t size)
 	{
 		Resize(size);
 
@@ -369,8 +369,8 @@ export namespace jpt
 		m_size += size;
 	}
 
-	template<typename _TKey, typename _TValue>
-	constexpr void HashMap<_TKey, _TValue>::MoveMap(HashMap&& other)
+	template<typename TKey, typename TValue>
+	constexpr void HashMap<TKey, TValue>::MoveMap(HashMap&& other)
 	{
 		m_buckets = Move(other.m_buckets);
 		m_size    = other.m_size;
