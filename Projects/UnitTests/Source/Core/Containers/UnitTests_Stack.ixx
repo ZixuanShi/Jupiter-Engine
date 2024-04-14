@@ -17,7 +17,7 @@ bool UnitTest_Stack()
 
     for (int32 i = 0; i < 10; ++i)
 	{
-		stack.Add(i);
+		stack.Push(i);
 	}
 
     JPT_ENSURE(stack.Size() == 10);
@@ -58,7 +58,7 @@ bool UnitTest_Stack_Copy()
 
     for (int32 i = 0; i < 10; ++i)
     {
-        stack.Add(i);
+        stack.Push(i);
     }
 
     jpt::Stack<int32> copy = stack;
@@ -119,7 +119,7 @@ bool UnitTest_Stack_Move()
 
     for (int32 i = 0; i < 10; ++i)
     {
-        stack.Add(i);
+        stack.Push(i);
     }
 
     jpt::Stack<int32> moved = jpt::Move(stack);

@@ -38,8 +38,8 @@ export namespace jpt
 		constexpr void Reserve(size_t capacity);
 
 		// Adding
-		constexpr void Add(const TData& value);
-		constexpr void Add(TData&& value);
+		constexpr void Push(const TData& value);
+		constexpr void Push(TData&& value);
 		template <typename... TArgs> constexpr void Emplace(TArgs&&... args);
 
 		// Erasing
@@ -84,13 +84,13 @@ export namespace jpt
 	}
 
 	template<typename _TData>
-	constexpr void Stack<_TData>::Add(const TData& value)
+	constexpr void Stack<_TData>::Push(const TData& value)
 	{
 		m_values.AddBack(value);
 	}
 
 	template<typename _TData>
-	constexpr void Stack<_TData>::Add(TData&& value)
+	constexpr void Stack<_TData>::Push(TData&& value)
 	{
 		m_values.AddBack(Move(value));
 	}
