@@ -19,6 +19,7 @@ export namespace jpt
 		DynamicArray<TData> m_values;
 
 	public:
+		// Iterators
 		Iterator begin() { return m_values.begin(); }
 		Iterator end()   { return m_values.end();   }
 		ConstIterator begin()  const { return m_values.begin(); }
@@ -26,42 +27,25 @@ export namespace jpt
 		ConstIterator cbegin() const { return m_values.begin(); }
 		ConstIterator cend()   const { return m_values.end();   }
 
-		constexpr void Add(const TData& value);
-		constexpr void Add(TData&& value);
-
-		template <typename... TArgs> constexpr void Emplace(TArgs&&... args);
-
-		constexpr TData Pop();
-		constexpr void Clear();
-
-		constexpr TData& Peek();
+		// Accessing
+		constexpr       TData& Peek();
 		constexpr const TData& Peek() const;
 
+		// Capacity
 		constexpr bool IsEmpty() const;
 		constexpr size_t Size() const;
 		constexpr size_t Capacity() const;
 		constexpr void Reserve(size_t capacity);
+
+		// Adding
+		constexpr void Add(const TData& value);
+		constexpr void Add(TData&& value);
+		template <typename... TArgs> constexpr void Emplace(TArgs&&... args);
+
+		// Erasing
+		constexpr TData Pop();
+		constexpr void Clear();
 	};
-
-	template<typename _TData>
-	constexpr void Stack<_TData>::Add(const TData& value)
-	{
-		m_values.AddBack(value);
-	}
-
-	template<typename _TData>
-	constexpr void Stack<_TData>::Add(TData&& value)
-	{
-		m_values.AddBack(Move(value));
-	}
-
-	template<typename _TData>
-	constexpr Stack<_TData>::TData Stack<_TData>::Pop()
-	{
-		TData value = m_values.Back();
-		m_values.PopBack();
-		return value;
-	}
 
 	template<typename _TData>
 	constexpr Stack<_TData>::TData& Stack<_TData>::Peek()
@@ -96,13 +80,19 @@ export namespace jpt
 	template<typename _TData>
 	constexpr void Stack<_TData>::Reserve(size_t capacity)
 	{
-		m_values.Reserve(capacity); 
+		m_values.Reserve(capacity);
 	}
 
 	template<typename _TData>
-	constexpr void Stack<_TData>::Clear()
+	constexpr void Stack<_TData>::Add(const TData& value)
 	{
-		m_values.Clear();
+		m_values.AddBack(value);
+	}
+
+	template<typename _TData>
+	constexpr void Stack<_TData>::Add(TData&& value)
+	{
+		m_values.AddBack(Move(value));
 	}
 
 	template<typename _TData>
@@ -110,5 +100,19 @@ export namespace jpt
 	constexpr void Stack<_TData>::Emplace(TArgs && ...args)
 	{
 		m_values.EmplaceBack(Forward<TArgs>(args)...);
+	}
+
+	template<typename _TData>
+	constexpr Stack<_TData>::TData Stack<_TData>::Pop()
+	{
+		TData value = m_values.Back();
+		m_values.PopBack();
+		return value;
+	}
+
+	template<typename _TData>
+	constexpr void Stack<_TData>::Clear()
+	{
+		m_values.Clear();
 	}
 }
