@@ -37,19 +37,19 @@ EnumData<TInt> GenerateData(const char* pSource);
 						Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
 	@examples: 	
 		// Local Enum for current file
-		JPT_ENUM_UINT8(Local, 
+		JPT_ENUM_UINT8(ELocal, 
 		A, 
 		B = 2, 
 		C = 5);
 
 		// Local Enum flag
-		JPT_ENUM_UINT8(LocalFlag,
+		JPT_ENUM_UINT8(ELocalFlag,
 		A = (1 << 0),
 		B = (1 << 1),
 		C = (1 << 2));
 		
 		// Global Enum for all files as module
-		export JPT_ENUM_UINT8(Global, 
+		export JPT_ENUM_UINT8(EGlobal, 
 		A, 
 		B = 2, 
 		C = 5);
@@ -58,7 +58,7 @@ EnumData<TInt> GenerateData(const char* pSource);
 		export class GlobalEnumContainer
 		{
 		public:
-			JPT_ENUM_UINT64(Nested, 
+			JPT_ENUM_UINT64(ENested, 
 			A, 
 			B = 2, 
 			C = 5);

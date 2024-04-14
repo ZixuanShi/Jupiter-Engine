@@ -10,7 +10,7 @@ export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
 
-JPT_ENUM_UINT8(Fruit_Local,
+JPT_ENUM_UINT8(EFruit_Local,
 	Apple = 5,
 	Banana,
 	Orange = 9,
@@ -102,7 +102,7 @@ bool UnitTest_Enum_NonSequence()
 	return true;
 }
 
-JPT_ENUM_UINT8(Weapon_Local,
+JPT_ENUM_UINT8(EWeapon_Local,
 	Sword,
 	Spear,
 	Hammer,
@@ -231,7 +231,7 @@ bool UnitTest_Enum_Flag()
 	return true;
 }
 
-JPT_ENUM_UINT32(Color_Local,
+JPT_ENUM_UINT32(EColor_Local,
 	Red    = 0xFF000000,
 	Green  = 0x00FF0000,
 	Blue   = 0x0000FF00,
@@ -245,23 +245,23 @@ JPT_ENUM_UINT32(Color_Local,
 );
 bool UnitTest_Enum_Hex()
 {
-	Color_Local color(Color_Local::Red);
-	color |= Color_Local::Green;
+	EColor_Local color(EColor_Local::Red);
+	color |= EColor_Local::Green;
 	
-	JPT_ENSURE(color == Color_Local::Yellow);
+	JPT_ENSURE(color == EColor_Local::Yellow);
 
 	return true;
 }
 
 export bool RunUnitTests_Enum()
 {
-	JPT_ENSURE(UnitTest_Enum_NonSequence<Fruit_Local>());
-	JPT_ENSURE(UnitTest_Enum_NonSequence<Fruit_Global>());
-	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::Fruit_Nested>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Global>());
+	JPT_ENSURE(UnitTest_Enum_NonSequence<GlobalEnumContainer::EFruit_Nested>());
 
-	JPT_ENSURE(UnitTest_Enum_Sequence<Weapon_Local>());
-	JPT_ENSURE(UnitTest_Enum_Sequence<Weapon_Global>());
-	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::Weapon_Nested>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Local>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<EWeapon_Global>());
+	JPT_ENSURE(UnitTest_Enum_Sequence<GlobalEnumContainer::EWeapon_Nested>());
 
 	JPT_ENSURE(UnitTest_Enum_Flag());
 	JPT_ENSURE(UnitTest_Enum_Hex());
