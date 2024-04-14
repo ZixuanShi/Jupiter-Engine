@@ -10,7 +10,7 @@ export module jpt.SortedMap;
 import jpt.Allocator;
 import jpt.Concepts;
 import jpt.Constants;
-import jpt.DynamicArray;
+import jpt.Stack;
 import jpt.Pair;
 import jpt.Utilities;
 import jpt.Math;
@@ -101,22 +101,22 @@ export namespace jpt
 	{
 		if (m_pRoot != nullptr)
 		{
-			DynamicArray<TNode*> stack;
+			Stack<TNode*> stack;
 			stack.Reserve(m_size);
-			stack.EmplaceBack(m_pRoot);
+			stack.Emplace(m_pRoot);
 
 			while (!stack.IsEmpty())
 			{
-				TNode* pNode = stack.Back();
-				stack.PopBack();
+				TNode* pNode = stack.Peek();
+				stack.Pop();
 
 				if (pNode->pLeftChild)
 				{
-					stack.EmplaceBack(pNode->pLeftChild);
+					stack.Emplace(pNode->pLeftChild);
 				}
 				if (pNode->pRightChild)
 				{
-					stack.EmplaceBack(pNode->pRightChild);
+					stack.Emplace(pNode->pRightChild);
 				}
 
 				TAllocator::Deallocate(pNode);
