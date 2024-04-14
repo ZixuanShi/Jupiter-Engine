@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
 
-export module jpt.RedBlackTree;
+export module jpt.SortedMap;
 
 import jpt.Concepts;
 import jpt.Constants;
@@ -17,8 +17,9 @@ import jpt_private.BinaryTreeIterator;
 
 export namespace jpt
 {
+	/** Sorted key value paired structure. Red Black Tree under the hood */
 	template<typename _TKey, typename _TValue>
-	class RedBlackTree
+	class SortedMap
 	{
 	public:
 		using TKey   = _TKey;
@@ -31,6 +32,6 @@ export namespace jpt
 		size_t m_size  = 0;
 
 	public:
-		constexpr RedBlackTree() = default;
+		constexpr SortedMap() = default;
 	};
 }
