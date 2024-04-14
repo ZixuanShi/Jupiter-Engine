@@ -16,16 +16,16 @@ export namespace jpt
 		using ConstIterator = typename LinkedList<TData>::ConstIterator;
 
 	private:
-		LinkedList<TData> m_values;
+		LinkedList<TData> m_container;
 
 	public:
 		// Iterators
-		Iterator begin() { return m_values.begin(); }
-		Iterator end() { return m_values.end(); }
-		ConstIterator begin()  const { return m_values.begin(); }
-		ConstIterator end()    const { return m_values.end(); }
-		ConstIterator cbegin() const { return m_values.begin(); }
-		ConstIterator cend()   const { return m_values.end(); }
+		Iterator begin() { return m_container.begin(); }
+		Iterator end() { return m_container.end(); }
+		ConstIterator begin()  const { return m_container.begin(); }
+		ConstIterator end()    const { return m_container.end(); }
+		ConstIterator cbegin() const { return m_container.begin(); }
+		ConstIterator cend()   const { return m_container.end(); }
 
 		// Accessing
 		constexpr       TData& Front();
@@ -50,67 +50,67 @@ export namespace jpt
 	template<typename _TData>
 	constexpr Queue<_TData>::TData& Queue<_TData>::Front()
 	{
-		return m_values.Front();
+		return m_container.Front();
 	}
 
 	template<typename _TData>
 	constexpr const Queue<_TData>::TData& Queue<_TData>::Front() const
 	{
-		return m_values.Front();
+		return m_container.Front();
 	}
 
 	template<typename _TData>
 	constexpr Queue<_TData>::TData& Queue<_TData>::Back()
 	{
-		return m_values.Back();
+		return m_container.Back();
 	}
 
 	template<typename _TData>
 	constexpr const Queue<_TData>::TData& Queue<_TData>::Back() const
 	{
-		return m_values.Back();
+		return m_container.Back();
 	}
 
 	template<typename _TData>
 	constexpr bool Queue<_TData>::IsEmpty() const
 	{
-		return m_values.IsEmpty();
+		return m_container.IsEmpty();
 	}
 
 	template<typename _TData>
 	constexpr size_t Queue<_TData>::Count() const
 	{
-		return m_values.Count();
+		return m_container.Count();
 	}
 
 	template<typename _TData>
 	constexpr void Queue<_TData>::Enqueue(const TData& value)
 	{
-		m_values.AddBack(value);
+		m_container.AddBack(value);
 	}
 
 	template<typename _TData>
 	constexpr void Queue<_TData>::Enqueue(TData&& value)
 	{
-		m_values.AddBack(Move(value));
+		m_container.AddBack(Move(value));
 	}
 
 	template<typename _TData>
 	template<typename ...TArgs>
 	constexpr void Queue<_TData>::Emplace(TArgs && ...args)
 	{
-		m_values.EmplaceBack(Forward<TArgs>(args)...);
+		m_container.EmplaceBack(Forward<TArgs>(args)...);
 	}
 
 	template<typename _TData>
 	constexpr void Queue<_TData>::Dequeue()
 	{
-		m_values.PopFront();
+		m_container.PopFront();
 	}
 
 	template<typename _TData>
 	constexpr void Queue<_TData>::Clear()
 	{
-		m_values.Clear();
+		m_container.Clear();
 	}
 }
