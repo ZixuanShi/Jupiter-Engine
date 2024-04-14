@@ -15,8 +15,8 @@ bool UnitTest_StringLen()
 {
 	using TChar = TString::TChar;
 
-	JPT_ENSURE(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Jupiter Engine)) == 14);
-	JPT_ENSURE(jpt::GetCStrLength(JPT_GET_PROPER_STRING(TChar, Zixuan Shi)) == 10);
+	JPT_ENSURE(jpt::FindCharsCount(JPT_GET_PROPER_STRING(TChar, Jupiter Engine)) == 14);
+	JPT_ENSURE(jpt::FindCharsCount(JPT_GET_PROPER_STRING(TChar, Zixuan Shi)) == 10);
 	return true;
 }
 

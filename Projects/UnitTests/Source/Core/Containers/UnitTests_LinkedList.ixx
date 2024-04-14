@@ -48,7 +48,7 @@ bool UnitTest_LinkedList_Trivial()
 
     list.EmplaceAfter(list.begin() + 3, 1);
     list.AddBefore(list.begin() + 2, 3);
-    list.AddAfter(list.begin() + (list.Size() - 1), 11);
+    list.AddAfter(list.begin() + (list.Count() - 1), 11);
     list.EmplaceBefore(list.begin() + 5, 0);
 
     list.PopBack();
@@ -84,7 +84,7 @@ bool UnitTest_LinkedList_NonTrivial()
 
     list.EmplaceAfter(list.begin() + 3, locHelper(1));
     list.AddBefore(list.begin() + 2, locHelper(3));
-    list.AddAfter(list.begin() + (list.Size() - 1), locHelper(11));
+    list.AddAfter(list.begin() + (list.Count() - 1), locHelper(11));
     list.EmplaceBefore(list.begin() + 5, locHelper(0));
 
     list.PopBack();

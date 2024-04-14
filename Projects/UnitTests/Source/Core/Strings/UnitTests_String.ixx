@@ -337,19 +337,19 @@ bool UnitTest_String_Insert()
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 26);
+	JPT_ENSURE(str.Count() == 26);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 32);
+	JPT_ENSURE(str.Count() == 32);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 38);
+	JPT_ENSURE(str.Count() == 38);
 
 	str.Insert(" World", 5);
 	JPT_ENSURE(str == "Hello World World World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 44);
+	JPT_ENSURE(str.Count() == 44);
 
 	return true;
 }
@@ -359,19 +359,19 @@ bool UnitTest_WString_Insert()
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 26);
+	JPT_ENSURE(str.Count() == 26);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 32);
+	JPT_ENSURE(str.Count() == 32);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 38);
+	JPT_ENSURE(str.Count() == 38);
 
 	str.Insert(L" World", 5);
 	JPT_ENSURE(str == L"Hello World World World World Jupiter Engine");
-	JPT_ENSURE(str.Size() == 44);
+	JPT_ENSURE(str.Count() == 44);
 
 	return true;
 }

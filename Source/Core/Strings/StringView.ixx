@@ -26,7 +26,7 @@ export namespace jpt
 
 	private:
 		const TChar* m_pBuffer = nullptr;
-		size_t m_size = 0;
+		size_t m_count = 0;
 
 	public:
 		// Constructors
@@ -45,12 +45,12 @@ export namespace jpt
 		constexpr const TChar* Buffer()         const { return m_pBuffer;             } 
 		constexpr const TChar& At(size_t index) const { return m_pBuffer[index];      }
 		constexpr const TChar& Front()          const { return m_pBuffer[0];          }
-		constexpr const TChar& Back()           const { return m_pBuffer[m_size - 1]; }
+		constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1]; }
 		constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Capacity
-		constexpr bool IsEmpty() const { return m_size == 0; }
-		constexpr size_t Size()  const { return m_size;      }
+		constexpr bool IsEmpty() const { return m_count == 0; }
+		constexpr size_t Count()  const { return m_count;      }
 
 		// Operations
 
@@ -59,11 +59,11 @@ export namespace jpt
 
 		/** @return     true if the string view starts with the given prefix */
 		constexpr bool StartsWith(const TChar* CString, size_t count) const;
-		constexpr bool StartsWith(const TChar* CString) const { return StartsWith(CString, GetCStrLength(CString)); }
+		constexpr bool StartsWith(const TChar* CString) const { return StartsWith(CString, FindCharsCount(CString)); }
 
 		/** @return     true if the string view ends with the given suffix */
 		constexpr bool EndsWith(const TChar* CString, size_t count) const;
-		constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, GetCStrLength(CString)); }
+		constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, FindCharsCount(CString)); }
 
 		constexpr size_t Find(TChar TCharoFind, size_t startIndex = 0, size_t endIndex = npos) const;
 		constexpr size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos) const;
@@ -75,44 +75,44 @@ export namespace jpt
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const StringViewBase<TChar>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.Buffer(), a.Size(), b.Size());
+		return AreStringsSame(a.Buffer(), b.Buffer(), a.Count(), b.Count());
 	}
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const TChar* b)
 	{
-		return AreStringsSame(a.Buffer(), b, a.Size(), GetCStrLength(b));
+		return AreStringsSame(a.Buffer(), b, a.Count(), FindCharsCount(b));
 	}
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const StringBase<TChar>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Size(), b.Size());
+		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Count(), b.Count());
 	}
 
 	// Member Functions Definitions --------------------------------------------------------------------------------------------------------
 	template<StringLiteral TChar>
 	constexpr StringViewBase<TChar>::StringViewBase(const TChar* CString, size_t size)
 		: m_pBuffer(CString)
-		, m_size(size)
+		, m_count(size)
 	{
 	}
 
 	template<StringLiteral TChar>
 	constexpr StringViewBase<TChar>::StringViewBase(const TChar* CString)
-		: StringViewBase(CString, GetCStrLength(CString))
+		: StringViewBase(CString, FindCharsCount(CString))
 	{
 	}
 
 	template<StringLiteral _TChar>
 	constexpr StringViewBase<_TChar>::StringViewBase(const StringViewBase& other)
 		: m_pBuffer(other.m_pBuffer)
-		, m_size(other.m_size)
+		, m_count(other.m_count)
 	{
 	}
 
 	template<StringLiteral TChar>
 	constexpr StringViewBase<TChar>::StringViewBase(const StringBase<TChar>& string)
 		: m_pBuffer(string.ConstBuffer())
-		, m_size(string.Size())
+		, m_count(string.Count())
 	{
 	}
 
@@ -122,7 +122,7 @@ export namespace jpt
 		if (m_pBuffer != CString)
 		{
 			m_pBuffer = CString;
-			m_size = GetCStrLength(CString);
+			m_count = FindCharsCount(CString);
 		}
 
 		return *this;
@@ -134,7 +134,7 @@ export namespace jpt
 		if (this != &other)
 		{
 			m_pBuffer = other.m_pBuffer;
-			m_size = other.m_size;
+			m_count = other.m_count;
 		}
 
 		return *this;
@@ -146,7 +146,7 @@ export namespace jpt
 		if (m_pBuffer != string.ConstBuffer())
 		{
 			m_pBuffer = string.ConstBuffer();
-			m_size = string.Size();
+			m_count = string.Count();
 		}
 
 		return *this;
@@ -157,10 +157,10 @@ export namespace jpt
 	{
 		if (count == npos)
 		{
-			count = m_size - index;
+			count = m_count - index;
 		}
 
-		JPT_ASSERT((index + count) <= m_size, "SubStr cannot exceeds string's bound");
+		JPT_ASSERT((index + count) <= m_count, "SubStr cannot exceeds string's bound");
 
 		return StringViewBase(m_pBuffer + index, count);
 	}
@@ -174,13 +174,13 @@ export namespace jpt
 	template<StringLiteral _TChar>
 	constexpr bool StringViewBase<_TChar>::EndsWith(const TChar* CString, size_t count) const
 	{
-		return AreStringsSame(m_pBuffer + m_size - count, CString, count);
+		return AreStringsSame(m_pBuffer + m_count - count, CString, count);
 	}
 
 	template<StringLiteral _TChar>
 	constexpr size_t StringViewBase<_TChar>::Find(TChar TCharoFind, size_t startIndex, size_t endIndex) const
 	{
-		ClampTo(endIndex, size_t(0), m_size);
+		ClampTo(endIndex, size_t(0), m_count);
 
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
@@ -201,8 +201,8 @@ export namespace jpt
 	template<StringLiteral _TChar>
 	constexpr size_t StringViewBase<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
-		const size_t StringToFindSize = GetCStrLength(pStringToFind);
-		ClampTo(endIndex, static_cast<size_t>(0), m_size);
+		const size_t StringToFindSize = FindCharsCount(pStringToFind);
+		ClampTo(endIndex, static_cast<size_t>(0), m_count);
 
 		StringViewBase current;
 		for (size_t i = startIndex; i < endIndex; ++i)

@@ -20,22 +20,22 @@ import jpt.Math;
 
 export namespace jpt
 {
-	/**	@return const TChar* string' string to check for size.'s size. Excluding '\0' */
+	/**	@return How many characters inside of the given CString. Excluding '\0' */
 	template<StringLiteral TChar>
-	constexpr size_t GetCStrLength(const TChar* string)
+	constexpr size_t FindCharsCount(const TChar* string)
 	{
 		if (!string)
 		{
 			return 0;
 		}
 
-		size_t size = 0;
-		while (string[size] != '\0')
+		size_t count = 0;
+		while (string[count] != '\0')
 		{
-			++size;
+			++count;
 		}
 
-		return size;
+		return count;
 	}
 
 #pragma region Converters
@@ -135,10 +135,10 @@ export namespace jpt
 
 	/** @return Integral number converted from pBuffer
 		@param pBuffer		Source buffer containing integer data 
-		@param size			Desired size to parse from start of pBuffer
+		@param count		Desired count to parse from start of pBuffer
 		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
 	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t size, IntBase base = IntBase::Decimal)
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count, IntBase base = IntBase::Decimal)
 	{
 		TInt result = 0;
 		bool isNegative = false;
@@ -161,7 +161,7 @@ export namespace jpt
 			start = 2;
 		}
 
-		for (size_t i = start; i < size; ++i)
+		for (size_t i = start; i < count; ++i)
 		{
 			TChar c = pBuffer[i];
 
@@ -211,7 +211,7 @@ export namespace jpt
 	template<StringLiteral TChar = char, Integral TInt = int32>
 	constexpr TInt CStrToInteger(const TChar* pBuffer)
 	{
-		return CStrToInteger<TChar, TInt>(pBuffer, GetCStrLength(pBuffer));
+		return CStrToInteger<TChar, TInt>(pBuffer, FindCharsCount(pBuffer));
 	}
 
 	template<StringLiteral TChar = char, Floating TFloat = float>
@@ -236,7 +236,7 @@ export namespace jpt
 
 	/** @note	Will ignore the 'f' is there's any */
 	template<StringLiteral TChar = char, Floating TFloat = float>
-	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t size)
+	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count)
 	{
 		// Parse two integral parts of the precision dot, then combine them
 
@@ -245,7 +245,7 @@ export namespace jpt
 		size_t precisionIndex = kInvalidValue<size_t>;
 		bool isNegative = false;
 
-		for (size_t i = 0; i < size; ++i)
+		for (size_t i = 0; i < count; ++i)
 		{
 			const TChar c = pBuffer[i];
 
@@ -301,7 +301,7 @@ export namespace jpt
 	template<StringLiteral TChar = char, Floating TFloat = float>
 	constexpr TFloat CStrToFloat(const TChar* pBuffer)
 	{
-		return CStrToFloat(pBuffer, GetCStrLength(pBuffer));
+		return CStrToFloat(pBuffer, FindCharsCount(pBuffer));
 	}
 
 #pragma endregion
@@ -365,14 +365,14 @@ export namespace jpt
 		- 0 maybe strings' sizes are not equal
 		- 0 to size for the index of of the first different char found in two strings */
 	template<StringLiteral TChar>
-	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
+	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
 	{
-		if (string1Size != string2Size)
+		if (string1Count != string2Count)
 		{
 			return 0;
 		}
 
-		for (size_t i = 0; i < string1Size; ++i)
+		for (size_t i = 0; i < string1Count; ++i)
 		{
 			if (pString1[i] != pString2[i])
 			{
@@ -383,24 +383,24 @@ export namespace jpt
 		return npos;
 	}
 	template<StringLiteral TChar>
-	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t size)
+	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t count)
 	{
-		return StrCmp(pString1, pString2, size, size);
+		return StrCmp(pString1, pString2, count, count);
 	}
 	template<StringLiteral TChar>
 	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2)
 	{
-		return StrCmp(pString1, pString2, GetCStrLength(pString1), GetCStrLength(pString2));
+		return StrCmp(pString1, pString2, FindCharsCount(pString1), FindCharsCount(pString2));
 	}
 	template<StringLiteral TChar>
-	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Size, size_t string2Size)
+	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
 	{
-		return StrCmp(pString1, pString2, string1Size, string2Size) == npos;
+		return StrCmp(pString1, pString2, string1Count, string2Count) == npos;
 	}
 	template<StringLiteral TChar>
-	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t size)
+	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t count)
 	{
-		return StrCmp(pString1, pString2, size) == npos;
+		return StrCmp(pString1, pString2, count) == npos;
 	}
 	template<StringLiteral TChar>
 	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2)

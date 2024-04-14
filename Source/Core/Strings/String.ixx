@@ -39,7 +39,7 @@ export namespace jpt
 	private:
 		TChar m_smallBuffer[kSmallDataSize] = { 0 };	/**< Small buffer to store small data */
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
-		size_t m_size = 0;           /**< How many characters in this string currently */
+		size_t m_count = 0;           /**< How many characters in this string currently */
 		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing */
 
 	public:
@@ -59,23 +59,23 @@ export namespace jpt
 		constexpr       TChar* Buffer()      const { return m_pBuffer; }
 		constexpr       TChar& Front()             { return m_pBuffer[0]; }
 		constexpr const TChar& Front()       const { return m_pBuffer[0]; }
-		constexpr       TChar& Back()              { return m_pBuffer[m_size - 1]; }
-		constexpr const TChar& Back()        const { return m_pBuffer[m_size - 1]; }
+		constexpr       TChar& Back()              { return m_pBuffer[m_count - 1]; }
+		constexpr const TChar& Back()        const { return m_pBuffer[m_count - 1]; }
 		constexpr       TChar& operator[](size_t index)       { return m_pBuffer[index]; }
 		constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Iterators
 		constexpr Iterator begin() { return Iterator(m_pBuffer); }
-		constexpr Iterator end()   { return Iterator(m_pBuffer + m_size); }
+		constexpr Iterator end()   { return Iterator(m_pBuffer + m_count); }
 		constexpr ConstIterator begin()  const { return ConstIterator(m_pBuffer); }
 		constexpr ConstIterator cbegin() const { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator end()    const { return ConstIterator(m_pBuffer + m_size); }
-		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator end()    const { return ConstIterator(m_pBuffer + m_count); }
+		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_count); }
 
 		// Capacity
-		constexpr size_t Size()     const { return m_size;      }
+		constexpr size_t Count()     const { return m_count;      }
 		constexpr size_t Capacity() const { return m_capacity;  }
-		constexpr bool   IsEmpty()  const { return m_size == 0; }
+		constexpr bool   IsEmpty()  const { return m_count == 0; }
 
 		/** Searching. Returns npos if not found */
 		constexpr size_t Find(      TChar  charToFind,   size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
@@ -132,7 +132,7 @@ export namespace jpt
 
 		/** Formats data to a string with provided format then return it
 			@example String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second); */
-		template<size_t kSize>
+		template<size_t kCount>
 		static constexpr StringBase Format(const TChar* format, ...);
 
 		/* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
@@ -211,13 +211,13 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr bool operator==(const StringBase<TChar, TAllocator>& string, const TChar* CString)
 	{
-		return AreStringsSame(string.ConstBuffer(), CString, string.Size(), GetCStrLength(CString));
+		return AreStringsSame(string.ConstBuffer(), CString, string.Count(), FindCharsCount(CString));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
 	constexpr bool operator==(const StringBase<TChar, TAllocator>& lhs, const StringBase<TChar>& rhs)
 	{
-		return AreStringsSame(lhs.ConstBuffer(), rhs.ConstBuffer(), lhs.Size(), rhs.Size());
+		return AreStringsSame(lhs.ConstBuffer(), rhs.ConstBuffer(), lhs.Count(), rhs.Count());
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	StringBase<TChar, TAllocator>& StringBase<TChar, TAllocator>::operator=(const TChar* CString)
 	{
-		if (!AreStringsSame(m_pBuffer, CString, m_size, GetCStrLength(CString)))
+		if (!AreStringsSame(m_pBuffer, CString, m_count, FindCharsCount(CString)))
 		{
 			CopyString(CString);
 		}
@@ -296,7 +296,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::Find(TChar charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
-		ClampTo(endIndex, size_t(0), m_size);
+		ClampTo(endIndex, size_t(0), m_count);
 
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
@@ -321,8 +321,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::Find(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t StringToFindSize = GetCStrLength(StringToFind);
-		ClampTo(endIndex, static_cast<size_t>(0), m_size);
+		const size_t StringToFindSize = FindCharsCount(StringToFind);
+		ClampTo(endIndex, static_cast<size_t>(0), m_count);
 
 		StringBase<TChar> current;
 		for (size_t i = startIndex; i < endIndex; ++i)
@@ -333,7 +333,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Size(), StringToFindSize))
+			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Count(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
@@ -361,7 +361,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::FindLastOf(TChar charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		ClampTo(endIndex, size_t(0), m_size);
+		ClampTo(endIndex, size_t(0), m_count);
 
 		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
 		{
@@ -386,8 +386,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::FindLastOf(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t StringToFindSize = GetCStrLength(StringToFind);
-		ClampTo(endIndex, size_t(0), m_size);
+		const size_t StringToFindSize = FindCharsCount(StringToFind);
+		ClampTo(endIndex, size_t(0), m_count);
 
 		StringBase<TChar> current;
 		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
@@ -398,7 +398,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i - StringToFindSize, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Size(), StringToFindSize))
+			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Count(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
@@ -416,7 +416,7 @@ export namespace jpt
 	{
 		DeallocateBuffer();
 		m_pBuffer = nullptr;
-		m_size = 0;
+		m_count = 0;
 		m_capacity = 0;
 	}
 
@@ -425,11 +425,11 @@ export namespace jpt
 	{
 		if (endIndex == npos)
 		{
-			endIndex = m_size;
+			endIndex = m_count;
 		}
 
 		const StringBase<TChar> replaced(StringToReplace);
-		const size_t stringToFindSize = GetCStrLength(StringToFind);
+		const size_t stringToFindSize = FindCharsCount(StringToFind);
 
 		size_t foundPos = startIndex;
 		while (true)
@@ -445,8 +445,8 @@ export namespace jpt
 
 			*this = Move(pre) + replaced + Move(suff);
 
-			startIndex = foundPos + replaced.Size();	// In case 'StringToReplace' contains 'StringToFind', like replacing 'x' with 'yx'		
-			endIndex += replaced.Size() - stringToFindSize;
+			startIndex = foundPos + replaced.Count();	// In case 'StringToReplace' contains 'StringToFind', like replacing 'x' with 'yx'		
+			endIndex += replaced.Count() - stringToFindSize;
 		}
 
 		return *this;
@@ -466,7 +466,7 @@ export namespace jpt
 		DynamicArray<StringBase> substrs;
 		StringBase current;
 		StringBase copy = *this;
-		const size_t pKeywordSize = GetCStrLength(pKeyword);
+		const size_t pKeywordSize = FindCharsCount(pKeyword);
 
 		while (true)
 		{
@@ -514,10 +514,10 @@ export namespace jpt
 	{
 		if (count == npos)
 		{
-			count = m_size - index;
+			count = m_count - index;
 		}
 
-		JPT_ASSERT((index + count) <= m_size, "SubStr cannot exceeds string's bound");
+		JPT_ASSERT((index + count) <= m_count, "SubStr cannot exceeds string's bound");
 		
 		if (count == 0)
 		{
@@ -551,7 +551,7 @@ export namespace jpt
 		if (index == npos)
 		{
 			size_t i = 0;
-			while (i < m_size && m_pBuffer[i] == ' ')
+			while (i < m_count && m_pBuffer[i] == ' ')
 			{
 				++i;
 			}
@@ -561,7 +561,7 @@ export namespace jpt
 		}
 
 		// Trim from the left to the index
-		JPT_ASSERT(index <= m_size, "Index out of bound");
+		JPT_ASSERT(index <= m_count, "Index out of bound");
 		*this = SubStr(index);
 	}
 
@@ -571,7 +571,7 @@ export namespace jpt
 		// If index == npos, trim all the white spaces from the right
 		if (index == npos)
 		{
-			size_t i = m_size - 1;
+			size_t i = m_count - 1;
 			while (i >= 0 && m_pBuffer[i] == ' ')
 			{
 				--i;
@@ -582,7 +582,7 @@ export namespace jpt
 		}
 
 		// Trim from right to the index
-		JPT_ASSERT(index <= m_size, "Index out of bound");
+		JPT_ASSERT(index <= m_count, "Index out of bound");
 		*this = SubStr(0, index);
 	}
 
@@ -596,19 +596,19 @@ export namespace jpt
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index)
 	{
-		Insert(CString, index, GetCStrLength(CString));
+		Insert(CString, index, FindCharsCount(CString));
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index, size_t size)
 	{
-		JPT_ASSERT(index <= m_size, "Index out of bound");
+		JPT_ASSERT(index <= m_count, "Index out of bound");
 		JPT_EXIT_IF(size == 0);
 
 		StringBase suff = SubStr(index);
 
 		TrimRight(index);
-		Reserve(m_size + size);
+		Reserve(m_count + size);
 
 		Append(CString, size);
 		Append(suff);
@@ -624,14 +624,14 @@ export namespace jpt
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::Append(const TChar* CString)
 	{
-		Append(CString, GetCStrLength(CString));
+		Append(CString, FindCharsCount(CString));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void StringBase<TChar, TAllocator>::Append(const StringBase<TChar>& otherString)
 	{
 		JPT_EXIT_IF(otherString.IsEmpty());
-		AppendImpl(otherString.ConstBuffer(), otherString.m_size);
+		AppendImpl(otherString.ConstBuffer(), otherString.m_count);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
@@ -673,7 +673,7 @@ export namespace jpt
 			// Copy the old buffer to the new one
 			if (m_pBuffer)
 			{
-				StrCpy(pNewBuffer, m_size + sizeof(TChar), m_pBuffer);
+				StrCpy(pNewBuffer, m_count + sizeof(TChar), m_pBuffer);
 				DeallocateBuffer();
 			}
 
@@ -683,10 +683,10 @@ export namespace jpt
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
-	template<size_t kSize>
+	template<size_t kCount>
 	constexpr StringBase<_TChar, _TAllocator> StringBase<_TChar, _TAllocator>::Format(const TChar* format, ...)
 	{
-		TChar buffer[kSize];
+		TChar buffer[kCount];
 
 		if constexpr (AreSameType<TChar, char>)
 		{
@@ -704,14 +704,14 @@ export namespace jpt
 	template<Integral TInt>
 	constexpr TInt StringBase<_TChar, _TAllocator>::ToInt() const
 	{
-		return CStrToInteger(m_pBuffer, m_size);
+		return CStrToInteger(m_pBuffer, m_count);
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	template<Floating TFloat>
 	constexpr TFloat StringBase<_TChar, _TAllocator>::ToFloat() const
 	{
-		return CStrToFloat(m_pBuffer, m_size);
+		return CStrToFloat(m_pBuffer, m_count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -723,7 +723,7 @@ export namespace jpt
 		{
 			m_pBuffer = nullptr;
 		}
-		else if (size == m_size)
+		else if (size == m_count)
 		{
 			StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
 		}
@@ -741,20 +741,20 @@ export namespace jpt
 			}
 		}
 
-		m_size     = size;
-		m_capacity = m_size;
+		m_count     = size;
+		m_capacity = m_count;
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::CopyString(const TChar* inCString)
 	{
-		CopyString(inCString, GetCStrLength(inCString));
+		CopyString(inCString, FindCharsCount(inCString));
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::CopyString(const StringBase<TChar>& otherString)
 	{
-		CopyString(otherString.ConstBuffer(), otherString.Size());
+		CopyString(otherString.ConstBuffer(), otherString.Count());
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -777,14 +777,14 @@ export namespace jpt
 			m_pBuffer = inCString;
 		}
 
-		m_size     = size;
-		m_capacity = m_size;
+		m_count     = size;
+		m_capacity = m_count;
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
 	constexpr void StringBase<_TChar, _TAllocator>::MoveString(TChar* inCString)
 	{
-		MoveString(inCString, GetCStrLength(inCString));
+		MoveString(inCString, FindCharsCount(inCString));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -796,9 +796,9 @@ export namespace jpt
 		{
 			m_pBuffer = nullptr;
 		}
-		else if (otherString.Size() < kSmallDataSize)
+		else if (otherString.Count() < kSmallDataSize)
 		{
-			StrCpy(m_smallBuffer, otherString.m_size + sizeof(TChar), otherString.m_pBuffer);
+			StrCpy(m_smallBuffer, otherString.m_count + sizeof(TChar), otherString.m_pBuffer);
 			m_pBuffer = m_smallBuffer;
 			otherString.DeallocateBuffer();
 		}
@@ -807,11 +807,11 @@ export namespace jpt
 			m_pBuffer = otherString.m_pBuffer;
 		}
 
-		m_size     = otherString.m_size;
+		m_count     = otherString.m_count;
 		m_capacity = otherString.m_capacity;
 
 		otherString.m_pBuffer  = nullptr;
-		otherString.m_size     = 0;
+		otherString.m_count     = 0;
 		otherString.m_capacity = 0;
 	}
 
@@ -830,16 +830,16 @@ export namespace jpt
 	{
 		JPT_EXIT_IF(size == 0);
 
-		const size_t newSize = m_size + size;
+		const size_t newSize = m_count + size;
 		if (newSize < kSmallDataSize)
 		{
 			m_pBuffer = m_smallBuffer;
 		}
 
 		Reserve(newSize);
-		StrCpy(m_pBuffer + m_size, size + sizeof(TChar), CString);
+		StrCpy(m_pBuffer + m_count, size + sizeof(TChar), CString);
 
-		m_size = newSize;
+		m_count = newSize;
 	}
 
 	using String = StringBase<char>;

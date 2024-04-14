@@ -61,12 +61,12 @@ bool UnitTest_StaticArray_Constructing_NonTrivial()
         JPT_ENSURE(element == locHelper(i++));
     }
 
-    for (i = 0; i < staticArray.Size() / 2; ++i)
+    for (i = 0; i < staticArray.Count() / 2; ++i)
     {
-        jpt::Swap(staticArray[i], staticArray[staticArray.Size() - 1 - i]);
+        jpt::Swap(staticArray[i], staticArray[staticArray.Count() - 1 - i]);
     }
 
-    i = staticArray.Size() - 1;
+    i = staticArray.Count() - 1;
     for (const jpt::String& element : staticArray)
     {
         JPT_ENSURE(element == locHelper(i--));

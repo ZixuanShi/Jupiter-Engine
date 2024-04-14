@@ -20,7 +20,7 @@ bool UnitTest_Stack()
 		stack.Push(i);
 	}
 
-    JPT_ENSURE(stack.Size() == 10);
+    JPT_ENSURE(stack.Count() == 10);
 
     for (int32 i = 9; i >= 0; --i)
     {
@@ -41,7 +41,7 @@ bool UnitTest_Stack_String()
     stack.Emplace("Jupiter");
     stack.Emplace("Technologies");
 
-    JPT_ENSURE(stack.Size() == 5);
+    JPT_ENSURE(stack.Count() == 5);
 
     JPT_ENSURE(stack.Peek() == "Technologies"); stack.Pop();
     JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
@@ -63,7 +63,7 @@ bool UnitTest_Stack_Copy()
 
     jpt::Stack<int32> copy = stack;
 
-    JPT_ENSURE(copy.Size() == 10);
+    JPT_ENSURE(copy.Count() == 10);
 
     for (int32 i = 9; i >= 0; --i)
     {
@@ -71,7 +71,7 @@ bool UnitTest_Stack_Copy()
         copy.Pop();
     }
 
-    JPT_ENSURE(stack.Size() == 10);
+    JPT_ENSURE(stack.Count() == 10);
 
     for (int32 i = 9; i >= 0; --i)
     {
@@ -94,7 +94,7 @@ bool UnitTest_Stack_Copy_String()
 
     jpt::Stack<jpt::String> copy = stack;
 
-    JPT_ENSURE(stack.Size() == 5);
+    JPT_ENSURE(stack.Count() == 5);
 
     JPT_ENSURE(stack.Peek() == "Technologies"); stack.Pop();
     JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
@@ -102,7 +102,7 @@ bool UnitTest_Stack_Copy_String()
     JPT_ENSURE(stack.Peek() == "Engine");       stack.Pop();
     JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
 
-    JPT_ENSURE(copy.Size() == 5);
+    JPT_ENSURE(copy.Count() == 5);
 
     JPT_ENSURE(copy.Peek() == "Technologies"); copy.Pop();
     JPT_ENSURE(copy.Peek() == "Jupiter");      copy.Pop();
@@ -124,7 +124,7 @@ bool UnitTest_Stack_Move()
 
     jpt::Stack<int32> moved = jpt::Move(stack);
 
-    JPT_ENSURE(moved.Size() == 10);
+    JPT_ENSURE(moved.Count() == 10);
     JPT_ENSURE(stack.IsEmpty());
 
     for (int32 i = 9; i >= 0; --i)
@@ -150,7 +150,7 @@ bool UnitTest_Stack_Move_String()
 
     jpt::Stack<jpt::String> moved = jpt::Move(stack);
 
-    JPT_ENSURE(moved.Size() == 5);
+    JPT_ENSURE(moved.Count() == 5);
 
     JPT_ENSURE(moved.Peek() == "Technologies"); moved.Pop();
     JPT_ENSURE(moved.Peek() == "Jupiter");      moved.Pop();

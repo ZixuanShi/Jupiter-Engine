@@ -23,14 +23,14 @@ bool UnitTest_HashSet()
     JPT_ENSURE(hashSet.Contains(2));
     JPT_ENSURE(hashSet.Contains(3));
     JPT_ENSURE(!hashSet.Contains(4));
-    JPT_ENSURE(hashSet.Size() == 3);
+    JPT_ENSURE(hashSet.Count() == 3);
 
     hashSet.Erase(2);
 
     JPT_ENSURE(hashSet.Contains(1));
     JPT_ENSURE(!hashSet.Contains(2));
     JPT_ENSURE(hashSet.Contains(3));
-    JPT_ENSURE(hashSet.Size() == 2);
+    JPT_ENSURE(hashSet.Count() == 2);
 
     hashSet.Clear();
 
@@ -54,14 +54,14 @@ bool UnitTest_HashSet_String()
     JPT_ENSURE(hashSet.Contains("World"));
     JPT_ENSURE(hashSet.Contains("Jupiter"));
     JPT_ENSURE(!hashSet.Contains("Engine"));
-    JPT_ENSURE(hashSet.Size() == 3);
+    JPT_ENSURE(hashSet.Count() == 3);
 
     hashSet.Erase("World");
 
     JPT_ENSURE(hashSet.Contains("Hello"));
     JPT_ENSURE(!hashSet.Contains("World"));
     JPT_ENSURE(hashSet.Contains("Jupiter"));
-    JPT_ENSURE(hashSet.Size() == 2);
+    JPT_ENSURE(hashSet.Count() == 2);
 
     hashSet.Clear();
 

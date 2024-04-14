@@ -91,9 +91,9 @@ export namespace jpt
 	};
 
 	template<typename T>
-	concept Sized = requires(T obj)
+	concept Countable = requires(T obj)
 	{
-		obj.Size();
+		obj.Count();
 	};
 
 	template<typename TContainer>

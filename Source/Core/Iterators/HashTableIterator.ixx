@@ -101,7 +101,7 @@ export namespace jpt_private
 	template<typename TData>
 	constexpr bool HashTableIterator<TData>::HasReachedEnd() const
 	{
-		return m_index == m_pBuckets->Size();
+		return m_index == m_pBuckets->Count();
 	}
 
 	template<typename TData>
@@ -208,7 +208,7 @@ export namespace jpt_private
 	template<typename TData>
 	constexpr bool ConstHashTableIterator<TData>::HasReachedEnd() const
 	{
-		return m_index == m_pBuckets->Size();
+		return m_index == m_pBuckets->Count();
 	}
 
 	template<typename TData>

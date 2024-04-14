@@ -34,7 +34,7 @@ export namespace jpt
 		Destructor  m_destructor  = nullptr; /**< Function pointer to the destructor of the current type */
 
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
-		size_t m_currentTypeSize = 0;       /**< Size of the current type */
+		size_t m_currentTypeSize = 0;       /**< Count of the current type */
 
 	public:
 		constexpr Any() = default;

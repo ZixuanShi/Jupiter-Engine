@@ -13,11 +13,11 @@ import jpt.IntroSort;
 
 export namespace jpt
 {
-	// Jupiter's containers with Size() function
-	template<typename TContainer, typename TComparator = Comparator_Less<void>> requires Sized<TContainer> && Indexable<TContainer>
+	// Jupiter's containers with Count() function
+	template<typename TContainer, typename TComparator = Comparator_Less<void>> requires Countable<TContainer> && Indexable<TContainer>
 	constexpr void Sort(TContainer& container, TComparator&& comparator = TComparator())
 	{
-		IntroSort(container, 0, container.Size() - 1, Move(comparator));
+		IntroSort(container, 0, container.Count() - 1, Move(comparator));
 	}
 
 	// C++ style plain array

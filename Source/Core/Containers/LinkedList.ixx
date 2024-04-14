@@ -33,7 +33,7 @@ export namespace jpt
 	private:
 		TNode* m_pHead = nullptr;
 		TNode* m_pTail = nullptr;
-		size_t m_size  = 0;
+		size_t m_count = 0;
 
 	public:
 		constexpr LinkedList() = default;
@@ -59,8 +59,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept { return ConstIterator(nullptr); }
 
 		// Capacity
-		constexpr size_t Size()  const { return m_size; }
-		constexpr bool IsEmpty() const { return m_size == 0; }
+		constexpr size_t Count()  const { return m_count; }
+		constexpr bool IsEmpty() const { return m_count == 0; }
 
 		// Modifier
 		constexpr void Clear();
@@ -103,7 +103,7 @@ export namespace jpt
 	template<typename TData>
 	constexpr bool operator==(const LinkedList<TData>& a, const LinkedList<TData>& b)
 	{
-		if (a.Size() != b.Size())
+		if (a.Count() != b.Count())
 		{
 			return false;
 		}
@@ -181,7 +181,7 @@ export namespace jpt
 
 		m_pHead = nullptr;
 		m_pTail = nullptr;
-		m_size  = 0;
+		m_count  = 0;
 	}
 
 	template<typename TData, typename TAllocator>
@@ -297,7 +297,7 @@ export namespace jpt
 		}
 
 		TAllocator::Deallocate(pToDelete);
-		--m_size;
+		--m_count;
 	}
 
 	template<typename TData, typename TAllocator>
@@ -327,11 +327,11 @@ export namespace jpt
 	{
 		m_pHead = other.m_pHead;
 		m_pTail = other.m_pTail;
-		m_size  = other.m_size;
+		m_count  = other.m_count;
 
 		other.m_pHead = nullptr;
 		other.m_pTail = nullptr;
-		other.m_size  = 0;
+		other.m_count  = 0;
 	}
 
 	template<typename TData, typename TAllocator>
@@ -361,7 +361,7 @@ export namespace jpt
 			m_pTail = pNewNode;
 		}
 
-		++m_size;
+		++m_count;
 	}
 
 	template<typename TData, typename TAllocator>
@@ -391,6 +391,6 @@ export namespace jpt
 			m_pHead = pNewNode;
 		}
 
-		++m_size;
+		++m_count;
 	}
 }

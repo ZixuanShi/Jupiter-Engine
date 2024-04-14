@@ -15,7 +15,7 @@ import jpt.Utilities;
 export namespace jpt
 {
 	/** A sequence container that encapsulates fixed size arrays */
-	template<typename _TData, size_t kSize>
+	template<typename _TData, size_t kCount>
 	class StaticArray
 	{
 	public:
@@ -24,7 +24,7 @@ export namespace jpt
 		using ConstIterator = const TData*;
 
 	private:
-		TData m_buffer[kSize];
+		TData m_buffer[kCount];
 
 	public:
 		constexpr StaticArray() = default;
@@ -40,36 +40,36 @@ export namespace jpt
 		constexpr       TData* Buffer()            { return m_buffer; }
 		constexpr       TData& Front()             { return m_buffer[0]; }
 		constexpr const TData& Front()       const { return m_buffer[0]; }
-		constexpr       TData& Back()              { return m_buffer[kSize - 1]; }
-		constexpr const TData& Back()        const { return m_buffer[kSize - 1]; }
+		constexpr       TData& Back()              { return m_buffer[kCount - 1]; }
+		constexpr const TData& Back()        const { return m_buffer[kCount - 1]; }
 		constexpr       TData& operator[](size_t index)       { return m_buffer[index]; }
 		constexpr const TData& operator[](size_t index) const { return m_buffer[index]; }
 
 		// Iterators
 		constexpr Iterator begin() { return Iterator(m_buffer); }
-		constexpr Iterator end()   { return Iterator(m_buffer + kSize); }
+		constexpr Iterator end()   { return Iterator(m_buffer + kCount); }
 		constexpr ConstIterator begin()  const { return ConstIterator(m_buffer); }
 		constexpr ConstIterator cbegin() const { return ConstIterator(m_buffer); }
-		constexpr ConstIterator end()    const { return ConstIterator(m_buffer + kSize); }
-		constexpr ConstIterator cend()   const { return ConstIterator(m_buffer + kSize); }
+		constexpr ConstIterator end()    const { return ConstIterator(m_buffer + kCount); }
+		constexpr ConstIterator cend()   const { return ConstIterator(m_buffer + kCount); }
 
 		// Capacity
-		constexpr size_t Size() const { return kSize; }
+		constexpr size_t Count() const { return kCount; }
 
 	private:
 		constexpr void CopyData(const TData* pBegin);
 		constexpr void MoveData(StaticArray&& other);
 	};
 
-	template<typename TData, size_t kSize>
-	constexpr bool operator==(const StaticArray<TData, kSize>& a, const StaticArray<TData, kSize>& b)
+	template<typename TData, size_t kCount>
+	constexpr bool operator==(const StaticArray<TData, kCount>& a, const StaticArray<TData, kCount>& b)
 	{
-		if (a.Size() != b.Size())
+		if (a.Count() != b.Count())
 		{
 			return false;
 		}
 
-		for (size_t i = 0; i < a.Size(); ++i)
+		for (size_t i = 0; i < a.Count(); ++i)
 		{
 			if (a[i] != b[i])
 			{
@@ -80,27 +80,27 @@ export namespace jpt
 		return true;
 	}
 
-	template<typename TData, size_t kSize>
-	constexpr StaticArray<TData, kSize>::StaticArray(const std::initializer_list<TData>& initializerList)
+	template<typename TData, size_t kCount>
+	constexpr StaticArray<TData, kCount>::StaticArray(const std::initializer_list<TData>& initializerList)
 	{
-		JPT_ASSERT(initializerList.size() == kSize, "Initializer list size doesn't match");
+		JPT_ASSERT(initializerList.size() == kCount, "Initializer list size doesn't match");
 		CopyData(initializerList.begin());
 	}
 
-	template<typename _TData, size_t kSize>
-	constexpr StaticArray<_TData, kSize>::StaticArray(const StaticArray& other)
+	template<typename _TData, size_t kCount>
+	constexpr StaticArray<_TData, kCount>::StaticArray(const StaticArray& other)
 	{
 		CopyData(other.ConstBuffer());
 	}
 
-	template<typename _TData, size_t kSize>
-	constexpr StaticArray<_TData, kSize>::StaticArray(StaticArray&& other) noexcept
+	template<typename _TData, size_t kCount>
+	constexpr StaticArray<_TData, kCount>::StaticArray(StaticArray&& other) noexcept
 	{
 		MoveData(Move(other));
 	}
 
-	template<typename _TData, size_t kSize>
-	StaticArray<_TData, kSize>& StaticArray<_TData, kSize>::operator=(const StaticArray& other) noexcept
+	template<typename _TData, size_t kCount>
+	StaticArray<_TData, kCount>& StaticArray<_TData, kCount>::operator=(const StaticArray& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -110,8 +110,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename _TData, size_t kSize>
-	StaticArray<_TData, kSize>& StaticArray<_TData, kSize>::operator=(StaticArray&& other) noexcept
+	template<typename _TData, size_t kCount>
+	StaticArray<_TData, kCount>& StaticArray<_TData, kCount>::operator=(StaticArray&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -121,38 +121,38 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename _TData, size_t kSize>
-	constexpr StaticArray<_TData, kSize>::~StaticArray()
+	template<typename _TData, size_t kCount>
+	constexpr StaticArray<_TData, kCount>::~StaticArray()
 	{
 		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
-			for (size_t i = 0; i < kSize; ++i)
+			for (size_t i = 0; i < kCount; ++i)
 			{
 				m_buffer[i].~TData();
 			}
 		}
 	}
 
-	template<typename _TData, size_t kSize>
-	constexpr void StaticArray<_TData, kSize>::CopyData(const TData* pBegin)
+	template<typename _TData, size_t kCount>
+	constexpr void StaticArray<_TData, kCount>::CopyData(const TData* pBegin)
 	{
 		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
-			std::memcpy(m_buffer, pBegin, kSize * sizeof(TData));
+			std::memcpy(m_buffer, pBegin, kCount * sizeof(TData));
 		}
 		else
 		{
-			for (size_t i = 0; i < kSize; ++i, ++pBegin)
+			for (size_t i = 0; i < kCount; ++i, ++pBegin)
 			{
 				m_buffer[i] = *pBegin;
 			}
 		}
 	}
 
-	template<typename _TData, size_t kSize>
-	constexpr void StaticArray<_TData, kSize>::MoveData(StaticArray&& other)
+	template<typename _TData, size_t kCount>
+	constexpr void StaticArray<_TData, kCount>::MoveData(StaticArray&& other)
 	{
-		for (size_t i = 0; i < kSize; ++i)
+		for (size_t i = 0; i < kCount; ++i)
 		{
 			m_buffer[i] = Move(other.m_buffer[i]);
 		}

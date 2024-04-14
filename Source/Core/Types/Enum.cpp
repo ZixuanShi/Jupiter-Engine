@@ -33,9 +33,9 @@ Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView oper
 	if (const size_t shiftIndex = expression.Find(operatorStr.Buffer()); shiftIndex != jpt::npos)
 	{
 		const jpt::StringView left  = expression.SubStr(0, shiftIndex);
-		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Size(), expression.Size() - shiftIndex - operatorStr.Size());
-		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.Buffer(),  left.Size());
-		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.Buffer(), right.Size());
+		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
+		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.Buffer(),  left.Count());
+		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.Buffer(), right.Count());
 
 		switch (operation)
 		{
@@ -60,7 +60,7 @@ TInt Evaluate(jpt::StringView valueStr)
 	jpt::StringView expression = valueStr;
 	if (expression.Front() == '(' && expression.Back() == ')')
 	{
-		expression = expression.SubStr(1, expression.Size() - 2);
+		expression = expression.SubStr(1, expression.Count() - 2);
 	}
 
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
@@ -71,10 +71,10 @@ TInt Evaluate(jpt::StringView valueStr)
 	// Hex. starts with 0x
 	else if (const size_t hexIndex = expression.Find("0x"); hexIndex == 0)
 	{
-		return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size(), IntBase::Hex);
+		return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Count(), IntBase::Hex);
 	}
 
-	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Size());
+	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Count());
 }
 
 template<jpt::Integral TInt>
@@ -83,7 +83,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 	EnumData<TInt> data;
 
 	DynamicArray<jpt::String> tokens = GetTokens(pSource);
-	data.names.Reserve(tokens.Size());
+	data.names.Reserve(tokens.Count());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
@@ -97,7 +97,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 		{
 			name = token.SubStr(0, equalIndex);
 
-			const jpt::String valueStr = token.SubStr(equalIndex + 1, token.Size() - equalIndex - 1);
+			const jpt::String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
 			key  = Evaluate<TInt>(valueStr);
 		}
 		else

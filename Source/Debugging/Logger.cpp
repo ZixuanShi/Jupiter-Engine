@@ -80,7 +80,7 @@ namespace jpt
 
 		const String stamp = GetStamp(type, line, file);
 
-		const size_t wStampStrSize = stamp.Size() + 1;
+		const size_t wStampStrSize = stamp.Count() + 1;
 		wchar_t* wStampStr = new wchar_t[wStampStrSize];
 		mbstowcs_s(nullptr, wStampStr, wStampStrSize, stamp.ConstBuffer(), _TRUNCATE);
 

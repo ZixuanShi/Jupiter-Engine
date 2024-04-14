@@ -14,10 +14,10 @@ import jpt.StringUtils;
 import jpt.Utilities;
 
 #pragma region String Formatting
-template<size_t kSize = 32>
+template<size_t kCount = 32>
 bool TestFormatHelper(const char* expectedResult, const char* format, ...)
 {
-    char buffer[kSize];
+    char buffer[kCount];
     JPT_FORMAT_STRING(buffer, format, ...);
 
     return jpt::AreStringsSame(buffer, expectedResult);

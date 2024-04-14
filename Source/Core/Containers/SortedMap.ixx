@@ -31,7 +31,7 @@ export namespace jpt
 
 	private:
 		TNode* m_pRoot = nullptr;
-		size_t m_size  = 0;
+		size_t m_count = 0;
 
 	public:
 		constexpr SortedMap() = default;
@@ -61,7 +61,7 @@ export namespace jpt
 		if (m_pRoot == nullptr)
 		{
 			m_pRoot = pNewNode;
-			m_size = 1;
+			m_count = 1;
 			return;
 		}
 
@@ -93,7 +93,7 @@ export namespace jpt
 
 		pNewNode->pParent = pParent;
 
-		++m_size;
+		++m_count;
 	}
 
 	template<Comparable _TKey, typename _TValue, typename TAllocator>
@@ -102,7 +102,7 @@ export namespace jpt
 		if (m_pRoot != nullptr)
 		{
 			Stack<TNode*> stack;
-			stack.Reserve(m_size);
+			stack.Reserve(m_count);
 			stack.Emplace(m_pRoot);
 
 			while (!stack.IsEmpty())
@@ -123,6 +123,6 @@ export namespace jpt
 			}
 		}
 
-		m_size = 0;
+		m_count = 0;
 	}
 }

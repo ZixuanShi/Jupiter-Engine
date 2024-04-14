@@ -30,7 +30,7 @@ export namespace jpt
 
 	private:
 		TData* m_pBuffer  = nullptr;
-		size_t m_size     = 0;
+		size_t m_count    = 0;
 		size_t m_capacity = 0;
 
 	public:
@@ -47,25 +47,25 @@ export namespace jpt
 		constexpr       TData* Buffer()            { return m_pBuffer; }
 		constexpr       TData& Front()             { return m_pBuffer[0]; }
 		constexpr const TData& Front()       const { return m_pBuffer[0]; }
-		constexpr       TData& Back()              { return m_pBuffer[m_size - 1]; }
-		constexpr const TData& Back()        const { return m_pBuffer[m_size - 1]; }
+		constexpr       TData& Back()              { return m_pBuffer[m_count - 1]; }
+		constexpr const TData& Back()        const { return m_pBuffer[m_count - 1]; }
 		constexpr       TData& operator[](size_t index)       { return m_pBuffer[index]; }
 		constexpr const TData& operator[](size_t index) const { return m_pBuffer[index]; }
-		constexpr       TData& At(size_t index)       { JPT_ASSERT(index < m_size); return m_pBuffer[index]; }
-		constexpr const TData& At(size_t index) const { JPT_ASSERT(index < m_size); return m_pBuffer[index]; }
+		constexpr       TData& At(size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
+		constexpr const TData& At(size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 
 		// Iterators
 		constexpr Iterator begin() noexcept { return Iterator(m_pBuffer); }
-		constexpr Iterator end()   noexcept { return Iterator(m_pBuffer + m_size); }
+		constexpr Iterator end()   noexcept { return Iterator(m_pBuffer + m_count); }
 		constexpr ConstIterator begin()  const noexcept { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator end()    const noexcept { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator end()    const noexcept { return ConstIterator(m_pBuffer + m_count); }
 		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator cend()   const noexcept { return ConstIterator(m_pBuffer + m_size); }
+		constexpr ConstIterator cend()   const noexcept { return ConstIterator(m_pBuffer + m_count); }
 
 		// Capacity
-		constexpr size_t Size()     const { return m_size;      }
+		constexpr size_t Count()     const { return m_count;      }
 		constexpr size_t Capacity() const { return m_capacity;  }
-		constexpr bool   IsEmpty()  const { return m_size == 0; }
+		constexpr bool   IsEmpty()  const { return m_count == 0; }
 		constexpr void Reserve(size_t capacity);
 		constexpr void ShrinkToFit();
 
@@ -108,12 +108,12 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr bool operator==(const DynamicArray<TData, TAllocator>& a, const DynamicArray<TData, TAllocator>& b)
 	{
-		if (a.Size() != b.Size())
+		if (a.Count() != b.Count())
 		{
 			return false;
 		}
 
-		for (size_t i = 0; i < a.Size(); ++i)
+		for (size_t i = 0; i < a.Count(); ++i)
 		{
 			if (a[i] != b[i])
 			{
@@ -133,7 +133,7 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::DynamicArray(const DynamicArray& other)
 	{
-		CopyData(other.ConstBuffer(), other.Size());
+		CopyData(other.ConstBuffer(), other.Count());
 	}
 
 	template<typename TData, typename TAllocator>
@@ -148,7 +148,7 @@ export namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			CopyData(other.ConstBuffer(), other.Size());
+			CopyData(other.ConstBuffer(), other.Count());
 		}
 
 		return *this;
@@ -186,39 +186,39 @@ export namespace jpt
 	{
 		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
-			for (size_t i = 0; i < m_size; ++i)
+			for (size_t i = 0; i < m_count; ++i)
 			{
 				TAllocator::Destruct(m_pBuffer + i);
 			}
 		}
 
 		JPT_SAFE_DELETE_ARRAY(m_pBuffer);
-		m_size = 0;
+		m_count = 0;
 		m_capacity = 0;
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Resize(size_t size, const TData& data /*= TData()*/)
 	{
-		// If size if less than m_size, shrink
-		if (size < m_size)
+		// If size if less than m_count, shrink
+		if (size < m_count)
 		{
-			for (size_t i = size; i < m_size; ++i)
+			for (size_t i = size; i < m_count; ++i)
 			{
 				PopBack();
 			}
 		}
-		// If size if greater than m_size, grow
-		else if (size > m_size)
+		// If size if greater than m_count, grow
+		else if (size > m_count)
 		{
 			Reserve(size);
-			for (size_t i = m_size; i < size; ++i)
+			for (size_t i = m_count; i < size; ++i)
 			{
 				EmplaceBack(data);
 			}
 		}
 
-		m_size = size;
+		m_count = size;
 	}
 
 	template<typename TData, typename TAllocator>
@@ -238,13 +238,13 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::AddBack(const TData& data)
 	{
-		Add(m_size, data);
+		Add(m_count, data);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::AddBack(TData&& data)
 	{
-		Add(m_size, Move(data));
+		Add(m_count, Move(data));
 	}
 
 	template<typename TData, typename TAllocator>
@@ -260,33 +260,33 @@ export namespace jpt
 	template<typename ...TArgs>
 	constexpr DynamicArray<TData, TAllocator>::TData& DynamicArray<TData, TAllocator>::EmplaceBack(TArgs&& ...args)
 	{
-		return Emplace(m_size, Forward<TArgs>(args)...);
+		return Emplace(m_count, Forward<TArgs>(args)...);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Erase(size_t index)
 	{
-		JPT_ASSERT(index <= m_size, "Calling Erase() with an invalid index");
+		JPT_ASSERT(index <= m_count, "Calling Erase() with an invalid index");
 
 		if constexpr (!std::is_trivially_destructible_v<TData>)
 		{
 			TAllocator::Destruct(m_pBuffer + index);
 		}
 
-		--m_size;
+		--m_count;
 		ShiftDataToBegin(index);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::PopBack()
 	{
-		Erase(m_size - 1);
+		Erase(m_count - 1);
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::ShrinkToFit()
 	{
-		UpdateBuffer(m_size);
+		UpdateBuffer(m_count);
 	}
 
 	template<typename TData, typename TAllocator>
@@ -301,11 +301,11 @@ export namespace jpt
 		{
 			if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 			{
-				std::memmove(pNewBuffer, m_pBuffer, m_size * sizeof(TData));
+				std::memmove(pNewBuffer, m_pBuffer, m_count * sizeof(TData));
 			}
 			else
 			{
-				for (size_t i = 0; i < m_size; ++i)
+				for (size_t i = 0; i < m_count; ++i)
 				{
 					pNewBuffer[i] = Move(m_pBuffer[i]);
 				}
@@ -323,25 +323,25 @@ export namespace jpt
 	{
 		m_pBuffer  = other.m_pBuffer;
 		m_capacity = other.m_capacity;
-		m_size     = other.m_size;
+		m_count     = other.m_count;
 
 		other.m_pBuffer  = nullptr;
 		other.m_capacity = 0;
-		other.m_size     = 0;
+		other.m_count     = 0;
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::ShiftDataToEnd(size_t index, size_t distance /*= 1*/)
 	{
-		JPT_ASSERT(index <= m_size, "Distance went beyond the bound of this vector. Use reserve first");
+		JPT_ASSERT(index <= m_count, "Distance went beyond the bound of this vector. Use reserve first");
 
 		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
-			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_size - index) * sizeof(TData));
+			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_count - index) * sizeof(TData));
 		}
 		else
 		{
-			for (size_t i = m_size; i > index; --i)
+			for (size_t i = m_count; i > index; --i)
 			{
 				m_pBuffer[i] = Move(m_pBuffer[i - distance]);
 			}
@@ -355,11 +355,11 @@ export namespace jpt
 
 		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
-			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_size - index) * sizeof(TData));
+			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_count - index) * sizeof(TData));
 		}
 		else
 		{
-			for (size_t i = index; i < m_size; ++i)
+			for (size_t i = index; i < m_count; ++i)
 			{
 				m_pBuffer[i] = Move(m_pBuffer[i + distance]);
 			}
@@ -369,26 +369,26 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForAdd(size_t index)
 	{
-		JPT_ASSERT(index <= m_size, "Calling DynamicArray::Insert() with an invalid index");
+		JPT_ASSERT(index <= m_count, "Calling DynamicArray::Insert() with an invalid index");
 
-		if (m_size >= m_capacity)
+		if (m_count >= m_capacity)
 		{
-			UpdateBuffer(m_size * kGrowMultiplier);
+			UpdateBuffer(m_count * kGrowMultiplier);
 		}
 
 		ShiftDataToEnd(index);
-		++m_size;
+		++m_count;
 	}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::CopyData(const TData* pBegin, size_t size)
 	{
-		m_size = size;
-		UpdateBuffer(m_size);
+		m_count = size;
+		UpdateBuffer(m_count);
 
 		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
-			std::memcpy(m_pBuffer, pBegin, m_size * sizeof(TData));
+			std::memcpy(m_pBuffer, pBegin, m_count * sizeof(TData));
 		}
 		else
 		{

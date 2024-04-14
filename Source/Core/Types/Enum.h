@@ -82,7 +82,7 @@ public:                                                                         
                                                                                                                                         \
     constexpr static TSize Min()   { return s_data.min; }                                                                               \
     constexpr static TSize Max()   { return s_data.max; }                                                                               \
-    constexpr static TSize Count() { return static_cast<TSize>(s_data.names.Size()); }                                                  \
+    constexpr static TSize Count() { return static_cast<TSize>(s_data.names.Count()); }                                                  \
     constexpr static const jpt::HashMap<TSize, jpt::String>& Names() { return s_data.names; }                                           \
     constexpr static const jpt::String& Name(TSize index) { JPT_ASSERT(s_data.names.Contains(index)); return s_data.names[index]; }     \
                                                                                                                                         \

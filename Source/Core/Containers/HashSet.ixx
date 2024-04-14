@@ -33,7 +33,7 @@ export namespace jpt
 
 	private:
 		TBuckets m_buckets;
-		size_t   m_size = 0;
+		size_t   m_count = 0;
 
 	public:
 		constexpr HashSet() noexcept = default;
@@ -53,8 +53,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
-		constexpr size_t Size()  const { return m_size; }
-		constexpr bool IsEmpty() const { return m_size == 0; }
+		constexpr size_t Count()  const { return m_count; }
+		constexpr bool IsEmpty() const { return m_count == 0; }
 		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
@@ -85,7 +85,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::HashSet(const HashSet& other)
 	{
-		CopyData(other, other.Size());
+		CopyData(other, other.Count());
 	}
 
 	template<typename TValue>
@@ -100,7 +100,7 @@ export namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			CopyData(other, other.Size());
+			CopyData(other, other.Count());
 		}
 
 		return *this;
@@ -128,9 +128,9 @@ export namespace jpt
 	constexpr void HashSet<TValue>::Add(const TValue& data)
 	{
 		// Grow if needed
-		if (m_size >= m_buckets.Size() * kGrowMultiplier)
+		if (m_count >= m_buckets.Count() * kGrowMultiplier)
 		{
-			Reserve(m_size * kGrowMultiplier);
+			Reserve(m_count * kGrowMultiplier);
 		}
 
 		TBucket& bucket = GetBucket(data);
@@ -145,7 +145,7 @@ export namespace jpt
 		}
 
 		// If the key does not exist, add it
-		++m_size;
+		++m_count;
 		bucket.EmplaceBack(data);
 	}
 
@@ -164,7 +164,7 @@ export namespace jpt
 			if (*it == key)
 			{
 				bucket.Erase(it);
-				--m_size;
+				--m_count;
 				return;
 			}
 		}
@@ -204,7 +204,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::Iterator HashSet<TValue>::end() noexcept
 	{
-		return Iterator(&m_buckets, m_buckets.Size(), nullptr);
+		return Iterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
 	template<typename TValue>
@@ -220,7 +220,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::end() const noexcept
 	{
-		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
+		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
 	template<typename TValue>
@@ -236,7 +236,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::cend() const noexcept
 	{
-		return ConstIterator(&m_buckets, m_buckets.Size(), nullptr);
+		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
 	template<typename TValue>
@@ -262,13 +262,13 @@ export namespace jpt
 	constexpr void HashSet<TValue>::Clear()
 	{
 		m_buckets.Clear();
-		m_size = 0;
+		m_count = 0;
 	}
 
 	template<typename TValue>
 	constexpr size_t HashSet<TValue>::GetBucketIndex(const TValue& key) const
 	{
-		return Hash<TValue>()(key) % m_buckets.Size();
+		return Hash<TValue>()(key) % m_buckets.Count();
 	}
 
 	template<typename TValue>
@@ -295,15 +295,15 @@ export namespace jpt
 			bucket.EmplaceBack(data);
 		}
 
-		m_size += size;
+		m_count += size;
 	}
 
 	template<typename TValue>
 	constexpr void HashSet<TValue>::MoveSet(HashSet&& other)
 	{
 		m_buckets = Move(other.m_buckets);
-		m_size = other.m_size;
+		m_count = other.m_count;
 
-		other.m_size = 0;
+		other.m_count = 0;
 	}
 }

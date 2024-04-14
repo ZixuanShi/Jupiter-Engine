@@ -33,7 +33,7 @@ export namespace jpt
 
 		// Capacity
 		constexpr bool IsEmpty() const;
-		constexpr size_t Size() const;
+		constexpr size_t Count() const;
 		constexpr size_t Capacity() const;
 		constexpr void Reserve(size_t capacity);
 
@@ -66,9 +66,9 @@ export namespace jpt
 	}
 
 	template<typename _TData>
-	constexpr size_t Stack<_TData>::Size() const
+	constexpr size_t Stack<_TData>::Count() const
 	{
-		return m_values.Size();
+		return m_values.Count();
 	}
 
 	template<typename _TData>

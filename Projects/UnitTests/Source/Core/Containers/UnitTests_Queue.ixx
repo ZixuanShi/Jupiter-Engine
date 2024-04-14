@@ -20,7 +20,7 @@ bool UnitTest_Queue()
 		queue.Enqueue(i);
 	}
 
-    JPT_ENSURE(queue.Size() == 10);
+    JPT_ENSURE(queue.Count() == 10);
 
     for (int32 i = 0; i < 10; ++i)
     {

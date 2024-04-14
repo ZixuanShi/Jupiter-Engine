@@ -88,7 +88,7 @@ bool UnitTest_DynamicArray_Trivial()
     JPT_ENSURE(dynamicArray.Capacity() == 7);
 
     dynamicArray.Resize(16, 42);
-    JPT_ENSURE(dynamicArray.Size() == 16);
+    JPT_ENSURE(dynamicArray.Count() == 16);
 
     for (i = 7; i < 16; ++i)
     {
@@ -204,7 +204,7 @@ bool UnitTest_DynamicArray_NonTrivial()
     JPT_ENSURE(dynamicArray.Capacity() == 7);
 
     dynamicArray.Resize(16, "42");
-    JPT_ENSURE(dynamicArray.Size() == 16);
+    JPT_ENSURE(dynamicArray.Count() == 16);
 
     for (i = 7; i < 16; ++i)
     {

@@ -35,7 +35,7 @@ export namespace jpt
 
 		// Capacity
 		constexpr bool IsEmpty() const;
-		constexpr size_t Size() const;
+		constexpr size_t Count() const;
 
 		// Adding
 		constexpr void Enqueue(const TData& value);
@@ -78,9 +78,9 @@ export namespace jpt
 	}
 
 	template<typename _TData>
-	constexpr size_t Queue<_TData>::Size() const
+	constexpr size_t Queue<_TData>::Count() const
 	{
-		return m_values.Size();
+		return m_values.Count();
 	}
 
 	template<typename _TData>

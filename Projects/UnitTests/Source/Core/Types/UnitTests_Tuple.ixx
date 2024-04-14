@@ -68,7 +68,7 @@ bool UnitTest_Tuple()
 	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
 	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 	
-	// Get Size
+	// Get Count
 	// Warning	C4127	conditional expression is constant :)
 	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
@@ -107,7 +107,7 @@ bool UnitTest_EmptyTuple()
 	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
 	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 
-	// Get Size
+	// Get Count
 	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
@@ -124,7 +124,7 @@ bool UnitTest_ConstTuple()
 	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(10));
 	JPT_ENSURE(jpt::Get<4>(tuple) == "Hello");
 
-	// Get Size
+	// Get Count
 	//JPT_ENSURE(jpt::GetSize(tuple) == 5);
 
 	return true;
@@ -158,7 +158,7 @@ bool UnitTest_ConstTDatauple()
 
 	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
 
-	// Get Size
+	// Get Count
 	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;
@@ -201,7 +201,7 @@ bool UnitTest_Tie()
 	JPT_ENSURE(jpt::Get<3>(tuple) == Foo(420));
 	JPT_ENSURE(jpt::Get<5>(tuple) == "Jupiter Engine");
 
-	// Get Size
+	// Get Count
 	//JPT_ENSURE(jpt::GetSize(tuple) == 6);
 
 	return true;

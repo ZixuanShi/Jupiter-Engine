@@ -51,7 +51,7 @@ export namespace jpt
 	template<class TReturn, class ...TArgs>
 	constexpr size_t Slot<TReturn(TArgs...)>::Add(const TFunction& function)
 	{
-		for (size_t i = 0; i < m_functions.Size(); ++i)
+		for (size_t i = 0; i < m_functions.Count(); ++i)
 		{
 			if (!m_functions[i].IsConnected())
 			{
@@ -61,14 +61,14 @@ export namespace jpt
 		}
 
 		m_functions.AddBack(function);
-		return m_functions.Size() - 1;
+		return m_functions.Count() - 1;
 	}
 
 	template<class TReturn, class ...TArgs>
 	template<class T>
 	constexpr size_t Slot<TReturn(TArgs...)>::Add(const T& function) requires (!AreSameType<T, TFunction>)
 	{
-		for (size_t i = 0; i < m_functions.Size(); ++i)
+		for (size_t i = 0; i < m_functions.Count(); ++i)
 		{
 			if (!m_functions[i].IsConnected())
 			{
@@ -78,14 +78,14 @@ export namespace jpt
 		}
 
 		m_functions.EmplaceBack(function);
-		return m_functions.Size() - 1;
+		return m_functions.Count() - 1;
 	}
 
 	template<class TReturn, class ...TArgs>
 	template<class TCaller>
 	constexpr size_t Slot<TReturn(TArgs...)>::Add(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...))
 	{
-		for (size_t i = 0; i < m_functions.Size(); ++i)
+		for (size_t i = 0; i < m_functions.Count(); ++i)
 		{
 			if (!m_functions[i].IsConnected())
 			{
@@ -95,20 +95,20 @@ export namespace jpt
 		}
 
 		m_functions.EmplaceBack(pCaller, pMemberFunction);
-		return m_functions.Size() - 1;
+		return m_functions.Count() - 1;
 	}
 
 	template<class TReturn, class ...TArgs>
 	constexpr void Slot<TReturn(TArgs...)>::Erase(size_t index)
 	{
-		JPT_ASSERT(index < m_functions.Size(), "Index out of range");
+		JPT_ASSERT(index < m_functions.Count(), "Index out of range");
 		m_functions[index].Disconnect();
 	}
 
 	template<class TReturn, class ...TArgs>
 	constexpr bool Slot<TReturn(TArgs...)>::IsConnected(size_t index) const
 	{
-		JPT_ASSERT(index < m_functions.Size(), "Index out of range");
+		JPT_ASSERT(index < m_functions.Count(), "Index out of range");
 		return m_functions[index].IsConnected();
 	}
 
