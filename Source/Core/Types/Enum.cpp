@@ -83,7 +83,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 	EnumData<TInt> data;
 
 	DynamicArray<jpt::String> tokens = GetTokens(pSource);
-	data.names.Resize(tokens.Size());
+	data.names.Reserve(tokens.Size());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;

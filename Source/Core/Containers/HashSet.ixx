@@ -55,7 +55,7 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Size()  const { return m_size; }
 		constexpr bool IsEmpty() const { return m_size == 0; }
-		constexpr void Resize(size_t capacity);
+		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
 		constexpr void Add(const TValue& data);
@@ -130,7 +130,7 @@ export namespace jpt
 		// Grow if needed
 		if (m_size >= m_buckets.Size() * kGrowMultiplier)
 		{
-			Resize(m_size * kGrowMultiplier);
+			Reserve(m_size * kGrowMultiplier);
 		}
 
 		TBucket& bucket = GetBucket(data);
@@ -240,15 +240,15 @@ export namespace jpt
 	}
 
 	template<typename TValue>
-	constexpr void HashSet<TValue>::Resize(size_t capacity)
+	constexpr void HashSet<TValue>::Reserve(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 
-		TBuckets newBuckets = m_buckets;
-		Clear();
+		TBuckets oldDataCopy = m_buckets;
+		m_buckets.Clear();
 		m_buckets.Resize(Max(kMinCapacity, capacity));
 
-		for (const TBucket& bucket : newBuckets)
+		for (const TBucket& bucket : oldDataCopy)
 		{
 			for (const TValue& element : bucket)
 			{
@@ -287,7 +287,7 @@ export namespace jpt
 	template<Iterable TContainer>
 	constexpr void HashSet<TValue>::CopyData(const TContainer& container, size_t size)
 	{
-		Resize(size);
+		Reserve(size);
 
 		for (const TValue& data : container)
 		{
