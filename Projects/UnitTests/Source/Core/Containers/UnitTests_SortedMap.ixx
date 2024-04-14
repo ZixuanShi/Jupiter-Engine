@@ -12,6 +12,13 @@ import jpt.Utilities;
 
 bool UnitTest_SortedMap()
 {
+    jpt::SortedMap<int32, int32> sortedMap;
+    
+    sortedMap.Add(1, 1);
+    sortedMap.Add(0, 0);
+    sortedMap.Add(2, 2);
+    sortedMap.Add(4, 4);
+    sortedMap.Add(3, 3);
 
     return true;
 }

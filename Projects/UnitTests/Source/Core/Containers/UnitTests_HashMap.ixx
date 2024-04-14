@@ -260,13 +260,15 @@ bool UnitTest_HashMap_Grow()
 	{
 		hashMap.Add(i, i * 2);
 	}
+    JPT_ENSURE(hashMap.Size() == 1000);
 
     for (int32 i = 0; i < 1000; ++i)
     {
         JPT_ENSURE(hashMap.Contains(i));
         JPT_ENSURE(hashMap[i] == i * 2);
         JPT_ENSURE(hashMap.Find(i)->second == i * 2);
-    }
+    } 
+    JPT_ENSURE(hashMap.Size() == 1000);
 
     return true;
 }
