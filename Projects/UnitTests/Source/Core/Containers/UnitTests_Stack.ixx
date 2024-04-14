@@ -43,11 +43,11 @@ bool UnitTest_Stack_String()
 
     JPT_ENSURE(stack.Size() == 5);
 
-    JPT_ENSURE(stack.Pop() == "Technologies");
-    JPT_ENSURE(stack.Pop() == "Jupiter");
-    JPT_ENSURE(stack.Pop() == "By");
-    JPT_ENSURE(stack.Pop() == "Engine");
-    JPT_ENSURE(stack.Pop() == "Jupiter");
+    JPT_ENSURE(stack.Peek() == "Technologies"); stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
+    JPT_ENSURE(stack.Peek() == "By");           stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Engine");       stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
 
     return true;
 }
@@ -96,19 +96,19 @@ bool UnitTest_Stack_Copy_String()
 
     JPT_ENSURE(stack.Size() == 5);
 
-    JPT_ENSURE(stack.Pop() == "Technologies");
-    JPT_ENSURE(stack.Pop() == "Jupiter");
-    JPT_ENSURE(stack.Pop() == "By");
-    JPT_ENSURE(stack.Pop() == "Engine");
-    JPT_ENSURE(stack.Pop() == "Jupiter");
+    JPT_ENSURE(stack.Peek() == "Technologies"); stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
+    JPT_ENSURE(stack.Peek() == "By");           stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Engine");       stack.Pop();
+    JPT_ENSURE(stack.Peek() == "Jupiter");      stack.Pop();
 
     JPT_ENSURE(copy.Size() == 5);
 
-    JPT_ENSURE(copy.Pop() == "Technologies");
-    JPT_ENSURE(copy.Pop() == "Jupiter");
-    JPT_ENSURE(copy.Pop() == "By");
-    JPT_ENSURE(copy.Pop() == "Engine");
-    JPT_ENSURE(copy.Pop() == "Jupiter");
+    JPT_ENSURE(copy.Peek() == "Technologies"); copy.Pop();
+    JPT_ENSURE(copy.Peek() == "Jupiter");      copy.Pop();
+    JPT_ENSURE(copy.Peek() == "By");           copy.Pop();
+    JPT_ENSURE(copy.Peek() == "Engine");       copy.Pop();
+    JPT_ENSURE(copy.Peek() == "Jupiter");      copy.Pop();
 
     return true;
 }
@@ -152,11 +152,11 @@ bool UnitTest_Stack_Move_String()
 
     JPT_ENSURE(moved.Size() == 5);
 
-    JPT_ENSURE(moved.Pop() == "Technologies");
-    JPT_ENSURE(moved.Pop() == "Jupiter");
-    JPT_ENSURE(moved.Pop() == "By");
-    JPT_ENSURE(moved.Pop() == "Engine");
-    JPT_ENSURE(moved.Pop() == "Jupiter");
+    JPT_ENSURE(moved.Peek() == "Technologies"); moved.Pop();
+    JPT_ENSURE(moved.Peek() == "Jupiter");      moved.Pop();
+    JPT_ENSURE(moved.Peek() == "By");           moved.Pop();
+    JPT_ENSURE(moved.Peek() == "Engine");       moved.Pop();
+    JPT_ENSURE(moved.Peek() == "Jupiter");      moved.Pop();
 
     JPT_ENSURE(stack.IsEmpty());
 
@@ -167,10 +167,10 @@ export bool RunUnitTests_Stack()
 {
     JPT_ENSURE(UnitTest_Stack());
     JPT_ENSURE(UnitTest_Stack_String());
-
+    
     JPT_ENSURE(UnitTest_Stack_Copy());
     JPT_ENSURE(UnitTest_Stack_Copy_String());
-
+    
     JPT_ENSURE(UnitTest_Stack_Move());
     JPT_ENSURE(UnitTest_Stack_Move_String());
 

@@ -43,7 +43,7 @@ export namespace jpt
 		template <typename... TArgs> constexpr void Emplace(TArgs&&... args);
 
 		// Erasing
-		constexpr TData Pop();
+		constexpr void Pop();
 		constexpr void Clear();
 	};
 
@@ -103,11 +103,9 @@ export namespace jpt
 	}
 
 	template<typename _TData>
-	constexpr Stack<_TData>::TData Stack<_TData>::Pop()
+	constexpr void Stack<_TData>::Pop()
 	{
-		TData value = m_values.Back();
 		m_values.PopBack();
-		return value;
 	}
 
 	template<typename _TData>
