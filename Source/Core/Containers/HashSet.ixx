@@ -155,8 +155,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::Iterator HashSet<TValue>::Erase(const TValue& key)
 	{
-		Iterator itr = Find(key);
-		if (itr != end())
+		if (Iterator itr = Find(key); itr != end())
 		{
 			Iterator nextItr = itr + 1;
 

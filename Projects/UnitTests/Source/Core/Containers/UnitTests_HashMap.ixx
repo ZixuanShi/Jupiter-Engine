@@ -365,6 +365,7 @@ bool UnitTest_HashMap_Iterate_Erase_Container()
         { "Tools" ,        { "Premake", "Doxygen"                  }}
     };
 
+    //JPT_LOG(hashMap);
     JPT_ENSURE(hashMap.Count() == 4);
 
     JPT_ENSURE(hashMap.Find("Languages")->second     == (jpt::DynamicArray<jpt::String>{ "C++", "Python", "Lua" }));

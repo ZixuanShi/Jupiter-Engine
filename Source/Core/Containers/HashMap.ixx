@@ -250,8 +250,7 @@ export namespace jpt
 	template<typename TKey, typename TValue>
 	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::Erase(const TKey& key)
 	{
-		Iterator itr = Find(key);
-		if (itr != end())
+		if (Iterator itr = Find(key); itr != end())
 		{
 			Iterator nextItr = itr + 1;
 
