@@ -128,11 +128,29 @@ bool UnitTest_Any_Move()
     return true;
 }
 
+
+bool UnitTest_Any_CStr()
+{
+    //jpt::Any any;
+    //
+    //any = "Hello World";
+    //JPT_LOG(any.As<const char*>());
+
+    std::any stdAny;
+
+    stdAny = "Hello World";
+    JPT_LOG(std::any_cast<const char*>(stdAny));
+
+    return true;
+}
+
 export bool RunUnitTests_Any()
 {
     JPT_ENSURE(UnitTest_Any());
     JPT_ENSURE(UnitTest_Any_Copy());
     JPT_ENSURE(UnitTest_Any_Move());
+
+    JPT_ENSURE(UnitTest_Any_CStr());
 
     return true;
 }

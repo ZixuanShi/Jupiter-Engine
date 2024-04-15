@@ -8,10 +8,13 @@ module;
 
 export module UnitTests_HashMap;
 
+import jpt.Any;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Function;
 import jpt.HashMap;
+import jpt.DynamicArray;
+import jpt.String;
 
 bool UnitTest_HashMap_Trivial()
 {
@@ -395,6 +398,19 @@ bool UnitTest_HashMap_Iterate_Erase_Container()
     return true;
 }
 
+bool UnitTest_HashMap_Any()
+{
+ /*   jpt::HashMap<jpt::String, jpt::Any> hashMap
+	{
+		{ "Int",    1             },
+		{ "Float",  3.14f         },
+		{ "Bool",   true          }
+	};*/
+
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -412,6 +428,8 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase());
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_String());
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_Container());
+
+    JPT_ENSURE(UnitTest_HashMap_Any());
 
     return true;
 }
