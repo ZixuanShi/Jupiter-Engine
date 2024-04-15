@@ -273,6 +273,88 @@ bool UnitTest_HashMap_Grow()
     return true;
 }
 
+bool UnitTest_HashMap_Iterate_Erase()
+{
+    jpt::HashMap<char, int32> hashMap
+    { 
+        { 'a', 0 }, 
+        { 'b', 1 }, 
+        { 'c', 2 },
+        { 'd', 3 },
+        { 'e', 4 }
+    };
+
+    JPT_ENSURE(hashMap.Count() == 5);
+    JPT_ENSURE(hashMap.Find('a')->second == 0);
+    JPT_ENSURE(hashMap.Find('b')->second == 1);
+    JPT_ENSURE(hashMap.Find('c')->second == 2);
+    JPT_ENSURE(hashMap.Find('d')->second == 3);
+    JPT_ENSURE(hashMap.Find('e')->second == 4);
+
+    for (auto itr = hashMap.begin(); itr != hashMap.end();)
+	{
+        if (itr->first == 'e' || itr->first == 'b')
+        {
+            itr = hashMap.Erase(itr);
+		}
+		else
+		{
+			++itr;
+        }
+	}
+
+    JPT_ENSURE(hashMap.Count() == 3);
+    JPT_ENSURE(hashMap.Find('a')->second == 0);
+    JPT_ENSURE(hashMap.Find('c')->second == 2);
+    JPT_ENSURE(hashMap.Find('d')->second == 3);
+    JPT_ENSURE(hashMap.Find('e') == hashMap.end());
+    JPT_ENSURE(hashMap.Find('b') == hashMap.end());
+
+    return true;
+}
+
+bool UnitTest_HashMap_Iterate_Erase_String()
+{
+    jpt::HashMap<jpt::String, jpt::String> hashMap
+    { 
+        { "Engine", "Jupiter" },
+        { "Client", "UnitTests" },
+        { "Platform", "Windows" },
+		{ "Language", "C++" },
+		{ "Version", "1.0" }
+    };
+
+    JPT_ENSURE(hashMap.Count() == 5);
+
+    JPT_ENSURE(hashMap.Find("Engine")->second == "Jupiter");
+    JPT_ENSURE(hashMap.Find("Client")->second == "UnitTests");
+    JPT_ENSURE(hashMap.Find("Platform")->second == "Windows");
+    JPT_ENSURE(hashMap.Find("Language")->second == "C++");
+    JPT_ENSURE(hashMap.Find("Version")->second == "1.0");
+
+    for (auto itr = hashMap.begin(); itr != hashMap.end();)
+	{
+		if (itr->first == "Client" || itr->first == "Language")
+		{
+			itr = hashMap.Erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+
+    JPT_ENSURE(hashMap.Count() == 3);
+
+    JPT_ENSURE(hashMap.Find("Engine")->second == "Jupiter");
+    JPT_ENSURE(hashMap.Find("Client") == hashMap.end());
+    JPT_ENSURE(hashMap.Find("Platform")->second == "Windows");
+    JPT_ENSURE(hashMap.Find("Language") == hashMap.end());
+    JPT_ENSURE(hashMap.Find("Version")->second == "1.0");
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -286,6 +368,9 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTest_HashMap_Function());
     JPT_ENSURE(UnitTest_HashMap_Erase());
     JPT_ENSURE(UnitTest_HashMap_Grow());
+
+    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase());
+    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_String());
 
     return true;
 }

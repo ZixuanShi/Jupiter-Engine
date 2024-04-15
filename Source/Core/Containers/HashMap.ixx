@@ -72,7 +72,8 @@ export namespace jpt
 		// Modifiers
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
-		constexpr void Erase(const TKey& key);
+		constexpr Iterator Erase(const TKey& key);
+		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
 
 		// Searching
@@ -247,24 +248,27 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue>
-	constexpr void HashMap<TKey, TValue>::Erase(const TKey& key)
+	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::Erase(const TKey& key)
 	{
-		if (IsEmpty())
+		Iterator itr = Find(key);
+		if (itr != end())
 		{
-			return;
-		}
+			Iterator nextItr = itr + 1;
 
-		TBucket& bucket = GetBucket(key);
+			TBucket& bucket = m_buckets[itr.GetIndex()];
+			bucket.Erase(itr.GetIterator());
+			--m_count;
 
-		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
-		{
-			if (itr->first == key)
-			{
-				bucket.Erase(itr);
-				--m_count;
-				return;
-			}
-		}
+			return nextItr;
+		}		
+
+		return end();
+	}
+
+	template<typename TKey, typename TValue>
+	constexpr HashMap<TKey, TValue>::Iterator HashMap<TKey, TValue>::Erase(const Iterator& iterator)
+	{
+		return Erase(iterator->first);
 	}
 
 	template<typename TKey, typename TValue>
@@ -278,7 +282,7 @@ export namespace jpt
 		const size_t index = GetBucketIndex(key);
 		TBucket& bucket = m_buckets[index];
 
-		for (auto itr = bucket.begin(); itr != bucket.end(); ++itr)
+		for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
 		{
 			if (itr->first == key)
 			{
@@ -300,7 +304,7 @@ export namespace jpt
 		const size_t index = GetBucketIndex(key);
 		const TBucket& bucket = m_buckets[index];
 
-		for (auto itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
+		for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
 		{
 			if (itr->first == key)
 			{

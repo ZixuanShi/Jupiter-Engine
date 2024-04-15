@@ -59,10 +59,13 @@ export namespace jpt
 
 		// Modifiers
 		constexpr void Add(const TValue& data);
-		constexpr void Erase(const TValue& data);
+		constexpr Iterator Erase(const TValue& data);
+		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
 
 		// Searching
+		constexpr Iterator      Find(const TValue& key);
+		constexpr ConstIterator Find(const TValue& key) const;
 		constexpr bool Contains(const TValue& key) const;
 
 	protected:
@@ -150,45 +153,77 @@ export namespace jpt
 	}
 
 	template<typename TValue>
-	constexpr void HashSet<TValue>::Erase(const TValue& key)
+	constexpr HashSet<TValue>::Iterator HashSet<TValue>::Erase(const TValue& key)
+	{
+		Iterator itr = Find(key);
+		if (itr != end())
+		{
+			Iterator nextItr = itr + 1;
+
+			TBucket& bucket = m_buckets[itr.GetIndex()];
+			bucket.Erase(itr.GetIterator());
+			--m_count;
+
+			return nextItr;
+		}
+
+		return end();
+	}
+
+	template<typename TValue>
+	constexpr  HashSet<TValue>::Iterator HashSet<TValue>::Erase(const Iterator& iterator)
+	{
+		return Erase(*iterator);
+	}
+
+	template<typename TValue>
+	constexpr HashSet<TValue>::Iterator HashSet<TValue>::Find(const TValue& key)
 	{
 		if (IsEmpty())
 		{
-			return;
+			return end();
 		}
 
-		TBucket& bucket = GetBucket(key);
+		const size_t index = GetBucketIndex(key);
+		TBucket& bucket = m_buckets[index];
 
-		for (auto it = bucket.begin(); it != bucket.end(); ++it)
+		for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
 		{
-			if (*it == key)
+			if (*itr == key)
 			{
-				bucket.Erase(it);
-				--m_count;
-				return;
+				return Iterator(&m_buckets, index, itr);
 			}
 		}
+
+		return end();
+	}
+
+	template<typename TValue>
+	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::Find(const TValue& key) const
+	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+
+		const size_t index = GetBucketIndex(key);
+		const TBucket& bucket = m_buckets[index];
+
+		for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
+		{
+			if (*itr == key)
+			{
+				return ConstIterator(&m_buckets, index, itr);
+			}
+		}
+
+		return cend();
 	}
 
 	template<typename TValue>
 	constexpr bool HashSet<TValue>::Contains(const TValue& key) const
 	{
-		if (IsEmpty())
-		{
-			return false;
-		}
-
-		const TBucket& bucket = GetBucket(key);
-
-		for (const TValue& element : bucket)
-		{
-			if (element == key)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return Find(key) != end();
 	}
 
 	template<typename TValue>

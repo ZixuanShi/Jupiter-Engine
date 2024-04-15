@@ -16,6 +16,7 @@ export namespace jpt_private
 	template<typename TData>
 	class HashTableIterator
 	{
+	public:
 		using TBucket  = jpt::LinkedList<TData>;
 		using TBuckets = jpt::DynamicArray<TBucket>;
 
@@ -34,10 +35,15 @@ export namespace jpt_private
 		constexpr HashTableIterator& operator+=(size_t offset);
 		constexpr HashTableIterator operator+(size_t offset);
 
-		constexpr       TData* operator->() { return &m_iterator; }
+		constexpr       TData* operator->()       { return &m_iterator; }
 		constexpr const TData* operator->() const { return &m_iterator; }
-		constexpr       TData& operator*() { return *m_iterator; }
+		constexpr       TData& operator*()        { return *m_iterator; }
 		constexpr const TData& operator*()  const { return *m_iterator; }
+
+		constexpr       LinearNodeIterator<TData>& GetIterator()       { return m_iterator; }
+		constexpr const LinearNodeIterator<TData>& GetIterator() const { return m_iterator; }
+
+		constexpr size_t GetIndex() const { return m_index; }
 
 		constexpr bool operator==(const HashTableIterator& other) const;
 
@@ -94,7 +100,7 @@ export namespace jpt_private
 	constexpr bool HashTableIterator<TData>::operator==(const HashTableIterator& other) const
 	{
 		return m_pBuckets == other.m_pBuckets &&
-			   m_index == other.m_index &&
+			   m_index    == other.m_index    &&
 			   m_iterator == other.m_iterator;
 	}
 
@@ -201,7 +207,7 @@ export namespace jpt_private
 	constexpr bool ConstHashTableIterator<TData>::operator==(const ConstHashTableIterator& other) const
 	{
 		return m_pBuckets == other.m_pBuckets &&
-			   m_index == other.m_index &&
+			   m_index    == other.m_index    &&
 			   m_iterator == other.m_iterator;
 	}
 

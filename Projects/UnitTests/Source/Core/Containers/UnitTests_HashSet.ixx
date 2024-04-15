@@ -285,6 +285,87 @@ bool UnitTest_HashSet_Grow()
     return true;
 }
 
+bool UnitTest_HashSet_Iterate_Erase()
+{
+    jpt::HashSet<char> hashSet
+    {
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',    
+    };
+
+    JPT_ENSURE(hashSet.Count() == 5);
+    JPT_ENSURE(hashSet.Contains('a'));
+    JPT_ENSURE(hashSet.Contains('b'));
+    JPT_ENSURE(hashSet.Contains('c'));
+    JPT_ENSURE(hashSet.Contains('d'));
+    JPT_ENSURE(hashSet.Contains('e'));
+
+    for (auto itr = hashSet.begin(); itr != hashSet.end();)
+    {
+        if (*itr == 'e' || *itr == 'b')
+        {
+            itr = hashSet.Erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
+
+    JPT_ENSURE(hashSet.Count() == 3);
+    JPT_ENSURE(hashSet.Contains('a'));
+    JPT_ENSURE(hashSet.Contains('c'));
+    JPT_ENSURE(hashSet.Contains('d'));
+    JPT_ENSURE(!hashSet.Contains('e'));
+    JPT_ENSURE(!hashSet.Contains('b'));
+
+    return true;
+}
+
+bool UnitTest_HashSet_Iterate_Erase_String()
+{
+    jpt::HashSet<jpt::String> hashSet
+    {
+        "Engine",
+        "Client",
+        "Platform",
+        "Language", 
+        "Version",
+    };
+
+    JPT_ENSURE(hashSet.Count() == 5);
+
+    JPT_ENSURE(hashSet.Contains("Engine"));
+    JPT_ENSURE(hashSet.Contains("Client"));
+    JPT_ENSURE(hashSet.Contains("Platform"));
+    JPT_ENSURE(hashSet.Contains("Language"));
+    JPT_ENSURE(hashSet.Contains("Version"));
+
+    for (auto itr = hashSet.begin(); itr != hashSet.end();)
+    {
+        if (*itr == "Client" || *itr == "Language")
+        {
+            itr = hashSet.Erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
+
+    JPT_ENSURE(hashSet.Count() == 3);
+
+    JPT_ENSURE(hashSet.Contains("Engine"));
+    JPT_ENSURE(!hashSet.Contains("Client"));
+    JPT_ENSURE(hashSet.Contains("Platform"));
+    JPT_ENSURE(!hashSet.Contains("Language"));
+    JPT_ENSURE(hashSet.Contains("Version"));
+
+    return true;
+}
 
 export bool RunUnitTests_HashSet()
 {
@@ -304,6 +385,9 @@ export bool RunUnitTests_HashSet()
     JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
 
     JPT_ENSURE(UnitTest_HashSet_Grow());
+
+    JPT_ENSURE(UnitTest_HashSet_Iterate_Erase());
+    JPT_ENSURE(UnitTest_HashSet_Iterate_Erase_String());
 
     return true;
 }
