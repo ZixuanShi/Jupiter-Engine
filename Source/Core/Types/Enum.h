@@ -80,17 +80,42 @@ public:                                                                         
     /** Static global API. See EnumData for more details at Enum.h */                                                                   \
     /**	@example: EFoo::Count() */                                                                                                      \
                                                                                                                                         \
-    constexpr static TSize Min()   { return s_data.min; }                                                                               \
-    constexpr static TSize Max()   { return s_data.max; }                                                                               \
-    constexpr static TSize Count() { return static_cast<TSize>(s_data.names.Count()); }                                                  \
-    constexpr static const jpt::HashMap<TSize, jpt::String>& Names() { return s_data.names; }                                           \
-    constexpr static const jpt::String& Name(TSize index) { JPT_ASSERT(s_data.names.Contains(index)); return s_data.names[index]; }     \
+    constexpr static TSize Min()                                                                                                        \
+    {                                                                                                                                   \
+        return s_data.min;                                                                                                              \
+    }                                                                                                                                   \
+    constexpr static TSize Max()                                                                                                        \
+    {                                                                                                                                   \
+        return s_data.max;                                                                                                              \
+    }                                                                                                                                   \
+    constexpr static TSize Count()                                                                                                      \
+    {                                                                                                                                   \
+        return static_cast<TSize>(s_data.names.Count());                                                                                \
+    }                                                                                                                                   \
+    constexpr static const jpt::HashMap<TSize, jpt::String>& Names()                                                                    \
+    {                                                                                                                                   \
+        return s_data.names;                                                                                                            \
+    }                                                                                                                                   \
+    constexpr static const jpt::String& Name(TSize index)                                                                               \
+    {                                                                                                                                   \
+        JPT_ASSERT(s_data.names.Contains(index));                                                                                       \
+        return s_data.names[index];                                                                                                     \
+    }                                                                                                                                   \
                                                                                                                                         \
 public:                                                                                                                                 \
     /** Member Constructor & operator= */                                                                                               \
     constexpr EnumName() = default;                                                                                                     \
-    constexpr EnumName(EnumName::Values value)	: m_value(value) {}                                                                     \
-    constexpr EnumName& operator=(EnumName::Values value) { m_value = value; return *this; }                                            \
+                                                                                                                                        \
+    constexpr EnumName(EnumName::Values value)	                                                                                        \
+        : m_value(value)                                                                                                                \
+    {                                                                                                                                   \
+    }                                                                                                                                   \
+                                                                                                                                        \
+    constexpr EnumName& operator=(EnumName::Values value)                                                                               \
+    {                                                                                                                                   \
+        m_value = value;                                                                                                                \
+        return *this;                                                                                                                   \
+    }                                                                                                                                   \
                                                                                                                                         \
     template<jpt::Integral TInt = TSize>                                                                                                \
     constexpr EnumName(TInt integer)                                                                                                    \
@@ -131,14 +156,34 @@ public:                                                                         
                                                                                                                                         \
     /** +, - */                                                                                                                         \
     template<jpt::Integral TInt>                                                                                                        \
-    constexpr EnumName operator+(TInt offset) {	EnumName copy = *this; return copy += offset; }                                         \
+    constexpr EnumName operator+(TInt offset)                                                                                           \
+    {	                                                                                                                                \
+        EnumName copy = *this;                                                                                                          \
+        return copy += offset;                                                                                                          \
+    }                                                                                                                                   \
     template<jpt::Integral TInt>                                                                                                        \
-    constexpr EnumName operator-(TInt offset) {	EnumName copy = *this; return copy -= offset; }                                         \
+    constexpr EnumName operator-(TInt offset)                                                                                           \
+    {	                                                                                                                                \
+        EnumName copy = *this;                                                                                                          \
+        return copy -= offset;                                                                                                          \
+    }                                                                                                                                   \
                                                                                                                                         \
     /** Bitwise */                                                                                                                      \
-    constexpr EnumName& operator&=(Values value) { m_value &= value; return *this; }                                                    \
-    constexpr EnumName& operator|=(Values value) { m_value |= value; return *this; }                                                    \
-    constexpr EnumName& operator^=(Values value) { m_value ^= value; return *this; }                                                    \
+    constexpr EnumName& operator&=(Values value)                                                                                        \
+    {                                                                                                                                   \
+        m_value &= value;                                                                                                               \
+        return *this;                                                                                                                   \
+    }                                                                                                                                   \
+    constexpr EnumName& operator|=(Values value)                                                                                        \
+    {                                                                                                                                   \
+        m_value |= value;                                                                                                               \
+        return *this;                                                                                                                   \
+    }                                                                                                                                   \
+    constexpr EnumName& operator^=(Values value)                                                                                        \
+    {                                                                                                                                   \
+        m_value ^= value;                                                                                                               \
+        return *this;                                                                                                                   \
+    }                                                                                                                                   \
 																																		\
     constexpr TSize operator&(Values value) const { return m_value & value; }                                                           \
     constexpr TSize operator|(Values value) const { return m_value | value; }                                                           \
