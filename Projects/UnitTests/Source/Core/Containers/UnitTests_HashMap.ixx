@@ -355,6 +355,45 @@ bool UnitTest_HashMap_Iterate_Erase_String()
     return true;
 }
 
+bool UnitTest_HashMap_Iterate_Erase_Container()
+{
+    jpt::HashMap<jpt::String, jpt::DynamicArray<jpt::String>> hashMap
+    {
+        { "Languages",     { "C++",     "Python", "Lua"            }},
+        { "Graphics APIs", { "DX12",    "Vulkan"                   }},
+        { "Platforms",     { "Windows", "Mac",    "Android", "IOS" }},
+        { "Tools" ,        { "Premake", "Doxygen"                  }}
+    };
+
+    JPT_ENSURE(hashMap.Count() == 4);
+
+    JPT_ENSURE(hashMap.Find("Languages")->second     == (jpt::DynamicArray<jpt::String>{ "C++", "Python", "Lua" }));
+    JPT_ENSURE(hashMap.Find("Graphics APIs")->second == (jpt::DynamicArray<jpt::String>{ "DX12", "Vulkan" }));
+    JPT_ENSURE(hashMap.Find("Platforms")->second     == (jpt::DynamicArray<jpt::String>{ "Windows", "Mac" , "Android", "IOS" }));
+    JPT_ENSURE(hashMap.Find("Tools")->second         == (jpt::DynamicArray<jpt::String>{ "Premake", "Doxygen" }));
+
+    for (auto itr = hashMap.begin(); itr != hashMap.end();)
+	{
+		if (itr->first == "Languages" || itr->first == "Platforms")
+		{
+			itr = hashMap.Erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+
+    JPT_ENSURE(hashMap.Count() == 2);
+
+    JPT_ENSURE(hashMap.Find("Languages")             == hashMap.end());
+    JPT_ENSURE(hashMap.Find("Graphics APIs")->second == (jpt::DynamicArray<jpt::String>{ "DX12", "Vulkan" }));
+    JPT_ENSURE(hashMap.Find("Platforms")             == hashMap.end());
+    JPT_ENSURE(hashMap.Find("Tools")->second         == (jpt::DynamicArray<jpt::String>{ "Premake", "Doxygen" }));
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -371,6 +410,7 @@ export bool RunUnitTests_HashMap()
 
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase());
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_String());
+    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_Container());
 
     return true;
 }
