@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/Headers.h"
+#include "Core/Types/Enum.h"
 
 #include <unordered_map>
 
@@ -411,6 +412,41 @@ bool UnitTest_HashMap_Any()
     return true;
 }
 
+JPT_ENUM_UINT8(EWeapon, 
+    Sword,
+    Hammer,
+    Axe,
+    Spear
+);
+bool UnitTest_HashMap_Enum()
+{
+    jpt::HashMap<EWeapon, int32> hashMap
+	{
+		{ EWeapon::Sword,  5  },
+		{ EWeapon::Hammer, 1  },
+		{ EWeapon::Axe,    3  },
+		{ EWeapon::Spear,  2  }
+	};
+
+    JPT_ENSURE(hashMap.Count() == 4);
+    JPT_ENSURE(hashMap[EWeapon::Sword]  == 5);
+    JPT_ENSURE(hashMap[EWeapon::Hammer] == 1);
+    JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
+    JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
+
+    //JPT_LOG(hashMap);
+
+    hashMap.Erase(EWeapon::Sword);
+
+    JPT_ENSURE(hashMap.Count() == 3);
+    JPT_ENSURE(!hashMap.Contains(EWeapon::Sword));
+    JPT_ENSURE(hashMap[EWeapon::Hammer] == 1);
+    JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
+    JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -430,6 +466,7 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_Container());
 
     JPT_ENSURE(UnitTest_HashMap_Any());
+    JPT_ENSURE(UnitTest_HashMap_Enum());
 
     return true;
 }
