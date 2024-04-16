@@ -434,7 +434,7 @@ bool UnitTest_HashMap_Enum()
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
 
-    JPT_LOG(hashMap);
+    //JPT_LOG(hashMap);
 
     hashMap.Erase(EWeapon::Sword);
 
