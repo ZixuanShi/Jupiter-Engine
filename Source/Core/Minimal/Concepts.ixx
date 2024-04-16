@@ -96,6 +96,12 @@ export namespace jpt
 		obj.Count();
 	};
 
+	template<typename T>
+	concept Containable = Iterable<T> && Countable<T> && requires(T t)
+	{
+		typename T::TData;
+	};
+
 	template<typename TContainer>
 	concept IndexableTrivial = Indexable<TContainer> && Trivial<typename TContainer::TData>;
 

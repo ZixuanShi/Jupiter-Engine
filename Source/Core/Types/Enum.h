@@ -203,13 +203,38 @@ public:                                                                         
     constexpr auto cend()   const { return s_data.names.cend();   }                                                          \
                                                                                                                              \
     /** Comparison */                                                                                                        \
+    /** == */                                                                                                                \
     template<jpt::Integral TInt = TSize>                                                                                     \
-    constexpr bool operator==(TInt value)      const { return m_value == static_cast<TSize>(value); }                        \
-    constexpr bool operator==(const char* str) const { return ToString() == str; }                                           \
+    constexpr bool operator==(TInt value)            const { return m_value == static_cast<TSize>(value); }                  \
+    constexpr bool operator==(Values value)          const { return m_value == static_cast<TSize>(value); }                  \
+    constexpr bool operator==(const char* str)       const { return ToString() == str; }                                     \
+    constexpr bool operator==(const EnumName& other) const { return m_value == other.m_value; }                              \
+                                                                                                                             \
+	/** < > */                                                                                                               \
+    /** Integer */                                                                                                           \
+    template<jpt::Integral TInt = TSize>                                                                                     \
+    constexpr bool operator<(TInt value)  const { return m_value < static_cast<TSize>(value);  }                             \
+    template<jpt::Integral TInt = TSize>                                                                                     \
+    constexpr bool operator>(TInt value)  const { return m_value > static_cast<TSize>(value);  }                             \
+    template<jpt::Integral TInt = TSize>                                                                                     \
+    constexpr bool operator<=(TInt value) const { return m_value <= static_cast<TSize>(value); }                             \
+    template<jpt::Integral TInt = TSize>                                                                                     \
+    constexpr bool operator>=(TInt value) const { return m_value >= static_cast<TSize>(value); }                             \
+																															 \
+    /** Enum Values */   																									 \
+    constexpr bool operator<(Values value)  const { return m_value <  static_cast<TSize>(value); }                           \
+	constexpr bool operator>(Values value)  const { return m_value >  static_cast<TSize>(value); }                           \
+    constexpr bool operator<=(Values value) const { return m_value <= static_cast<TSize>(value); }                           \
+	constexpr bool operator>=(Values value) const { return m_value >= static_cast<TSize>(value); }                           \
+                                                                                                                             \
+	/** Other Enum class instance */                                                                                         \
+	constexpr bool operator<(const EnumName& other)  const { return m_value <  other.m_value; }                              \
+	constexpr bool operator>(const EnumName& other)  const { return m_value >  other.m_value; }                              \
+	constexpr bool operator<=(const EnumName& other) const { return m_value <= other.m_value; }                              \
+	constexpr bool operator>=(const EnumName& other) const { return m_value >= other.m_value; }                              \
                                                                                                                              \
     /** Numeric value access */                                                                                              \
     constexpr TSize Value()    const { return m_value; }                                                                     \
-    constexpr operator TSize() const { return m_value; }                                                                     \
                                                                                                                              \
     /** String value access */                                                                                               \
     constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }                                          \

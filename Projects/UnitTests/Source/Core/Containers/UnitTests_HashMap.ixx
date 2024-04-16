@@ -415,7 +415,7 @@ bool UnitTest_HashMap_Any()
 JPT_ENUM_UINT8(EWeapon, 
     Sword,
     Hammer,
-    Axe,
+    Axe = 5,
     Spear
 );
 bool UnitTest_HashMap_Enum()
@@ -434,7 +434,7 @@ bool UnitTest_HashMap_Enum()
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
 
-    //JPT_LOG(hashMap);
+    JPT_LOG(hashMap);
 
     hashMap.Erase(EWeapon::Sword);
 
@@ -443,6 +443,8 @@ bool UnitTest_HashMap_Enum()
     JPT_ENSURE(hashMap[EWeapon::Hammer] == 1);
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
+
+    //JPT_LOG(hashMap);
 
     return true;
 }
