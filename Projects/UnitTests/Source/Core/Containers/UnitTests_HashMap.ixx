@@ -10,12 +10,14 @@ module;
 export module UnitTests_HashMap;
 
 import jpt.Any;
-import jpt.TypeDefs;
-import jpt.Utilities;
+import jpt.DynamicArray;
 import jpt.Function;
 import jpt.HashMap;
-import jpt.DynamicArray;
 import jpt.String;
+import jpt.Tuple;
+import jpt.TypeDefs;
+import jpt.Utilities;
+import jpt.Variant;
 
 bool UnitTest_HashMap_Trivial()
 {
@@ -399,25 +401,11 @@ bool UnitTest_HashMap_Iterate_Erase_Container()
     return true;
 }
 
-bool UnitTest_HashMap_Any()
-{
- /*   jpt::HashMap<jpt::String, jpt::Any> hashMap
-	{
-		{ "Int",    1             },
-		{ "Float",  3.14f         },
-		{ "Bool",   true          }
-	};*/
-
-
-    return true;
-}
-
 JPT_ENUM_UINT8(EWeapon, 
     Sword,
     Hammer,
     Axe = 5,
-    Spear
-);
+    Spear);
 bool UnitTest_HashMap_Enum()
 {
     jpt::HashMap<EWeapon, int32> hashMap
@@ -449,6 +437,47 @@ bool UnitTest_HashMap_Enum()
     return true;
 }
 
+bool UnitTest_HashMap_Variant()
+{
+    using JsonBasicVariant = jpt::Variant<int32, float64, bool, jpt::String>;
+
+    jpt::HashMap<jpt::String, JsonBasicVariant> hashMap;
+
+    hashMap.Add("integer_1", 1);
+    hashMap.Add("float_1", 2.0);
+    hashMap.Add("string_1", jpt::String("Three"));
+    hashMap.Add("bool_1", true);
+
+    JPT_ENSURE(hashMap.Count() == 4);
+
+    JPT_ENSURE(hashMap["integer_1"].Is<int32>());
+    JPT_ENSURE(hashMap["integer_1"].As<int32>() == 1);
+
+    JPT_ENSURE(hashMap["float_1"].Is<float64>());
+    JPT_ENSURE(hashMap["float_1"].As<float64>() == 2.0);
+
+    JPT_ENSURE(hashMap["string_1"].Is<jpt::String>());
+    JPT_ENSURE(hashMap["string_1"].As<jpt::String>() == "Three");
+
+    JPT_ENSURE(hashMap["bool_1"].Is<bool>());
+    JPT_ENSURE(hashMap["bool_1"].As<bool>() == true);
+
+    return true;
+}
+
+bool UnitTest_HashMap_Tuple()
+{
+
+    return true;
+}
+
+bool UnitTest_HashMap_Any()
+{
+    //jpt::HashMap<EWeapon, jpt::Any> hashMap;
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -467,8 +496,10 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_String());
     JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_Container());
 
-    JPT_ENSURE(UnitTest_HashMap_Any());
     JPT_ENSURE(UnitTest_HashMap_Enum());
+    JPT_ENSURE(UnitTest_HashMap_Variant());
+    JPT_ENSURE(UnitTest_HashMap_Tuple());
+    JPT_ENSURE(UnitTest_HashMap_Any());
 
     return true;
 }
