@@ -209,7 +209,7 @@ public:                                                                         
     constexpr bool operator==(const char* str)       const { return ToString() == str; }                                     \
     constexpr bool operator==(const EnumName& other) const { return m_value == other.m_value; }                              \
                                                                                                                              \
-	/** Other Enum class instance */                                                                                         \
+    /** Other Enum class instance */                                                                                         \
     constexpr bool operator<(const EnumName& other)  const { return m_value <  other.m_value; }                              \
     constexpr bool operator>(const EnumName& other)  const { return m_value >  other.m_value; }                              \
     constexpr bool operator<=(const EnumName& other) const { return m_value <= other.m_value; }                              \
