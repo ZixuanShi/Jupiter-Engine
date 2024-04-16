@@ -12,6 +12,7 @@ export module jpt.HashSet;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
+import jpt.Hash;
 import jpt.LinkedList;
 import jpt.Math;
 import jpt.Utilities;
@@ -302,7 +303,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr size_t HashSet<TValue>::GetBucketIndex(const TValue& key) const
 	{
-		return Hash<TValue>()(key) % m_buckets.Count();
+		return Hash(key) % m_buckets.Count();
 	}
 
 	template<typename TValue>

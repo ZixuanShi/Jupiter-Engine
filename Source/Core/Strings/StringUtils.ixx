@@ -306,23 +306,6 @@ export namespace jpt
 
 #pragma endregion
 
-#pragma region Hashing
-
-	/** constexpr compile time hash functions, 32 and 64 bit
-		@str: should be a null terminated string literal */
-	constexpr uint32 StringHash32(const char* const str, const uint32 value = 0x811c9dc5)         noexcept { return (str[0] == '\0') ? value : StringHash32(&str[1], (value ^ uint32(str[0])) * 0x1000193); }
-	constexpr uint64 StringHash64(const char* const str, const uint64 value = 0xcbf29ce484222325) noexcept { return (str[0] == '\0') ? value : StringHash64(&str[1], (value ^ uint64(str[0])) * 0x100000001b3); }
-	
-	template<>
-	struct Hash<const char*>
-	{
-		size_t operator()(const char* key)
-		{
-			return jpt::StringHash64(key);
-		}
-	};
-#pragma endregion
-
 #pragma region Operations
 
 	/**	Copies data from destination to source with the given size */

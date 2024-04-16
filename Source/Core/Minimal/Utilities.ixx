@@ -45,18 +45,6 @@ export namespace jpt
 		a = jpt::Move(temp);
 	}
 
-	/** Equivalent for std::hash. Calculate the key's hash value */
-	template<class KeyT>
-	struct Hash
-	{
-		/** Example: jpt::hash<jpt::string>()(key) */
-		size_t operator()(const KeyT& key)
-		{
-			// TODO: Write my own std::hash
-			return std::hash<KeyT>()(key);
-		}
-	};
-
 	/** @return		How many args of parameter pack. Works on Macro's __VA_ARGS__ too */
 	template<typename ...Ts>
 	constexpr size_t GetArgsCount(Ts&&...)

@@ -10,6 +10,7 @@ export module UnitTests_StringView;
 
 import jpt.String;
 import jpt.StringView;
+import jpt.Utilities;
 
 bool UnitTests_StringView()
 {

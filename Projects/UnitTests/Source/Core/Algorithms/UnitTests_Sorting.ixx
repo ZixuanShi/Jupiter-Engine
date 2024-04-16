@@ -19,6 +19,7 @@ import jpt.StaticArray;
 import jpt.DynamicArray;
 import jpt.String;
 import jpt.RandomNumberGenerator;
+import jpt.Utilities;
 
 bool UnitTest_QuickSort()
 {

@@ -9,6 +9,7 @@ export module UnitTests_StringUtils;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.Math;
+import jpt.Utilities;
 
 template<class TString>
 bool UnitTest_StringLen()

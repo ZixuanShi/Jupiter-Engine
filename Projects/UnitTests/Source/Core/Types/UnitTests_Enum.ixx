@@ -9,6 +9,7 @@ module;
 export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
+import jpt.Utilities;
 
 JPT_ENUM_UINT8(EFruit_Local,
 	Apple = 5,

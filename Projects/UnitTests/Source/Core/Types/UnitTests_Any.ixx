@@ -15,6 +15,7 @@ import jpt.String;
 import jpt.Function;
 import jpt.TypeDefs;
 import jpt.Variant;
+import jpt.Utilities;
 
 bool UnitTest_Any()
 {
@@ -139,7 +140,7 @@ bool UnitTest_Any_CStr()
     std::any stdAny;
 
     stdAny = "Hello World";
-    JPT_LOG(std::any_cast<const char*>(stdAny));
+    //JPT_LOG(std::any_cast<const char*>(stdAny));
 
     return true;
 }

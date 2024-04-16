@@ -7,6 +7,7 @@ module;
 export module UnitTests_Pair;
 
 import jpt.Pair;
+import jpt.Utilities;
 
 bool UnitTest_Pair()
 {

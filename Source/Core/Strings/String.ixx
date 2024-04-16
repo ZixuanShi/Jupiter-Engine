@@ -14,12 +14,12 @@ export module jpt.String;
 import jpt.Allocator;
 import jpt.Concepts;
 import jpt.Constants;
-import jpt.Utilities;
+import jpt.DynamicArray;
+import jpt.Hash;
 import jpt.Math;
 import jpt.StringUtils;
 import jpt.TypeDefs;
-import jpt.DynamicArray;
-
+import jpt.Utilities;
 
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
@@ -155,6 +155,9 @@ export namespace jpt
 			@note	Will ignore the 'f' is there's any */
 		template<Floating TFloat = float>
 		constexpr TFloat ToFloat() const;
+
+		/** @return A hash value of this string */
+		constexpr uint64 Hash() const;
 
 	private:
 		constexpr void DeallocateBuffer();
@@ -807,7 +810,7 @@ export namespace jpt
 			m_pBuffer = otherString.m_pBuffer;
 		}
 
-		m_count     = otherString.m_count;
+		m_count    = otherString.m_count;
 		m_capacity = otherString.m_capacity;
 
 		otherString.m_pBuffer  = nullptr;
@@ -815,8 +818,14 @@ export namespace jpt
 		otherString.m_capacity = 0;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::DeallocateBuffer()
+	template<StringLiteral TChar, class TAllocator>
+	constexpr uint64 StringBase<TChar, TAllocator>::Hash() const
+	{
+		return StringHash64(m_pBuffer);
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::DeallocateBuffer()
 	{
 		if (m_pBuffer && 
 			m_pBuffer != m_smallBuffer)
@@ -847,13 +856,4 @@ export namespace jpt
 
 	template<typename T>
 	concept StringType = AreSameType<T, String> || AreSameType<T, WString>;
-
-	template<>
-	struct Hash<String>
-	{
-		size_t operator()(const String& key)
-		{
-			return jpt::StringHash64(key.ConstBuffer());
-		}
-	};
 }

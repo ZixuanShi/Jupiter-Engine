@@ -9,13 +9,14 @@ module;
 
 export module jpt.HashMap;
 
-import jpt.Constants;
-import jpt.Pair;
-import jpt.DynamicArray;
-import jpt.LinkedList;
 import jpt.Concepts;
-import jpt.Utilities;
+import jpt.Constants;
+import jpt.DynamicArray;
+import jpt.Hash;
+import jpt.LinkedList;
 import jpt.Math;
+import jpt.Pair;
+import jpt.Utilities;
 
 import jpt_private.HashTableIterator;
 
@@ -342,7 +343,7 @@ export namespace jpt
 	template<typename TKey, typename TValue>
 	constexpr size_t HashMap<TKey, TValue>::GetBucketIndex(const TKey& key) const
 	{
-		return Hash<TKey>()(key) % m_buckets.Count();
+		return Hash(key) % m_buckets.Count();
 	}
 
 	template<typename TKey, typename TValue>

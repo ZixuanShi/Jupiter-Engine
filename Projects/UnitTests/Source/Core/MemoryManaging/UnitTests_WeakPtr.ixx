@@ -13,6 +13,7 @@ import jpt.WeakPtr;
 import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.String;
+import jpt.Utilities;
 
 bool UnitTests_WeakPtr_Class()
 {
