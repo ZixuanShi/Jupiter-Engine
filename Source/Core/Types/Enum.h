@@ -185,12 +185,12 @@ public:                                                                         
         m_value ^= value;                                                                                                    \
         return *this;                                                                                                        \
     }                                                                                                                        \
-																														   	 \
+                                                                                                                             \
     constexpr TSize operator&(Values value) const { return m_value & value; }                                                \
     constexpr TSize operator|(Values value) const { return m_value | value; }                                                \
     constexpr TSize operator^(Values value) const { return m_value ^ value; }                                                \
     constexpr TSize operator~() const { return ~m_value; }                                                                   \
-																															 \
+                                                                                                                             \
     constexpr bool Has(Values value) const { return (m_value & value) != 0; }                                                \
     constexpr void Insert(Values value) { m_value |= value; }                                                                \
     constexpr void Toggle(Values value) { m_value ^= value; }                                                                \
@@ -210,10 +210,10 @@ public:                                                                         
     constexpr bool operator==(const EnumName& other) const { return m_value == other.m_value; }                              \
                                                                                                                              \
 	/** Other Enum class instance */                                                                                         \
-	constexpr bool operator<(const EnumName& other)  const { return m_value <  other.m_value; }                              \
-	constexpr bool operator>(const EnumName& other)  const { return m_value >  other.m_value; }                              \
-	constexpr bool operator<=(const EnumName& other) const { return m_value <= other.m_value; }                              \
-	constexpr bool operator>=(const EnumName& other) const { return m_value >= other.m_value; }                              \
+    constexpr bool operator<(const EnumName& other)  const { return m_value <  other.m_value; }                              \
+    constexpr bool operator>(const EnumName& other)  const { return m_value >  other.m_value; }                              \
+    constexpr bool operator<=(const EnumName& other) const { return m_value <= other.m_value; }                              \
+    constexpr bool operator>=(const EnumName& other) const { return m_value >= other.m_value; }                              \
                                                                                                                              \
     /** Numeric value access */                                                                                              \
     constexpr TSize Value()    const { return m_value; }                                                                     \
@@ -221,8 +221,8 @@ public:                                                                         
     /** String value access */                                                                                               \
     constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }                                          \
                                                                                                                              \
-    /** Hash value */                    									                                                 \
-	constexpr uint64 Hash() const { return jpt::Hash(m_value); }                                                             \
+    /** Hash value */                                                                                                        \
+    constexpr uint64 Hash() const { return jpt::Hash(m_value); }                                                             \
 };
 
 #define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)
