@@ -18,8 +18,14 @@ export namespace jpt
 		{ t.Hash() } -> std::convertible_to<uint64>; 
 	};
 
-	template<Hashable T>
+	template<Hashable T> requires NonTrivial<T>
 	constexpr uint64 Hash(const T& object)
+	{
+		return object.Hash();
+	}
+
+	template<Hashable T> requires Trivial<T>
+	constexpr uint64 Hash(T object)
 	{
 		return object.Hash();
 	}

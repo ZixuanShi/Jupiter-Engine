@@ -29,6 +29,7 @@ import UnitTests_Slot;
 import UnitTests_Function;
 
 // Math
+import UnitTests_Hash;
 import UnitTests_Vector3;
 import UnitTests_Vector2;
 import UnitTests_Math;
@@ -90,6 +91,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Macros());
 
 	// Math
+	JPT_ENSURE(RunUnitTests_Hash());
 	JPT_ENSURE(RunUnitTests_Vector3());
 	JPT_ENSURE(RunUnitTests_Vector2());
 	JPT_ENSURE(RunUnitTests_Math());
