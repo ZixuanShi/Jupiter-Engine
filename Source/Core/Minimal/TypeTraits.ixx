@@ -6,6 +6,8 @@ module;
 
 export module jpt.TypeTraits;
 
+import jpt.Constants;
+
 namespace jpt_private
 {
 #pragma region Removing Qualifiers
@@ -92,6 +94,9 @@ export namespace jpt
 
 	template<typename T>
 	constexpr bool IsTrivial = std::is_trivial_v<T>;
+
+	template<typename T>
+	constexpr bool IsSmall = sizeof(T) <= kSmallDataSize;
 
 #pragma endregion
 

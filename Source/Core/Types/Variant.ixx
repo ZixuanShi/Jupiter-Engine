@@ -11,9 +11,10 @@ export module jpt.Variant;
 import jpt.Allocator;
 import jpt.Byte;
 import jpt.Concepts;
+import jpt.Constants;
+import jpt.Math;
 import jpt.TypeTraits;
 import jpt.TypeDefs;
-import jpt.Math;
 import jpt.Utilities;
 
 export namespace jpt

@@ -31,12 +31,10 @@ export namespace jpt
 
 	// If a simple struct is deduced as non-trivial, you can override jpt::IsTrivial<T> to return true in your struct. Refer to Vector2
 	template<typename T>
-	concept Trivial = jpt::IsTrivial<T> &&
-					  sizeof(T) <= kSmallDataSize;
+	concept Trivial = jpt::IsTrivial<T> && jpt::IsSmall<T>;
 
 	template<typename T>
-	concept NonTrivial = !jpt::IsTrivial<T> ||
-		                 sizeof(T) > kSmallDataSize;
+	concept NonTrivial = !jpt::IsTrivial<T> || !jpt::IsSmall<T>;
 
 #pragma endregion
 
