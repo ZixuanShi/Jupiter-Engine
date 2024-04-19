@@ -374,6 +374,48 @@ bool UnitTests_DynamicArray_Tuple()
     return true;
 }
 
+bool UnitTests_DynamicArray_Variant()
+{
+    using TVariant = jpt::Variant<int32, float, jpt::String, jpt::Tuple<int32, char, bool>>;
+    jpt::DynamicArray<TVariant> dynamicArray;
+
+    dynamicArray.EmplaceBack(1);
+    dynamicArray.EmplaceBack(2.0f);
+    dynamicArray.EmplaceBack(jpt::String("Four"));
+    dynamicArray.EmplaceBack(jpt::Tuple<int32, char, bool>(5, '6', true));
+
+    JPT_ENSURE(dynamicArray[0].Is<int32>());
+    JPT_ENSURE(dynamicArray[0].As<int32>() == 1);
+
+    JPT_ENSURE(dynamicArray[1].Is<float>());
+    JPT_ENSURE(dynamicArray[1].As<float>() == 2.0f);
+
+    JPT_ENSURE(dynamicArray[2].Is<jpt::String>());
+    JPT_ENSURE(dynamicArray[2].As<jpt::String>() == "Four");
+
+    JPT_ENSURE((dynamicArray[3].Is<jpt::Tuple<int32, char, bool>>()));
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[3].As<jpt::Tuple<int32, char, bool>>()) == 5);
+
+    dynamicArray[0] = 10;
+    dynamicArray[1] = 20.0f;
+    dynamicArray[2] = jpt::String("Ten");
+    dynamicArray[3] = jpt::Tuple<int32, char, bool>(15, '6', false);
+
+    JPT_ENSURE(dynamicArray[0].Is<int32>());
+    JPT_ENSURE(dynamicArray[0].As<int32>() == 10);
+
+    JPT_ENSURE(dynamicArray[1].Is<float>());
+    JPT_ENSURE(dynamicArray[1].As<float>() == 20.0f);
+
+    JPT_ENSURE(dynamicArray[2].Is<jpt::String>());
+    JPT_ENSURE(dynamicArray[2].As<jpt::String>() == "Ten");
+
+    JPT_ENSURE((dynamicArray[3].Is<jpt::Tuple<int32, char, bool>>()));
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[3].As<jpt::Tuple<int32, char, bool>>()) == 15);
+
+    return true;
+}
+
 export bool RunUnitTests_DynamicArray()
 {
     JPT_ENSURE(UnitTest_DynamicArray_Trivial());
@@ -382,6 +424,7 @@ export bool RunUnitTests_DynamicArray()
     JPT_ENSURE(UnitTests_DynamicArray_Enum());
     JPT_ENSURE(UnitTests_DynamicArray_Any());
     JPT_ENSURE(UnitTests_DynamicArray_Tuple());
+    JPT_ENSURE(UnitTests_DynamicArray_Variant());
 
     return true;
 }
