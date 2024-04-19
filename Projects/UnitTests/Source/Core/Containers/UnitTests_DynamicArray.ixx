@@ -276,7 +276,6 @@ JPT_ENUM_UINT32(ETest,
     Four = (1 << 8),
     Five, 
     Six);
-
 bool UnitTests_DynamicArray_Enum()
 {
     jpt::DynamicArray<ETest> dynamicArray{ ETest::Zero, ETest::Two, ETest::Four };
@@ -336,6 +335,45 @@ bool UnitTests_DynamicArray_Any()
     return true;
 }
 
+bool UnitTests_DynamicArray_Tuple()
+{
+    using TTuple = jpt::Tuple<int32, float, jpt::String, jpt::Variant<int32, char, bool>>;
+    jpt::DynamicArray<TTuple> dynamicArray;
+
+    dynamicArray.EmplaceBack(1, 2.0f, jpt::String("Four"), jpt::Variant<int32, char, bool>(5));
+    dynamicArray.EmplaceBack(2, 3.0f, jpt::String("Five"), jpt::Variant<int32, char, bool>('6'));
+    dynamicArray.EmplaceBack(3, 4.0f, jpt::String("Six"), jpt::Variant<int32, char, bool>(true));
+
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[0]) == 1);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[0]) == 2.0f);
+    JPT_ENSURE(jpt::Get<2>(dynamicArray[0]) == "Four");
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[0]).Is<int32>());
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[0]).As<int32>() == 5);
+
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[1]) == 2);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[1]) == 3.0f);
+    JPT_ENSURE(jpt::Get<2>(dynamicArray[1]) == "Five");
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[1]).Is<char>());
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[1]).As<char>() == '6');
+
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[2]) == 3);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[2]) == 4.0f);
+    JPT_ENSURE(jpt::Get<2>(dynamicArray[2]) == "Six");
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[2]).Is<bool>());
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[2]).As<bool>() == true);
+
+    jpt::Get<0>(dynamicArray[0]) = 10;
+    jpt::Get<1>(dynamicArray[0]) = 20.0f;
+    jpt::Get<2>(dynamicArray[0]) = jpt::String("Ten");
+    jpt::Get<3>(dynamicArray[0]) = jpt::Variant<int32, char, bool>(15);
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[0]) == 10);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[0]) == 20.0f);
+    JPT_ENSURE(jpt::Get<2>(dynamicArray[0]) == "Ten");
+    JPT_ENSURE(jpt::Get<3>(dynamicArray[0]).Is<int32>());
+
+    return true;
+}
+
 export bool RunUnitTests_DynamicArray()
 {
     JPT_ENSURE(UnitTest_DynamicArray_Trivial());
@@ -343,6 +381,7 @@ export bool RunUnitTests_DynamicArray()
 
     JPT_ENSURE(UnitTests_DynamicArray_Enum());
     JPT_ENSURE(UnitTests_DynamicArray_Any());
+    JPT_ENSURE(UnitTests_DynamicArray_Tuple());
 
     return true;
 }
