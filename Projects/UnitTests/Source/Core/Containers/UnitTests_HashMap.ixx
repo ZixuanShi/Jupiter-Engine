@@ -479,6 +479,37 @@ bool UnitTest_HashMap_Variant()
 
 bool UnitTest_HashMap_Tuple()
 {
+    jpt::HashMap<int32, jpt::Tuple<int32, jpt::String, float64>> hashMap;
+
+    hashMap.Add(1, jpt::Tie(1, jpt::String("One"), 1.0));
+    hashMap.Add(2, jpt::Tie(2, jpt::String("Two"), 2.0));
+    hashMap.Add(3, jpt::Tie(3, jpt::String("Three"), 3.0));
+
+    JPT_ENSURE(hashMap.Count() == 3);
+
+    JPT_ENSURE(jpt::Get<0>(hashMap[1]) == 1);
+    JPT_ENSURE(jpt::Get<1>(hashMap[1]) == "One");
+    JPT_ENSURE(jpt::Get<2>(hashMap[1]) == 1.0);
+
+    JPT_ENSURE(jpt::Get<0>(hashMap[2]) == 2);
+    JPT_ENSURE(jpt::Get<1>(hashMap[2]) == "Two");
+    JPT_ENSURE(jpt::Get<2>(hashMap[2]) == 2.0);
+
+    JPT_ENSURE(jpt::Get<0>(hashMap[3]) == 3);
+    JPT_ENSURE(jpt::Get<1>(hashMap[3]) == "Three");
+    JPT_ENSURE(jpt::Get<2>(hashMap[3]) == 3.0);
+
+    hashMap.Erase(2);
+
+    JPT_ENSURE(hashMap.Count() == 2);
+
+    JPT_ENSURE(jpt::Get<0>(hashMap[1]) == 1);
+    JPT_ENSURE(jpt::Get<1>(hashMap[1]) == "One");
+    JPT_ENSURE(jpt::Get<2>(hashMap[1]) == 1.0);
+
+    JPT_ENSURE(jpt::Get<0>(hashMap[3]) == 3);
+    JPT_ENSURE(jpt::Get<1>(hashMap[3]) == "Three");
+    JPT_ENSURE(jpt::Get<2>(hashMap[3]) == 3.0);
 
     return true;
 }
