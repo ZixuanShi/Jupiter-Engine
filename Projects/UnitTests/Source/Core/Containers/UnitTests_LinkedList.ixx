@@ -6,10 +6,14 @@ module;
 
 export module UnitTests_LinkedList;
 
+import jpt.Any;
+import jpt.DynamicArray;
+import jpt.LinkedList;
+import jpt.String;
+import jpt.Tuple;
 import jpt.TypeDefs;
 import jpt.Utilities;
-import jpt.String;
-import jpt.LinkedList;
+import jpt.Variant;
 
 auto locHelper = [](size_t i) -> const char*
     {
@@ -69,7 +73,7 @@ bool UnitTest_LinkedList_Trivial()
     return true;
 }
 
-bool UnitTest_LinkedList_NonTrivial()
+bool UnitTest_LinkedList_String()
 {
     jpt::LinkedList<jpt::String> list{ "Seven", "Eight", "Nine" };
 
@@ -105,10 +109,60 @@ bool UnitTest_LinkedList_NonTrivial()
     return true;
 }
 
+JPT_ENUM_UINT32(ETest2,
+    Zero = 12,
+    One,
+    Two,
+    Three,
+    Four = (1 << 8),
+    Five,
+    Six);
+bool UnitTest_LinkedList_Enum()
+{
+	jpt::LinkedList<ETest2> list{ ETest2::Zero, ETest2::Two, ETest2::Four };
+
+    ETest2 test = list.Front();
+    list.PopFront();
+    JPT_ENSURE(test == ETest2::Zero);
+    JPT_ENSURE(test.Value() == 12);
+    JPT_ENSURE(test.ToString() == "Zero");
+
+    test = list.Front();
+    list.PopFront();
+    JPT_ENSURE(test == ETest2::Two);
+    JPT_ENSURE(test.Value() == 14);
+    JPT_ENSURE(test.ToString() == "Two");
+
+    test = list.Front();
+    list.PopFront();
+    JPT_ENSURE(test == ETest2::Four);
+    JPT_ENSURE(test.Value() == 256);
+    JPT_ENSURE(test.ToString() == "Four");
+
+	return true;
+}
+
+bool UnitTest_LinkedList_Any()
+{
+    // Any's m_smallBuffer and m_pBuffer set correctly
+    jpt::LinkedList<jpt::Any> list2{ 1.05f };
+    JPT_ENSURE(list2.Front().As<float>() == 1.05f);
+
+    // m_pBuffer not pointing to correct m_smallBuffer
+    jpt::LinkedList<jpt::Any> list1;
+    list1.EmplaceBack(1.05f);
+    JPT_ENSURE(list1.Front().As<float>() == 1.05f);
+
+    return true;
+}
+
 export bool RunUnitTests_LinkedList()
 {
     JPT_ENSURE(UnitTest_LinkedList_Trivial());
-    JPT_ENSURE(UnitTest_LinkedList_NonTrivial());
+
+    JPT_ENSURE(UnitTest_LinkedList_String());
+    JPT_ENSURE(UnitTest_LinkedList_Enum());
+    //JPT_ENSURE(UnitTest_LinkedList_Any());
 
     return true;
 }

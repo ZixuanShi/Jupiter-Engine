@@ -59,7 +59,7 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept { return ConstIterator(nullptr); }
 
 		// Capacity
-		constexpr size_t Count()  const { return m_count; }
+		constexpr size_t Count() const { return m_count; }
 		constexpr bool IsEmpty() const { return m_count == 0; }
 
 		// Modifier
