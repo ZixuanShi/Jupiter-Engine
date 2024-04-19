@@ -398,6 +398,10 @@ bool UnitTest_HashMap_Iterate_Erase_Container()
     JPT_ENSURE(hashMap.Find("Platforms")             == hashMap.end());
     JPT_ENSURE(hashMap.Find("Tools")->second         == (jpt::DynamicArray<jpt::String>{ "Premake", "Doxygen" }));
 
+    hashMap["Graphics APIs"].EmplaceBack("OpenGL");
+    hashMap["Graphics APIs"].EmplaceBack("Metal");
+    JPT_ENSURE(hashMap.Find("Graphics APIs")->second == (jpt::DynamicArray<jpt::String>{ "DX12", "Vulkan", "OpenGL", "Metal" }));
+
     return true;
 }
 
