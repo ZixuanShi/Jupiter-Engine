@@ -8,10 +8,13 @@ module;
 
 export module UnitTests_DynamicArray;
 
-import jpt.TypeDefs;
-import jpt.Utilities;
-import jpt.String;
+import jpt.Any;
 import jpt.DynamicArray;
+import jpt.String;
+import jpt.TypeDefs;
+import jpt.Tuple;
+import jpt.Utilities;
+import jpt.Variant;
 
 auto locHelper = [](size_t i) -> const char*
     {
@@ -298,13 +301,48 @@ bool UnitTests_DynamicArray_Enum()
     return true;
 }
 
+bool UnitTests_DynamicArray_Any()
+{
+    jpt::DynamicArray<jpt::Any> dynamicArray{ 1, 2.0f, jpt::String("Four"), jpt::Tuple<int32, bool>(5, false), jpt::Variant<int32>(7) };
+
+    JPT_ENSURE(dynamicArray[0].Is<int32>());
+    JPT_ENSURE(dynamicArray[0].As<int32>() == 1);
+    dynamicArray[0] = 2;
+    JPT_ENSURE(dynamicArray[0].As<int32>() == 2);
+
+    JPT_ENSURE(dynamicArray[1].Is<float>());
+    JPT_ENSURE(dynamicArray[1].As<float>() == 2.0f);
+    dynamicArray[1] = 3.0f;
+    JPT_ENSURE(dynamicArray[1].As<float>() == 3.0f);
+
+    JPT_ENSURE(dynamicArray[2].Is<jpt::String>());
+    JPT_ENSURE(dynamicArray[2].As<jpt::String>() == "Four");
+    dynamicArray[2] = jpt::String("Five");
+    JPT_ENSURE(dynamicArray[2].As<jpt::String>() == "Five");
+
+    JPT_ENSURE((dynamicArray[3].Is<jpt::Tuple<int32, bool>>()));
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[3].As<jpt::Tuple<int32, bool>>()) == 5);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[3].As<jpt::Tuple<int32, bool>>()) == false);
+    dynamicArray[3] = jpt::Tuple<int32, bool>(6, true);
+    JPT_ENSURE(jpt::Get<0>(dynamicArray[3].As<jpt::Tuple<int32, bool>>()) == 6);
+    JPT_ENSURE(jpt::Get<1>(dynamicArray[3].As<jpt::Tuple<int32, bool>>()) == true);
+
+    JPT_ENSURE(dynamicArray[4].Is<jpt::Variant<int32>>());
+    JPT_ENSURE(dynamicArray[4].As<jpt::Variant<int32>>().Is<int32>());
+    JPT_ENSURE(dynamicArray[4].As<jpt::Variant<int32>>().As<int32>() == 7);
+    dynamicArray[4] = jpt::Variant<int32>(8);
+    JPT_ENSURE(dynamicArray[4].As<jpt::Variant<int32>>().As<int32>() == 8);
+
+    return true;
+}
+
 export bool RunUnitTests_DynamicArray()
 {
     JPT_ENSURE(UnitTest_DynamicArray_Trivial());
     JPT_ENSURE(UnitTest_DynamicArray_NonTrivial());
 
     JPT_ENSURE(UnitTests_DynamicArray_Enum());
-
+    JPT_ENSURE(UnitTests_DynamicArray_Any());
 
     return true;
 }
