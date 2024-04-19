@@ -456,15 +456,23 @@ bool UnitTest_HashMap_Variant()
 
     JPT_ENSURE(hashMap["integer_1"].Is<int32>());
     JPT_ENSURE(hashMap["integer_1"].As<int32>() == 1);
+    hashMap["integer_1"] = 2;
+    JPT_ENSURE(hashMap["integer_1"].As<int32>() == 2);
 
     JPT_ENSURE(hashMap["float_1"].Is<float64>());
     JPT_ENSURE(hashMap["float_1"].As<float64>() == 2.0);
+    hashMap["float_1"] = 3.0;
+    JPT_ENSURE(hashMap["float_1"].As<float64>() == 3.0);
 
     JPT_ENSURE(hashMap["string_1"].Is<jpt::String>());
     JPT_ENSURE(hashMap["string_1"].As<jpt::String>() == "Three");
+    hashMap["string_1"] = jpt::String("Four");
+    JPT_ENSURE(hashMap["string_1"].As<jpt::String>() == "Four");
 
     JPT_ENSURE(hashMap["bool_1"].Is<bool>());
     JPT_ENSURE(hashMap["bool_1"].As<bool>() == true);
+    hashMap["bool_1"] = false;
+    JPT_ENSURE(hashMap["bool_1"].As<bool>() == false);
 
     return true;
 }
