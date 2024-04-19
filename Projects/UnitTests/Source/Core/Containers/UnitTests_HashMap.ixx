@@ -516,7 +516,15 @@ bool UnitTest_HashMap_Tuple()
 
 bool UnitTest_HashMap_Any()
 {
-    //jpt::HashMap<EWeapon, jpt::Any> hashMap;
+    jpt::HashMap<EWeapon, jpt::Any> hashMap;
+
+    //hashMap.Add(EWeapon::Sword, 1);
+    //JPT_ENSURE(hashMap[EWeapon::Sword].Is<int32>());
+    //JPT_ENSURE(hashMap[EWeapon::Sword].As<int32>() == 1);
+
+    //hashMap[EWeapon::Sword] = jpt::String("Hello World");
+    //JPT_ENSURE(hashMap[EWeapon::Sword].Is<jpt::String>());
+    //JPT_ENSURE(hashMap[EWeapon::Sword].As<jpt::String>() == "Hello World");
 
     return true;
 }

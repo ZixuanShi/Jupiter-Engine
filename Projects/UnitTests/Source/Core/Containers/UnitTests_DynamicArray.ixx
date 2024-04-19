@@ -265,10 +265,46 @@ bool UnitTest_DynamicArray_NonTrivial()
     return true;
 }
 
+JPT_ENUM_UINT32(ETest, 
+    Zero = 12, 
+    One, 
+    Two, 
+    Three, 
+    Four = (1 << 8),
+    Five, 
+    Six);
+
+bool UnitTests_DynamicArray_Enum()
+{
+    jpt::DynamicArray<ETest> dynamicArray{ ETest::Zero, ETest::Two, ETest::Four };
+    
+    JPT_ENSURE(dynamicArray[0] == ETest::Zero);
+    JPT_ENSURE(dynamicArray[0].Value() == 12);
+    JPT_ENSURE(dynamicArray[0].ToString() == "Zero");
+
+    JPT_ENSURE(dynamicArray[1] == ETest::Two);
+    JPT_ENSURE(dynamicArray[1].Value() == 14);
+    JPT_ENSURE(dynamicArray[1].ToString() == "Two");
+
+    JPT_ENSURE(dynamicArray[2] == ETest::Four);
+    JPT_ENSURE(dynamicArray[2].Value() == 256);
+    JPT_ENSURE(dynamicArray[2].ToString() == "Four");
+
+    dynamicArray[1] = ETest::Six;
+    JPT_ENSURE(dynamicArray[1] == ETest::Six);
+    JPT_ENSURE(dynamicArray[1].Value() == 258);
+    JPT_ENSURE(dynamicArray[1].ToString() == "Six");
+
+    return true;
+}
+
 export bool RunUnitTests_DynamicArray()
 {
     JPT_ENSURE(UnitTest_DynamicArray_Trivial());
     JPT_ENSURE(UnitTest_DynamicArray_NonTrivial());
+
+    JPT_ENSURE(UnitTests_DynamicArray_Enum());
+
 
     return true;
 }
