@@ -180,6 +180,64 @@ bool UnitTest_LinkedList_Any()
     return true;
 }
 
+bool UnitTest_LinkedList_Variant()
+{
+	jpt::LinkedList<jpt::Variant<int32, jpt::String>> list;
+
+	list.EmplaceBack(1);
+	list.EmplaceBack(jpt::String("Hello"));
+	list.EmplaceBack(5);
+	list.EmplaceBack(jpt::String("Five"));
+
+	JPT_ENSURE(list.Front().As<int32>() == 1);
+	list.PopFront();
+
+	JPT_ENSURE(list.Front().As<jpt::String>() == "Hello");
+	list.PopFront();
+
+	JPT_ENSURE(list.Front().As<int32>() == 5);
+	list.PopFront();
+
+	JPT_ENSURE(list.Front().As<jpt::String>() == "Five");
+	list.PopFront();
+
+	return true;
+}
+
+bool UnitTest_LinkedList_Tuple()
+{
+    using TTuple = jpt::Tuple<int32, jpt::String>;
+	jpt::LinkedList<TTuple> list;
+
+    TTuple tuple1(1, jpt::String("One"));
+    TTuple tuple2(2, jpt::String("Two"));
+    TTuple tuple3(3, jpt::String("Three"));
+    TTuple tuple4(4, jpt::String("Four"));
+
+	list.EmplaceBack(tuple1);
+	list.EmplaceBack(tuple2);
+	list.EmplaceBack(tuple3);
+	list.EmplaceBack(tuple4);
+
+	JPT_ENSURE(jpt::Get<0>(list.Front()) == 1);
+	JPT_ENSURE(jpt::Get<1>(list.Front()) == "One");
+	list.PopFront();
+
+	JPT_ENSURE(jpt::Get<0>(list.Front()) == 2);
+	JPT_ENSURE(jpt::Get<1>(list.Front()) == "Two");
+	list.PopFront();
+
+	JPT_ENSURE(jpt::Get<0>(list.Front()) == 3);
+	JPT_ENSURE(jpt::Get<1>(list.Front()) == "Three");
+	list.PopFront();
+
+	JPT_ENSURE(jpt::Get<0>(list.Front()) == 4);
+	JPT_ENSURE(jpt::Get<1>(list.Front()) == "Four");
+	list.PopFront();
+
+	return true;
+}
+
 export bool RunUnitTests_LinkedList()
 {
     JPT_ENSURE(UnitTest_LinkedList_Trivial());
@@ -187,6 +245,8 @@ export bool RunUnitTests_LinkedList()
     JPT_ENSURE(UnitTest_LinkedList_String());
     JPT_ENSURE(UnitTest_LinkedList_Enum());
     JPT_ENSURE(UnitTest_LinkedList_Any());
+    JPT_ENSURE(UnitTest_LinkedList_Variant());
+    JPT_ENSURE(UnitTest_LinkedList_Tuple());
 
     return true;
 }
