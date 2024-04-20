@@ -213,9 +213,9 @@ export namespace jpt
 
 	constexpr bool Any::IsEmpty() const
 	{
-		return m_currentTypeSize == 0 || m_currentTypeHash == 0 || m_pBuffer == nullptr;
-
-		return false;
+		return m_currentTypeSize == 0 || 
+			   m_currentTypeHash == 0 || 
+			   m_pBuffer == nullptr;
 	}
 
 	constexpr void Any::Clear()
