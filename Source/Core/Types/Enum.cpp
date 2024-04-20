@@ -31,12 +31,12 @@ template<jpt::Integral TInt>
 Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView operatorStr, EOperation operation)
 {
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-	if (const size_t shiftIndex = expression.Find(operatorStr.Buffer()); shiftIndex != jpt::npos)
+	if (const size_t shiftIndex = expression.Find(operatorStr.ConstBuffer()); shiftIndex != jpt::npos)
 	{
 		const jpt::StringView left  = expression.SubStr(0, shiftIndex);
 		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
-		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.Buffer(),  left.Count());
-		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.Buffer(), right.Count());
+		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.ConstBuffer(),  left.Count());
+		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.ConstBuffer(), right.Count());
 
 		switch (operation)
 		{
@@ -72,10 +72,10 @@ TInt Evaluate(jpt::StringView valueStr)
 	// Hex. starts with 0x
 	else if (const size_t hexIndex = expression.Find("0x"); hexIndex == 0)
 	{
-		return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Count(), IntBase::Hex);
+		return jpt::CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), IntBase::Hex);
 	}
 
-	return jpt::CStrToInteger<char, TInt>(expression.Buffer(), expression.Count());
+	return jpt::CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
 }
 
 template<jpt::Integral TInt>

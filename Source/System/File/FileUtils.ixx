@@ -66,18 +66,18 @@ export namespace jpt
 			break;
 		}
 
-		result.Append(relativePath.Buffer(), relativePath.Count());
+		result.Append(relativePath.ConstBuffer(), relativePath.Count());
 		return result;
 	}
 
 	Optional<String> GetTextFileContent(StringView absolutePath)
 	{
 		std::ifstream file;
-		file.open(absolutePath.Buffer());
+		file.open(absolutePath.ConstBuffer());
 
 		if (!file.is_open())
 		{
-			JPT_ERROR("Failed to open file: %s", absolutePath.Buffer());
+			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
 			return Optional<String>();
 		}
 

@@ -42,17 +42,15 @@ export namespace jpt
 		StringViewBase& operator=(const StringBase<TChar>& string);
 
 		// Element Access
-		constexpr const TChar* Buffer()         const { return m_pBuffer;             } 
+		constexpr const TChar* ConstBuffer()    const { return m_pBuffer;             } 
 		constexpr const TChar& At(size_t index) const { return m_pBuffer[index];      }
 		constexpr const TChar& Front()          const { return m_pBuffer[0];          }
 		constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1]; }
 		constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
 		// Capacity
+		constexpr size_t Count() const { return m_count; }
 		constexpr bool IsEmpty() const { return m_count == 0; }
-		constexpr size_t Count()  const { return m_count;      }
-
-		// Operations
 
 		/** @return		A sub string within the given range at index and length */
 		constexpr StringViewBase SubStr(size_t index, size_t count = npos) const;
@@ -75,17 +73,17 @@ export namespace jpt
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const StringViewBase<TChar>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.Buffer(), a.Count(), b.Count());
+		return AreStringsSame(a.ConstBuffer(), b.ConstBuffer(), a.Count(), b.Count());
 	}
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const TChar* b)
 	{
-		return AreStringsSame(a.Buffer(), b, a.Count(), FindCharsCount(b));
+		return AreStringsSame(a.ConstBuffer(), b, a.Count(), FindCharsCount(b));
 	}
 	template<StringLiteral TChar>
 	constexpr bool operator==(const StringViewBase<TChar>& a, const StringBase<TChar>& b)
 	{
-		return AreStringsSame(a.Buffer(), b.ConstBuffer(), a.Count(), b.Count());
+		return AreStringsSame(a.ConstBuffer(), b.ConstBuffer(), a.Count(), b.Count());
 	}
 
 	// Member Functions Definitions --------------------------------------------------------------------------------------------------------
