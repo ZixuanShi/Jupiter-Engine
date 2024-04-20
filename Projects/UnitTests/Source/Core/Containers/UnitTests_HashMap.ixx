@@ -522,9 +522,28 @@ bool UnitTest_HashMap_Any()
     JPT_ENSURE(hashMap[EWeapon::Sword].Is<int32>());
     JPT_ENSURE(hashMap[EWeapon::Sword].As<int32>() == 1);
 
-    hashMap[EWeapon::Sword] = jpt::String("Hello World");
-    JPT_ENSURE(hashMap[EWeapon::Sword].Is<jpt::String>());
-    JPT_ENSURE(hashMap[EWeapon::Sword].As<jpt::String>() == "Hello World");
+    hashMap[EWeapon::Hammer] = jpt::String("Hello World");
+    JPT_ENSURE(hashMap[EWeapon::Hammer].Is<jpt::String>());
+    JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::String>() == "Hello World");
+
+    hashMap[EWeapon::Axe] = 3.0;
+    JPT_ENSURE(hashMap[EWeapon::Axe].Is<float64>());
+    JPT_ENSURE(hashMap[EWeapon::Axe].As<float64>() == 3.0);
+
+    hashMap[EWeapon::Sword] = true;
+    JPT_ENSURE(hashMap[EWeapon::Sword].Is<bool>());
+    JPT_ENSURE(hashMap[EWeapon::Sword].As<bool>() == true);
+
+    hashMap[EWeapon::Hammer] = jpt::DynamicArray<int32>{ 0, 1, 2, 3, 4 };
+    JPT_ENSURE(hashMap[EWeapon::Hammer].Is<jpt::DynamicArray<int32>>());
+    JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>().Count() == 5);
+    for (int32 i = 0; i < 5; ++i)
+	{
+		JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[i] == i);
+	}
+
+    hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[3] = 10;
+    JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[3] == 10);
 
     return true;
 }
