@@ -25,18 +25,6 @@ export namespace jpt
 
 	/** Replaces directory slashes to platform-correct version */
 	template<StringType TString>
-	void FixSlashes(TString& path);
-
-	/** Returns the absolute path of the given relative path */
-	String GetAbsolutePath(ESource source, StringView relativePath);
-
-	/** Reads text file's content at given absolute path */
-	Optional<String> GetTextFileContent(StringView absolutePath);
-}
-
-export namespace jpt
-{
-	template<StringType TString>
 	void FixSlashes(TString& path)
 	{
 		using TChar = typename TString::TChar;
@@ -44,6 +32,7 @@ export namespace jpt
 		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
 	}
 
+	/** Returns the absolute path of the given relative path */
 	String GetAbsolutePath(ESource source, StringView relativePath)
 	{
 		String result;
@@ -70,6 +59,7 @@ export namespace jpt
 		return result;
 	}
 
+	/** Reads text file's content at given absolute path */
 	Optional<String> GetTextFileContent(StringView absolutePath)
 	{
 		std::ifstream file;
