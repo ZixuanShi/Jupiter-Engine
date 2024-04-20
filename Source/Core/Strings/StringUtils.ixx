@@ -304,6 +304,29 @@ export namespace jpt
 		return CStrToFloat(pBuffer, FindCharsCount(pBuffer));
 	}
 
+	/** @return		Lowercase or Uppercase for the given character */
+	template<StringLiteral TChar = char>
+	constexpr TChar GetLower(TChar c)
+	{
+		if (c >= 'A' && c <= 'Z')
+		{
+			return c + 'a' - 'A';
+		}
+
+		return c;
+	}
+
+	template<StringLiteral TChar = char>
+	constexpr TChar GetUpper(TChar c)
+	{
+		if (c >= 'a' && c <= 'z')
+		{
+			return c + 'A' - 'a';
+		}
+
+		return c;
+	}
+
 #pragma endregion
 
 #pragma region Operations

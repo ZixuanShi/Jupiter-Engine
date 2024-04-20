@@ -512,6 +512,52 @@ bool UnitTest_WString_Format()
 	return true;
 }
 
+bool UnitTest_String_MakeUpper()
+{
+	jpt::String str = "Hello World Jupiter Engine";
+	str.MakeUpper();
+
+	JPT_ENSURE(str == "HELLO WORLD JUPITER ENGINE");
+
+	JPT_ENSURE(jpt::String::GetUpper("Hello World Jupiter Engine") == "HELLO WORLD JUPITER ENGINE");
+
+	return true;
+}
+bool UnitTest_WString_MakeUpper()
+{
+	jpt::WString str = L"Hello World Jupiter Engine";
+	str.MakeUpper();
+
+	JPT_ENSURE(str == L"HELLO WORLD JUPITER ENGINE");
+
+	JPT_ENSURE(jpt::WString::GetUpper(L"Hello World Jupiter Engine") == L"HELLO WORLD JUPITER ENGINE");
+
+	return true;
+}
+
+bool UnitTest_String_MakeLower()
+{
+	jpt::String str = "Hello World Jupiter Engine";
+	str.MakeLower();
+
+	JPT_ENSURE(str == "hello world jupiter engine");
+
+	JPT_ENSURE(jpt::String::GetLower("Hello World Jupiter Engine") == "hello world jupiter engine");
+
+	return true;
+}
+bool UnitTest_WString_MakeLower()
+{
+	jpt::WString str = L"Hello World Jupiter Engine";
+	str.MakeLower();
+
+	JPT_ENSURE(str == L"hello world jupiter engine");
+
+	JPT_ENSURE(jpt::WString::GetLower(L"Hello World Jupiter Engine") == L"hello world jupiter engine");
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
@@ -562,6 +608,12 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTest_String_Format());
 		JPT_ENSURE(UnitTest_WString_Format());
+
+		JPT_ENSURE(UnitTest_String_MakeUpper());
+		JPT_ENSURE(UnitTest_WString_MakeUpper());
+
+		JPT_ENSURE(UnitTest_String_MakeLower());
+		JPT_ENSURE(UnitTest_WString_MakeLower());
 	}
 
 	return true;

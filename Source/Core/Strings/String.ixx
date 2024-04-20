@@ -156,6 +156,12 @@ export namespace jpt
 		template<Floating TFloat = float>
 		constexpr TFloat ToFloat() const;
 
+		/** Converts all the characters to lowercase/uppercase */
+		constexpr void MakeLower();
+		constexpr void MakeUpper();
+		static constexpr StringBase GetLower(const StringBase& string);
+		static constexpr StringBase GetUpper(const StringBase& string);
+
 		/** @return A hash value of this string */
 		constexpr uint64 Hash() const;
 
@@ -236,8 +242,8 @@ export namespace jpt
 		CopyString(CString);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr StringBase<_TChar, _TAllocator>::StringBase(TChar c)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator>::StringBase(TChar c)
 	{
 		TChar* pBuffer = TAllocator::AllocateArray(2);
 		pBuffer[0] = c;
@@ -455,16 +461,16 @@ export namespace jpt
 		return *this;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr StringBase<_TChar, _TAllocator> StringBase<_TChar, _TAllocator>::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator> StringBase<TChar, TAllocator>::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
 	{
 		StringBase copy = *this;
 		copy.Replace(StringToFind, StringToReplace, startIndex, endIndex);
 		return copy;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr DynamicArray<StringBase<_TChar, _TAllocator>> StringBase<_TChar, _TAllocator>::Split(const TChar* pKeyword) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr DynamicArray<StringBase<TChar, TAllocator>> StringBase<TChar, TAllocator>::Split(const TChar* pKeyword) const
 	{
 		DynamicArray<StringBase> substrs;
 		StringBase current;
@@ -488,8 +494,8 @@ export namespace jpt
 		return substrs;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr DynamicArray<StringBase<_TChar, _TAllocator>> StringBase<_TChar, _TAllocator>::Split(TChar keyword) const
+	template<StringLiteral TChar, class TAllocator>
+	constexpr DynamicArray<StringBase<TChar, TAllocator>> StringBase<TChar, TAllocator>::Split(TChar keyword) const
 	{
 		DynamicArray<StringBase> substrs;
 		StringBase current;
@@ -547,8 +553,8 @@ export namespace jpt
 		return result;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::TrimLeft(size_t index /* = npos*/)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::TrimLeft(size_t index /* = npos*/)
 	{
 		// If index == npos, trim all the white spaces from the left
 		if (index == npos)
@@ -568,8 +574,8 @@ export namespace jpt
 		*this = SubStr(index);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::TrimRight(size_t index /* = npos*/)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::TrimRight(size_t index /* = npos*/)
 	{
 		// If index == npos, trim all the white spaces from the right
 		if (index == npos)
@@ -589,21 +595,21 @@ export namespace jpt
 		*this = SubStr(0, index);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::Insert(TChar c, size_t index)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::Insert(TChar c, size_t index)
 	{
 		TChar cString[2] = { c, '\0' };
 		Insert(cString, index, 1);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::Insert(const TChar* CString, size_t index)
 	{
 		Insert(CString, index, FindCharsCount(CString));
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::Insert(const TChar* CString, size_t index, size_t size)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::Insert(const TChar* CString, size_t index, size_t size)
 	{
 		JPT_ASSERT(index <= m_count, "Index out of bound");
 		JPT_EXIT_IF(size == 0);
@@ -624,8 +630,8 @@ export namespace jpt
 		AppendImpl(CString, newStringSize);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::Append(const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::Append(const TChar* CString)
 	{
 		Append(CString, FindCharsCount(CString));
 	}
@@ -637,29 +643,29 @@ export namespace jpt
 		AppendImpl(otherString.ConstBuffer(), otherString.m_count);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::Append(TChar c)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::Append(TChar c)
 	{
 		TChar cString[2] = { c, '\0' };
 		AppendImpl(cString, 1);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr StringBase<_TChar, _TAllocator>& StringBase<_TChar, _TAllocator>::operator+=(const TChar* CString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator>& StringBase<TChar, TAllocator>::operator+=(const TChar* CString)
 	{
 		Append(CString);
 		return *this;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr StringBase<_TChar, _TAllocator>& StringBase<_TChar, _TAllocator>::operator+=(const StringBase<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator>& StringBase<TChar, TAllocator>::operator+=(const StringBase<TChar>& otherString)
 	{
 		Append(otherString);
 		return *this;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr StringBase<_TChar, _TAllocator>& StringBase<_TChar, _TAllocator>::operator+=(TChar c)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator>& StringBase<TChar, TAllocator>::operator+=(TChar c)
 	{
 		Append(c);
 		return *this;
@@ -685,9 +691,9 @@ export namespace jpt
 		}
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
+	template<StringLiteral TChar, class TAllocator>
 	template<size_t kCount>
-	constexpr StringBase<_TChar, _TAllocator> StringBase<_TChar, _TAllocator>::Format(const TChar* format, ...)
+	constexpr StringBase<TChar, TAllocator> StringBase<TChar, TAllocator>::Format(const TChar* format, ...)
 	{
 		TChar buffer[kCount];
 
@@ -703,16 +709,16 @@ export namespace jpt
 		return StringBase(buffer);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
+	template<StringLiteral TChar, class TAllocator>
 	template<Integral TInt>
-	constexpr TInt StringBase<_TChar, _TAllocator>::ToInt() const
+	constexpr TInt StringBase<TChar, TAllocator>::ToInt() const
 	{
 		return CStrToInteger(m_pBuffer, m_count);
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
+	template<StringLiteral TChar, class TAllocator>
 	template<Floating TFloat>
-	constexpr TFloat StringBase<_TChar, _TAllocator>::ToFloat() const
+	constexpr TFloat StringBase<TChar, TAllocator>::ToFloat() const
 	{
 		return CStrToFloat(m_pBuffer, m_count);
 	}
@@ -748,14 +754,14 @@ export namespace jpt
 		m_capacity = m_count;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::CopyString(const TChar* inCString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::CopyString(const TChar* inCString)
 	{
 		CopyString(inCString, FindCharsCount(inCString));
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::CopyString(const StringBase<TChar>& otherString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::CopyString(const StringBase<TChar>& otherString)
 	{
 		CopyString(otherString.ConstBuffer(), otherString.Count());
 	}
@@ -784,8 +790,8 @@ export namespace jpt
 		m_capacity = m_count;
 	}
 
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr void StringBase<_TChar, _TAllocator>::MoveString(TChar* inCString)
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::MoveString(TChar* inCString)
 	{
 		MoveString(inCString, FindCharsCount(inCString));
 	}
@@ -816,6 +822,40 @@ export namespace jpt
 		otherString.m_pBuffer  = nullptr;
 		otherString.m_count     = 0;
 		otherString.m_capacity = 0;
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::MakeLower()
+	{
+		for (size_t i = 0; i < m_count; ++i)
+		{
+			m_pBuffer[i] = jpt::GetLower(m_pBuffer[i]);
+		}
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void StringBase<TChar, TAllocator>::MakeUpper()
+	{
+		for (size_t i = 0; i < m_count; ++i)
+		{
+			m_pBuffer[i] = jpt::GetUpper(m_pBuffer[i]);
+		}
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator> StringBase<TChar, TAllocator>::GetLower(const StringBase& string)
+	{
+		StringBase str = string;
+		str.MakeLower();
+		return str;
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr StringBase<TChar, TAllocator> StringBase<TChar, TAllocator>::GetUpper(const StringBase& string)
+	{
+		StringBase str = string;
+		str.MakeUpper();
+		return str;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
