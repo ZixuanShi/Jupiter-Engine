@@ -246,7 +246,14 @@ export namespace jpt
 		m_currentTypeSize = other.m_currentTypeSize;
 
 		std::memmove(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
-		m_pBuffer = other.m_pBuffer;
+		if (m_currentTypeSize <= kLocSmallDataSize)
+		{
+			m_pBuffer = m_smallBuffer;
+		}
+		else
+		{
+			m_pBuffer = other.m_pBuffer;
+		}
 
 		m_constructor = other.m_constructor;
 		m_destructor  = other.m_destructor;
