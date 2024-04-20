@@ -159,7 +159,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	constexpr void StrongPtr<TData>::Reset(TData* pPtr, const TDeleter& deleter)
+	constexpr void StrongPtr<TData>::Reset(TData* pPtr/* = nullptr*/, const TDeleter& deleter/* = TDeleter()*/)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
@@ -175,7 +175,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	constexpr void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter)
+	constexpr void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter/* = TDeleter()*/)
 	{
 		if (m_pRefCounter)
 		{
