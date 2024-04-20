@@ -69,6 +69,9 @@ export namespace jpt
 		template<typename T> 
 		constexpr bool Is() const;
 
+		constexpr bool IsEmpty() const;
+		constexpr void Clear();
+
 	private:
 		void CopyAny(const Any& other);
 		void MoveAny(Any&& other);
@@ -92,13 +95,7 @@ export namespace jpt
 
 	constexpr Any::~Any()
 	{
-		DestructObject();
-		DeallocateBuffer();
-		m_pBuffer     = nullptr;
-		m_constructor = nullptr;
-		m_destructor  = nullptr;
-		m_currentTypeHash = 0;
-		m_currentTypeSize = 0;
+		Clear();
 	}
 
 	Any::Any(const Any& other)
@@ -115,9 +112,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			DestructObject();
-			DeallocateBuffer();
-
+			Clear();
 			CopyAny(other);
 		}
 
@@ -128,9 +123,7 @@ export namespace jpt
 	{
 		if (this != &other)
 		{
-			DestructObject();
-			DeallocateBuffer();
-
+			Clear();
 			MoveAny(Move(other));
 		}
 
@@ -218,6 +211,24 @@ export namespace jpt
 		return m_currentTypeSize == sizeof(T) && m_currentTypeHash == typeid(T).hash_code();
 	}
 
+	constexpr bool Any::IsEmpty() const
+	{
+		return m_currentTypeSize == 0 || m_currentTypeHash == 0 || m_pBuffer == nullptr;
+
+		return false;
+	}
+
+	constexpr void Any::Clear()
+	{
+		DestructObject();
+		DeallocateBuffer();
+		m_pBuffer     = nullptr;
+		m_constructor = nullptr;
+		m_destructor  = nullptr;
+		m_currentTypeHash = 0;
+		m_currentTypeSize = 0;
+	}
+
 	void Any::CopyAny(const Any& other)
 	{
 		m_currentTypeHash = other.m_currentTypeHash;
@@ -237,7 +248,10 @@ export namespace jpt
 		m_constructor = other.m_constructor;
 		m_destructor  = other.m_destructor;
 
-		m_constructor(m_pBuffer, other.m_pBuffer);
+		if (m_constructor)
+		{
+			m_constructor(m_pBuffer, other.m_pBuffer);
+		}
 	}
 
 	void Any::MoveAny(Any&& other)
