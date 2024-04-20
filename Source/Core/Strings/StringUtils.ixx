@@ -22,55 +22,6 @@ export namespace jpt
 {
 	/**	@return How many characters inside of the given CString. Excluding '\0' */
 	template<StringLiteral TChar>
-	constexpr size_t FindCharsCount(const TChar* string);
-
-	/** Convert from IntegerType to a char pointer holding the integer's value as string literal
-		@param value:        The IntegerType value to convert to char*
-		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
-		@return A char pointer pointing to the memory where we store the converted number's string literal */
-	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TChar* IntegerToCStr(TInt value, IntBase base = IntBase::Decimal);
-
-	/** @return Integral number converted from pBuffer
-		@param pBuffer		Source buffer containing integer data 
-		@param count		Desired count to parse from start of pBuffer
-		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
-	template<StringLiteral TChar = char, Integral TInt = int32>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count, IntBase base = IntBase::Decimal);
-
-	template<StringLiteral TChar = char, Floating TFloat = float>
-	constexpr TChar* FloatToCStr(TFloat value);
-
-	/** @note	Will ignore the 'f' is there's any */
-	template<StringLiteral TChar = char, Floating TFloat = float>
-	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count);
-
-	/**	Copies data from destination to source with the given size */
-	template<StringLiteral TChar>
-	constexpr void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource);
-
-	/** Compares two C-Style strings. 
-		Optional one size parameter indicates how many characters should it compare from begin
-		Optional two size parameters indicates the first and second string's size in order
-		@return		
-		- npos if two C-Style strings within the given size are identical. 
-		- 0 maybe strings' sizes are not equal
-		- 0 to size for the index of of the first different char found in two strings */
-	template<StringLiteral TChar>
-	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count);
-
-	template<StringLiteral TChar>
-	constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count);
-
-	/** @return		true if input CString contains acceptable text data
-		@param pString				The string to perform check on every char 
-		@param treatSpecialAsValid	[Optional] false if treat special characters as failure of validness. default to true */
-	constexpr bool IsValidDataCStr(const char* pString, bool treatSpecialAsValid = true);
-}
-
-export namespace jpt
-{
-	template<StringLiteral TChar>
 	constexpr size_t FindCharsCount(const TChar* string)
 	{
 		if (!string)
@@ -89,8 +40,12 @@ export namespace jpt
 
 #pragma region Converters
 
-	template<StringLiteral TChar/* = char*/, Integral TInt/* = int32*/>
-	constexpr TChar* IntegerToCStr(TInt value, IntBase base /*= IntBase::Decimal*/)
+	/** Convert from IntegerType to a char pointer holding the integer's value as string literal
+		@param value:        The IntegerType value to convert to char*
+		@param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
+		@return A char pointer pointing to the memory where we store the converted number's string literal */
+	template<StringLiteral TChar = char, Integral TInt = int32>
+	constexpr TChar* IntegerToCStr(TInt value, IntBase base = IntBase::Decimal)
 	{
 		// Prepare data
 		bool isNegative = false;	// Whether this value is negative or not
@@ -178,8 +133,12 @@ export namespace jpt
 		return result;
 	}
 
-	template<StringLiteral TChar /*= char*/, Integral TInt/* = int32*/>
-	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count, IntBase base/* = IntBase::Decimal*/)
+	/** @return Integral number converted from pBuffer
+		@param pBuffer		Source buffer containing integer data 
+		@param count		Desired count to parse from start of pBuffer
+		@param base			Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
+	template<StringLiteral TChar = char, Integral TInt = int32>
+	constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count, IntBase base = IntBase::Decimal)
 	{
 		TInt result = 0;
 		bool isNegative = false;
@@ -255,7 +214,7 @@ export namespace jpt
 		return CStrToInteger<TChar, TInt>(pBuffer, FindCharsCount(pBuffer));
 	}
 
-	template<StringLiteral TChar /*= char*/, Floating TFloat/* = float*/>
+	template<StringLiteral TChar = char, Floating TFloat = float>
 	constexpr TChar* FloatToCStr(TFloat value)
 	{
 		static constexpr size_t kMaxSize = 32;
@@ -275,7 +234,8 @@ export namespace jpt
 		return buffer;
 	}
 
-	template<StringLiteral TChar /*= char*/, Floating TFloat /*= float*/>
+	/** @note	Will ignore the 'f' is there's any */
+	template<StringLiteral TChar = char, Floating TFloat = float>
 	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count)
 	{
 		// Parse two integral parts of the precision dot, then combine them
@@ -348,6 +308,7 @@ export namespace jpt
 
 #pragma region Operations
 
+	/**	Copies data from destination to source with the given size */
 	template<StringLiteral TChar>
 	constexpr void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource)
 	{
@@ -379,6 +340,13 @@ export namespace jpt
 
 #pragma region Comparisons
 
+	/** Compares two C-Style strings. 
+		Optional one size parameter indicates how many characters should it compare from begin
+		Optional two size parameters indicates the first and second string's size in order
+		@return		
+		- npos if two C-Style strings within the given size are identical. 
+		- 0 maybe strings' sizes are not equal
+		- 0 to size for the index of of the first different char found in two strings */
 	template<StringLiteral TChar>
 	constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
 	{
@@ -452,7 +420,10 @@ export namespace jpt
 		return (c == '-' || c == '.' || c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '+' || c == '=' || c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ';' || c == '"' || c == '\'' || c == '<' || c == '>' || c == ',' || c == '.' || c == '?' || c == '/' || c == '\\' || c == '|' || c == '`' || c == '~');
 	}
 
-	constexpr bool IsValidDataCStr(const char* pString, bool treatSpecialAsValid /*= true*/)
+	/** @return		true if input CString contains acceptable text data
+		@param pString				The string to perform check on every char 
+		@param treatSpecialAsValid	[Optional] false if treat special characters as failure of validness. default to true */
+	constexpr bool IsValidDataCStr(const char* pString, bool treatSpecialAsValid = true)
 	{
 		// Check if the pointer is valid and not empty
 		if (pString == nullptr)
