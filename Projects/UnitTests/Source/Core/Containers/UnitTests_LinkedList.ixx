@@ -144,14 +144,38 @@ bool UnitTest_LinkedList_Enum()
 
 bool UnitTest_LinkedList_Any()
 {
-    // Any's m_smallBuffer and m_pBuffer set correctly
-    jpt::LinkedList<jpt::Any> list2{ 1.05f };
-    JPT_ENSURE(list2.Front().As<float>() == 1.05f);
+    jpt::LinkedList<jpt::Any> list;
 
-    // m_pBuffer not pointing to correct m_smallBuffer
-    jpt::LinkedList<jpt::Any> list1;
-    list1.EmplaceBack(1.05f);
-    JPT_ENSURE(list1.Front().As<float>() == 1.05f);
+    list.EmplaceBack(1.05f);
+    list.EmplaceBack(true);
+    list.EmplaceBack(1);
+    list.EmplaceBack(jpt::String("Hello"));
+    list.EmplaceBack(jpt::Tuple<int32, jpt::String>(5, "Five"));
+    list.EmplaceBack(jpt::Variant<int32, jpt::String>(5));
+
+    list.EmplaceAfter(list.begin() + 3, ETest2(ETest2::Five));
+
+    JPT_ENSURE(list.Front().As<float>() == 1.05f);
+    list.PopFront();
+
+    JPT_ENSURE(list.Front().As<bool>() == true);
+    list.PopFront();
+
+    JPT_ENSURE(list.Front().As<int32>() == 1);
+    list.PopFront();
+
+    JPT_ENSURE(list.Front().As<jpt::String>() == "Hello");
+    list.PopFront();
+
+    JPT_ENSURE(list.Front().As<ETest2>() == ETest2::Five);
+    list.PopFront();
+
+    JPT_ENSURE(jpt::Get<0>(list.Front().As<jpt::Tuple<int32, jpt::String>>()) == 5);
+    JPT_ENSURE(jpt::Get<1>(list.Front().As<jpt::Tuple<int32, jpt::String>>()) == "Five");
+    list.PopFront();
+
+    JPT_ENSURE((list.Front().As<jpt::Variant<int32, jpt::String>>().As<int32>() == 5));
+    list.PopFront();
 
     return true;
 }
@@ -162,7 +186,7 @@ export bool RunUnitTests_LinkedList()
 
     JPT_ENSURE(UnitTest_LinkedList_String());
     JPT_ENSURE(UnitTest_LinkedList_Enum());
-    //JPT_ENSURE(UnitTest_LinkedList_Any());
+    JPT_ENSURE(UnitTest_LinkedList_Any());
 
     return true;
 }
