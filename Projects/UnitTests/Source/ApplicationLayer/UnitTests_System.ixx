@@ -12,7 +12,6 @@ import jpt.Utilities;
 
 // File
 import UnitTests_FileUtils;
-// FileIO
 import UnitTests_FileIO;
 
 // Time
@@ -25,7 +24,6 @@ export bool RunUnitTests_System()
 
 	// File
 	JPT_ENSURE(RunUnitTests_FileUtils());
-	// FileIO
 	JPT_ENSURE(RunUnitTests_FileIO());
 
 	// Time

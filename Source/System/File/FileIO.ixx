@@ -13,6 +13,7 @@ module;
 export module jpt.FileIO;
 
 import jpt.BaseFile;
+import jpt.FileEnums;
 import jpt.FileUtils;
 import jpt.TypeDefs;
 import jpt.String;
@@ -24,20 +25,20 @@ namespace jpt_private
 {
 	using namespace jpt;
 
-	String GetAbsolutePath(FileUtils::ESource source, StringView relativePath)
+	String GetAbsolutePath(ESource source, StringView relativePath)
 	{
 		String result;
 
 		switch (source)
 		{
-			case FileUtils::ESource::Engine:
+			case ESource::Engine:
 			{
-				result += JPT_ENGINE_DIR;
+				result.Append(JPT_ENGINE_DIR);
 				break;
 			}
-			case FileUtils::ESource::Client:
+			case ESource::Client:
 			{
-				result += GetClientDir();
+				result.Append(GetClientDir());
 				break;
 			}
 
@@ -46,7 +47,7 @@ namespace jpt_private
 			break;
 		}
 
-		result += relativePath.Buffer();
+		result.Append(relativePath.Buffer(), relativePath.Count());
 		return result;
 	}
 
@@ -92,7 +93,7 @@ export namespace jpt
 			return file;
 		}
 
-		Optional<StrongPtr<BaseFile>> Read(FileUtils::ESource source, StringView relativePath)
+		Optional<StrongPtr<BaseFile>> Read(ESource source, StringView relativePath)
 		{
 			return Read(jpt_private::GetAbsolutePath(source, relativePath));
 		}
