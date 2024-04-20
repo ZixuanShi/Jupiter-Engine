@@ -10,6 +10,8 @@ import jpt.Utilities;
 
 /** Unit Test Modules */
 
+// File
+import UnitTests_FileUtils;
 // FileIO
 import UnitTests_FileIO;
 
@@ -21,6 +23,8 @@ export bool RunUnitTests_System()
 {
 	/** Unit Test Functions */
 
+	// File
+	JPT_ENSURE(RunUnitTests_FileUtils());
 	// FileIO
 	JPT_ENSURE(RunUnitTests_FileIO());
 
