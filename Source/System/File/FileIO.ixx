@@ -14,88 +14,31 @@ export module jpt.FileIO;
 
 import jpt.BaseFile;
 import jpt.FileEnums;
+import jpt.FileTypeDefs;
 import jpt.FileUtils;
-import jpt.TypeDefs;
+import jpt.Optional;
 import jpt.String;
 import jpt.StringView;
-import jpt.Optional;
 import jpt.StrongPtr;
-
-namespace jpt_private
-{
-	using namespace jpt;
-
-	String GetAbsolutePath(ESource source, StringView relativePath)
-	{
-		String result;
-
-		switch (source)
-		{
-			case ESource::Engine:
-			{
-				result.Append(JPT_ENGINE_DIR);
-				break;
-			}
-			case ESource::Client:
-			{
-				result.Append(GetClientDir());
-				break;
-			}
-
-		default:
-			JPT_ASSERT(false, "Invalid source");
-			break;
-		}
-
-		result.Append(relativePath.Buffer(), relativePath.Count());
-		return result;
-	}
-
-	Optional<String> GetFileContent(const String& absolutePath)
-	{
-		std::ifstream file;
-		file.open(absolutePath.ConstBuffer());
-
-		if(!file.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
-			return Optional<String>();
-		}
-
-		std::string line;
-		String content;
-		while (std::getline(file, line))
-		{
-			content += line.c_str();
-			content += '\n';
-		}
-
-		file.close();
-
-		return content;
-	}
-}
+import jpt.TypeDefs;
 
 export namespace jpt
 {
-	namespace FileIO
+	Optional<StrongPtr<BaseFile>> ReadFile(const String& absolutePath)
 	{
-		Optional<StrongPtr<BaseFile>> Read(const String& absolutePath)
+		Optional<String> content = GetTextFileContent(absolutePath);
+
+		if (!content)
 		{
-			Optional<String> content = jpt_private::GetFileContent(absolutePath);
-
-			if (!content)
-			{
-				return Optional<StrongPtr<BaseFile>>();
-			}
-
-			StrongPtr<BaseFile> file;
-			return file;
+			return Optional<StrongPtr<BaseFile>>();
 		}
 
-		Optional<StrongPtr<BaseFile>> Read(ESource source, StringView relativePath)
-		{
-			return Read(jpt_private::GetAbsolutePath(source, relativePath));
-		}
+		StrongPtr<BaseFile> file;
+		return file;
+	}
+
+	Optional<StrongPtr<BaseFile>> ReadFile(ESource source, StringView relativePath)
+	{
+		return ReadFile(GetAbsolutePath(source, relativePath));
 	}
 }

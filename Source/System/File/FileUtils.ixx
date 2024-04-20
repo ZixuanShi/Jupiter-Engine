@@ -6,7 +6,16 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
+#include <fstream>
+#include <mutex>
+#include <string>
+
 export module jpt.FileUtils;
+
+import jpt.FileEnums;
+import jpt.String;
+import jpt.StringView;
+import jpt.Optional;
 
 export namespace jpt
 {
@@ -17,6 +26,12 @@ export namespace jpt
 	/** Replaces directory slashes to platform-correct version */
 	template<StringType TString>
 	void FixSlashes(TString& path);
+
+	/** Returns the absolute path of the given relative path */
+	String GetAbsolutePath(ESource source, StringView relativePath);
+
+	/** Reads text file's content at given absolute path */
+	Optional<String> GetTextFileContent(StringView absolutePath);
 }
 
 export namespace jpt
@@ -27,5 +42,55 @@ export namespace jpt
 		using TChar = typename TString::TChar;
 
 		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
+	}
+
+	String GetAbsolutePath(ESource source, StringView relativePath)
+	{
+		String result;
+
+		switch (source)
+		{
+		case ESource::Engine:
+		{
+			result.Append(JPT_ENGINE_DIR);
+			break;
+		}
+		case ESource::Client:
+		{
+			result.Append(GetClientDir());
+			break;
+		}
+
+		default:
+			JPT_ASSERT(false, "Invalid source");
+			break;
+		}
+
+		result.Append(relativePath.Buffer(), relativePath.Count());
+		return result;
+	}
+
+	Optional<String> GetTextFileContent(StringView absolutePath)
+	{
+		std::ifstream file;
+		file.open(absolutePath.Buffer());
+
+		if (!file.is_open())
+		{
+			JPT_ERROR("Failed to open file: %s", absolutePath.Buffer());
+			return Optional<String>();
+		}
+
+		std::string line;
+		String content;
+		while (std::getline(file, line))
+		{
+			content += line.c_str();
+			content += '\n';
+		}
+
+		file.close();
+
+		return content;
 	}
 }
