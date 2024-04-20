@@ -48,7 +48,7 @@ export namespace jpt
 		constexpr TData* GetIfValid() const;
 
 		/** @return		Reference or pointer to the managed object if not expired */
-		constexpr TData& operator*() const noexcept  { return *GetIfValid(); }
+		constexpr TData& operator*()  const noexcept { return *GetIfValid(); }
 		constexpr TData* operator->() const noexcept { return GetIfValid(); }
 
 	private:

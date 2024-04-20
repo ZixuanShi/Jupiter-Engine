@@ -48,11 +48,11 @@ namespace jpt
 		constexpr int32 GetRefCount() const;
 
 		/** @return		Reference or pointer to the managed object */
-		constexpr TData& operator*() const noexcept { return *m_pPtr; }
-		constexpr TData* operator->() const noexcept { return m_pPtr; }
+		constexpr TData& operator*()  const noexcept { return *m_pPtr; }
+		constexpr TData* operator->() const noexcept { return m_pPtr;  }
 
 		/** @return		true if *this owns an object, false otherwise */
-		constexpr bool IsValid() const noexcept { return m_pPtr != nullptr; }
+		constexpr bool IsValid()  const noexcept { return m_pPtr != nullptr; }
 		constexpr operator bool() const noexcept { return IsValid(); }
 
 	private:
