@@ -90,6 +90,10 @@ const char* jpt::GetClientDir()
 {
 	return JPT_CLIENT_DIR;
 }
+const wchar_t* jpt::GetClientDirW()
+{
+	return JPT_CLIENT_DIR_W;
+}
 """
 	communications_content = communications_content.replace("<ProjectName>", project_name)
 	with open(project_directory + "/Source/ApplicationLayer/ApplicationCommunications.ixx", "w") as file:

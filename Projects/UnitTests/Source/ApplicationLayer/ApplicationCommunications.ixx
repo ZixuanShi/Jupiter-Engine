@@ -21,3 +21,8 @@ const char* jpt::GetClientDir()
 {
 	return JPT_CLIENT_DIR;
 }
+
+const wchar_t* jpt::GetClientDirW()
+{
+	return JPT_CLIENT_DIR_W;
+}

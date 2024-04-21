@@ -19,25 +19,26 @@ import jpt.FileUtils;
 import jpt.Optional;
 import jpt.String;
 import jpt.StringView;
-import jpt.StrongPtr;
 import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<StrongPtr<BaseFile>> ReadFile(const FilePath& absolutePath)
+	Optional<BaseFile> ReadFile(const FilePath& absolutePath)
 	{
+		// Parse directory, file name, and extension
+
 		Optional<String> content = GetTextFileContent(absolutePath);
 
 		if (!content)
 		{
-			return Optional<StrongPtr<BaseFile>>();
+			return Optional<BaseFile>();
 		}
 
-		StrongPtr<BaseFile> file;
+		BaseFile file;
 		return file;
 	}
 
-	Optional<StrongPtr<BaseFile>> ReadFile(ESource source, FilePathView relativePath)
+	Optional<BaseFile> ReadFile(ESource source, FilePathView relativePath)
 	{
 		return ReadFile(GetAbsolutePath(source, relativePath));
 	}

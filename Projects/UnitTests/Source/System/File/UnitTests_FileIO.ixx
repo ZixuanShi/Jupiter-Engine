@@ -6,13 +6,21 @@ module;
 
 export module UnitTests_FileIO;
 
+import jpt.BaseFile;
 import jpt.FileIO;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.Optional;
 
 bool UnitTest_FileIO_Read()
 {
-    //jpt::FileIO::Read(jpt::ESource::Engine, "Assets/Configs/TestJson.json");
+    if (jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json"))
+    {
+        JPT_IGNORE(file);
+        JPT_LOG("Successfully read file");
+    }
+
+
     //jpt::FileIO::Read("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Assets/Configs/TestJson.json");
 
     //jpt::FileIO::Read(jpt::ESource::Client, "Assets/Configs/TestJson.json");

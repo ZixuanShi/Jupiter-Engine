@@ -23,6 +23,7 @@ export namespace jpt
 	/** Designed to be implemented in client project's application
 		@return Client's project root directory. */
 	const char* GetClientDir();
+	const wchar_t* GetClientDirW();
 
 	/** Replaces directory slashes to platform-correct version */
 	template<StringType TString>
