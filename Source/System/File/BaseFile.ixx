@@ -15,9 +15,9 @@ export namespace jpt
 	class BaseFile
 	{
 	private:
-		TFilePath m_fileName;
-		TFilePath m_filePath;
-		EFileType m_fileType;
+		FilePath m_fileName;
+		FilePath m_filePath;
+		EExtension m_fileType;
 
 	public:
 		virtual ~BaseFile() = default;

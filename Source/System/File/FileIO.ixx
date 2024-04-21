@@ -24,7 +24,7 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<StrongPtr<BaseFile>> ReadFile(const String& absolutePath)
+	Optional<StrongPtr<BaseFile>> ReadFile(const FilePath& absolutePath)
 	{
 		Optional<String> content = GetTextFileContent(absolutePath);
 
@@ -37,7 +37,7 @@ export namespace jpt
 		return file;
 	}
 
-	Optional<StrongPtr<BaseFile>> ReadFile(ESource source, StringView relativePath)
+	Optional<StrongPtr<BaseFile>> ReadFile(ESource source, FilePathView relativePath)
 	{
 		return ReadFile(GetAbsolutePath(source, relativePath));
 	}

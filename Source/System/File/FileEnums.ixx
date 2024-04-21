@@ -13,7 +13,7 @@ export namespace jpt
 		Client,
 	};
 
-	enum class EFileType : uint8
+	enum class EExtension : uint8
 	{
 		Unknown,
 		txt,

@@ -13,6 +13,7 @@ module;
 export module jpt.FileUtils;
 
 import jpt.FileEnums;
+import jpt.FileTypeDefs;
 import jpt.String;
 import jpt.StringView;
 import jpt.Optional;
@@ -33,9 +34,9 @@ export namespace jpt
 	}
 
 	/** Returns the absolute path of the given relative path */
-	String GetAbsolutePath(ESource source, StringView relativePath)
+	FilePath GetAbsolutePath(ESource source, FilePathView relativePath)
 	{
-		String result;
+		FilePath result;
 
 		switch (source)
 		{
@@ -60,7 +61,7 @@ export namespace jpt
 	}
 
 	/** Reads text file's content at given absolute path */
-	Optional<String> GetTextFileContent(StringView absolutePath)
+	Optional<FilePath> GetTextFileContent(FilePathView absolutePath)
 	{
 		std::ifstream file;
 		file.open(absolutePath.ConstBuffer());
@@ -68,11 +69,11 @@ export namespace jpt
 		if (!file.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
-			return Optional<String>();
+			return Optional<FilePath>();
 		}
 
 		std::string line;
-		String content;
+		FilePath content;
 		while (std::getline(file, line))
 		{
 			content += line.c_str();
