@@ -6,17 +6,12 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
-#include <fstream>
-#include <mutex>
-#include <string>
-
 export module jpt.FileUtils;
 
 import jpt.FileEnums;
 import jpt.FileTypeDefs;
 import jpt.String;
 import jpt.StringView;
-import jpt.Optional;
 
 export namespace jpt
 {
@@ -59,30 +54,5 @@ export namespace jpt
 
 		result.Append(relativePath.ConstBuffer(), relativePath.Count());
 		return result;
-	}
-
-	/** Reads text file's content at given absolute path */
-	Optional<FilePath> GetTextFileContent(FilePathView absolutePath)
-	{
-		std::ifstream file;
-		file.open(absolutePath.ConstBuffer());
-
-		if (!file.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
-			return Optional<FilePath>();
-		}
-
-		std::string line;
-		FilePath content;
-		while (std::getline(file, line))
-		{
-			content += line.c_str();
-			content += '\n';
-		}
-
-		file.close();
-
-		return content;
 	}
 }
