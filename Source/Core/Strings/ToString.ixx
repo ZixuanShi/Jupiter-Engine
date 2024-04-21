@@ -114,4 +114,14 @@ export namespace jpt
 			return str;
 		}
 	}
+
+	// String to WString
+	WString ToWString(const String& str)
+	{
+		wchar_t* pBuffer = ToWChars(str.ConstBuffer(), str.Count());
+
+		WString wstr;
+		wstr.MoveString(pBuffer);
+		return wstr;
+	}
 }

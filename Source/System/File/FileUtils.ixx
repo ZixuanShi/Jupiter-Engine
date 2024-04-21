@@ -108,14 +108,7 @@ export namespace jpt
 				}
 				else if constexpr (AreSameType<TChar, wchar_t>)
 				{
-					const size_t count = FindCharsCount(pCStr) + 1;
-
-					wchar_t* pBuffer = new wchar_t[count];
-					mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
-
-					WString wstr;
-					wstr.MoveString(pBuffer);
-					return wstr;
+					return ToWString(pCStr);
 				}
 			}();
 	}

@@ -78,14 +78,8 @@ namespace jpt
 	{
 		std::lock_guard<std::mutex> lock(g_logMutex);
 
-		const String stamp = GetStamp(type, line, file);
-
-		const size_t wStampStrSize = stamp.Count() + 1;
-		wchar_t* wStampStr = new wchar_t[wStampStrSize];
-		mbstowcs_s(nullptr, wStampStr, wStampStrSize, stamp.ConstBuffer(), _TRUNCATE);
-
-		WString wStamp;
-		wStamp.MoveString(wStampStr);
+		const String stamp = GetStamp(type, line, file);		
+		WString wStamp = ToWString(stamp);
 
 		wStamp += pMessage;
 		wStamp += L"\n";

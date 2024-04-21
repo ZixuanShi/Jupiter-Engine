@@ -7,6 +7,7 @@ module;
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <type_traits>
 
 export module jpt.StringUtils;
@@ -325,6 +326,22 @@ export namespace jpt
 		}
 
 		return c;
+	}
+
+	/** @return Heap allocated wchar_t* buffer with content of const char*. Caller needs to cleanup */
+	wchar_t* ToWChars(const char* pCStr, size_t count = npos)
+	{
+		if (count == npos)
+		{
+			count = FindCharsCount(pCStr);
+		}
+
+		++count;	// For null terminator
+
+		wchar_t* pBuffer = new wchar_t[count];
+		mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
+
+		return pBuffer;
 	}
 
 #pragma endregion
