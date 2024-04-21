@@ -18,8 +18,42 @@ export namespace jpt
 {
 	/** Designed to be implemented in client project's application
 		@return Client's project root directory. */
-	const char* GetClientDir();
-	const wchar_t* GetClientDirW();
+	const char* GetClientDirImpl();
+	const wchar_t* GetClientDirWImpl();
+
+	/** @return		 FilePath type of engine/client directories roots */
+	FilePath GetEngineDir()
+	{
+		using TChar = typename FilePath::TChar;
+
+		return []()
+			{
+				if constexpr (AreSameType<TChar, char>)
+				{
+					return JPT_ENGINE_DIR;
+				}
+				else if constexpr (AreSameType<TChar, wchar_t>)
+				{
+					return JPT_ENGINE_DIR_W;
+				}
+			}();
+	}
+	FilePath GetClientDir()
+	{
+		using TChar = typename FilePath::TChar;
+
+		return []()
+			{
+				if constexpr (AreSameType<TChar, char>)
+				{
+					return GetClientDirImpl();
+				}
+				else if constexpr (AreSameType<TChar, wchar_t>)
+				{
+					return GetClientDirWImpl();
+				}
+			}();
+	}
 
 	/** Replaces directory slashes to platform-correct version */
 	template<StringType TString>
@@ -30,7 +64,7 @@ export namespace jpt
 		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
 	}
 
-	/** Returns the absolute path of the given relative path */
+	/** @return		The absolute path of the given relative path */
 	FilePath GetAbsolutePath(ESource source, FilePathView relativePath)
 	{
 		using TChar = typename FilePath::TChar;
@@ -41,34 +75,12 @@ export namespace jpt
 		{
 		case ESource::Engine:
 		{
-			result.Append([]()
-				{
-					if constexpr (AreSameType<TChar, char>)
-					{
-						return JPT_ENGINE_DIR;
-					}
-					else if constexpr (AreSameType<TChar, wchar_t>)
-					{
-						return JPT_ENGINE_DIR_W;
-					}
-				}());
-
+			result.Append(GetEngineDir());
 			break;
 		}
 		case ESource::Client:
 		{
-			result.Append([]()
-				{
-					if constexpr (AreSameType<TChar, char>)
-					{
-						return GetClientDir();
-					}
-					else if constexpr (AreSameType<TChar, wchar_t>)
-					{
-						return GetClientDirW();
-					}
-				}());
-			
+			result.Append(GetClientDir());			
 			break;
 		}
 

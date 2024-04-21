@@ -86,11 +86,11 @@ jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
 }
 
 /** Must Overrides GetClientDir here */
-const char* jpt::GetClientDir()
+const char* jpt::GetClientDirImpl()
 {
 	return JPT_CLIENT_DIR;
 }
-const wchar_t* jpt::GetClientDirW()
+const wchar_t* jpt::GetClientDirWImpl()
 {
 	return JPT_CLIENT_DIR_W;
 }
