@@ -24,11 +24,11 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<BaseFile> ReadFile(FilePathView absolutePath)
+	Optional<BaseFile> ReadFile(FilePathView absoluteFullPath)
 	{
 		// Parse directory, file name, and extension
 
-		Optional<FilePath> content = GetTextFileContent(absolutePath);
+		Optional<FilePath> content = GetTextFileContent(absoluteFullPath);
 
 		if (!content)
 		{
@@ -41,6 +41,11 @@ export namespace jpt
 
 	Optional<BaseFile> ReadFile(ESource source, FilePathView relativePath)
 	{
-		return ReadFile(GetAbsolutePath(source, relativePath));
+		return ReadFile(GetAbsoluteFullPath(source, relativePath));
+	}
+
+	Optional<BaseFile> ReadFile(ESource source, const char* pRelativePath)
+	{
+		return ReadFile(source, ToFilePathType(pRelativePath));
 	}
 }

@@ -6,6 +6,8 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
+#include <stdlib.h>
+
 export module jpt.FileUtils;
 
 import jpt.FileEnums;
@@ -64,8 +66,8 @@ export namespace jpt
 		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
 	}
 
-	/** @return		The absolute path of the given relative path */
-	FilePath GetAbsolutePath(ESource source, FilePathView relativePath)
+	/** @return		The absolute full path of the given relative path */
+	FilePath GetAbsoluteFullPath(ESource source, FilePathView relativePath)
 	{
 		using TChar = typename FilePath::TChar;
 
@@ -91,5 +93,30 @@ export namespace jpt
 
 		result.Append(relativePath.ConstBuffer(), relativePath.Count());
 		return result;
+	}
+
+	/** @return		FilePath's type of given pCStr */
+	FilePath ToFilePathType(const char* pCStr)
+	{
+		using TChar = typename FilePath::TChar;
+
+		return [pCStr]()
+			{
+				if constexpr (AreSameType<TChar, char>)
+				{
+					return pCStr;
+				}
+				else if constexpr (AreSameType<TChar, wchar_t>)
+				{
+					const size_t count = FindCharsCount(pCStr) + 1;
+
+					wchar_t* pBuffer = new wchar_t[count];
+					mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
+
+					WString wstr;
+					wstr.MoveString(pBuffer);
+					return wstr;
+				}
+			}();
 	}
 }

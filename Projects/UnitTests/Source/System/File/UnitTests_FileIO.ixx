@@ -14,7 +14,7 @@ import jpt.Optional;
 
 bool UnitTest_FileIO_Read()
 {
-    if (jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, L"Assets/Configs/TestJson.json"))
+    if (jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json"))
     {
         JPT_IGNORE(file);
         JPT_LOG("Successfully read file");
