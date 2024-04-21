@@ -5,6 +5,6 @@ import jpt.StringView;
 
 export namespace jpt
 {
-	using FilePath = jpt::String;
-	using FilePathView = jpt::StringView;
+	using FilePath = jpt::WString;
+	using FilePathView = jpt::WStringView;
 }

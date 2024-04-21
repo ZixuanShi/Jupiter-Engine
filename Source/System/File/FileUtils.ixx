@@ -12,6 +12,7 @@ import jpt.FileEnums;
 import jpt.FileTypeDefs;
 import jpt.String;
 import jpt.StringView;
+import jpt.TypeTraits;
 
 export namespace jpt
 {
@@ -32,18 +33,42 @@ export namespace jpt
 	/** Returns the absolute path of the given relative path */
 	FilePath GetAbsolutePath(ESource source, FilePathView relativePath)
 	{
+		using TChar = typename FilePath::TChar;
+
 		FilePath result;
 
 		switch (source)
 		{
 		case ESource::Engine:
 		{
-			result.Append(JPT_ENGINE_DIR);
+			result.Append([]()
+				{
+					if constexpr (AreSameType<TChar, char>)
+					{
+						return JPT_ENGINE_DIR;
+					}
+					else if constexpr (AreSameType<TChar, wchar_t>)
+					{
+						return JPT_ENGINE_DIR_W;
+					}
+				}());
+
 			break;
 		}
 		case ESource::Client:
 		{
-			result.Append(GetClientDir());
+			result.Append([]()
+				{
+					if constexpr (AreSameType<TChar, char>)
+					{
+						return GetClientDir();
+					}
+					else if constexpr (AreSameType<TChar, wchar_t>)
+					{
+						return GetClientDirW();
+					}
+				}());
+			
 			break;
 		}
 

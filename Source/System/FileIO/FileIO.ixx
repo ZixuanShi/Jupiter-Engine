@@ -28,7 +28,7 @@ export namespace jpt
 	{
 		// Parse directory, file name, and extension
 
-		Optional<String> content = GetTextFileContent(absolutePath);
+		Optional<FilePath> content = GetTextFileContent(absolutePath);
 
 		if (!content)
 		{

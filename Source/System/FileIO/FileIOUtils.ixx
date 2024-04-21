@@ -9,6 +9,7 @@ module;
 
 export module jpt.FileIOUtils;
 
+import jpt.TypeTraits;
 import jpt.FileEnums;
 import jpt.FileTypeDefs;
 import jpt.Optional;
@@ -18,7 +19,9 @@ export namespace jpt
 	/** Reads text file's content at given absolute path */
 	Optional<FilePath> GetTextFileContent(FilePathView absolutePath)
 	{
-		std::ifstream file;
+		using TChar = typename FilePathView::TChar;
+
+		std::basic_ifstream<TChar> file;
 		file.open(absolutePath.ConstBuffer());
 
 		if (!file.is_open())
@@ -27,7 +30,7 @@ export namespace jpt
 			return Optional<FilePath>();
 		}
 
-		std::string line;
+		std::basic_string<TChar> line;
 		FilePath content;
 		while (std::getline(file, line))
 		{
