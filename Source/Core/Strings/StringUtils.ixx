@@ -328,20 +328,19 @@ export namespace jpt
 		return c;
 	}
 
-	/** @return Heap allocated wchar_t* buffer with content of const char*. Caller needs to cleanup */
-	wchar_t* ToWChars(const char* pCStr, size_t count = npos)
+	/** @return Heap allocated wchar_t* buffer with content of const char*. Caller needs to take ownership of buffer */
+	wchar_t* ToWChars(const char* pCStr, size_t count)
 	{
-		if (count == npos)
-		{
-			count = FindCharsCount(pCStr);
-		}
-
 		++count;	// For null terminator
 
 		wchar_t* pBuffer = new wchar_t[count];
 		mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
 
 		return pBuffer;
+	}
+	wchar_t* ToWChars(const char* pCStr)
+	{
+		return ToWChars(pCStr, FindCharsCount(pCStr));
 	}
 
 #pragma endregion
