@@ -24,7 +24,7 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<BaseFile> ReadFile(const FilePath& absolutePath)
+	Optional<BaseFile> ReadFile(FilePathView absolutePath)
 	{
 		// Parse directory, file name, and extension
 
