@@ -15,7 +15,7 @@ import jpt.ToString;
 
 namespace jpt
 {
-	template<Numeric T>
+	export template<Numeric T>
 	struct Vector2
 	{
 	public:
