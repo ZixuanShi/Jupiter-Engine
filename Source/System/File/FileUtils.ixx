@@ -14,6 +14,7 @@ import jpt.FileEnums;
 import jpt.FileTypeDefs;
 import jpt.String;
 import jpt.StringView;
+import jpt.ToString;
 import jpt.TypeTraits;
 
 export namespace jpt
@@ -56,6 +57,15 @@ export namespace jpt
 				}
 			}();
 	}
+	FilePath GetSourceDir(ESource source)
+	{
+		switch (source)
+		{
+			case ESource::Engine: return GetEngineDir();
+			case ESource::Client: return GetClientDir();
+			default: JPT_ASSERT(false, "Invalid source"); return FilePath();
+		}
+	}
 
 	/** Replaces directory slashes to platform-correct version */
 	template<StringType TString>
@@ -73,25 +83,9 @@ export namespace jpt
 
 		FilePath result;
 
-		switch (source)
-		{
-		case ESource::Engine:
-		{
-			result.Append(GetEngineDir());
-			break;
-		}
-		case ESource::Client:
-		{
-			result.Append(GetClientDir());			
-			break;
-		}
-
-		default:
-			JPT_ASSERT(false, "Invalid source");
-			break;
-		}
-
+		result.MoveString(GetSourceDir(source));
 		result.Append(relativePath.ConstBuffer(), relativePath.Count());
+
 		return result;
 	}
 

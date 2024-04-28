@@ -7,4 +7,6 @@ export namespace jpt
 {
 	using FilePath = jpt::WString;
 	using FilePathView = jpt::WStringView;
+
+	using Text = jpt::WString;
 }

@@ -72,9 +72,9 @@ namespace jpt
 	};
 }
 #else
-	#define JPT_LOG(message, ...)	      JPT_IGNORE(message)		
-	#define JPT_SYSTEM_INFO(message, ...) JPT_IGNORE(message)	
-	#define JPT_WARNING(message, ...)     JPT_IGNORE(message)	
-	#define JPT_ERROR(message, ...)		  JPT_IGNORE(message)	
+	#define JPT_LOG(message, ...)	      static_cast<void>(message)		
+	#define JPT_SYSTEM_INFO(message, ...) static_cast<void>(message)	
+	#define JPT_WARNING(message, ...)     static_cast<void>(message)	
+	#define JPT_ERROR(message, ...)		  static_cast<void>(message)	
 
 #endif // !IS_RELEASE
