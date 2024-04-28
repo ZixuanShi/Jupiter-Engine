@@ -754,7 +754,7 @@ export namespace jpt
 			}
 		}
 
-		m_count     = size;
+		m_count    = size;
 		m_capacity = m_count;
 	}
 
