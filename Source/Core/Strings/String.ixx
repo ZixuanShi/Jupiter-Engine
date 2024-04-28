@@ -266,11 +266,7 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	StringBase<TChar, TAllocator>& StringBase<TChar, TAllocator>::operator=(const TChar* CString)
 	{
-		if (!AreStringsSame(m_pBuffer, CString, m_count, FindCharsCount(CString)))
-		{
-			CopyString(CString);
-		}
-
+		CopyString(CString);
 		return *this;
 	}
 
@@ -726,15 +722,23 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void StringBase<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
+		if (AreStringsSame(m_pBuffer, inCString, m_count, size))
+		{
+			return;
+		}
+
+		if (size == m_count)
+		{
+			StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
+			m_capacity = m_count;
+			return;
+		}
+
 		DeallocateBuffer();
 
 		if (size == 0)
 		{
 			m_pBuffer = nullptr;
-		}
-		else if (size == m_count)
-		{
-			StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
 		}
 		else
 		{

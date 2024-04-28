@@ -80,6 +80,9 @@ bool UnitTest_String_Copying()
 	strCopy = str;
 	JPT_ENSURE(str == strCopy);
 
+	str.CopyString("12345678901234567890", 20);
+	str.CopyString("12345678901234567891", 20);
+
 	return true;
 }
 bool UnitTest_WString_Copying()
