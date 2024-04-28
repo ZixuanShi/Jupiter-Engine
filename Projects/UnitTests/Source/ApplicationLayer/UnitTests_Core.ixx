@@ -33,7 +33,7 @@ import UnitTests_Hash;
 import UnitTests_Vector3;
 import UnitTests_Vector2;
 import UnitTests_Math;
-import UnitTests_RandomNumberGenerator;
+import UnitTests_Rand;
 
 // Memory Managing
 import UnitTests_Allocator;
@@ -95,7 +95,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Vector3());
 	JPT_ENSURE(RunUnitTests_Vector2());
 	JPT_ENSURE(RunUnitTests_Math());
-	JPT_ENSURE(RunUnitTests_RandomNumberGenerator());
+	JPT_ENSURE(RunUnitTests_Rand());
 
 	// Memory Managing
 	JPT_ENSURE(RunUnitTests_Allocator());

@@ -11,7 +11,7 @@ export module UnitTests_String;
 
 import jpt.DynamicArray;
 import jpt.Math;
-import jpt.RandomNumberGenerator;
+import jpt.Rand;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.StringView;

@@ -30,7 +30,7 @@ export import jpt.Utilities;
 // Math
 export import jpt.Limits;
 export import jpt.Math;
-export import jpt.RandomNumberGenerator;
+export import jpt.Rand;
 export import jpt.Vector2;
 export import jpt.Vector3;
 

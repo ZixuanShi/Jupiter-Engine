@@ -18,7 +18,7 @@ import jpt.TypeTraits;
 import jpt.StaticArray;
 import jpt.DynamicArray;
 import jpt.String;
-import jpt.RandomNumberGenerator;
+import jpt.Rand;
 import jpt.Utilities;
 
 bool UnitTest_QuickSort()
@@ -116,7 +116,7 @@ bool UnitTest_Sorting_Random()
 
     for (size_t i = 0; i < kArraySize; ++i)
 	{
-        arr[i] = local.RandInMax(100);
+        arr[i] = local.MaxInt(100);
 	}
 
     jpt::Sort(arr, [](int32 a, int32 b) { return a > b; });
