@@ -83,7 +83,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr HashSet<TValue>::HashSet(const std::initializer_list<TValue>& list)
 	{
-		CopyData(list, list.size());
+		CopyData(list, list.Count());
 	}
 
 	template<typename TValue>

@@ -1,17 +1,5 @@
--- Client project should have a Generate.bat file that should be like this:
-
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
--- set args="<ProjectName>" "<ProjectDirectory>"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
-
--- Example:
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
--- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
-
--- <> To be specified by client premake5.lua
-local project_name = "<ProjectName>"
-local project_dir  = "<ProjectDirectory>"
+local project_name = "UnitTests"
+local project_dir  = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
 local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
 local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 

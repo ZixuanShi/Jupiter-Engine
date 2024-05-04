@@ -1,17 +1,5 @@
--- Client project should have a Generate.bat file that should be like this:
-
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
--- set args="<ProjectName>" "<ProjectDirectory>"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
-
--- Example:
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
--- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
-
--- <> To be specified by client premake5.lua
-local project_name = "<ProjectName>"
-local project_dir  = "<ProjectDirectory>"
+local project_name = "Benchmarks"
+local project_dir  = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/Benchmarks/"
 local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
 local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
@@ -28,14 +16,11 @@ function HasArg(name)
     return false
 end
 
--- Jupiter workspace
+-- Project workspace
 workspace (project_name)
     configurations 
     { 
-        "Debug",        -- Debugging. No optimization will be performed
-        "Development",  -- Develop the project. Use Engine's editors and tools 
         "Profiling",    -- Profiling. Same configurations with Release but enables Profiling code
-        "Release",      -- Relese/Shipping
     }
 
     platforms 
@@ -66,40 +51,10 @@ workspace (project_name)
     }
 
     -- Global filters for configurations
-    filter "configurations:Release or configurations:Profiling"
-        flags{ "FatalCompileWarnings" }
-
-    filter "configurations:Debug"
-        defines 
-        { 
-            "IS_DEBUG",
-        }
-        buildoptions { "/MTd" }
-        optimize "Off"
-        symbols "On"
-
-    filter "configurations:Development"
-        defines 
-        { 
-            "IS_DEVELOPMENT",
-        }
-        buildoptions { "/MT" }
-        optimize "Size"
-        symbols "On"
-
     filter "configurations:Profiling"
         defines 
         { 
             "IS_PROFILING",
-        }
-        buildoptions { "/MT" }
-        optimize "Speed"
-        symbols "off"
-
-    filter "configurations:Release"
-        defines 
-        { 
-            "IS_RELEASE",
         }
         buildoptions { "/MT" }
         optimize "Speed"

@@ -28,7 +28,7 @@ export void RunBenchmarks_Core()
 	/** Unit Test Functions */
 
 	// Algorithms
-	//RunBenchmarks_Sorting();
+	RunBenchmarks_Sorting();
 
 	// Containers
 	//RunBenchmarks_DynamicArray();

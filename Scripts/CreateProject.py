@@ -1,11 +1,14 @@
 # Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 import os
+import shutil
 
 project_name = ""
 project_directory = ""
 
-# Get Project Name and Directory
+# -----------------------------------------------------------------------------------------------------
+# Get basic information from user
+# -----------------------------------------------------------------------------------------------------
 def get_info():
 	global project_name
 	global project_directory
@@ -14,27 +17,47 @@ def get_info():
 	project_directory = project_directory.replace("\\", "/")
 
 
+# -----------------------------------------------------------------------------------------------------
+# Scripts folder
+# -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generate_project_files_bat():
-	generator_bat = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
-
-set args="<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action> %args%
-
+	generator_bat = """
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action>
 pause
 """
-	os.makedirs(project_directory + "/Scripts")
-	generator_bat = generator_bat.replace("<ProjectName>", project_name)
-	generator_bat = generator_bat.replace("<ProjectDirectory>", project_directory)
-
 	# 2022
 	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2022.bat", "w") as file:
 		vs2022 = generator_bat.replace("<action>", "vs2022")
 		file.write(vs2022)
 
 	# Add any other versions here
+ 
+
+def copy_premake5_lua():
+	destination = project_directory + "/Scripts/premake5.lua"
+	shutil.copyfile("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Scripts/premake5.lua", destination)
+	
+	content = ""
+	with open(destination, "r") as file:
+		content = file.read()
+
+	content = content.replace("<ProjectName>", project_name)
+	content = content.replace("<ProjectDirectory>", project_directory)
+
+	with open(destination, "w") as file:
+		file.write(content)
+
+def create_scripts():
+	os.makedirs(project_directory + "/Scripts")
+
+	create_generate_project_files_bat()
+	copy_premake5_lua()
 
 
+# -----------------------------------------------------------------------------------------------------
+# Source folder
+# -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Source/ApplicationLayer/Main.cpp and ProjectNameApplication.ixx
 def create_main_cpp():
 	main_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
@@ -54,14 +77,12 @@ import <ProjectName>Application;
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_LOG("Hello World %s", "<ProjectName>");
+	JPT_LOG("Hello World %s. Powered by Jupiter Engine", "<ProjectName>");
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
 #endif
 """
 	main_content = main_content.replace("<ProjectName>", project_name)
-
-	os.makedirs(project_directory + "/Source/ApplicationLayer")
 	with open(project_directory + "/Source/ApplicationLayer/Main.cpp", "w") as file:
 	    file.write(main_content)
 
@@ -123,11 +144,18 @@ private:
 	    file.write(application_content)
 
 
-if __name__ == "__main__":
-	get_info()
-	create_generate_project_files_bat()
+def create_source():
+	os.makedirs(project_directory + "/Source/ApplicationLayer")
+
 	create_main_cpp()
 	create_application_communications_ixx()
 	create_application_ixx()
+
+
+if __name__ == "__main__":
+	get_info()
+
+	create_scripts()
+	create_source()
 
 	print("Successfully Created Project: " + project_name + " at " + project_directory)
