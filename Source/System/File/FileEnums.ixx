@@ -5,7 +5,7 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
-export module jpt.File.Enums;
+export module jpt.FileEnums;
 
 import jpt.TypeDefs;
 

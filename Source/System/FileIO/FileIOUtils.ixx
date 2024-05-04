@@ -7,11 +7,11 @@ module;
 #include <fstream>
 #include <string>
 
-export module jpt.File.IO.Utils;
+export module jpt.FileIOUtils;
 
 import jpt.Constants;
-import jpt.File.Enums;
-import jpt.File.Path;
+import jpt.FileEnums;
+import jpt.FilePath;
 import jpt.Optional;
 import jpt.TypeTraits;
 

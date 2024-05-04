@@ -67,7 +67,7 @@ def create_main_cpp():
 import jpt.CoreModules;
 import jpt.EntryPoints;
 
-import <ProjectName>Application;
+import Application_<ProjectName>;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
@@ -94,15 +94,15 @@ def create_application_communications_ixx():
 
 export module ApplicationCommunications;
 
-import jpt.Application.Base;
-import jpt.File.Path.Utils;
+import jpt.Application_Base;
+import jpt.FilePathUtils;
 
-import <ProjectName>Application;
+import Application_<ProjectName>;
 
 /** Must Overrides Application GetInstance here */
 jpt::Application_Base& jpt::Application_Base::GetInstance()
 {
-	static <ProjectName>Application s_instance;
+	static Application_<ProjectName> s_instance;
 	return s_instance;
 }
 
@@ -128,11 +128,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module <ProjectName>Application;
+export module Application_<ProjectName>;
 
-import jpt.Application.Base;
+import jpt.Application_Base;
 
-export class <ProjectName>Application final : public jpt::Application_Base
+export class Application_<ProjectName> final : public jpt::Application_Base
 {
 private:
 	using Super = jpt::Application_Base;
@@ -140,7 +140,7 @@ private:
 };
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
-	with open(project_directory + "/Source/ApplicationLayer/" + project_name + "Application.ixx", "w") as file:
+	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".ixx", "w") as file:
 	    file.write(application_content)
 
 

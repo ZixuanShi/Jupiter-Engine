@@ -10,14 +10,14 @@ module;
 #include <mutex>
 #include <string>
 
-export module jpt.File.IO;
+export module jpt.FileIO;
 
-import jpt.File.Base;
-import jpt.File.Enums;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
-import jpt.File.Utils;
-import jpt.File.IO.Utils;
+import jpt.File_Base;
+import jpt.FileEnums;
+import jpt.FilePath;
+import jpt.FilePathUtils;
+import jpt.FileUtils;
+import jpt.FileIOUtils;
 import jpt.Optional;
 import jpt.String;
 import jpt.StringView;

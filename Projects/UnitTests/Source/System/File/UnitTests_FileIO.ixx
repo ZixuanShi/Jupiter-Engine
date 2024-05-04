@@ -6,8 +6,8 @@ module;
 
 export module UnitTests_FileIO;
 
-import jpt.File.Base;
-import jpt.File.IO;
+import jpt.File_Base;
+import jpt.FileIO;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Optional;

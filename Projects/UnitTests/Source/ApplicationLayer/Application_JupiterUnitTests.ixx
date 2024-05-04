@@ -7,14 +7,14 @@ module;
 export module UnitTestsApplication;
 
 import jpt.CoreModules;
-import jpt.Application.Base;
+import jpt.Application_Base;
 import jpt.Utilities;
 
 import UnitTests_Core;
 import UnitTests_Debugging;
 import UnitTests_System;
 
-export class JupiterUnitTestsApplication final : public jpt::Application_Base
+export class Application_JupiterUnitTests final : public jpt::Application_Base
 {
 private:
 	using Super = jpt::Application_Base;
@@ -23,7 +23,7 @@ public:
 	virtual bool Init() override final;
 };
 
-bool JupiterUnitTestsApplication::Init()
+bool Application_JupiterUnitTests::Init()
 {
 	JPT_ENSURE(Super::Init());
 

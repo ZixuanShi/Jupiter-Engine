@@ -2,7 +2,7 @@
 
 module;
 
-export module jpt.Application.Base;
+export module jpt.Application_Base;
 
 import jpt.StopWatch;
 

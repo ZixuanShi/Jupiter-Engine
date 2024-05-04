@@ -2,11 +2,11 @@
 
 module;
 
-export module jpt.File.Base;
+export module jpt.File_Base;
 
-import jpt.File.Enums;
-import jpt.File.Path;
-import jpt.File.Utils;
+import jpt.FileEnums;
+import jpt.FilePath;
+import jpt.FileUtils;
 import jpt.TypeDefs;
 import jpt.String;
 

@@ -6,11 +6,11 @@ module;
 
 #include <stdlib.h>
 
-export module jpt.File.Utils;
+export module jpt.FileUtils;
 
 import jpt.Constants;
-import jpt.File.Enums;
-import jpt.File.Path;
+import jpt.FileEnums;
+import jpt.FilePath;
 
 export namespace jpt
 {

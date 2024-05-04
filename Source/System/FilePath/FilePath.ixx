@@ -4,7 +4,7 @@ module;
 
 #include <filesystem>
 
-export module jpt.File.Path;
+export module jpt.FilePath;
 
 import jpt.Constants;
 import jpt.String;
