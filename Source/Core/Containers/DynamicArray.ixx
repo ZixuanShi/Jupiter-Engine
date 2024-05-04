@@ -127,7 +127,7 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::DynamicArray(const std::initializer_list<TData>& list)
 	{
-		CopyData(list.begin(), list.Count());
+		CopyData(list.begin(), list.size());
 	}
 
 	template<typename TData, typename TAllocator>

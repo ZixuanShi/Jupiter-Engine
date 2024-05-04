@@ -83,7 +83,7 @@ export namespace jpt
 	template<typename TData, size_t kCount>
 	constexpr StaticArray<TData, kCount>::StaticArray(const std::initializer_list<TData>& initializerList)
 	{
-		JPT_ASSERT(initializerList.Count() == kCount, "Initializer list size doesn't match");
+		JPT_ASSERT(initializerList.size() == kCount, "Initializer list size doesn't match");
 		CopyData(initializerList.begin());
 	}
 

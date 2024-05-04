@@ -95,7 +95,7 @@ export namespace jpt
 	template<typename TKey, typename TValue>
 	constexpr HashMap<TKey, TValue>::HashMap(const std::initializer_list<TData>& list)
 	{
-		CopyData(list, list.Count());
+		CopyData(list, list.size());
 	}
 
 	template<typename TKey, typename TValue>
