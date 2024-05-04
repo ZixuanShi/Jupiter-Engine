@@ -6,21 +6,21 @@ module;
 
 export module BenchmarksApplication;
 
-import jpt.ApplicationBase;
+import jpt.Application_Base;
 import jpt.Utilities;
 
 import Benchmarks_Core;
 
-export class BenchmarksApplication final : public jpt::ApplicationBase
+export class Application_Benchmarks final : public jpt::Application_Base
 {
 private:
-	using Super = jpt::ApplicationBase;
+	using Super = jpt::Application_Base;
 
 public:
 	virtual bool Init() override final;
 };
 
-bool BenchmarksApplication::Init()
+bool Application_Benchmarks::Init()
 {
 	JPT_ENSURE(Super::Init());
 

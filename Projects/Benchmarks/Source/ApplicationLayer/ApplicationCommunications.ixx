@@ -4,15 +4,15 @@
 
 export module ApplicationCommunications;
 
-import jpt.ApplicationBase;
-import jpt.FileUtils;
+import jpt.Application_Base;
+import jpt.FilePathUtils;
 
 import BenchmarksApplication;
 
 /** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
+jpt::Application_Base& jpt::Application_Base::GetInstance()
 {
-	static BenchmarksApplication s_instance;
+	static Application_Benchmarks s_instance;
 	return s_instance;
 }
 
