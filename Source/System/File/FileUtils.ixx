@@ -11,11 +11,13 @@ module;
 export module jpt.FileUtils;
 
 import jpt.FileEnums;
+import jpt.FilePath;
 import jpt.FileTypeDefs;
 import jpt.String;
 import jpt.StringView;
 import jpt.ToString;
 import jpt.TypeTraits;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -93,31 +95,13 @@ export namespace jpt
 	}
 
 	/** @return		The absolute full path of the given relative path */
-	FilePath GetAbsoluteFullPath(ESource source, FilePathView relativePath)
+	FilePath GetAbsoluteFullPath(ESource source, const FilePath& relativePath)
 	{
 		FilePath result;
 
-		result.MoveString(GetSourcePath(source));
+		result = Move(GetSourcePath(source));
 		result.Append(relativePath.ConstBuffer(), relativePath.Count());
 
 		return result;
-	}
-
-	/** @return		FilePath's type of given pCStr */
-	FilePath ToFilePathType(const char* pCStr)
-	{
-		using TChar = typename FilePath::TChar;
-
-		return [pCStr]()
-			{
-				if constexpr (AreSameType<TChar, char>)
-				{
-					return pCStr;
-				}
-				else if constexpr (AreSameType<TChar, wchar_t>)
-				{
-					return ToWString(pCStr);
-				}
-			}();
 	}
 }

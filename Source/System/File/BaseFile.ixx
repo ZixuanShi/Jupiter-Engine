@@ -5,6 +5,7 @@ module;
 export module jpt.BaseFile;
 
 import jpt.FileEnums;
+import jpt.FilePath;
 import jpt.FileTypeDefs;
 import jpt.FileUtils;
 import jpt.TypeDefs;

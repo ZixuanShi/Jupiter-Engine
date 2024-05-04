@@ -10,17 +10,18 @@ module;
 export module jpt.FileIOUtils;
 
 import jpt.Constants;
-import jpt.TypeTraits;
 import jpt.FileEnums;
+import jpt.FilePath;
 import jpt.FileTypeDefs;
 import jpt.Optional;
+import jpt.TypeTraits;
 
 export namespace jpt
 {
 	/** Reads text file's content at given absolute path */
-	Optional<FilePath> GetTextFileContent(FilePathView absolutePath)
+	Optional<FilePath> GetTextFileContent(const FilePath& absolutePath)
 	{
-		using TChar = typename FilePathView::TChar;
+		using TChar = typename FilePath::TChar;
 
 		std::basic_ifstream<TChar> file;
 		file.open(absolutePath.ConstBuffer());
@@ -47,7 +48,7 @@ export namespace jpt
 	/** @return		    File's extension of the given path
 		@param path		Can be either relative or absolute. As long as it ends with .<type> format
 		@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
-	EExtension GetExtension(FilePathView path)
+	EExtension GetExtension(const FilePath& path)
 	{
 		const size_t dotPos = path.FindLastOf('.');
 		if (dotPos == npos)

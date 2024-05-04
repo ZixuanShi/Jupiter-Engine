@@ -14,6 +14,7 @@ export module jpt.FileIO;
 
 import jpt.BaseFile;
 import jpt.FileEnums;
+import jpt.FilePath;
 import jpt.FileTypeDefs;
 import jpt.FileUtils;
 import jpt.FileIOUtils;
@@ -24,7 +25,7 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<BaseFile> ReadFile(FilePathView absoluteFullPath)
+	Optional<BaseFile> ReadFile(const FilePath& absoluteFullPath)
 	{
 		// Get extension to determine file type
 		//EExtension extension = GetExtension(absoluteFullPath);
@@ -40,13 +41,8 @@ export namespace jpt
 		return file;
 	}
 
-	Optional<BaseFile> ReadFile(ESource source, FilePathView relativePath)
+	Optional<BaseFile> ReadFile(ESource source, const FilePath& relativePath)
 	{
 		return ReadFile(GetAbsoluteFullPath(source, relativePath));
-	}
-
-	Optional<BaseFile> ReadFile(ESource source, const char* pRelativePath)
-	{
-		return ReadFile(source, ToFilePathType(pRelativePath));
 	}
 }

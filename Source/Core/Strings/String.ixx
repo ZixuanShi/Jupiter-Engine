@@ -78,14 +78,14 @@ export namespace jpt
 		constexpr bool   IsEmpty()  const { return m_count == 0; }
 
 		/** Searching. Returns npos if not found */
-		constexpr size_t Find(      TChar  charToFind,   size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t Find(const TChar* StringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(      TChar charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(const TChar* StringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindLastOf(      TChar charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr size_t FindLastOf(const TChar* StringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr bool   Contains(      TChar  charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
-		constexpr bool   Contains(const TChar* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+		constexpr size_t Find(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindFirstOf(      TChar charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindFirstOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
+		constexpr size_t FindLastOf(      TChar charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
+		constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
+		constexpr bool   Contains(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
+		constexpr bool   Contains(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
 		
 		/* Deallocate the memory that this string holds */
 		constexpr void Clear();
@@ -324,9 +324,9 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr size_t StringBase<TChar, TAllocator>::Find(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t StringBase<TChar, TAllocator>::Find(const TChar* pStringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t StringToFindSize = FindCharsCount(StringToFind);
+		const size_t StringToFindSize = FindCharsCount(pStringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_count);
 
 		StringBase<TChar> current;
@@ -338,7 +338,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Count(), StringToFindSize))
+			if (AreStringsSame(current.ConstBuffer(), pStringToFind, current.Count(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
@@ -358,9 +358,9 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr size_t StringBase<TChar, TAllocator>::FindFirstOf(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t StringBase<TChar, TAllocator>::FindFirstOf(const TChar* pStringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		return Find(StringToFind, startIndex, endIndex, count);
+		return Find(pStringToFind, startIndex, endIndex, count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -389,9 +389,9 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr size_t StringBase<TChar, TAllocator>::FindLastOf(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+	constexpr size_t StringBase<TChar, TAllocator>::FindLastOf(const TChar* pStringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		const size_t StringToFindSize = FindCharsCount(StringToFind);
+		const size_t StringToFindSize = FindCharsCount(pStringToFind);
 		ClampTo(endIndex, size_t(0), m_count);
 
 		StringBase<TChar> current;
@@ -403,7 +403,7 @@ export namespace jpt
 			}
 
 			current = SubStr(i - StringToFindSize, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), StringToFind, current.Count(), StringToFindSize))
+			if (AreStringsSame(current.ConstBuffer(), pStringToFind, current.Count(), StringToFindSize))
 			{
 				--count;
 				if (count == 0)
