@@ -21,5 +21,7 @@ export namespace jpt
 
 	public:
 		virtual ~BaseFile() = default;
+
+
 	};
 }

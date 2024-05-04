@@ -26,7 +26,8 @@ export namespace jpt
 {
 	Optional<BaseFile> ReadFile(FilePathView absoluteFullPath)
 	{
-		// Parse directory, file name, and extension
+		// Get extension to determine file type
+		//EExtension extension = GetExtension(absoluteFullPath);
 
 		Optional<FilePath> content = GetTextFileContent(absoluteFullPath);
 

@@ -9,6 +9,7 @@ module;
 
 export module jpt.FileIOUtils;
 
+import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.FileEnums;
 import jpt.FileTypeDefs;
@@ -41,5 +42,21 @@ export namespace jpt
 		file.close();
 
 		return content;
+	}
+
+	/** @return		    File's extension of the given path
+		@param path		Can be either relative or absolute. As long as it ends with .<type> format
+		@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
+	EExtension GetExtension(FilePathView path)
+	{
+		const size_t dotPos = path.FindLastOf('.');
+		if (dotPos == npos)
+		{
+			JPT_ERROR("Failed to find extension in path: %s", path.ConstBuffer());
+			return EExtension::Unknown;
+		}
+
+		// TODO
+		return EExtension::Unknown;
 	}
 }

@@ -354,13 +354,13 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::FindFirstOf(TChar charToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		return Find(charToFind, startIndex, endIndex);
+		return Find(charToFind, startIndex, endIndex, count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t StringBase<TChar, TAllocator>::FindFirstOf(const TChar* StringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
 	{
-		return Find(StringToFind, startIndex, endIndex);
+		return Find(StringToFind, startIndex, endIndex, count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
