@@ -15,7 +15,7 @@ module;
 export module jpt.EntryPoints;
 
 // TODO: When Win64Application is implemented, do conditional import for application
-export import jpt.ApplicationBase;
+export import jpt.Application.Base;
 
 #if IS_PLATFORM_WIN64
 
@@ -28,7 +28,7 @@ export namespace jpt
 		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 
-		jpt::ApplicationBase& app = jpt::ApplicationBase::GetInstance();
+		jpt::Application_Base& app = jpt::Application_Base::GetInstance();
 		if (app.Init())
 		{
 			app.Run();

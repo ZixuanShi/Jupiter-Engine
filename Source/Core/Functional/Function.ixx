@@ -20,15 +20,15 @@ export namespace jpt
 	class Function<TReturn(TArgs...)>
 	{
 	public:
-		struct BaseFunction
+		struct Function_Base
 		{
-			virtual ~BaseFunction() {}
+			virtual ~Function_Base() {}
 			virtual TReturn operator()(TArgs... args) const = 0;
-			virtual BaseFunction* Clone() const = 0;
+			virtual Function_Base* Clone() const = 0;
 		};
 
 		template<class TFunction>
-		struct FunctionData final : public BaseFunction
+		struct FunctionData final : public Function_Base
 		{
 			TFunction m_function;
 
@@ -49,14 +49,14 @@ export namespace jpt
 				}
 			}
 
-			virtual BaseFunction* Clone() const override final
+			virtual Function_Base* Clone() const override final
 			{
 				return new FunctionData(m_function);
 			}
 		};
 
 		template<class TCaller>
-		struct MemberFunctionData final : public BaseFunction
+		struct MemberFunctionData final : public Function_Base
 		{
 			TCaller* m_pCaller;
 			TReturn(TCaller::*m_pMemberFunction)(TArgs...);
@@ -79,14 +79,14 @@ export namespace jpt
 				}
 			}
 
-			virtual BaseFunction* Clone() const override final
+			virtual Function_Base* Clone() const override final
 			{
 				return new MemberFunctionData(m_pCaller, m_pMemberFunction);
 			}
 		};
 
 	private:
-		BaseFunction* m_pFunction = nullptr;
+		Function_Base* m_pFunction = nullptr;
 
 	public:
 		constexpr Function() = default;

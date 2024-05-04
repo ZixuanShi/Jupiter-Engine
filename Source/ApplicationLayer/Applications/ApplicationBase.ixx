@@ -2,7 +2,7 @@
 
 module;
 
-export module jpt.ApplicationBase;
+export module jpt.Application.Base;
 
 import jpt.StopWatch;
 
@@ -10,10 +10,10 @@ namespace jpt
 {
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
-	export class ApplicationBase
+	export class Application_Base
 	{
 	public:
-		virtual ~ApplicationBase() = default;
+		virtual ~Application_Base() = default;
 
 		virtual bool Init();
 		virtual void Update();
@@ -23,28 +23,28 @@ namespace jpt
 
 		/** Designed to be implemented in client project's application
 			@return An Application's reference to the client project. */
-		static ApplicationBase& GetInstance();
+		static Application_Base& GetInstance();
 
 	private:
 		void PollInput();
 		void Render();
 	};
 
-	bool ApplicationBase::Init()
+	bool Application_Base::Init()
 	{
 		return true;
 	}
 
-	void ApplicationBase::Update()
+	void Application_Base::Update()
 	{
 	}
 
-	void ApplicationBase::Terminate()
+	void Application_Base::Terminate()
 	{
 
 	}
 
-	void ApplicationBase::Run()
+	void Application_Base::Run()
 	{
 		StopWatch timer;
 		timer.Start();
@@ -62,11 +62,11 @@ namespace jpt
 		}
 	}
 
-	void ApplicationBase::PollInput()
+	void Application_Base::PollInput()
 	{
 	}
 
-	void ApplicationBase::Render()
+	void Application_Base::Render()
 	{
 	}
 }

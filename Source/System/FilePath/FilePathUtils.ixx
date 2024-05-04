@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
 
-export module jpt.File.PathUtils;
+export module jpt.File.Path.Utils;
 
 import jpt.File.Enums;
 import jpt.File.Path;

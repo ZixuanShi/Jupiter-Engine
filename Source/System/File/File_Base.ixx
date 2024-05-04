@@ -2,7 +2,7 @@
 
 module;
 
-export module jpt.BaseFile;
+export module jpt.File.Base;
 
 import jpt.File.Enums;
 import jpt.File.Path;

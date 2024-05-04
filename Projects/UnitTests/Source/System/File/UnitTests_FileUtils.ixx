@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_FileUtils;
 
-import jpt.File.PathUtils;
+import jpt.File.Path.Utils;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;

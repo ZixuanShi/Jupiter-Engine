@@ -94,13 +94,13 @@ def create_application_communications_ixx():
 
 export module ApplicationCommunications;
 
-import jpt.ApplicationBase;
-import jpt.FileUtils;
+import jpt.Application.Base;
+import jpt.File.Path.Utils;
 
 import <ProjectName>Application;
 
 /** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
+jpt::Application_Base& jpt::Application_Base::GetInstance()
 {
 	static <ProjectName>Application s_instance;
 	return s_instance;
@@ -130,12 +130,12 @@ module;
 
 export module <ProjectName>Application;
 
-import jpt.ApplicationBase;
+import jpt.Application.Base;
 
-export class <ProjectName>Application final : public jpt::ApplicationBase
+export class <ProjectName>Application final : public jpt::Application_Base
 {
 private:
-	using Super = jpt::ApplicationBase;
+	using Super = jpt::Application_Base;
 
 };
 """

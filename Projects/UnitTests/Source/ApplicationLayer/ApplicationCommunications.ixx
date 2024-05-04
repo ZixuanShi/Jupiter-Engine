@@ -4,13 +4,13 @@
 
 export module ApplicationCommunications;
 
-import jpt.ApplicationBase;
-import jpt.File.PathUtils;
+import jpt.Application.Base;
+import jpt.File.Path.Utils;
 
 import UnitTestsApplication;
 
 /** Must Overrides Application GetInstance here */
-jpt::ApplicationBase& jpt::ApplicationBase::GetInstance()
+jpt::Application_Base& jpt::Application_Base::GetInstance()
 {
 	static JupiterUnitTestsApplication s_instance;
 	return s_instance;
