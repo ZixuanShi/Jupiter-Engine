@@ -15,6 +15,9 @@ namespace jpt
 	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...);
 	void OnAssertionFailed(int line, const char* file, const char* expression);
 
+	/** Breaks the debugger if attached */
+	void DebugBreak();
+
 	/** Assert with error message logging if Debug mode, do nothing if not Debugging
 		@param expression: A boolean expression to assert true
 		@param ...:	       Error messages if the expression went false
@@ -31,7 +34,7 @@ namespace jpt
 			if (!(expression))\
 			{\
 				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-				__debugbreak();\
+				DebugBreak();\
 			}\
 		} while(false)
 }

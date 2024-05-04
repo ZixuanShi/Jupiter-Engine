@@ -36,5 +36,14 @@ namespace jpt
 	{
 		OnAssertionFailed(line, file, expression, nullptr);
 	}
+
+	void DebugBreak()
+	{
+#if IS_PLATFORM_WIN64
+		__debugbreak();
+#else
+#error "DebugBreak not implemented for this platform"
+#endif
+	}
 }
 #endif // IS_DEBUG || IS_DEVELOPMENT
