@@ -7,12 +7,11 @@ module;
 #include <fstream>
 #include <string>
 
-export module jpt.FileIOUtils;
+export module jpt.File.IO.Utils;
 
 import jpt.Constants;
-import jpt.FileEnums;
-import jpt.FilePath;
-import jpt.FileTypeDefs;
+import jpt.File.Enums;
+import jpt.File.Path;
 import jpt.Optional;
 import jpt.TypeTraits;
 
@@ -44,21 +43,5 @@ export namespace jpt
 		file.close();
 
 		return content;
-	}
-
-	/** @return		    File's extension of the given path
-		@param path		Can be either relative or absolute. As long as it ends with .<type> format
-		@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
-	EExtension GetExtension(const FilePath& path)
-	{
-		const size_t dotPos = path.FindLastOf('.');
-		if (dotPos == npos)
-		{
-			JPT_ERROR("Failed to find extension in path: %s", path.ConstBuffer());
-			return EExtension::Unknown;
-		}
-
-		// TODO
-		return EExtension::Unknown;
 	}
 }

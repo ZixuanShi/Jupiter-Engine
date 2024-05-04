@@ -4,16 +4,15 @@ module;
 
 export module jpt.BaseFile;
 
-import jpt.FileEnums;
-import jpt.FilePath;
-import jpt.FileTypeDefs;
-import jpt.FileUtils;
+import jpt.File.Enums;
+import jpt.File.Path;
+import jpt.File.Utils;
 import jpt.TypeDefs;
 import jpt.String;
 
 export namespace jpt
 {
-	class BaseFile
+	class File_Base
 	{
 	private:
 		FilePath m_fileName;
@@ -21,7 +20,7 @@ export namespace jpt
 		EExtension m_fileType;
 
 	public:
-		virtual ~BaseFile() = default;
+		virtual ~File_Base() = default;
 
 
 	};

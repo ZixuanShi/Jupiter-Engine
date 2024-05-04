@@ -14,7 +14,7 @@ import jpt.Optional;
 
 bool UnitTest_FileIO_Read_Engine_English()
 {
-    jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json");
+    jpt::Optional<jpt::File_Base> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json");
     JPT_ENSURE(file);
 
 
