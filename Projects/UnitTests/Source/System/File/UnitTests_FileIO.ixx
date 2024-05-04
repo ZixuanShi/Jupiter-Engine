@@ -12,26 +12,19 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Optional;
 
-bool UnitTest_FileIO_Read()
+bool UnitTest_FileIO_Read_Engine_English()
 {
-    if (jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json"))
-    {
-        JPT_IGNORE(file);
-        JPT_LOG("Successfully read file");
-    }
+    jpt::Optional<jpt::BaseFile> file = jpt::ReadFile(jpt::ESource::Engine, "Assets/Configs/TestJson.json");
+    JPT_ENSURE(file);
 
 
-    //jpt::FileIO::Read("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Assets/Configs/TestJson.json");
-
-    //jpt::FileIO::Read(jpt::ESource::Client, "Assets/Configs/TestJson.json");
-    //jpt::FileIO::Read("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/Assets/Configs/TestJson.json");
 
     return true;
 }
 
 export bool RunUnitTests_FileIO()
 {
-    JPT_ENSURE(UnitTest_FileIO_Read());
+    JPT_ENSURE(UnitTest_FileIO_Read_Engine_English());
 
     return true;
 }

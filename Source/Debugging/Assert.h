@@ -34,7 +34,7 @@ namespace jpt
 			if (!(expression))\
 			{\
 				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-				DebugBreak();\
+				jpt::DebugBreak();\
 			}\
 		} while(false)
 }
