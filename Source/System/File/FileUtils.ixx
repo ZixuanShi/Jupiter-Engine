@@ -99,8 +99,8 @@ export namespace jpt
 	{
 		FilePath result;
 
-		result = Move(GetSourcePath(source));
-		result.Append(relativePath.ConstBuffer(), relativePath.Count());
+		result.Append(GetSourcePath(source));
+		result.Append(relativePath);
 
 		return result;
 	}

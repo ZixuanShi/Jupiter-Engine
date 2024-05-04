@@ -328,7 +328,7 @@ export namespace jpt
 		return c;
 	}
 
-	/** @return Heap allocated wchar_t* buffer with content of const char*. Caller needs to take ownership of buffer */
+	/** @return Heap allocated Buffer with content of input string. Caller needs to take ownership of buffer. i.e. Memory Managing, deleting */
 	wchar_t* ToWChars(const char* pCStr, size_t count)
 	{
 		++count;	// For null terminator
@@ -341,6 +341,19 @@ export namespace jpt
 	wchar_t* ToWChars(const char* pCStr)
 	{
 		return ToWChars(pCStr, FindCharsCount(pCStr));
+	}
+	char* ToChars(const wchar_t* pWStr, size_t count)
+	{
+		++count;	// For null terminator
+
+		char* pBuffer = new char[count];
+		wcstombs_s(nullptr, pBuffer, count, pWStr, count);
+
+		return pBuffer;
+	}
+	char* ToChars(const wchar_t* pWStr)
+	{
+		return ToChars(pWStr, FindCharsCount(pWStr));
 	}
 
 #pragma endregion

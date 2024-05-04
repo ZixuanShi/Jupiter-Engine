@@ -9,6 +9,8 @@ export module jpt.FilePath;
 import jpt.Constants;
 import jpt.String;
 import jpt.StringUtils;
+import jpt.ToString;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -27,11 +29,8 @@ export namespace jpt
 		FilePath(const char* path);
 		FilePath(const wchar_t* path);
 
-		void Append(const wchar_t* path, size_t count);
-		void Append(const wchar_t* path);
-		void Append(const WString& path);
-		void operator+=(const wchar_t* path) { m_path += path; }
-		void operator+=(const WString& path) { m_path += path; }
+		void Append(const FilePath& path);
+		void operator+=(const WString& path);
 
 		size_t Find(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		size_t Find(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
@@ -42,14 +41,14 @@ export namespace jpt
 		bool   Contains(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
 		bool   Contains(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
 
-		const WString& ToString() const { return m_path; }
+		const WString& ToWString() const { return m_path; }
 		const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 		size_t Count() const { return m_path.Count(); }
 	};
 
 	FilePath::FilePath(const char* path)
-		: m_path(ToWChars(path))
-	{		
+		: m_path(Move(jpt::ToWString(path)))
+	{
 	}
 
 	FilePath::FilePath(const wchar_t* path)
@@ -57,19 +56,14 @@ export namespace jpt
 	{
 	}
 
-	void FilePath::Append(const wchar_t* path, size_t count)
+	void FilePath::Append(const FilePath& path)
 	{
-		m_path.Append(path, count);
+		m_path.Append(path.ToWString());
 	}
 
-	void FilePath::Append(const wchar_t* path)
+	void FilePath::operator+=(const WString& path)
 	{
-		m_path.Append(path);
-	}
-
-	void FilePath::Append(const WString& path)
-	{
-		m_path.Append(path);
+		m_path += path;
 	}
 
 	size_t FilePath::Find(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
