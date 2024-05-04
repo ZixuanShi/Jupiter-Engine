@@ -561,6 +561,25 @@ bool UnitTest_WString_MakeLower()
 	return true;
 }
 
+bool UnitTest_String_ToString()
+{
+	JPT_ENSURE(jpt::ToString(L"") == "");
+	JPT_ENSURE(jpt::ToString(L"Hello") == "Hello");
+	JPT_ENSURE(jpt::ToString(L"World") == "World");
+	JPT_ENSURE(jpt::ToString(L"Hello World") == "Hello World");
+
+	return true;
+}
+bool UnitTest_String_ToWString()
+{
+	JPT_ENSURE(jpt::ToWString("") == L"");
+	JPT_ENSURE(jpt::ToWString("Hello") == L"Hello");
+	JPT_ENSURE(jpt::ToWString("World") == L"World");
+	JPT_ENSURE(jpt::ToWString("Hello World") == L"Hello World");
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
@@ -617,6 +636,9 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTest_String_MakeLower());
 		JPT_ENSURE(UnitTest_WString_MakeLower());
+
+		JPT_ENSURE(UnitTest_String_ToString());
+		JPT_ENSURE(UnitTest_String_ToWString());
 	}
 
 	return true;

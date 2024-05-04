@@ -129,6 +129,43 @@ bool RunUnitTests_StringUtils_CStrToInteger()
 	return true;
 }
 
+bool RunUnitTests_StringUtils_CStrToWStr()
+{
+	wchar_t* wchars = nullptr;
+		
+	wchars = jpt::ToWChars("");
+	JPT_ENSURE(jpt::AreStringsSame(wchars, L""));
+	delete[] wchars;
+
+	wchars = jpt::ToWChars("Jupiter Engine");
+	JPT_ENSURE(jpt::AreStringsSame(wchars, L"Jupiter Engine"));
+	delete[] wchars;
+
+	wchars = jpt::ToWChars("Zixuan Shi");
+	JPT_ENSURE(jpt::AreStringsSame(wchars, L"Zixuan Shi"));
+	delete[] wchars;
+
+	return true;
+}
+bool RunUnitTests_StringUtils_WStrToCStr()
+{
+	char* chars = nullptr;
+
+	chars = jpt::ToChars(L"");
+	JPT_ENSURE(jpt::AreStringsSame(chars, ""));
+	delete[] chars;
+
+	chars = jpt::ToChars(L"Jupiter Engine");
+	JPT_ENSURE(jpt::AreStringsSame(chars, "Jupiter Engine"));
+	delete[] chars;
+
+	chars = jpt::ToChars(L"Zixuan Shi");
+	JPT_ENSURE(jpt::AreStringsSame(chars, "Zixuan Shi"));
+	delete[] chars;
+
+	return true;
+}
+
 export bool RunUnitTests_StringUtils()
 {
 	JPT_ENSURE(UnitTest_StringLen<jpt::String>());
@@ -143,6 +180,9 @@ export bool RunUnitTests_StringUtils()
 	JPT_ENSURE(RunUnitTests_IsValidDataCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_IntegerToCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_CStrToInteger());
+
+	JPT_ENSURE(RunUnitTests_StringUtils_CStrToWStr());
+	JPT_ENSURE(RunUnitTests_StringUtils_WStrToCStr());
 
 	return true;
 }
