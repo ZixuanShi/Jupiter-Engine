@@ -173,6 +173,7 @@ export namespace jpt
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
+	
 	template<StringLiteral TChar, class TAllocator>
 	constexpr String_Base<TChar, TAllocator> operator+(const String_Base<TChar, TAllocator>& string, const TChar* CString)
 	{
@@ -230,6 +231,7 @@ export namespace jpt
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
+	
 	template<StringLiteral TChar, class TAllocator>
 	constexpr String_Base<TChar, TAllocator>::String_Base(const TChar* CString, size_t size)
 	{

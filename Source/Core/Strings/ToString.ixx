@@ -126,7 +126,7 @@ export namespace jpt
 		wchar_t* pBuffer = ToWChars(str.ConstBuffer(), str.Count());
 
 		WString wstr;
-		wstr.MoveString(pBuffer);
+		wstr.MoveString(pBuffer, str.Count());
 		return wstr;
 	}
 	WString ToWString(const char* pCStr, size_t count = npos)
@@ -141,7 +141,7 @@ export namespace jpt
 			return WString();
 		}
 
-		String str(pCStr);
+		String str(pCStr, count);
 		return ToWString(str);
 	}
 
@@ -156,7 +156,7 @@ export namespace jpt
 		char* pBuffer = ToChars(wstr.ConstBuffer(), wstr.Count());
 
 		String str;
-		str.MoveString(pBuffer);
+		str.MoveString(pBuffer, wstr.Count());
 		return str;
 	}
 	String ToString(const wchar_t* pWStr, size_t count = npos)
@@ -171,7 +171,7 @@ export namespace jpt
 			return String();
 		}
 
-		WString wstr(pWStr);
+		WString wstr(pWStr, count);
 		return ToString(wstr);
 	}
 }

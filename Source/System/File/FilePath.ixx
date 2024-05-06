@@ -19,6 +19,7 @@ export namespace jpt
 	{
 	public:
 		using TChar = wchar_t;
+		using TData = TChar;
 		using TString = WString;
 
 	private:
@@ -28,9 +29,13 @@ export namespace jpt
 		FilePath() = default;
 		FilePath(const char* path);
 		FilePath(const wchar_t* path);
+		FilePath(const TString& path);
 
 		void Append(const FilePath& path);
 		void operator+=(const WString& path);
+
+		FilePath& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		FilePath GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		size_t Find(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		size_t Find(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
@@ -46,12 +51,30 @@ export namespace jpt
 		size_t Count() const { return m_path.Count(); }
 	};
 
+	// Non member functions -------------------------------------------------------------------------------------------------------------------
+
+	constexpr bool operator==(const FilePath& filePath, const typename FilePath::TChar* CString)
+	{
+		return filePath.ToWString() == CString;
+	}
+	constexpr bool operator==(const FilePath& lhs, const FilePath& rhs)
+	{
+		return lhs.ToWString() == rhs.ToWString();
+	}
+
+	// Member Functions Definitions ---------------------------------------------------------------------------------------
+
 	FilePath::FilePath(const char* path)
 		: m_path(Move(jpt::ToWString(path)))
 	{
 	}
 
 	FilePath::FilePath(const wchar_t* path)
+		: m_path(path)
+	{
+	}
+
+	FilePath::FilePath(const TString& path)
 		: m_path(path)
 	{
 	}
@@ -64,6 +87,17 @@ export namespace jpt
 	void FilePath::operator+=(const WString& path)
 	{
 		m_path += path;
+	}
+
+	FilePath& FilePath::Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex)
+	{
+		m_path.Replace(StringToFind, StringToReplace, startIndex, endIndex);
+		return *this;
+	}
+
+	FilePath FilePath::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
+	{
+		return m_path.GetReplaced(StringToFind, StringToReplace, startIndex, endIndex);
 	}
 
 	size_t FilePath::Find(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const

@@ -17,24 +17,24 @@
 #pragma region Memory
 
 /** Deleter helpers */
-#define JPT_DELETE(pPointer)\
-			delete pPointer;\
+#define JPT_DELETE(pPointer)            \
+			delete pPointer;            \
 			pPointer = nullptr;
 
-#define JPT_DELETE_ARRAY(pPointer)\
-			delete[] pPointer;\
+#define JPT_DELETE_ARRAY(pPointer)      \
+			delete[] pPointer;          \
 			pPointer = nullptr;
 
-#define JPT_SAFE_DELETE(pPointer)\
-		if (pPointer)\
-		{\
-			JPT_DELETE(pPointer);\
+#define JPT_SAFE_DELETE(pPointer)       \
+		if (pPointer)                   \
+		{                               \
+			JPT_DELETE(pPointer);       \
 		}
 
-#define JPT_SAFE_DELETE_ARRAY(pPointer)\
-		if (pPointer)\
-		{\
-			JPT_DELETE_ARRAY(pPointer);\
+#define JPT_SAFE_DELETE_ARRAY(pPointer) \
+		if (pPointer)                   \
+		{                               \
+			JPT_DELETE_ARRAY(pPointer); \
 		}
 
 #pragma endregion
@@ -42,31 +42,31 @@
 #pragma region Logging
 
 /**< Return, with Error logging */
-#define JPT_VERIFY(condition, returnValue, ...)\
-	if (!(condition))\
-	{\
-		if (JPT_HAS_ARGS(__VA_ARGS__))\
-		{\
-			JPT_ERROR("%s", __VA_ARGS__);\
-		}\
-		else\
-		{\
-			JPT_ERROR("Failed: %s", #condition);\
-		}\
-		return returnValue;\
-	}
-
-#define JPT_ENSURE(condition, ...)\
-	JPT_VERIFY(condition, false, __VA_ARGS__)
-
-/**< Slient Return */
-#define JPT_RETURN_IF(condition, returnValue)\
-	if ((condition))\
-	{\
-		return returnValue;\
-	}
-
-#define JPT_EXIT_IF(condition)\
+#define JPT_VERIFY(condition, returnValue, ...)  \
+	if (!(condition))                            \
+	{                                            \
+		if (JPT_HAS_ARGS(__VA_ARGS__))           \
+		{                                        \
+			JPT_ERROR("%s", __VA_ARGS__);        \
+		}                                        \
+		else                                     \
+		{                                        \
+			JPT_ERROR("Failed: %s", #condition); \
+		}                                        \
+		return returnValue;                      \
+	}										     
+											     
+#define JPT_ENSURE(condition, ...)               \
+	JPT_VERIFY(condition, false, __VA_ARGS__)    
+											     
+/**< Slient Return */						     
+#define JPT_RETURN_IF(condition, returnValue)    \
+	if ((condition))                             \
+	{                                            \
+		return returnValue;                      \
+	}										     
+											     
+#define JPT_EXIT_IF(condition)                   \
 	JPT_RETURN_IF(condition, void())
 
 #pragma endregion
@@ -85,23 +85,23 @@
 	@return   C-Style string for different Char Type but contains the exact input string literals.
 	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
 	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
-#define JPT_GET_PROPER_STRING(TChar, SourceStr)\
-	[]() -> const TChar* \
-	{\
-		const TChar* pString = nullptr; \
-		if constexpr (jpt::AreSameType<TChar, char>)\
-		{\
-			pString = #SourceStr;\
-		}\
-		else if constexpr (jpt::AreSameType<TChar, wchar_t>)\
-		{\
-			pString = JPT_TO_WSTRING(#SourceStr);\
-		}\
-		else\
-		{\
-			JPT_ASSERT(false, "Unsupported TChar");\
-		}\
-		return pString;\
+#define JPT_GET_PROPER_STRING(TChar, SourceStr)              \
+	[]() -> const TChar*                                     \
+	{                                                        \
+		const TChar* pString = nullptr;                      \
+		if constexpr (jpt::AreSameType<TChar, char>)         \
+		{                                                    \
+			pString = #SourceStr;                            \
+		}                                                    \
+		else if constexpr (jpt::AreSameType<TChar, wchar_t>) \
+		{                                                    \
+			pString = JPT_TO_WSTRING(#SourceStr);            \
+		}                                                    \
+		else                                                 \
+		{                                                    \
+			JPT_ASSERT(false, "Unsupported TChar");          \
+		}                                                    \
+		return pString;                                      \
 	}()
 
 /** Formats a buffer as string 

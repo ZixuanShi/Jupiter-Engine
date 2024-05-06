@@ -29,7 +29,6 @@ export bool RunUnitTests_System()
 	/** Unit Test Functions */
 
 	// File
-	JPT_ENSURE(RunUnitTests_FileUtils());
 	JPT_ENSURE(RunUnitTests_FileIO());
 
 	// FileIO
@@ -37,6 +36,7 @@ export bool RunUnitTests_System()
 
 	// FilePath
 	JPT_ENSURE(RunUnitTests_FilePath());
+	JPT_ENSURE(RunUnitTests_FilePathUtils());
 
 	// Time
 	JPT_ENSURE(RunUnitTests_Clock());

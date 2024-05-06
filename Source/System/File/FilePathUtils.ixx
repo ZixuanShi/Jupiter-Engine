@@ -40,27 +40,27 @@ export namespace jpt
 	}
 
 	/** Replaces directory slashes to platform-correct version */
-	template<StringType TString>
-	void FixSlashes(TString& path)
+	template<typename TString>
+	void FixSeparators(TString& path)
 	{
 		using TChar = typename TString::TChar;
 
-#if IS_PLATFORM_WIN64
-		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
+#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
+		path.Replace(JPT_GET_PROPER_STRING(TChar, /), JPT_GET_PROPER_STRING(TChar, \\));
 #else
-#error "Unsupported platform"
+		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, /));
 #endif
 	}
 
-	template<StringType TString>
-	TString GetSlash()
+	template<typename TString>
+	TString GetSeparator()
 	{
 		using TChar = typename TString::TChar;
 
-#if IS_PLATFORM_WIN64
-		return JPT_GET_PROPER_STRING(TChar, /);
+#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
+		return JPT_GET_PROPER_STRING(TChar, \\);
 #else
-	#error "Unsupported platform"
+		return JPT_GET_PROPER_STRING(TChar, /);
 #endif
 	}
 
