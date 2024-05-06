@@ -30,11 +30,11 @@ export namespace jpt
 		Byte m_smallBuffer[kLocSmallDataSize]; /**< Small Object Optimization. Will hold data in this local stack buffer if it's small */
 		Byte* m_pBuffer = nullptr;             /**< Buffer pointer to the memory of hold object */
 
-		Constructor m_constructor = nullptr; /**< Function pointer to the constructor of the current type */
-		Destructor  m_destructor  = nullptr; /**< Function pointer to the destructor of the current type */
+		Constructor m_constructor = nullptr;   /**< Constructor function pointer. Needed for copy constructing */
+		Destructor  m_destructor  = nullptr;   /**< Destructor function pointer. Needed for destructing */
 
 		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
-		size_t m_currentTypeSize = 0;       /**< Count of the current type */
+		size_t m_currentTypeSize = 0;       /**< Size in bytes of the current type */
 
 	public:
 		constexpr Any() = default;
