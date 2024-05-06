@@ -208,6 +208,7 @@ bool UnitTest_WString_Find()
 
 bool UnitTest_String_Replace()
 {
+	// Single word
 	jpt::String str = "Hello World Jupiter Engine";
 	str.Replace("Jupiter", "Mars");
 	JPT_ENSURE(str == "Hello World Mars Engine");
@@ -227,6 +228,14 @@ bool UnitTest_String_Replace()
 	str.Replace("En", "End", 10, 24);
 	JPT_ENSURE(str == "HEnllo World JupitEndr EndginEn");
 
+	// Multiple words
+	str = "Hello World Jupiter Engine";
+	str.Replace({ "Hello", "Jupiter" }, "YOLO");
+	JPT_ENSURE(str == "YOLO World YOLO Engine");
+
+	str.Replace({ "YOLO", "Engine" }, "Hello Jupiter");
+	JPT_ENSURE(str == "Hello Jupiter World Hello Jupiter Hello Jupiter");
+	
 	return true;
 }
 bool UnitTest_WString_Replace()
@@ -249,6 +258,14 @@ bool UnitTest_WString_Replace()
 
 	str.Replace(L"En", L"End", 10, 24);
 	JPT_ENSURE(str == L"HEnllo World JupitEndr EndginEn");
+
+	// Multiple words
+	str = L"Hello World Jupiter Engine";
+	str.Replace({ L"Hello", L"Jupiter" }, L"YOLO");
+	JPT_ENSURE(str == L"YOLO World YOLO Engine");
+
+	str.Replace({ L"YOLO", L"Engine" }, L"Hello Jupiter");
+	JPT_ENSURE(str == L"Hello Jupiter World Hello Jupiter Hello Jupiter");
 
 	return true;
 }

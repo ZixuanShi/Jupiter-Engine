@@ -95,8 +95,10 @@ export namespace jpt
 			@param StringToReplace:	The string to replace the original data
 			@param startIndex:		[optional] The start index to start searching. Default to 0
 			@param endIndex:		[optional] The end index to stop operation. Default to size() */
-		constexpr String_Base& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
-		constexpr String_Base GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
+		constexpr String_Base& Replace(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		constexpr String_Base GetReplaced(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
+		constexpr String_Base& Replace(const DynamicArray<String_Base>& stringsToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		constexpr String_Base GetReplaced(const DynamicArray<String_Base>& stringsToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		/** Splits this string to substrings by a keyword */
 		constexpr DynamicArray<String_Base> Split(const TChar* pKeyword) const;
@@ -428,20 +430,20 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr String_Base<TChar, TAllocator>& String_Base<TChar, TAllocator>::Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex)
+	constexpr String_Base<TChar, TAllocator>& String_Base<TChar, TAllocator>::Replace(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex, size_t endIndex)
 	{
 		if (endIndex == npos)
 		{
 			endIndex = m_count;
 		}
 
-		const String_Base<TChar> replaced(StringToReplace);
-		const size_t stringToFindSize = FindCharsCount(StringToFind);
+		const String_Base<TChar> replaced(pStringToReplace);
+		const size_t stringToFindSize = FindCharsCount(pStringToFind);
 
 		size_t foundPos = startIndex;
 		while (true)
 		{
-			foundPos = Find(StringToFind, startIndex, endIndex);
+			foundPos = Find(pStringToFind, startIndex, endIndex);
 			if (foundPos == npos)
 			{
 				break;
@@ -460,10 +462,29 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
+	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetReplaced(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex, size_t endIndex) const
 	{
 		String_Base copy = *this;
-		copy.Replace(StringToFind, StringToReplace, startIndex, endIndex);
+		copy.Replace(pStringToFind, pStringToReplace, startIndex, endIndex);
+		return copy;
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr String_Base<TChar, TAllocator>& String_Base<TChar, TAllocator>::Replace(const DynamicArray<String_Base>& stringsToFind, const TChar* pStringToReplace, size_t startIndex, size_t endIndex)
+	{
+		for (const String_Base& stringToFind : stringsToFind)
+		{
+			Replace(stringToFind.ConstBuffer(), pStringToReplace, startIndex, endIndex);
+		}
+
+		return *this;
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetReplaced(const DynamicArray<String_Base>& stringsToFind, const TChar* pStringToReplace, size_t startIndex, size_t endIndex) const
+	{
+		String_Base copy = *this;
+		copy.Replace(stringsToFind, pStringToReplace, startIndex, endIndex);
 		return copy;
 	}
 
