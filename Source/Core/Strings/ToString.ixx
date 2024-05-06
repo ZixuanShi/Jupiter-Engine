@@ -118,20 +118,60 @@ export namespace jpt
 	// String to WString
 	WString ToWString(const String& str)
 	{
+		if (str.Count() == 0)
+		{
+			return WString();
+		}
+
 		wchar_t* pBuffer = ToWChars(str.ConstBuffer(), str.Count());
 
 		WString wstr;
 		wstr.MoveString(pBuffer);
 		return wstr;
 	}
+	WString ToWString(const char* pCStr, size_t count = npos)
+	{
+		if (count == npos)
+		{
+			count = FindCharsCount(pCStr);
+		}
+
+		if (count == 0)
+		{
+			return WString();
+		}
+
+		String str(pCStr);
+		return ToWString(str);
+	}
 
 	// WString to String
 	String ToString(const WString& wstr)
 	{
+		if (wstr.Count() == 0)
+		{
+			return String();
+		}
+
 		char* pBuffer = ToChars(wstr.ConstBuffer(), wstr.Count());
 
 		String str;
 		str.MoveString(pBuffer);
 		return str;
+	}
+	String ToString(const wchar_t* pWStr, size_t count = npos)
+	{
+		if (count == npos)
+		{
+			count = FindCharsCount(pWStr);
+		}
+		
+		if (count == 0)
+		{
+			return String();
+		}
+
+		WString wstr(pWStr);
+		return ToString(wstr);
 	}
 }
