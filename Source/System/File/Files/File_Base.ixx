@@ -6,12 +6,12 @@ export module jpt.File_Base;
 
 import jpt.FileEnums;
 import jpt.FilePath;
-import jpt.FileUtils;
 import jpt.TypeDefs;
 import jpt.String;
 
 export namespace jpt
 {
+	/** Base file abstraction for all files. */
 	class File_Base
 	{
 	private:

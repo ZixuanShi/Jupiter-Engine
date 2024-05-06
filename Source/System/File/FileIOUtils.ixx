@@ -19,7 +19,7 @@ export namespace jpt
 {
 	/** Reads text file's content at given absolute path */
 	// TODO: This API is definitely having wrong return type. It should be returning a "File_Text" instead of FilePath
-	Optional<FilePath> GetTextFileContent(const FilePath& absolutePath)
+	Optional<FilePath> LoadTextFile(const FilePath& absolutePath)
 	{
 		using TChar = typename FilePath::TChar;
 

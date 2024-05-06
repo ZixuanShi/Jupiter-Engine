@@ -14,10 +14,9 @@ export module jpt.FileIO;
 
 import jpt.File_Base;
 import jpt.FileEnums;
+import jpt.FileIOUtils;
 import jpt.FilePath;
 import jpt.FilePathUtils;
-import jpt.FileUtils;
-import jpt.FileIOUtils;
 import jpt.Optional;
 import jpt.String;
 import jpt.StringView;
@@ -30,7 +29,7 @@ export namespace jpt
 		// Get extension to determine file type
 		//EExtension extension = GetExtension(absoluteFullPath);
 
-		Optional<FilePath> content = GetTextFileContent(absoluteFullPath);
+		Optional<FilePath> content = LoadTextFile(absoluteFullPath);
 
 		if (!content)
 		{

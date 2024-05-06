@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
+#include "Debugging/Logger.h"
 
 export module jpt.FilePathUtils;
 
@@ -72,5 +73,21 @@ export namespace jpt
 		result.Append(relativePath);
 
 		return result;
+	}
+
+	/** @return		    File's extension of the given path
+		@param path		Can be either relative or absolute. As long as it ends with .<type> format
+		@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
+	EExtension FindExtension(const FilePath& path)
+	{
+		const size_t dotPos = path.FindLastOf('.');
+		if (dotPos == npos)
+		{
+			JPT_ERROR("Failed to find extension in path: %s", path.ConstBuffer());
+			return EExtension::Unknown;
+		}
+
+		// TODO
+		return EExtension::Unknown;
 	}
 }
