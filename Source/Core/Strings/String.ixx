@@ -636,7 +636,6 @@ export namespace jpt
 		String_Base suff = SubStr(index);
 
 		TrimRight(index);
-		Reserve(m_count + size);
 
 		Append(CString, size);
 		Append(suff);
@@ -693,10 +692,12 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void String_Base<TChar, TAllocator>::Reserve(size_t capacity)
 	{
+		capacity += sizeof(TChar); // Null terminator
+
 		if (capacity >= kSmallDataSize &&
 			capacity > m_capacity)
 		{
-			TChar* pNewBuffer = TAllocator::AllocateArray(capacity + sizeof(TChar));
+			TChar* pNewBuffer = TAllocator::AllocateArray(capacity);
 
 			// Copy the old buffer to the new one
 			if (m_pBuffer)
@@ -708,6 +709,14 @@ export namespace jpt
 			m_pBuffer = pNewBuffer;
 			m_capacity = capacity;
 		}
+
+		if (capacity < kSmallDataSize)
+		{
+			m_pBuffer = m_smallBuffer;
+			m_capacity = kSmallDataSize;
+		}
+
+		JPT_ASSERT(m_capacity >= m_count, "Capacity cannot be less than the current count");
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -907,18 +916,9 @@ export namespace jpt
 		JPT_EXIT_IF(size == 0);
 
 		const size_t newSize = m_count + size;
-		if (newSize < kSmallDataSize)
-		{
-			m_pBuffer = m_smallBuffer;
-		}
 
 		Reserve(newSize);
-
 		StrCpy(m_pBuffer + m_count, size + sizeof(TChar), CString);
-		if (newSize < kSmallDataSize)
-		{
-			m_pBuffer = m_smallBuffer;
-		}
 
 		m_count = newSize;
 	}

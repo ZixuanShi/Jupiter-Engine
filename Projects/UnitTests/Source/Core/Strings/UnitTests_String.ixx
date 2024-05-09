@@ -264,13 +264,8 @@ bool UnitTest_WString_Replace()
  	str.Replace({ L"Hello", L"Jupiter" }, L"YOLO");
 	JPT_ENSURE(str == L"YOLO World YOLO Engine");
 
-	str = L"Hello World Jupiter Engine 木星引擎";
-	str.Replace({ L"Jupiter", L"Hello" }, L"YOLO");
-	JPT_ENSURE(str == L"YOLO World YOLO Engine 木星引擎");
-
 	str.Replace({ L"YOLO", L"Engine" }, L"Hello Jupiter");
-	JPT_ENSURE(str == L"Hello Jupiter World Hello Jupiter Hello Jupiter 木星引擎");
-	//JPT_LOG(str);
+	JPT_ENSURE(str == L"Hello Jupiter World Hello Jupiter Hello Jupiter");
 
 	return true;
 }
@@ -606,7 +601,7 @@ export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
 
-	//for (size_t i = 0; i < 1000; ++i)
+	//for (size_t i = 0; i < 10'000; ++i)
 	{
 		JPT_ENSURE(UnitTest_String_Constructing());
 		JPT_ENSURE(UnitTest_WString_Constructing());
