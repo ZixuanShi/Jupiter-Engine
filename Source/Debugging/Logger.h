@@ -47,7 +47,14 @@ namespace jpt
 		template<Containable TContainer>
 		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)
 		{
-			ProcessMessage(type, line, file, jpt::ToString(container).ConstBuffer());
+			if constexpr (AreSameType<TContainer, jpt::String> || AreSameType<TContainer, jpt::WString>)
+			{
+				ProcessMessage(type, line, file, container.ConstBuffer());
+			}
+			else
+			{
+				ProcessMessage(type, line, file, jpt::ToString(container).ConstBuffer());
+			}
 		}
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);

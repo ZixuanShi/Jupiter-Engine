@@ -73,8 +73,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_count); }
 
 		// Capacity
-		constexpr size_t Count()     const { return m_count;      }
-		constexpr size_t Capacity() const { return m_capacity;  }
+		constexpr size_t Count()    const { return m_count;      }
+		constexpr size_t Capacity() const { return m_capacity;   }
 		constexpr bool   IsEmpty()  const { return m_count == 0; }
 
 		/** Searching. Returns npos if not found */
