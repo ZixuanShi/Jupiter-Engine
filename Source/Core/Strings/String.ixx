@@ -913,7 +913,12 @@ export namespace jpt
 		}
 
 		Reserve(newSize);
+
 		StrCpy(m_pBuffer + m_count, size + sizeof(TChar), CString);
+		if (newSize < kSmallDataSize)
+		{
+			m_pBuffer = m_smallBuffer;
+		}
 
 		m_count = newSize;
 	}

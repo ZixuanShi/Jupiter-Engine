@@ -14,6 +14,8 @@ import UnitTests_Core;
 import UnitTests_Debugging;
 import UnitTests_System;
 
+import jpt.String;
+
 export class Application_JupiterUnitTests final : public jpt::Application_Base
 {
 private:

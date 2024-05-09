@@ -261,11 +261,16 @@ bool UnitTest_WString_Replace()
 
 	// Multiple words
 	str = L"Hello World Jupiter Engine";
-	str.Replace({ L"Hello", L"Jupiter" }, L"YOLO");
+ 	str.Replace({ L"Hello", L"Jupiter" }, L"YOLO");
 	JPT_ENSURE(str == L"YOLO World YOLO Engine");
 
+	str = L"Hello World Jupiter Engine 木星引擎";
+	str.Replace({ L"Jupiter", L"Hello" }, L"YOLO");
+	JPT_ENSURE(str == L"YOLO World YOLO Engine 木星引擎");
+
 	str.Replace({ L"YOLO", L"Engine" }, L"Hello Jupiter");
-	JPT_ENSURE(str == L"Hello Jupiter World Hello Jupiter Hello Jupiter");
+	JPT_ENSURE(str == L"Hello Jupiter World Hello Jupiter Hello Jupiter 木星引擎");
+	//JPT_LOG(str);
 
 	return true;
 }
