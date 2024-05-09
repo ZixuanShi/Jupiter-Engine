@@ -712,11 +712,10 @@ export namespace jpt
 
 		if (capacity < kSmallDataSize)
 		{
+			DeallocateBuffer();
 			m_pBuffer = m_smallBuffer;
 			m_capacity = kSmallDataSize;
 		}
-
-		JPT_ASSERT(m_capacity >= m_count, "Capacity cannot be less than the current count");
 	}
 
 	template<StringLiteral TChar, class TAllocator>
