@@ -97,19 +97,22 @@ export namespace jpt
 		}
 		else
 		{
-			String str("{ ");
+			String str("{ ", 2);
 
 			for (auto itr = container.begin(); itr != container.end(); ++itr)
 			{
+				// Elements need to provide ToString() implementation to make this work
+				str += jpt::ToString(*itr);
+
 				// Append ", " suffix if it's not the last element
 				const bool isLastElement = ((itr + 1) == container.end());
-				const char* pSuffix = (isLastElement ? "" : ", ");
-
-				// Elements need to provide ToString() implementation to make this work
-				str += jpt::ToString(*itr) + pSuffix;
+				if (!isLastElement)
+				{
+					str.Append(", ", 2);
+				}
 			}
 
-			str.Append(" }");
+			str.Append(" }", 2);
 
 			return str;
 		}

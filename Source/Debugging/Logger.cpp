@@ -16,6 +16,8 @@
 	#include <Windows.h>
 #endif
 
+import jpt.FilePathUtils;
+
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 1024;
@@ -53,7 +55,7 @@ namespace jpt
 
 		// Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
 		const String fileStr(file);
-		stamp += "..\\" + fileStr.SubStr(fileStr.Find("Source"));
+		stamp += ".." + GetSeparator<String>() + fileStr.SubStr(fileStr.Find("Source"));
 
 		// line number and log type
 		stamp += "(" + ToString(line) + "):  \t" + "[" + locGetLogStr(type) + "] ";
