@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/Macros.h"
 #include "Debugging/Logger.h"
 
 #include <fstream>
@@ -10,6 +11,7 @@ module;
 export module jpt.FileIOUtils;
 
 import jpt.Constants;
+import jpt.File_Text;
 import jpt.FileEnums;
 import jpt.FilePath;
 import jpt.Optional;
@@ -19,7 +21,7 @@ export namespace jpt
 {
 	/** Reads text file's content at given absolute path */
 	// TODO: This API is definitely having wrong return type. It should be returning a "File_Text" instead of FilePath
-	Optional<FilePath> LoadTextFile(const FilePath& absolutePath)
+	Optional<File_Text> LoadTextFile(const FilePath& absolutePath)
 	{
 		using TChar = typename FilePath::TChar;
 
@@ -29,11 +31,11 @@ export namespace jpt
 		if (!file.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", absolutePath.ConstBuffer());
-			return Optional<FilePath>();
+			return Optional<File_Text>();
 		}
 
 		std::basic_string<TChar> line;
-		FilePath content;
+		WString content;
 		while (std::getline(file, line))
 		{
 			content += line.c_str();
@@ -42,6 +44,7 @@ export namespace jpt
 
 		file.close();
 
-		return content;
+		JPT_IGNORE(content);
+		return File_Text();
 	}
 }

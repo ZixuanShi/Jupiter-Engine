@@ -17,31 +17,33 @@ import jpt.FileEnums;
 import jpt.FileIOUtils;
 import jpt.FilePath;
 import jpt.FilePathUtils;
-import jpt.Optional;
-import jpt.String;
-import jpt.StringView;
 import jpt.TypeDefs;
 
 export namespace jpt
 {
-	Optional<File_Base> ReadFile(const FilePath& absoluteFullPath)
+	File_Base* ReadFile(const FilePath& absoluteFullPath)
 	{
 		// Get extension to determine file type
 		//EExtension extension = GetExtension(absoluteFullPath);
 
-		Optional<FilePath> content = LoadTextFile(absoluteFullPath);
+		//switch (extension)
+		//{
+		//	case EExtension::txt:
+		//	case EExtension::json:
+		//	{
+		//		return ReadTextFile(absoluteFullPath);
+		//	}
+		//}
 
-		if (!content)
-		{
-			return Optional<File_Base>();
-		}
-
-		File_Base file;
-		return file;
+		JPT_IGNORE(absoluteFullPath);
+		return nullptr;
 	}
 
-	Optional<File_Base> ReadFile(ESource source, const FilePath& relativePath)
+	template<typename TFile>
+	TFile* ReadFile(ESource source, const FilePath& relativePath)
 	{
-		return ReadFile(GetAbsoluteFullPath(source, relativePath));
+		const FilePath path = GetAbsoluteFullPath(source, relativePath);
+		File_Base* pFile = ReadFile(path);
+		return static_cast<TFile*>(pFile);
 	}
 }
