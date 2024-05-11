@@ -65,7 +65,7 @@ namespace jpt
 
 	/** Getting how many data Ts can a tuple holds */
 	export template<typename... TArgs>
-	consteval size_t GetSize(const jpt::Tuple<TArgs...>& /*tuple*/)
+	consteval size_t GetSize(const Tuple<TArgs...>& /*tuple*/)
 	{
 		return sizeof...(TArgs);
 	}
