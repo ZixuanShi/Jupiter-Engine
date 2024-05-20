@@ -31,14 +31,14 @@ namespace jpt_private
 {
 	using jpt::Tuple;
 
-	template<size_t index, typename TData, typename... TRest>
+	template<size_t kIndex, typename TData, typename... TRest>
 	struct GetImpl
 	{
-		using NextT = GetImpl<index - 1, TRest...>;
+		using TNext = GetImpl<kIndex - 1, TRest...>;
 
-		static constexpr auto Value(const Tuple<TData, TRest...>& tuple) -> decltype(NextT::Value(tuple))
+		static constexpr auto Value(const Tuple<TData, TRest...>& tuple) -> decltype(TNext::Value(tuple))
 		{
-			return NextT::Value(tuple);
+			return TNext::Value(tuple);
 		}
 	};
 
