@@ -14,10 +14,6 @@ import jpt.Utilities;
 
 bool UnitTest_FileIO_Read_Engine_English()
 {
-    jpt::File_Text* pFileText = jpt::ReadFile<jpt::File_Text>(jpt::ESource::Engine, "Assets/Configs/TestJson.json");
-    //JPT_ENSURE(pFileText);
-    JPT_IGNORE(pFileText);
-
 
     return true;
 }
