@@ -548,6 +548,23 @@ bool UnitTest_HashMap_Any()
     return true;
 }
 
+bool UnitTest_HashMap_CStrKey()
+{
+    jpt::HashMap<const char*, int32> hashMap;
+
+	hashMap.Add("One", 1);
+	hashMap.Add("Two", 2);
+	hashMap.Add("Three", 3);
+
+	JPT_ENSURE(hashMap.Count() == 3);
+
+	JPT_ENSURE(hashMap["One"] == 1);
+	JPT_ENSURE(hashMap["Two"] == 2);
+	JPT_ENSURE(hashMap["Three"] == 3);
+
+	return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTest_HashMap_Trivial());
@@ -570,6 +587,7 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTest_HashMap_Variant());
     JPT_ENSURE(UnitTest_HashMap_Tuple());
     JPT_ENSURE(UnitTest_HashMap_Any());
+    JPT_ENSURE(UnitTest_HashMap_CStrKey());
 
     return true;
 }

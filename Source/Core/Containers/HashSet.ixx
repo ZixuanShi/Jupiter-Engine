@@ -23,16 +23,19 @@ import jpt_private.HashTableIterator;
 export namespace jpt
 {
 	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
-	template<typename _TValue/*, typename _Comparator = Comparator_Equal<_TValue>*/>
+	template<typename _TValue, typename _Comparator = Comparator_Equal<_TValue>>
 	class HashSet
 	{
 	public:
 		using TValue        = _TValue;
-		//using TComparator   = _Comparator;
+		using TComparator   = _Comparator;
 		using TBucket       = LinkedList<TValue>;
 		using TBuckets      = DynamicArray<TBucket>;
 		using Iterator      = jpt_private::HashTableIterator<TValue>;
 		using ConstIterator = jpt_private::ConstHashTableIterator<TValue>;
+
+	private:
+		static constexpr TComparator kComparator = TComparator();
 
 	private:
 		TBuckets m_buckets;
@@ -82,26 +85,26 @@ export namespace jpt
 		constexpr void MoveSet(HashSet&& other);
 	};
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::HashSet(const std::initializer_list<TValue>& list)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::HashSet(const std::initializer_list<TValue>& list)
 	{
 		CopyData(list, list.size());
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::HashSet(const HashSet& other)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::HashSet(const HashSet& other)
 	{
 		CopyData(other, other.Count());
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::HashSet(HashSet&& other) noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::HashSet(HashSet&& other) noexcept
 	{
 		MoveSet(Move(other));
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>& HashSet<TValue>::operator=(const HashSet& other)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>& HashSet<TValue, TComparator>::operator=(const HashSet& other)
 	{
 		if (this != &other)
 		{
@@ -112,8 +115,8 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>& HashSet<TValue>::operator=(HashSet&& other) noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>& HashSet<TValue, TComparator>::operator=(HashSet&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -124,14 +127,14 @@ export namespace jpt
 		return *this;
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::~HashSet()
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::~HashSet()
 	{
 		Clear();
 	}
 
-	template<typename TValue>
-	constexpr void HashSet<TValue>::Add(const TValue& data)
+	template<typename TValue, typename TComparator>
+	constexpr void HashSet<TValue, TComparator>::Add(const TValue& data)
 	{
 		// Grow if needed
 		if (m_count >= m_buckets.Count() * kGrowMultiplier)
@@ -144,7 +147,7 @@ export namespace jpt
 		// Check if the key already exists. If it does, return
 		for (TValue& element : bucket)
 		{
-			if (element == data)
+			if (kComparator(element, data))
 			{
 				return;
 			}
@@ -155,8 +158,8 @@ export namespace jpt
 		bucket.EmplaceBack(data);
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::Iterator HashSet<TValue>::Erase(const TValue& key)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Erase(const TValue& key)
 	{
 		if (Iterator itr = Find(key); itr != end())
 		{
@@ -172,14 +175,14 @@ export namespace jpt
 		return end();
 	}
 
-	template<typename TValue>
-	constexpr  HashSet<TValue>::Iterator HashSet<TValue>::Erase(const Iterator& iterator)
+	template<typename TValue, typename TComparator>
+	constexpr  HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Erase(const Iterator& iterator)
 	{
 		return Erase(*iterator);
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::Iterator HashSet<TValue>::Find(const TValue& key)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Find(const TValue& key)
 	{
 		if (IsEmpty())
 		{
@@ -191,7 +194,7 @@ export namespace jpt
 
 		for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
 		{
-			if (*itr == key)
+			if (kComparator(*itr, key))
 			{
 				return Iterator(&m_buckets, index, itr);
 			}
@@ -200,8 +203,8 @@ export namespace jpt
 		return end();
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::Find(const TValue& key) const
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::Find(const TValue& key) const
 	{
 		if (IsEmpty())
 		{
@@ -213,7 +216,7 @@ export namespace jpt
 
 		for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
 		{
-			if (*itr == key)
+			if (kComparator(*itr, key))
 			{
 				return ConstIterator(&m_buckets, index, itr);
 			}
@@ -222,14 +225,14 @@ export namespace jpt
 		return cend();
 	}
 
-	template<typename TValue>
-	constexpr bool HashSet<TValue>::Contains(const TValue& key) const
+	template<typename TValue, typename TComparator>
+	constexpr bool HashSet<TValue, TComparator>::Contains(const TValue& key) const
 	{
 		return Find(key) != end();
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::Iterator HashSet<TValue>::begin() noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::begin() noexcept
 	{
 		if (IsEmpty())
 		{
@@ -238,14 +241,14 @@ export namespace jpt
 		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::Iterator HashSet<TValue>::end() noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::end() noexcept
 	{
 		return Iterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::begin() const noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::begin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -254,14 +257,14 @@ export namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::end() const noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::end() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::cbegin() const noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::cbegin() const noexcept
 	{
 		if (IsEmpty())
 		{
@@ -270,14 +273,14 @@ export namespace jpt
 		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::ConstIterator HashSet<TValue>::cend() const noexcept
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::cend() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
-	template<typename TValue>
-	constexpr void HashSet<TValue>::Reserve(size_t capacity)
+	template<typename TValue, typename TComparator>
+	constexpr void HashSet<TValue, TComparator>::Reserve(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 8;
 
@@ -295,34 +298,34 @@ export namespace jpt
 		}
 	}
 
-	template<typename TValue>
-	constexpr void HashSet<TValue>::Clear()
+	template<typename TValue, typename TComparator>
+	constexpr void HashSet<TValue, TComparator>::Clear()
 	{
 		m_buckets.Clear();
 		m_count = 0;
 	}
 
-	template<typename TValue>
-	constexpr size_t HashSet<TValue>::GetBucketIndex(const TValue& key) const
+	template<typename TValue, typename TComparator>
+	constexpr size_t HashSet<TValue, TComparator>::GetBucketIndex(const TValue& key) const
 	{
 		return Hash(key) % m_buckets.Count();
 	}
 
-	template<typename TValue>
-	constexpr HashSet<TValue>::TBucket& HashSet<TValue>::GetBucket(const TValue& key)
+	template<typename TValue, typename TComparator>
+	constexpr HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TValue& key)
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename TValue>
-	constexpr const HashSet<TValue>::TBucket& HashSet<TValue>::GetBucket(const TValue& key) const
+	template<typename TValue, typename TComparator>
+	constexpr const HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TValue& key) const
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
-	template<typename TValue>
+	template<typename TValue, typename TComparator>
 	template<Iterable TContainer>
-	constexpr void HashSet<TValue>::CopyData(const TContainer& container, size_t size)
+	constexpr void HashSet<TValue, TComparator>::CopyData(const TContainer& container, size_t size)
 	{
 		Reserve(size);
 
@@ -335,8 +338,8 @@ export namespace jpt
 		m_count += size;
 	}
 
-	template<typename TValue>
-	constexpr void HashSet<TValue>::MoveSet(HashSet&& other)
+	template<typename TValue, typename TComparator>
+	constexpr void HashSet<TValue, TComparator>::MoveSet(HashSet&& other)
 	{
 		m_buckets = Move(other.m_buckets);
 		m_count = other.m_count;
