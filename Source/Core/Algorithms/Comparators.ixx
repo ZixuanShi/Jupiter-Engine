@@ -7,33 +7,63 @@ import jpt.StringUtils;
 
 export namespace jpt
 {
-	template<typename T = void>
+	template<NonTrivial T>
 	struct Comparator_Less
 	{
-		template<NonTrivial U = T>
-		constexpr bool operator()(const U& lhs, const U& rhs) const
+		constexpr bool operator()(const T& lhs, const T& rhs) const
 		{
 			return lhs < rhs;
 		}
-
-		template<Trivial U = T>
-		constexpr bool operator()(U lhs, U rhs) const
+	};
+	template<Trivial T>
+	struct Comparator_Less<T>
+	{
+		constexpr bool operator()(T lhs, T rhs) const
+		{
+			return lhs < rhs;
+		}
+	};
+	template<>
+	struct Comparator_Less<void>
+	{
+		template<NonTrivial T>
+		constexpr bool operator()(const T& lhs, const T& rhs) const
+		{
+			return lhs < rhs;
+		}
+		template<Trivial T>
+		constexpr bool operator()(T lhs, T rhs) const
 		{
 			return lhs < rhs;
 		}
 	};
 
-	template<typename T = void>
+	template<NonTrivial T>
 	struct Comparator_Greater
 	{
-		template<NonTrivial U = T>
-		constexpr bool operator()(const U& lhs, const U& rhs) const
+		constexpr bool operator()(const T& lhs, const T& rhs) const
 		{
 			return lhs > rhs;
 		}
-
-		template<Trivial U = T>
-		constexpr bool operator()(U lhs, U rhs) const
+	};
+	template<Trivial T>
+	struct Comparator_Greater<T>
+	{
+		constexpr bool operator()(T lhs, T rhs) const
+		{
+			return lhs > rhs;
+		}
+	};
+	template<>
+	struct Comparator_Greater<void>
+	{
+		template<NonTrivial T>
+		constexpr bool operator()(const T& lhs, const T& rhs) const
+		{
+			return lhs > rhs;
+		}
+		template<Trivial T>
+		constexpr bool operator()(T lhs, T rhs) const
 		{
 			return lhs > rhs;
 		}
