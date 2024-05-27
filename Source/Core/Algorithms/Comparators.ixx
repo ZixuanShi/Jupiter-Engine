@@ -3,6 +3,7 @@
 export module jpt.Comparators;
 
 import jpt.Concepts;
+import jpt.StringUtils;
 
 export namespace jpt
 {
@@ -35,6 +36,31 @@ export namespace jpt
 		constexpr bool operator()(U lhs, U rhs)
 		{
 			return lhs > rhs;
+		}
+	};
+
+	template<typename T = void>
+	struct Comparator_Equal
+	{
+		template<NonTrivial U = T>
+		constexpr bool operator()(const U& lhs, const U& rhs)
+		{
+			return lhs == rhs;
+		}
+
+		template<Trivial U = T>
+		constexpr bool operator()(U lhs, U rhs)
+		{
+			return lhs == rhs;
+		}
+	};
+
+	template<>
+	struct Comparator_Equal<const char*>
+	{
+		constexpr bool operator()(const char* lhs, const char* rhs)
+		{
+			return AreStringsSame(lhs, rhs);
 		}
 	};
 }

@@ -367,6 +367,48 @@ bool UnitTest_HashSet_Iterate_Erase_String()
     return true;
 }
 
+bool UnitTest_HashSet_CStr()
+{
+    jpt::HashSet<const char*> hashSet
+	{
+		"Engine",
+		"Client",
+		"Platform",
+		"Language",
+		"Version",
+	};
+
+    JPT_ENSURE(hashSet.Count() == 5);
+
+    JPT_ENSURE(hashSet.Contains("Engine"));
+    JPT_ENSURE(hashSet.Contains("Client"));
+    JPT_ENSURE(hashSet.Contains("Platform"));
+    JPT_ENSURE(hashSet.Contains("Language"));
+    JPT_ENSURE(hashSet.Contains("Version"));
+
+    for (auto itr = hashSet.begin(); itr != hashSet.end();)
+	{
+		if (jpt::String(*itr) == "Client" || jpt::String(*itr) == "Language")
+		{
+			itr = hashSet.Erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+
+    JPT_ENSURE(hashSet.Count() == 3);
+
+    JPT_ENSURE(hashSet.Contains("Engine"));
+    JPT_ENSURE(!hashSet.Contains("Client"));
+    JPT_ENSURE(hashSet.Contains("Platform"));
+    JPT_ENSURE(!hashSet.Contains("Language"));
+    JPT_ENSURE(hashSet.Contains("Version"));
+
+    return true;
+}
+
 export bool RunUnitTests_HashSet()
 {
     JPT_ENSURE(UnitTest_HashSet());
@@ -388,6 +430,8 @@ export bool RunUnitTests_HashSet()
 
     JPT_ENSURE(UnitTest_HashSet_Iterate_Erase());
     JPT_ENSURE(UnitTest_HashSet_Iterate_Erase_String());
+
+    JPT_ENSURE(UnitTest_HashSet_CStr());
 
     return true;
 }

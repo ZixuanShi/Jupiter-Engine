@@ -9,6 +9,7 @@ module;
 
 export module jpt.HashSet;
 
+import jpt.Comparators;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
@@ -22,11 +23,12 @@ import jpt_private.HashTableIterator;
 export namespace jpt
 {
 	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
-	template<typename _TValue>
+	template<typename _TValue/*, typename _Comparator = Comparator_Equal<_TValue>*/>
 	class HashSet
 	{
 	public:
 		using TValue        = _TValue;
+		//using TComparator   = _Comparator;
 		using TBucket       = LinkedList<TValue>;
 		using TBuckets      = DynamicArray<TBucket>;
 		using Iterator      = jpt_private::HashTableIterator<TValue>;
