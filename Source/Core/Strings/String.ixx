@@ -226,6 +226,35 @@ export namespace jpt
 		return AreStringsSame(string.ConstBuffer(), CString, string.Count(), FindCharsCount(CString));
 	}
 
+	/** Comparing a String class with raw CStr but different char type */
+	template<StringLiteral TChar1, class TAllocator, StringLiteral TChar2 = TChar1>
+	constexpr bool operator==(const String_Base<TChar1, TAllocator>& string, const TChar2* CString)
+	{
+		const size_t cStrCount = FindCharsCount(CString);
+		bool result = false;
+
+		// String to const wchar_t*
+		if constexpr (AreSameType<TChar1, char> && AreSameType<TChar2, wchar_t>)
+		{
+			const char* pCStr = ToChars(CString, cStrCount);
+			result = AreStringsSame(string.ConstBuffer(), pCStr, string.Count(), cStrCount);
+			JPT_DELETE_ARRAY(pCStr);
+		}
+		// WString to const char*
+		else if constexpr (AreSameType<TChar1, wchar_t> && AreSameType<TChar2, char>)
+		{
+			const wchar_t* pWCStr = ToWChars(CString, cStrCount);
+			result = AreStringsSame(string.ConstBuffer(), pWCStr, string.Count(), cStrCount);
+			JPT_DELETE_ARRAY(pWCStr);
+		}
+		else
+		{
+			JPT_ASSERT(false, "Unsupported type");
+		}
+
+		return result;
+	}
+
 	template<StringLiteral TChar, class TAllocator>
 	constexpr bool operator==(const String_Base<TChar, TAllocator>& lhs, const String_Base<TChar>& rhs)
 	{

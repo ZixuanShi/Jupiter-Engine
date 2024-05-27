@@ -597,6 +597,23 @@ bool UnitTest_String_ToWString()
 	return true;
 }
 
+bool UnitTest_String_StringCompareWCStr()
+{
+	jpt::String str = "Hello";
+	JPT_ENSURE(str == L"Hello");
+	JPT_ENSURE(str != L"World");
+
+	return true;
+}
+bool UnitTest_String_WStringCompareCStr()
+{
+	jpt::WString str = L"Hello";
+	JPT_ENSURE(str == "Hello");
+	JPT_ENSURE(str != "World");
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
@@ -656,6 +673,9 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTest_String_ToString());
 		JPT_ENSURE(UnitTest_String_ToWString());
+
+		JPT_ENSURE(UnitTest_String_StringCompareWCStr());
+		JPT_ENSURE(UnitTest_String_WStringCompareCStr());
 	}
 
 	return true;
