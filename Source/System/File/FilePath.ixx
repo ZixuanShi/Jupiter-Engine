@@ -47,6 +47,7 @@ export namespace jpt
 		constexpr bool   Contains(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
 
 		constexpr const WString& ToWString() const { return m_path; }
+		constexpr const WString& ToString() const { return m_path; }
 		constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 		constexpr size_t Count() const { return m_path.Count(); }
 	};

@@ -12,6 +12,14 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
+bool UnitTest_FilePathUtils_Getters()
+{
+    //JPT_LOG(jpt::GetClientPath());
+    //JPT_LOG(jpt::GetEnginePath());
+
+    return true;
+}
+
 bool UnitTest_FilePathUtils_GetSeparator()
 {
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
@@ -22,7 +30,6 @@ bool UnitTest_FilePathUtils_GetSeparator()
 
     return true;
 }
-
 
 bool UnitTest_FilePathUtils_FixSeparators()
 {
@@ -41,6 +48,7 @@ bool UnitTest_FilePathUtils_FixSeparators()
 
 export bool RunUnitTests_FilePathUtils()
 {
+    JPT_ENSURE(UnitTest_FilePathUtils_Getters());
     JPT_ENSURE(UnitTest_FilePathUtils_FixSeparators());
     JPT_ENSURE(UnitTest_FilePathUtils_GetSeparator());
 

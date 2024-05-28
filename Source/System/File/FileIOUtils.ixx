@@ -20,7 +20,6 @@ import jpt.TypeTraits;
 export namespace jpt
 {
 	/** Reads text file's content at given absolute path */
-	// TODO: This API is definitely having wrong return type. It should be returning a "File_Text" instead of FilePath
 	Optional<File_Text> LoadTextFile(const FilePath& absolutePath)
 	{
 		using TChar = typename FilePath::TChar;
