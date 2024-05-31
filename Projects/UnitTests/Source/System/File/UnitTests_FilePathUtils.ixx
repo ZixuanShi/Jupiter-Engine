@@ -6,16 +6,16 @@ module;
 
 export module UnitTests_FileUtils;
 
-import jpt.FilePath;
-import jpt.FilePathUtils;
+import jpt.File.Path;
+import jpt.File.PathUtils;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
 bool UnitTest_FilePathUtils_Getters()
 {
-    //JPT_LOG(jpt::GetClientPath());
-    //JPT_LOG(jpt::GetEnginePath());
+    //JPT_LOG(jpt::File::GetClientPath());
+    //JPT_LOG(jpt::File::GetEnginePath());
 
     return true;
 }
@@ -23,9 +23,9 @@ bool UnitTest_FilePathUtils_Getters()
 bool UnitTest_FilePathUtils_GetSeparator()
 {
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-    JPT_ENSURE(jpt::GetSeparator<jpt::FilePath>() == L"\\");
+    JPT_ENSURE(jpt::File::GetSeparator<jpt::File::Path>() == L"\\");
 #else 
-	JPT_ENSURE(jpt::GetSeparator<jpt::FilePath>() == L"/");
+	JPT_ENSURE(jpt::File::GetSeparator<jpt::File::Path>() == L"/");
 #endif
 
     return true;
@@ -34,12 +34,12 @@ bool UnitTest_FilePathUtils_GetSeparator()
 bool UnitTest_FilePathUtils_FixSeparators()
 {
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-    jpt::FilePath path = "C:/Users/<user_name>/Documents/UnitTests";
-    jpt::FixSeparators(path);
+    jpt::File::Path path = "C:/Users/<user_name>/Documents/UnitTests";
+    jpt::File::FixSeparators(path);
     JPT_ENSURE(path == "C:\\Users\\<user_name>\\Documents\\UnitTests");
 #else 
-    jpt::FilePath path = "C:\\Users\\<user_name>\\Documents\\UnitTests";
-	jpt::FixSeparators(path);
+    jpt::File::Path path = "C:\\Users\\<user_name>\\Documents\\UnitTests";
+	jpt::File::FixSeparators(path);
 	JPT_ENSURE(path == "C:/Users/<user_name>/Documents/UnitTests");
 #endif
 

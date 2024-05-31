@@ -63,8 +63,8 @@ struct NonTrivialStruct
         return jpt::Hash(a) ^ jpt::Hash(b) ^ jpt::Hash(c) ^ jpt::Hash(d) ^ jpt::Hash(e);
     }
 };
-template<> constexpr bool jpt::IsTrivial<NonTrivialStruct> = true;
-template<> constexpr bool jpt::IsSmall<NonTrivialStruct> = true;
+//template<> constexpr bool jpt::IsTrivial<NonTrivialStruct> = true;
+//template<> constexpr bool jpt::IsSmall<NonTrivialStruct> = true;
 bool UnitTest_Hash_NonTrivialStruct()
 {
 	NonTrivialStruct testStruct = { 42, 41, 42.0415f, 42.0415, "Hello" };

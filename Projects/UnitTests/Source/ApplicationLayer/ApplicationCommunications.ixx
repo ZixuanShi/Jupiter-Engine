@@ -5,7 +5,7 @@
 export module ApplicationCommunications;
 
 import jpt.Application_Base;
-import jpt.FilePathUtils;
+import jpt.File.PathUtils;
 
 import UnitTestsApplication;
 

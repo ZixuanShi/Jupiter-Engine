@@ -94,7 +94,7 @@ export namespace jpt
 			@param StringToFind:	The string we want to remove and replace
 			@param StringToReplace:	The string to replace the original data
 			@param startIndex:		[optional] The start index to start searching. Default to 0
-			@param endIndex:		[optional] The end index to stop operation. Default to size() */
+			@param endIndex:		[optional] The end index to stop operation. Default to Count() */
 		constexpr String_Base& Replace(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos);
 		constexpr String_Base GetReplaced(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 		constexpr String_Base& Replace(const DynamicArray<String_Base>& stringsToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos);

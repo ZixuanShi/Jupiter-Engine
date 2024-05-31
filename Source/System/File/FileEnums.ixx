@@ -5,11 +5,11 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
-export module jpt.FileEnums;
+export module jpt.File.Enums;
 
 import jpt.TypeDefs;
 
-export namespace jpt
+export namespace jpt::File
 {
 	enum class ESource : uint8
 	{
@@ -25,7 +25,7 @@ export namespace jpt
 		json
 	);
 
-	enum class EFileType : uint8
+	enum class EType : uint8
 	{
 		Unknown,
 		Text,

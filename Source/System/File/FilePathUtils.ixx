@@ -6,11 +6,12 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.FilePathUtils;
+export module jpt.File.PathUtils;
 
-import jpt.FileEnums;
-import jpt.FilePath;
 import jpt.String;
+
+import jpt.File.Enums;
+import jpt.File.Path;
 
 export namespace jpt
 {
@@ -19,75 +20,53 @@ export namespace jpt
 	const char* GetClientDir();
 	const wchar_t* GetClientDirW();
 
-	/** @return		 FilePath type of engine/client directories roots */
-	FilePath GetEnginePath()
+	export namespace File
 	{
-		return JPT_ENGINE_DIR_W;
-	}
-	FilePath GetClientPath()
-	{
-		return GetClientDirW();
-	}
-
-	FilePath GetSourcePath(ESource source)
-	{
-		switch (source)
+		/** @return		 FilePath type of engine/client directories roots */
+		Path GetEnginePath()
 		{
+			return JPT_ENGINE_DIR_W;
+		}
+		Path GetClientPath()
+		{
+			return GetClientDirW();
+		}
+
+		Path GetSourcePath(ESource source)
+		{
+			switch (source)
+			{
 			case ESource::Engine: return GetEnginePath();
 			case ESource::Client: return GetClientPath();
-			default: JPT_ASSERT(false, "Invalid source"); return FilePath();
+			default: JPT_ASSERT(false, "Invalid source"); return Path();
+			}
 		}
-	}
 
-	/** Replaces directory slashes to platform-correct version */
-	template<typename TString>
-	void FixSeparators(TString& path)
-	{
-		using TChar = typename TString::TChar;
-
-#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		path.Replace(JPT_GET_PROPER_STRING(TChar, /), JPT_GET_PROPER_STRING(TChar, \\));
-#else
-		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, /));
-#endif
-	}
-
-	template<typename TString>
-	TString GetSeparator()
-	{
-		using TChar = typename TString::TChar;
-
-#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		return JPT_GET_PROPER_STRING(TChar, \\);
-#else
-		return JPT_GET_PROPER_STRING(TChar, /);
-#endif
-	}
-
-	/** @return		The absolute full path of the given relative path */
-	FilePath GetAbsoluteFullPath(ESource source, const FilePath& relativePath)
-	{
-		FilePath result;
-
-		result.Append(GetSourcePath(source));
-		result.Append(relativePath);
-
-		return result;
-	}
-
-	/** @return		    File's extension of the given path
-		@param path		Can be either relative or absolute. As long as it ends with .<type> format
-		@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
-	EExtension FindExtension(const FilePath& path)
-	{
-		const size_t dotPos = path.FindLastOf('.');
-		if (dotPos == npos)
+		/** @return		The absolute full path of the given relative path */
+		Path GetAbsoluteFullPath(ESource source, const Path& relativePath)
 		{
-			JPT_ERROR("Failed to find extension in path: %s", path.ConstBuffer());
+			Path result;
+
+			result.Append(GetSourcePath(source));
+			result.Append(relativePath);
+
+			return result;
+		}
+
+		/** @return		    File's extension of the given path
+			@param path		Can be either relative or absolute. As long as it ends with .<type> format
+			@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */
+		EExtension FindExtension(const Path& path)
+		{
+			const size_t dotPos = path.FindLastOf('.');
+			if (dotPos == npos)
+			{
+				JPT_ERROR("Failed to find extension in path: %s", path.ConstBuffer());
+				return EExtension::Unknown;
+			}
+
+			// TODO
 			return EExtension::Unknown;
 		}
-
-		// TODO
-		return EExtension::Unknown;
 	}
 }

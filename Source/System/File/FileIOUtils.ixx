@@ -11,18 +11,19 @@ module;
 export module jpt.FileIOUtils;
 
 import jpt.Constants;
-import jpt.File_Text;
-import jpt.FileEnums;
-import jpt.FilePath;
 import jpt.Optional;
 import jpt.TypeTraits;
 
-export namespace jpt
+import jpt.File_Text;
+import jpt.File.Enums;
+import jpt.File.Path;
+
+export namespace jpt::File
 {
 	/** Reads text file's content at given absolute path */
-	Optional<File_Text> LoadTextFile(const FilePath& absolutePath)
+	Optional<File_Text> LoadTextFile(const Path& absolutePath)
 	{
-		using TChar = typename FilePath::TChar;
+		using TChar = typename Path::TChar;
 
 		std::basic_ifstream<TChar> file;
 		file.open(absolutePath.ConstBuffer());

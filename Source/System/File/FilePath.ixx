@@ -2,20 +2,50 @@
 
 module;
 
+#include "Core/Minimal/Macros.h"
+#include "Debugging/Assert.h"
+#include "Debugging/Logger.h"
+
 #include <filesystem>
 
-export module jpt.FilePath;
+export module jpt.File.Path;
 
+import jpt.Concepts;
 import jpt.Constants;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.ToString;
 import jpt.Utilities;
 
-export namespace jpt
+export namespace jpt::File
 {
+	/** Replaces directory slashes to platform-correct version */
+	template<typename TString>
+	constexpr void FixSeparators(TString& path)
+	{
+		using TChar = typename TString::TChar;
+
+#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
+		path.Replace(JPT_GET_PROPER_STRING(TChar, / ), JPT_GET_PROPER_STRING(TChar, \\));
+#else
+		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
+#endif
+	}
+
+	template<typename TString>
+	constexpr TString GetSeparator()
+	{
+		using TChar = typename TString::TChar;
+
+#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
+		return JPT_GET_PROPER_STRING(TChar, \\);
+#else
+		return JPT_GET_PROPER_STRING(TChar, / );
+#endif
+	}
+
 	/** Identifies address of a file */
-	class FilePath
+	class Path
 	{
 	public:
 		using TChar = wchar_t;
@@ -26,16 +56,16 @@ export namespace jpt
 		TString m_path;
 
 	public:
-		constexpr FilePath() = default;
-		constexpr FilePath(const char* path);
-		constexpr FilePath(const wchar_t* path);
-		constexpr FilePath(const TString& path);
+		constexpr Path() = default;
+		constexpr Path(const char* path);
+		constexpr Path(const wchar_t* path);
+		constexpr Path(const TString& path);
 
-		constexpr void Append(const FilePath& path);
+		constexpr void Append(const Path& path);
 		constexpr void operator+=(const WString& path);
 
-		constexpr FilePath& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
-		constexpr FilePath GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
+		constexpr Path& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+		constexpr Path GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		constexpr size_t Find(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t Find(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
@@ -54,79 +84,83 @@ export namespace jpt
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------
 
-	constexpr bool operator==(const FilePath& filePath, const typename FilePath::TChar* CString)
+	constexpr bool operator==(const Path& filePath, const typename Path::TChar* CString)
 	{
 		return filePath.ToWString() == CString;
 	}
-	constexpr bool operator==(const FilePath& lhs, const FilePath& rhs)
+	constexpr bool operator==(const Path& lhs, const Path& rhs)
 	{
 		return lhs.ToWString() == rhs.ToWString();
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
 
-	constexpr FilePath::FilePath(const char* path)
+	constexpr Path::Path(const char* path)
 		: m_path(Move(jpt::ToWString(path)))
 	{
+		FixSeparators(m_path);
 	}
 
-	constexpr FilePath::FilePath(const wchar_t* path)
+	constexpr Path::Path(const wchar_t* path)
 		: m_path(path)
 	{
+		FixSeparators(m_path);
 	}
 
-	constexpr FilePath::FilePath(const TString& path)
+	constexpr Path::Path(const TString& path)
 		: m_path(path)
 	{
+		FixSeparators(m_path);
 	}
 
-	constexpr void FilePath::Append(const FilePath& path)
+	constexpr void Path::Append(const Path& path)
 	{
 		m_path.Append(path.ToWString());
 	}
 
-	constexpr void FilePath::operator+=(const WString& path)
+	constexpr void Path::operator+=(const WString& path)
 	{
 		m_path += path;
+		FixSeparators(m_path);
 	}
 
-	constexpr FilePath& FilePath::Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex)
+	constexpr Path& Path::Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex)
 	{
 		m_path.Replace(StringToFind, StringToReplace, startIndex, endIndex);
 		return *this;
 	}
 
-	constexpr FilePath FilePath::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
+	constexpr Path Path::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
 	{
 		return m_path.GetReplaced(StringToFind, StringToReplace, startIndex, endIndex);
 	}
 
-	constexpr size_t FilePath::Find(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr size_t Path::Find(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		return m_path.Find(charToFind, startIndex, endIndex, count);
 	}
 
-	constexpr size_t FilePath::Find(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr size_t Path::Find(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		return m_path.Find(pStringToFind, startIndex, endIndex, count);
 	}
 
-	constexpr size_t FilePath::FindFirstOf(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr size_t Path::FindFirstOf(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		return Find(charToFind, startIndex, endIndex, count);
 	}
 
-	constexpr size_t FilePath::FindFirstOf(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr size_t Path::FindFirstOf(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
 	{
 		return Find(pStringToFind, startIndex, endIndex, count);
 	}
 
-	constexpr size_t FilePath::FindLastOf(wchar_t charToFind, size_t startIndex, size_t endIndex, size_t count) const
+	constexpr size_t Path::FindLastOf(wchar_t charToFind, size_t startIndex, size_t endIndex, size_t count) const
 	{
 		return m_path.FindLastOf(charToFind, startIndex, endIndex, count);
 	}
 
-	constexpr size_t FilePath::FindLastOf(const wchar_t* pStringToFind, size_t startIndex, size_t endIndex, size_t count) const
+	constexpr size_t Path::FindLastOf(const wchar_t* pStringToFind, size_t startIndex, size_t endIndex, size_t count) const
 	{
 		return m_path.FindLastOf(pStringToFind, startIndex, endIndex, count);
 	}
