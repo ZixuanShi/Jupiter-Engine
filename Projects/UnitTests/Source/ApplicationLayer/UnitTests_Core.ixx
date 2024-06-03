@@ -35,6 +35,7 @@ import UnitTests_Vector3;
 import UnitTests_Vector2;
 import UnitTests_Math;
 import UnitTests_Rand;
+import UnitTests_MathPractice;
 
 // Memory Managing
 import UnitTests_Allocator;
@@ -98,6 +99,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Vector2());
 	JPT_ENSURE(RunUnitTests_Math());
 	JPT_ENSURE(RunUnitTests_Rand());
+	JPT_ENSURE(RunUnitTests_MathPractice());
 
 	// Memory Managing
 	JPT_ENSURE(RunUnitTests_Allocator());

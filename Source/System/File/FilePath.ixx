@@ -15,6 +15,7 @@ import jpt.Constants;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.ToString;
+import jpt.TypeTraits;
 import jpt.Utilities;
 
 export namespace jpt::File
