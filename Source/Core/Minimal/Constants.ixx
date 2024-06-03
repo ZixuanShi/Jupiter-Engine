@@ -9,6 +9,7 @@ module;
 export module jpt.Constants;
 
 import jpt.Limits;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
@@ -24,4 +25,7 @@ export namespace jpt
 
 	/** Grow multiplier for dynamic containers */
 	constexpr size_t kGrowMultiplier = 2;
+
+	template<typename T = float>
+	constexpr T kPi = static_cast<T>(3.14159265358979323846f);
 }

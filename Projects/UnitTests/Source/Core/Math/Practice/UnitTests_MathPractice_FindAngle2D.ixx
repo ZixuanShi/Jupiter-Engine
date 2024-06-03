@@ -11,18 +11,19 @@ import jpt.CoreModules;
 /** @return Angle in degrees between two vectors representing position in 2D */
 float FindAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 {
-	Vec2f targetDir = targetPos - sourcePos;
-	targetDir.Normalize();
-
-	float dot = sourceFacingDir.Dot(targetDir);
-	float angle = acos(dot);
-
-	return angle;
+	const Vec2f toTargetDir = (targetPos - sourcePos).Normalized();
+	const float dot = sourceFacingDir.Dot(toTargetDir);
+	const float angleRadius = acos(dot);
+	const float angleDegrees = jpt::RadiusToDegrees(angleRadius);
+	return angleDegrees;
 }
 
 export bool UnitTest_MathPractice_FindAngle2D()
 {
-	//JPT_ENSURE(FindAngle2D(Vec2f(0, 0), Vec2f(1, 0), Vec2f(1, 0)) == 0);
+	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(0, 0), Vec2f(1, 0), Vec2f(10, 0)), 0.0f));
+	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(10, 0), Vec2f(1, 0), Vec2f(-10, 0)), 180.0f));
+	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(10, 0), Vec2f(0, 1), Vec2f(-10, 0)), 90.0f));
+	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(10, 0), Vec2f(0, -1), Vec2f(-10, 0)), 90.0f));
 
 	return true;
 }

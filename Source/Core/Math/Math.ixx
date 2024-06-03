@@ -3,6 +3,8 @@
 export module jpt.Math;
 
 import jpt.Concepts;
+import jpt.Constants;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 export namespace jpt
@@ -149,5 +151,16 @@ export namespace jpt
 	constexpr bool AreValuesClose(TFloat A, TFloat B, TFloat tolerance = static_cast<TFloat>(0.000001))
 	{
 		return GetAbs(A - B) < tolerance;
+	}
+
+	template<Floating TFloat = float32>
+	constexpr TFloat RadiusToDegrees(TFloat radius)
+	{
+		return radius * static_cast<TFloat>(180) / kPi<TFloat>;
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat DegreesToRadius(TFloat degrees)
+	{
+		return degrees * kPi<TFloat> / static_cast<TFloat>(180);
 	}
 }
