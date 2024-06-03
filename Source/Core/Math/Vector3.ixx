@@ -35,6 +35,7 @@ namespace jpt
 
 	public:
 		constexpr Vector3() = default;
+		constexpr Vector3(T scalar);
 		constexpr Vector3(T x, T y, T z);
 
 		constexpr Vector3 operator+(Vector3 other) const;
@@ -106,6 +107,14 @@ namespace jpt
 	constexpr Vector3<T> operator/(T scaler, Vector3<T> vector3)
 	{
 		return vector3 / scaler;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T>::Vector3(T scalar)
+		: x(scalar)
+		, y(scalar)
+		, z(scalar)
+	{
 	}
 
 	template<Numeric T>

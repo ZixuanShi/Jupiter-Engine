@@ -31,8 +31,12 @@ export import jpt.Utilities;
 export import jpt.Limits;
 export import jpt.Math;
 export import jpt.Rand;
+export import jpt.Edge2;
+export import jpt.Edge3;
 export import jpt.Vector2;
 export import jpt.Vector3;
+export import jpt.Triangle2;
+export import jpt.Triangle3;
 
 // Memory Managing
 export import jpt.Allocator;

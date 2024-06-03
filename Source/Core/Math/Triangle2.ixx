@@ -1,0 +1,53 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+module;
+
+#include <cmath>
+
+export module jpt.Triangle2;
+
+import jpt.Concepts;
+import jpt.TypeDefs;
+import jpt.TypeTraits;
+import jpt.Vector2;
+import jpt.Math;
+
+namespace jpt
+{
+	export template<Numeric T>
+	struct Triangle2
+	{
+	public:
+		Vector2<T> a = static_cast<Vector2<T>>(0);
+		Vector2<T> b = static_cast<Vector2<T>>(0);
+		Vector2<T> c = static_cast<Vector2<T>>(0);
+
+	public:
+		constexpr Triangle2() = default;
+		constexpr Triangle2(Vector2<T> _a, Vector2<T> _b, Vector2<T> _c);
+
+		constexpr T Perimeter() const;
+		constexpr T Area() const;
+	};
+
+	template<Numeric T>
+	constexpr Triangle2<T>::Triangle2(Vector2<T> _a, Vector2<T> _b, Vector2<T> _c)
+		: a(_a), b(_b), c(_c)
+	{
+	}
+
+	template<Numeric T>
+	constexpr T Triangle2<T>::Perimeter() const
+	{
+		return Vector2<T>::Distance(a, b) + Vector2<T>::Distance(b, c) + Vector2<T>::Distance(c, a);
+	}
+
+	template<Numeric T>
+	constexpr T Triangle2<T>::Area() const
+	{
+		const T s = Perimeter() * static_cast<T>(0.5);
+		return std::sqrt(s * (s - Vector2<T>::Distance(a, b)) * (s - Vector2<T>::Distance(b, c)) * (s - Vector2<T>::Distance(c, a)));
+	}
+}
+
+export using Triangle2f = jpt::Triangle2<float>;
