@@ -29,3 +29,6 @@ export namespace jpt
 	template<typename T = float>
 	constexpr T kPi = static_cast<T>(3.14159265358979323846f);
 }
+
+export constexpr float PI = jpt::kPi<float>;
+export constexpr double PI_D = jpt::kPi<double>;

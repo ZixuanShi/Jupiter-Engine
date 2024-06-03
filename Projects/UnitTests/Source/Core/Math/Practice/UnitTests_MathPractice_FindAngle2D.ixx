@@ -4,11 +4,12 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTest_MathPractice_FindAngle2D;
+export module UnitTests_MathPractice_FindAngle2D;
 
 import jpt.CoreModules;
 
-/** @return Angle in degrees between two vectors representing position in 2D */
+/** @return Angle in degrees between two vectors representing position in 2D 
+	@note   Doesn't reflect the direction to turn. Only scalar of angle  */
 float FindAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 {
 	const Vec2f toTargetDir = (targetPos - sourcePos).Normalized();
