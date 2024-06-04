@@ -29,6 +29,7 @@ namespace jpt
 		constexpr T Perimeter() const;
 		constexpr T Area() const;
 		constexpr Vector3<T> Normal() const;
+		constexpr T Distance(Vector3<T> point) const;
 	};
 
 	template<Numeric T>
@@ -58,6 +59,12 @@ namespace jpt
 		Vector3<T> normal = edge1.Cross(edge2);
 		normal.Normalize();
 		return normal;
+	}
+
+	template<Numeric T>
+	constexpr T Triangle3<T>::Distance(Vector3<T> /*point*/) const
+	{
+		return 0.0f;
 	}
 }
 
