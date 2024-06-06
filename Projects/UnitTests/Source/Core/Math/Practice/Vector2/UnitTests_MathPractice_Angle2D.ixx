@@ -15,7 +15,7 @@ float FindAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 	const Vec2f toTargetDir = (targetPos - sourcePos).Normalized();
 	const float dot = sourceFacingDir.Dot(toTargetDir);
 	const float angleRadius = acos(dot);
-	const float angleDegrees = jpt::RadiusToDegrees(angleRadius);
+	const float angleDegrees = jpt::RadiansToDegrees(angleRadius);
 	return angleDegrees;
 }
 

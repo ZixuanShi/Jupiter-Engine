@@ -24,7 +24,7 @@ float FindAngleAndDir2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 		atan2 += 2 * PI;
 	}
 	
-	const float angleDegrees = jpt::RadiusToDegrees(atan2);
+	const float angleDegrees = jpt::RadiansToDegrees(atan2);
 	return angleDegrees;
 }
 

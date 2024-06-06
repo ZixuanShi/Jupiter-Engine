@@ -15,6 +15,7 @@ import UnitTests_MathPractice_FindAngleAndDir2D;
 import UnitTests_MathPractice_DistancePointToLine2D;
 import UnitTests_MathPractice_DistancePointToLineSegment2D;
 import UnitTests_MathPractice_DistancePointToRay2D;
+import UnitTests_MathPractice_VectorRotation2D;
 
 // Vector3
 import UnitTest_MathPractice_FindPerpendicularVector;
@@ -29,6 +30,7 @@ export bool RunUnitTests_MathPractice()
 	JPT_ENSURE(UnitTest_MathPractice_DistancePointToLine2D());
 	JPT_ENSURE(UnitTest_MathPractice_DistancePointToLineSegment2D());
 	JPT_ENSURE(UnitTest_MathPractice_DistancePointToRay2D());
+	JPT_ENSURE(UnitTest_MathPractice_VectorRotation2D());
 
 	// Vector3
 	JPT_ENSURE(UnitTest_MathPractice_FindPerpendicularVector());

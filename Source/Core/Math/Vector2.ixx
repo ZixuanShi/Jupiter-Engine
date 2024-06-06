@@ -63,12 +63,12 @@ namespace jpt
 		constexpr T Distance2(Vector2 other) const;
 		constexpr void Normalize();
 		constexpr Vector2 Normalized() const;
-		constexpr void Lerp(Vector2 other, T t) const;
+		constexpr void Lerp(Vector2 other, T t);
 		constexpr Vector2 Lerped(Vector2 other, T t) const;
-
+		
 		// Counter-clockwise rotation
-		constexpr Vector2 Rotate(T radius) const;
-		constexpr Vector2 RotateDegrees(T degrees) const;
+		constexpr void Rotate(T radians);
+		constexpr void RotateDegrees(T degrees);
 
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
@@ -77,6 +77,8 @@ namespace jpt
 		constexpr static T Distance2(Vector2 from, Vector2 to);
 		constexpr static Vector2 Normalized(Vector2 vector);
 		constexpr static Vector2 Lerp(Vector2 from, Vector2 to, T t);
+		constexpr static Vector2 Rotate(Vector2 vec2, T radians);
+		constexpr static Vector2 RotateDegrees(Vector2 vec2, T degrees);
 
 		constexpr jpt::String ToString() const;
 	};
@@ -227,7 +229,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool Vector2<T>::operator==(Vector2 other) const
 	{
-		return AreValuesClose(x, other.x) && AreValuesClose(y, other.y);
+		return AreValuesClose(x, other.x, static_cast<T>(0.1)) && AreValuesClose(y, other.y, static_cast<T>(0.1));
 	}
 
 	template<Numeric T>
@@ -280,7 +282,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void Vector2<T>::Lerp(Vector2 other, T t) const
+	constexpr void Vector2<T>::Lerp(Vector2 other, T t)
 	{
 		*this += (other - *this) * t;
 	}
@@ -292,20 +294,19 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Rotate(T radius) const
+	constexpr void Vector2<T>::Rotate(T radians)
 	{
-		Vector2<T> result;
+		T dx = x * std::cos(radians) - y * std::sin(radians);
+		T dy = x * std::sin(radians) + y * std::cos(radians);
 
-		result.x = x * std::cos(radius) - y * std::sin(radius);
-		result.y = x * std::sin(radius) + y * std::cos(radius);
-
-		return result;
+		x = dx;
+		y = dy;
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::RotateDegrees(T degrees) const
+	constexpr void Vector2<T>::RotateDegrees(T degrees)
 	{
-		return Rotate(DegreesToRadians(degrees));
+		Rotate(DegreesToRadians(degrees));
 	}
 
 	template<Numeric T>
@@ -348,6 +349,20 @@ namespace jpt
 	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
 	{
 		return from.Lerped(to, t);
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Rotate(Vector2 vec2, T radians)
+	{
+		vec2.Rotate(radians);
+		return vec2;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::RotateDegrees(Vector2 vec2, T degrees)
+	{
+		vec2.RotateDegrees(degrees);
+		return vec2;
 	}
 
 	template<Numeric T>
