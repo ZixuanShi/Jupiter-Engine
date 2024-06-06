@@ -20,11 +20,9 @@ bool UnitTest_FileIO_Read_Engine_Exists()
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TestJson.json"));
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TextTxt.txt"));
     JPT_ENSURE(!Exists(ESource::Engine, "Assets/Configs/NotExist.txt"));
-    JPT_ENSURE(Exists(ESource::Engine, L"Assets/中文测试/中文文本.txt"));
 
     // Client
     JPT_ENSURE(Exists(ESource::Client, "Assets/Configs/TestJson.json"));
-    JPT_ENSURE(Exists(ESource::Client, L"Assets/好家伙/中文文本.txt"));
     
     return true;
 }

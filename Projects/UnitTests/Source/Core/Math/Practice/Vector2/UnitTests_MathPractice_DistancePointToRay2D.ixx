@@ -34,21 +34,27 @@ export bool UnitTest_MathPractice_DistancePointToRay2D()
 	Vec2f point = { 0.0f, 0.0f };
 
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 0.0f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 0.0f));
 	
 	point = { 1.0f, 1.0f };
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 0.0f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 0.0f));
 
 	point = { 2.0f, 2.0f };
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 0.0f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 0.0f));
 
 	point = { -1.0f, -1.0f };
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 1.41421354f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 1.41421354f));
 
 	point = { -2.0f, -2.0f };
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 2.82842708f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 2.82842708f));
 
 	point = { 0.0f, 1.0f };
 	JPT_ENSURE(jpt::AreValuesClose(DistancePointToRay2D(point, ray), 0.707106769f));
+	JPT_ENSURE(jpt::AreValuesClose(ray.Distance(point), 0.707106769f));
 
 	return true;
 }
