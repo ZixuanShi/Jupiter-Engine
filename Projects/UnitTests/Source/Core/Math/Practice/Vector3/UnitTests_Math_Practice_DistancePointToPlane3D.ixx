@@ -8,7 +8,6 @@ export module UnitTest_MathPractice_DistancePointToPlane3D;
 
 import jpt.CoreModules;
 
-
 export bool UnitTest_MathPractice_DistancePointToPlane3D()
 {
 

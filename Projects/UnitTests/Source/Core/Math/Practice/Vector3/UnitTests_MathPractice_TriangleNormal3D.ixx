@@ -17,18 +17,13 @@ Vec3f FindTriangleNormal(const Vec3f& v0, const Vec3f& v1, const Vec3f& v2)
 	return normal;
 }
 
-Vec3f FindTriangleNormal(const Triangle3f& triangle)
-{
-	return triangle.Normal();
-}
-
 export bool UnitTest_MathPractice_FindTriangleNormal()
 {
 	JPT_ENSURE(FindTriangleNormal(Vec3f(0, 0, 0), Vec3f(1, 0, 0), Vec3f(0, 1, 0)) == Vec3f(0, 0, 1));
-	JPT_ENSURE(FindTriangleNormal(Triangle3f(Vec3f(0, 0, 0), Vec3f(1, 0, 0), Vec3f(0, 1, 0))) == Vec3f(0, 0, 1));
+	JPT_ENSURE(Triangle3f(Vec3f(0, 0, 0), Vec3f(1, 0, 0), Vec3f(0, 1, 0)).Normal() == Vec3f(0, 0, 1));
 
 	JPT_ENSURE(FindTriangleNormal(Vec3f(0, 0, 0), Vec3f(0, 1, 0), Vec3f(1, 0, 0)) == Vec3f(0, 0, -1));
-	JPT_ENSURE(FindTriangleNormal(Triangle3f(Vec3f(0, 0, 0), Vec3f(0, 1, 0), Vec3f(1, 0, 0))) == Vec3f(0, 0, -1));
+	JPT_ENSURE(Triangle3f(Vec3f(0, 0, 0), Vec3f(0, 1, 0), Vec3f(1, 0, 0)).Normal() == Vec3f(0, 0, -1));
 
 	return true;
 }
