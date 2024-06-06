@@ -65,7 +65,10 @@ namespace jpt
 		constexpr Vector2 Normalized() const;
 		constexpr void Lerp(Vector2 other, T t) const;
 		constexpr Vector2 Lerped(Vector2 other, T t) const;
-		constexpr Vector2 Rotate(T angle) const;
+
+		// Counter-clockwise rotation
+		constexpr Vector2 Rotate(T radius) const;
+		constexpr Vector2 RotateDegrees(T degrees) const;
 
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
@@ -289,10 +292,20 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Rotate(T angle) const
+	constexpr Vector2<T> Vector2<T>::Rotate(T radius) const
 	{
-		// TODO: Implement
-		return Vector2();
+		Vector2<T> result;
+
+		result.x = x * std::cos(radius) - y * std::sin(radius);
+		result.y = x * std::sin(radius) + y * std::cos(radius);
+
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::RotateDegrees(T degrees) const
+	{
+		return Rotate(DegreesToRadians(degrees));
 	}
 
 	template<Numeric T>
