@@ -70,10 +70,10 @@ namespace jpt
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
 		constexpr static T Length2(Vector2 vector);
-		constexpr static T Distance(Vector2 left, Vector2 right);
-		constexpr static T Distance2(Vector2 left, Vector2 right);
+		constexpr static T Distance(Vector2 from, Vector2 to);
+		constexpr static T Distance2(Vector2 from, Vector2 to);
 		constexpr static Vector2 Normalized(Vector2 vector);
-		constexpr static Vector2 Lerp(Vector2 left, Vector2 right, T t);
+		constexpr static Vector2 Lerp(Vector2 from, Vector2 to, T t);
 
 		constexpr jpt::String ToString() const;
 	};
@@ -314,15 +314,15 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Vector2<T>::Distance(Vector2 left, Vector2 right)
+	constexpr T Vector2<T>::Distance(Vector2 from, Vector2 to)
 	{
-		return left.Distance(right);
+		return from.Distance(to);
 	}
 
 	template<Numeric T>
-	constexpr T Vector2<T>::Distance2(Vector2 left, Vector2 right)
+	constexpr T Vector2<T>::Distance2(Vector2 from, Vector2 to)
 	{
-		return left.Distance2(right);
+		return from.Distance2(to);
 	}
 
 	template<Numeric T>
@@ -332,9 +332,9 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 left, Vector2 right, T t)
+	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
 	{
-		return left.Lerped(right, t);
+		return from.Lerped(to, t);
 	}
 
 	template<Numeric T>
