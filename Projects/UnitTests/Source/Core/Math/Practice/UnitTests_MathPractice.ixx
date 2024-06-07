@@ -21,6 +21,9 @@ import UnitTests_MathPractice_VectorRotation2D;
 import UnitTest_MathPractice_FindPerpendicularVector;
 import UnitTest_MathPractice_DistancePointToTriangle3D;
 
+// Matrix33
+import UnitTest_MathPractice_Matrix33;
+
 // Main entry point for math practice. import any test modules above and add them to this function
 export bool RunUnitTests_MathPractice()
 {
@@ -35,6 +38,9 @@ export bool RunUnitTests_MathPractice()
 	// Vector3
 	JPT_ENSURE(UnitTest_MathPractice_FindPerpendicularVector());
 	JPT_ENSURE(UnitTest_MathPractice_DistancePointToTriangle3D());
+
+	// Matrix33
+	JPT_ENSURE(UnitTest_MathPractice_Matrix33());
 
 	return true;
 }
