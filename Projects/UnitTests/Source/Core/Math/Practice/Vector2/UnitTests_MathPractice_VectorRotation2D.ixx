@@ -32,5 +32,12 @@ export bool UnitTest_MathPractice_VectorRotation2D()
 	JPT_ENSURE(v2 == Vec2f(1.4f, 0.1f));
 	JPT_ENSURE(v3 == Vec2f(0.1f, -1.4f));
 
+	v3 = Vec2f(10.0f, 10.0f);	// pivot
+	v1 = Vec2f(0.0f, 0.0f);
+	v2 = Vec2f(0.0f, 0.0f);
+	v1.RotateDegreesAround(v3, 45.0f);
+	JPT_ENSURE(v1 == Vec2f(10.0f, -4.14213562f));
+	JPT_ENSURE(Vec2f::RotateDegreesAround(v2, v3, 45.0f) == Vec2f(10.0f, -4.14213562f))
+
 	return true;
 }

@@ -68,7 +68,9 @@ namespace jpt
 		
 		// Counter-clockwise rotation
 		constexpr void Rotate(T radians);
+		constexpr void RotateAround(Vector2 pivot, T radians);
 		constexpr void RotateDegrees(T degrees);
+		constexpr void RotateDegreesAround(Vector2 pivot, T degrees);
 
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr static T Length(Vector2 vector);
@@ -78,7 +80,9 @@ namespace jpt
 		constexpr static Vector2 Normalized(Vector2 vector);
 		constexpr static Vector2 Lerp(Vector2 from, Vector2 to, T t);
 		constexpr static Vector2 Rotate(Vector2 vec2, T radians);
+		constexpr static Vector2 RotateAround(Vector2 vec2, Vector2 pivot, T radians);
 		constexpr static Vector2 RotateDegrees(Vector2 vec2, T degrees);
+		constexpr static Vector2 RotateDegreesAround(Vector2 vec2, Vector2 pivot, T degrees);
 
 		constexpr jpt::String ToString() const;
 	};
@@ -296,17 +300,38 @@ namespace jpt
 	template<Numeric T>
 	constexpr void Vector2<T>::Rotate(T radians)
 	{
-		T dx = x * std::cos(radians) - y * std::sin(radians);
-		T dy = x * std::sin(radians) + y * std::cos(radians);
+		const T cos = std::cos(radians);
+		const T sin = std::sin(radians);
+
+		const T dx = x * cos - y * sin;
+		const T dy = x * sin + y * cos;
 
 		x = dx;
 		y = dy;
 	}
 
 	template<Numeric T>
+	constexpr void Vector2<T>::RotateAround(Vector2 pivot, T radians)
+	{
+		const T cos = std::cos(radians);
+		const T sin = std::sin(radians);
+
+		const Vector2<T> temp = *this - pivot;
+
+		x = temp.x * cos - temp.y * sin + pivot.x;
+		y = temp.x * sin + temp.y * cos + pivot.y;
+	}
+
+	template<Numeric T>
 	constexpr void Vector2<T>::RotateDegrees(T degrees)
 	{
 		Rotate(DegreesToRadians(degrees));
+	}
+
+	template<Numeric T>
+	constexpr void Vector2<T>::RotateDegreesAround(Vector2 pivot, T degrees)
+	{
+		RotateAround(pivot, DegreesToRadians(degrees));
 	}
 
 	template<Numeric T>
@@ -359,9 +384,23 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 vec2, Vector2 pivot, T radians)
+	{
+		vec2.RotateAround(pivot, radians);
+		return vec2;
+	}
+
+	template<Numeric T>
 	constexpr Vector2<T> Vector2<T>::RotateDegrees(Vector2 vec2, T degrees)
 	{
 		vec2.RotateDegrees(degrees);
+		return vec2;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::RotateDegreesAround(Vector2 vec2, Vector2 pivot, T degrees)
+	{
+		vec2.RotateDegreesAround(pivot, degrees);
 		return vec2;
 	}
 
