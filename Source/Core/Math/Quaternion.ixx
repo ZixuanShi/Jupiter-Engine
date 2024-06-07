@@ -12,7 +12,8 @@ namespace jpt
 	/** A quaternion is a 4D vector that represents a rotation in 3D space.
 		The first three components are the axis of rotation, and the fourth component is the angle of rotation.
 		The quaternion is normalized so that the first three components form a unit vector.
-		The angle is in radians. */
+		The angle is in radians.
+		Bye Gimbal-Lock */
 	export template<Numeric T>
 	struct TQuaternion
 	{

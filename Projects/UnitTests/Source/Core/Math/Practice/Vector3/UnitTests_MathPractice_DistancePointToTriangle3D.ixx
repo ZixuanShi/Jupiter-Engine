@@ -11,15 +11,16 @@ import jpt.CoreModules;
 float DistancePointToTriangle3D(Vec3f point, Triangle3f triangle)
 {
 	// Compute the edges of the triangle
-	Vec3f edgeBa = triangle.b - triangle.a;
-	Vec3f edgeCa = triangle.c - triangle.a;
+	const Vec3f edgeBa = triangle.b - triangle.a;
+	const Vec3f edgeCa = triangle.c - triangle.a;
 
 	// Compute the normal of the triangle
-	Vec3f normal = edgeBa.Cross(edgeCa);
-	normal.Normalize();
+	const Vec3f cross = edgeBa.Cross(edgeCa);
+	const Vec3f normal = cross.Normalized();
 
 	// Compute the vector from the point to the triangle
-	float distance = std::abs(normal.Dot(point - triangle.a));
+	const Vec3f pointToPlane = triangle.a - point;
+	const float distance = std::abs(pointToPlane.Dot(normal));
 
 	return distance;
 }

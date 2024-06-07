@@ -65,15 +65,16 @@ namespace jpt
 	constexpr T Triangle3<T>::Distance(Vector3<T> point) const
 	{
 		// Compute the edges of the triangle
-		Vec3f edgeBa = b - a;
-		Vec3f edgeCa = c - a;
+		const Vec3f edgeBa = b - a;
+		const Vec3f edgeCa = c - a;
 
 		// Compute the normal of the triangle
-		Vec3f normal = edgeBa.Cross(edgeCa);
-		normal.Normalize();
+		const Vec3f cross = edgeBa.Cross(edgeCa);
+		const Vec3f normal = cross.Normalized();
 
 		// Compute the vector from the point to the triangle
-		float distance = std::abs(normal.Dot(point - a));
+		const Vec3f pointToTriangle = a - point;
+		const float distance = std::abs(pointToTriangle.Dot(normal));
 
 		return distance;
 	}
