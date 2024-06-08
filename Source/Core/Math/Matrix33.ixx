@@ -19,13 +19,14 @@ namespace jpt
 	struct Matrix33
 	{
 	public:
-		T m[3][3];
+		Vector3<T> m[3];
 
 	public:
 		static constexpr Matrix33 Identity() { return Matrix33<T>(); }
 
 	public:
 		constexpr Matrix33();
+		constexpr Matrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis);
 		constexpr Matrix33(T m00, T m01, T m02,
 						   T m10, T m11, T m12,
 						   T m20, T m21, T m22);
@@ -53,6 +54,13 @@ namespace jpt
 			 { 0, 0, 1 } }
 	{
 	}
+
+	template<Numeric T>
+	constexpr Matrix33<T>::Matrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis)
+		: m{ xAxis, yAxis, zAxis }
+	{
+	}
+
 	template<Numeric T>
 	constexpr Matrix33<T>::Matrix33(T m00, T m01, T m02, 
 		                            T m10, T m11, T m12, 
@@ -76,15 +84,11 @@ namespace jpt
 	{
 		Matrix33<T> result;
 
-		for (size_t i = 0; i < 3; ++i) 
+		for (size_t i = 0; i < 3; ++i)
 		{
 			for (size_t j = 0; j < 3; ++j)
 			{
-				result.m[i][j] = 0;
-				for (size_t k = 0; k < 3; ++k)
-				{
-					result.m[i][j] += m[i][k] * rhs.m[k][j];
-				}
+				result.m[i][j] = m[i][0] * rhs.m[0][j] + m[i][1] * rhs.m[1][j] + m[i][2] * rhs.m[2][j];
 			}
 		}
 

@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Assert.h"
+
 #include <cmath>
 
 export module jpt.Vector3;
@@ -57,6 +59,9 @@ namespace jpt
 		constexpr Vector3& operator-=(T scalar);
 		constexpr Vector3& operator*=(T scalar);
 		constexpr Vector3& operator/=(T scalar);
+
+		constexpr T& operator[](size_t index) { return (&x)[index]; }
+		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
 
 		constexpr bool operator==(Vector3 other) const;
 
