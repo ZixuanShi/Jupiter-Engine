@@ -24,10 +24,17 @@ namespace jpt
 		T w = static_cast<T>(1);	/**< Radians */
 
 	public:
+		static constexpr TQuaternion Identity() { return TQuaternion(); }
+
+	public:
 		constexpr TQuaternion() = default;
 		constexpr TQuaternion(T x, T y, T z, T w);
 		constexpr TQuaternion(const Vector3<T>& axis);
 		constexpr TQuaternion(const Vector3<T>& axis, T radians);
+
+		constexpr TQuaternion operator*(const TQuaternion& rhs) const;
+		constexpr TQuaternion operator+(const TQuaternion& rhs) const;
+		constexpr TQuaternion operator*(T scalar) const;
 	};
 
 	template<Numeric T>
@@ -55,5 +62,27 @@ namespace jpt
 		, z(axis.z)
 		, w(radians)
 	{
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator*(const TQuaternion& rhs) const
+	{
+		const T w = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
+		const T x = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
+		const T y = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
+		const T z = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
+		return TQuaternion(x, y, z, w);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator*(T scalar) const
+	{
+		return TQuaternion(x * scalar, y * scalar, z * scalar, w * scalar);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator+(const TQuaternion& rhs) const
+	{ 
+		return TQuaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); 
 	}
 }

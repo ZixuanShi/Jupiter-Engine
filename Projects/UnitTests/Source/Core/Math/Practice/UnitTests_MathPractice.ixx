@@ -24,6 +24,9 @@ import UnitTest_MathPractice_DistancePointToTriangle3D;
 // Matrix33
 import UnitTest_MathPractice_Matrix33;
 
+// Matrix44
+import UnitTest_MathPractice_Matrix44;
+
 // Main entry point for math practice. import any test modules above and add them to this function
 export bool RunUnitTests_MathPractice()
 {
@@ -41,6 +44,9 @@ export bool RunUnitTests_MathPractice()
 
 	// Matrix33
 	JPT_ENSURE(UnitTest_MathPractice_Matrix33());
+
+	// Matrix44
+	JPT_ENSURE(UnitTest_MathPractice_Matrix44());
 
 	return true;
 }

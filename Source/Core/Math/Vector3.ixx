@@ -2,8 +2,6 @@
 
 module;
 
-#include "Debugging/Assert.h"
-
 #include <cmath>
 
 export module jpt.Vector3;

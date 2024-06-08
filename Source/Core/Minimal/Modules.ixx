@@ -31,6 +31,8 @@ export import jpt.Utilities;
 export import jpt.Limits;
 export import jpt.Math;
 export import jpt.Matrix33;
+export import jpt.Matrix44;
+export import jpt.Quaternion;
 export import jpt.Rand;
 export import jpt.Line2;
 export import jpt.Line3;
@@ -40,6 +42,7 @@ export import jpt.Ray2;
 export import jpt.Ray3;
 export import jpt.Vector2;
 export import jpt.Vector3;
+export import jpt.Vector4;
 export import jpt.Triangle2;
 export import jpt.Triangle3;
 
