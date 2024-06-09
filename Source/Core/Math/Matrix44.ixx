@@ -12,6 +12,7 @@ import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Vector3;
 import jpt.Vector4;
+import jpt.Utilities;
 
 namespace jpt
 {
@@ -36,14 +37,21 @@ namespace jpt
 		constexpr Vector3<T> operator*(const Vector3<T>& rhs) const;
 		constexpr Vector4<T> operator*(const Vector4<T>& rhs) const;
 
-		constexpr Matrix44<T> Transpose() const;
-
 		constexpr static Matrix44<T> Translation(const Vector3<T>& v);
 		constexpr static Matrix44<T> RotationX(T radians);
 		constexpr static Matrix44<T> RotationY(T radians);
 		constexpr static Matrix44<T> RotationZ(T radians);
 		constexpr static Matrix44<T> Rotation(const Vector3<T>& axis, T radians);
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
+		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
+
+		constexpr void Translate(const Vector3<T>& v);
+		constexpr void RotateX(T radians);
+		constexpr void RotateY(T radians);
+		constexpr void RotateZ(T radians);
+		constexpr void Rotate(const Vector3<T>& axis, T radians);
+		constexpr void Scale(const Vector3<T>& v);
+		constexpr void Transpose();
 	};
 
 	template<Numeric T>
@@ -76,13 +84,18 @@ namespace jpt
 	constexpr Matrix44<T> Matrix44<T>::operator*(const Matrix44<T>& rhs) const
 	{
 		Matrix44<T> result;
+
 		for (size_t i = 0; i < 4; ++i)
 		{
 			for (size_t j = 0; j < 4; ++j)
 			{
-				result.m[i][j] = m[i][0] * rhs.m[0][j] + m[i][1] * rhs.m[1][j] + m[i][2] * rhs.m[2][j] + m[i][3] * rhs.m[3][j];
+				result.m[i][j] = m[i][0] * rhs.m[0][j] + 
+					             m[i][1] * rhs.m[1][j] + 
+					             m[i][2] * rhs.m[2][j] + 
+					             m[i][3] * rhs.m[3][j];
 			}
 		}
+
 		return result;
 	}
 
@@ -102,15 +115,6 @@ namespace jpt
 			result[i] = m[i][0] * rhs[0] + m[i][1] * rhs[1] + m[i][2] * rhs[2] + m[i][3] * rhs[3];
 		}
 		return result;
-	}
-
-	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::Transpose() const
-	{
-		return Matrix44<T>(m[0][0], m[1][0], m[2][0], m[3][0],
-			               m[0][1], m[1][1], m[2][1], m[3][1],
-			               m[0][2], m[1][2], m[2][2], m[3][2],
-			               m[0][3], m[1][3], m[2][3], m[3][3]);
 	}
 
 	template<Numeric T>
@@ -183,6 +187,62 @@ namespace jpt
 			               0, v.y, 0, 0,
 			               0, 0, v.z, 0,
 			               0, 0, 0, 1);
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::Transposed(const Matrix44<T>& matrix44)
+	{
+		Matrix44<T> result = matrix44;
+		result.Transpose();
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::Translate(const Vector3<T>& v)
+	{
+		*this = *this * Translation(v);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::RotateX(T radians)
+	{
+		*this = *this * RotationX(radians);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::RotateY(T radians)
+	{
+		*this = *this * RotationY(radians);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::RotateZ(T radians)
+	{
+		*this = *this * RotationZ(radians);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::Rotate(const Vector3<T>& axis, T radians)
+	{
+		*this = *this * Rotation(axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::Scale(const Vector3<T>& v)
+	{
+		*this = *this * Scaling(v);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::Transpose()
+	{
+		for (size_t i = 0; i < 4; ++i)
+		{
+			for (size_t j = i + 1; j < 4; ++j)
+			{
+				Swap(m[i][j], m[j][i]);
+			}
+		}
 	}
 }
 

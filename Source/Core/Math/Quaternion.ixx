@@ -21,7 +21,7 @@ namespace jpt
 		T x = static_cast<T>(0);
 		T y = static_cast<T>(0);
 		T z = static_cast<T>(0);
-		T w = static_cast<T>(1);	/**< Radians */
+		T w = static_cast<T>(1);
 
 	public:
 		static constexpr TQuaternion Identity() { return TQuaternion(); }

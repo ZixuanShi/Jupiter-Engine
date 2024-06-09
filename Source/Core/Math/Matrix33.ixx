@@ -90,7 +90,9 @@ namespace jpt
 		{
 			for (size_t j = 0; j < 3; ++j)
 			{
-				result.m[i][j] = m[i][0] * rhs.m[0][j] + m[i][1] * rhs.m[1][j] + m[i][2] * rhs.m[2][j];
+				result.m[i][j] = m[i][0] * rhs.m[0][j] +
+								 m[i][1] * rhs.m[1][j] +
+								 m[i][2] * rhs.m[2][j];
 			}
 		}
 
