@@ -141,16 +141,16 @@ export namespace jpt
 	}
 
 	/** @return true if two values are close enough */
-	template<Integral TInt>
-	constexpr bool AreValuesClose(TInt A, TInt B)
+	template<Integral TInt1, Integral TInt2>
+	constexpr bool AreValuesClose(TInt1 A, TInt2 B)
 	{
-		return A == B;
+		return A == static_cast<TInt1>(B);
 	}
 
-	template<Floating TFloat>
-	constexpr bool AreValuesClose(TFloat A, TFloat B, TFloat tolerance = static_cast<TFloat>(0.000001))
+	template<Floating TFloat1, Floating TFloat2>
+	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
 	{
-		return GetAbs(A - B) < tolerance;
+		return GetAbs(A - static_cast<TFloat1>(B)) < tolerance;
 	}
 
 	template<Floating TFloat = float32>

@@ -4,16 +4,12 @@ export module jpt.Quaternion;
 
 import jpt.Concepts;
 import jpt.Constants;
+import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Vector3;
 
 namespace jpt
 {
-	/** A quaternion is a 4D vector that represents a rotation in 3D space.
-		The first three components are the axis of rotation, and the fourth component is the angle of rotation.
-		The quaternion is normalized so that the first three components form a unit vector.
-		The angle is in radians.
-		Bye Gimbal-Lock */
 	export template<Numeric T>
 	struct TQuaternion
 	{
@@ -32,9 +28,18 @@ namespace jpt
 		constexpr TQuaternion(const Vector3<T>& axis);
 		constexpr TQuaternion(const Vector3<T>& axis, T radians);
 
-		constexpr TQuaternion operator*(const TQuaternion& rhs) const;
 		constexpr TQuaternion operator+(const TQuaternion& rhs) const;
+		constexpr TQuaternion operator-(const TQuaternion& rhs) const;
+		constexpr TQuaternion operator*(const TQuaternion& rhs) const;
+		constexpr TQuaternion operator/(const TQuaternion& rhs) const;
+
+		constexpr TQuaternion operator/(T scalar) const;
 		constexpr TQuaternion operator*(T scalar) const;
+
+		constexpr TQuaternion& operator*=(const TQuaternion& rhs);
+		constexpr TQuaternion& operator+=(const TQuaternion& rhs);
+
+		constexpr bool operator==(const TQuaternion& rhs) const;
 	};
 
 	template<Numeric T>
@@ -65,6 +70,18 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator+(const TQuaternion& rhs) const
+	{
+		return TQuaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator-(const TQuaternion& rhs) const
+	{
+		return TQuaternion(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
+	}
+
+	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::operator*(const TQuaternion& rhs) const
 	{
 		const T w = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
@@ -75,14 +92,44 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator/(const TQuaternion& rhs) const
+	{
+		return TQuaternion(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::operator/(T scalar) const
+	{
+		return TQuaternion(x / scalar, y / scalar, z / scalar, w / scalar);
+	}
+
+	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::operator*(T scalar) const
 	{
 		return TQuaternion(x * scalar, y * scalar, z * scalar, w * scalar);
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::operator+(const TQuaternion& rhs) const
-	{ 
-		return TQuaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w); 
+	constexpr TQuaternion<T>& TQuaternion<T>::operator*=(const TQuaternion& rhs)
+	{
+		return *this = *this * rhs;
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T>& TQuaternion<T>::operator+=(const TQuaternion& rhs)
+	{
+		return *this = *this + rhs;
+	}
+
+	template<Numeric T>
+	constexpr bool TQuaternion<T>::operator==(const TQuaternion& rhs) const
+	{
+		return AreValuesClose(x, rhs.x) &&
+			AreValuesClose(y, rhs.y) &&
+			AreValuesClose(z, rhs.z) &&
+			AreValuesClose(w, rhs.w);
 	}
 }
+
+export using Quaternionf = jpt::TQuaternion<float>;
+export using Quaterniond = jpt::TQuaternion<float>;
