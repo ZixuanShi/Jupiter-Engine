@@ -22,7 +22,7 @@ namespace jpt
 		Vector3<T> m[3];
 
 	public:
-		static constexpr Matrix33 Identity() { return Matrix33<T>(); }
+		static const Matrix33 Identity;
 
 	public:
 		constexpr Matrix33();
@@ -48,6 +48,9 @@ namespace jpt
 
 		constexpr bool operator==(const Matrix33<T>& rhs) const;
 	};
+
+	template<Numeric T>
+	const Matrix33<T> Matrix33<T>::Identity = Matrix33<T>();
 
 	template<Numeric T>
 	constexpr Matrix33<T>::Matrix33()

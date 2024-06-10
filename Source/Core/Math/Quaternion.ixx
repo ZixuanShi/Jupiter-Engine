@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <cmath>
+
 export module jpt.Quaternion;
 
 import jpt.Concepts;
@@ -20,7 +24,7 @@ namespace jpt
 		T w = static_cast<T>(1);
 
 	public:
-		static constexpr TQuaternion Identity() { return TQuaternion(); }
+		static const TQuaternion<T> Identity;
 
 	public:
 		constexpr TQuaternion() = default;
@@ -41,6 +45,9 @@ namespace jpt
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
 	};
+
+	template<Numeric T>
+	const TQuaternion<T> TQuaternion<T>::Identity = TQuaternion<T>();
 
 	template<Numeric T>
 	constexpr TQuaternion<T>::TQuaternion(T x, T y, T z, T w)
@@ -131,5 +138,5 @@ namespace jpt
 	}
 }
 
-export using Quaternionf = jpt::TQuaternion<float>;
-export using Quaterniond = jpt::TQuaternion<float>;
+export using Quatf = jpt::TQuaternion<float>;
+export using Quatd = jpt::TQuaternion<float>;

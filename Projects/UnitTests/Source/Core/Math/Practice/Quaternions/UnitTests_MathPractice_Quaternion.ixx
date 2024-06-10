@@ -10,8 +10,8 @@ import jpt.CoreModules;
 
 export bool UnitTest_MathPractice_Quaternion()
 {
-	Quaternionf quaternion = Quaternionf::Identity();
-	JPT_ENSURE(quaternion == Quaternionf(0, 0, 0, 1));
+	Quatf quaternion = Quatf::Identity;
+	JPT_ENSURE(quaternion == Quatf(0, 0, 0, 1));
 
 
 	return true;

@@ -23,7 +23,7 @@ namespace jpt
 		Vector4<T> m[4];
 
 	public:
-		static constexpr Matrix44<T> Identity() { return Matrix44<T>(); }
+		static const Matrix44<T> Identity;
 
 	public:
 		constexpr Matrix44();
@@ -53,6 +53,9 @@ namespace jpt
 		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Transpose();
 	};
+
+	template<Numeric T>
+	const Matrix44<T> Matrix44<T>::Identity = Matrix44<T>();
 
 	template<Numeric T>
 	constexpr Matrix44<T>::Matrix44()
