@@ -29,6 +29,7 @@ export bool UnitTest_MathPractice_Matrix44()
 		                  Vec4f(5.0f, 6.0f, 7.0f, 8.0f), 
 		                  Vec4f(9.0f, 10.0f, 11.0f, 12.0f), 
 		                  Vec4f(13.0f, 14.0f, 15.0f, 16.0f) };
+	//JPT_LOG(matrix44);
 	matrix44.Transpose();
 	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 5.0f, 9.0f, 13.0f));
 	JPT_ENSURE(matrix44.m[1] == Vec4f(2.0f, 6.0f, 10.0f, 14.0f));

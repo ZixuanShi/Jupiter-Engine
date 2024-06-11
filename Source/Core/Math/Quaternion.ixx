@@ -13,6 +13,8 @@ import jpt.TypeDefs;
 import jpt.Vector3;
 import jpt.Matrix33;
 import jpt.Matrix44;
+import jpt.String;
+import jpt.ToString;
 
 namespace jpt
 {
@@ -55,7 +57,7 @@ namespace jpt
 		constexpr TQuaternion Inversed() const;
 
 		constexpr T Dot(const TQuaternion& rhs) const;
-		constexpr TQuaternion Cross(const TQuaternion& rhs) const;
+
 		constexpr TQuaternion Lerp(const TQuaternion& rhs, T t) const;
 		constexpr TQuaternion Slerp(const TQuaternion& rhs, T t) const;
 
@@ -71,6 +73,8 @@ namespace jpt
 		constexpr static TQuaternion Rotate(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
+
+		constexpr String ToString() const;
 	};
 
 	template<Numeric T>
@@ -118,11 +122,11 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::operator*(const TQuaternion& rhs) const
 	{
-		const T w = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
-		const T x = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
-		const T y = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
-		const T z = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
-		return TQuaternion(x, y, z, w);
+		const T newW = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
+		const T newX = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
+		const T newY = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
+		const T newZ = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
+		return TQuaternion(newX, newY, newZ, newW);
 	}
 
 	template<Numeric T>
@@ -234,16 +238,6 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Cross(const TQuaternion& rhs) const
-	{
-		const T w = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
-		const T x = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
-		const T y = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
-		const T z = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
-		return TQuaternion(x, y, z, w);
-	}
-
-	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::Lerp(const TQuaternion& rhs, T t) const
 	{
 		const T t1 = static_cast<T>(1) - t;
@@ -283,12 +277,12 @@ namespace jpt
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
 
-		const T x = axis.x * sinHalfAngle;
-		const T y = axis.y * sinHalfAngle;
-		const T z = axis.z * sinHalfAngle;
-		const T w = cosHalfAngle;
+		const T newX = axis.x * sinHalfAngle;
+		const T newY = axis.y * sinHalfAngle;
+		const T newZ = axis.z * sinHalfAngle;
+		const T newW = cosHalfAngle;
 
-		const TQuaternion rotation(x, y, z, w);
+		const TQuaternion rotation(newX, newY, newZ, newW);
 		*this = rotation * *this;
 	}
 
@@ -366,12 +360,12 @@ namespace jpt
 		const T sinZ = std::sin(halfZ);
 		const T cosZ = std::cos(halfZ);
 
-		const T x = sinX * cosY * cosZ + cosX * sinY * sinZ;
-		const T y = cosX * sinY * cosZ - sinX * cosY * sinZ;
-		const T z = cosX * cosY * sinZ - sinX * sinY * cosZ;
-		const T w = cosX * cosY * cosZ + sinX * sinY * sinZ;
+		const T newX = sinX * cosY * cosZ + cosX * sinY * sinZ;
+		const T newY = cosX * sinY * cosZ - sinX * cosY * sinZ;
+		const T newZ = cosX * cosY * sinZ - sinX * sinY * cosZ;
+		const T newW = cosX * cosY * cosZ + sinX * sinY * sinZ;
 
-		return TQuaternion(x, y, z, w);
+		return TQuaternion(newX, newY, newZ, newW);
 	}
 
 	template<Numeric T>
@@ -381,12 +375,12 @@ namespace jpt
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
 
-		const T x = axis.x * sinHalfAngle;
-		const T y = axis.y * sinHalfAngle;
-		const T z = axis.z * sinHalfAngle;
-		const T w = cosHalfAngle;
+		const T newX = axis.x * sinHalfAngle;
+		const T newY = axis.y * sinHalfAngle;
+		const T newZ = axis.z * sinHalfAngle;
+		const T newW = cosHalfAngle;
 
-		return TQuaternion(x, y, z, w);
+		return TQuaternion(newX, newY, newZ, newW);
 	}
 
 	template<Numeric T>
@@ -429,12 +423,12 @@ namespace jpt
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
 
-		const T x = axis.x * sinHalfAngle;
-		const T y = axis.y * sinHalfAngle;
-		const T z = axis.z * sinHalfAngle;
-		const T w = cosHalfAngle;
+		const T newX = axis.x * sinHalfAngle;
+		const T newY = axis.y * sinHalfAngle;
+		const T newZ = axis.z * sinHalfAngle;
+		const T newW = cosHalfAngle;
 
-		const TQuaternion rotation(x, y, z, w);
+		const TQuaternion rotation(newX, newY, newZ, newW);
 		return rotation * quaternion;
 	}
 
@@ -454,10 +448,25 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool TQuaternion<T>::operator==(const TQuaternion& rhs) const
 	{
-		return AreValuesClose(x, rhs.x) &&
-			AreValuesClose(y, rhs.y) &&
-			AreValuesClose(z, rhs.z) &&
-			AreValuesClose(w, rhs.w);
+		return AreValuesClose(x, rhs.x, static_cast<T>(0.001)) &&
+			   AreValuesClose(y, rhs.y, static_cast<T>(0.001)) &&
+			   AreValuesClose(z, rhs.z, static_cast<T>(0.001)) &&
+			   AreValuesClose(w, rhs.w, static_cast<T>(0.001));
+	}
+
+	template<Numeric T>
+	constexpr String TQuaternion<T>::ToString() const
+	{
+		jpt::String result;
+		result += "x: ";
+		result += jpt::ToString(x);
+		result += ", y:";
+		result += jpt::ToString(y);
+		result += ", z:";
+		result += jpt::ToString(z);
+		result += ", w:";
+		result += jpt::ToString(w);
+		return result;
 	}
 }
 

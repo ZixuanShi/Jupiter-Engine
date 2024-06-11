@@ -12,6 +12,8 @@ import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Vector2;
 import jpt.Vector3;
+import jpt.String;
+import jpt.ToString;
 
 namespace jpt
 {
@@ -47,6 +49,8 @@ namespace jpt
 		constexpr void Scale(T scalar);
 
 		constexpr bool operator==(const Matrix33<T>& rhs) const;
+
+		constexpr String ToString() const;
 	};
 
 	template<Numeric T>
@@ -179,6 +183,18 @@ namespace jpt
 		return m[0] == rhs.m[0] && 
 			   m[1] == rhs.m[1] && 
 			   m[2] == rhs.m[2];
+	}
+
+	template<Numeric T>
+	constexpr String Matrix33<T>::ToString() const
+	{
+		jpt::String result = "\n";
+
+		result += jpt::ToString(m[0][0]) + ", " + jpt::ToString(m[0][1]) + ", " + jpt::ToString(m[0][2]) + "\n";
+		result += jpt::ToString(m[1][0]) + ", " + jpt::ToString(m[1][1]) + ", " + jpt::ToString(m[1][2]) + "\n";
+		result += jpt::ToString(m[2][0]) + ", " + jpt::ToString(m[2][1]) + ", " + jpt::ToString(m[2][2]);
+
+		return result;
 	}
 }
 

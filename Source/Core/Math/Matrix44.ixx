@@ -13,6 +13,8 @@ import jpt.Math;
 import jpt.Vector3;
 import jpt.Vector4;
 import jpt.Utilities;
+import jpt.String;
+import jpt.ToString;
 
 namespace jpt
 {
@@ -52,6 +54,8 @@ namespace jpt
 		constexpr void Rotate(const Vector3<T>& axis, T radians);
 		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Transpose();
+
+		constexpr String ToString() const;
 	};
 
 	template<Numeric T>
@@ -246,6 +250,19 @@ namespace jpt
 				Swap(m[i][j], m[j][i]);
 			}
 		}
+	}
+
+	template<Numeric T>
+	constexpr String Matrix44<T>::ToString() const
+	{
+		jpt::String result = "\n";
+
+		result += jpt::ToString(m[0][0]) + ", " + jpt::ToString(m[0][1]) + ", " + jpt::ToString(m[0][2]) + ", " + jpt::ToString(m[0][3]) + "\n";
+		result += jpt::ToString(m[1][0]) + ", " + jpt::ToString(m[1][1]) + ", " + jpt::ToString(m[1][2]) + ", " + jpt::ToString(m[1][3]) + "\n";
+		result += jpt::ToString(m[2][0]) + ", " + jpt::ToString(m[2][1]) + ", " + jpt::ToString(m[2][2]) + ", " + jpt::ToString(m[2][3]) + "\n";
+		result += jpt::ToString(m[3][0]) + ", " + jpt::ToString(m[3][1]) + ", " + jpt::ToString(m[3][2]) + ", " + jpt::ToString(m[3][3]) + "\n";
+
+		return result;
 	}
 }
 

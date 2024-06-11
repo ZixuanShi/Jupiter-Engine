@@ -15,6 +15,7 @@ export bool UnitTest_MathPractice_Matrix33()
 	JPT_ENSURE(matrix33.m[0] == Vec3f(1.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix33.m[1] == Vec3f(0.0f, 1.0f, 0.0f));
 	JPT_ENSURE(matrix33.m[2] == Vec3f(0.0f, 0.0f, 1.0f));
+	//JPT_LOG(matrix33);
 
 	// Matrix multiplication
 	Matrix33f matrixMul = Matrix33f(1.0f, 2.0f, 3.0f, 
