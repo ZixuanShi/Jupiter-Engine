@@ -13,6 +13,7 @@ import jpt.Utilities;
 import UnitTests_Core;
 import UnitTests_Debugging;
 import UnitTests_System;
+import UnitTests_Scratch;
 
 import jpt.String;
 
@@ -32,6 +33,7 @@ bool Application_JupiterUnitTests::Init()
 	JPT_LOG("Core      Unit Tests %s", RunUnitTests_Core()      ? "Succeeded" : "Failed");
 	JPT_LOG("Debugging Unit Tests %s", RunUnitTests_Debugging() ? "Succeeded" : "Failed");
 	JPT_LOG("System    Unit Tests %s", RunUnitTests_System()    ? "Succeeded" : "Failed");
+	JPT_LOG("Scratch   Unit Tests %s", RunUnitTests_Scratch()   ? "Succeeded" : "Failed");
 
 	return true;
 }

@@ -4,11 +4,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTest_MathPractice_Matrix33;
+export module UnitTests_Matrix33;
 
 import jpt.CoreModules;
 
-export bool UnitTest_MathPractice_Matrix33()
+export bool RunUnitTests_Matrix33()
 {
 	// Matrix identity
 	Matrix33f matrix33 = Matrix33f::Identity;

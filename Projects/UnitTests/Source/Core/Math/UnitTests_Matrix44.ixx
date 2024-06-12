@@ -4,11 +4,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTest_MathPractice_Matrix44;
+export module UnitTests_Matrix44;
 
 import jpt.CoreModules;
 
-export bool UnitTest_MathPractice_Matrix44()
+export bool RunUnitTests_Matrix44()
 {
 	// Identity
 	Matrix44f matrix44 = Matrix44f::Identity;

@@ -4,11 +4,11 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTest_MathPractice_Quaternion;
+export module UnitTests_Quaternion;
 
 import jpt.CoreModules;
 
-export bool UnitTest_MathPractice_Quaternion()
+export bool RunUnitTests_Quaternion()
 {
 	Quatf quaternion = Quatf::Identity;
 	JPT_ENSURE(quaternion == Quatf(0, 0, 0, 1));
