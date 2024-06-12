@@ -128,7 +128,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr Matrix33<T> Matrix33<T>::RotationDegrees(T degrees)
 	{
-		return Rotation(DegreesToRadians(degrees));
+		return Rotation(ToRadians(degrees));
 	}
 
 	template<Numeric T>

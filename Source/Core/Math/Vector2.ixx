@@ -325,13 +325,13 @@ namespace jpt
 	template<Numeric T>
 	constexpr void Vector2<T>::RotateDegrees(T degrees)
 	{
-		Rotate(DegreesToRadians(degrees));
+		Rotate(ToRadians(degrees));
 	}
 
 	template<Numeric T>
 	constexpr void Vector2<T>::RotateDegreesAround(Vector2 pivot, T degrees)
 	{
-		RotateAround(pivot, DegreesToRadians(degrees));
+		RotateAround(pivot, ToRadians(degrees));
 	}
 
 	template<Numeric T>

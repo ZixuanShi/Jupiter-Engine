@@ -25,11 +25,11 @@ export bool RunUnitTests_Quaternion()
 
 	quaternion = Quatf::Identity;
 	Vec3f rotationAxis = { 1,0,0 };
-	quaternion.Rotate(rotationAxis, jpt::DegreesToRadians(90.0f));
+	quaternion.Rotate(rotationAxis, jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion == Quatf(0.707f, 0, 0, 0.707f));
 
 	rotationAxis = { 0,0,1 };
-	quaternion.Rotate(rotationAxis, jpt::DegreesToRadians(45.0f));
+	quaternion.Rotate(rotationAxis, jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion == Quatf(0.653f, 0.271f, 0.271f, 0.653f));
 
 	return true;

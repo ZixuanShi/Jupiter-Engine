@@ -119,7 +119,10 @@ namespace jpt
 		Vector4<T> result;
 		for (size_t i = 0; i < 4; ++i)
 		{
-			result[i] = m[i][0] * rhs[0] + m[i][1] * rhs[1] + m[i][2] * rhs[2] + m[i][3] * rhs[3];
+			result[i] = m[i][0] * rhs[0] + 
+				        m[i][1] * rhs[1] + 
+				        m[i][2] * rhs[2] + 
+				        m[i][3] * rhs[3];
 		}
 		return result;
 	}

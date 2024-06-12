@@ -154,12 +154,12 @@ export namespace jpt
 	}
 
 	template<Floating TFloat = float32>
-	constexpr TFloat RadiansToDegrees(TFloat radians)
+	constexpr TFloat ToDegrees(TFloat radians)
 	{
 		return radians * static_cast<TFloat>(180) / kPi<TFloat>;
 	}
 	template<Floating TFloat = float32>
-	constexpr TFloat DegreesToRadians(TFloat degrees)
+	constexpr TFloat ToRadians(TFloat degrees)
 	{
 		return degrees * kPi<TFloat> / static_cast<TFloat>(180);
 	}
