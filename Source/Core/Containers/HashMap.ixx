@@ -367,7 +367,7 @@ export namespace jpt
 	template<Iterable TContainer>
 	constexpr void HashMap<TKey, TValue, TComparator>::CopyData(const TContainer& container, size_t size)
 	{
-		Reserve(size);
+		Reserve(m_count + size);
 
 		for (const TData& element : container)
 		{
@@ -382,7 +382,7 @@ export namespace jpt
 	constexpr void HashMap<TKey, TValue, TComparator>::MoveMap(HashMap&& other)
 	{
 		m_buckets = Move(other.m_buckets);
-		m_count    = other.m_count;
+		m_count   = other.m_count;
 
 		other.m_count = 0;
 	}
