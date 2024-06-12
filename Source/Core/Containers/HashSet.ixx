@@ -327,7 +327,7 @@ export namespace jpt
 	template<Iterable TContainer>
 	constexpr void HashSet<TValue, TComparator>::CopyData(const TContainer& container, size_t size)
 	{
-		Reserve(size);
+		Reserve(m_count + size);
 
 		for (const TValue& data : container)
 		{
