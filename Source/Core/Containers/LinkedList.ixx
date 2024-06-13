@@ -64,6 +64,7 @@ export namespace jpt
 
 		// Modifier
 		constexpr void Clear();
+		constexpr void Reverse();
 
 		// Adding
 		constexpr void AddBefore(Iterator iterator, const TData& value);
@@ -182,6 +183,27 @@ export namespace jpt
 		m_pHead = nullptr;
 		m_pTail = nullptr;
 		m_count  = 0;
+	}
+
+	template<typename _TData, typename _TAllocator>
+	constexpr void LinkedList<_TData, _TAllocator>::Reverse()
+	{
+		TNode* pCurrent = m_pHead;
+
+		while (pCurrent)
+		{
+			TNode* pOriginalPrevious = pCurrent->pPrevious;
+			TNode* pOriginalNext = pCurrent->pNext;
+
+			// Modify linkages
+			pCurrent->pPrevious = pOriginalNext;
+			pCurrent->pNext = pOriginalPrevious;
+
+			// Move to the next node
+			pCurrent = pOriginalNext;
+		}
+
+		Swap(m_pHead, m_pTail);
 	}
 
 	template<typename TData, typename TAllocator>

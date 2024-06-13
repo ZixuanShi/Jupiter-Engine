@@ -238,9 +238,20 @@ bool UnitTest_LinkedList_Tuple()
 	return true;
 }
 
+bool UnitTest_LinkedList_Reverse()
+{
+    jpt::LinkedList<int32> list{ 1, 2, 3, 4, 5 };
+
+    list.Reverse();
+    JPT_ENSURE(list == (jpt::LinkedList<int32>{5, 4, 3, 2, 1}));
+
+    return true;
+}
+
 export bool RunUnitTests_LinkedList()
 {
     JPT_ENSURE(UnitTest_LinkedList_Trivial());
+    JPT_ENSURE(UnitTest_LinkedList_Reverse());
 
     JPT_ENSURE(UnitTest_LinkedList_String());
     JPT_ENSURE(UnitTest_LinkedList_Enum());
