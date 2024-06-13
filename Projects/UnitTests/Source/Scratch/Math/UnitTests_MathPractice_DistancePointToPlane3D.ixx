@@ -17,7 +17,7 @@ float DistancePointToPlane3D(Vec3f point, Vec3f a, Vec3f b, Vec3f c)
 	const Vec3f normal = cross.Normalized();
 
 	const Vec3f pointToPlane = a - point;
-	const float distance = std::abs(normal.Dot(pointToPlane));
+	const float distance = std::abs(Vec3f::Dot(pointToPlane, normal));
 
 	return distance;
 }

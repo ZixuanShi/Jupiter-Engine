@@ -8,6 +8,7 @@ module;
 export module jpt.SortedMap;
 
 import jpt.Allocator;
+import jpt.Comparators;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.Stack;
@@ -20,14 +21,21 @@ import jpt_private.BinaryTreeIterator;
 export namespace jpt
 {
 	/** Sorted key value paired structure. Red Black Tree under the hood */
-	template<Comparable _TKey, typename _TValue, typename _TAllocator = Allocator<jpt_private::BinaryTreeNode<Pair<_TKey, _TValue>>>>
+	template<Comparable _TKey, 
+		     typename _TValue,
+			 typename _TComparator = Comparator_Less<_TKey>,
+		     typename _TAllocator = Allocator<jpt_private::BinaryTreeNode<Pair<_TKey, _TValue>>>>
 	class SortedMap
 	{
 	public:
-		using TKey   = _TKey;
-		using TValue = _TValue;
-		using TData  = Pair<TKey, TValue>;
-		using TNode  = jpt_private::BinaryTreeNode<TData>;
+		using TKey        = _TKey;
+		using TValue      = _TValue;
+		using TComparator = _TComparator;
+		using TData       = Pair<TKey, TValue>;
+		using TNode       = jpt_private::BinaryTreeNode<TData>;
+
+	public:
+		static constexpr TComparator kComparator = TComparator();
 
 	private:
 		TNode* m_pRoot = nullptr;
@@ -46,14 +54,14 @@ export namespace jpt
 
 	};
 
-	template<Comparable _TKey, typename _TValue, typename TAllocator>
-	constexpr SortedMap<_TKey, _TValue, TAllocator>::~SortedMap()
+	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<_TKey, _TValue, TComparator, TAllocator>::~SortedMap()
 	{
 		Clear();
 	}
 
-	template<Comparable _TKey, typename _TValue, typename TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, TAllocator>::Add(const TKey& key, const TValue& value)
+	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Add(const TKey& key, const TValue& value)
 	{
 		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 
@@ -72,7 +80,7 @@ export namespace jpt
 		{
 			pParent = pCurrent;
 
-			if (key < pCurrent->data.first)
+			if (kComparator(key, pCurrent->data.first))
 			{
 				pCurrent = pCurrent->pLeftChild;
 			}
@@ -82,7 +90,7 @@ export namespace jpt
 			}
 		}
 
-		if (key < pParent->data.first)
+		if (kComparator(key, pParent->data.first))
 		{
 			pParent->pLeftChild = pNewNode;
 		}
@@ -96,8 +104,8 @@ export namespace jpt
 		++m_count;
 	}
 
-	template<Comparable _TKey, typename _TValue, typename TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, TAllocator>::Clear()
+	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Clear()
 	{
 		if (m_pRoot != nullptr)
 		{

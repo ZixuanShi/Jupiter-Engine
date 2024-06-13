@@ -1,5 +1,0 @@
-Two Choices
-
-1. Maintain one and only premake script in Engine/Scripts with overridden logic. Projects can pass different parameters to the script to control the behavior of the script.
-
-2. Engine/Scripts has a main premake script with defaults. Projects can override the script with their own premake script. 
