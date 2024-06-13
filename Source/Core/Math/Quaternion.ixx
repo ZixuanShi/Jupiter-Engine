@@ -63,14 +63,20 @@ namespace jpt
 
 		constexpr void Rotate(const Vector3<T>& axis, T radians);
 		constexpr void Rotate(const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
+		constexpr void RotateX(T radians);
+		constexpr void RotateY(T radians);
+		constexpr void RotateZ(T radians);
 		constexpr void LookAt(const Vector3<T>& target, const Vector3<T>& up);
 
 		constexpr static TQuaternion FromEulerAngles(const Vector3<T>& eulerAngles);
 		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axis, T radians);
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
-		constexpr static TQuaternion Rotate(const TQuaternion& quaternion, const Vector3<T>& axis, T radians);
-		constexpr static TQuaternion Rotate(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
+		constexpr static TQuaternion Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians);
+		constexpr static TQuaternion RotationX(const TQuaternion& quaternion, T radians);
+		constexpr static TQuaternion RotationY(const TQuaternion& quaternion, T radians);
+		constexpr static TQuaternion RotationZ(const TQuaternion& quaternion, T radians);
+		constexpr static TQuaternion Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
 
@@ -300,6 +306,27 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr void TQuaternion<T>::RotateX(T radians)
+	{
+		Vector3<T> axis(1, 0, 0);
+		Rotate(axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr void TQuaternion<T>::RotateY(T radians)
+	{
+		Vector3<T> axis(0, 1, 0);
+		Rotate(axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr void TQuaternion<T>::RotateZ(T radians)
+	{
+		Vector3<T> axis(0, 0, 1);
+		Rotate(axis, radians);
+	}
+
+	template<Numeric T>
 	constexpr void TQuaternion<T>::LookAt(const Vector3<T>& target, const Vector3<T>& up)
 	{
 		const Vector3<T> forward = (target - Vector3<T>(0, 0, 0)).Normalized();
@@ -417,7 +444,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotate(const TQuaternion& quaternion, const Vector3<T>& axis, T radians)
+	constexpr TQuaternion<T> TQuaternion<T>::Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians)
 	{
 		const T halfAngle = radians * static_cast<T>(0.5);
 		const T sinHalfAngle = std::sin(halfAngle);
@@ -433,7 +460,28 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotate(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot)
+	constexpr TQuaternion<T> TQuaternion<T>::RotationX(const TQuaternion& quaternion, T radians)
+	{
+		Vector3<T> axis(1, 0, 0);
+		return Rotation(quaternion, axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::RotationY(const TQuaternion& quaternion, T radians)
+	{
+		Vector3<T> axis(0, 1, 0);
+		return Rotation(quaternion, axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::RotationZ(const TQuaternion& quaternion, T radians)
+	{
+		Vector3<T> axis(0, 0, 1);
+		return Rotation(quaternion, axis, radians);
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot)
 	{
 		const Vector3<T> translation = pivot - Vector3<T>(0, 0, 0);
 		const Vector3<T> translationRotation = translation * -1;
