@@ -74,7 +74,7 @@ namespace jpt
 
 		// Compute the vector from the point to the triangle
 		const Vec3f pointToTriangle = a - point;
-		const float distance = std::abs(pointToTriangle.Dot(normal));
+		const float distance = Abs(pointToTriangle.Dot(normal));
 
 		return distance;
 	}

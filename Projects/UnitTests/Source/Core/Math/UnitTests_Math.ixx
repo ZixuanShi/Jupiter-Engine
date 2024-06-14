@@ -28,10 +28,10 @@ bool UnitTest_Clamping()
 
 bool UnitTest_Abs()
 {
-	JPT_ENSURE(jpt::GetAbs(-10) == 10);
-	JPT_ENSURE(jpt::GetAbs(10) == 10);
-	JPT_ENSURE(jpt::AreValuesClose(jpt::GetAbs(-10.55f), 10.55f) );
-	JPT_ENSURE(jpt::AreValuesClose(jpt::GetAbs(10.55f), 10.55f));
+	JPT_ENSURE(jpt::Abs(-10) == 10);
+	JPT_ENSURE(jpt::Abs(10) == 10);
+	JPT_ENSURE(jpt::AreValuesClose(jpt::Abs(-10.55f), 10.55f) );
+	JPT_ENSURE(jpt::AreValuesClose(jpt::Abs(10.55f), 10.55f));
 	return true;
 }
 

@@ -8,6 +8,7 @@ export module jpt.Line2;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
+import jpt.Math;
 import jpt.Vector2;
 import jpt.Vector3;
 
@@ -49,7 +50,7 @@ namespace jpt
 	constexpr T Line2<T>::Distance(Vector2<T> point) const
 	{
 		const Vector3<T> lineData = GetLine();
-		const T distance = std::abs(lineData.x * point.x + lineData.y * point.y + lineData.z) / std::sqrt(lineData.x * lineData.x + lineData.y * lineData.y);
+		const T distance = Abs(lineData.x * point.x + lineData.y * point.y + lineData.z) / std::sqrt(lineData.x * lineData.x + lineData.y * lineData.y);
 		return distance;
 	}
 }

@@ -135,7 +135,7 @@ export namespace jpt
 
 	/** @return The absolute value of input arithmetic parameter */
 	template<Numeric TNum>
-	constexpr TNum GetAbs(TNum value)
+	constexpr TNum Abs(TNum value)
 	{
 		return (value >= static_cast<TNum>(0) ? value : -value);
 	}
@@ -150,7 +150,7 @@ export namespace jpt
 	template<Floating TFloat1, Floating TFloat2>
 	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
 	{
-		return GetAbs(A - static_cast<TFloat1>(B)) < tolerance;
+		return Abs(A - static_cast<TFloat1>(B)) < tolerance;
 	}
 
 	template<Floating TFloat = float32>
