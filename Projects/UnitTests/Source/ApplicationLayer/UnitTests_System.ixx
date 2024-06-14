@@ -12,7 +12,6 @@ import jpt.Utilities;
 
 // File
 import UnitTests_FileUtils;
-import UnitTests_FileIO;
 
 // FileIO
 import UnitTests_FileIO;
@@ -27,9 +26,6 @@ import UnitTests_StopWatch;
 export bool RunUnitTests_System()
 {
 	/** Unit Test Functions */
-
-	// File
-	JPT_ENSURE(RunUnitTests_FileIO());
 
 	// FileIO
 	JPT_ENSURE(RunUnitTests_FileIO());

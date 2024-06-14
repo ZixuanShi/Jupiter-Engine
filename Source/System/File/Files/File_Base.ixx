@@ -20,6 +20,6 @@ export namespace jpt::File
 	public:
 		virtual ~File_Base() = default;
 
-
+		virtual bool Load(const Path& /*absoluteFullPath*/) { return false; }
 	};
 }

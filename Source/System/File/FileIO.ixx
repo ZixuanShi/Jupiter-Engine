@@ -73,11 +73,22 @@ export namespace jpt::File
 	}
 #pragma endregion Directory
 
-	// Open
+#pragma region Read
 
+	template<typename TFile>
+	TFile* ReadAs(const Path& absoluteFullPath)
+	{
+		TFile* pFile = new TFile();
+		JPT_ASSERT(pFile->Load(absoluteFullPath));
+		return pFile;
+	}
+	template<typename TFile>
+	TFile* ReadAs(ESource source, const Path& relativePath)
+	{
+		return ReadAs<TFile>(GetAbsoluteFullPath(source, relativePath));
+	}
 
-	// Read
-
+#pragma endregion Read
 
 	// Write
 

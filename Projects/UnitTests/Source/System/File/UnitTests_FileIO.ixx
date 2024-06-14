@@ -14,6 +14,7 @@ import jpt.FileIO;
 import jpt.File.PathUtils;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.StrongPtr;
 
 using namespace jpt::File;
 
@@ -57,10 +58,20 @@ bool UnitTest_FileIO_Directory()
     return true;
 }
 
+bool UnitTest_FileIO_Read()
+{
+    File_Text* pFile = jpt::File::ReadAs<File_Text>(ESource::Client, "Assets/Configs/TestJson.json");
+    JPT_LOG(pFile->GetText());
+	delete pFile;
+
+	return true;
+}
+
 export bool RunUnitTests_FileIO()
 {
     JPT_ENSURE(UnitTest_FileIO_Exists());
 	JPT_ENSURE(UnitTest_FileIO_Directory());
+	JPT_ENSURE(UnitTest_FileIO_Read());
 
     return true;
 }
