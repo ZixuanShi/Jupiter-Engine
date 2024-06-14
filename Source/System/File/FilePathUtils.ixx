@@ -23,21 +23,15 @@ export namespace jpt
 	export namespace File
 	{
 		/** @return		 FilePath type of engine/client directories roots */
-		Path GetEnginePath()
-		{
-			return JPT_ENGINE_DIR_W;
-		}
-		Path GetClientPath()
-		{
-			return GetClientDirW();
-		}
+		const Path EnginePath = JPT_ENGINE_DIR_W;
+		const Path ClientPath = GetClientDirW();
 
 		Path GetSourcePath(ESource source)
 		{
 			switch (source)
 			{
-			case ESource::Engine: return GetEnginePath();
-			case ESource::Client: return GetClientPath();
+			case ESource::Engine: return EnginePath;
+			case ESource::Client: return ClientPath;
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 			}
 		}

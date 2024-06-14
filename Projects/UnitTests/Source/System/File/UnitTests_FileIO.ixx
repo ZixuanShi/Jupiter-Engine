@@ -2,6 +2,8 @@
 
 module;
 
+#pragma execution_character_set("utf-8")
+
 #include "Core/Minimal/Headers.h"
 
 export module UnitTests_FileIO;
@@ -12,7 +14,7 @@ import jpt.FileIO;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_FileIO_Read_Engine_Exists()
+bool UnitTest_FileIO_Exists()
 {
     using namespace jpt::File;
 
@@ -20,27 +22,19 @@ bool UnitTest_FileIO_Read_Engine_Exists()
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TestJson.json"));
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TextTxt.txt"));
     JPT_ENSURE(!Exists(ESource::Engine, "Assets/Configs/NotExist.txt"));
+    JPT_ENSURE(Exists(ESource::Engine, L"Assets/中文测试/中文文本.txt"));
 
     // Client
     JPT_ENSURE(Exists(ESource::Client, "Assets/Configs/TestJson.json"));
+    JPT_ENSURE(Exists(ESource::Client, L"Assets/好家伙/中文文本.txt"));
     
-    return true;
-}
-
-
-bool UnitTest_FileIO_Read_Engine_English()
-{
-
     return true;
 }
 
 export bool RunUnitTests_FileIO()
 {
-    // Basic tests
-    JPT_ENSURE(UnitTest_FileIO_Read_Engine_Exists());
+    JPT_ENSURE(UnitTest_FileIO_Exists());
 
-    // Files
-    JPT_ENSURE(UnitTest_FileIO_Read_Engine_English());
 
     return true;
 }
