@@ -14,12 +14,12 @@ export namespace jpt::File
 	/** Base file abstraction for all files. */
 	class File_Base
 	{
-	private:
-		Path m_filePath;
+	protected:
+		Path m_path;
 
 	public:
-		virtual ~File_Base() = default;
-
-		virtual bool Load(const Path& /*absoluteFullPath*/) { return false; }
+		constexpr File_Base() = default;
+		constexpr File_Base(const Path& path) : m_path(path) {}
+		constexpr virtual ~File_Base() = default;
 	};
 }

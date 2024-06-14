@@ -13,6 +13,9 @@ export module jpt.File_Text;
 import jpt.String;
 
 import jpt.File_Base;
+import jpt.File.Path;
+import jpt.File.PathUtils;
+import jpt.File.Enums;
 
 export namespace jpt::File
 {
@@ -23,12 +26,21 @@ export namespace jpt::File
 		WString m_text;
 
 	public:
-		virtual bool Load(const Path& absoluteFullPath) override;
+		constexpr File_Text() = default;
+		constexpr File_Text(const Path& path);
+
+		static File_Text* Load(const Path& absoluteFullPath);
+		static File_Text* Load(ESource source, const Path& relativePath);
 
 		const WString& GetText() const { return m_text; }
 	};
 
-	bool File_Text::Load(const Path& absoluteFullPath)
+	constexpr File_Text::File_Text(const Path& path)
+		: File_Base(path)
+	{
+	}
+
+	File_Text* File_Text::Load(const Path& absoluteFullPath)
 	{
 		using TChar = typename Path::TChar;
 
@@ -38,17 +50,22 @@ export namespace jpt::File
 		if (!file.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
+			return nullptr;
 		}
 
 		std::basic_string<TChar> line;
+		File_Text* fileText = new File_Text(absoluteFullPath);
 		while (std::getline(file, line))
 		{
-			m_text += line.c_str();
-			m_text += '\n';
+			fileText->m_text += line.c_str();
+			fileText->m_text += '\n';
 		}
 
 		file.close();
-		return true;
+		return fileText;
+	}
+	File_Text* File_Text::Load(ESource source, const Path& relativePath)
+	{
+		return Load(GetAbsoluteFullPath(source, relativePath));
 	}
 }

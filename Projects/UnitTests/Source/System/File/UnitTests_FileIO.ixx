@@ -60,7 +60,7 @@ bool UnitTest_FileIO_Directory()
 
 bool UnitTest_FileIO_Read()
 {
-    File_Text* pFile = jpt::File::ReadAs<File_Text>(ESource::Client, "Assets/Configs/TestJson.json");
+    File_Text* pFile = File_Text::Load(ESource::Client, "Assets/Configs/TestJson.json");
     JPT_LOG(pFile->GetText());
 	delete pFile;
 
