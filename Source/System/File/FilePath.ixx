@@ -58,6 +58,7 @@ export namespace jpt::File
 
 	public:
 		constexpr Path() = default;
+		constexpr Path(char path);
 		constexpr Path(const char* path);
 		constexpr Path(const wchar_t* path);
 		constexpr Path(const TString& path);
@@ -68,14 +69,8 @@ export namespace jpt::File
 		constexpr Path& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
 		constexpr Path GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
-		constexpr size_t Find(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t Find(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(      wchar_t charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindFirstOf(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-		constexpr size_t FindLastOf(      wchar_t charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr size_t FindLastOf(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr bool   Contains(      wchar_t  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
-		constexpr bool   Contains(const wchar_t* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
+		constexpr size_t FindLastOf(const Path& path) const;
+		constexpr bool Contains(const Path& path) const;
 
 		constexpr const WString& ToWString() const { return m_path; }
 		constexpr const WString& ToString() const { return m_path; }
@@ -95,6 +90,11 @@ export namespace jpt::File
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
+
+	constexpr Path::Path(char path)
+		: m_path(Move(jpt::ToWString(jpt::String(path))))
+	{
+	}
 
 	constexpr Path::Path(const char* path)
 		: m_path(Move(jpt::ToWString(path)))
@@ -136,33 +136,13 @@ export namespace jpt::File
 		return m_path.GetReplaced(StringToFind, StringToReplace, startIndex, endIndex);
 	}
 
-	constexpr size_t Path::Find(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr size_t Path::FindLastOf(const Path& path) const
 	{
-		return m_path.Find(charToFind, startIndex, endIndex, count);
+		return m_path.FindLastOf(path.ToWString().ConstBuffer());
 	}
 
-	constexpr size_t Path::Find(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+	constexpr bool Path::Contains(const Path& path) const
 	{
-		return m_path.Find(pStringToFind, startIndex, endIndex, count);
-	}
-
-	constexpr size_t Path::FindFirstOf(wchar_t charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
-	{
-		return Find(charToFind, startIndex, endIndex, count);
-	}
-
-	constexpr size_t Path::FindFirstOf(const wchar_t* pStringToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
-	{
-		return Find(pStringToFind, startIndex, endIndex, count);
-	}
-
-	constexpr size_t Path::FindLastOf(wchar_t charToFind, size_t startIndex, size_t endIndex, size_t count) const
-	{
-		return m_path.FindLastOf(charToFind, startIndex, endIndex, count);
-	}
-
-	constexpr size_t Path::FindLastOf(const wchar_t* pStringToFind, size_t startIndex, size_t endIndex, size_t count) const
-	{
-		return m_path.FindLastOf(pStringToFind, startIndex, endIndex, count);
+		return m_path.Contains(path.ToWString().ConstBuffer());
 	}
 }

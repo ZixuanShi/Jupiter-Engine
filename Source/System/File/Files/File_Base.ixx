@@ -21,5 +21,7 @@ export namespace jpt::File
 		constexpr File_Base() = default;
 		constexpr File_Base(const Path& path) : m_path(path) {}
 		constexpr virtual ~File_Base() = default;
+
+		constexpr const Path& GetPath() const { return m_path; }
 	};
 }

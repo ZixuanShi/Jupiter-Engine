@@ -28,7 +28,7 @@ namespace jpt
 
 	public:
 		constexpr StrongPtr() noexcept = default;
-		constexpr explicit StrongPtr(TData* pPtr) noexcept;
+		constexpr StrongPtr(TData* pPtr) noexcept;
 		constexpr StrongPtr(const StrongPtr& other);
 		constexpr StrongPtr(const WeakPtr<TData>& weakPtr);
 		constexpr StrongPtr(StrongPtr&& other) noexcept;

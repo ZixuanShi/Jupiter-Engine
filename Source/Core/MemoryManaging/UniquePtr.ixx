@@ -18,7 +18,7 @@ export namespace jpt
 
 	public:
 		constexpr UniquePtr() noexcept = default;
-		constexpr explicit UniquePtr(TData* pPtr) noexcept;
+		constexpr UniquePtr(TData* pPtr) noexcept;
 		constexpr UniquePtr(TData* pPtr, const TDeleter& deleter) noexcept;
 		constexpr UniquePtr(UniquePtr&& other) noexcept;
 		UniquePtr& operator=(UniquePtr<TData, TDeleter>&& other) noexcept;

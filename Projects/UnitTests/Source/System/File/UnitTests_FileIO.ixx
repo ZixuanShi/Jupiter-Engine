@@ -60,9 +60,9 @@ bool UnitTest_FileIO_Directory()
 
 bool UnitTest_FileIO_Read()
 {
-    File_Text* pFile = File_Text::Load(ESource::Client, "Assets/Configs/TestJson.json");
-    JPT_LOG(pFile->GetText());
-	delete pFile;
+    jpt::StrongPtr<File_Text> pFile = File_Text::Load(ESource::Client, "Assets/Configs/TestJson.json");
+
+    JPT_ENSURE(pFile->GetPath().Contains("Assets/Configs/TestJson.json"));
 
 	return true;
 }
