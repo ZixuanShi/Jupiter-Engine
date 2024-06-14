@@ -28,6 +28,7 @@ namespace jpt
 
 		constexpr T Perimeter() const;
 		constexpr T Area() const;
+		constexpr bool Inside(Vector2<T> point) const;
 	};
 
 	template<Numeric T>
@@ -47,6 +48,16 @@ namespace jpt
 	{
 		const T s = Perimeter() * static_cast<T>(0.5);
 		return std::sqrt(s * (s - Vector2<T>::Distance(a, b)) * (s - Vector2<T>::Distance(b, c)) * (s - Vector2<T>::Distance(c, a)));
+	}
+
+	template<Numeric T>
+	constexpr bool Triangle2<T>::Inside(Vector2<T> point) const
+	{
+		const float u = (b.y - c.y) * (point.x - c.x) + (c.x - b.x) * (point.y - c.y);
+		const float v = (c.y - a.y) * (point.x - c.x) + (a.x - c.x) * (point.y - c.y);
+		const float w = 1.0f - u - v;
+
+		return u >= 0.0f && v >= 0.0f && w >= 0.0f;
 	}
 }
 

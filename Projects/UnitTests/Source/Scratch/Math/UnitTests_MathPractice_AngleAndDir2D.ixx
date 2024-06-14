@@ -6,7 +6,11 @@ module;
 
 export module UnitTests_MathPractice_FindAngleAndDir2D;
 
-import jpt.CoreModules;
+import jpt.Constants;
+import jpt.TypeDefs;
+import jpt.Utilities;
+import jpt.Math;
+import jpt.Vector2;
 
 /** @return Angle in dgrees from -180 to 180 between 2 position respective to facing dir */
 float FindAngleAndDir2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)

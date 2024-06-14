@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTest_MathPractice_DistancePointToTriangle3D;
+export module UnitTests_MathPractice_DistancePointToTriangle3D;
 
 import jpt.CoreModules;
 

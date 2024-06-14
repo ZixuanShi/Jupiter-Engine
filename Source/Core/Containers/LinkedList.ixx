@@ -182,7 +182,7 @@ export namespace jpt
 
 		m_pHead = nullptr;
 		m_pTail = nullptr;
-		m_count  = 0;
+		m_count = 0;
 	}
 
 	template<typename _TData, typename _TAllocator>
@@ -349,11 +349,11 @@ export namespace jpt
 	{
 		m_pHead = other.m_pHead;
 		m_pTail = other.m_pTail;
-		m_count  = other.m_count;
+		m_count = other.m_count;
 
 		other.m_pHead = nullptr;
 		other.m_pTail = nullptr;
-		other.m_count  = 0;
+		other.m_count = 0;
 	}
 
 	template<typename TData, typename TAllocator>

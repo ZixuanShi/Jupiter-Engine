@@ -6,7 +6,10 @@ module;
 
 export module UnitTests_MathPractice_FindAngle2D;
 
-import jpt.CoreModules;
+import jpt.TypeDefs;
+import jpt.Utilities;
+import jpt.Math;
+import jpt.Vector2;
 
 /** @return Angle in degrees between two vectors representing position in 2D 
 	@note   Doesn't reflect the direction to turn. Only scalar of angle  */
