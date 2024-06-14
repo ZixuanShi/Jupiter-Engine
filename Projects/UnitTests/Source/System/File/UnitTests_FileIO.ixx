@@ -35,18 +35,24 @@ bool UnitTest_FileIO_Exists()
 bool UnitTest_FileIO_Directory()
 {
     // Create
-	jpt::File::CreateDirectory(ESource::Engine, "Assets/NewDirectory");
-	JPT_ENSURE(Exists(ESource::Engine, "Assets/NewDirectory"));
+	jpt::File::CreateDirectory(ESource::Engine, "Assets/NewDirectory_UnitTest");
+	JPT_ENSURE(Exists(ESource::Engine, "Assets/NewDirectory_UnitTest"));
 
-	jpt::File::CreateDirectory(ESource::Client, "Assets/NewDirectory");
-	JPT_ENSURE(Exists(ESource::Client, "Assets/NewDirectory"));
+	jpt::File::CreateDirectory(ESource::Client, "Assets/NewDirectory_UnitTest");
+	JPT_ENSURE(Exists(ESource::Client, "Assets/NewDirectory_UnitTest"));
+
+    jpt::File::CreateDirectory(ESource::Client, L"Assets/新文件夹_UnitTest");
+    JPT_ENSURE(Exists(ESource::Client, L"Assets/新文件夹_UnitTest"));
 
     // Destroy
-	jpt::File::DeleteDirectory(ESource::Engine, "Assets/NewDirectory");
-	JPT_ENSURE(!Exists(ESource::Engine, "Assets/NewDirectory"));
+	jpt::File::DeleteDirectory(ESource::Engine, "Assets/NewDirectory_UnitTest");
+	JPT_ENSURE(!Exists(ESource::Engine, "Assets/NewDirectory_UnitTest"));
 
-	jpt::File::DeleteDirectory(ESource::Client, "Assets/NewDirectory");
-	JPT_ENSURE(!Exists(ESource::Client, "Assets/NewDirectory"));
+	jpt::File::DeleteDirectory(ESource::Client, "Assets/NewDirectory_UnitTest");
+	JPT_ENSURE(!Exists(ESource::Client, "Assets/NewDirectory_UnitTest"));
+
+	jpt::File::DeleteDirectory(ESource::Client, L"Assets/新文件夹_UnitTest");
+	JPT_ENSURE(!Exists(ESource::Client, L"Assets/新文件夹_UnitTest"));
 
     return true;
 }
@@ -54,7 +60,6 @@ bool UnitTest_FileIO_Directory()
 export bool RunUnitTests_FileIO()
 {
     JPT_ENSURE(UnitTest_FileIO_Exists());
-
 	JPT_ENSURE(UnitTest_FileIO_Directory());
 
     return true;
