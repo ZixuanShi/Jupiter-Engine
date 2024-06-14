@@ -6,6 +6,7 @@ module;
 
 export module jpt.Vector2;
 
+import jpt.Constants;
 import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
@@ -65,6 +66,11 @@ namespace jpt
 		constexpr Vector2 Normalized() const;
 		constexpr void Lerp(Vector2 other, T t);
 		constexpr Vector2 Lerped(Vector2 other, T t) const;
+
+		constexpr T Angle(Vector2 other) const;	        // Unsigned Radians. Faster (no atan2
+		constexpr T AngleDegrees(Vector2 other) const;	
+		constexpr T AngleSigned(Vector2 other) const;	// Signed Radians. Slower
+		constexpr T AngleSignedDegrees(Vector2 other) const;	
 		
 		// Counter-clockwise rotation
 		constexpr void Rotate(T radians);
@@ -79,6 +85,12 @@ namespace jpt
 		constexpr static T Distance2(Vector2 from, Vector2 to);
 		constexpr static Vector2 Normalized(Vector2 vector);
 		constexpr static Vector2 Lerp(Vector2 from, Vector2 to, T t);
+
+		constexpr static T Angle(Vector2 lhs, Vector2 rhs);
+		constexpr static T AngleDegrees(Vector2 lhs, Vector2 rhs);
+		constexpr static T AngleSigned(Vector2 from, Vector2 to);
+		constexpr static T AngleSignedDegrees(Vector2 from, Vector2 to);
+
 		constexpr static Vector2 Rotate(Vector2 vec2, T radians);
 		constexpr static Vector2 RotateAround(Vector2 vec2, Vector2 pivot, T radians);
 		constexpr static Vector2 RotateDegrees(Vector2 vec2, T degrees);
@@ -298,6 +310,43 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector2<T>::Angle(Vector2 other) const
+	{
+		const T dot = Dot(other);
+		const T angle = std::acos(dot / (Length() * other.Length()));
+		return angle;
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleDegrees(Vector2 other) const
+	{
+		return ToDegrees(Angle(other));
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleSigned(Vector2 other) const
+	{
+		T atan2 = std::atan2(other.y, other.x) - std::atan2(y, x);
+
+		if (atan2 > PI)
+		{
+			atan2 -= 2 * PI;
+		}
+		else if (atan2 < -PI)
+		{
+			atan2 += 2 * PI;
+		}
+
+		return atan2;
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleSignedDegrees(Vector2 other) const
+	{
+		return ToDegrees(AngleSigned(other));
+	}
+
+	template<Numeric T>
 	constexpr void Vector2<T>::Rotate(T radians)
 	{
 		const T cos = std::cos(radians);
@@ -374,6 +423,30 @@ namespace jpt
 	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
 	{
 		return from.Lerped(to, t);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::Angle(Vector2 lhs, Vector2 rhs)
+	{
+		return lhs.Angle(rhs);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleDegrees(Vector2 lhs, Vector2 rhs)
+	{
+		return lhs.AngleDegrees(rhs);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
+	{
+		return from.AngleSigned(to);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleSignedDegrees(Vector2 from, Vector2 to)
+	{
+		return from.AngleSignedDegrees(to);
 	}
 
 	template<Numeric T>

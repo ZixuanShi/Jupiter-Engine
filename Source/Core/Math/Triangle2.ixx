@@ -53,6 +53,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool Triangle2<T>::Inside(Vector2<T> point) const
 	{
+		// Barycentric coordinates
+
 		const float u = (b.y - c.y) * (point.x - c.x) + (c.x - b.x) * (point.y - c.y);
 		const float v = (c.y - a.y) * (point.x - c.x) + (a.x - c.x) * (point.y - c.y);
 		const float w = 1.0f - u - v;

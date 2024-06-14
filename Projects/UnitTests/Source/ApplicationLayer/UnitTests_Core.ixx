@@ -30,6 +30,11 @@ import UnitTests_Slot;
 import UnitTests_Function;
 
 // Math
+import UnitTests_Ray2;
+import UnitTests_LineSegment2;
+import UnitTests_Line2;
+import UnitTests_Triangle3;
+import UnitTests_Triangle2;
 import UnitTests_Hash;
 import UnitTests_Vector3;
 import UnitTests_Vector2;
@@ -97,6 +102,11 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Macros());
 
 	// Math
+	JPT_ENSURE(RunUnitTests_Ray2());
+	JPT_ENSURE(RunUnitTests_LineSegment2());
+	JPT_ENSURE(RunUnitTests_Line2());
+	JPT_ENSURE(RunUnitTests_Triangle3());
+	JPT_ENSURE(RunUnitTests_Triangle2());
 	JPT_ENSURE(RunUnitTests_Hash());
 	JPT_ENSURE(RunUnitTests_Vector3());
 	JPT_ENSURE(RunUnitTests_Vector2());
