@@ -18,7 +18,6 @@ import jpt.File.PathUtils;
 
 export namespace jpt::File
 {
-#pragma region Exists
 	/** @return		true if path exists in system. Could be either file or directory */
 	bool Exists(const Path& absoluteFullPath)
 	{
@@ -31,13 +30,7 @@ export namespace jpt::File
 
 		return result;
 	}
-	bool Exists(ESource source, const Path& relativePath)
-	{
-		return Exists(GetAbsoluteFullPath(source, relativePath));
-	}
-#pragma endregion Exists
 
-#pragma region Directory
 	/** Creates a directory and all necessary parent folders */
 	bool CreateDirectory(const Path& absoluteFullPath)
 	{
@@ -50,13 +43,9 @@ export namespace jpt::File
 
 		return result;
 	}
-	bool CreateDirectory(ESource source, const Path& relativePath)
-	{
-		return CreateDirectory(GetAbsoluteFullPath(source, relativePath));
-	}
 
-	// Delete Directory
-	bool DeleteDirectory(const Path& absoluteFullPath)
+	// Delete
+	bool Delete(const Path& absoluteFullPath)
 	{
 		std::error_code errorCode;
 		const bool result = std::filesystem::remove_all(absoluteFullPath.ConstBuffer(), errorCode);
@@ -67,12 +56,6 @@ export namespace jpt::File
 
 		return result;
 	}
-	bool DeleteDirectory(ESource source, const Path& relativePath)
-	{
-		return DeleteDirectory(GetAbsoluteFullPath(source, relativePath));
-	}
-#pragma endregion Directory
-
 
 	// Write
 

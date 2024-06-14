@@ -15,38 +15,8 @@ import jpt.File.Path;
 
 export namespace jpt
 {
-	/** Designed to be implemented in client project's application
-		@return Client's project root directory. */
-	const char* GetClientDir();
-	const wchar_t* GetClientDirW();
-
 	export namespace File
 	{
-		/** @return		 FilePath type of engine/client directories roots */
-		const Path EnginePath = JPT_ENGINE_DIR_W;
-		const Path ClientPath = GetClientDirW();
-
-		Path GetSourcePath(ESource source)
-		{
-			switch (source)
-			{
-			case ESource::Engine: return EnginePath;
-			case ESource::Client: return ClientPath;
-			default: JPT_ASSERT(false, "Invalid source"); return Path();
-			}
-		}
-
-		/** @return		The absolute full path of the given relative path */
-		Path GetAbsoluteFullPath(ESource source, const Path& relativePath)
-		{
-			Path result;
-
-			result.Append(GetSourcePath(source));
-			result.Append(relativePath);
-
-			return result;
-		}
-
 		/** @return		    File's extension of the given path
 			@param path		Can be either relative or absolute. As long as it ends with .<type> format
 			@example		GetExtension("Assets/Config/JupiterEngine.json") will return json */

@@ -30,8 +30,10 @@ export namespace jpt::File
 		constexpr File_Text(const Path& path);
 
 		static File_Text* Load(const Path& absoluteFullPath);
-		static File_Text* Load(ESource source, const Path& relativePath);
 
+		void Save(const Path& absoluteFullPath) const;
+
+		WString& GetText() { return m_text; }
 		const WString& GetText() const { return m_text; }
 	};
 
@@ -64,8 +66,21 @@ export namespace jpt::File
 		file.close();
 		return fileText;
 	}
-	File_Text* File_Text::Load(ESource source, const Path& relativePath)
+
+	void File_Text::Save(const Path& absoluteFullPath) const
 	{
-		return Load(GetAbsoluteFullPath(source, relativePath));
+		using TChar = typename Path::TChar;
+
+		std::basic_ofstream<TChar> file;
+		file.open(absoluteFullPath.ConstBuffer());
+
+		if (!file.is_open())
+		{
+			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
+			return;
+		}
+
+		file << m_text.ConstBuffer();
+		file.close();
 	}
 }
