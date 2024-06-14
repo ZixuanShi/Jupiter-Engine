@@ -11,13 +11,14 @@ export module UnitTests_FileIO;
 import jpt.File_Base;
 import jpt.File_Text;
 import jpt.FileIO;
+import jpt.File.PathUtils;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
+using namespace jpt::File;
+
 bool UnitTest_FileIO_Exists()
 {
-    using namespace jpt::File;
-
     // Engine
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TestJson.json"));
     JPT_ENSURE(Exists(ESource::Engine, "Assets/Configs/TextTxt.txt"));
@@ -31,10 +32,30 @@ bool UnitTest_FileIO_Exists()
     return true;
 }
 
+bool UnitTest_FileIO_Directory()
+{
+    // Create
+	jpt::File::CreateDirectory(ESource::Engine, "Assets/NewDirectory");
+	JPT_ENSURE(Exists(ESource::Engine, "Assets/NewDirectory"));
+
+	jpt::File::CreateDirectory(ESource::Client, "Assets/NewDirectory");
+	JPT_ENSURE(Exists(ESource::Client, "Assets/NewDirectory"));
+
+    // Destroy
+	jpt::File::DeleteDirectory(ESource::Engine, "Assets/NewDirectory");
+	JPT_ENSURE(!Exists(ESource::Engine, "Assets/NewDirectory"));
+
+	jpt::File::DeleteDirectory(ESource::Client, "Assets/NewDirectory");
+	JPT_ENSURE(!Exists(ESource::Client, "Assets/NewDirectory"));
+
+    return true;
+}
+
 export bool RunUnitTests_FileIO()
 {
     JPT_ENSURE(UnitTest_FileIO_Exists());
 
+	JPT_ENSURE(UnitTest_FileIO_Directory());
 
     return true;
 }
