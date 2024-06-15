@@ -30,7 +30,6 @@ export namespace jpt::File
 		constexpr File_Text(const Path& path);
 
 		static File_Text* Load(const Path& absoluteFullPath);
-
 		void Save(const Path& absoluteFullPath) const;
 
 		WString& GetText() { return m_text; }
@@ -46,10 +45,10 @@ export namespace jpt::File
 	{
 		using TChar = typename Path::TChar;
 
-		std::basic_ifstream<TChar> file;
-		file.open(absoluteFullPath.ConstBuffer());
+		std::basic_ifstream<TChar> ifstream;
+		ifstream.open(absoluteFullPath.ConstBuffer());
 
-		if (!file.is_open())
+		if (!ifstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
 			return nullptr;
@@ -57,13 +56,19 @@ export namespace jpt::File
 
 		std::basic_string<TChar> line;
 		File_Text* fileText = new File_Text(absoluteFullPath);
-		while (std::getline(file, line))
+		while (std::getline(ifstream, line))
 		{
 			fileText->m_text += line.c_str();
-			fileText->m_text += '\n';
+
+			if (!ifstream.eof())
+			{
+				fileText->m_text += '\n';
+			}
 		}
 
-		file.close();
+		ifstream >> line;
+
+		ifstream.close();
 		return fileText;
 	}
 
@@ -71,16 +76,16 @@ export namespace jpt::File
 	{
 		using TChar = typename Path::TChar;
 
-		std::basic_ofstream<TChar> file;
-		file.open(absoluteFullPath.ConstBuffer());
+		std::basic_ofstream<TChar> ofstream;
+		ofstream.open(absoluteFullPath.ConstBuffer());
 
-		if (!file.is_open())
+		if (!ofstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
 			return;
 		}
 
-		file << m_text.ConstBuffer();
-		file.close();
+		ofstream.write(m_text.ConstBuffer(), m_text.Count());
+		ofstream.close();
 	}
 }

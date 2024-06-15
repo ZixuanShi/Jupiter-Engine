@@ -63,6 +63,7 @@ bool UnitTest_FileIO_TextFile()
 {
 	// Load existing file
     jpt::StrongPtr<File_Text> pFile = File_Text::Load({ ESource::Client, "Assets/Configs/TestJson.json" });
+    //JPT_LOG(pFile->GetText());
     JPT_ENSURE(pFile->GetPath().Contains("Assets/Configs/TestJson.json"));
 
     // Create new one
@@ -77,8 +78,9 @@ bool UnitTest_FileIO_TextFile()
 
     // Load again
 	pFile = File_Text::Load({ ESource::Client, "Assets/NewTextFile.txt" });
+    //JPT_LOG(pFile->GetText());
 	JPT_ENSURE(pFile->GetPath().Contains("Assets/NewTextFile.txt"));
-    JPT_ENSURE(pFile->GetText() == "Hello, World! I'm a new text file\n");
+    JPT_ENSURE(pFile->GetText() == "Hello, World! I'm a new text file");
 
 	// Clean up
 	jpt::File::Delete({ ESource::Client, "Assets/NewTextFile.txt" });
