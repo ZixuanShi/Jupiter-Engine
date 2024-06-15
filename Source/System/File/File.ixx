@@ -11,6 +11,7 @@ module;
 export module jpt.File;
 
 import jpt.Any;
+import jpt.Utilities;
 import jpt.File.Path;
 
 export namespace jpt::File

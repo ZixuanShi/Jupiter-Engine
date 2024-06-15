@@ -16,6 +16,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.StrongPtr;
 import jpt.Math;
+import jpt.HashMap;
 
 using namespace jpt::File;
 
@@ -120,6 +121,29 @@ bool UnitTest_FileIO_BinaryFile()
     JPT_ENSURE(jpt::AreStringsSame(loaderData.m_cstr, "ABCDRFG"));
     JPT_ENSURE(jpt::AreStringsSame(loaderData.m_wcstr, L"中文"));
 
+    // Another loader
+    File loader2;
+	loader2.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin.bin" });
+	const Foo& loaderData2 = loader2.GetData<Foo>();
+
+	JPT_ENSURE(loaderData2.m_bool == true);
+	JPT_ENSURE(jpt::AreValuesClose(loaderData2.m_double, 3.14));
+	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_cstr, "ABCDRFG"));
+	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_wcstr, L"中文"));
+
+    return true;
+}
+
+bool UnitTest_FileIO_DataArray()
+{
+
+    return true;
+}
+
+bool UnitTest_FileIO_DataMap()
+{
+
+
     return true;
 }
 
@@ -130,6 +154,9 @@ export bool RunUnitTests_FileIO()
 
 	JPT_ENSURE(UnitTest_FileIO_TextFile());
 	JPT_ENSURE(UnitTest_FileIO_BinaryFile());
+
+	JPT_ENSURE(UnitTest_FileIO_DataArray());
+	JPT_ENSURE(UnitTest_FileIO_DataMap());
 
     return true;
 }
