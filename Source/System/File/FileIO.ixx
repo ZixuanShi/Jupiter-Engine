@@ -11,7 +11,6 @@ module;
 
 export module jpt.FileIO;
 
-import jpt.File_Base;
 import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.File.PathUtils;
