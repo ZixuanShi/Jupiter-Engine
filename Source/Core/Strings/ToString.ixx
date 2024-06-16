@@ -11,6 +11,7 @@ import jpt.String;
 import jpt.StringUtils;
 import jpt.Concepts;
 import jpt.TypeTraits;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 export namespace jpt
@@ -39,7 +40,7 @@ export namespace jpt
 	}
 
 	// int, uint
-	template<StringType TString = jpt::String, Integral TInt>
+	template<StringType TString = jpt::String, Integral TInt = int32>
 	constexpr TString ToString(TInt integer)
 	{
 		using TChar = TString::TChar;
@@ -51,7 +52,7 @@ export namespace jpt
 	}
 
 	// float, double
-	template<StringType TString = jpt::String, Floating TFloat>
+	template<StringType TString = jpt::String, Floating TFloat = float32>
 	constexpr TString ToString(TFloat value)
 	{
 		using TChar = TString::TChar;
@@ -115,6 +116,35 @@ export namespace jpt
 			str.Append(" }", 2);
 
 			return str;
+		}
+	}
+	template<Containable TContainer>
+	constexpr WString ToWString(const TContainer& container)
+	{
+		if constexpr (AreSameType<TContainer, WString>)
+		{
+			return container;
+		}
+		else
+		{
+			WString wstr(L"{ ", 2);
+
+			for (auto itr = container.begin(); itr != container.end(); ++itr)
+			{
+				// Elements need to provide ToWString() implementation to make this work
+				wstr += jpt::ToString<jpt::WString>(*itr);
+
+				// Append ", " suffix if it's not the last element
+				const bool isLastElement = ((itr + 1) == container.end());
+				if (!isLastElement)
+				{
+					wstr.Append(L", ", 2);
+				}
+			}
+
+			wstr.Append(L" }", 2);
+
+			return wstr;
 		}
 	}
 

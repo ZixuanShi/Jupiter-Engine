@@ -9,10 +9,10 @@ import jpt.Concepts;
 import jpt.ToString;
 import jpt.String;
 
-	#define JPT_LOG(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,		__LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_SYSTEM_INFO(message, ...)   { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_WARNING(message, ...)		{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,	__LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_ERROR(message, ...)			{ jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,		__LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_LOG(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,        __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_SYSTEM_INFO(message, ...) { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::SystemInfo, __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_WARNING(message, ...)     { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,    __LINE__, __FILE__, message, __VA_ARGS__); }
+	#define JPT_ERROR(message, ...)       { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,      __LINE__, __FILE__, message, __VA_ARGS__); }
 
 namespace jpt
 {
@@ -43,6 +43,11 @@ namespace jpt
 		void Log(ELogType type, int32 line, const char* file, const TObject& obj, ...)
 		{
 			ProcessMessage(type, line, file, obj.ToString().ConstBuffer());
+		}
+		template<EnabledToWString TObject>
+		void Log(ELogType type, int32 line, const char* file, const TObject& obj, ...)
+		{
+			ProcessMessage(type, line, file, obj.ToWString().ConstBuffer());
 		}
 		template<Containable TContainer>
 		void Log(ELogType type, int32 line, const char* file, const TContainer& container, ...)

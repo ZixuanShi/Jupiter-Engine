@@ -17,6 +17,7 @@ import jpt.Utilities;
 import jpt.StrongPtr;
 import jpt.Math;
 import jpt.HashMap;
+import jpt.DynamicArray;
 
 using namespace jpt::File;
 
@@ -73,13 +74,13 @@ bool UnitTest_FileIO_TextFile()
     saver.SetText(L"Hello, World! I'm a new text file");
 
     // Save
-    saver.Save({ ESource::Client, "Assets/NewTextFile.txt" });
-    JPT_ENSURE(Exists({ ESource::Client, "Assets/NewTextFile.txt"}));
+    saver.Save({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    JPT_ENSURE(Exists({ ESource::Client, "Assets/NewTextFile_UnitTest.txt"}));
 
     // Load again
-    loader.Load({ ESource::Client, "Assets/NewTextFile.txt" });
+    loader.Load({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     //JPT_LOG(file.GetText());
-	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile.txt"));
+	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile_UnitTest.txt"));
     JPT_ENSURE(loader.GetText() == "Hello, World! I'm a new text file");
 
 	// Clean up
@@ -109,11 +110,11 @@ bool UnitTest_FileIO_BinaryFile()
 	JPT_ENSURE(jpt::AreStringsSame(saverData.m_cstr, "ABCDRFG"));
 	JPT_ENSURE(jpt::AreStringsSame(saverData.m_wcstr, L"中文"));
 
-    saver.SaveBinary<Foo>({ ESource::Client, L"Assets/中文Bin.bin" });
+    saver.SaveBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
 
 	// Load Binary
     File loader;
-	loader.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin.bin" });
+	loader.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
     const Foo& loaderData = loader.GetData<Foo>();
 
     JPT_ENSURE(loaderData.m_bool == true);
@@ -123,13 +124,75 @@ bool UnitTest_FileIO_BinaryFile()
 
     // Another loader
     File loader2;
-	loader2.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin.bin" });
+	loader2.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
 	const Foo& loaderData2 = loader2.GetData<Foo>();
 
 	JPT_ENSURE(loaderData2.m_bool == true);
 	JPT_ENSURE(jpt::AreValuesClose(loaderData2.m_double, 3.14));
 	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_cstr, "ABCDRFG"));
 	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_wcstr, L"中文"));
+
+    return true;
+}
+
+bool UnitTest_FileIO_Serialization()
+{
+    struct Foo
+    {
+		int32 m_int = 0;
+		jpt::WString m_string;
+		jpt::DynamicArray<int32> m_array;
+
+		void Serialize(std::ofstream& os)
+        {
+            // int
+			os.write(reinterpret_cast<char*>(&m_int), sizeof(m_int));
+
+			// string
+			size_t stringSize = m_string.Count();
+			os.write(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
+			const wchar_t* buffer = m_string.ConstBuffer();
+            os.write(reinterpret_cast<char*>(&buffer), sizeof(stringSize * sizeof(wchar_t)));
+
+        }
+        void Deserialize(std::ifstream& is)
+        {
+            // int
+            is.read(reinterpret_cast<char*>(&m_int), sizeof(m_int));
+
+            // string
+            //size_t stringSize = 0;
+            //is.read(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
+            //wchar_t* buffer = new wchar_t[stringSize];
+            //is.read(reinterpret_cast<char*>(&buffer), sizeof(stringSize * sizeof(wchar_t)));
+            //m_string.CopyString(buffer);
+        }
+
+        jpt::WString ToWString() const
+        {
+			jpt::WString result;
+			result.Append(L"m_int: ");
+			result.Append(jpt::ToString<jpt::WString>(m_int));
+			result.Append(L", m_string: ");
+			result.Append(m_string);
+			result.Append(L", m_array: ");
+			result.Append(jpt::ToWString(m_array));
+			return result;
+
+        }
+	};
+
+	// Save
+	File saver;
+	saver.SetData<Foo>({ 56, L"Hello哥们儿, World!", { 9,8,6,4,5 } });
+	saver.SaveBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
+	JPT_LOG(saver.GetData<Foo>());
+
+	// Load
+	File loader;
+	loader.LoadBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
+	const Foo& loaderData = loader.GetData<Foo>();
+	JPT_LOG(loaderData);
 
     return true;
 }
@@ -154,6 +217,7 @@ export bool RunUnitTests_FileIO()
 
 	JPT_ENSURE(UnitTest_FileIO_TextFile());
 	JPT_ENSURE(UnitTest_FileIO_BinaryFile());
+	JPT_ENSURE(UnitTest_FileIO_Serialization());
 
 	JPT_ENSURE(UnitTest_FileIO_DataArray());
 	JPT_ENSURE(UnitTest_FileIO_DataMap());
