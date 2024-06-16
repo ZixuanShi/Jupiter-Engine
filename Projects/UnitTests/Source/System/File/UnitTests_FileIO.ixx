@@ -6,6 +6,8 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
+#include <fstream>
+
 export module UnitTests_FileIO;
 
 import jpt.File;
@@ -18,6 +20,8 @@ import jpt.StrongPtr;
 import jpt.Math;
 import jpt.HashMap;
 import jpt.DynamicArray;
+import jpt.Serializer;
+import jpt.Optional;
 
 using namespace jpt::File;
 
@@ -65,23 +69,23 @@ bool UnitTest_FileIO_TextFile()
 {
 	// Load existing file
     File loader;
-    loader.Load({ ESource::Client, "Assets/Configs/TestJson.json" });
+    loader.LoadText<jpt::String>({ ESource::Client, "Assets/Configs/TestJson.json" });
     //JPT_LOG(file.GetText());
     JPT_ENSURE(loader.GetPath().Contains("Assets/Configs/TestJson.json"));
 
 	// Create new one and edit its content
     File saver;
-    saver.SetText(L"Hello, World! I'm a new text file");
+    saver.SetData<jpt::String>("Hello, World! I'm a new text file");
 
     // Save
-    saver.Save({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    saver.SaveText<jpt::String>({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     JPT_ENSURE(Exists({ ESource::Client, "Assets/NewTextFile_UnitTest.txt"}));
 
     // Load again
-    loader.Load({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    loader.LoadText<jpt::String>({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     //JPT_LOG(file.GetText());
 	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile_UnitTest.txt"));
-    JPT_ENSURE(loader.GetText() == "Hello, World! I'm a new text file");
+    JPT_ENSURE(loader.GetData<jpt::String>() == "Hello, World! I'm a new text file");
 
 	// Clean up
 	//jpt::File::Delete({ ESource::Client, "Assets/NewTextFile.txt" });

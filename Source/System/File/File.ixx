@@ -6,12 +6,12 @@ module;
 #include "Debugging/Logger.h"
 
 #include <fstream>
-#include <string>
 
 export module jpt.File;
 
 import jpt.Any;
 import jpt.Concepts;
+import jpt.Optional;
 import jpt.Serializer;
 import jpt.Utilities;
 import jpt.File.Path;
@@ -19,30 +19,7 @@ import jpt.File.Path;
 export namespace jpt::File
 {
 	/** Represents a File in the system
-		Could contain text, binary, or any custom data
-
-		Examples:
-
-		// Save text file
-		File saver;
-		saver.SetText(L"Hello World");
-		saver.Save({ ESource::Client, "Assets/NewTextFile.txt" });	// Will create a new file or overwrite existing one at Client directory's Assets/NewTextFile.txt with the content of "Hello World"
-
-		// Load text file
-		File loader;
-		loader.Load({ ESource::Client, "Assets/NewTextFile.txt" });	// Will load the content of the file at Client directory's Assets/NewTextFile.txt into loader's data.
-		JPT_LOG(loader.GetText());	// Will print "Hello World"
-
-		// Save binary file
-		File binarySaver;
-		binarySaver.SetData<int>(42);
-		binarySaver.SaveBinary<int>({ ESource::Client, "Assets/NewBinaryFile.bin" });	// Will create a new file or overwrite existing one at Client directory's Assets/NewBinaryFile.bin with the content of 42
-
-		// Load binary file
-		File binaryLoader;
-		binaryLoader.LoadBinary<int>({ ESource::Client, "Assets/NewBinaryFile.bin" });	// Will load the content of the file at Client directory's Assets/NewBinaryFile.bin into loader's data.
-		JPT_LOG(binaryLoader.GetData<int>());	// Will print 42
-	*/
+		Could contain text, binary, or any custom data */
 	class File
 	{
 	private:
@@ -54,29 +31,14 @@ export namespace jpt::File
 		constexpr File(const Path& path);
 
 		// Text
-		bool Load(const Path& absoluteFullPath);
-		bool Save(const Path& absoluteFullPath);
+		template<StringType TString> bool LoadText(const Path& absoluteFullPath);
+		template<StringType TString> bool SaveText(const Path& absoluteFullPath);
 
-		// Binary. Raw data, T only have primitive types
-		template<typename T> 
-		requires (!Serializable<T>) 
-		bool LoadBinary(const Path& absoluteFullPath);
-
-		template<typename T>
-		requires (!Serializable<T>) 
-		bool SaveBinary(const Path& absoluteFullPath);
-
-		// Serialization. T is serializable with Serialize/Deserialize functions. Can have non-primitive types
-		template<Serializable T>
-		bool LoadBinary(const Path& absoluteFullPath);
-
-		template<Serializable T>
-		bool SaveBinary(const Path& absoluteFullPath);
+		// Binary
+		template<typename T> bool LoadBinary(const Path& absoluteFullPath);
+		template<typename T> bool SaveBinary(const Path& absoluteFullPath);
 
 		// Data
-		void SetText(const WString& text) { m_data = text; }
-		const WString& GetText() const { return m_data.As<WString>(); }
-
 		template<typename T> void SetData(const T& data) { m_data = data; }
 		template<typename T>       T& GetData()       { return m_data.As<T>(); }
 		template<typename T> const T& GetData() const { return m_data.As<T>(); }
@@ -90,118 +52,38 @@ export namespace jpt::File
 	{
 	}
 
-	bool File::Load(const Path& absoluteFullPath)
+	template<StringType TString>
+	bool File::LoadText(const Path& absoluteFullPath)
 	{
-		std::wifstream ifstream(absoluteFullPath.ConstBuffer(), std::ios::in);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
 		m_path = absoluteFullPath;
-		m_data = WString();
-		WString& content = m_data.As<WString>();
 
-		std::wstring line;
-		while (std::getline(ifstream, line))
+		if (Optional<TString> content = LoadTextFile<TString>(absoluteFullPath))
 		{
-			content += line.c_str();
-
-			if (!ifstream.eof())
-			{
-				content += '\n';
-			}
+			m_data = content.Value();
+			return true;
 		}
 
-		ifstream.close();
-		return true;
+		return false;
 	}
 
-	bool File::Save(const Path& absoluteFullPath)
+	template<StringType TString>
+	bool File::SaveText(const Path& absoluteFullPath)
 	{
-		std::wofstream ofstream(absoluteFullPath.ConstBuffer(), std::ios::out);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
-		ofstream.write(m_data.As<WString>().ConstBuffer(), m_data.As<WString>().Count());
-		ofstream.close();
-		return true;
+		const TString& content = m_data.As<TString>();
+		return SaveTextFile<TString::TChar>(absoluteFullPath, content.ConstBuffer(), content.Size());
 	}
 
 	template<typename T>
-	requires (!Serializable<T>)
 	bool File::LoadBinary(const Path& absoluteFullPath)
 	{
-		std::basic_ifstream<char> ifstream(absoluteFullPath.ConstBuffer(), std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
 		m_path = absoluteFullPath;
-
-		T data;
-		ifstream.read(reinterpret_cast<char*>(&data), sizeof(T));
-		SetData<T>(data);
-
-		ifstream.close();
-		return true;
+		m_data = T();
+		return LoadBinaryFile(absoluteFullPath, m_data.As<T>());
 	}
 
 	template<typename T>
-	requires (!Serializable<T>)
 	bool File::SaveBinary(const Path& absoluteFullPath)
 	{
-		std::basic_ofstream<char> ofstream(absoluteFullPath.ConstBuffer(), std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
-		ofstream.write(reinterpret_cast<char*>(&m_data.As<T>()), sizeof(T));
-		ofstream.close();
-		return true;
-	}
-
-	template<Serializable T>
-	bool File::LoadBinary(const Path& absoluteFullPath)
-	{
-		std::basic_ifstream<char> ifstream(absoluteFullPath.ConstBuffer(), std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
-		m_path = absoluteFullPath;
-
-		T data;
-		data.Deserialize(ifstream);
-		SetData<T>(data);
-
-		ifstream.close();
-		return true;
-	}
-
-	template<Serializable T>
-	bool File::SaveBinary(const Path& absoluteFullPath)
-	{
-		std::basic_ofstream<char> ofstream(absoluteFullPath.ConstBuffer(), std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %s", absoluteFullPath.ConstBuffer());
-			return false;
-		}
-
-		m_data.As<T>().Serialize(ofstream);
-
-		ofstream.close();
-		return true;
+		return SaveBinaryFile(absoluteFullPath, m_data.As<T>());
 	}
 }
