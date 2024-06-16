@@ -151,8 +151,12 @@ bool UnitTest_FileIO_Serialization()
 			// string
 			size_t stringCount = m_string.Count();
 			os.write(reinterpret_cast<const char*>(&stringCount), sizeof(size_t));
-            os.write(reinterpret_cast<const char*>(m_string.Buffer()), m_string.Size());
+            os.write(reinterpret_cast<const char*>(m_string.ConstBuffer()), m_string.Size());
 
+			// array
+			size_t arrayCount = m_array.Count();
+			os.write(reinterpret_cast<const char*>(&arrayCount), sizeof(size_t));
+			os.write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
         }
         void Deserialize(std::ifstream& is)
         {
@@ -162,12 +166,14 @@ bool UnitTest_FileIO_Serialization()
             // string
 			size_t stringCount = 0;
 			is.read(reinterpret_cast<char*>(&stringCount), sizeof(size_t));
+			m_string.Resize(stringCount);
+            is.read(reinterpret_cast<char*>(m_string.Buffer()), stringCount * sizeof(wchar_t));
 
-			wchar_t* buffer = new wchar_t[stringCount + 1];
-            is.read(reinterpret_cast<char*>(buffer), stringCount * sizeof(wchar_t));
-			buffer[stringCount] = L'\0';
-
-            m_string.MoveString(buffer, stringCount);
+            // array
+			size_t arrayCount = 0;
+			is.read(reinterpret_cast<char*>(&arrayCount), sizeof(size_t));
+			m_array.Resize(arrayCount);
+			is.read(reinterpret_cast<char*>(m_array.Buffer()), arrayCount * sizeof(int32));
         }
 
         jpt::WString ToWString() const
@@ -187,7 +193,8 @@ bool UnitTest_FileIO_Serialization()
 	File saver;
 	saver.SetData<Foo>({ 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } });
 	saver.SaveBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
-	JPT_LOG(saver.GetData<Foo>());
+	const Foo& saverData = saver.GetData<Foo>();
+	JPT_LOG(saverData);
 
 	// Load
 	File loader;

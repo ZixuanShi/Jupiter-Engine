@@ -132,6 +132,7 @@ export namespace jpt
 
 		/** Pre allocate buffer with capacity's size. Preventing oftenly dynamic heap allocation */
 		constexpr void Reserve(size_t capacity);
+		constexpr void Resize(size_t newSize);
 
 		/** Formats data to a string with provided format then return it
 			@example String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second); */
@@ -746,6 +747,28 @@ export namespace jpt
 			m_pBuffer = m_smallBuffer;
 			m_capacity = kSmallDataSize;
 		}
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void String_Base<_TChar, _TAllocator>::Resize(size_t newSize)
+	{
+		if (newSize == 0)
+		{
+			Clear();
+			return;
+		}
+
+		if (newSize < m_count)
+		{
+			m_count = newSize;
+		}
+		else
+		{
+			Reserve(newSize);
+			m_count = newSize;
+		}
+
+		m_pBuffer[m_count] = '\0';
 	}
 
 	template<StringLiteral TChar, class TAllocator>

@@ -64,6 +64,7 @@ export namespace jpt
 
 		// Capacity
 		constexpr size_t Count()    const { return m_count;      }
+		constexpr size_t Size()     const { return m_count * sizeof(TData); }
 		constexpr size_t Capacity() const { return m_capacity;   }
 		constexpr bool   IsEmpty()  const { return m_count == 0; }
 		constexpr void Reserve(size_t capacity);
