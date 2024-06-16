@@ -31,7 +31,7 @@ export namespace jpt::File
 	}
 
 	/** Creates a directory and all necessary parent folders */
-	bool CreateDirectory(const Path& absoluteFullPath)
+	bool MakeDirectory(const Path& absoluteFullPath)
 	{
 		std::error_code errorCode;
 		const bool result = std::filesystem::create_directories(absoluteFullPath.ConstBuffer(), errorCode);

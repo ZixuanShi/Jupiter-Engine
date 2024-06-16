@@ -31,16 +31,17 @@ export namespace jpt::File
 		constexpr File(const Path& path);
 
 		// Text
-		template<StringType TString> bool LoadText(const Path& absoluteFullPath);
-		template<StringType TString> bool SaveText(const Path& absoluteFullPath);
+		bool LoadText(const Path& absoluteFullPath);
+		bool SaveText(const Path& absoluteFullPath);
 
 		// Binary
 		template<typename T> bool LoadBinary(const Path& absoluteFullPath);
 		template<typename T> bool SaveBinary(const Path& absoluteFullPath);
 
 		// Data
+		void SetText(const String& text) { m_data = text; }
+		const String& GetText() const { return m_data.As<String>(); }
 		template<typename T> void SetData(const T& data) { m_data = data; }
-		template<typename T>       T& GetData()       { return m_data.As<T>(); }
 		template<typename T> const T& GetData() const { return m_data.As<T>(); }
 
 		// Path
@@ -52,12 +53,11 @@ export namespace jpt::File
 	{
 	}
 
-	template<StringType TString>
 	bool File::LoadText(const Path& absoluteFullPath)
 	{
 		m_path = absoluteFullPath;
 
-		if (Optional<TString> content = LoadTextFile<TString>(absoluteFullPath))
+		if (Optional<jpt::String> content = LoadTextFile(absoluteFullPath))
 		{
 			m_data = content.Value();
 			return true;
@@ -66,11 +66,10 @@ export namespace jpt::File
 		return false;
 	}
 
-	template<StringType TString>
 	bool File::SaveText(const Path& absoluteFullPath)
 	{
-		const TString& content = m_data.As<TString>();
-		return SaveTextFile<TString::TChar>(absoluteFullPath, content.ConstBuffer(), content.Size());
+		const String& content = m_data.As<String>();
+		return SaveTextFile(absoluteFullPath, content.ConstBuffer(), content.Size());
 	}
 
 	template<typename T>

@@ -48,23 +48,17 @@ export namespace jpt
 		is.read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}
 
-	/** @example:     
-		jpt::Optional<jpt::String> content = jpt::DeserializeTextFile<jpt::String>({ ESource::Client, "Assets/Configs/TestJson.json" });
-		JPT_LOG(content.Value()); */
-	template<StringType TString>
-	Optional<TString> LoadTextFile(const File::Path& path)
+	Optional<String> LoadTextFile(const File::Path& path)
 	{
-		using TChar = TString::TChar;
-
-		std::basic_ifstream<TChar> ifstream(path.ConstBuffer(), std::ios::in);
+		std::ifstream ifstream(path.ConstBuffer(), std::ios::in);
 		if (!ifstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", path.ConstBuffer());
-			return Optional<TString>();
+			return Optional<String>();
 		}
 
-		TString content;
-		std::basic_string<TChar> line;
+		String content;
+		std::string line;
 		while (std::getline(ifstream, line))
 		{
 			content += line.c_str();
@@ -79,13 +73,9 @@ export namespace jpt
 		return content;
 	}
 
-	/** @example:
-		const char* content = "Hello World";
-		jpt::SerializeTextFile<char>({ ESource::Client, "Assets/Configs/UnitTestResults.txt" }, content, jpt::FindCharsCount(content)); */
-	template<typename TChar>
-	bool SaveTextFile(const File::Path& path, const TChar* data, size_t sizeInBytes)
+	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
-		std::basic_ofstream<TChar> ofstream(path.ConstBuffer(), std::ios::out);
+		std::basic_ofstream<char> ofstream(path.ConstBuffer(), std::ios::out);
 		if (!ofstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %s", path.ConstBuffer());
@@ -96,10 +86,9 @@ export namespace jpt
 		ofstream.close();
 		return true;
 	}
-	template<typename TChar>
-	bool SaveTextFile(const File::Path& path, const TChar* data)
+	bool SaveTextFile(const File::Path& path, const char* data)
 	{
-		return SaveTextFile(path, data, FindCharsCount(data));
+		return SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
 
 	template<typename T>

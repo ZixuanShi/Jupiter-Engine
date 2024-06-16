@@ -43,13 +43,13 @@ bool UnitTest_FileIO_Exists()
 bool UnitTest_FileIO_Directory()
 {
     // Create
-    jpt::File::CreateDirectory({ ESource::Engine, "Assets/NewDirectory_UnitTest" });
+    jpt::File::MakeDirectory({ ESource::Engine, "Assets/NewDirectory_UnitTest" });
     JPT_ENSURE(Exists({ ESource::Engine, "Assets/NewDirectory_UnitTest" }));
 
-    jpt::File::CreateDirectory({ ESource::Client, "Assets/NewDirectory_UnitTest" });
+    jpt::File::MakeDirectory({ ESource::Client, "Assets/NewDirectory_UnitTest" });
     JPT_ENSURE(Exists({ ESource::Client, "Assets/NewDirectory_UnitTest" }));
 
-    jpt::File::CreateDirectory({ ESource::Client, L"Assets/新文件夹_UnitTest" });
+    jpt::File::MakeDirectory({ ESource::Client, L"Assets/新文件夹_UnitTest" });
     JPT_ENSURE(Exists({ ESource::Client, L"Assets/新文件夹_UnitTest" }));
 
     // Destroy
@@ -69,27 +69,27 @@ bool UnitTest_FileIO_TextFile()
 {
 	// Load existing file
     File loader;
-    loader.LoadText<jpt::String>({ ESource::Client, "Assets/Configs/TestJson.json" });
+    loader.LoadText({ ESource::Client, "Assets/Configs/TestJson.json" });
     //JPT_LOG(file.GetText());
     JPT_ENSURE(loader.GetPath().Contains("Assets/Configs/TestJson.json"));
 
 	// Create new one and edit its content
     File saver;
-    saver.SetData<jpt::String>("Hello, World! I'm a new text file");
+    saver.SetText("Hello, World! I'm a new text file");
 
     // Save
-    saver.SaveText<jpt::String>({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    saver.SaveText({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     JPT_ENSURE(Exists({ ESource::Client, "Assets/NewTextFile_UnitTest.txt"}));
 
     // Load again
-    loader.LoadText<jpt::String>({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    loader.LoadText({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     //JPT_LOG(file.GetText());
 	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile_UnitTest.txt"));
-    JPT_ENSURE(loader.GetData<jpt::String>() == "Hello, World! I'm a new text file");
+    JPT_ENSURE(loader.GetText() == "Hello, World! I'm a new text file");
 
 	// Clean up
-	//jpt::File::Delete({ ESource::Client, "Assets/NewTextFile.txt" });
-    //JPT_ENSURE(!Exists({ ESource::Client, "Assets/NewTextFile.txt" }));
+	jpt::File::Delete({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
+    JPT_ENSURE(!Exists({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" }));
 
 	return true;
 }
@@ -102,39 +102,37 @@ bool UnitTest_FileIO_BinaryFile()
         double m_double = 0.0;
         const char* m_cstr = "";
 		const wchar_t* m_wcstr = L"";
+
+		bool operator==(const Foo& other) const
+		{
+			return m_bool == other.m_bool &&
+				jpt::AreValuesClose(m_double, other.m_double) &&
+				jpt::AreStringsSame(m_cstr, other.m_cstr) &&
+				jpt::AreStringsSame(m_wcstr, other.m_wcstr);
+		}
     };
+
+	Foo foo = { true, 3.14, "ABCDRFG", L"中文" };
 
     // Save Binary
     File saver;
-    saver.SetData<Foo>({ true, 3.14, "ABCDRFG", L"中文" });
-
-    const Foo& saverData = saver.GetData<Foo>();
-	JPT_ENSURE(saverData.m_bool == true);
-	JPT_ENSURE(jpt::AreValuesClose(saverData.m_double, 3.14));
-	JPT_ENSURE(jpt::AreStringsSame(saverData.m_cstr, "ABCDRFG"));
-	JPT_ENSURE(jpt::AreStringsSame(saverData.m_wcstr, L"中文"));
-
-    saver.SaveBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
+    saver.SetData(foo);
+    saver.SaveBinary<Foo>({ ESource::Client, "Assets/Bin_UnitTest.bin" });
 
 	// Load Binary
     File loader;
-	loader.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
+	loader.LoadBinary<Foo>({ ESource::Client, "Assets/Bin_UnitTest.bin" });
     const Foo& loaderData = loader.GetData<Foo>();
-
-    JPT_ENSURE(loaderData.m_bool == true);
-    JPT_ENSURE(jpt::AreValuesClose(loaderData.m_double, 3.14));
-    JPT_ENSURE(jpt::AreStringsSame(loaderData.m_cstr, "ABCDRFG"));
-    JPT_ENSURE(jpt::AreStringsSame(loaderData.m_wcstr, L"中文"));
+	JPT_ENSURE(loaderData == foo);
 
     // Another loader
     File loader2;
-	loader2.LoadBinary<Foo>({ ESource::Client, L"Assets/中文Bin_UnitTest.bin" });
+	loader2.LoadBinary<Foo>({ ESource::Client, "Assets/Bin_UnitTest.bin" });
 	const Foo& loaderData2 = loader2.GetData<Foo>();
+    JPT_ENSURE(loaderData2 == foo);
 
-	JPT_ENSURE(loaderData2.m_bool == true);
-	JPT_ENSURE(jpt::AreValuesClose(loaderData2.m_double, 3.14));
-	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_cstr, "ABCDRFG"));
-	JPT_ENSURE(jpt::AreStringsSame(loaderData2.m_wcstr, L"中文"));
+    // Clean
+	jpt::File::Delete({ ESource::Client, "Assets/Bin_UnitTest.bin" });
 
     return true;
 }
@@ -210,8 +208,9 @@ bool UnitTest_FileIO_Serialization()
 	File loader;
 	loader.LoadBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
 	const Foo& loaderData = loader.GetData<Foo>();
-
 	JPT_ENSURE(saverData == loaderData);
+
+	jpt::File::Delete({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
 
     return true;
 }
