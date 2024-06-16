@@ -143,16 +143,15 @@ bool UnitTest_FileIO_Serialization()
 		jpt::WString m_string;
 		jpt::DynamicArray<int32> m_array;
 
-		void Serialize(std::ofstream& os)
+		void Serialize(std::ofstream& os) const
         {
             // int
-			os.write(reinterpret_cast<char*>(&m_int), sizeof(m_int));
+			os.write(reinterpret_cast<const char*>(&m_int), sizeof(m_int));
 
 			// string
-			size_t stringSize = m_string.Count();
-			os.write(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
-			const wchar_t* buffer = m_string.ConstBuffer();
-            os.write(reinterpret_cast<char*>(&buffer), sizeof(stringSize * sizeof(wchar_t)));
+			size_t stringCount = m_string.Count();
+			os.write(reinterpret_cast<const char*>(&stringCount), sizeof(size_t));
+            os.write(reinterpret_cast<const char*>(m_string.Buffer()), m_string.Size());
 
         }
         void Deserialize(std::ifstream& is)
@@ -161,11 +160,14 @@ bool UnitTest_FileIO_Serialization()
             is.read(reinterpret_cast<char*>(&m_int), sizeof(m_int));
 
             // string
-            //size_t stringSize = 0;
-            //is.read(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
-            //wchar_t* buffer = new wchar_t[stringSize];
-            //is.read(reinterpret_cast<char*>(&buffer), sizeof(stringSize * sizeof(wchar_t)));
-            //m_string.CopyString(buffer);
+			size_t stringCount = 0;
+			is.read(reinterpret_cast<char*>(&stringCount), sizeof(size_t));
+
+			wchar_t* buffer = new wchar_t[stringCount + 1];
+            is.read(reinterpret_cast<char*>(buffer), stringCount * sizeof(wchar_t));
+			buffer[stringCount] = L'\0';
+
+            m_string.MoveString(buffer, stringCount);
         }
 
         jpt::WString ToWString() const
@@ -178,13 +180,12 @@ bool UnitTest_FileIO_Serialization()
 			result.Append(L", m_array: ");
 			result.Append(jpt::ToWString(m_array));
 			return result;
-
         }
 	};
 
 	// Save
 	File saver;
-	saver.SetData<Foo>({ 56, L"Hello哥们儿, World!", { 9,8,6,4,5 } });
+	saver.SetData<Foo>({ 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } });
 	saver.SaveBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
 	JPT_LOG(saver.GetData<Foo>());
 

@@ -74,6 +74,7 @@ export namespace jpt
 
 		// Capacity
 		constexpr size_t Count()    const { return m_count;      }
+		constexpr size_t Size()     const { return m_count * sizeof(TChar); }	/**< How many size in bytes this string in memory */
 		constexpr size_t Capacity() const { return m_capacity;   }
 		constexpr bool   IsEmpty()  const { return m_count == 0; }
 
