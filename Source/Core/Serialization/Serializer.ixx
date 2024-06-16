@@ -11,7 +11,7 @@ export namespace jpt
 	class Serializer
 	{
 	private:
-		std::ofstream m_outStream;
+		std::fstream m_stream;
 
 	public:
 		//Serializer(const char* path);

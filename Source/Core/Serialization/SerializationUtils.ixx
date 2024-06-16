@@ -18,108 +18,33 @@ import jpt.File.Path;
 export namespace jpt
 {
 	template<typename T>
-	concept Serializable = requires(T obj, std::fstream & is, std::fstream & os)
+	concept Serializable = requires(T obj, std::fstream& stream)
 	{
-		obj.Serialize(os);
-		obj.Deserialize(is);
+		obj.Serialize(stream);
+		obj.Deserialize(stream);
 	};
 
 	template<Serializable T>
-	void Serialize(const T& obj, std::fstream& os)
+	void Serialize(const T& obj, std::fstream& stream)
 	{
-		obj.Serialize(os);
+		obj.Serialize(stream);
 	}
 
 	template<Serializable T>
-	void Deserialize(T& obj, std::fstream& is)
+	void Deserialize(T& obj, std::fstream& stream)
 	{
-		obj.Deserialize(is);
+		obj.Deserialize(stream);
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Serialize(const T& obj, std::fstream& os)
+		void Serialize(const T& obj, std::fstream& stream)
 	{
-		os.write(reinterpret_cast<const char*>(&obj), sizeof(T));
+		stream.write(reinterpret_cast<const char*>(&obj), sizeof(T));
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Deserialize(T& obj, std::fstream& is)
+		void Deserialize(T& obj, std::fstream& stream)
 	{
-		is.read(reinterpret_cast<char*>(&obj), sizeof(T));
-	}
-
-	Optional<String> LoadTextFile(const File::Path& path)
-	{
-		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return Optional<String>();
-		}
-
-		String content;
-		std::string line;
-		while (std::getline(ifstream, line))
-		{
-			content += line.c_str();
-
-			if (!ifstream.eof())
-			{
-				content += '\n';
-			}
-		}
-
-		ifstream.close();
-		return content;
-	}
-
-	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
-	{
-		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		ofstream.write(data, sizeInBytes);
-		ofstream.close();
-		return true;
-	}
-	bool SaveTextFile(const File::Path& path, const char* data)
-	{
-		return SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
-	}
-
-	template<typename T>
-	bool LoadBinaryFile(const File::Path& path, T& obj)
-	{
-		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		Deserialize(obj, ifstream);
-
-		ifstream.close();
-		return true;
-	}
-
-	template<typename T>
-	bool SaveBinaryFile(const File::Path& path, const T& obj)
-	{
-		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		Serialize(obj, ofstream);
-
-		ofstream.close();
-		return true;
+		stream.read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}
 }

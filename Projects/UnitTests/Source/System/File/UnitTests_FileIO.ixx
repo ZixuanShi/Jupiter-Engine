@@ -70,7 +70,7 @@ bool UnitTest_FileIO_TextFile()
 	// Load existing file
     File loader;
     loader.LoadText({ ESource::Client, "Assets/Configs/TestJson.json" });
-    //JPT_LOG(file.GetText());
+    //JPT_LOG(loader.GetText());
     JPT_ENSURE(loader.GetPath().Contains("Assets/Configs/TestJson.json"));
 
 	// Create new one and edit its content
@@ -83,7 +83,7 @@ bool UnitTest_FileIO_TextFile()
 
     // Load again
     loader.LoadText({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
-    //JPT_LOG(file.GetText());
+    //JPT_LOG(loader.GetText());
 	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile_UnitTest.txt"));
     JPT_ENSURE(loader.GetText() == "Hello, World! I'm a new text file");
 

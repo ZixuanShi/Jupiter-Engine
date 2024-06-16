@@ -14,7 +14,9 @@ import jpt.Concepts;
 import jpt.Optional;
 import jpt.SerializationUtils;
 import jpt.Utilities;
+
 import jpt.File.Path;
+import jpt.FileIO;
 
 export namespace jpt::File
 {
@@ -42,6 +44,7 @@ export namespace jpt::File
 		void SetText(const String& text) { m_data = text; }
 		const String& GetText() const { return m_data.As<String>(); }
 		template<typename T> void SetData(const T& data) { m_data = data; }
+		template<typename T>       T& GetData()       { return m_data.As<T>(); }
 		template<typename T> const T& GetData() const { return m_data.As<T>(); }
 
 		// Path
