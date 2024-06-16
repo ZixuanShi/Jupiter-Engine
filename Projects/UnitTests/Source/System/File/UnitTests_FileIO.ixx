@@ -20,7 +20,7 @@ import jpt.StrongPtr;
 import jpt.Math;
 import jpt.HashMap;
 import jpt.DynamicArray;
-import jpt.Serializer;
+import jpt.SerializationUtils;
 import jpt.Optional;
 
 using namespace jpt::File;
@@ -147,33 +147,23 @@ bool UnitTest_FileIO_Serialization()
 
 		void Serialize(std::ofstream& os) const
         {
-            // int
-			os.write(reinterpret_cast<const char*>(&m_int), sizeof(m_int));
-
-			// string
-			size_t stringCount = m_string.Count();
-			os.write(reinterpret_cast<const char*>(&stringCount), sizeof(size_t));
-            os.write(reinterpret_cast<const char*>(m_string.ConstBuffer()), m_string.Size());
+            jpt::Serialize(m_int, os);
+			jpt::Serialize(m_string, os);
+			//jpt::Serialize(m_array, os);
 
 			// array
 			size_t arrayCount = m_array.Count();
-			os.write(reinterpret_cast<const char*>(&arrayCount), sizeof(size_t));
+			os.write(reinterpret_cast<const char*>(&arrayCount), sizeof(arrayCount));
 			os.write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
         }
         void Deserialize(std::ifstream& is)
         {
-            // int
-            is.read(reinterpret_cast<char*>(&m_int), sizeof(m_int));
-
-            // string
-			size_t stringCount = 0;
-			is.read(reinterpret_cast<char*>(&stringCount), sizeof(size_t));
-			m_string.Resize(stringCount);
-            is.read(reinterpret_cast<char*>(m_string.Buffer()), stringCount * sizeof(wchar_t));
+            jpt::Deserialize(m_int, is);
+            jpt::Deserialize(m_string, is);
 
             // array
 			size_t arrayCount = 0;
-			is.read(reinterpret_cast<char*>(&arrayCount), sizeof(size_t));
+			is.read(reinterpret_cast<char*>(&arrayCount), sizeof(arrayCount));
 			m_array.Resize(arrayCount);
 			is.read(reinterpret_cast<char*>(m_array.Buffer()), arrayCount * sizeof(int32));
         }

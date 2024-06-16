@@ -8,7 +8,7 @@ module;
 #include <fstream>
 #include <string>
 
-export module jpt.Serializer;
+export module jpt.SerializationUtils;
 
 import jpt.String;
 import jpt.Optional;
@@ -18,7 +18,7 @@ import jpt.StringUtils;
 export namespace jpt
 {
 	template<typename T>
-	concept Serializable = requires(T obj, std::ifstream& is, std::ofstream& os)
+	concept Serializable = requires(T obj, std::ifstream & is, std::ofstream & os)
 	{
 		obj.Serialize(os);
 		obj.Deserialize(is);
@@ -37,13 +37,13 @@ export namespace jpt
 	}
 
 	template<typename T> requires(!Serializable<T>)
-	void Serialize(const T& obj, std::ofstream& os)
+		void Serialize(const T& obj, std::ofstream& os)
 	{
 		os.write(reinterpret_cast<const char*>(&obj), sizeof(T));
 	}
 
 	template<typename T> requires(!Serializable<T>)
-	void Deserialize(T& obj, std::ifstream& is)
+		void Deserialize(T& obj, std::ifstream& is)
 	{
 		is.read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}

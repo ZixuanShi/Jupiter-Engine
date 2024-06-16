@@ -5,8 +5,7 @@ module;
 #include "Core/Types/Enum.h"
 #include "Debugging/Assert.h"
 
-#include <time.h>
-#include <chrono>
+#include <corecrt.h>
 
 export module jpt.Time.TypeDefs;
 

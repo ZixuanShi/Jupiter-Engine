@@ -88,6 +88,9 @@ export namespace jpt
 		constexpr void Erase(size_t index);
 		constexpr void PopBack();
 
+		//void Serialize(std::ofstream& os) const;
+		//void Deserialize(std::ifstream& is);
+
 	private:
 		/** Create a new data buffer with a new capacity, move the existing data over */
 		constexpr void UpdateBuffer(size_t capacity);
@@ -283,6 +286,28 @@ export namespace jpt
 	{
 		Erase(m_count - 1);
 	}
+
+	//template<typename TData, typename TAllocator>
+	//void DynamicArray<TData, TAllocator>::Serialize(std::ofstream& os) const
+	//{
+	//	os.write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
+	//	os.write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
+	//	os.write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TData));
+	//}
+
+	//template<typename TData, typename TAllocator>
+	//void DynamicArray<TData, TAllocator>::Deserialize(std::ifstream& is)
+	//{
+	//	size_t count = 0;
+	//	size_t capacity = 0;
+	//	is.read(reinterpret_cast<char*>(&count), sizeof(count));
+	//	is.read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
+
+	//	Resize(count);
+	//	is.read(reinterpret_cast<char*>(m_pBuffer), count * sizeof(TData));
+	//	m_count = count;
+	//	m_capacity = capacity;
+	//}
 
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::ShrinkToFit()

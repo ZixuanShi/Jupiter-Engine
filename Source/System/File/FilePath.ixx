@@ -17,8 +17,8 @@ import jpt.StringUtils;
 import jpt.ToString;
 import jpt.TypeTraits;
 import jpt.Utilities;
-import jpt.File.Enums;
 
+import jpt.File.Enums;
 
 export namespace jpt
 {
@@ -134,11 +134,13 @@ export namespace jpt::File
 		}
 
 		m_path.Append(relativePath.ToWString());
+		FixSeparators(m_path);
 	}
 
 	constexpr void Path::Append(const Path& path)
 	{
 		m_path.Append(path.ToWString());
+		FixSeparators(m_path);
 	}
 
 	constexpr void Path::operator+=(const WString& path)

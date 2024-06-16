@@ -8,6 +8,7 @@ module;
 #include <stdio.h>
 #include <vadefs.h>
 #include <stdarg.h>
+#include <fstream>
 
 export module jpt.String;
 
@@ -168,6 +169,9 @@ export namespace jpt
 
 		/** @return A hash value of this string */
 		constexpr uint64 Hash() const;
+
+		void Serialize(std::ofstream& os) const;
+		void Deserialize(std::ifstream& is);
 
 	private:
 		constexpr void DeallocateBuffer();
@@ -950,6 +954,31 @@ export namespace jpt
 	constexpr uint64 String_Base<TChar, TAllocator>::Hash() const
 	{
 		return StringHash64(m_pBuffer);
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	void String_Base<TChar, TAllocator>::Serialize(std::ofstream& os) const
+	{
+		os.write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
+		os.write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
+		os.write(reinterpret_cast<const char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
+		os.write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TChar));
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	void String_Base<TChar, TAllocator>::Deserialize(std::ifstream& is)
+	{
+		size_t count = 0;
+		is.read(reinterpret_cast<char*>(&count), sizeof(count));
+
+		size_t capacity = 0;
+		is.read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
+
+		Resize(count);
+		is.read(reinterpret_cast<char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
+		is.read(reinterpret_cast<char*>(m_pBuffer), m_count * sizeof(TChar));
+		m_count = count;
+		m_capacity = capacity;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
