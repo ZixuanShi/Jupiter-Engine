@@ -22,7 +22,8 @@ export namespace jpt::File
 	JPT_ENUM_UINT8(EExtension,
 		Unknown,
 		txt,
-		json
+		json,
+		bin,
 	);
 
 	enum class EType : uint8
