@@ -170,8 +170,8 @@ export namespace jpt
 		/** @return A hash value of this string */
 		constexpr uint64 Hash() const;
 
-		void Serialize(std::ofstream& os) const;
-		void Deserialize(std::ifstream& is);
+		void Serialize(std::fstream& os) const;
+		void Deserialize(std::fstream& is);
 
 	private:
 		constexpr void DeallocateBuffer();
@@ -957,7 +957,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	void String_Base<TChar, TAllocator>::Serialize(std::ofstream& os) const
+	void String_Base<TChar, TAllocator>::Serialize(std::fstream& os) const
 	{
 		os.write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
 		os.write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
@@ -966,7 +966,7 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	void String_Base<TChar, TAllocator>::Deserialize(std::ifstream& is)
+	void String_Base<TChar, TAllocator>::Deserialize(std::fstream& is)
 	{
 		size_t count = 0;
 		is.read(reinterpret_cast<char*>(&count), sizeof(count));

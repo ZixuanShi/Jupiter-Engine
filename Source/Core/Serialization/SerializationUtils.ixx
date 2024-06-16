@@ -18,39 +18,39 @@ import jpt.File.Path;
 export namespace jpt
 {
 	template<typename T>
-	concept Serializable = requires(T obj, std::ifstream & is, std::ofstream & os)
+	concept Serializable = requires(T obj, std::fstream & is, std::fstream & os)
 	{
 		obj.Serialize(os);
 		obj.Deserialize(is);
 	};
 
 	template<Serializable T>
-	void Serialize(const T& obj, std::ofstream& os)
+	void Serialize(const T& obj, std::fstream& os)
 	{
 		obj.Serialize(os);
 	}
 
 	template<Serializable T>
-	void Deserialize(T& obj, std::ifstream& is)
+	void Deserialize(T& obj, std::fstream& is)
 	{
 		obj.Deserialize(is);
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Serialize(const T& obj, std::ofstream& os)
+		void Serialize(const T& obj, std::fstream& os)
 	{
 		os.write(reinterpret_cast<const char*>(&obj), sizeof(T));
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Deserialize(T& obj, std::ifstream& is)
+		void Deserialize(T& obj, std::fstream& is)
 	{
 		is.read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}
 
 	Optional<String> LoadTextFile(const File::Path& path)
 	{
-		std::ifstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
 		if (!ifstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
@@ -75,7 +75,7 @@ export namespace jpt
 
 	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
-		std::basic_ofstream<char> ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
+		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
 		if (!ofstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
@@ -94,7 +94,7 @@ export namespace jpt
 	template<typename T>
 	bool LoadBinaryFile(const File::Path& path, T& obj)
 	{
-		std::basic_ifstream<char> ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
 		if (!ifstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
@@ -110,7 +110,7 @@ export namespace jpt
 	template<typename T>
 	bool SaveBinaryFile(const File::Path& path, const T& obj)
 	{
-		std::basic_ofstream<char> ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
+		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
 		if (!ofstream.is_open())
 		{
 			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());

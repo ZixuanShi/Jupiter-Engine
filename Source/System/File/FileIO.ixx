@@ -55,9 +55,4 @@ export namespace jpt::File
 
 		return result;
 	}
-
-	// Write
-
-
-	// Close
 }

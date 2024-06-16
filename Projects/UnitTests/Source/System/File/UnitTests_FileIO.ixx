@@ -145,7 +145,7 @@ bool UnitTest_FileIO_Serialization()
 		jpt::WString m_string;
 		jpt::DynamicArray<int32> m_array;
 
-		void Serialize(std::ofstream& os) const
+		void Serialize(std::fstream& os) const
         {
             jpt::Serialize(m_int, os);
 			jpt::Serialize(m_string, os);
@@ -156,7 +156,7 @@ bool UnitTest_FileIO_Serialization()
 			os.write(reinterpret_cast<const char*>(&arrayCount), sizeof(arrayCount));
 			os.write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
         }
-        void Deserialize(std::ifstream& is)
+        void Deserialize(std::fstream& is)
         {
             jpt::Deserialize(m_int, is);
             jpt::Deserialize(m_string, is);
