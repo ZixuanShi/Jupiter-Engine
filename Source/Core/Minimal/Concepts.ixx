@@ -4,7 +4,6 @@ module;
 
 #include <type_traits>
 #include <iostream>
-#include <fstream>
 
 export module jpt.Concepts;
 
@@ -107,11 +106,4 @@ export namespace jpt
 	template<typename TContainer>
 	concept IndexableNonTrivial = Indexable<TContainer> && NonTrivial<typename TContainer::TData>;
 #pragma endregion Container
-
-	template<typename T>
-	concept Serializable = requires(T obj, std::ifstream& is, std::ofstream& os)
-	{
-		obj.Serialize(os);
-		obj.Deserialize(is);
-	};
 }

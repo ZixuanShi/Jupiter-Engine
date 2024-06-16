@@ -187,6 +187,13 @@ bool UnitTest_FileIO_Serialization()
 			result.Append(jpt::ToWString(m_array));
 			return result;
         }
+
+        bool operator==(const Foo& other) const
+		{
+			return m_int == other.m_int &&
+				m_string == other.m_string &&
+				m_array == other.m_array;
+		}
 	};
 
 	// Save
@@ -194,13 +201,13 @@ bool UnitTest_FileIO_Serialization()
 	saver.SetData<Foo>({ 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } });
 	saver.SaveBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
 	const Foo& saverData = saver.GetData<Foo>();
-	JPT_LOG(saverData);
 
 	// Load
 	File loader;
 	loader.LoadBinary<Foo>({ ESource::Client, "Assets/Serialization_UnitTest.bin" });
 	const Foo& loaderData = loader.GetData<Foo>();
-	JPT_LOG(loaderData);
+
+	JPT_ENSURE(saverData == loaderData);
 
     return true;
 }

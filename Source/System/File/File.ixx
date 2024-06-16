@@ -12,6 +12,7 @@ export module jpt.File;
 
 import jpt.Any;
 import jpt.Concepts;
+import jpt.Serializer;
 import jpt.Utilities;
 import jpt.File.Path;
 
