@@ -60,41 +60,73 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	void ReadTextFile(const File::Path& path, String& content)
+	bool ReadTextFile(const File::Path& path, String& content)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
+
+		if (!serializer.IsOpen())
+		{
+			JPT_ERROR("Failed to open file for reading with SerializerMode::Read: %ls", path.ConstBuffer());
+			return false;
+		}
+
 		char* buffer = serializer.ReadText();
 		content.MoveString(buffer);
+		return true;
 	}
 
 	/** Saves text data to a file */
-	void WriteTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
+	bool WriteTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
+
+		if (!serializer.IsOpen())
+		{
+			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
+			return false;
+		}
+
 		serializer.Write(data, sizeInBytes);
+		return true;
 	}
-	void WriteTextFile(const File::Path& path, const char* data)
+	bool WriteTextFile(const File::Path& path, const char* data)
 	{
-		WriteTextFile(path, data, FindCharsCount(data) * sizeof(char));
+		return WriteTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
-	void WriteTextFile(const File::Path& path, const String& data)
+	bool WriteTextFile(const File::Path& path, const String& data)
 	{
-		WriteTextFile(path, data.ConstBuffer(), data.Size());
+		return WriteTextFile(path, data.ConstBuffer(), data.Size());
 	}
 
 	/** Loads binary data from a file */
 	template<typename T>
-	void ReadBinaryFile(const File::Path& path, T& obj)
+	bool ReadBinaryFile(const File::Path& path, T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
+
+		if (!serializer.IsOpen())
+		{
+			JPT_ERROR("Failed to open file for reading with SerializerMode::ReadBinary: %ls", path.ConstBuffer());
+			return false;
+		}
+
 		serializer.Read(obj);
+		return true;
 	}
 
 	/** Saves binary data to a file */
 	template<typename T>
-	void WriteBinaryFile(const File::Path& path, const T& obj)
+	bool WriteBinaryFile(const File::Path& path, const T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
+
+		if (!serializer.IsOpen())
+		{
+			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
+			return false;
+		}
+
 		serializer.Write(obj);
+		return true;
 	}
 }
