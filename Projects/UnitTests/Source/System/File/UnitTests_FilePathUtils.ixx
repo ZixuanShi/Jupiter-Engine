@@ -6,11 +6,11 @@ module;
 
 export module UnitTests_FileUtils;
 
-import jpt.File.Path;
-import jpt.File.PathUtils;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
+
+import jpt.File.Path;
 
 bool UnitTest_FilePathUtils_Getters()
 {

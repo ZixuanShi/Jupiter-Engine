@@ -4,20 +4,13 @@ module;
 
 #include "Core/Minimal/Macros.h"
 #include "Debugging/Assert.h"
-#include "Debugging/Logger.h"
-
-#include <filesystem>
 
 export module jpt.File.Path;
 
-import jpt.Concepts;
-import jpt.Constants;
 import jpt.String;
-import jpt.StringUtils;
 import jpt.ToString;
-import jpt.TypeTraits;
 import jpt.Utilities;
-
+import jpt.TypeTraits;
 import jpt.File.Enums;
 
 export namespace jpt

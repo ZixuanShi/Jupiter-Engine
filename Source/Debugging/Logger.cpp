@@ -17,7 +17,6 @@
 #endif
 
 import jpt.File.Path;
-import jpt.File.PathUtils;
 
 namespace jpt
 {

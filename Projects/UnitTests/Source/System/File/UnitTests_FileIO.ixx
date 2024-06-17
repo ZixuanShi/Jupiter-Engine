@@ -23,7 +23,6 @@ import jpt.Optional;
 import jpt.File;
 import jpt.File.Enums;
 import jpt.FileIO;
-import jpt.File.PathUtils;
 
 using namespace jpt::File;
 
