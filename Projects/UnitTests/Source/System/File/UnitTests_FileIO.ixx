@@ -151,23 +151,13 @@ bool UnitTest_FileIO_Serialization()
         {
             jpt::Serialize(m_int, serializer);
 			jpt::Serialize(m_string, serializer);
-			//jpt::Serialize(m_array, os);
-
-			// array
-			size_t arrayCount = m_array.Count();
-            serializer.Write(reinterpret_cast<const char*>(&arrayCount), sizeof(arrayCount));
-            serializer.Write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
+			jpt::Serialize(m_array, serializer);
         }
         void Deserialize(jpt::Serializer& serializer)
         {
             jpt::Deserialize(m_int, serializer);
             jpt::Deserialize(m_string, serializer);
-
-            // array
-			size_t arrayCount = 0;
-            serializer.Read(reinterpret_cast<char*>(&arrayCount), sizeof(arrayCount));
-			m_array.Resize(arrayCount);
-            serializer.Read(reinterpret_cast<char*>(m_array.Buffer()), arrayCount * sizeof(int32));
+            jpt::Deserialize(m_array, serializer);
         }
 
         jpt::WString ToWString() const
