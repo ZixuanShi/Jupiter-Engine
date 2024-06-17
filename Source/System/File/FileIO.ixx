@@ -61,7 +61,7 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	Optional<String> LoadTextFile(const File::Path& path)
+	Optional<String> ReadTextFile(const File::Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 		char* buffer = serializer.ReadText();
@@ -72,23 +72,23 @@ export namespace jpt::File
 	}
 
 	/** Saves text data to a file */
-	void SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
+	void WriteTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		serializer.Write(data, sizeInBytes);
 	}
-	void SaveTextFile(const File::Path& path, const char* data)
+	void WriteTextFile(const File::Path& path, const char* data)
 	{
-		SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
+		WriteTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
-	void SaveTextFile(const File::Path& path, const String& data)
+	void WriteTextFile(const File::Path& path, const String& data)
 	{
-		SaveTextFile(path, data.ConstBuffer(), data.Size());
+		WriteTextFile(path, data.ConstBuffer(), data.Size());
 	}
 
 	/** Loads binary data from a file */
 	template<typename T>
-	void LoadBinaryFile(const File::Path& path, T& obj)
+	void ReadBinaryFile(const File::Path& path, T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 		Deserialize(obj, serializer);
@@ -96,7 +96,7 @@ export namespace jpt::File
 
 	/** Saves binary data to a file */
 	template<typename T>
-	void SaveBinaryFile(const File::Path& path, const T& obj)
+	void WriteBinaryFile(const File::Path& path, const T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		Serialize(obj, serializer);

@@ -75,11 +75,11 @@ bool UnitTest_FileIO_TextFile()
 
     // Save new file
     jpt::String newContent = "Hello, World! I'm a new text file";
-	jpt::File::SaveTextFile(path, newContent);
+	jpt::File::WriteTextFile(path, newContent);
     JPT_ENSURE(Exists(path));
 
     // Load again
-    jpt::Optional<jpt::String> loaded = jpt::File::LoadTextFile(path);
+    jpt::Optional<jpt::String> loaded = jpt::File::ReadTextFile(path);
     JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file");
 
 	// Clean up
@@ -111,16 +111,16 @@ bool UnitTest_FileIO_BinaryFile()
 	Foo saver = { true, 3.14, "ABCDRFG", L"中文" };
 
     // Save Binary
-    jpt::File::SaveBinaryFile(path, saver);
+    jpt::File::WriteBinaryFile(path, saver);
 
 	// Load Binary
     Foo loader;
-    jpt::File::LoadBinaryFile(path, loader);
+    jpt::File::ReadBinaryFile(path, loader);
 	JPT_ENSURE(loader == saver);
 
     // Another loader
     Foo loader2;
-    jpt::File::LoadBinaryFile(path, loader2);
+    jpt::File::ReadBinaryFile(path, loader2);
     JPT_ENSURE(loader2 == saver);
 
     // Clean
@@ -175,11 +175,11 @@ bool UnitTest_FileIO_Serialization()
 
 	// Save
     Foo saver = { 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } };
-	jpt::File::SaveBinaryFile(path, saver);
+	jpt::File::WriteBinaryFile(path, saver);
 
 	// Load
     Foo loader;
-    jpt::File::LoadBinaryFile(path, loader);
+    jpt::File::ReadBinaryFile(path, loader);
 	JPT_ENSURE(saver == loader);
 
 	// Clean
