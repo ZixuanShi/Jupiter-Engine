@@ -133,7 +133,7 @@ namespace jpt
 		return Matrix44<T>(1, 0, 0, v.x,
 			               0, 1, 0, v.y,
 			               0, 0, 1, v.z,
-			               0, 0, 0, 1);
+			               0, 0, 0,   1);
 	}
 
 	template<Numeric T>
@@ -153,9 +153,9 @@ namespace jpt
 		const T cos = std::cos(radians);
 		const T sin = std::sin(radians);
 		return Matrix44<T>( cos, 0, sin, 0,
-			                 0, 1,   0, 0,
-			                -sin, 0, cos, 0,
-			                 0, 0,   0, 1);
+			                  0, 1,   0, 0,
+			               -sin, 0, cos, 0,
+			                  0, 0,   0, 1);
 	}
 
 	template<Numeric T>
@@ -164,9 +164,9 @@ namespace jpt
 		const T cos = std::cos(radians);
 		const T sin = std::sin(radians);
 		return Matrix44<T>(cos, -sin, 0, 0,
-			                sin,  cos, 0, 0,
-			                  0,    0, 1, 0,
-			                  0,    0, 0, 1);
+			               sin,  cos, 0, 0,
+			                 0,    0, 1, 0,
+			                 0,    0, 0, 1);
 	}
 
 	template<Numeric T>
@@ -184,19 +184,19 @@ namespace jpt
 		const T xsin = x * sin;
 		const T ysin = y * sin;
 		const T zsin = z * sin;
-		return Matrix44<T>(cos + x * x * oneMinusCos, xy * oneMinusCos - zsin, xz * oneMinusCos + ysin, 0,
-			               xy * oneMinusCos + zsin, cos + y * y * oneMinusCos, yz * oneMinusCos - xsin, 0,
-			               xz * oneMinusCos - ysin, yz * oneMinusCos + xsin, cos + z * z * oneMinusCos, 0,
-			               0, 0, 0, 1);
+		return Matrix44<T>(cos + x * x * oneMinusCos,   xy * oneMinusCos - zsin, xz * oneMinusCos + ysin, 0,
+			                 xy * oneMinusCos + zsin, cos + y * y * oneMinusCos, yz * oneMinusCos - xsin, 0,
+			                 xz * oneMinusCos - ysin,   yz * oneMinusCos + xsin, cos + z * z * oneMinusCos, 0,
+			                                        0,                        0, 0, 1);
 	}
 
 	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::Scaling(const Vector3<T>& v)
 	{
-		return Matrix44<T>(v.x, 0, 0, 0,
-			               0, v.y, 0, 0,
-			               0, 0, v.z, 0,
-			               0, 0, 0, 1);
+		return Matrix44<T>(v.x,   0,   0, 0,
+			                 0, v.y,   0, 0,
+			                 0,   0, v.z, 0,
+			                 0,   0,   0, 1);
 	}
 
 	template<Numeric T>
