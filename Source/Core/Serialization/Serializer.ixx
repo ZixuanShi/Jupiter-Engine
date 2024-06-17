@@ -11,6 +11,22 @@ export module jpt.Serializer;
 
 export namespace jpt
 {
+	enum class SerializerMode : std::ios_base::openmode
+	{
+		Read = std::ios_base::in,
+		Write = std::ios_base::out,
+		Append = std::ios_base::app,
+		Binary = std::ios_base::binary,
+		Truncate = std::ios_base::trunc,
+
+		ReadBinary = Read | Binary,
+		WriteBinary = Write | Binary,
+		ReadAll = Read | Binary | Truncate,
+		WriteAll = Write | Binary | Truncate,
+
+		All = Read | Write | Binary | Truncate,
+	};
+
 	class Serializer
 	{
 	private:
@@ -18,10 +34,10 @@ export namespace jpt
 
 	public:
 		Serializer() = default;
-		Serializer(const wchar_t* path, std::ios_base::openmode mode);
+		Serializer(const wchar_t* path, SerializerMode mode);
 		~Serializer();
 
-		void Open(const wchar_t* path, std::ios_base::openmode mode);
+		void Open(const wchar_t* path, SerializerMode mode);
 		bool IsOpen() const;
 
 		void Close();
@@ -31,7 +47,7 @@ export namespace jpt
 		char* ReadText();
 	};
 
-	Serializer::Serializer(const wchar_t* path, std::ios_base::openmode mode)
+	Serializer::Serializer(const wchar_t* path, SerializerMode mode)
 	{
 		Open(path, mode);
 		JPT_ASSERT(IsOpen(), "Failed to open file: %ls", path);
@@ -42,9 +58,9 @@ export namespace jpt
 		Close();
 	}
 
-	void Serializer::Open(const wchar_t* path, std::ios_base::openmode mode)
+	void Serializer::Open(const wchar_t* path, SerializerMode mode)
 	{
-		m_stream.open(path, mode);
+		m_stream.open(path, static_cast<std::ios_base::openmode>(mode));
 	}
 
 	bool Serializer::IsOpen() const

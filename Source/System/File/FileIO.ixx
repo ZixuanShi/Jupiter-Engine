@@ -63,7 +63,7 @@ export namespace jpt::File
 	/** @return		String data of a text file */
 	Optional<String> LoadTextFile(const File::Path& path)
 	{
-		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 		jpt::String content;
 		content.MoveString(serializer.ReadText());
 		return content;
@@ -72,7 +72,7 @@ export namespace jpt::File
 	/** Saves text data to a file */
 	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
-		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
+		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		serializer.Write(data, sizeInBytes);
 		return true;
 	}
@@ -85,7 +85,7 @@ export namespace jpt::File
 	template<typename T>
 	bool LoadBinaryFile(const File::Path& path, T& obj)
 	{
-		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 		Deserialize(obj, serializer);
 		return true;
 	}
@@ -94,7 +94,7 @@ export namespace jpt::File
 	template<typename T>
 	bool SaveBinaryFile(const File::Path& path, const T& obj)
 	{
-		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
+		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		Serialize(obj, serializer);
 		return true;
 	}
