@@ -13,6 +13,7 @@ export module jpt.FileIO;
 
 import jpt.String;
 import jpt.Optional;
+import jpt.Serializer;
 import jpt.SerializationUtils;
 
 import jpt.File.Enums;
@@ -62,41 +63,17 @@ export namespace jpt::File
 	/** @return		String data of a text file */
 	Optional<String> LoadTextFile(const File::Path& path)
 	{
-		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return Optional<String>();
-		}
-
-		String content;
-		std::string line;
-		while (std::getline(ifstream, line))
-		{
-			content += line.c_str();
-
-			if (!ifstream.eof())
-			{
-				content += '\n';
-			}
-		}
-
-		ifstream.close();
+		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		jpt::String content;
+		content.MoveString(serializer.ReadText());
 		return content;
 	}
 
 	/** Saves text data to a file */
 	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
-		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		ofstream.write(data, sizeInBytes);
-		ofstream.close();
+		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
+		serializer.Write(data, sizeInBytes);
 		return true;
 	}
 	bool SaveTextFile(const File::Path& path, const char* data)
@@ -108,16 +85,8 @@ export namespace jpt::File
 	template<typename T>
 	bool LoadBinaryFile(const File::Path& path, T& obj)
 	{
-		std::fstream ifstream(path.ConstBuffer(), std::ios::in | std::ios::binary);
-		if (!ifstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		Deserialize(obj, ifstream);
-
-		ifstream.close();
+		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::binary);
+		Deserialize(obj, serializer);
 		return true;
 	}
 
@@ -125,16 +94,8 @@ export namespace jpt::File
 	template<typename T>
 	bool SaveBinaryFile(const File::Path& path, const T& obj)
 	{
-		std::fstream ofstream(path.ConstBuffer(), std::ios::out | std::ios::binary);
-		if (!ofstream.is_open())
-		{
-			JPT_ERROR("Failed to open file: %ls", path.ConstBuffer());
-			return false;
-		}
-
-		Serialize(obj, ofstream);
-
-		ofstream.close();
+		Serializer serializer(path.ConstBuffer(), std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
+		Serialize(obj, serializer);
 		return true;
 	}
 }

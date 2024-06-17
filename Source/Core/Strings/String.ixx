@@ -21,6 +21,7 @@ import jpt.Math;
 import jpt.StringUtils;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.Serializer;
 
 /** Resizing multiplier for capacity */
 static constexpr size_t kLocCapacityMultiplier = 2;
@@ -170,8 +171,8 @@ export namespace jpt
 		/** @return A hash value of this string */
 		constexpr uint64 Hash() const;
 
-		void Serialize(std::fstream& os) const;
-		void Deserialize(std::fstream& is);
+		void Serialize(Serializer& serializer) const;
+		void Deserialize(Serializer& serializer);
 
 	private:
 		constexpr void DeallocateBuffer();
@@ -957,26 +958,26 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	void String_Base<TChar, TAllocator>::Serialize(std::fstream& os) const
+	void String_Base<TChar, TAllocator>::Serialize(Serializer& serializer) const
 	{
-		os.write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
-		os.write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
-		os.write(reinterpret_cast<const char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
-		os.write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TChar));
+		serializer.Write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
+		serializer.Write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
+		serializer.Write(reinterpret_cast<const char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
+		serializer.Write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TChar));
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	void String_Base<TChar, TAllocator>::Deserialize(std::fstream& is)
+	void String_Base<TChar, TAllocator>::Deserialize(Serializer& serializer)
 	{
 		size_t count = 0;
-		is.read(reinterpret_cast<char*>(&count), sizeof(count));
+		serializer.Read(reinterpret_cast<char*>(&count), sizeof(count));
 
 		size_t capacity = 0;
-		is.read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
+		serializer.Read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
 
 		Resize(count);
-		is.read(reinterpret_cast<char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
-		is.read(reinterpret_cast<char*>(m_pBuffer), m_count * sizeof(TChar));
+		serializer.Read(reinterpret_cast<char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
+		serializer.Read(reinterpret_cast<char*>(m_pBuffer), m_count * sizeof(TChar));
 		m_count = count;
 		m_capacity = capacity;
 	}

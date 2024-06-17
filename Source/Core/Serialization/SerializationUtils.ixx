@@ -13,38 +13,40 @@ export module jpt.SerializationUtils;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.Optional;
+import jpt.Serializer;
+
 import jpt.File.Path;
 
 export namespace jpt
 {
 	template<typename T>
-	concept Serializable = requires(T obj, std::fstream& stream)
+	concept Serializable = requires(T obj, jpt::Serializer& serializer)
 	{
-		obj.Serialize(stream);
-		obj.Deserialize(stream);
+		obj.Serialize(serializer);
+		obj.Deserialize(serializer);
 	};
 
 	template<Serializable T>
-	void Serialize(const T& obj, std::fstream& stream)
+	void Serialize(const T& obj, jpt::Serializer& serializer)
 	{
-		obj.Serialize(stream);
+		obj.Serialize(serializer);
 	}
 
 	template<Serializable T>
-	void Deserialize(T& obj, std::fstream& stream)
+	void Deserialize(T& obj, jpt::Serializer& serializer)
 	{
-		obj.Deserialize(stream);
+		obj.Deserialize(serializer);
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Serialize(const T& obj, std::fstream& stream)
+	void Serialize(const T& obj, jpt::Serializer& serializer)
 	{
-		stream.write(reinterpret_cast<const char*>(&obj), sizeof(T));
+		serializer.Write(reinterpret_cast<const char*>(&obj), sizeof(T));
 	}
 
 	template<typename T> requires(!Serializable<T>)
-		void Deserialize(T& obj, std::fstream& stream)
+	void Deserialize(T& obj, jpt::Serializer& serializer)
 	{
-		stream.read(reinterpret_cast<char*>(&obj), sizeof(T));
+		serializer.Read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}
 }

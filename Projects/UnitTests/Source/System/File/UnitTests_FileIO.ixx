@@ -10,18 +10,20 @@ module;
 
 export module UnitTests_FileIO;
 
-import jpt.File;
-import jpt.File.Enums;
-import jpt.FileIO;
-import jpt.File.PathUtils;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.StrongPtr;
 import jpt.Math;
 import jpt.HashMap;
 import jpt.DynamicArray;
+import jpt.Serializer;
 import jpt.SerializationUtils;
 import jpt.Optional;
+
+import jpt.File;
+import jpt.File.Enums;
+import jpt.FileIO;
+import jpt.File.PathUtils;
 
 using namespace jpt::File;
 
@@ -85,7 +87,8 @@ bool UnitTest_FileIO_TextFile()
     loader.LoadText({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
     //JPT_LOG(loader.GetText());
 	JPT_ENSURE(loader.GetPath().Contains("Assets/NewTextFile_UnitTest.txt"));
-    JPT_ENSURE(loader.GetText() == "Hello, World! I'm a new text file");
+    const auto text = loader.GetText();
+    JPT_ENSURE(text == "Hello, World! I'm a new text file");
 
 	// Clean up
 	jpt::File::Delete({ ESource::Client, "Assets/NewTextFile_UnitTest.txt" });
@@ -145,27 +148,27 @@ bool UnitTest_FileIO_Serialization()
 		jpt::WString m_string;
 		jpt::DynamicArray<int32> m_array;
 
-		void Serialize(std::fstream& os) const
+		void Serialize(jpt::Serializer& serializer) const
         {
-            jpt::Serialize(m_int, os);
-			jpt::Serialize(m_string, os);
+            jpt::Serialize(m_int, serializer);
+			jpt::Serialize(m_string, serializer);
 			//jpt::Serialize(m_array, os);
 
 			// array
 			size_t arrayCount = m_array.Count();
-			os.write(reinterpret_cast<const char*>(&arrayCount), sizeof(arrayCount));
-			os.write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
+            serializer.Write(reinterpret_cast<const char*>(&arrayCount), sizeof(arrayCount));
+            serializer.Write(reinterpret_cast<const char*>(m_array.ConstBuffer()), m_array.Size());
         }
-        void Deserialize(std::fstream& is)
+        void Deserialize(jpt::Serializer& serializer)
         {
-            jpt::Deserialize(m_int, is);
-            jpt::Deserialize(m_string, is);
+            jpt::Deserialize(m_int, serializer);
+            jpt::Deserialize(m_string, serializer);
 
             // array
 			size_t arrayCount = 0;
-			is.read(reinterpret_cast<char*>(&arrayCount), sizeof(arrayCount));
+            serializer.Read(reinterpret_cast<char*>(&arrayCount), sizeof(arrayCount));
 			m_array.Resize(arrayCount);
-			is.read(reinterpret_cast<char*>(m_array.Buffer()), arrayCount * sizeof(int32));
+            serializer.Read(reinterpret_cast<char*>(m_array.Buffer()), arrayCount * sizeof(int32));
         }
 
         jpt::WString ToWString() const
