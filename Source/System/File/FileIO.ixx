@@ -14,7 +14,6 @@ export module jpt.FileIO;
 import jpt.String;
 import jpt.Optional;
 import jpt.Serializer;
-import jpt.SerializationUtils;
 
 import jpt.File.Enums;
 import jpt.File.Path;
@@ -91,7 +90,7 @@ export namespace jpt::File
 	void ReadBinaryFile(const File::Path& path, T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
-		Deserialize(obj, serializer);
+		serializer.Read(obj);
 	}
 
 	/** Saves binary data to a file */
@@ -99,6 +98,6 @@ export namespace jpt::File
 	void WriteBinaryFile(const File::Path& path, const T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
-		Serialize(obj, serializer);
+		serializer.Write(obj);
 	}
 }

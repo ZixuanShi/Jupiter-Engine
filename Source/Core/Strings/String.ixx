@@ -960,8 +960,8 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	void String_Base<TChar, TAllocator>::Serialize(Serializer& serializer) const
 	{
-		serializer.Write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
-		serializer.Write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
+		serializer.Write(m_count);
+		serializer.Write(m_capacity);
 		serializer.Write(reinterpret_cast<const char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));
 		serializer.Write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TChar));
 	}
@@ -970,10 +970,10 @@ export namespace jpt
 	void String_Base<TChar, TAllocator>::Deserialize(Serializer& serializer)
 	{
 		size_t count = 0;
-		serializer.Read(reinterpret_cast<char*>(&count), sizeof(count));
+		serializer.Read(count);
 
 		size_t capacity = 0;
-		serializer.Read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
+		serializer.Read(capacity);
 
 		Resize(count);
 		serializer.Read(reinterpret_cast<char*>(m_smallBuffer), kSmallDataSize * sizeof(TChar));

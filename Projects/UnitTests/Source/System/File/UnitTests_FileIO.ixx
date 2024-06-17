@@ -17,7 +17,6 @@ import jpt.Math;
 import jpt.HashMap;
 import jpt.DynamicArray;
 import jpt.Serializer;
-import jpt.SerializationUtils;
 import jpt.Optional;
 
 import jpt.File.Enums;
@@ -68,22 +67,22 @@ bool UnitTest_FileIO_Directory()
 bool UnitTest_FileIO_TextFile()
 {
 	// Load existing file
-	//jpt::Optional<jpt::String> text = jpt::File::LoadTextFile({ESource::Client, "Assets/Configs/TestJson.json"});
-    //JPT_LOG(text.Value());
+	//jpt::Optional<jpt::String> text = jpt::File::ReadTextFile({ESource::Client, "Assets/Configs/TestJson.json"});
+ //   JPT_LOG(text.Value());
 
-    const jpt::File::Path path = { ESource::Client, "Assets/NewTextFile_UnitTest.txt" };
+    const Path path = { ESource::Client, "Assets/NewTextFile_UnitTest.txt" };
 
     // Save new file
     jpt::String newContent = "Hello, World! I'm a new text file";
-	jpt::File::WriteTextFile(path, newContent);
+	WriteTextFile(path, newContent);
     JPT_ENSURE(Exists(path));
 
     // Load again
-    jpt::Optional<jpt::String> loaded = jpt::File::ReadTextFile(path);
+    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
     JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file");
 
 	// Clean up
-	jpt::File::Delete(path);
+	Delete(path);
     JPT_ENSURE(!Exists(path));
 
 	return true;
@@ -107,24 +106,24 @@ bool UnitTest_FileIO_BinaryFile()
 		}
     };
 
-	const jpt::File::Path path = { ESource::Client, "Assets/Bin_UnitTest.bin" };
+	const Path path = { ESource::Client, "Assets/Bin_UnitTest.bin" };
 	Foo saver = { true, 3.14, "ABCDRFG", L"中文" };
 
     // Save Binary
-    jpt::File::WriteBinaryFile(path, saver);
+    WriteBinaryFile(path, saver);
 
 	// Load Binary
     Foo loader;
-    jpt::File::ReadBinaryFile(path, loader);
+    ReadBinaryFile(path, loader);
 	JPT_ENSURE(loader == saver);
 
     // Another loader
     Foo loader2;
-    jpt::File::ReadBinaryFile(path, loader2);
+    ReadBinaryFile(path, loader2);
     JPT_ENSURE(loader2 == saver);
 
     // Clean
-	jpt::File::Delete(path);
+	Delete(path);
     JPT_ENSURE(!Exists(path));
 
     return true;
@@ -140,15 +139,15 @@ bool UnitTest_FileIO_Serialization()
 
 		void Serialize(jpt::Serializer& serializer) const
         {
-            jpt::Serialize(m_int, serializer);
-			jpt::Serialize(m_string, serializer);
-			jpt::Serialize(m_array, serializer);
+			serializer.Write(m_int);
+			serializer.Write(m_string);
+			serializer.Write(m_array);
         }
         void Deserialize(jpt::Serializer& serializer)
         {
-            jpt::Deserialize(m_int, serializer);
-            jpt::Deserialize(m_string, serializer);
-            jpt::Deserialize(m_array, serializer);
+			serializer.Read(m_int);
+			serializer.Read(m_string);
+			serializer.Read(m_array);
         }
 
         jpt::WString ToWString() const
@@ -171,19 +170,19 @@ bool UnitTest_FileIO_Serialization()
 		}
 	};
 
-	const jpt::File::Path path = { ESource::Client, "Assets/Serialization_UnitTest.bin" };
+	const Path path = { ESource::Client, "Assets/Serialization_UnitTest.bin" };
 
 	// Save
     Foo saver = { 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } };
-	jpt::File::WriteBinaryFile(path, saver);
+	WriteBinaryFile(path, saver);
 
 	// Load
     Foo loader;
-    jpt::File::ReadBinaryFile(path, loader);
+    ReadBinaryFile(path, loader);
 	JPT_ENSURE(saver == loader);
 
 	// Clean
-	jpt::File::Delete(path);
+	Delete(path);
     JPT_ENSURE(!Exists(path));
 
     return true;

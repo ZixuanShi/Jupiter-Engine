@@ -291,8 +291,8 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	void DynamicArray<TData, TAllocator>::Serialize(Serializer& serializer) const
 	{
-		serializer.Write(reinterpret_cast<const char*>(&m_count), sizeof(m_count));
-		serializer.Write(reinterpret_cast<const char*>(&m_capacity), sizeof(m_capacity));
+		serializer.Write(m_count);
+		serializer.Write(m_capacity);
 		serializer.Write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TData));
 	}
 
@@ -301,8 +301,8 @@ export namespace jpt
 	{
 		size_t count = 0;
 		size_t capacity = 0;
-		serializer.Read(reinterpret_cast<char*>(&count), sizeof(count));
-		serializer.Read(reinterpret_cast<char*>(&capacity), sizeof(capacity));
+		serializer.Read(count);
+		serializer.Read(capacity);
 
 		Resize(count);
 		serializer.Read(reinterpret_cast<char*>(m_pBuffer), count * sizeof(TData));
