@@ -70,32 +70,29 @@ export namespace jpt::File
 	}
 
 	/** Saves text data to a file */
-	bool SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
+	void SaveTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		serializer.Write(data, sizeInBytes);
-		return true;
 	}
-	bool SaveTextFile(const File::Path& path, const char* data)
+	void SaveTextFile(const File::Path& path, const char* data)
 	{
-		return SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
+		SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
 
 	/** Loads binary data from a file */
 	template<typename T>
-	bool LoadBinaryFile(const File::Path& path, T& obj)
+	void LoadBinaryFile(const File::Path& path, T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 		Deserialize(obj, serializer);
-		return true;
 	}
 
 	/** Saves binary data to a file */
 	template<typename T>
-	bool SaveBinaryFile(const File::Path& path, const T& obj)
+	void SaveBinaryFile(const File::Path& path, const T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 		Serialize(obj, serializer);
-		return true;
 	}
 }
