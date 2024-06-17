@@ -73,6 +73,7 @@ export namespace jpt
 		constexpr Vector3 Normalized() const;
 		constexpr T Angle(Vector3 other) const;
 		constexpr Vector3 Lerp(Vector3 other, T t) const;
+		constexpr Vector3 InvLerp(Vector3 other, Vector3 value) const;
 		constexpr Vector3 Rotate(Vector3 axis, T angle) const;
 
 		constexpr static T Dot(Vector3 left, Vector3 right);
@@ -84,6 +85,7 @@ export namespace jpt
 		constexpr static Vector3 Normalize(Vector3 vector3);
 		constexpr static T Angle(Vector3 left, Vector3 right);
 		constexpr static Vector3 Lerp(Vector3 start, Vector3 end, T t);
+		constexpr static Vector3 InvLerp(Vector3 start, Vector3 end, Vector3 value);
 
 		constexpr String ToString() const;
 	};
@@ -304,6 +306,12 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::InvLerp(Vector3 other, Vector3 value) const
+	{
+		return (value - *this) / (other - *this);
+	}
+
+	template<Numeric T>
 	constexpr Vector3<T> Vector3<T>::Rotate(Vector3 axis, T angle) const
 	{
 		// TODO: Implement
@@ -363,6 +371,12 @@ export namespace jpt
 	constexpr Vector3<T> Vector3<T>::Lerp(Vector3 start, Vector3 end, T t)
 	{
 		return start.Lerp(end, t);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::InvLerp(Vector3 start, Vector3 end, Vector3 value)
+	{
+		return start.InvLerp(end, value);
 	}
 
 	template<Numeric T>

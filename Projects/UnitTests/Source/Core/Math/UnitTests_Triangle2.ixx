@@ -12,8 +12,6 @@ import jpt.Utilities;
 
 bool UnitTest_Triangle2_PointInsideTriangle()
 {
-	// Barycentric coordinates
-
 	Triangle2f triangle2(Vec2f(0.0f, 0.0f), Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
 	Vec2f point(0.5f, 0.5f);
 

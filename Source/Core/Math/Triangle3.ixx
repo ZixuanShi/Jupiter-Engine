@@ -30,6 +30,7 @@ namespace jpt
 		constexpr T Area() const;
 		constexpr Vector3<T> Normal() const;
 		constexpr T Distance(Vector3<T> point) const;
+		constexpr bool Inside(const Vector3<T>& point) const;
 	};
 
 	template<Numeric T>
@@ -77,6 +78,28 @@ namespace jpt
 		const float distance = Abs(pointToTriangle.Dot(normal));
 
 		return distance;
+	}
+
+	template<Numeric T>
+	constexpr bool Triangle3<T>::Inside(const Vector3<T>& point) const
+	{
+		// https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
+
+		const Vector3 BA = b - a;
+		const Vector3 CA = c - a;
+		const Vector3 PA = point - a;
+
+		const T dot00 = BA.Dot(BA);
+		const T dot01 = BA.Dot(CA);
+		const T dot02 = BA.Dot(PA);
+		const T dot11 = CA.Dot(CA);
+		const T dot12 = CA.Dot(PA);
+
+		const T invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+		const T u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+		const T v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+		return (u >= 0) && (v >= 0) && (u + v <= 1);
 	}
 }
 

@@ -67,6 +67,40 @@ export namespace jpt
 
 #pragma endregion Clamping
 
+#pragma region Lerp
+	template<NonTrivial T, Floating TFloat = float32>
+	constexpr T Lerp(const T& start, const T& end, TFloat t)
+	{
+		return start + t * (end - start);
+	}
+	template<Trivial T, Floating TFloat = float32>
+	constexpr T Lerp(T start, T end, TFloat t)
+	{
+		return start + t * (end - start);
+	}
+	template<NonTrivial T, Floating TFloat = float32>
+	constexpr void Lerp(T& value, const T& start, const T& end, TFloat t)
+	{
+		value = start + t * (end - start);
+	}
+	template<Trivial T, Floating TFloat = float32>
+	constexpr void Lerp(T& value, T start, T end, TFloat t)
+	{
+		value = start + t * (end - start);
+	}
+
+	template<NonTrivial T>
+	constexpr T InvLerp(const T& start, const T& end, const T& value)
+	{
+		return (value - start) / (end - start);
+	}
+	template<Trivial T>
+	constexpr T InvLerp(T start, T end, T value)
+	{
+		return (value - start) / (end - start);
+	}
+#pragma endregion Lerp
+
 #pragma region MinMax
 
 	template <Trivial TFirst, typename... TRest>
@@ -151,23 +185,6 @@ export namespace jpt
 	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
 	{
 		return Abs(A - static_cast<TFloat1>(B)) < tolerance;
-	}
-
-	template<typename T, Floating TFloat = float32>
-	constexpr T Lerp(const T& start, const T& end, TFloat t)
-	{
-		return start + t * (end - start);
-	}
-	template<typename T, Floating TFloat = float32>
-	constexpr void Lerp(T& value, const T& start, const T& end, TFloat t)
-	{
-		value = start + t * (end - start);
-	}
-
-	template<typename T>
-	constexpr T InverseLerp(const T& start, const T& end, const T& value)
-	{
-		return (value - start) / (end - start);
 	}
 
 	template<Floating TFloat = float32>

@@ -22,7 +22,28 @@ bool UnitTest_Triangle3_Normal()
 
 bool UnitTest_Triangle3_PointInside()
 {
-    // Barycentric coordinates 3D
+	Triangle3f triangle(Vec3f(0.0f, 0.0f, 0.0f), Vec3f(1.0f, 0.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
+
+	Vec3f point(0.5f, 0.5f, 0.0f);
+	JPT_ENSURE(triangle.Inside(point));
+
+	point = Vec3f(10.0f, 10.0f, 10.0f);
+	JPT_ENSURE(!triangle.Inside(point));
+
+	point = Vec3f(0.1f, 0.0f, 0.0f);
+	JPT_ENSURE(triangle.Inside(point));
+
+	point = Vec3f(0.1f, 0.0f, 0.0f);
+	JPT_ENSURE(triangle.Inside(point));
+
+	point = Vec3f(0.1f, 0.5f, 0.0f);
+	JPT_ENSURE(triangle.Inside(point));
+
+	point = Vec3f(0.1f, -0.5f, 0.0f);
+	JPT_ENSURE(!triangle.Inside(point));
+
+	point = Vec3f(-0.1f, 0.0f, 0.0f);
+	JPT_ENSURE(!triangle.Inside(point));
 
     return true;
 }
