@@ -60,14 +60,11 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	Optional<String> ReadTextFile(const File::Path& path)
+	void ReadTextFile(const File::Path& path, String& content)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 		char* buffer = serializer.ReadText();
-
-		jpt::String content;
 		content.MoveString(buffer);
-		return content;
 	}
 
 	/** Saves text data to a file */

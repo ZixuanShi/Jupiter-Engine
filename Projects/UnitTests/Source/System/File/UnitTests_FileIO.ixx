@@ -67,8 +67,9 @@ bool UnitTest_FileIO_Directory()
 bool UnitTest_FileIO_TextFile()
 {
 	// Load existing file
-	//jpt::Optional<jpt::String> text = jpt::File::ReadTextFile({ESource::Client, "Assets/Configs/TestJson.json"});
- //   JPT_LOG(text.Value());
+    //jpt::String text;
+    //jpt::File::ReadTextFile({ ESource::Client, "Assets/Configs/TestJson.json" }, text);
+    //JPT_LOG(text);
 
     const Path path = { ESource::Client, "Assets/NewTextFile_UnitTest.txt" };
 
@@ -78,8 +79,9 @@ bool UnitTest_FileIO_TextFile()
     JPT_ENSURE(Exists(path));
 
     // Load again
-    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
-    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file");
+    jpt::String loaded;
+    ReadTextFile(path, loaded);
+    JPT_ENSURE(loaded == "Hello, World! I'm a new text file");
 
 	// Clean up
 	Delete(path);
