@@ -14,7 +14,7 @@ import jpt.Sorting;
 
 bool UnitTest_Clamping()
 {
-	int32 n = jpt::GetClamped(5, 10, 13);
+	int32 n = jpt::Clamp(5, 10, 13);
 	JPT_ENSURE(n == 10);
 
 	jpt::ClampTo(n, 5, 13);

@@ -12,7 +12,7 @@ export namespace jpt
 #pragma region Clamping
 	/** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
 	template<ComparableTrivial T>
-	constexpr T GetClamped(T value, T min, T max)
+	constexpr T Clamp(T value, T min, T max)
 	{
 		if (value < min)
 		{
@@ -25,7 +25,7 @@ export namespace jpt
 		return value;
 	}
 	template<ComparableNonTrivial T>
-	constexpr T GetClamped(const T& value, const T& min, const T& max)
+	constexpr T Clamp(const T& value, const T& min, const T& max)
 	{
 		if (value < min)
 		{
@@ -151,6 +151,23 @@ export namespace jpt
 	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
 	{
 		return Abs(A - static_cast<TFloat1>(B)) < tolerance;
+	}
+
+	template<typename T, Floating TFloat = float32>
+	constexpr T Lerp(const T& start, const T& end, TFloat t)
+	{
+		return start + t * (end - start);
+	}
+	template<typename T, Floating TFloat = float32>
+	constexpr void Lerp(T& value, const T& start, const T& end, TFloat t)
+	{
+		value = start + t * (end - start);
+	}
+
+	template<typename T>
+	constexpr T InverseLerp(const T& start, const T& end, const T& value)
+	{
+		return (value - start) / (end - start);
 	}
 
 	template<Floating TFloat = float32>

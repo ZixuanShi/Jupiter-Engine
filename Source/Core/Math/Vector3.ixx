@@ -13,9 +13,9 @@ import jpt.Math;
 import jpt.String;
 import jpt.ToString;
 
-namespace jpt
+export namespace jpt
 {
-	export template<Numeric T>
+	template<Numeric T>
 	struct Vector3
 	{
 	public:
@@ -88,30 +88,9 @@ namespace jpt
 		constexpr String ToString() const;
 	};
 
-	template<Numeric T>
-	constexpr Vector3<T> operator+(T scaler, Vector3<T> vector3)
-	{
-		return vector3 + scaler;
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> operator-(T scaler, Vector3<T> vector3)
-	{
-		return vector3 - scaler;
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> operator*(T scaler, Vector3<T> vector3)
-	{
-		return vector3 * scaler;
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> operator/(T scaler, Vector3<T> vector3)
-	{
-		return vector3 / scaler;
-	}
-
+	// ------------------------------------------------------------------------------------------------
+	// Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr Vector3<T>::Vector3(T scalar)
 		: x(scalar)
@@ -408,3 +387,27 @@ export using Vec3u = jpt::Vector3<uint32>;
 template<> constexpr bool jpt::IsTrivial<Vec3f> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3i> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3u> = true;
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector3<T> operator+(T scaler, const jpt::Vector3<T>& vector3)
+{
+	return vector3 + scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector3<T> operator-(T scaler, const jpt::Vector3<T>& vector3)
+{
+	return vector3 - scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector3<T> operator*(T scaler, const jpt::Vector3<T>& vector3)
+{
+	return vector3 * scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector3<T> operator/(T scaler, const jpt::Vector3<T>& vector3)
+{
+	return vector3 / scaler;
+}
