@@ -152,7 +152,7 @@ export namespace jpt
 	template<typename TValue>
 	constexpr void Optional<TValue>::MoveData(Optional&& other)
 	{
-		m_value = move(other.m_value);
+		m_value = Move(other.m_value);
 		m_hasValue = other.m_hasValue;
 		other.Reset();
 	}

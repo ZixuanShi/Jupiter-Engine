@@ -64,8 +64,10 @@ export namespace jpt::File
 	Optional<String> LoadTextFile(const File::Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
+		char* buffer = serializer.ReadText();
+
 		jpt::String content;
-		content.MoveString(serializer.ReadText());
+		content.MoveString(buffer);
 		return content;
 	}
 
@@ -78,6 +80,10 @@ export namespace jpt::File
 	void SaveTextFile(const File::Path& path, const char* data)
 	{
 		SaveTextFile(path, data, FindCharsCount(data) * sizeof(char));
+	}
+	void SaveTextFile(const File::Path& path, const String& data)
+	{
+		SaveTextFile(path, data.ConstBuffer(), data.Size());
 	}
 
 	/** Loads binary data from a file */
