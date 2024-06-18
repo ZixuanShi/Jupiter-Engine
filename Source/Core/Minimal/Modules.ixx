@@ -8,7 +8,7 @@
 export module jpt.CoreModules;
 
 // Algorithms
-export import jpt.Searching;
+export import jpt.LinearFind;
 export import jpt.Sorting;
 
 // Containers

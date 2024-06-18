@@ -1,17 +1,20 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Searching;
+module;
+
+#include "Core/Minimal/Macros.h"
+
+export module jpt.LinearFind;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Concepts;
+import jpt.Constants;
 
 export namespace jpt
 {
-#pragma region Linear
-
 #pragma region Find
-	template<typename TContainer, typename TData>
+	template<Iterable TContainer, typename TData>
 	constexpr auto Find(TContainer& container, const TData& dataToFind) -> decltype(container.begin())
 	{
 		for(auto it = container.begin(); it != container.end(); ++it)
@@ -25,7 +28,7 @@ export namespace jpt
 		return container.end();
 	}
 
-	template<typename TContainer, typename TFinderFunction>
+	template<Iterable TContainer, typename TFinderFunction>
 	constexpr auto FindIf(TContainer& container, TFinderFunction&& finderFunc) -> decltype(container.begin())
 	{
 		for (auto it = container.begin(); it != container.end(); ++it)
@@ -66,6 +69,21 @@ export namespace jpt
 
 		return container.cend();
 	}
+
+	template<typename TContainer, typename TData>
+	constexpr size_t Find(const TContainer& pArray, const TData& dataToFind)
+	{
+		for (size_t i = 0; i < JPT_ARRAY_COUNT(pArray); ++i)
+		{
+			if (pArray[i] == dataToFind)
+			{
+				return i;
+			}
+		}
+
+		return kInvalidValue<size_t>;
+	}
+
 #pragma endregion Find
 
 #pragma region Contains
@@ -80,7 +98,6 @@ export namespace jpt
 	{
 		return FindIf(container, Forward<TFinderFunction>(finderFunc)) != container.end();
 	}
-#pragma endregion Contains
 
-#pragma endregion Linear
+#pragma endregion Contains
 }

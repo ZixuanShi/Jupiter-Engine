@@ -31,38 +31,6 @@ int SubArraySum(const jpt::DynamicArray<int32>& nums, int k)
 	return count;
 }
 
-struct TreeNode 
-{
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
-int FindZigZag(TreeNode* pNode, bool goRight, int depth)
-{
-	if (pNode == nullptr)
-	{
-		return 0;
-	}
-
-	if (goRight)
-	{
-		return std::max(FindZigZag(pNode->right, false, depth + 1), FindZigZag(pNode->left, true, depth + 1)) + 1;
-	}
-	else
-	{
-		return std::max(FindZigZag(pNode->left, true, depth + 1), FindZigZag(pNode->right, false, depth + 1)) + 1;
-	}
-}
-
-int longestZigZag(TreeNode* root)
-{
-	return std::max(FindZigZag(root->left, true, 1), FindZigZag(root->right, false, 1));
-}
-
 export bool RunUnitTests_Coding()
 {
 

@@ -11,6 +11,7 @@ import jpt.Utilities;
 /** Unit Test Modules */
 
 // Algorithms
+import UnitTests_BinarySearch;
 import UnitTests_Comparators;
 import UnitTests_Sorting;
 import UnitTests_Searching;
@@ -77,6 +78,7 @@ export bool RunUnitTests_Core()
 	/** Unit Test Functions */
 	
 	// Algorithms
+	JPT_ENSURE(RunUnitTests_BinarySearch());
 	JPT_ENSURE(RunUnitTests_Comparators());
 	JPT_ENSURE(RunUnitTests_Sorting());
 	JPT_ENSURE(RunUnitTests_Searching());

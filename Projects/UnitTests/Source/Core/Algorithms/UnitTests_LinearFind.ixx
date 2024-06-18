@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Searching;
 
-import jpt.Searching;
+import jpt.LinearFind;
 import jpt.Utilities;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
@@ -16,7 +16,7 @@ import jpt.String;
 
 bool UnitTest_Searching_StaticArray()
 {
-    jpt::StaticArray<int32, 5> staticArray = { 1, 2, 3, 4, 5 };
+    const jpt::StaticArray<int32, 5> staticArray = { 1, 2, 3, 4, 5 };
 
     JPT_ENSURE(jpt::Find(staticArray, 6) == staticArray.end());
     JPT_ENSURE(jpt::Contains(staticArray, 5) );
@@ -101,11 +101,27 @@ bool UnitTest_Searching_LinkedList()
     return true;
 }
 
+bool UnitTest_Searching_RawArray()
+{
+	int32 rawArray[] = { 1, 2, 3, 4, 5 };
+
+	JPT_ENSURE(jpt::Find(rawArray, 1) == 0);
+	JPT_ENSURE(jpt::Find(rawArray, 2) == 1);
+	JPT_ENSURE(jpt::Find(rawArray, 3) == 2);
+	JPT_ENSURE(jpt::Find(rawArray, 4) == 3);
+	JPT_ENSURE(jpt::Find(rawArray, 5) == 4);
+	JPT_ENSURE(jpt::Find(rawArray, 6) == jpt::kInvalidValue<size_t>);
+	JPT_ENSURE(jpt::Find(rawArray, 0) == jpt::kInvalidValue<size_t>);
+
+    return true;
+}
+
 export bool RunUnitTests_Searching()
 {
     JPT_ENSURE(UnitTest_Searching_StaticArray());
     JPT_ENSURE(UnitTest_Searching_DynamicArray());
     JPT_ENSURE(UnitTest_Searching_LinkedList());
+    JPT_ENSURE(UnitTest_Searching_RawArray());
 
     return true;
 }
