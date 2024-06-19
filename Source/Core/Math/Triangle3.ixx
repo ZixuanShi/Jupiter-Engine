@@ -55,9 +55,12 @@ namespace jpt
 	template<Numeric T>
 	constexpr Vector3<T> Triangle3<T>::Normal() const
 	{
-		const Vector3<T> edge1 = b - a;
-		const Vector3<T> edge2 = c - a;
-		Vector3<T> normal = edge1.Cross(edge2);
+		// Compute the edges of the triangle
+		const Vector3 edge1 = b - a;
+		const Vector3 edge2 = c - a;
+
+		// Compute the normal of the triangle
+		Vector3 normal = edge1.Cross(edge2);
 		normal.Normalize();
 		return normal;
 	}
@@ -65,16 +68,10 @@ namespace jpt
 	template<Numeric T>
 	constexpr T Triangle3<T>::Distance(Vector3<T> point) const
 	{
-		// Compute the edges of the triangle
-		const Vec3f edgeBa = b - a;
-		const Vec3f edgeCa = c - a;
-
-		// Compute the normal of the triangle
-		const Vec3f cross = edgeBa.Cross(edgeCa);
-		const Vec3f normal = cross.Normalized();
+		const Vector3 normal = Normal();
 
 		// Compute the vector from the point to the triangle
-		const Vec3f pointToTriangle = a - point;
+		const Vector3 pointToTriangle = a - point;
 		const float distance = Abs(pointToTriangle.Dot(normal));
 
 		return distance;
