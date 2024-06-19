@@ -14,22 +14,23 @@ import jpt.Utilities;
 
 bool UnitTest_SortedMap()
 {
-    jpt::SortedMap<int32, char> sortedMap;
+    jpt::SortedMap<int32, int32> sortedMap;
     
     // Add
-    sortedMap.Add(1, 'E');
-    sortedMap.Add(0, 'A');
-    sortedMap.Add(2, 'D');
-    sortedMap.Add(4, 'G');
-    sortedMap.Add(3, 'B');
-    sortedMap.Add(6, 'E');
+    sortedMap.Add(4, 4);
+    sortedMap.Add(2, 2);
+    sortedMap.Add(6, 6);
+    sortedMap.Add(1, 1);
+    sortedMap.Add(3, 3);
+    sortedMap.Add(5, 5);
+    sortedMap.Add(7, 7);
 
     // Erase
     //sortedMap.Erase(4);
 
-    auto printer = [](int32 key, char value)
+    auto printer = [](int32 key, int32 value)
 	{
-        jpt::Pair<int32, char> pair(key, value);
+        jpt::Pair<int32, int32> pair(key, value);
 		JPT_LOG(pair);
 	};
 
