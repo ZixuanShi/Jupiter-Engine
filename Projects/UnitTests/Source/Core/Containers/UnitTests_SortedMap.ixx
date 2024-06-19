@@ -16,12 +16,16 @@ bool UnitTest_SortedMap()
 {
     jpt::SortedMap<int32, char> sortedMap;
     
+    // Add
     sortedMap.Add(1, 'E');
     sortedMap.Add(0, 'A');
     sortedMap.Add(2, 'D');
     sortedMap.Add(4, 'G');
     sortedMap.Add(3, 'B');
     sortedMap.Add(6, 'E');
+
+    // Erase
+    //sortedMap.Erase(4);
 
     auto printer = [](int32 key, char value)
 	{
