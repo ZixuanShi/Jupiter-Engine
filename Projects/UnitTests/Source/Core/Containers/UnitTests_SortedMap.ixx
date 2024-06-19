@@ -33,15 +33,15 @@ bool UnitTest_SortedMap()
 		JPT_LOG(pair);
 	};
 
-	sortedMap.TraversePreOrder(printer);
+	sortedMap.PreOrderWalk(printer);
 
     JPT_LOG("--------------------------------------");
 
-    sortedMap.TraverseInOrder(printer);
+    sortedMap.InOrderWalk(printer);
 
     JPT_LOG("--------------------------------------");
 
-    sortedMap.TraversePostOrder(printer);
+    sortedMap.PostOrderWalk(printer);
 
     return true;
 }
