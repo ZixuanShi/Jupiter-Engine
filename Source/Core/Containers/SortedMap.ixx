@@ -23,15 +23,16 @@ import jpt_private.RedBlackTreeIterator;
 export namespace jpt
 {
 	/** Sorted key value paired structure. Red Black Tree implementation */
-	template<Comparable _TKey, typename _TValue, typename _TComparator = Comparator_Less<_TKey>, typename _TAllocator = Allocator<jpt_private::RedBlackTreeNode<Pair<_TKey, _TValue>>>>
+	template<Comparable _TKey, typename _TValue, typename _TComparator = Comparator_Less<_TKey>, typename _TAllocator = Allocator<jpt_private::RedBlackTreeNode<Pair<const _TKey, _TValue>>>>
 	class SortedMap
 	{
 	public:
 		using TKey        = _TKey;
 		using TValue      = _TValue;
 		using TComparator = _TComparator;
-		using TData       = Pair<TKey, TValue>;
+		using TData       = Pair<const TKey, TValue>;
 		using TNode       = jpt_private::RedBlackTreeNode<TData>;
+		using WalkerFunc  = Function<void(const TKey&, TValue&)>;
 
 	public:
 		static constexpr TComparator kComparator = TComparator();
@@ -51,12 +52,12 @@ export namespace jpt
 		constexpr size_t Count() const { return m_count; }
 
 		// Traverse
-		constexpr void TraversePreOrder(TNode* pStart, const Function<void(TData&)>& function);
-		constexpr void TraversePreOrder(const Function<void(TData&)>& function);
-		constexpr void TraverseInOrder(TNode* pStart, const Function<void(TData&)>& function);
-		constexpr void TraverseInOrder(const Function<void(TData&)>& function);
-		constexpr void TraversePostOrder(TNode* pStart, const Function<void(TData&)>& function);
-		constexpr void TraversePostOrder(const Function<void(TData&)>& function);
+		constexpr void TraversePreOrder(TNode* pStart, const WalkerFunc& function);
+		constexpr void TraversePreOrder(const WalkerFunc& function);
+		constexpr void TraverseInOrder(TNode* pStart, const WalkerFunc& function);
+		constexpr void TraverseInOrder(const WalkerFunc& function);
+		constexpr void TraversePostOrder(TNode* pStart, const WalkerFunc& function);
+		constexpr void TraversePostOrder(const WalkerFunc& function);
 
 	private:
 	};
@@ -148,7 +149,7 @@ export namespace jpt
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePreOrder(TNode* pStart, const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePreOrder(TNode* pStart, const WalkerFunc& function)
 	{
 		if (pStart == nullptr)
 		{
@@ -162,30 +163,30 @@ export namespace jpt
 
 		while (!stack.IsEmpty())
 		{
-			TNode* pNode = stack.Peek();
+			TNode* pCurrent = stack.Peek();
 			stack.Pop();
 
-			function(pNode->data);
+			function(pCurrent->data.first, pCurrent->data.second);
 
-			if (pNode->pRightChild)
+			if (pCurrent->pRightChild)
 			{
-				stack.Emplace(pNode->pRightChild);
+				stack.Emplace(pCurrent->pRightChild);
 			}
-			if (pNode->pLeftChild)
+			if (pCurrent->pLeftChild)
 			{
-				stack.Emplace(pNode->pLeftChild);
+				stack.Emplace(pCurrent->pLeftChild);
 			}
 		}
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePreOrder(const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePreOrder(const WalkerFunc& function)
 	{
 		TraversePreOrder(m_pRoot, function);
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraverseInOrder(TNode* pStart, const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraverseInOrder(TNode* pStart, const WalkerFunc& function)
 	{
 		if (pStart == nullptr)
 		{
@@ -208,20 +209,20 @@ export namespace jpt
 			pCurrent = stack.Peek();
 			stack.Pop();
 
-			function(pCurrent->data);
+			function(pCurrent->data.first, pCurrent->data.second);
 
 			pCurrent = pCurrent->pRightChild;
 		}
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraverseInOrder(const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraverseInOrder(const WalkerFunc& function)
 	{
 		TraverseInOrder(m_pRoot, function);
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePostOrder(TNode* pStart, const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePostOrder(TNode* pStart, const WalkerFunc& function)
 	{
 		if (pStart == nullptr)
 		{
@@ -242,23 +243,24 @@ export namespace jpt
 				pCurrent = pCurrent->pLeftChild;
 			}
 
-			TNode* pNode = stack.Peek();
+			pCurrent = stack.Peek();
 
-			if (pNode->pRightChild != nullptr && pLastVisited != pNode->pRightChild)
+			if (pCurrent->pRightChild != nullptr && pCurrent->pRightChild != pLastVisited)
 			{
-				pCurrent = pNode->pRightChild;
+				pCurrent = pCurrent->pRightChild;
 			}
 			else
 			{
-				function(pNode->data);
-				pLastVisited = pNode;
+				function(pCurrent->data.first, pCurrent->data.second);
+				pLastVisited = pCurrent;
 				stack.Pop();
+				pCurrent = nullptr;
 			}
 		}
 	}
 
 	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
-	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePostOrder(const Function<void(TData&)>& function)
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePostOrder(const WalkerFunc& function)
 	{
 		TraversePostOrder(m_pRoot, function);
 	}

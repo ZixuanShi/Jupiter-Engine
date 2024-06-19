@@ -6,6 +6,7 @@ module;
 
 export module UnitTests_MathPractice_FindAngle2D;
 
+import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
