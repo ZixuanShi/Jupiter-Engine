@@ -60,6 +60,7 @@ export namespace jpt
 		constexpr void TraversePostOrder(const WalkerFunc& function);
 
 	private:
+		constexpr void ForEachNode(TNode* pStart, const Function<void(TNode*)>& func);
 	};
 
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
@@ -121,30 +122,13 @@ export namespace jpt
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Clear()
 	{
-		if (m_pRoot != nullptr)
+		ForEachNode(m_pRoot, [](TNode* pNode)
 		{
-			Stack<TNode*> stack;
-			stack.Reserve(m_count);
-			stack.Emplace(m_pRoot);
+			TAllocator::Deallocate(pNode);
+			pNode = nullptr;
+		});
 
-			while (!stack.IsEmpty())
-			{
-				TNode* pNode = stack.Peek();
-				stack.Pop();
-
-				if (pNode->pLeftChild)
-				{
-					stack.Emplace(pNode->pLeftChild);
-				}
-				if (pNode->pRightChild)
-				{
-					stack.Emplace(pNode->pRightChild);
-				}
-
-				TAllocator::Deallocate(pNode);
-			}
-		}
-
+		m_pRoot = nullptr;
 		m_count = 0;
 	}
 
@@ -166,8 +150,6 @@ export namespace jpt
 			TNode* pCurrent = stack.Peek();
 			stack.Pop();
 
-			function(pCurrent->data.first, pCurrent->data.second);
-
 			if (pCurrent->pRightChild)
 			{
 				stack.Emplace(pCurrent->pRightChild);
@@ -176,6 +158,8 @@ export namespace jpt
 			{
 				stack.Emplace(pCurrent->pLeftChild);
 			}
+
+			function(pCurrent->data.first, pCurrent->data.second);
 		}
 	}
 
@@ -263,5 +247,36 @@ export namespace jpt
 	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::TraversePostOrder(const WalkerFunc& function)
 	{
 		TraversePostOrder(m_pRoot, function);
+	}
+
+	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
+	constexpr void SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::ForEachNode(TNode* pStart, const Function<void(TNode*)>& func)
+	{
+		if (pStart == nullptr)
+		{
+			return;
+		}
+
+		Stack<TNode*> stack;
+		stack.Reserve(m_count);
+
+		stack.Emplace(pStart);
+
+		while (!stack.IsEmpty())
+		{
+			TNode* pCurrent = stack.Peek();
+			stack.Pop();
+
+			if (pCurrent->pRightChild)
+			{
+				stack.Emplace(pCurrent->pRightChild);
+			}
+			if (pCurrent->pLeftChild)
+			{
+				stack.Emplace(pCurrent->pLeftChild);
+			}
+
+			func(pCurrent);
+		}
 	}
 }
