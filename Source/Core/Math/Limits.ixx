@@ -11,5 +11,6 @@ export namespace jpt
 	{
 		static constexpr T kMax = std::numeric_limits<T>::max();
 		static constexpr T kMin = std::numeric_limits<T>::min();
+		static constexpr T kEpsilon = std::numeric_limits<T>::epsilon();
 	};
 }

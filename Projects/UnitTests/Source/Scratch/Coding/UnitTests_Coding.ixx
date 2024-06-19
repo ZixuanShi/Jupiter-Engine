@@ -8,6 +8,8 @@ export module UnitTests_Coding;
 
 import jpt.CoreModules;
 
+import UnitTests_Coding_FindMedianSortedArrays;
+
 int SubArraySum(const jpt::DynamicArray<int32>& nums, int k)
 {
 	jpt::HashMap<int32, int32> prefixSum;
@@ -33,6 +35,7 @@ int SubArraySum(const jpt::DynamicArray<int32>& nums, int k)
 
 export bool RunUnitTests_Coding()
 {
+	JPT_ENSURE(UnitTest_Coding_FindMedianSortedArrays());
 
 	return true;
 }
