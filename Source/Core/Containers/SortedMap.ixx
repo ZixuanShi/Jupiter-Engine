@@ -109,11 +109,11 @@ export namespace jpt
 		constexpr const TNode* FindPredecessor(TNode* pNode) const;
 
 		// Red Black Tree Utils
+		constexpr void FixAdd(TNode* pNode);
+		constexpr void FixErase(TNode* pNode);
 		constexpr void RotateLeft(TNode* pNode);
 		constexpr void RotateRight(TNode* pNode);
-		constexpr void AddFixup(TNode* pNode);
 		constexpr void Transplant(TNode* pOldNode, TNode* pNewNode);
-		constexpr void EraseFixup(TNode* pNode);
 
 		// Copy and move
 		constexpr void CopyMap(const SortedMap& other);
@@ -199,7 +199,7 @@ export namespace jpt
 		}
 
 		pNewNode->color = Color::Red;
-		AddFixup(pNewNode);
+		FixAdd(pNewNode);
 		++m_count;
 	}
 
@@ -259,7 +259,7 @@ export namespace jpt
 
 		if (originalColor == Color::Black)
 		{
-			EraseFixup(pChild);
+			FixErase(pChild);
 		}
 
 		TAllocator::Deallocate(pNode);
@@ -548,67 +548,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateLeft(TNode* pNode)
-	{
-		TNode* pRightChild = pNode->pRightChild;
-		pNode->pRightChild = pRightChild->pLeftChild;
-
-		if (pRightChild->pLeftChild != nullptr)
-		{
-			pRightChild->pLeftChild->pParent = pNode;
-		}
-
-		pRightChild->pParent = pNode->pParent;
-
-		if (pNode->pParent == nullptr)
-		{
-			m_pRoot = pRightChild;
-		}
-		else if (pNode == pNode->pParent->pLeftChild)
-		{
-			pNode->pParent->pLeftChild = pRightChild;
-		}
-		else
-		{
-			pNode->pParent->pRightChild = pRightChild;
-		}
-
-		pRightChild->pLeftChild = pNode;
-		pNode->pParent = pRightChild;
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateRight(TNode* pNode)
-	{
-		TNode* pLeftChild = pNode->pLeftChild;
-		pNode->pLeftChild = pLeftChild->pRightChild;
-
-		if (pLeftChild->pRightChild != nullptr)
-		{
-			pLeftChild->pRightChild->pParent = pNode;
-		}
-
-		pLeftChild->pParent = pNode->pParent;
-
-		if (pNode->pParent == nullptr)
-		{
-			m_pRoot = pLeftChild;
-		}
-		else if (pNode == pNode->pParent->pRightChild)
-		{
-			pNode->pParent->pRightChild = pLeftChild;
-		}
-		else
-		{
-			pNode->pParent->pLeftChild = pLeftChild;
-		}
-
-		pLeftChild->pRightChild = pNode;
-		pNode->pParent = pLeftChild;
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::AddFixup(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixAdd(TNode* pNode)
 	{
 		while (pNode->pParent != nullptr && pNode->pParent->color == Color::Red)
 		{
@@ -666,29 +606,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
-	{
-		if (pOldNode->pParent == nullptr)
-		{
-			m_pRoot = pNewNode;
-		}
-		else if (pOldNode == pOldNode->pParent->pLeftChild)
-		{
-			pOldNode->pParent->pLeftChild = pNewNode;
-		}
-		else
-		{
-			pOldNode->pParent->pRightChild = pNewNode;
-		}
-
-		if (pNewNode != nullptr)
-		{
-			pNewNode->pParent = pOldNode->pParent;
-		}
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::EraseFixup(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixErase(TNode* pNode)
 	{
 		while (pNode != m_pRoot && pNode->color == Color::Black)
 		{
@@ -763,6 +681,88 @@ export namespace jpt
 		}
 
 		pNode->color = Color::Black;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateLeft(TNode* pNode)
+	{
+		TNode* pRightChild = pNode->pRightChild;
+		pNode->pRightChild = pRightChild->pLeftChild;
+
+		if (pRightChild->pLeftChild != nullptr)
+		{
+			pRightChild->pLeftChild->pParent = pNode;
+		}
+
+		pRightChild->pParent = pNode->pParent;
+
+		if (pNode->pParent == nullptr)
+		{
+			m_pRoot = pRightChild;
+		}
+		else if (pNode == pNode->pParent->pLeftChild)
+		{
+			pNode->pParent->pLeftChild = pRightChild;
+		}
+		else
+		{
+			pNode->pParent->pRightChild = pRightChild;
+		}
+
+		pRightChild->pLeftChild = pNode;
+		pNode->pParent = pRightChild;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateRight(TNode* pNode)
+	{
+		TNode* pLeftChild = pNode->pLeftChild;
+		pNode->pLeftChild = pLeftChild->pRightChild;
+
+		if (pLeftChild->pRightChild != nullptr)
+		{
+			pLeftChild->pRightChild->pParent = pNode;
+		}
+
+		pLeftChild->pParent = pNode->pParent;
+
+		if (pNode->pParent == nullptr)
+		{
+			m_pRoot = pLeftChild;
+		}
+		else if (pNode == pNode->pParent->pRightChild)
+		{
+			pNode->pParent->pRightChild = pLeftChild;
+		}
+		else
+		{
+			pNode->pParent->pLeftChild = pLeftChild;
+		}
+
+		pLeftChild->pRightChild = pNode;
+		pNode->pParent = pLeftChild;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
+	{
+		if (pOldNode->pParent == nullptr)
+		{
+			m_pRoot = pNewNode;
+		}
+		else if (pOldNode == pOldNode->pParent->pLeftChild)
+		{
+			pOldNode->pParent->pLeftChild = pNewNode;
+		}
+		else
+		{
+			pOldNode->pParent->pRightChild = pNewNode;
+		}
+
+		if (pNewNode != nullptr)
+		{
+			pNewNode->pParent = pOldNode->pParent;
+		}
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
