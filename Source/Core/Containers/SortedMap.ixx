@@ -185,6 +185,7 @@ export namespace jpt
 
 		pNewNode->pParent = pParent;
 
+		// Tree is empty
 		if (pParent == nullptr)
 		{
 			m_pRoot = pNewNode;
@@ -589,6 +590,7 @@ export namespace jpt
 			{
 				TNode* pUncle = pNode->pParent->pParent->pRightChild;
 
+				// Case 1: Uncle is red. Recolor parent, uncle and grandparent
 				if (pUncle != nullptr && pUncle->color == Color::Red)
 				{
 					pNode->pParent->color = Color::Black;
@@ -598,12 +600,14 @@ export namespace jpt
 				}
 				else
 				{
+					// Case 2: Uncle is black and pNode is right child. Rotate left
 					if (pNode == pNode->pParent->pRightChild)
 					{
 						pNode = pNode->pParent;
 						RotateLeft(pNode);
 					}
 
+					// Case 3: Uncle is black and pNode is left child. Recolor parent and grandparent and rotate right
 					pNode->pParent->color = Color::Black;
 					pNode->pParent->pParent->color = Color::Red;
 					RotateRight(pNode->pParent->pParent);
@@ -647,6 +651,7 @@ export namespace jpt
 			{
 				TNode* pSibling = pNode->pParent->pRightChild;
 
+				// Case 1: Sibling is red. Recolor sibling and parent and rotate left
 				if (pSibling->color == Color::Red)
 				{
 					pSibling->color = Color::Black;
@@ -655,6 +660,7 @@ export namespace jpt
 					pSibling = pNode->pParent->pRightChild;
 				}
 
+				// Case 2: Sibling is black and both children are black. Recolor sibling and move up the tree
 				if (pSibling->pLeftChild->color == Color::Black && pSibling->pRightChild->color == Color::Black)
 				{
 					pSibling->color = Color::Red;
@@ -662,6 +668,7 @@ export namespace jpt
 				}
 				else
 				{
+					// Case 3: Sibling is black and left child is red. Recolor sibling and left child and rotate right
 					if (pSibling->pRightChild->color == Color::Black)
 					{
 						pSibling->pLeftChild->color = Color::Black;
@@ -670,6 +677,7 @@ export namespace jpt
 						pSibling = pNode->pParent->pRightChild;
 					}
 
+					// Case 4: Sibling is black and right child is red. Recolor sibling and parent and rotate left
 					pSibling->color = pNode->pParent->color;
 					pNode->pParent->color = Color::Black;
 					pSibling->pRightChild->color = Color::Black;
