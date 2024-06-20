@@ -16,7 +16,12 @@ namespace jpt
 	void OnAssertionFailed(int line, const char* file, const char* expression);
 
 	/** Breaks the debugger if attached */
-	void DebugBreak();
+#if IS_PLATFORM_WIN64
+	#define JPT_DEBUG_BREAK() __debugbreak()
+#else
+	#error "DebugBreak not implemented for this platform"
+#endif
+		
 
 	/** Assert with error message logging if Debug mode, do nothing if not Debugging
 		@param expression: A boolean expression to assert true
@@ -34,7 +39,7 @@ namespace jpt
 			if (!(expression))\
 			{\
 				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-				jpt::DebugBreak();\
+				JPT_DEBUG_BREAK();\
 			}\
 		} while(false)
 }

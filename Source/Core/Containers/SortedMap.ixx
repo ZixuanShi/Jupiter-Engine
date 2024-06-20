@@ -213,10 +213,7 @@ export namespace jpt
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Erase(const TKey& key)
 	{
 		TNode* pNode = FindNode(key);
-		if (pNode == nullptr)
-		{
-			return;
-		}
+		JPT_ASSERT(pNode != nullptr, "Key not found");
 
 		Color originalColor = pNode->color;
 		TNode* pChild = nullptr;

@@ -101,13 +101,25 @@ bool UnitTest_SortedMap_Erase()
 	sortedMap[8] = '8';
 	sortedMap[9] = '9';
 
+    sortedMap.Erase(1);
+    sortedMap.Erase(2);
+    sortedMap.Erase(3);
     sortedMap.Erase(4);
     sortedMap.Erase(5);
+    sortedMap.Erase(6);
+    sortedMap.Erase(7);
+    sortedMap.Erase(8);
+    sortedMap.Erase(9);
 
+    JPT_ENSURE(!sortedMap.Contains(1));
+    JPT_ENSURE(!sortedMap.Contains(2));
+    JPT_ENSURE(!sortedMap.Contains(3));
     JPT_ENSURE(!sortedMap.Contains(4));
     JPT_ENSURE(!sortedMap.Contains(5));
-
-    JPT_LOG(sortedMap);
+    JPT_ENSURE(!sortedMap.Contains(6));
+    JPT_ENSURE(!sortedMap.Contains(7));
+    JPT_ENSURE(!sortedMap.Contains(8));
+    JPT_ENSURE(!sortedMap.Contains(9));
 
     return true;
 }
