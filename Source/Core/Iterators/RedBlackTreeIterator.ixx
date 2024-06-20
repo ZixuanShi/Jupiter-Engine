@@ -16,7 +16,6 @@ export namespace jpt_private
 	{
 		enum class EColor : uint8
 		{
-			Undefined,
 			Red,
 			Black
 		};
@@ -25,7 +24,7 @@ export namespace jpt_private
 		RedBlackTreeNode* pParent = nullptr;
 		RedBlackTreeNode* pLeftChild = nullptr;
 		RedBlackTreeNode* pRightChild = nullptr;
-		EColor color = EColor::Undefined;
+		EColor color = EColor::Red;
 
 		constexpr RedBlackTreeNode(const TData& _data) : data(_data) {}
 		constexpr RedBlackTreeNode(TData&& _data) : data(jpt::Move(_data)) {}
@@ -44,7 +43,7 @@ export namespace jpt_private
 		pParent = nullptr;
 		pLeftChild = nullptr;
 		pRightChild = nullptr;
-		color = EColor::Undefined;
+		color = EColor::Red;
 	}
 
 	template<typename TData>
@@ -259,6 +258,12 @@ export namespace jpt_private
 		ConstRedBlackTreeIterator iterator = *this;
 		--(*this);
 		return iterator;
+	}
+
+	template<typename TData>
+	constexpr bool ConstRedBlackTreeIterator<TData>::operator==(const ConstRedBlackTreeIterator& other) const
+	{
+		return m_pNode == other.m_pNode;
 	}
 
 	template<typename TData>
