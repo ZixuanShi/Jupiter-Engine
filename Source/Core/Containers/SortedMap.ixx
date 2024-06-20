@@ -82,12 +82,12 @@ export namespace jpt
 		constexpr void PostOrderWalk(const WalkerFunc& function);
 
 		// Iterators
-		constexpr Iterator begin() { return Iterator(FindMinNode(m_pRoot)); }
-		constexpr Iterator end() { return Iterator(nullptr); }
-		constexpr ConstIterator begin() const { return ConstIterator(FindMinNode(m_pRoot)); }
-		constexpr ConstIterator end() const { return ConstIterator(nullptr); }
-		constexpr ConstIterator cbegin() const { return ConstIterator(FindMinNode(m_pRoot)); }
-		constexpr ConstIterator cend() const { return ConstIterator(nullptr); }
+		constexpr      Iterator begin();
+		constexpr      Iterator end();
+		constexpr ConstIterator begin()  const;
+		constexpr ConstIterator end()    const;
+		constexpr ConstIterator cbegin() const;
+		constexpr ConstIterator cend()   const;
 
 	private:
 		// Traverse
@@ -373,6 +373,42 @@ export namespace jpt
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalk(const WalkerFunc& function)
 	{
 		PostOrderWalk(m_pRoot, function);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin()
+	{
+		return Iterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::end()
+	{
+		return Iterator(nullptr);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() const
+	{
+		return ConstIterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() const
+	{
+		return ConstIterator(nullptr);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cbegin() const
+	{
+		return ConstIterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cend() const
+	{
+		return ConstIterator(nullptr);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
