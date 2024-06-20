@@ -34,7 +34,7 @@ double FindMedianSortedArrays_BruteForce(const jpt::DynamicArray<int32>& nums1, 
 
 	if (merged.Count() % 2 == 0)
 	{
-		return (merged[merged.Count() / 2 - 1] + merged[merged.Count() / 2]) / 2.0;
+		return static_cast<double>(merged[merged.Count() / 2 - 1] + merged[merged.Count() / 2]) / 2.0;
 	}
 	else
 	{
