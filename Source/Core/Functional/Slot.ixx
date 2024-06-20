@@ -60,7 +60,7 @@ export namespace jpt
 			}
 		}
 
-		m_functions.AddBack(function);
+		m_functions.Add(function);
 		return m_functions.Count() - 1;
 	}
 

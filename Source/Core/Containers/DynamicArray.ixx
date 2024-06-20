@@ -78,8 +78,8 @@ export namespace jpt
 		// Inserting
 		constexpr void Add(size_t index, const TData& data);
 		constexpr void Add(size_t index, TData&& data);
-		constexpr void AddBack(const TData& data);
-		constexpr void AddBack(TData&& data);
+		constexpr void Add(const TData& data);
+		constexpr void Add(TData&& data);
 		template<typename ...TArgs>
 		constexpr TData& Emplace(size_t index, TArgs&&... args);
 		template<typename ...TArgs>
@@ -87,7 +87,7 @@ export namespace jpt
 
 		// Erasing
 		constexpr void Erase(size_t index);
-		constexpr void PopBack();
+		constexpr void Pop();
 
 		void Serialize(Serializer& serializer) const;
 		void Deserialize(Serializer& serializer);
@@ -210,7 +210,7 @@ export namespace jpt
 		{
 			for (size_t i = size; i < m_count; ++i)
 			{
-				PopBack();
+				Pop();
 			}
 		}
 		// If size if greater than m_count, grow
@@ -241,13 +241,13 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::AddBack(const TData& data)
+	constexpr void DynamicArray<TData, TAllocator>::Add(const TData& data)
 	{
 		Add(m_count, data);
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::AddBack(TData&& data)
+	constexpr void DynamicArray<TData, TAllocator>::Add(TData&& data)
 	{
 		Add(m_count, Move(data));
 	}
@@ -283,7 +283,7 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::PopBack()
+	constexpr void DynamicArray<TData, TAllocator>::Pop()
 	{
 		Erase(m_count - 1);
 	}

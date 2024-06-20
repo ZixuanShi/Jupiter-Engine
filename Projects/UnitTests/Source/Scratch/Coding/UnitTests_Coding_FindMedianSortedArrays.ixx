@@ -23,11 +23,11 @@ double FindMedianSortedArrays_BruteForce(const jpt::DynamicArray<int32>& nums1, 
 
 	for (int32 i : nums1)
 	{
-		merged.AddBack(i);
+		merged.Add(i);
 	}
 	for (int32 i : nums2)
 	{
-		merged.AddBack(i);
+		merged.Add(i);
 	}
 
 	jpt::Sort(merged);

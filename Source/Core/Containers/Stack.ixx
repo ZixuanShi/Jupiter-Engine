@@ -47,69 +47,69 @@ export namespace jpt
 		constexpr void Clear();
 	};
 
-	template<typename _TData>
-	constexpr Stack<_TData>::TData& Stack<_TData>::Peek()
+	template<typename TData>
+	constexpr Stack<TData>::TData& Stack<TData>::Peek()
 	{
 		return m_container.Back();
 	}
 
-	template<typename _TData>
-	constexpr const Stack<_TData>::TData& Stack<_TData>::Peek() const
+	template<typename TData>
+	constexpr const Stack<TData>::TData& Stack<TData>::Peek() const
 	{
 		return m_container.Back();
 	}
 
-	template<typename _TData>
-	constexpr bool Stack<_TData>::IsEmpty() const
+	template<typename TData>
+	constexpr bool Stack<TData>::IsEmpty() const
 	{
 		return m_container.IsEmpty();
 	}
 
-	template<typename _TData>
-	constexpr size_t Stack<_TData>::Count() const
+	template<typename TData>
+	constexpr size_t Stack<TData>::Count() const
 	{
 		return m_container.Count();
 	}
 
-	template<typename _TData>
-	constexpr size_t Stack<_TData>::Capacity() const
+	template<typename TData>
+	constexpr size_t Stack<TData>::Capacity() const
 	{
 		return m_container.Capacity();
 	}
 
-	template<typename _TData>
-	constexpr void Stack<_TData>::Reserve(size_t capacity)
+	template<typename TData>
+	constexpr void Stack<TData>::Reserve(size_t capacity)
 	{
 		m_container.Reserve(capacity);
 	}
 
-	template<typename _TData>
-	constexpr void Stack<_TData>::Push(const TData& value)
+	template<typename TData>
+	constexpr void Stack<TData>::Push(const TData& value)
 	{
-		m_container.AddBack(value);
+		m_container.Add(value);
 	}
 
-	template<typename _TData>
-	constexpr void Stack<_TData>::Push(TData&& value)
+	template<typename TData>
+	constexpr void Stack<TData>::Push(TData&& value)
 	{
-		m_container.AddBack(Move(value));
+		m_container.Add(Move(value));
 	}
 
-	template<typename _TData>
+	template<typename TData>
 	template<typename ...TArgs>
-	constexpr void Stack<_TData>::Emplace(TArgs && ...args)
+	constexpr void Stack<TData>::Emplace(TArgs && ...args)
 	{
 		m_container.EmplaceBack(Forward<TArgs>(args)...);
 	}
 
-	template<typename _TData>
-	constexpr void Stack<_TData>::Pop()
+	template<typename TData>
+	constexpr void Stack<TData>::Pop()
 	{
-		m_container.PopBack();
+		m_container.Pop();
 	}
 
-	template<typename _TData>
-	constexpr void Stack<_TData>::Clear()
+	template<typename TData>
+	constexpr void Stack<TData>::Clear()
 	{
 		m_container.Clear();
 	}

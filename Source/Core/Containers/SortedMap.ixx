@@ -58,8 +58,8 @@ export namespace jpt
 		constexpr void Clear();
 
 		// Searching
-		constexpr size_t Count() const { return m_count; }
-		constexpr Iterator Find(const TKey& key);
+		constexpr size_t Count() const;
+		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Contains(const TKey& key);
 		constexpr       TValue& operator[](const TKey& key);
@@ -116,7 +116,8 @@ export namespace jpt
 		constexpr void Transplant(TNode* pOldNode, TNode* pNewNode);
 
 		// Copy and move
-		constexpr void CopyMap(const SortedMap& other);
+		template<Iterable TContainer>
+		constexpr void CopyMap(const TContainer& other);
 		constexpr void MoveMap(SortedMap&& other);
 	};
 
@@ -169,7 +170,7 @@ export namespace jpt
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
 
-		while (pCurrent != nullptr)
+		while (pCurrent)
 		{
 			pParent = pCurrent;
 
@@ -185,7 +186,7 @@ export namespace jpt
 
 		pNewNode->pParent = pParent;
 
-		if (pParent == nullptr)
+		if (!pParent)
 		{
 			m_pRoot = pNewNode;
 		}
@@ -213,7 +214,7 @@ export namespace jpt
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Erase(const TKey& key)
 	{
 		TNode* pNode = FindNode(key);
-		if (pNode == nullptr)
+		if (!pNode)
 		{
 			return;
 		}
@@ -221,12 +222,12 @@ export namespace jpt
 		Color originalColor = pNode->color;
 		TNode* pChild = nullptr;
 
-		if (pNode->pLeftChild == nullptr)
+		if (!pNode->pLeftChild)
 		{
 			pChild = pNode->pRightChild;
 			Transplant(pNode, pNode->pRightChild);
 		}
-		else if (pNode->pRightChild == nullptr)
+		else if (!pNode->pRightChild)
 		{
 			pChild = pNode->pLeftChild;
 			Transplant(pNode, pNode->pLeftChild);
@@ -239,7 +240,7 @@ export namespace jpt
 
 			if (pSuccessor->pParent == pNode)
 			{
-				if (pChild != nullptr)
+				if (!pChild)
 				{
 					pChild->pParent = pSuccessor;
 				}
@@ -287,6 +288,12 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const
+	{
+		return m_count;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::Find(const TKey& key)
 	{
 		return Iterator(FindNode(key));
@@ -309,7 +316,7 @@ export namespace jpt
 	{
 		TNode* pNode = FindNode(key);
 
-		if (pNode == nullptr)
+		if (!pNode)
 		{
 			Add(key, TValue());
 			pNode = FindNode(key);
@@ -417,7 +424,7 @@ export namespace jpt
 	{
 		TNode* pCurrent = m_pRoot;
 
-		while (pCurrent != nullptr)
+		while (pCurrent)
 		{
 			if (pCurrent->data.first == key)
 			{
@@ -502,7 +509,7 @@ export namespace jpt
 
 		TNode* pParent = pNode->pParent;
 
-		while (pParent != nullptr && pNode == pParent->pRightChild)
+		while (pParent && pNode == pParent->pRightChild)
 		{
 			pNode = pParent;
 			pParent = pParent->pParent;
@@ -532,7 +539,7 @@ export namespace jpt
 
 		TNode* pParent = pNode->pParent;
 
-		while (pParent != nullptr && pNode == pParent->pLeftChild)
+		while (pParent && pNode == pParent->pLeftChild)
 		{
 			pNode = pParent;
 			pParent = pParent->pParent;
@@ -550,13 +557,13 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixAdd(TNode* pNode)
 	{
-		while (pNode->pParent != nullptr && pNode->pParent->color == Color::Red)
+		while (pNode->pParent && pNode->pParent->color == Color::Red)
 		{
 			if (pNode->pParent == pNode->pParent->pParent->pLeftChild)
 			{
 				TNode* pUncle = pNode->pParent->pParent->pRightChild;
 
-				if (pUncle != nullptr && pUncle->color == Color::Red)
+				if (pUncle && pUncle->color == Color::Red)
 				{
 					pNode->pParent->color = Color::Black;
 					pUncle->color = Color::Black;
@@ -580,7 +587,7 @@ export namespace jpt
 			{
 				TNode* pUncle = pNode->pParent->pParent->pLeftChild;
 
-				if (pUncle != nullptr && pUncle->color == Color::Red)
+				if (pUncle && pUncle->color == Color::Red)
 				{
 					pNode->pParent->color = Color::Black;
 					pUncle->color = Color::Black;
@@ -689,14 +696,14 @@ export namespace jpt
 		TNode* pRightChild = pNode->pRightChild;
 		pNode->pRightChild = pRightChild->pLeftChild;
 
-		if (pRightChild->pLeftChild != nullptr)
+		if (pRightChild->pLeftChild)
 		{
 			pRightChild->pLeftChild->pParent = pNode;
 		}
 
 		pRightChild->pParent = pNode->pParent;
 
-		if (pNode->pParent == nullptr)
+		if (!pNode->pParent)
 		{
 			m_pRoot = pRightChild;
 		}
@@ -719,14 +726,14 @@ export namespace jpt
 		TNode* pLeftChild = pNode->pLeftChild;
 		pNode->pLeftChild = pLeftChild->pRightChild;
 
-		if (pLeftChild->pRightChild != nullptr)
+		if (pLeftChild->pRightChild)
 		{
 			pLeftChild->pRightChild->pParent = pNode;
 		}
 
 		pLeftChild->pParent = pNode->pParent;
 
-		if (pNode->pParent == nullptr)
+		if (!pNode->pParent)
 		{
 			m_pRoot = pLeftChild;
 		}
@@ -746,7 +753,7 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
 	{
-		if (pOldNode->pParent == nullptr)
+		if (pOldNode->pParent)
 		{
 			m_pRoot = pNewNode;
 		}
@@ -759,18 +766,19 @@ export namespace jpt
 			pOldNode->pParent->pRightChild = pNewNode;
 		}
 
-		if (pNewNode != nullptr)
+		if (!pNewNode)
 		{
 			pNewNode->pParent = pOldNode->pParent;
 		}
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::CopyMap(const SortedMap& other)
+	template<Iterable TContainer>
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::CopyMap(const TContainer& other)
 	{
-		for (const auto& [key, value] : other)
+		for (const TData& data : other)
 		{
-			Add(key, value);
+			Add(data);
 		}
 	}
 
