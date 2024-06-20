@@ -88,6 +88,30 @@ bool UnitTest_SortedMap_Add()
     return true;
 }
 
+bool UnitTest_SortedMap_Erase()
+{
+    jpt::SortedMap<int32, char> sortedMap;
+    sortedMap[4] = '4';
+    sortedMap[2] = '2';
+    sortedMap[6] = '6';
+    sortedMap[1] = '1';
+    sortedMap[3] = '3';
+    sortedMap[5] = '5';
+    sortedMap[7] = '7';
+	sortedMap[8] = '8';
+	sortedMap[9] = '9';
+
+    sortedMap.Erase(4);
+    sortedMap.Erase(5);
+
+    JPT_ENSURE(!sortedMap.Contains(4));
+    JPT_ENSURE(!sortedMap.Contains(5));
+
+    JPT_LOG(sortedMap);
+
+    return true;
+}
+
 bool UnitTest_SortedMap_Walk()
 {
 	jpt::SortedMap<int32, char> sortedMap;
@@ -146,6 +170,7 @@ export bool RunUnitTests_SortedMap()
     JPT_ENSURE(UnitTest_SortedMap_Move());
 
     JPT_ENSURE(UnitTest_SortedMap_Add());
+    JPT_ENSURE(UnitTest_SortedMap_Erase());
     //JPT_ENSURE(UnitTest_SortedMap_Walk());
     JPT_ENSURE(UnitTest_SortedMap_Iterators());
 
