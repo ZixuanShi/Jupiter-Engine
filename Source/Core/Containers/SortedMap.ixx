@@ -58,8 +58,8 @@ export namespace jpt
 		constexpr void Clear();
 
 		// Searching
-		constexpr size_t Count() const { return m_count; }
-		constexpr Iterator Find(const TKey& key);
+		constexpr size_t Count() const;
+		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Contains(const TKey& key);
 		constexpr       TValue& operator[](const TKey& key);
@@ -282,6 +282,12 @@ export namespace jpt
 
 		m_pRoot = nullptr;
 		m_count = 0;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const
+	{
+		return m_count;
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
