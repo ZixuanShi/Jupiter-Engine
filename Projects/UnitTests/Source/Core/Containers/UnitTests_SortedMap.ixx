@@ -17,7 +17,6 @@ import jpt.Utilities;
 bool UnitTest_SortedMap_Add()
 {
     jpt::SortedMap<int32, char> sortedMap;
-    
     sortedMap.Add(4, '4');
     sortedMap.Add(2, '2');
     sortedMap.Add(6, '6');
@@ -51,7 +50,6 @@ bool UnitTest_SortedMap_Add()
 bool UnitTest_SortedMap_Walk()
 {
 	jpt::SortedMap<int32, char> sortedMap;
-	
 	sortedMap.Add(4, '4');
 	sortedMap.Add(2, '2');
 	sortedMap.Add(6, '6');
@@ -79,10 +77,31 @@ bool UnitTest_SortedMap_Walk()
 	return true;
 }
 
+bool UnitTest_SortedMap_Iterators()
+{
+    jpt::SortedMap<int32, char> sortedMap;
+    sortedMap.Add(4, '4');
+    sortedMap.Add(2, '2');
+    sortedMap.Add(6, '6');
+    sortedMap.Add(1, '1');
+    sortedMap.Add(3, '3');
+    sortedMap.Add(5, '5');
+    sortedMap.Add(7, '7');
+
+    for (const auto& [key, value] : sortedMap)
+	{
+		jpt::Pair<int32, char> pair(key, value);
+        JPT_LOG(pair);
+	}
+
+    return true;
+}
+
 export bool RunUnitTests_SortedMap()
 {
     JPT_ENSURE(UnitTest_SortedMap_Add());
     //JPT_ENSURE(UnitTest_SortedMap_Walk());
+    JPT_ENSURE(UnitTest_SortedMap_Iterators());
 
     return true;
 }

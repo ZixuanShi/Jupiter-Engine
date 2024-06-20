@@ -24,14 +24,16 @@ export namespace jpt
 	class SortedMap
 	{
 	public:
-		using TKey        = _TKey;
-		using TValue      = _TValue;
-		using TComparator = _TComparator;
-		using TData       = Pair<const TKey, TValue>;
-		using TNode       = jpt_private::RedBlackTreeNode<TData>;
+		using TKey          = _TKey;
+		using TValue        = _TValue;
+		using TComparator   = _TComparator;
+		using TData         = Pair<const TKey, TValue>;
+		using TNode         = jpt_private::RedBlackTreeNode<TData>;
+		using Iterator      = jpt_private::RedBlackTreeIterator<TData>;
+		using ConstIterator = jpt_private::ConstRedBlackTreeIterator<TData>;
 
-		using Color 	  = typename TNode::EColor;
-		using WalkerFunc  = Function<void(const TKey&, TValue&)>;
+		using Color 	    = typename TNode::EColor;
+		using WalkerFunc    = Function<void(const TKey&, TValue&)>;
 
 	public:
 		static constexpr TComparator kComparator = TComparator();
@@ -70,6 +72,14 @@ export namespace jpt
 		/** Left-right-root
 			Used for postfixing. i.e. Deleting the tree */
 		constexpr void PostOrderWalk(const WalkerFunc& function);
+
+		// Iterators
+		constexpr Iterator begin() { return Iterator(FindMinNode(m_pRoot)); }
+		constexpr Iterator end() { return Iterator(nullptr); }
+		constexpr ConstIterator begin() const { return ConstIterator(FindMinNode(m_pRoot)); }
+		constexpr ConstIterator end() const { return ConstIterator(nullptr); }
+		constexpr ConstIterator cbegin() const { return ConstIterator(FindMinNode(m_pRoot)); }
+		constexpr ConstIterator cend() const { return ConstIterator(nullptr); }
 
 	private:
 		// Traverse
