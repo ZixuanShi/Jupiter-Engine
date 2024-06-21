@@ -77,7 +77,6 @@ export namespace jpt::File
 		constexpr bool Contains(const Path& path) const;
 
 		constexpr const WString& ToWString() const { return m_path; }
-		constexpr const WString& ToString() const { return m_path; }
 		constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 		constexpr size_t Count() const { return m_path.Count(); }
 	};

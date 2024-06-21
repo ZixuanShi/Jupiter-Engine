@@ -79,9 +79,8 @@ bool UnitTest_FileIO_TextFile()
     JPT_ENSURE(Exists(path));
 
     // Load again
-    jpt::String loaded;
-    ReadTextFile(path, loaded);
-    JPT_ENSURE(loaded == "Hello, World! I'm a new text file");
+    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
+    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file");
 
 	// Clean up
 	Delete(path);
@@ -115,14 +114,12 @@ bool UnitTest_FileIO_BinaryFile()
     WriteBinaryFile(path, saver);
 
 	// Load Binary
-    Foo loader;
-    ReadBinaryFile(path, loader);
-	JPT_ENSURE(loader == saver);
+    jpt::Optional<Foo> loader = ReadBinaryFile<Foo>(path);    
+	JPT_ENSURE(loader.Value() == saver);
 
     // Another loader
-    Foo loader2;
-    ReadBinaryFile(path, loader2);
-    JPT_ENSURE(loader2 == saver);
+    jpt::Optional<Foo> loader2 = ReadBinaryFile<Foo>(path);
+    JPT_ENSURE(loader2.Value() == saver);
 
     // Clean
 	Delete(path);
@@ -179,9 +176,8 @@ bool UnitTest_FileIO_Serialization()
 	WriteBinaryFile(path, saver);
 
 	// Load
-    Foo loader;
-    ReadBinaryFile(path, loader);
-	JPT_ENSURE(saver == loader);
+    jpt::Optional<Foo> loader = ReadBinaryFile<Foo>(path);
+	JPT_ENSURE(saver == loader.Value());
 
 	// Clean
 	Delete(path);

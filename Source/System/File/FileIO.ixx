@@ -61,19 +61,21 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	bool ReadTextFile(const File::Path& path, String& content)
+	Optional<String> ReadTextFile(const File::Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 
 		if (!serializer.IsOpen())
 		{
 			JPT_ERROR("Failed to open file for reading with SerializerMode::Read: %ls", path.ConstBuffer());
-			return false;
+			return Optional<String>();
 		}
 
 		char* buffer = serializer.ReadText();
+
+		String content;
 		content.MoveString(buffer);
-		return true;
+		return content;
 	}
 
 	/** Saves text data to a file */
@@ -101,18 +103,19 @@ export namespace jpt::File
 
 	/** Loads binary data from a file */
 	template<typename T>
-	bool ReadBinaryFile(const File::Path& path, T& obj)
+	Optional<T> ReadBinaryFile(const File::Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 
 		if (!serializer.IsOpen())
 		{
 			JPT_ERROR("Failed to open file for reading with SerializerMode::ReadBinary: %ls", path.ConstBuffer());
-			return false;
+			return Optional<T>();
 		}
 
+		T obj;
 		serializer.Read(obj);
-		return true;
+		return obj;
 	}
 
 	/** Saves binary data to a file */
