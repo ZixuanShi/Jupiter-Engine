@@ -18,7 +18,7 @@ import jpt.FileIO;
 
 static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
 
-bool UnitTest_Json_BasicWrite()
+bool UnitTest_Json_Write()
 {
     jpt::JsonObject jsonRoot;
 
@@ -35,7 +35,14 @@ bool UnitTest_Json_BasicWrite()
             { "year",      2024 },
             { "month",     6    },
             { "day",       20   },
-            { "Calender", jpt::String("Made in China")}
+            { "Calender", jpt::String("Made in China")},
+
+            { "Subset", jpt::JsonMap 
+                        {
+            				{ "key1", 1 },
+							{ "key2", 2 },
+							{ "key3", 3 }
+                        }}
         });
 
     jpt::WriteJsonRoot(path, jsonRoot);
@@ -43,7 +50,7 @@ bool UnitTest_Json_BasicWrite()
     return true;
 }
 
-bool UnitTest_Json_BasicRead()
+bool UnitTest_Json_Read()
 {
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonObject jsonRoot = jpt::ReadJsonRoot(path).Value();
@@ -66,13 +73,18 @@ bool UnitTest_Json_BasicRead()
     JPT_ENSURE(subSet["day"] == 20);
     JPT_ENSURE(subSet["Calender"] == jpt::String("Made in China"));
 
+    const jpt::JsonMap& subSet2 = subSet["Subset"].As<jpt::JsonMap>();
+    JPT_ENSURE(subSet2["key1"] == 1);
+    JPT_ENSURE(subSet2["key2"] == 2);
+    JPT_ENSURE(subSet2["key3"] == 3);
+
     return true;
 }
 
 export bool RunUnitTests_Json()
 {
-    JPT_ENSURE(UnitTest_Json_BasicWrite());
-    JPT_ENSURE(UnitTest_Json_BasicRead());
+    JPT_ENSURE(UnitTest_Json_Write());
+    JPT_ENSURE(UnitTest_Json_Read());
 
     return true;
 }

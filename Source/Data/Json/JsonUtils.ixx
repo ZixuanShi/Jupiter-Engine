@@ -68,12 +68,12 @@ namespace jpt
 		else
 		{
 			valueEnd = line.Find(",", valueStart);
+			if (valueEnd == npos)	// Last element. No comma
+			{
+				valueEnd = line.Count();
+			}
 		}
 
-		if (valueEnd == npos)
-		{
-			valueEnd = line.Count();
-		}
 		return line.SubStr(valueStart, valueEnd - valueStart);
 	}
 

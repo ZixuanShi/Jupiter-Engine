@@ -19,7 +19,7 @@ export namespace jpt
 	class JsonData;
 
 	using JsonArray = DynamicArray<JsonData>;
-	using JsonMap = HashMap<String, JsonData>;
+	using JsonMap   = HashMap<String, JsonData>;
 	using TJsonData = Variant<int32, 
                              float32,
                              bool, 
