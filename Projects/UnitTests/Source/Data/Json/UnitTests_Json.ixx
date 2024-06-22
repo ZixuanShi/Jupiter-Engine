@@ -27,7 +27,16 @@ bool UnitTest_Json_BasicWrite()
     jsonRoot.Add("data_float", 1.55f);
     jsonRoot.Add("data_string", jpt::String("Hello from Jupiter Engine!"));
     jsonRoot.Add("data_null", jpt::String("null"));
+
     jsonRoot.Add("data_array", jpt::JsonArray{111, jpt::String("Hello World"), 33, 4.77f, false});
+
+    jsonRoot.Add("data_map", jpt::JsonMap
+        {
+            { "year",      2024 },
+            { "month",     6    },
+            { "day",       20   },
+            { "Calender", jpt::String("Made in China")}
+        });
 
     jpt::WriteJsonRoot(path, jsonRoot);
 
@@ -36,10 +45,8 @@ bool UnitTest_Json_BasicWrite()
 
 bool UnitTest_Json_BasicRead()
 {
-    jpt::File::Path pathNew = { jpt::File::ESource::Client, "Assets/TestJson.json" };
-
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonObject jsonRoot = jpt::ReadJsonRoot(pathNew).Value();
+    jpt::JsonObject jsonRoot = jpt::ReadJsonRoot(path).Value();
 
     // Access the data with Get<T>() 
     JPT_ENSURE(jsonRoot.Get<jpt::String>("source") == "Engine");
@@ -54,11 +61,10 @@ bool UnitTest_Json_BasicRead()
 
     // Subset map
     const jpt::JsonMap& subSet = jsonRoot.Get<jpt::JsonMap>("data_map");
-    JPT_ENSURE(subSet["data_map_int"] == 132);
-
-    // Sub-submap
-    const jpt::JsonMap& subSubSet = subSet["data_map_map"].As<jpt::JsonMap>();
-    JPT_ENSURE(subSubSet["key3"] == jpt::String("Hello from Sub-subset!"));
+    JPT_ENSURE(subSet["year"] == 2024);
+    JPT_ENSURE(subSet["month"] == 6);
+    JPT_ENSURE(subSet["day"] == 20);
+    JPT_ENSURE(subSet["Calender"] == jpt::String("Made in China"));
 
     return true;
 }

@@ -118,7 +118,29 @@ export namespace jpt
 		}
 		else if (data.Is<HashMap<String, JsonData>>())
 		{
-			return jpt::ToString(data.As<HashMap<String, JsonData>>());
+			String str("\n{\n");
+
+			size_t count = 0;
+			for (const auto& [key, value] : data.As<HashMap<String, JsonData>>())
+			{
+				str.Append("\t\"");
+				str.Append(key);
+				str.Append("\": ");
+				str.Append(value.ToString());
+
+				++count;
+				if (count < data.As<HashMap<String, JsonData>>().Count())
+				{
+					str.Append(",\n");
+				}
+				else
+				{
+					str.Append("\n");
+				}
+			}
+
+			str.Append("}");
+			return str;
 		}
 
 		JPT_ASSERT(false, "Unsupported data type in json file");
