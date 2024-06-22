@@ -11,13 +11,15 @@ module;
 export module jpt.JsonUtils;
 
 import jpt.Constants;
-import jpt.JsonObject;
 import jpt.DynamicArray;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.Optional;
 import jpt.Pair;
 import jpt.Stack;
+
+import jpt.JsonData;
+import jpt.JsonObject;
 
 import jpt.File.Path;
 import jpt.FileIO;
@@ -134,54 +136,6 @@ namespace jpt
 			return;
 		}
 
-		const HashMap<String, JsonData>& data = jsonRoot.GetData();
-
-		size_t count = 0;
-		file << "{\n";
-		for (const Pair<String, JsonData>& pair : data)
-		{
-			file << '\t' << "\"" << pair.first.ConstBuffer() << "\": ";
-
-			const JsonData& value = pair.second;
-			if (value.Is<int32>())
-			{
-				file << value.As<int32>();
-			}
-			else if (value.Is<float32>())
-			{
-				file << value.As<float32>();
-			}
-			else if (value.Is<bool>())
-			{
-				file << (value.As<bool>() ? "true" : "false");
-			}
-			else if (value.Is<String>())
-			{
-				const char* str = value.As<String>().ConstBuffer();
-				if(AreStringsSame(str, "null"))
-				{
-					file << "null";
-				}
-				else
-				{
-					file << "\"" << str << "\"";
-				}
-			}
-			else
-			{
-				JPT_ASSERT(false, "Unsupported data type in json file");
-			}
-
-			++count;
-			if (count < data.Count())
-			{
-				file << ",\n";
-			}
-			else
-			{
-				file << "\n";
-			}
-		}
-		file << "}";
+		file << jsonRoot.ToString().ConstBuffer();
 	}
 }

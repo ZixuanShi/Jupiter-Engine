@@ -6,19 +6,15 @@ module;
 
 export module jpt.JsonObject;
 
-import jpt.DynamicArray;
 import jpt.HashMap;
-import jpt.String;
-import jpt.TypeDefs;
-import jpt.TypeTraits;
-import jpt.Utilities;
 import jpt.Variant;
+import jpt.String;
+import jpt.StringUtils;
+import jpt.JsonData;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
-	using JsonSingleData = Variant<int32, float32, bool, String>;
-	using JsonData = Variant<int32, float32, bool, String, DynamicArray<JsonSingleData>>;
-
 	/** Represents a scope in Json file, also known as a map that stores key-value pairs in the same scope layer 
 		To inqury data in a subset of map.  */
 	class JsonObject
@@ -39,7 +35,7 @@ export namespace jpt
 		template<typename T>
 		void Update(const String& key, const T& value);
 
-		const HashMap<String, JsonData>& GetData() const { return m_data; }
+		String ToString() const;
 	};
 
 	template<typename T>
@@ -61,5 +57,33 @@ export namespace jpt
 	{
 		JPT_ASSERT(m_data.Contains(key), "Key not found in JsonFile");
 		m_data[key] = value;
+	}
+
+	String JsonObject::ToString() const
+	{
+		String str;
+		str.Append("{\n");
+
+		size_t count = 0;
+		for (const Pair<String, JsonData>& pair : m_data)
+		{
+			str.Append("\t\"");
+			str.Append(pair.first);
+			str.Append("\": ");
+			str.Append(pair.second.ToString());
+
+			++count;
+			if (count < m_data.Count())
+			{
+				str.Append(",\n");
+			}
+			else
+			{
+				str.Append("\n");
+			}
+		}
+
+		str.Append("}");
+		return str;
 	}
 }
