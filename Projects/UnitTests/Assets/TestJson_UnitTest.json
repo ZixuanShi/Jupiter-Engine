@@ -3,5 +3,6 @@
 	"data_float": 1.550,
 	"data_int": 12,
 	"data_string": "Hello from Jupiter Engine!",
-	"data_null": null
+	"data_null": null,
+	"data_array": [111, "Hello World", 33, 4.770, false]
 }

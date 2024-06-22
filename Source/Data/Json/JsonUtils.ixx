@@ -51,7 +51,19 @@ namespace jpt
 				return i;
 			}();
 
-		size_t valueEnd = line.Find(",", valueStart);
+		size_t valueEnd = npos;
+
+		// Is array
+		if (line[valueStart] == '[')
+		{
+			valueEnd = line.Find("]", valueStart) + 1;
+		}
+		// single data
+		else
+		{
+			valueEnd = line.Find(",", valueStart);
+		}
+
 		if (valueEnd == npos)
 		{
 			valueEnd = line.Count();
@@ -81,6 +93,43 @@ namespace jpt
 		else if (valueStr == "null")
 		{
 			return String("null");
+		}
+
+		// Array
+		else if (valueStr.Front() == '[' && valueStr.Back() == ']')
+		{
+			DynamicArray<JsonData> arr;
+			String copy = valueStr.SubStr(1, valueStr.Count() - 2);
+
+			while (true)
+			{
+				const size_t valueStart = [&copy]()
+					{
+						// Find the first non-space character
+						size_t i = 0;
+
+						while (IsEmpty(copy[i]))
+						{
+							++i;
+						}
+
+						return i;
+					}();
+
+				size_t valueEnd = copy.Find(",", valueStart);
+				if (valueEnd == npos)
+				{
+					// Last element
+					arr.Add(ParseValueData(copy.SubStr(valueStart, copy.Count() - valueStart)));
+					break;
+				}
+
+				String value = copy.SubStr(valueStart, valueEnd - valueStart);
+				arr.Add(ParseValueData(value));
+				copy = copy.SubStr(valueEnd + 1);
+			}
+
+			return arr;
 		}
 
 		// Number

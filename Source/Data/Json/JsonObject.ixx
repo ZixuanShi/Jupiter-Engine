@@ -65,12 +65,12 @@ export namespace jpt
 		str.Append("{\n");
 
 		size_t count = 0;
-		for (const Pair<String, JsonData>& pair : m_data)
+		for (const auto& [key, value] : m_data)
 		{
 			str.Append("\t\"");
-			str.Append(pair.first);
+			str.Append(key);
 			str.Append("\": ");
-			str.Append(pair.second.ToString());
+			str.Append(value.ToString());
 
 			++count;
 			if (count < m_data.Count())

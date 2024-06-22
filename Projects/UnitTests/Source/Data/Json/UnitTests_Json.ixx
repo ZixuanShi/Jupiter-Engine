@@ -27,6 +27,7 @@ bool UnitTest_Json_BasicWrite()
     jsonRoot.Add("data_float", 1.55f);
     jsonRoot.Add("data_string", jpt::String("Hello from Jupiter Engine!"));
     jsonRoot.Add("data_null", jpt::String("null"));
+    jsonRoot.Add("data_array", jpt::DynamicArray<jpt::JsonData>{111, jpt::String("Hello World"), 33, 4.77f, false});
 
     jpt::WriteJsonRoot(path, jsonRoot);
 
@@ -44,6 +45,10 @@ bool UnitTest_Json_BasicRead()
     JPT_ENSURE(jpt::AreValuesClose(jsonRoot.Get<float32>("data_float"), 1.55));
     JPT_ENSURE(jsonRoot.Get<jpt::String>("data_string") == "Hello from Jupiter Engine!");
     JPT_ENSURE(jsonRoot.Get<jpt::String>("data_null") == "null");
+
+    jpt::DynamicArray<jpt::JsonData> data_array = jsonRoot.Get<jpt::DynamicArray<jpt::JsonData>>("data_array");
+    jpt::DynamicArray<jpt::JsonData> expected_data_array{ 111, jpt::String("Hello World"), 33, 4.77f, false};
+    JPT_ENSURE(data_array == expected_data_array);
 
     return true;
 }
