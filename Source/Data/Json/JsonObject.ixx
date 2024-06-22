@@ -20,7 +20,7 @@ export namespace jpt
 	class JsonObject
 	{
 	private:
-		HashMap<String, JsonData> m_data;		/**< Single data */
+		HashMap<String, JsonData> m_data;
 
 	public:
 		/** Reads an exisiting value */
@@ -50,6 +50,13 @@ export namespace jpt
 	{
 		JPT_ASSERT(!m_data.Contains(key), "Key already exists in JsonFile");
 		m_data.Add(key, value);
+	}
+
+	template<>
+	void JsonObject::Add(const String& key, const JsonObject& value)
+	{
+		JPT_ASSERT(!m_data.Contains(key), "Key already exists in JsonFile");
+		m_data.Add(key, value.m_data);	
 	}
 
 	template<typename T>

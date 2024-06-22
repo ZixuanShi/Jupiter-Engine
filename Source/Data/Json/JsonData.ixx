@@ -9,6 +9,7 @@ export module jpt.JsonData;
 import jpt.Variant;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
+import jpt.HashMap;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.ToString;
@@ -17,11 +18,14 @@ export namespace jpt
 {
 	class JsonData;
 
+	using JsonArray = DynamicArray<JsonData>;
+	using JsonMap = HashMap<String, JsonData>;
 	using TJsonData = Variant<int32, 
-		                      float32,
-		                      bool, 
-		                      String, 
-		                      DynamicArray<JsonData>>;
+                             float32,
+                             bool, 
+                             String, 
+                             JsonArray,
+                             JsonMap>;
 
 	class JsonData
 	{
@@ -73,7 +77,12 @@ export namespace jpt
 		{
 			return data.As<DynamicArray<JsonData>>() == other.data.As<DynamicArray<JsonData>>();
 		}
+		else if (data.Is<HashMap<String, JsonData>>())
+		{
+			return data.As<HashMap<String, JsonData>>() == other.data.As<HashMap<String, JsonData>>();
+		}
 
+		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
 		return false;
 	}
 
@@ -106,6 +115,10 @@ export namespace jpt
 		else if (data.Is<DynamicArray<JsonData>>())
 		{
 			return jpt::ToString(data.As<DynamicArray<JsonData>>());
+		}
+		else if (data.Is<HashMap<String, JsonData>>())
+		{
+			return jpt::ToString(data.As<HashMap<String, JsonData>>());
 		}
 
 		JPT_ASSERT(false, "Unsupported data type in json file");

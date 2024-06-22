@@ -97,6 +97,31 @@ export namespace jpt
 		constexpr void MoveMap(HashMap&& other);
 	};
 
+	//----------------------------------------------------------------------------------------------
+	// Non-member functions
+	//----------------------------------------------------------------------------------------------
+	template<typename TKey, typename TValue, typename TComparator>
+	constexpr bool operator==(const HashMap<TKey, TValue, TComparator>& lhs, const HashMap<TKey, TValue, TComparator>& rhs)
+	{
+		if (lhs.Count() != rhs.Count())
+		{
+			return false;
+		}
+
+		for (const auto& [key, value] : lhs)
+		{
+			if (rhs.Contains(key) == false || rhs[key] != value)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// Member function definitions
+	//----------------------------------------------------------------------------------------------
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr HashMap<TKey, TValue, TComparator>::HashMap(const std::initializer_list<TData>& list)
 	{

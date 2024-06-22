@@ -17,6 +17,7 @@ import jpt.StringUtils;
 import jpt.Optional;
 import jpt.Pair;
 import jpt.Stack;
+import jpt.Utilities;
 
 import jpt.JsonData;
 import jpt.JsonObject;
@@ -43,7 +44,7 @@ namespace jpt
 				// Find the first non-space character
 				size_t i = colonIndex + 1;
 
-				while (IsEmpty(line[i]))
+				while (line[i] == ' ')
 				{
 					++i;
 				}
@@ -53,8 +54,13 @@ namespace jpt
 
 		size_t valueEnd = npos;
 
+		// Is empty. Could be start of map
+		if (valueStart == line.Count())
+		{
+			return String();
+		}
 		// Is array
-		if (line[valueStart] == '[')
+		else if (line[valueStart] == '[')
 		{
 			valueEnd = line.Find("]", valueStart) + 1;
 		}
@@ -108,7 +114,7 @@ namespace jpt
 						// Find the first non-space character
 						size_t i = 0;
 
-						while (IsEmpty(copy[i]))
+						while (copy[i] == ' ')
 						{
 							++i;
 						}
@@ -158,7 +164,9 @@ namespace jpt
 			return {};
 		}
 
-		JsonObject jsonRoot;
+		Stack<JsonObject> jsonMaps;
+		Stack<String> mapNames;
+
 		std::string stdLine;
 		while (std::getline(file, stdLine))
 		{
@@ -168,12 +176,43 @@ namespace jpt
 			{
 				const String keyStr = ParseKeyStr(line);
 				const String valueStr = ParseValueStr(line);
-				JsonData valueData = ParseValueData(valueStr);
-				jsonRoot.Add(keyStr, valueData);
+
+				if (!valueStr.IsEmpty())
+				{
+					JsonData valueData = ParseValueData(valueStr);
+					jsonMaps.Peek().Add(keyStr, valueData);
+				}
+				// Start of map next line
+				else
+				{
+					mapNames.Push(Move(keyStr));
+				}
+			}
+			// Start of map
+			else if (line.Contains("{"))
+			{
+				jsonMaps.Emplace();
+			}
+			// End of map
+			else if (line.Contains("}"))
+			{
+				// If this is the end of root map
+				if (jsonMaps.Count() == 1)
+				{
+					return jsonMaps.Peek();
+				}
+
+				JsonObject map = jsonMaps.Peek();
+				jsonMaps.Pop();
+
+				String mapName = mapNames.Peek();
+				jsonMaps.Peek().Add(mapName, map);
+				mapNames.Pop();
 			}
 		}
 
-		return jsonRoot;
+		// Empty file
+		return {};
 	}
 
 	export void WriteJsonRoot(const Path& path, const JsonObject& jsonRoot)
