@@ -23,16 +23,16 @@ import jpt_private.HashTableIterator;
 export namespace jpt
 {
 	/** A hash set is a collection of unique elements. The order of the elements in a hash set is undefined. */
-	template<typename _TValue, typename _Comparator = Comparator_Equal<_TValue>>
+	template<typename _TData, typename _Comparator = Comparator_Equal<_TData>>
 	class HashSet
 	{
 	public:
-		using TValue        = _TValue;
+		using TData         = _TData;
 		using TComparator   = _Comparator;
-		using TBucket       = LinkedList<TValue>;
+		using TBucket       = LinkedList<TData>;
 		using TBuckets      = DynamicArray<TBucket>;
-		using Iterator      = jpt_private::HashTableIterator<TValue>;
-		using ConstIterator = jpt_private::ConstHashTableIterator<TValue>;
+		using Iterator      = jpt_private::HashTableIterator<TData>;
+		using ConstIterator = jpt_private::ConstHashTableIterator<TData>;
 
 	private:
 		static constexpr TComparator kComparator = TComparator();
@@ -43,7 +43,7 @@ export namespace jpt
 
 	public:
 		constexpr HashSet() noexcept = default;
-		constexpr HashSet(const std::initializer_list<TValue>& list);
+		constexpr HashSet(const std::initializer_list<TData>& list);
 		constexpr HashSet(const HashSet& other);
 		constexpr HashSet(HashSet&& other) noexcept;
 		constexpr HashSet& operator=(const HashSet& other);
@@ -64,20 +64,20 @@ export namespace jpt
 		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
-		constexpr void Add(const TValue& data);
-		constexpr Iterator Erase(const TValue& data);
+		constexpr void Add(const TData& data);
+		constexpr Iterator Erase(const TData& data);
 		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
 
 		// Searching
-		constexpr Iterator      Find(const TValue& key);
-		constexpr ConstIterator Find(const TValue& key) const;
-		constexpr bool Contains(const TValue& key) const;
+		constexpr Iterator      Find(const TData& key);
+		constexpr ConstIterator Find(const TData& key) const;
+		constexpr bool Contains(const TData& key) const;
 
 	protected:
-		constexpr size_t GetBucketIndex(const TValue& key) const;
-		constexpr       TBucket& GetBucket(const TValue& key);
-		constexpr const TBucket& GetBucket(const TValue& key) const;
+		constexpr size_t GetBucketIndex(const TData& key) const;
+		constexpr       TBucket& GetBucket(const TData& key);
+		constexpr const TBucket& GetBucket(const TData& key) const;
 
 		template<Iterable TContainer>
 		constexpr void CopyData(const TContainer& container, size_t size);
@@ -86,7 +86,7 @@ export namespace jpt
 	};
 
 	template<typename TValue, typename TComparator>
-	constexpr HashSet<TValue, TComparator>::HashSet(const std::initializer_list<TValue>& list)
+	constexpr HashSet<TValue, TComparator>::HashSet(const std::initializer_list<TData>& list)
 	{
 		CopyData(list, list.size());
 	}
@@ -134,7 +134,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr void HashSet<TValue, TComparator>::Add(const TValue& data)
+	constexpr void HashSet<TValue, TComparator>::Add(const TData& data)
 	{
 		// Grow if needed
 		if (m_count >= m_buckets.Count() * kGrowMultiplier)
@@ -145,7 +145,7 @@ export namespace jpt
 		TBucket& bucket = GetBucket(data);
 
 		// Check if the key already exists. If it does, return
-		for (TValue& element : bucket)
+		for (TData& element : bucket)
 		{
 			if (kComparator(element, data))
 			{
@@ -159,7 +159,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Erase(const TValue& key)
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Erase(const TData& key)
 	{
 		if (Iterator itr = Find(key); itr != end())
 		{
@@ -182,7 +182,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Find(const TValue& key)
+	constexpr HashSet<TValue, TComparator>::Iterator HashSet<TValue, TComparator>::Find(const TData& key)
 	{
 		if (IsEmpty())
 		{
@@ -204,7 +204,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::Find(const TValue& key) const
+	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::Find(const TData& key) const
 	{
 		if (IsEmpty())
 		{
@@ -226,7 +226,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr bool HashSet<TValue, TComparator>::Contains(const TValue& key) const
+	constexpr bool HashSet<TValue, TComparator>::Contains(const TData& key) const
 	{
 		return Find(key) != end();
 	}
@@ -290,7 +290,7 @@ export namespace jpt
 
 		for (const TBucket& bucket : oldDataCopy)
 		{
-			for (const TValue& element : bucket)
+			for (const TData& element : bucket)
 			{
 				const size_t index = GetBucketIndex(element);
 				m_buckets[index].EmplaceBack(element);
@@ -306,19 +306,19 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr size_t HashSet<TValue, TComparator>::GetBucketIndex(const TValue& key) const
+	constexpr size_t HashSet<TValue, TComparator>::GetBucketIndex(const TData& key) const
 	{
 		return Hash(key) % m_buckets.Count();
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TValue& key)
+	constexpr HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TData& key)
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr const HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TValue& key) const
+	constexpr const HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TData& key) const
 	{
 		return m_buckets[GetBucketIndex(key)];
 	}
@@ -329,7 +329,7 @@ export namespace jpt
 	{
 		Reserve(m_count + size);
 
-		for (const TValue& data : container)
+		for (const TData& data : container)
 		{
 			TBucket& bucket = GetBucket(data);
 			bucket.EmplaceBack(data);

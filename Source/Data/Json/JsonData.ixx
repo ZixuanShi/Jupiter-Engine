@@ -105,20 +105,7 @@ export namespace jpt
 		}
 		else if (data.Is<DynamicArray<JsonData>>())
 		{
-			const DynamicArray<JsonData>& arr = data.As<DynamicArray<JsonData>>();
-
-			String str = "[";
-			for (size_t i = 0; i < arr.Count(); ++i)
-			{
-				str.Append(arr[i].ToString());
-				if (i < arr.Count() - 1)
-				{
-					str.Append(", ");
-				}
-			}
-			str.Append("]");
-
-			return str;
+			return jpt::ToString(data.As<DynamicArray<JsonData>>());
 		}
 
 		JPT_ASSERT(false, "Unsupported data type in json file");

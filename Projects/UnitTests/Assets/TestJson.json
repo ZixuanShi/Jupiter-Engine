@@ -1,0 +1,24 @@
+{
+	"source": "Engine",
+	"data_float": 1.550,
+	"data_int": 12,
+	"data_string": "Hello from Jupiter Engine!",
+	"data_null": null,
+	"data_array": [111, "Hello World", 33, 4.770, false],
+	"data_map": 
+	{
+		"data_map_int": 132,
+		"data_map_float": 12.556,
+		"data_map_string": "Hello from Subset",
+		"data_map_null": null,
+		"data_map_array": [111, "Hello World", 33, 4.770, false],
+		"data_map_map": 
+		{
+			"key1": 1.550,
+			"key2": 12,
+			"key3": "Hello from Jupiter Engine!",
+			"key4": null,
+			"key5": [111, "Hello World", 33, 4.770, false]
+		}
+	}
+}

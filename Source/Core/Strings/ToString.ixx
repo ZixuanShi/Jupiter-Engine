@@ -98,7 +98,7 @@ export namespace jpt
 		}
 		else
 		{
-			String str("{ ", 2);
+			String str("[");
 
 			for (auto itr = container.begin(); itr != container.end(); ++itr)
 			{
@@ -113,7 +113,7 @@ export namespace jpt
 				}
 			}
 
-			str.Append(" }", 2);
+			str.Append("]");
 
 			return str;
 		}
