@@ -798,14 +798,14 @@ export namespace jpt
 	template<Integral TInt>
 	constexpr TInt String_Base<TChar, TAllocator>::ToInt() const
 	{
-		return CStrToInteger(m_pBuffer, m_count);
+		return CStrToInteger<TChar, TInt>(m_pBuffer, m_count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>
 	template<Floating TFloat>
 	constexpr TFloat String_Base<TChar, TAllocator>::ToFloat() const
 	{
-		return CStrToFloat(m_pBuffer, m_count);
+		return CStrToFloat<TChar, TFloat>(m_pBuffer, m_count);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

@@ -472,6 +472,11 @@ export namespace jpt
 		return (c == '-' || c == '.' || c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '+' || c == '=' || c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ';' || c == '"' || c == '\'' || c == '<' || c == '>' || c == ',' || c == '.' || c == '?' || c == '/' || c == '\\' || c == '|' || c == '`' || c == '~');
 	}
 
+	constexpr bool IsEmpty(char c)
+	{
+		return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0';
+	}
+
 	/** @return		true if input CString contains acceptable text data
 		@param pString				The string to perform check on every char 
 		@param treatSpecialAsValid	[Optional] false if treat special characters as failure of validness. default to true */
