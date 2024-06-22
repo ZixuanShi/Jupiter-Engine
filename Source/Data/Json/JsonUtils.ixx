@@ -78,7 +78,7 @@ namespace jpt
 		// Null
 		else if (valueStr == "null")
 		{
-			return String("Invalid");
+			return String("null");
 		}
 
 		// Number
@@ -123,5 +123,65 @@ namespace jpt
 		}
 
 		return jsonRoot;
+	}
+
+	export void WriteJsonRoot(const Path& path, const JsonObject& jsonRoot)
+	{
+		std::ofstream file(path.ConstBuffer(), std::ios::out);
+		if (!file.is_open())
+		{
+			JPT_ERROR("Failed to open json file: %ls", path.ConstBuffer());
+			return;
+		}
+
+		const HashMap<String, JsonData>& data = jsonRoot.GetData();
+
+		size_t count = 0;
+		file << "{\n";
+		for (const Pair<String, JsonData>& pair : data)
+		{
+			file << '\t' << "\"" << pair.first.ConstBuffer() << "\": ";
+
+			const JsonData& value = pair.second;
+			if (value.Is<int32>())
+			{
+				file << value.As<int32>();
+			}
+			else if (value.Is<float32>())
+			{
+				file << value.As<float32>();
+			}
+			else if (value.Is<bool>())
+			{
+				file << (value.As<bool>() ? "true" : "false");
+			}
+			else if (value.Is<String>())
+			{
+				const char* str = value.As<String>().ConstBuffer();
+				if(AreStringsSame(str, "null"))
+				{
+					file << "null";
+				}
+				else
+				{
+					file << "\"" << str << "\"";
+				}
+			}
+			else
+			{
+				JPT_ASSERT(false, "Unsupported data type in json file");
+			}
+
+			++count;
+			if (count < data.Count())
+			{
+				file << ",\n";
+			}
+			else
+			{
+				file << "\n";
+			}
+		}
+		file << "}";
 	}
 }

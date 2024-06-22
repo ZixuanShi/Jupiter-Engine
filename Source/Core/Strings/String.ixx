@@ -51,6 +51,7 @@ export namespace jpt
 		constexpr String_Base(TChar c);
 		constexpr String_Base(const String_Base<TChar>& otherString);
 		constexpr String_Base(String_Base<TChar>&& otherString) noexcept;
+
 		String_Base& operator=(const TChar* CString);
 		String_Base& operator=(const String_Base<TChar>& otherString);
 		String_Base& operator=(String_Base<TChar>&& otherString) noexcept;

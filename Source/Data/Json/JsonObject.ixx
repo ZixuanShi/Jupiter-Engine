@@ -25,7 +25,6 @@ export namespace jpt
 	{
 	private:
 		HashMap<String, JsonData> m_data;		/**< Single data */
-		HashMap<String, JsonObject> m_subMaps;	/**< Nested map data */
 
 	public:
 		/** Reads an exisiting value */
@@ -40,7 +39,7 @@ export namespace jpt
 		template<typename T>
 		void Update(const String& key, const T& value);
 
-	private:
+		const HashMap<String, JsonData>& GetData() const { return m_data; }
 	};
 
 	template<typename T>

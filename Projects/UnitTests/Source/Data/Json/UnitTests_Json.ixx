@@ -16,10 +16,25 @@ import jpt.JsonObject;
 import jpt.File.Path;
 import jpt.FileIO;
 
-bool UnitTest_Json_Read()
-{
-    const jpt::File::Path path = { jpt::File::ESource::Engine, "Assets/Configs/TestJson.json" };
+static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
 
+bool UnitTest_Json_BasicWrite()
+{
+    jpt::JsonObject jsonRoot;
+
+    jsonRoot.Add("source", jpt::String("Engine"));
+    jsonRoot.Add("data_int", 12);
+    jsonRoot.Add("data_float", 1.55f);
+    jsonRoot.Add("data_string", jpt::String("Hello from Jupiter Engine!"));
+    jsonRoot.Add("data_null", jpt::String("null"));
+
+    jpt::WriteJsonRoot(path, jsonRoot);
+
+    return true;
+}
+
+bool UnitTest_Json_BasicRead()
+{
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonObject jsonRoot = jpt::ReadJsonRoot(path).Value();
 
@@ -28,14 +43,15 @@ bool UnitTest_Json_Read()
     JPT_ENSURE(jsonRoot.Get<int32>("data_int") == 12);
     JPT_ENSURE(jpt::AreValuesClose(jsonRoot.Get<float32>("data_float"), 1.55));
     JPT_ENSURE(jsonRoot.Get<jpt::String>("data_string") == "Hello from Jupiter Engine!");
-    JPT_ENSURE(jsonRoot.Get<jpt::String>("data_null") == "Invalid");
+    JPT_ENSURE(jsonRoot.Get<jpt::String>("data_null") == "null");
 
     return true;
 }
 
 export bool RunUnitTests_Json()
 {
-    JPT_ENSURE(UnitTest_Json_Read());
+    JPT_ENSURE(UnitTest_Json_BasicWrite());
+    JPT_ENSURE(UnitTest_Json_BasicRead());
 
     return true;
 }

@@ -1,6 +1,0 @@
-{
-    "source": "Client",
-    "data_int": 42,
-    "data_float": 3.14,
-    "data_string": "Hello from Client!"
-}
