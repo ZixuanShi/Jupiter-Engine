@@ -6,6 +6,7 @@ import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Math;
+import jpt.Vector3;
 import jpt.String;
 import jpt.ToString;
 
@@ -15,13 +16,14 @@ namespace jpt
 	struct EulerAngles
 	{
 	public:
-		T yaw = static_cast<T>(0);
+		T yaw   = static_cast<T>(0);
 		T pitch = static_cast<T>(0);
-		T roll = static_cast<T>(0);
+		T roll  = static_cast<T>(0);
 
 	public:
 		constexpr EulerAngles() = default;
 		constexpr EulerAngles(T yaw, T pitch, T roll);
+		constexpr EulerAngles(const Vector3<T>& v);
 
 		constexpr EulerAngles<T> operator+(const EulerAngles<T>& rhs) const;
 		constexpr EulerAngles<T> operator-(const EulerAngles<T>& rhs) const;
@@ -34,6 +36,14 @@ namespace jpt
 		: yaw(yaw)
 		, pitch(pitch)
 		, roll(roll) 
+	{
+	}
+
+	template<Numeric T>
+	constexpr EulerAngles<T>::EulerAngles(const Vector3<T>& v)
+		: yaw(v.x)
+		, pitch(v.y)
+		, roll(v.z)
 	{
 	}
 
@@ -74,4 +84,4 @@ namespace jpt
 	}
 }
 
-export using EulerAnglesf = jpt::EulerAngles<float>;
+export using EulerAnglesf = jpt::EulerAngles<float32>;
