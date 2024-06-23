@@ -17,7 +17,7 @@ bool UnitTest_Box3()
     JPT_ENSURE(box1.Center() == Vec3f(0, 0, 0));
     JPT_ENSURE(box1.Size() == Vec3f(20, 20, 10));
     JPT_ENSURE(box1.HalfSize() == Vec3f(10, 10, 5));
-    JPT_ENSURE(box1.Volume() == 2000);
+    JPT_ENSURE(box1.Volume() == 4000);
 
     JPT_ENSURE(box1.Inside(Vec3f(0, 0, 0)));
     JPT_ENSURE(box1.Inside(Vec3f(-5, -5, -2)));
