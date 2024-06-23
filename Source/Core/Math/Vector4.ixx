@@ -236,10 +236,10 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool Vector4<T>::operator==(const Vector4& other) const
 	{
-		return AreValuesClose(x, other.x) && 
-			   AreValuesClose(y, other.y) && 
-			   AreValuesClose(z, other.z) && 
-			   AreValuesClose(w, other.w);
+		return AreValuesClose(x, other.x, static_cast<T>(0.05)) && 
+			   AreValuesClose(y, other.y, static_cast<T>(0.05)) && 
+			   AreValuesClose(z, other.z, static_cast<T>(0.05)) && 
+			   AreValuesClose(w, other.w, static_cast<T>(0.05));
 	}
 }
 

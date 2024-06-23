@@ -35,6 +35,15 @@ bool UnitTests_Matrix44_Rotation()
 	Vec3f rotationResult = rotation * rotationVector;
 	JPT_ENSURE(rotationResult == Vec3f(4.0f, -6.0f, 5.0f));
 
+	rotation = Matrix44f::Identity;
+	rotation.RotateX(jpt::ToRadians(45.0f));
+	rotation.RotateY(jpt::ToRadians(-29.0f));
+	rotation.RotateZ(jpt::ToRadians(90.0f));
+	JPT_ENSURE(rotation.m[0] == Vec4f(0.000f, -0.875f, -0.485f, 0.000f));
+	JPT_ENSURE(rotation.m[1] == Vec4f(0.707f,  0.343f, -0.618f, 0.000f));
+	JPT_ENSURE(rotation.m[2] == Vec4f(0.707f, -0.343f,  0.618f, 0.000f));
+	JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
+
 	return true;
 }
 

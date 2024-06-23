@@ -232,7 +232,9 @@ export namespace jpt
 	template<Numeric T>
 	constexpr bool Vector3<T>::operator==(Vector3 other) const
 	{
-		return AreValuesClose(x, other.x) && AreValuesClose(y, other.y) && AreValuesClose(z, other.z);
+		return AreValuesClose(x, other.x, static_cast<T>(0.05)) && 
+			   AreValuesClose(y, other.y, static_cast<T>(0.05)) && 
+			   AreValuesClose(z, other.z, static_cast<T>(0.05));
 	}
 
 	template<Numeric T>

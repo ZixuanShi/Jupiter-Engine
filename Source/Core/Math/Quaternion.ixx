@@ -61,22 +61,12 @@ namespace jpt
 		constexpr TQuaternion Lerp(const TQuaternion& rhs, T t) const;
 		constexpr TQuaternion Slerp(const TQuaternion& rhs, T t) const;
 
-		constexpr void Rotate(const Vector3<T>& axis, T radians);
-		constexpr void Rotate(const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
 		constexpr void RotateZ(T radians);
-		constexpr void LookAt(const Vector3<T>& target, const Vector3<T>& up);
 
-		constexpr static TQuaternion FromEulerAngles(const Vector3<T>& eulerAngles);
-		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axis, T radians);
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
-		constexpr static TQuaternion Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians);
-		constexpr static TQuaternion RotationX(const TQuaternion& quaternion, T radians);
-		constexpr static TQuaternion RotationY(const TQuaternion& quaternion, T radians);
-		constexpr static TQuaternion RotationZ(const TQuaternion& quaternion, T radians);
-		constexpr static TQuaternion Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
 
@@ -277,137 +267,57 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TQuaternion<T>::Rotate(const Vector3<T>& axis, T radians)
+	constexpr void TQuaternion<T>::RotateX(T radians)
 	{
 		const T halfAngle = radians * static_cast<T>(0.5);
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
 
-		const T newX = axis.x * sinHalfAngle;
-		const T newY = axis.y * sinHalfAngle;
-		const T newZ = axis.z * sinHalfAngle;
-		const T newW = cosHalfAngle;
+		const T newX = x * cosHalfAngle + w * sinHalfAngle;
+		const T newY = y * cosHalfAngle + z * sinHalfAngle;
+		const T newZ = z * cosHalfAngle - y * sinHalfAngle;
+		const T newW = w * cosHalfAngle - x * sinHalfAngle;
 
-		const TQuaternion rotation(newX, newY, newZ, newW);
-		*this = rotation * *this;
-	}
-
-	template<Numeric T>
-	constexpr void TQuaternion<T>::Rotate(const Vector3<T>& axis, T radians, const Vector3<T>& pivot)
-	{
-		const Vector3<T> translation = pivot - Vector3<T>(0, 0, 0);
-		const Vector3<T> translationRotation = translation * -1;
-		const Vector3<T> rotationAxis = axis.Normalized();
-		const TQuaternion rotation(rotationAxis, radians);
-		const TQuaternion translationQuaternion(translationRotation);
-		const TQuaternion translationQuaternionConjugate = translationQuaternion.Conjugated();
-
-		*this = translationQuaternion * rotation * translationQuaternionConjugate * *this;
-	}
-
-	template<Numeric T>
-	constexpr void TQuaternion<T>::RotateX(T radians)
-	{
-		Vector3<T> axis(1, 0, 0);
-		Rotate(axis, radians);
+		x = newX;
+		y = newY;
+		z = newZ;
+		w = newW;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateY(T radians)
 	{
-		Vector3<T> axis(0, 1, 0);
-		Rotate(axis, radians);
+		const T halfAngle = radians * static_cast<T>(0.5);
+		const T sinHalfAngle = std::sin(halfAngle);
+		const T cosHalfAngle = std::cos(halfAngle);
+
+		const T newX = x * cosHalfAngle - z * sinHalfAngle;
+		const T newY = y * cosHalfAngle + w * sinHalfAngle;
+		const T newZ = z * cosHalfAngle + x * sinHalfAngle;
+		const T newW = w * cosHalfAngle - y * sinHalfAngle;
+
+		x = newX;
+		y = newY;
+		z = newZ;
+		w = newW;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateZ(T radians)
 	{
-		Vector3<T> axis(0, 0, 1);
-		Rotate(axis, radians);
-	}
-
-	template<Numeric T>
-	constexpr void TQuaternion<T>::LookAt(const Vector3<T>& target, const Vector3<T>& up)
-	{
-		const Vector3<T> forward = (target - Vector3<T>(0, 0, 0)).Normalized();
-		const Vector3<T> right = up.Cross(forward).Normalized();
-		const Vector3<T> upVector = forward.Cross(right).Normalized();
-
-		const T trace = right.x + upVector.y + forward.z;
-		if (trace > static_cast<T>(0))
-		{
-			const T s = std::sqrt(trace + static_cast<T>(1)) * static_cast<T>(2);
-			const T invS = static_cast<T>(1) / s;
-
-			x = (upVector.z - forward.y) * invS;
-			y = (forward.x - right.z) * invS;
-			z = (right.y - upVector.x) * invS;
-			w = static_cast<T>(0.25) * s;
-		}
-		else if (right.x > upVector.y && right.x > forward.z)
-		{
-			const T s = std::sqrt(static_cast<T>(1) + right.x - upVector.y - forward.z) * static_cast<T>(2);
-			const T invS = static_cast<T>(1) / s;
-
-			x = static_cast<T>(0.25) * s;
-			y = (right.y + upVector.x) * invS;
-			z = (forward.x + right.z) * invS;
-			w = (upVector.z - forward.y) * invS;
-		}
-		else if (upVector.y > forward.z)
-		{
-			const T s = std::sqrt(static_cast<T>(1) + upVector.y - right.x - forward.z) * static_cast<T>(2);
-			const T invS = static_cast<T>(1) / s;
-
-			x = (right.y + upVector.x) * invS;
-			y = static_cast<T>(0.25) * s;
-			z = (upVector.z + forward.y) * invS;
-			w = (forward.x - right.z) * invS;
-		}
-		else
-		{
-			const T s = std::sqrt(static_cast<T>(1) + forward.z - right.x - upVector.y) * static_cast<T>(2);
-			const T invS = static_cast<T>(1) / s;
-
-			x = (forward.x + right.z) * invS;
-		}
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
-	{
-		const T halfX = eulerAngles.x * static_cast<T>(0.5);
-		const T halfY = eulerAngles.y * static_cast<T>(0.5);
-		const T halfZ = eulerAngles.z * static_cast<T>(0.5);
-
-		const T sinX = std::sin(halfX);
-		const T cosX = std::cos(halfX);
-		const T sinY = std::sin(halfY);
-		const T cosY = std::cos(halfY);
-		const T sinZ = std::sin(halfZ);
-		const T cosZ = std::cos(halfZ);
-
-		const T newX = sinX * cosY * cosZ + cosX * sinY * sinZ;
-		const T newY = cosX * sinY * cosZ - sinX * cosY * sinZ;
-		const T newZ = cosX * cosY * sinZ - sinX * sinY * cosZ;
-		const T newW = cosX * cosY * cosZ + sinX * sinY * sinZ;
-
-		return TQuaternion(newX, newY, newZ, newW);
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axis, T radians)
-	{
 		const T halfAngle = radians * static_cast<T>(0.5);
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
 
-		const T newX = axis.x * sinHalfAngle;
-		const T newY = axis.y * sinHalfAngle;
-		const T newZ = axis.z * sinHalfAngle;
-		const T newW = cosHalfAngle;
+		const T newX = x * cosHalfAngle + y * sinHalfAngle;
+		const T newY = y * cosHalfAngle - x * sinHalfAngle;
+		const T newZ = z * cosHalfAngle + w * sinHalfAngle;
+		const T newW = w * cosHalfAngle - z * sinHalfAngle;
 
-		return TQuaternion(newX, newY, newZ, newW);
+		x = newX;
+		y = newY;
+		z = newZ;
+		w = newW;
 	}
 
 	template<Numeric T>
@@ -441,56 +351,6 @@ namespace jpt
 		const TQuaternion q1 = start * sinTheta1 / sinTheta;
 		const TQuaternion q2 = end * sinTheta2 / sinTheta;
 		return q1 + q2;
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians)
-	{
-		const T halfAngle = radians * static_cast<T>(0.5);
-		const T sinHalfAngle = std::sin(halfAngle);
-		const T cosHalfAngle = std::cos(halfAngle);
-
-		const T newX = axis.x * sinHalfAngle;
-		const T newY = axis.y * sinHalfAngle;
-		const T newZ = axis.z * sinHalfAngle;
-		const T newW = cosHalfAngle;
-
-		const TQuaternion rotation(newX, newY, newZ, newW);
-		return rotation * quaternion;
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::RotationX(const TQuaternion& quaternion, T radians)
-	{
-		Vector3<T> axis(1, 0, 0);
-		return Rotation(quaternion, axis, radians);
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::RotationY(const TQuaternion& quaternion, T radians)
-	{
-		Vector3<T> axis(0, 1, 0);
-		return Rotation(quaternion, axis, radians);
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::RotationZ(const TQuaternion& quaternion, T radians)
-	{
-		Vector3<T> axis(0, 0, 1);
-		return Rotation(quaternion, axis, radians);
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotation(const TQuaternion& quaternion, const Vector3<T>& axis, T radians, const Vector3<T>& pivot)
-	{
-		const Vector3<T> translation = pivot - Vector3<T>(0, 0, 0);
-		const Vector3<T> translationRotation = translation * -1;
-		const Vector3<T> rotationAxis = axis.Normalized();
-		const TQuaternion rotation(rotationAxis, radians);
-		const TQuaternion translationQuaternion(translationRotation);
-		const TQuaternion translationQuaternionConjugate = translationQuaternion.Conjugated();
-
-		return translationQuaternion * rotation * translationQuaternionConjugate * quaternion;
 	}
 
 	template<Numeric T>
