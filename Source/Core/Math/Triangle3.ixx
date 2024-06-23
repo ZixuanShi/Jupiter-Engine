@@ -11,6 +11,7 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Vector3;
 import jpt.Math;
+import jpt.Limits;
 
 namespace jpt
 {
@@ -96,7 +97,9 @@ namespace jpt
 		const T u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 		const T v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
-		return (u >= 0) && (v >= 0) && (u + v <= 1);
+		return (u >= 0) && 
+			   (v >= 0) && 
+			   (u + v <= static_cast<T>(1) + Limits<T>::kEpsilon);
 	}
 }
 
