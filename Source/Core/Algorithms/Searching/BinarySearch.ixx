@@ -18,9 +18,9 @@ export namespace jpt
 		{
 			auto mid = begin + (end - begin) / 2;
 
-			if (comparator(*mid, dataToFind))
+			if (dataToFind == *mid)
 			{
-				begin = mid + 1;
+				return mid;
 			}
 			else if (comparator(dataToFind, *mid))
 			{
@@ -28,7 +28,7 @@ export namespace jpt
 			}
 			else
 			{
-				return mid;
+				begin = mid + 1;
 			}
 		}
 
