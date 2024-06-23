@@ -30,18 +30,28 @@ bool UnitTest_Quaternion_SLerp()
 
 bool UnitTest_Quaternion_Rotate()
 {
+	// 1
 	Quatf quaternion = Quatf::Identity;
 	quaternion.RotateX(jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion == Quatf(0.707f, 0, 0, 0.707f));
 
+	// 2
 	quaternion.RotateZ(jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion == Quatf(0.653f, -0.271f, 0.271f, 0.653f));
 
+	// 3
 	quaternion = Quatf::Identity;
 	quaternion.RotateX(jpt::ToRadians(45.0f));
 	quaternion.RotateY(jpt::ToRadians(-29.0f));
 	quaternion.RotateZ(jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion == Quatf(0.098f, -0.426f, 0.565f, 0.7f));
+
+	// 4
+	quaternion = Quatf::Identity;
+	quaternion.RotateX(jpt::ToRadians(23.0f));
+	quaternion.RotateY(jpt::ToRadians(11.0f));
+	quaternion.RotateZ(jpt::ToRadians(50.0f));
+	JPT_ENSURE(quaternion == Quatf(0.220f, 0.001f, 0.430f, 0.876f));
 
 	return true;
 }

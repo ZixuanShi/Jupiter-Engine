@@ -29,6 +29,8 @@ namespace jpt
 		constexpr EulerAngles<T> operator-(const EulerAngles<T>& rhs) const;
 		constexpr EulerAngles<T> operator*(T scalar) const;
 		constexpr EulerAngles<T> operator/(T scalar) const;
+
+		constexpr operator Vector3<T>() const;
 	};
 
 	template<Numeric T>
@@ -81,6 +83,12 @@ namespace jpt
 		const T newPitch = pitch / scalar;
 		const T newRoll = roll / scalar;
 		return EulerAngles<T>(newYaw, newPitch, newRoll);
+	}
+
+	template<Numeric T>
+	constexpr EulerAngles<T>::operator Vector3<T>() const
+	{
+		return Vector3<T>(yaw, pitch, roll);
 	}
 }
 
