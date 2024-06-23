@@ -46,6 +46,7 @@ namespace jpt
 		constexpr static Matrix44<T> Rotation(const Vector3<T>& axis, T radians);
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
+		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -204,6 +205,25 @@ namespace jpt
 	{
 		Matrix44<T> result = matrix44;
 		result.Transpose();
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::Orthographic(T left, T right, T bottom, T top, T near, T far)
+	{
+		Matrix44<T> result = Matrix44<T>::Identity;
+
+		const T width = right - left;
+		const T height = top - bottom;
+		const T depth = far - near;
+
+		result.m[0][0] = static_cast<T>(2) / width;
+		result.m[1][1] = static_cast<T>(2) / height;
+		result.m[2][2] = -static_cast<T>(2) / depth;
+		result.m[3][0] = -(right + left) / width;
+		result.m[3][1] = -(top + bottom) / height;
+		result.m[3][2] = -(far + near) / depth;
+
 		return result;
 	}
 
