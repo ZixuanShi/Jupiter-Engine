@@ -25,7 +25,7 @@ bool UnitTests_Matrix44_Translation()
 
 bool UnitTests_Matrix44_Rotation()
 {
-	Matrix44f rotation = Matrix44f::Rotation(Vec3f(1,0,0), jpt::ToRadians(90.0f));
+	Matrix44f rotation = Matrix44f::RotationX(jpt::ToRadians(90.0f));
 	JPT_ENSURE(rotation.m[0] == Vec4f(1.0f, 0.0f,  0.0f, 0.0f));
 	JPT_ENSURE(rotation.m[1] == Vec4f(0.0f, 0.0f, -1.0f, 0.0f));
 	JPT_ENSURE(rotation.m[2] == Vec4f(0.0f, 1.0f,  0.0f, 0.0f));

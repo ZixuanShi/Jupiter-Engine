@@ -33,8 +33,6 @@ namespace jpt
 	public:
 		constexpr TQuaternion() = default;
 		constexpr TQuaternion(T x, T y, T z, T w);
-		constexpr TQuaternion(const Vector3<T>& axis);
-		constexpr TQuaternion(const Vector3<T>& axis, T radians);
 
 		constexpr TQuaternion operator+(const TQuaternion& rhs) const;
 		constexpr TQuaternion operator-(const TQuaternion& rhs) const;
@@ -82,24 +80,6 @@ namespace jpt
 		, y(y)
 		, z(z)
 		, w(w)
-	{
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T>::TQuaternion(const Vector3<T>& axis)
-		: x(axis.x)
-		, y(axis.y)
-		, z(axis.z)
-		, w(static_cast<T>(1))
-	{
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T>::TQuaternion(const Vector3<T>& axis, T radians)
-		: x(axis.x)
-		, y(axis.y)
-		, z(axis.z)
-		, w(radians)
 	{
 	}
 
@@ -200,9 +180,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::Conjugated() const
 	{
-		TQuaternion result = *this;
-		result.Conjugate();
-		return result;
+		return TQuaternion(-x, -y, -z, w);
 	}
 
 	template<Numeric T>

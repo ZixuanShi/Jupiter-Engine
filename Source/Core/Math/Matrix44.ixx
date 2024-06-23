@@ -43,7 +43,6 @@ namespace jpt
 		constexpr static Matrix44<T> RotationX(T radians);
 		constexpr static Matrix44<T> RotationY(T radians);
 		constexpr static Matrix44<T> RotationZ(T radians);
-		constexpr static Matrix44<T> Rotation(const Vector3<T>& axis, T radians);
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
@@ -52,7 +51,6 @@ namespace jpt
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
 		constexpr void RotateZ(T radians);
-		constexpr void Rotate(const Vector3<T>& axis, T radians);
 		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Transpose();
 
@@ -171,27 +169,6 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::Rotation(const Vector3<T>& axis, T radians)
-	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
-		const T oneMinusCos = 1 - cos;
-		const T x = axis.x;
-		const T y = axis.y;
-		const T z = axis.z;
-		const T xy = x * y;
-		const T xz = x * z;
-		const T yz = y * z;
-		const T xsin = x * sin;
-		const T ysin = y * sin;
-		const T zsin = z * sin;
-		return Matrix44<T>(cos + x * x * oneMinusCos,   xy * oneMinusCos - zsin, xz * oneMinusCos + ysin, 0,
-			                 xy * oneMinusCos + zsin, cos + y * y * oneMinusCos, yz * oneMinusCos - xsin, 0,
-			                 xz * oneMinusCos - ysin,   yz * oneMinusCos + xsin, cos + z * z * oneMinusCos, 0,
-			                                        0,                        0, 0, 1);
-	}
-
-	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::Scaling(const Vector3<T>& v)
 	{
 		return Matrix44<T>(v.x,   0,   0, 0,
@@ -249,12 +226,6 @@ namespace jpt
 	constexpr void Matrix44<T>::RotateZ(T radians)
 	{
 		*this = *this * RotationZ(radians);
-	}
-
-	template<Numeric T>
-	constexpr void Matrix44<T>::Rotate(const Vector3<T>& axis, T radians)
-	{
-		*this = *this * Rotation(axis, radians);
 	}
 
 	template<Numeric T>
