@@ -59,12 +59,10 @@ bool UnitTest_Quaternion_Rotate()
 
 	// 5
 	quaternion = Quatf::Identity;
-
 	Quatf rotationX = Quatf::FromAxisAngle(Vec3f::Right(), jpt::ToRadians(-143.0f));
 	Quatf rotationY = Quatf::FromAxisAngle(Vec3f::Up(), jpt::ToRadians(55.0f));
 	Quatf rotationZ = Quatf::FromAxisAngle(Vec3f::Forward(), jpt::ToRadians(-41.0f));
 	quaternion = rotationX * rotationY * rotationZ;
-
 	JPT_ENSURE(quaternion == Quatf(-0.839f, -0.157f, -0.509f, 0.110f));
 
 	return true;
@@ -92,6 +90,14 @@ bool UnitTest_Quaternion_AxisAngles()
 	return true;
 }
 
+bool UnitTest_Quaternion_EulerAngles()
+{
+	Quatf quaternion = Quatf::FromDegrees(Vec3f(90, 45, 90));
+	JPT_ENSURE(quaternion == Quatf(0.653f, -0.271f, 0.653f, 0.271f));
+
+	return true;
+}
+
 export bool RunUnitTests_Quaternion()
 {
 	Quatf quaternion = Quatf::Identity;
@@ -102,6 +108,7 @@ export bool RunUnitTests_Quaternion()
 	JPT_ENSURE(UnitTest_Quaternion_SLerp());
 	JPT_ENSURE(UnitTest_Quaternion_Multiplication());
 	JPT_ENSURE(UnitTest_Quaternion_AxisAngles());
+	JPT_ENSURE(UnitTest_Quaternion_EulerAngles());
 
 	return true;
 }
