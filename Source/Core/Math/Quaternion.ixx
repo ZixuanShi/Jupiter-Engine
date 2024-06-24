@@ -67,6 +67,7 @@ namespace jpt
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axisAngle, T radians);
 		constexpr static TQuaternion FromDegrees(const Vector3<T>& degrees);
+		constexpr static TQuaternion FromDegrees(T yaw, T pitch, T row);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
 		constexpr String ToString() const;
@@ -368,6 +369,12 @@ namespace jpt
 		const TQuaternion<T> z = FromAxisAngle(Vector3<T>::Forward(), ToRadians(degrees.z));
 
 		return x * y * z;
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(T yaw, T pitch, T row)
+	{
+		return FromDegrees(Vector3<T>(yaw, pitch, row));
 	}
 
 	template<Numeric T>

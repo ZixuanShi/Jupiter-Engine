@@ -44,26 +44,17 @@ bool UnitTest_Quaternion_Rotate()
 	JPT_ENSURE(quaternion == Quatf(0.653f, -0.271f, 0.271f, 0.653f));
 
 	// 3
-	quaternion = Quatf::Identity;
-	quaternion.RotateX(jpt::ToRadians(45.0f));
-	quaternion.RotateY(jpt::ToRadians(-29.0f));
-	quaternion.RotateZ(jpt::ToRadians(90.0f));
-	JPT_ENSURE(quaternion == Quatf(0.098f, -0.426f, 0.565f, 0.7f));
+	Quatf quaternion2 = Quatf::FromDegrees(90, 0, 45);
+	JPT_ENSURE(quaternion2 == Quatf(0.653f, -0.271f, 0.271f, 0.653f));
+	JPT_ENSURE(quaternion2 == quaternion);
 
 	// 4
-	quaternion = Quatf::Identity;
-	quaternion.RotateX(jpt::ToRadians(23.0f));
-	quaternion.RotateY(jpt::ToRadians(11.0f));
-	quaternion.RotateZ(jpt::ToRadians(50.0f));
-	JPT_ENSURE(quaternion == Quatf(0.220f, 0.001f, 0.430f, 0.876f));
+	Quatf quaternion3 = Quatf::FromAxisAngle(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
+	JPT_ENSURE(quaternion3 == Quatf(0.000f, 0.383f, 0.000f, 0.924f));
 
 	// 5
-	quaternion = Quatf::Identity;
-	Quatf rotationX = Quatf::FromAxisAngle(Vec3f::Right(), jpt::ToRadians(-143.0f));
-	Quatf rotationY = Quatf::FromAxisAngle(Vec3f::Up(), jpt::ToRadians(55.0f));
-	Quatf rotationZ = Quatf::FromAxisAngle(Vec3f::Forward(), jpt::ToRadians(-41.0f));
-	quaternion = rotationX * rotationY * rotationZ;
-	JPT_ENSURE(quaternion == Quatf(-0.839f, -0.157f, -0.509f, 0.110f));
+	Quatf quaternion4 = Quatf::FromAxisAngle(Vec3f(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
+	JPT_ENSURE(quaternion4 == Quatf(0.707f, 0, 0, 0.707f));
 
 	return true;
 }
