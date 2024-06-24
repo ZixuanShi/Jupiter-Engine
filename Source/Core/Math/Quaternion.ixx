@@ -51,7 +51,6 @@ namespace jpt
 		constexpr void Normalize();
 		constexpr void Conjugate();
 		constexpr void Inverse();
-		constexpr void Concatenate(const TQuaternion& rhs);
 
 		constexpr TQuaternion Normalized() const;
 		constexpr TQuaternion Conjugated() const;
@@ -200,19 +199,6 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TQuaternion<T>::Concatenate(const TQuaternion& rhs)
-	{
-		const T newW = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
-		const T newX = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
-		const T newY = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
-		const T newZ = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
-		x = newX;
-		y = newY;
-		z = newZ;
-		w = newW;
-	}
-
-	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::Inversed() const
 	{
 		TQuaternion result = *this;
@@ -262,55 +248,22 @@ namespace jpt
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateX(T radians)
 	{
-		const T halfAngle = radians * static_cast<T>(0.5);
-		const T sinHalfAngle = std::sin(halfAngle);
-		const T cosHalfAngle = std::cos(halfAngle);
-
-		const T newX = x * cosHalfAngle + w * sinHalfAngle;
-		const T newY = y * cosHalfAngle + z * sinHalfAngle;
-		const T newZ = z * cosHalfAngle - y * sinHalfAngle;
-		const T newW = w * cosHalfAngle - x * sinHalfAngle;
-
-		x = newX;
-		y = newY;
-		z = newZ;
-		w = newW;
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Right(), radians);
+		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateY(T radians)
 	{
-		const T halfAngle = radians * static_cast<T>(0.5);
-		const T sinHalfAngle = std::sin(halfAngle);
-		const T cosHalfAngle = std::cos(halfAngle);
-
-		const T newX = x * cosHalfAngle - z * sinHalfAngle;
-		const T newY = y * cosHalfAngle + w * sinHalfAngle;
-		const T newZ = z * cosHalfAngle + x * sinHalfAngle;
-		const T newW = w * cosHalfAngle - y * sinHalfAngle;
-
-		x = newX;
-		y = newY;
-		z = newZ;
-		w = newW;
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Up(), radians);
+		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateZ(T radians)
 	{
-		const T halfAngle = radians * static_cast<T>(0.5);
-		const T sinHalfAngle = std::sin(halfAngle);
-		const T cosHalfAngle = std::cos(halfAngle);
-
-		const T newX = x * cosHalfAngle + y * sinHalfAngle;
-		const T newY = y * cosHalfAngle - x * sinHalfAngle;
-		const T newZ = z * cosHalfAngle + w * sinHalfAngle;
-		const T newW = w * cosHalfAngle - z * sinHalfAngle;
-
-		x = newX;
-		y = newY;
-		z = newZ;
-		w = newW;
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Forward(), radians);
+		*this *= rotation;
 	}
 
 	template<Numeric T>
