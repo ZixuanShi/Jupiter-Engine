@@ -3,8 +3,8 @@
 export module jpt.QuickSort;
 
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.TypeDefs;
-import jpt.Limits;
 import jpt.Utilities;
 
 export namespace jpt
@@ -85,7 +85,7 @@ export namespace jpt
 	constexpr void QuickSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
 		// Bounds check
-		if (beginIndex >= endIndex || endIndex == Limits<size_t>::kMax)
+		if (beginIndex >= endIndex || endIndex == Constants<size_t>::kMax)
 		{
 			return;
 		}

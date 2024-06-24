@@ -7,9 +7,9 @@ module;
 
 export module UnitTests_Coding_FindMedianSortedArrays;
 
+import jpt.Constants;
 import jpt.Sorting;
 import jpt.TypeDefs;
-import jpt.Limits;
 import jpt.DynamicArray;
 import jpt.SortedMap;
 import jpt.Utilities;
@@ -89,10 +89,10 @@ double FindMedianSortedArrays_BinarySearch(const jpt::DynamicArray<int32>& nums1
 		const size_t partition1 = (left + right) / 2;
 		const size_t partition2 = partition - partition1;
 
-		const int32 maxLeft1 = partition1 == 0 ? jpt::Limits<int32>::kMin : nums1[partition1 - 1];
-		const int32 minRight1 = partition1 == nums1Count ? jpt::Limits<int32>::kMax : nums1[partition1];
-		const int32 maxLeft2 = partition2 == 0 ? jpt::Limits<int32>::kMin : nums2[partition2 - 1];
-		const int32 minRight2 = partition2 == nums2Count ? jpt::Limits<int32>::kMax : nums2[partition2];
+		const int32 maxLeft1 = partition1 == 0 ? jpt::Constants<int32>::kMin : nums1[partition1 - 1];
+		const int32 minRight1 = partition1 == nums1Count ? jpt::Constants<int32>::kMax : nums1[partition1];
+		const int32 maxLeft2 = partition2 == 0 ? jpt::Constants<int32>::kMin : nums2[partition2 - 1];
+		const int32 minRight2 = partition2 == nums2Count ? jpt::Constants<int32>::kMax : nums2[partition2];
 
 		if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1)
 		{

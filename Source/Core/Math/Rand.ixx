@@ -8,9 +8,9 @@ module;
 
 export module jpt.Rand;
 
-import jpt.TypeDefs;
 import jpt.Concepts;
-import jpt.Limits;
+import jpt.Constants;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
@@ -32,7 +32,7 @@ export namespace jpt
 		/** @return		a random integral value within max range
 			@param max	Largest possible value (inclusive) */
 		template<Integral TInt = uint32>
-		constexpr TInt MaxInt(TInt max = Limits<TInt>::kMax);
+		constexpr TInt MaxInt(TInt max = Constants<TInt>::kMax);
 
 		/** @return		a random floating point from 0 to 1 inclusive */
 		template<Floating Type = float>
@@ -78,7 +78,7 @@ export namespace jpt
 		const uint64 temp2 = m_seeds[0] ^ m_seeds[1] ^ (m_seeds[0] >> 17) ^ (m_seeds[1] >> 26);
 		const uint64 temp3 = temp2 + m_seeds[1];
 
-		result = 1.0f / (static_cast<float>(Limits<int32>::kMax) + 1.0f) * (0x7FFFFFFF & temp3);
+		result = 1.0f / (static_cast<float>(Constants<int32>::kMax) + 1.0f) * (0x7FFFFFFF & temp3);
 
 		// reassign seed
 		m_seeds[0] = temp1;

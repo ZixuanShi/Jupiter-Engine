@@ -47,6 +47,8 @@ namespace jpt
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 
+		constexpr Vector3<T> ToEulerAngles() const;
+
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
@@ -200,6 +202,27 @@ namespace jpt
 		result.m[3][0] = -(right + left) / width;
 		result.m[3][1] = -(top + bottom) / height;
 		result.m[3][2] = -(far + near) / depth;
+
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Matrix44<T>::ToEulerAngles() const
+	{
+		Vector3<T> result;
+
+		result.y = std::asin(-m[2][0]);
+
+		if (std::cos(result.y) != 0)
+		{
+			result.x = std::atan2(m[2][1], m[2][2]);
+			result.z = std::atan2(m[1][0], m[0][0]);
+		}
+		else
+		{
+			result.x = 0;
+			result.z = std::atan2(-m[0][1], m[1][1]);
+		}
 
 		return result;
 	}

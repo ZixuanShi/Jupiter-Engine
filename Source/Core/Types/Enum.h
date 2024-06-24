@@ -5,19 +5,19 @@
 
 import jpt.TypeDefs;
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.String;
 import jpt.StringUtils;
 import jpt.Hash;
 import jpt.HashMap;
 import jpt.DynamicArray;
-import jpt.Limits;
 
 /** Contains shared enum data across all instances and public */
 template<jpt::Integral TInt>
 struct EnumData
 {
-	TInt min = jpt::Limits<TInt>::kMax;	/**< The min value of this enum */
-	TInt max = jpt::Limits<TInt>::kMin;	/**< The max value of this enum */
+	TInt min = jpt::Constants<TInt>::kMax;	/**< The min value of this enum */
+	TInt max = jpt::Constants<TInt>::kMin;	/**< The max value of this enum */
 	jpt::HashMap<TInt, jpt::String> names;	/**< The names map of the enum values */
 };
 

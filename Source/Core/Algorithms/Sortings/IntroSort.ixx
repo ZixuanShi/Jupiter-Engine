@@ -7,11 +7,11 @@ module;
 export module jpt.IntroSort;
 
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.InsertionSort;
 import jpt.QuickSort;
 import jpt.HeapSort;
-import jpt.Limits;
 import jpt.Utilities;
 
 export namespace jpt
@@ -21,7 +21,7 @@ export namespace jpt
 	{
 		static constexpr size_t kInsertionSortThreshold = 16;
 
-		if (beginIndex >= endIndex || endIndex == Limits<size_t>::kMax)
+		if (beginIndex >= endIndex || endIndex == Constants<size_t>::kMax)
 		{
 			return;
 		}

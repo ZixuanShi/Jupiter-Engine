@@ -73,6 +73,17 @@ bool UnitTests_Matrix44_Scaling()
 	return true;
 }
 
+bool UnitTests_Matrix44_EulerAngles()
+{
+	//Matrix44f rotation = Matrix44f::EulerAngles(jpt::ToRadians(90.0f), jpt::ToRadians(45.0f), jpt::ToRadians(30.0f));
+	//JPT_ENSURE(rotation.m[0] == Vec4f(0.612f, -0.354f,  0.707f, 0.000f));
+	//JPT_ENSURE(rotation.m[1] == Vec4f(0.707f,  0.354f, -0.612f, 0.000f));
+	//JPT_ENSURE(rotation.m[2] == Vec4f(-0.354f,  0.866f,  0.354f, 0.000f));
+	//JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
+
+	return true;
+}
+
 export bool RunUnitTests_Matrix44()
 {
 	// Identity
@@ -104,6 +115,7 @@ export bool RunUnitTests_Matrix44()
 	JPT_ENSURE(UnitTests_Matrix44_Translation());
 	JPT_ENSURE(UnitTests_Matrix44_Rotation());
 	JPT_ENSURE(UnitTests_Matrix44_Scaling());
+	JPT_ENSURE(UnitTests_Matrix44_EulerAngles());
 
 	return true;
 }

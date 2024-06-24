@@ -7,11 +7,11 @@ module;
 export module jpt.Triangle3;
 
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Vector3;
 import jpt.Math;
-import jpt.Limits;
 
 namespace jpt
 {
@@ -99,7 +99,7 @@ namespace jpt
 
 		return (u >= 0) && 
 			   (v >= 0) && 
-			   (u + v <= static_cast<T>(1) + Limits<T>::kEpsilon);
+			   (u + v <= static_cast<T>(1) + Constants<T>::kEpsilon);
 	}
 }
 

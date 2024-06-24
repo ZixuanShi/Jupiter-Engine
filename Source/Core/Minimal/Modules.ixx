@@ -28,7 +28,6 @@ export import jpt.TypeTraits;
 export import jpt.Utilities;
 
 // Math
-export import jpt.Limits;
 export import jpt.Math;
 export import jpt.Matrix33;
 export import jpt.Matrix44;
