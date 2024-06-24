@@ -3,6 +3,7 @@
 export module jpt.Ray3;
 
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.Vector3;
 
 namespace jpt
@@ -40,7 +41,7 @@ namespace jpt
 	constexpr T Ray3<T>::Distance(const Vector3<T>& point) const noexcept
 	{
 		const T dot = Vector3<T>::Dot(point - origin, direction);
-		T distance = jpt::kInvalidValue<T>;
+		T distance = kInvalidValue<T>;
 
 		// If the point is behind the ray's origin, return the distance to the origin
 		if (dot < 0)
