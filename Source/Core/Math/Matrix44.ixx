@@ -48,8 +48,8 @@ namespace jpt
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 
 		// Expects angles in degrees
-		constexpr static Matrix44<T> FromEulerAngles(const Vector3<T>& eulerAngles);
-		constexpr static Matrix44<T> FromEulerAngles(T yaw, T pitch, T row);
+		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& eulerAngles);
+		constexpr static Matrix44<T> FromDegrees(T yaw, T pitch, T row);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -209,19 +209,19 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
+	constexpr Matrix44<T> Matrix44<T>::FromDegrees(const Vector3<T>& degrees)
 	{
 		Matrix44<T> result = Matrix44<T>::Identity;
-		result.RotateX(ToRadians(eulerAngles.x));
-		result.RotateY(ToRadians(eulerAngles.y));
-		result.RotateZ(ToRadians(eulerAngles.z));
+		result.RotateX(ToRadians(degrees.x));
+		result.RotateY(ToRadians(degrees.y));
+		result.RotateZ(ToRadians(degrees.z));
 		return result;
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::FromEulerAngles(T yaw, T pitch, T row)
+	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T yaw, T pitch, T row)
 	{
-		return FromEulerAngles(Vector3<T>(yaw, pitch, row));
+		return FromDegrees(Vector3<T>(yaw, pitch, row));
 	}
 
 	template<Numeric T>

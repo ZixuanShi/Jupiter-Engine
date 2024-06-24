@@ -84,10 +84,16 @@ bool UnitTests_Matrix44_Scaling()
 
 bool UnitTests_Matrix44_EulerAngles()
 {
-	Matrix44f rotation = Matrix44f::FromEulerAngles(180, -63, 22);
+	Matrix44f rotation = Matrix44f::FromDegrees(180, -63, 22);
 	JPT_ENSURE(rotation.m[0] == Vec4f( 0.421f, -0.170f, -0.891f, 0.000f));
 	JPT_ENSURE(rotation.m[1] == Vec4f(-0.375f, -0.927f,  0.000f, 0.000f));
 	JPT_ENSURE(rotation.m[2] == Vec4f(-0.826f,  0.334f, -0.454f, 0.000f));
+	JPT_ENSURE(rotation.m[3] == Vec4f( 0.000f,  0.000f,  0.000f, 1.000f));
+
+	rotation = Matrix44f::FromDegrees(90, 45, 90);
+	JPT_ENSURE(rotation.m[0] == Vec4f(-0.000f, -0.707f,  0.707f, 0.000f));
+	JPT_ENSURE(rotation.m[1] == Vec4f(-0.000f, -0.707f, -0.707f, 0.000f));
+	JPT_ENSURE(rotation.m[2] == Vec4f( 1.000f, -0.000f, -0.000f, 0.000f));
 	JPT_ENSURE(rotation.m[3] == Vec4f( 0.000f,  0.000f,  0.000f, 1.000f));
 
 	return true;
