@@ -47,15 +47,15 @@ namespace jpt
 
 		constexpr T Length() const;
 		constexpr T Length2() const;
-		constexpr void Normalize();
-		constexpr TQuaternion Normalized() const;
-		constexpr void Conjugate();
-		constexpr TQuaternion Conjugated() const;
-		constexpr void Inverse();
-		constexpr TQuaternion Inversed() const;
-
 		constexpr T Dot(const TQuaternion& rhs) const;
+		constexpr void Normalize();
+		constexpr void Conjugate();
+		constexpr void Inverse();
+		constexpr void Concatenate(const TQuaternion& rhs);
 
+		constexpr TQuaternion Normalized() const;
+		constexpr TQuaternion Conjugated() const;
+		constexpr TQuaternion Inversed() const;
 		constexpr TQuaternion Lerp(const TQuaternion& rhs, T t) const;
 		constexpr TQuaternion Slerp(const TQuaternion& rhs, T t) const;
 
@@ -65,9 +65,9 @@ namespace jpt
 
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
+		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axisAngle, T radians);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
-
 		constexpr String ToString() const;
 	};
 
@@ -195,6 +195,19 @@ namespace jpt
 			z = -z * invLength2;
 			w = w * invLength2;
 		}
+	}
+
+	template<Numeric T>
+	constexpr void TQuaternion<T>::Concatenate(const TQuaternion& rhs)
+	{
+		const T newW = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
+		const T newX = w * rhs.x + x * rhs.w + y * rhs.z - z * rhs.y;
+		const T newY = w * rhs.y - x * rhs.z + y * rhs.w + z * rhs.x;
+		const T newZ = w * rhs.z + x * rhs.y - y * rhs.x + z * rhs.w;
+		x = newX;
+		y = newY;
+		z = newZ;
+		w = newW;
 	}
 
 	template<Numeric T>
@@ -329,6 +342,21 @@ namespace jpt
 		const TQuaternion q1 = start * sinTheta1 / sinTheta;
 		const TQuaternion q2 = end * sinTheta2 / sinTheta;
 		return q1 + q2;
+	}
+
+	template<Numeric T>
+	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
+	{
+		const T halfAngle = radians * static_cast<T>(0.5);
+		const T sinHalfAngle = std::sin(halfAngle);
+		const T cosHalfAngle = std::cos(halfAngle);
+
+		const T x = axisAngle.x * sinHalfAngle;
+		const T y = axisAngle.y * sinHalfAngle;
+		const T z = axisAngle.z * sinHalfAngle;
+		const T w = cosHalfAngle;
+
+		return TQuaternion(x, y, z, w);
 	}
 
 	template<Numeric T>

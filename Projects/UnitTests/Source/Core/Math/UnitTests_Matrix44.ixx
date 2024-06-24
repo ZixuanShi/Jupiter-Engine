@@ -8,6 +8,8 @@ export module UnitTests_Matrix44;
 
 import jpt.CoreModules;
 
+// https://www.andre-gaschler.com/rotationconverter/
+
 bool UnitTests_Matrix44_Translation()
 {
 	Matrix44f translation = Matrix44f::Translation(Vec3f(1.0f, 2.0f, 3.0f));
@@ -31,9 +33,16 @@ bool UnitTests_Matrix44_Rotation()
 	JPT_ENSURE(rotation.m[1] == Vec4f(0.0f, 0.0f, -1.0f, 0.0f));
 	JPT_ENSURE(rotation.m[2] == Vec4f(0.0f, 1.0f,  0.0f, 0.0f));
 	JPT_ENSURE(rotation.m[3] == Vec4f(0.0f, 0.0f,  0.0f, 1.0f));
+
+	rotation.RotateX(jpt::ToRadians(90.0f));
+	JPT_ENSURE(rotation.m[0] == Vec4f(1.0f,  0.0f,  0.0f, 0.0f));
+	JPT_ENSURE(rotation.m[1] == Vec4f(0.0f, -1.0f,  0.0f, 0.0f));
+	JPT_ENSURE(rotation.m[2] == Vec4f(0.0f,  0.0f, -1.0f, 0.0f));
+	JPT_ENSURE(rotation.m[3] == Vec4f(0.0f,  0.0f,  0.0f, 1.0f));
+
 	Vec3f rotationVector = Vec3f(4.0f, 5.0f, 6.0f);
 	Vec3f rotationResult = rotation * rotationVector;
-	JPT_ENSURE(rotationResult == Vec3f(4.0f, -6.0f, 5.0f));
+	JPT_ENSURE(rotationResult == Vec3f(4.0f, -5.0f, -6.0f));
 
 	// 2
 	rotation = Matrix44f::Identity;
@@ -75,11 +84,11 @@ bool UnitTests_Matrix44_Scaling()
 
 bool UnitTests_Matrix44_EulerAngles()
 {
-	//Matrix44f rotation = Matrix44f::EulerAngles(jpt::ToRadians(90.0f), jpt::ToRadians(45.0f), jpt::ToRadians(30.0f));
-	//JPT_ENSURE(rotation.m[0] == Vec4f(0.612f, -0.354f,  0.707f, 0.000f));
-	//JPT_ENSURE(rotation.m[1] == Vec4f(0.707f,  0.354f, -0.612f, 0.000f));
-	//JPT_ENSURE(rotation.m[2] == Vec4f(-0.354f,  0.866f,  0.354f, 0.000f));
-	//JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
+	Matrix44f rotation = Matrix44f::FromEulerAngles(180, -63, 22);
+	JPT_ENSURE(rotation.m[0] == Vec4f( 0.421f, -0.170f, -0.891f, 0.000f));
+	JPT_ENSURE(rotation.m[1] == Vec4f(-0.375f, -0.927f,  0.000f, 0.000f));
+	JPT_ENSURE(rotation.m[2] == Vec4f(-0.826f,  0.334f, -0.454f, 0.000f));
+	JPT_ENSURE(rotation.m[3] == Vec4f( 0.000f,  0.000f,  0.000f, 1.000f));
 
 	return true;
 }

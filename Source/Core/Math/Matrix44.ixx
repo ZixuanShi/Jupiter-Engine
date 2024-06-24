@@ -47,7 +47,9 @@ namespace jpt
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 
-		constexpr Vector3<T> ToEulerAngles() const;
+		// Expects angles in degrees
+		constexpr static Matrix44<T> FromEulerAngles(const Vector3<T>& eulerAngles);
+		constexpr static Matrix44<T> FromEulerAngles(T yaw, T pitch, T row);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -207,24 +209,19 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Matrix44<T>::ToEulerAngles() const
+	constexpr Matrix44<T> Matrix44<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
 	{
-		Vector3<T> result;
-
-		result.y = std::asin(-m[2][0]);
-
-		if (std::cos(result.y) != 0)
-		{
-			result.x = std::atan2(m[2][1], m[2][2]);
-			result.z = std::atan2(m[1][0], m[0][0]);
-		}
-		else
-		{
-			result.x = 0;
-			result.z = std::atan2(-m[0][1], m[1][1]);
-		}
-
+		Matrix44<T> result = Matrix44<T>::Identity;
+		result.RotateX(ToRadians(eulerAngles.x));
+		result.RotateY(ToRadians(eulerAngles.y));
+		result.RotateZ(ToRadians(eulerAngles.z));
 		return result;
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::FromEulerAngles(T yaw, T pitch, T row)
+	{
+		return FromEulerAngles(Vector3<T>(yaw, pitch, row));
 	}
 
 	template<Numeric T>
