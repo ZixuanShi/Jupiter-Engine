@@ -38,6 +38,7 @@ namespace jpt
 		constexpr Matrix44<T> operator*(const Matrix44<T>& rhs) const;
 		constexpr Vector3<T> operator*(const Vector3<T>& rhs) const;
 		constexpr Vector4<T> operator*(const Vector4<T>& rhs) const;
+		constexpr Matrix44<T>& operator*=(const Matrix44<T>& rhs);
 
 		constexpr static Matrix44<T> Translation(const Vector3<T>& v);
 		constexpr static Matrix44<T> RotationX(T radians);
@@ -46,9 +47,7 @@ namespace jpt
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
-
-		// Expects angles in degrees
-		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& eulerAngles);
+		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& degrees);
 		constexpr static Matrix44<T> FromDegrees(T yaw, T pitch, T row);
 
 		constexpr void Translate(const Vector3<T>& v);
@@ -128,6 +127,13 @@ namespace jpt
 				        m[i][3] * rhs[3];
 		}
 		return result;
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T>& Matrix44<T>::operator*=(const Matrix44<T>& rhs)
+	{
+		*this = *this * rhs;
+		return *this;
 	}
 
 	template<Numeric T>
@@ -227,31 +233,31 @@ namespace jpt
 	template<Numeric T>
 	constexpr void Matrix44<T>::Translate(const Vector3<T>& v)
 	{
-		*this = *this * Translation(v);
+		*this *= Translation(v);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix44<T>::RotateX(T radians)
 	{
-		*this = *this * RotationX(radians);
+		*this *= RotationX(radians);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix44<T>::RotateY(T radians)
 	{
-		*this = *this * RotationY(radians);
+		*this *= RotationY(radians);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix44<T>::RotateZ(T radians)
 	{
-		*this = *this * RotationZ(radians);
+		*this *= RotationZ(radians);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix44<T>::Scale(const Vector3<T>& v)
 	{
-		*this = *this * Scaling(v);
+		*this *= Scaling(v);
 	}
 
 	template<Numeric T>

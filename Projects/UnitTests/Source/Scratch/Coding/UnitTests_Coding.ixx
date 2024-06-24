@@ -13,6 +13,7 @@ import UnitTests_Coding_SubArraySum;
 import UnitTests_Coding_IsPalindrome;
 import UnitTests_Coding_TwoSum;
 import UnitTests_Coding_RomanToInteger;
+import UnitTests_Coding_MaxSubArray;
 
 export bool RunUnitTests_Coding()
 {
@@ -21,6 +22,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTest_Coding_IsPalindrome());
 	JPT_ENSURE(UnitTest_Coding_TwoSum());
 	JPT_ENSURE(UnitTest_Coding_RomanToInteger());
+	JPT_ENSURE(UnitTest_Coding_MaxSubArray());
 
 	return true;
 }
