@@ -11,12 +11,14 @@ import jpt.Utilities;
 
 import UnitTests_MathPractice_FindAngle2D;
 import UnitTests_MathPractice_DistancePointToPlane3D;
+import UnitTests_MathPractice_MergeCloseVertices;
 
 // Main entry point for math practice. import any test modules above and add them to this function
 export bool RunUnitTests_MathPractice()
 {
 	JPT_ENSURE(UnitTest_MathPractice_FindAngle2D());
 	JPT_ENSURE(UnitTest_MathPractice_DistancePointToPlane3D());
+	JPT_ENSURE(UnitTest_MathPractice_MergeCloseVertices());
 
 	return true;
 }

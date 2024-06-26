@@ -9,8 +9,8 @@ import jpt.Utilities;
 
 export namespace jpt
 {
-	template<Indexable TContainer>
-	constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex)
+	template<Indexable TContainer, typename TComparator>
+	constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
 		// Mid of three pivot selection
 
@@ -20,13 +20,13 @@ export namespace jpt
 		const auto last  = container[beginIndex];
 
 		// Compare and return mid index
-		if (first > mid)
+		if (comparator(mid, first))
 		{
-			if (mid > last)
+			if (comparator(last, mid))
 			{
 				return endIndex / 2;
 			}
-			else if (first > last)
+			else if (comparator(last, first))
 			{
 				return endIndex;
 			}
@@ -37,17 +37,17 @@ export namespace jpt
 		}
 		else
 		{
-			if (first > last)
+			if (comparator(last, first))
 			{
 				return beginIndex;
 			}
-			else if (mid > last)
+			else if (comparator(last, mid))
 			{
-				return endIndex;
+				return endIndex / 2;
 			}
 			else
 			{
-				return endIndex / 2;
+				return endIndex;
 			}
 		}
 	}
@@ -55,7 +55,7 @@ export namespace jpt
 	template<Indexable TContainer, typename TComparator>
 	constexpr size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
-		size_t pivotIndex = GetPivot(container, beginIndex, endIndex);
+		size_t pivotIndex = GetPivot(container, beginIndex, endIndex, comparator);
 		Swap(container[pivotIndex], container[endIndex]);
 
 		const auto pivot = container[endIndex];

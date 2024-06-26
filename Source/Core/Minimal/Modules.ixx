@@ -15,6 +15,7 @@ export import jpt.Sorting;
 export import jpt.StaticArray;
 export import jpt.DynamicArray;
 export import jpt.HashMap;
+export import jpt.SortedMap;
 
 // Functional
 export import jpt.Function;
