@@ -10,5 +10,6 @@ import jpt.CoreModules;
 
 export bool UnitTest_Coding_Scratch()
 {
+
 	return true;
 }

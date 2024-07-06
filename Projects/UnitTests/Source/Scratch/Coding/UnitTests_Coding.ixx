@@ -15,6 +15,7 @@ import UnitTests_Coding_IsPalindrome;
 import UnitTests_Coding_TwoSum;
 import UnitTests_Coding_RomanToInteger;
 import UnitTests_Coding_MaxSubArray;
+import UnitTests_Coding_DeleteDuplicatesFromList;
 
 export bool RunUnitTests_Coding()
 {
@@ -25,6 +26,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTest_Coding_TwoSum());
 	JPT_ENSURE(UnitTest_Coding_RomanToInteger());
 	JPT_ENSURE(UnitTest_Coding_MaxSubArray());
+	JPT_ENSURE(UnitTest_Coding_DeleteDuplicatesFromList());
 
 	return true;
 }
