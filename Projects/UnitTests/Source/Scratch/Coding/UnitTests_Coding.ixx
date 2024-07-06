@@ -8,6 +8,7 @@ export module UnitTests_Coding;
 
 import jpt.Utilities;
 
+import UnitTests_Coding_Scratch;
 import UnitTests_Coding_FindMedianSortedArrays;
 import UnitTests_Coding_SubArraySum;
 import UnitTests_Coding_IsPalindrome;
@@ -17,6 +18,7 @@ import UnitTests_Coding_MaxSubArray;
 
 export bool RunUnitTests_Coding()
 {
+	JPT_ENSURE(UnitTest_Coding_Scratch());
 	JPT_ENSURE(UnitTest_Coding_FindMedianSortedArrays());
 	JPT_ENSURE(UnitTest_Coding_SubArraySum());
 	JPT_ENSURE(UnitTest_Coding_IsPalindrome());
