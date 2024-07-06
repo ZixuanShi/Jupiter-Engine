@@ -50,8 +50,8 @@ export namespace jpt
 		constexpr const TData& Front()       const { return m_pBuffer[0]; }
 		constexpr       TData& Back()              { return m_pBuffer[m_count - 1]; }
 		constexpr const TData& Back()        const { return m_pBuffer[m_count - 1]; }
-		constexpr       TData& operator[](size_t index)       { return m_pBuffer[index]; }
-		constexpr const TData& operator[](size_t index) const { return m_pBuffer[index]; }
+		constexpr       TData& operator[](size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
+		constexpr const TData& operator[](size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 		constexpr       TData& At(size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 		constexpr const TData& At(size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 
