@@ -55,6 +55,7 @@ export namespace jpt
 
 		// Capacity
 		constexpr size_t Count() const { return kCount; }
+		constexpr size_t Size()  const { return kCount * sizeof(TData); }
 
 	private:
 		constexpr void CopyData(const TData* pBegin);

@@ -6,11 +6,9 @@ module;
 
 export module UnitTests_Coding_Scratch;
 
-import jpt.Utilities;
+import jpt.CoreModules;
 
 export bool UnitTest_Coding_Scratch()
 {
-	
-
 	return true;
 }
