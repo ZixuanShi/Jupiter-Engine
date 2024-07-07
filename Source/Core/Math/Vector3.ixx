@@ -386,12 +386,13 @@ export namespace jpt
 	constexpr String Vector3<T>::ToString() const
 	{
 		jpt::String result;
-		result += "x: ";
+		result += "{ x: ";
 		result += jpt::ToString(x);
 		result += ", y:";
 		result += jpt::ToString(y);
 		result += ", z:";
 		result += jpt::ToString(z);
+		result += " }";
 		return result;
 	}
 }

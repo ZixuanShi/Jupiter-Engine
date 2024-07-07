@@ -276,6 +276,7 @@ export namespace jpt
 		PostOrderWalkNode(m_pRoot, [](TNode* pNode)
 		{
 			TAllocator::Deallocate(pNode);
+			pNode = nullptr;
 		});
 
 		m_pRoot = nullptr;

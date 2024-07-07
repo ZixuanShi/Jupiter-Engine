@@ -16,6 +16,7 @@ import UnitTests_Coding_TwoSum;
 import UnitTests_Coding_RomanToInteger;
 import UnitTests_Coding_MaxSubArray;
 import UnitTests_Coding_DeleteDuplicatesFromList;
+import UnitTests_Coding_MergeCloseVertices;
 
 export bool RunUnitTests_Coding()
 {
@@ -27,6 +28,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTest_Coding_RomanToInteger());
 	JPT_ENSURE(UnitTest_Coding_MaxSubArray());
 	JPT_ENSURE(UnitTest_Coding_DeleteDuplicatesFromList());
+	JPT_ENSURE(UnitTest_Coding_MergeCloseVertices());
 
 	return true;
 }
