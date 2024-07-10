@@ -75,7 +75,7 @@ namespace jpt
 {
 	export constexpr uint64 Hash(const Vec3i& vec)
 	{
-		return jpt::Hash(vec.x) ^ jpt::Hash(vec.y) ^ jpt::Hash(vec.z);
+		return Hash(vec.x) ^ Hash(vec.y) ^ Hash(vec.z);
 	}
 }
 
