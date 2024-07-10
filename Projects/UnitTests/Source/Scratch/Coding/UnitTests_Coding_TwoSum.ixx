@@ -8,7 +8,7 @@ export module UnitTests_Coding_TwoSum;
 
 import jpt.CoreModules;
 
-jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, int32 target)
+static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, int32 target)
 {
 	jpt::HashMap<size_t, size_t> numToIndex;
 

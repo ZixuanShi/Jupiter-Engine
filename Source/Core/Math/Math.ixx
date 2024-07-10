@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Minimal/Macros.h"
+
 export module jpt.Math;
 
 import jpt.Concepts;
@@ -175,9 +179,10 @@ export namespace jpt
 	}
 
 	/** @return true if two values are close enough */
-	template<Integral TInt1, Integral TInt2>
-	constexpr bool AreValuesClose(TInt1 A, TInt2 B)
+	template<Integral TInt1, Integral TInt2, typename TEpsilion>
+	constexpr bool AreValuesClose(TInt1 A, TInt2 B, TEpsilion epsilion = static_cast<TEpsilion>(0))
 	{
+		JPT_IGNORE(epsilion);
 		return A == static_cast<TInt1>(B);
 	}
 

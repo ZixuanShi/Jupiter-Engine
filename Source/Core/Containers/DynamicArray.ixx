@@ -54,6 +54,7 @@ export namespace jpt
 		constexpr const TData& operator[](size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 		constexpr       TData& At(size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
 		constexpr const TData& At(size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
+		constexpr bool Contains(const TData& data) const;
 
 		// Iterators
 		constexpr Iterator begin() noexcept { return Iterator(m_pBuffer); }
@@ -175,6 +176,20 @@ export namespace jpt
 	constexpr DynamicArray<TData, TAllocator>::~DynamicArray()
 	{
 		Clear();
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr bool DynamicArray<_TData, TAllocator>::Contains(const TData& data) const
+	{
+		for (size_t i = 0; i < m_count; ++i)
+		{
+			if (m_pBuffer[i] == data)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	template<typename TData, typename TAllocator>
