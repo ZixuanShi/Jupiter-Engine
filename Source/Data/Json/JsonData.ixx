@@ -73,13 +73,13 @@ export namespace jpt
 		{
 			return data.As<String>() == other.data.As<String>();
 		}
-		else if (data.Is<DynamicArray<JsonData>>())
+		else if (data.Is<JsonArray>())
 		{
-			return data.As<DynamicArray<JsonData>>() == other.data.As<DynamicArray<JsonData>>();
+			return data.As<JsonArray>() == other.data.As<JsonArray>();
 		}
-		else if (data.Is<HashMap<String, JsonData>>())
+		else if (data.Is<JsonMap>())
 		{
-			return data.As<HashMap<String, JsonData>>() == other.data.As<HashMap<String, JsonData>>();
+			return data.As<JsonMap>() == other.data.As<JsonMap>();
 		}
 
 		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
@@ -112,16 +112,16 @@ export namespace jpt
 				return "\"" + str + "\"";
 			}
 		}
-		else if (data.Is<DynamicArray<JsonData>>())
+		else if (data.Is<JsonArray>())
 		{
-			return jpt::ToString(data.As<DynamicArray<JsonData>>());
+			return jpt::ToString(data.As<JsonArray>());
 		}
-		else if (data.Is<HashMap<String, JsonData>>())
+		else if (data.Is<JsonMap>())
 		{
 			String str("\n{\n");
 
 			size_t count = 0;
-			for (const auto& [key, value] : data.As<HashMap<String, JsonData>>())
+			for (const auto& [key, value] : data.As<JsonMap>())
 			{
 				str.Append("\t\"");
 				str.Append(key);
@@ -129,7 +129,7 @@ export namespace jpt
 				str.Append(value.ToString());
 
 				++count;
-				if (count < data.As<HashMap<String, JsonData>>().Count())
+				if (count < data.As<JsonMap>().Count())
 				{
 					str.Append(",\n");
 				}
