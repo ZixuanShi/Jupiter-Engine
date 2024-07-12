@@ -11,7 +11,7 @@ import jpt.Utilities;
 import jpt.Math;
 
 import jpt.JsonUtils;
-import jpt.JsonObject;
+import jpt.JsonData;
 
 import jpt.File.Path;
 import jpt.FileIO;
@@ -20,7 +20,7 @@ static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJs
 
 bool UnitTest_Json_Write()
 {
-    jpt::JsonObject jsonRoot;
+    jpt::JsonMap jsonRoot;
 
     jsonRoot.Add("source", jpt::String("Engine"));
     jsonRoot.Add("data_int", 12);
@@ -53,21 +53,21 @@ bool UnitTest_Json_Write()
 bool UnitTest_Json_Read()
 {
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonObject jsonRoot = jpt::ReadJsonRoot(path).Value();
+    jpt::JsonMap jsonRoot = jpt::ReadJsonRoot(path).Value();
 
     // Access the data with Get<T>() 
-    JPT_ENSURE(jsonRoot.Get<jpt::String>("source") == "Engine");
-    JPT_ENSURE(jsonRoot.Get<int32>("data_int") == 12);
-    JPT_ENSURE(jpt::AreValuesClose(jsonRoot.Get<float32>("data_float"), 1.55));
-    JPT_ENSURE(jsonRoot.Get<jpt::String>("data_string") == "Hello from Jupiter Engine!");
-    JPT_ENSURE(jsonRoot.Get<jpt::String>("data_null") == "null");
+    JPT_ENSURE(jsonRoot["source"] == jpt::String("Engine"));
+    JPT_ENSURE(jsonRoot["data_int"] == 12);
+    JPT_ENSURE(jpt::AreValuesClose(jsonRoot["data_float"].As<float32>(), 1.55f));
+    JPT_ENSURE(jsonRoot["data_string"] == jpt::String("Hello from Jupiter Engine!"));
+    JPT_ENSURE(jsonRoot["data_null"] == jpt::String("null"));
 
-    jpt::JsonArray data_array = jsonRoot.Get<jpt::JsonArray>("data_array");
+    jpt::JsonArray data_array = jsonRoot["data_array"].As<jpt::JsonArray>();
     jpt::JsonArray expected_data_array{ 111, jpt::String("Hello World"), 33, 4.77f, false};
     JPT_ENSURE(data_array == expected_data_array);
 
     // Subset map
-    const jpt::JsonMap& subSet = jsonRoot.Get<jpt::JsonMap>("data_map");
+    const jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
     JPT_ENSURE(subSet["year"] == 2024);
     JPT_ENSURE(subSet["month"] == 6);
     JPT_ENSURE(subSet["day"] == 20);

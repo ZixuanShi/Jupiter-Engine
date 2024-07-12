@@ -20,7 +20,6 @@ import jpt.Stack;
 import jpt.Utilities;
 
 import jpt.JsonData;
-import jpt.JsonObject;
 
 import jpt.File.Path;
 import jpt.FileIO;
@@ -155,7 +154,7 @@ namespace jpt
 	}
 
 	/** Reads a json file from disk. Initialize all the data to memory and assign to root json object then return it */
-	export Optional<JsonObject> ReadJsonRoot(const Path& path)
+	export Optional<JsonMap> ReadJsonRoot(const Path& path)
 	{
 		std::ifstream file(path.ConstBuffer(), std::ios::in);
 		if (!file.is_open())
@@ -164,7 +163,7 @@ namespace jpt
 			return {};
 		}
 
-		Stack<JsonObject> jsonMaps;
+		Stack<JsonMap> jsonMaps;
 		Stack<String> mapNames;
 
 		std::string stdLine;
@@ -202,7 +201,7 @@ namespace jpt
 					return jsonMaps.Peek();
 				}
 
-				JsonObject map = jsonMaps.Peek();
+				JsonMap map = jsonMaps.Peek();
 				jsonMaps.Pop();
 
 				String mapName = mapNames.Peek();
@@ -215,7 +214,35 @@ namespace jpt
 		return {};
 	}
 
-	export void WriteJsonRoot(const Path& path, const JsonObject& jsonRoot)
+	export String ToString(const JsonMap& map)
+	{
+		String str;
+		str.Append("{\n");
+
+		size_t count = 0;
+		for (const auto& [key, value] : map)
+		{
+			str.Append("\t\"");
+			str.Append(key);
+			str.Append("\": ");
+			str.Append(value.ToString());
+
+			++count;
+			if (count < map.Count())
+			{
+				str.Append(",\n");
+			}
+			else
+			{
+				str.Append("\n");
+			}
+		}
+
+		str.Append("}");
+		return str;
+	}
+
+	export void WriteJsonRoot(const Path& path, const JsonMap& jsonRoot)
 	{
 		std::ofstream file(path.ConstBuffer(), std::ios::out);
 		if (!file.is_open())
@@ -224,6 +251,6 @@ namespace jpt
 			return;
 		}
 
-		file << jsonRoot.ToString().ConstBuffer();
+		file << ToString(jsonRoot).ConstBuffer();
 	}
 }
