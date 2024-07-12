@@ -44,7 +44,7 @@ bool UnitTest_Json_Write()
 
     jsonRoot.Set("data_map", subMap);
 
-    jpt::WriteJsonRoot(path, jsonRoot);
+    jpt::WriteJsonFile(path, jsonRoot);
 
     return true;
 }
@@ -52,7 +52,7 @@ bool UnitTest_Json_Write()
 bool UnitTest_Json_Read()
 {
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonMap jsonRoot = jpt::ReadJsonRoot(path).Value();
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
     // Access the data with operator[]
     JPT_ENSURE(jsonRoot["source"] == jpt::String("Engine"));

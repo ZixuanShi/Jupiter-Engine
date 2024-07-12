@@ -155,7 +155,7 @@ namespace jpt
 		return false;
 	}
 
-	constexpr void RecurToString(const JsonMap& map, String& content, uint8 depth)
+	constexpr void Recur_JsonMapToString(const JsonMap& map, String& content, uint8 depth)
 	{
 		// Helper function to add tabs by depth
 		auto addTabs = [&content, depth]()
@@ -184,7 +184,7 @@ namespace jpt
 				addTabs();
 				content.Append("{\n");
 
-				RecurToString(value.As<JsonMap>(), content, depth + 1);
+				Recur_JsonMapToString(value.As<JsonMap>(), content, depth + 1);
 
 				addTabs();
 				content.Append("}");
@@ -210,7 +210,7 @@ namespace jpt
 	export constexpr String ToString(const JsonMap& map)
 	{
 		String content("{\n");
-		RecurToString(map, content, 1);
+		Recur_JsonMapToString(map, content, 1);
 		content.Append("}");
 		return content;
 	}

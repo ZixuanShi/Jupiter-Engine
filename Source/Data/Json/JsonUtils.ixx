@@ -155,7 +155,7 @@ namespace jpt
 	}
 
 	/** Reads a json file from disk. Initialize all the data to memory and assign to root json object then return it */
-	export Optional<JsonMap> ReadJsonRoot(const Path& path)
+	export Optional<JsonMap> ReadJsonFile(const Path& path)
 	{
 		std::ifstream file(path.ConstBuffer(), std::ios::in);
 		if (!file.is_open())
@@ -215,7 +215,7 @@ namespace jpt
 		return {};
 	}
 
-	export void WriteJsonRoot(const Path& path, const JsonMap& jsonRoot)
+	export void WriteJsonFile(const Path& path, const JsonMap& jsonRoot)
 	{
 		std::ofstream file(path.ConstBuffer(), std::ios::out);
 		if (!file.is_open())
