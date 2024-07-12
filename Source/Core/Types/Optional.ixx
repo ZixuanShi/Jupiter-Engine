@@ -38,7 +38,7 @@ export namespace jpt
 		/** Destroys any contained value */
 		constexpr void Reset();
 
-		/** @return true if this contains a value. */
+		/** @return true if this Has a value. */
 		constexpr bool HasValue() const { return m_hasValue; }
 		constexpr operator bool() const { return m_hasValue; }
 

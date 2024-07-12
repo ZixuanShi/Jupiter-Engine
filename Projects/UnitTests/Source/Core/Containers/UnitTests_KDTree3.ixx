@@ -44,11 +44,11 @@ bool UnitTest_KDTree3()
     KDTree3f tree(GetTestData());
 	JPT_ENSURE(tree.Count() == 13);
 
-	// Contains
-	JPT_ENSURE(tree.Contains({ 3.00f, 3.00f, 3.00f }));
-	JPT_ENSURE(tree.Contains({ 4.00f, 4.00f, 4.00f }));
-	JPT_ENSURE(tree.Contains({ 15.0f, 90.0f, 22.0f }));
-	JPT_ENSURE(!tree.Contains({ 99.0f, 99.0f, 99.0f }));
+	// Has
+	JPT_ENSURE(tree.Has({ 3.00f, 3.00f, 3.00f }));
+	JPT_ENSURE(tree.Has({ 4.00f, 4.00f, 4.00f }));
+	JPT_ENSURE(tree.Has({ 15.0f, 90.0f, 22.0f }));
+	JPT_ENSURE(!tree.Has({ 99.0f, 99.0f, 99.0f }));
 
 	// Adding
 	tree.Add({ 3.00f, 3.00f, 3.00f });

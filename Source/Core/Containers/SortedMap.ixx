@@ -61,7 +61,7 @@ export namespace jpt
 		constexpr size_t Count() const;
 		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
-		constexpr bool Contains(const TKey& key);
+		constexpr bool Has(const TKey& key);
 		constexpr       TValue& operator[](const TKey& key);
 		constexpr const TValue& operator[](const TKey& key) const;
 		constexpr       TValue& Min();
@@ -302,7 +302,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr bool SortedMap<TKey, TValue, TComparator, TAllocator>::Contains(const TKey& key)
+	constexpr bool SortedMap<TKey, TValue, TComparator, TAllocator>::Has(const TKey& key)
 	{
 		return FindNode(key) != nullptr;
 	}

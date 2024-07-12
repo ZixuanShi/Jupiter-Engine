@@ -189,12 +189,12 @@ namespace jpt
 				}
 			}
 			// Start of map
-			else if (line.Contains("{"))
+			else if (line.Has("{"))
 			{
 				jsonMaps.Emplace();
 			}
 			// End of map
-			else if (line.Contains("}"))
+			else if (line.Has("}"))
 			{
 				// If this is the end of root map
 				if (jsonMaps.Count() == 1)

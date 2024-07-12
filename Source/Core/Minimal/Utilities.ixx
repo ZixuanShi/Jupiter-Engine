@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-// This file contains minimum C++ programming utility functions.
+// This file Has minimum C++ programming utility functions.
 // Without these functions we can't write a complete program in C++
 
 module;

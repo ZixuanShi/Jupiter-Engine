@@ -27,7 +27,7 @@ bool UnitTest_SortedMap_Copy()
 
     for (const auto& [key, value] : sortedMap)
 	{
-		JPT_ENSURE(sortedMapCopy.Contains(key));
+		JPT_ENSURE(sortedMapCopy.Has(key));
 		JPT_ENSURE(sortedMapCopy[key] == value);
 	}
     
@@ -111,15 +111,15 @@ bool UnitTest_SortedMap_Erase()
     sortedMap.Erase(8);
     sortedMap.Erase(9);
 
-    JPT_ENSURE(!sortedMap.Contains(1));
-    JPT_ENSURE(!sortedMap.Contains(2));
-    JPT_ENSURE(!sortedMap.Contains(3));
-    JPT_ENSURE(!sortedMap.Contains(4));
-    JPT_ENSURE(!sortedMap.Contains(5));
-    JPT_ENSURE(!sortedMap.Contains(6));
-    JPT_ENSURE(!sortedMap.Contains(7));
-    JPT_ENSURE(!sortedMap.Contains(8));
-    JPT_ENSURE(!sortedMap.Contains(9));
+    JPT_ENSURE(!sortedMap.Has(1));
+    JPT_ENSURE(!sortedMap.Has(2));
+    JPT_ENSURE(!sortedMap.Has(3));
+    JPT_ENSURE(!sortedMap.Has(4));
+    JPT_ENSURE(!sortedMap.Has(5));
+    JPT_ENSURE(!sortedMap.Has(6));
+    JPT_ENSURE(!sortedMap.Has(7));
+    JPT_ENSURE(!sortedMap.Has(8));
+    JPT_ENSURE(!sortedMap.Has(9));
 
     return true;
 }

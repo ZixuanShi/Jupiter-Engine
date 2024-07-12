@@ -12,7 +12,7 @@ import jpt.Hash;
 import jpt.HashMap;
 import jpt.DynamicArray;
 
-/** Contains shared enum data across all instances and public */
+/** Has shared enum data across all instances and public */
 template<jpt::Integral TInt>
 struct EnumData
 {
@@ -22,7 +22,7 @@ struct EnumData
 };
 
 /** Generate the shared enum data 
-	@param pSource		A string contains all the enum values, separated by ',' accepts value assignment too */
+	@param pSource		A string Has all the enum values, separated by ',' accepts value assignment too */
 template<jpt::Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource);
 
@@ -99,7 +99,7 @@ public:                                                                         
     }                                                                                                                        \
     constexpr static const jpt::String& Name(TSize index)                                                                    \
     {                                                                                                                        \
-        JPT_ASSERT(s_data.names.Contains(index));                                                                            \
+        JPT_ASSERT(s_data.names.Has(index));                                                                            \
         return s_data.names[index];                                                                                          \
     }                                                                                                                        \
                                                                                                                              \
@@ -140,14 +140,14 @@ public:                                                                         
     constexpr EnumName& operator+=(TInt offset)                                                                              \
     {                                                                                                                        \
     	m_value += static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Contains(m_value));                                                                          \
+    	JPT_ASSERT(s_data.names.Has(m_value));                                                                          \
     	return *this;                                                                                                        \
     }                                                                                                                        \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator-=(TInt offset)                                                                              \
     {                                                                                                                        \
     	m_value -= static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Contains(m_value));                                                                          \
+    	JPT_ASSERT(s_data.names.Has(m_value));                                                                          \
     	return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \

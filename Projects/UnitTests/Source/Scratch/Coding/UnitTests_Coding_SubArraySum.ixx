@@ -25,7 +25,7 @@ int SubArraySum(const jpt::DynamicArray<int32>& nums, int k)
 	{
 		sum += i;
 
-		if (prefixSum.Contains(sum - k))
+		if (prefixSum.Has(sum - k))
 		{
 			count += prefixSum[sum - k];
 		}

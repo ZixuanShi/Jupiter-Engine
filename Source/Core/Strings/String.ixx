@@ -88,8 +88,8 @@ export namespace jpt
 		constexpr size_t FindFirstOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t FindLastOf(      TChar charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
 		constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr bool   Contains(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
-		constexpr bool   Contains(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
+		constexpr bool   Has(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
+		constexpr bool   Has(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
 		
 		/* Deallocate the memory that this string holds */
 		constexpr void Clear();
@@ -153,12 +153,12 @@ export namespace jpt
 		constexpr void MoveString(String_Base<TChar>&& otherString);
 
 		/** @return An integer associated with this string
-			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front */
+			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front */
 		template<Integral TInt = int32>
 		constexpr TInt ToInt() const;
 
 		/** @return A float associated with this string
-			@note   Will assert fail if contains non-numeric literals besides the negative sign at the front or the percision dot
+			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front or the percision dot
 			@note	Will ignore the 'f' is there's any */
 		template<Floating TFloat = float>
 		constexpr TFloat ToFloat() const;
@@ -491,7 +491,7 @@ export namespace jpt
 
 			*this = Move(pre) + replaced + Move(suff);
 
-			startIndex = foundPos + replaced.Count();	// In case 'StringToReplace' contains 'StringToFind', like replacing 'x' with 'yx'		
+			startIndex = foundPos + replaced.Count();	// In case 'StringToReplace' Has 'StringToFind', like replacing 'x' with 'yx'		
 			endIndex += replaced.Count() - stringToFindSize;
 		}
 

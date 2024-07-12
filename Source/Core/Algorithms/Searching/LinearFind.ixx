@@ -86,18 +86,18 @@ export namespace jpt
 
 #pragma endregion Find
 
-#pragma region Contains
+#pragma region Has
 	template<Iterable TContainer, typename TData>
-	constexpr bool Contains(TContainer& container, const TData& dataToFind)
+	constexpr bool Has(TContainer& container, const TData& dataToFind)
 	{
 		return Find(container, dataToFind) != container.end();
 	}
 
 	template<Iterable TContainer, typename TFinderFunction>
-	constexpr bool ContainsIf(TContainer& container, TFinderFunction&& finderFunc)
+	constexpr bool HasIf(TContainer& container, TFinderFunction&& finderFunc)
 	{
 		return FindIf(container, Forward<TFinderFunction>(finderFunc)) != container.end();
 	}
 
-#pragma endregion Contains
+#pragma endregion Has
 }

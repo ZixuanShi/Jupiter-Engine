@@ -92,7 +92,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 	{
 		jpt::String name;
 
-		// If token contains an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
+		// If token Has an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
 		// Example: "Name", Name=5", "Name=(1<<2)"
 		if (const size_t equalIndex = token.Find('='); equalIndex != jpt::npos)
 		{

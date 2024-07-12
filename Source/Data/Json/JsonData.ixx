@@ -21,7 +21,7 @@ namespace jpt
 	class JsonData;
 	export using JsonArray = DynamicArray<JsonData>;
 
-	/** Encapsulates a hashmap that contains Json data within a scope */
+	/** Encapsulates a hashmap that Has Json data within a scope */
 	export class JsonMap
 	{
 	private:
@@ -48,19 +48,19 @@ namespace jpt
 
 		constexpr JsonData& operator[](const String& key)
 		{
-			JPT_ASSERT(m_map.Contains(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
+			JPT_ASSERT(m_map.Has(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
 			return m_map[key];
 		}
 
 		constexpr const JsonData& operator[](const String& key) const
 		{
-			JPT_ASSERT(m_map.Contains(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
+			JPT_ASSERT(m_map.Has(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
 			return m_map[key];
 		}
 
-		constexpr bool Contains(const String& key) const
+		constexpr bool Has(const String& key) const
 		{
-			return m_map.Contains(key);
+			return m_map.Has(key);
 		}
 	};
 

@@ -67,8 +67,8 @@ export namespace jpt
 		constexpr size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
 		constexpr size_t FindLastOf(      TChar charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
 		constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-		constexpr bool   Contains(      TChar  charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
-		constexpr bool   Contains(const TChar* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+		constexpr bool   Has(      TChar  charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+		constexpr bool   Has(const TChar* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
 	};
 
 	// Non member functions -------------------------------------------------------------------------------------------------------------------

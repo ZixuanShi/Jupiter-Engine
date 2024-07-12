@@ -89,7 +89,7 @@ static void MergeCloseVertices_SpatialHashing(jpt::DynamicArray<Vec3f>& position
 			                     static_cast<int32>(positions[i].y / threshold), 
 			                     static_cast<int32>(positions[i].z / threshold));
 
-		if (cells.Contains(cell)) 
+		if (cells.Has(cell)) 
 		{
 			positions.Erase(i);
 		}

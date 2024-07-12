@@ -41,8 +41,8 @@ bool UnitTest_HashMap_Trivial()
     map.Erase('e');
 
     // Searching
-    JPT_ENSURE(map.Contains('a'));
-    JPT_ENSURE(!map.Contains('e'));
+    JPT_ENSURE(map.Has('a'));
+    JPT_ENSURE(!map.Has('e'));
     JPT_ENSURE(map.Find('a')->second == 3);
     JPT_ENSURE(map.Find('e') == map.end());
 
@@ -138,8 +138,8 @@ bool UnitTest_HashMap_NonTrivial()
     map.Erase("Champ E");
 
     // Searching
-    JPT_ENSURE(map.Contains("Champ A"));
-    JPT_ENSURE(!map.Contains("Champ E"));
+    JPT_ENSURE(map.Has("Champ A"));
+    JPT_ENSURE(!map.Has("Champ E"));
     JPT_ENSURE(map.Find("Champ A")->second == "Morde");
     JPT_ENSURE(map.Find("Champ E") == map.end());
 
@@ -270,7 +270,7 @@ bool UnitTest_HashMap_Grow()
 
     for (int32 i = 0; i < 1000; ++i)
     {
-        JPT_ENSURE(hashMap.Contains(i));
+        JPT_ENSURE(hashMap.Has(i));
         JPT_ENSURE(hashMap[i] == i * 2);
         JPT_ENSURE(hashMap.Find(i)->second == i * 2);
     } 
@@ -431,7 +431,7 @@ bool UnitTest_HashMap_Enum()
     hashMap.Erase(EWeapon::Sword);
 
     JPT_ENSURE(hashMap.Count() == 3);
-    JPT_ENSURE(!hashMap.Contains(EWeapon::Sword));
+    JPT_ENSURE(!hashMap.Has(EWeapon::Sword));
     JPT_ENSURE(hashMap[EWeapon::Hammer] == 1);
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);

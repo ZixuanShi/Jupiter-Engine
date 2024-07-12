@@ -39,7 +39,7 @@ namespace jpt
 		constexpr void Build(const DynamicArray<Vector3<T>>& points);
 
 		// Searching
-		constexpr bool Contains(const Vector3<T>& point) const;
+		constexpr bool Has(const Vector3<T>& point) const;
 		constexpr DynamicArray<Vector3<T>> FindNearest(const Vector3<T>& point, T threshold) const;
 
 	private:
@@ -264,7 +264,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr bool KDTree3<T>::Contains(const Vector3<T>& point) const
+	constexpr bool KDTree3<T>::Has(const Vector3<T>& point) const
 	{
 		Node* pNode = m_pRoot;
 		size_t depth = 0;

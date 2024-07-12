@@ -85,7 +85,7 @@ export namespace jpt
 		// Searching
 		constexpr Iterator      Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
-		constexpr bool Contains(const TKey& key) const;
+		constexpr bool Has(const TKey& key) const;
 
 	private:
 		constexpr size_t GetBucketIndex(const TKey& key) const;
@@ -110,7 +110,7 @@ export namespace jpt
 
 		for (const auto& [key, value] : lhs)
 		{
-			if (rhs.Contains(key) == false || rhs[key] != value)
+			if (rhs.Has(key) == false || rhs[key] != value)
 			{
 				return false;
 			}
@@ -346,7 +346,7 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr bool HashMap<TKey, TValue, TComparator>::Contains(const TKey& key) const
+	constexpr bool HashMap<TKey, TValue, TComparator>::Has(const TKey& key) const
 	{
 		return Find(key) != cend();
 	}

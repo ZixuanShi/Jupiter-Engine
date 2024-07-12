@@ -82,7 +82,7 @@
 #define JPT_TO_WSTRING(cStr) L##cStr
 
 /** This solves the issue when dealing with templated string class functions with raw string literals involved. No Heap Memory Allocation at all
-	@return   C-Style string for different Char Type but contains the exact input string literals.
+	@return   C-Style string for different Char Type but Has the exact input string literals.
 	@example: const char* cstr = JPT_GET_PROPER_STRING(char, Hello World);		  // cstr will be "Hello World"
 	@example: const wchar_t* wcstr = JPT_GET_PROPER_STRING(wchar_t, Hello World); // wcstr will be L"Hello World" */
 #define JPT_GET_PROPER_STRING(TChar, SourceStr)              \

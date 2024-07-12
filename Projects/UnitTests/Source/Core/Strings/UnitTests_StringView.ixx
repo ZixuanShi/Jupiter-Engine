@@ -49,9 +49,9 @@ bool UnitTests_StringView()
 	JPT_ENSURE(strView.Find('I') == 3);
 	JPT_ENSURE(strView.Find("NoExist") == jpt::npos);
 	JPT_ENSURE(strView.Find('N') == jpt::npos);
-	JPT_ENSURE(strView.Contains("StringView"));
-	JPT_ENSURE(strView.Contains('I'));
-	JPT_ENSURE(!strView.Contains("N"));
+	JPT_ENSURE(strView.Has("StringView"));
+	JPT_ENSURE(strView.Has('I'));
+	JPT_ENSURE(!strView.Has("N"));
 
 	return true;
 }

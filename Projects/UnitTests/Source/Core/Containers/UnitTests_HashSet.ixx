@@ -19,24 +19,24 @@ bool UnitTest_HashSet()
     hashSet.Add(2);
     hashSet.Add(3);
 
-    JPT_ENSURE(hashSet.Contains(1));
-    JPT_ENSURE(hashSet.Contains(2));
-    JPT_ENSURE(hashSet.Contains(3));
-    JPT_ENSURE(!hashSet.Contains(4));
+    JPT_ENSURE(hashSet.Has(1));
+    JPT_ENSURE(hashSet.Has(2));
+    JPT_ENSURE(hashSet.Has(3));
+    JPT_ENSURE(!hashSet.Has(4));
     JPT_ENSURE(hashSet.Count() == 3);
 
     hashSet.Erase(2);
 
-    JPT_ENSURE(hashSet.Contains(1));
-    JPT_ENSURE(!hashSet.Contains(2));
-    JPT_ENSURE(hashSet.Contains(3));
+    JPT_ENSURE(hashSet.Has(1));
+    JPT_ENSURE(!hashSet.Has(2));
+    JPT_ENSURE(hashSet.Has(3));
     JPT_ENSURE(hashSet.Count() == 2);
 
     hashSet.Clear();
 
-    JPT_ENSURE(!hashSet.Contains(1));
-    JPT_ENSURE(!hashSet.Contains(2));
-    JPT_ENSURE(!hashSet.Contains(3));
+    JPT_ENSURE(!hashSet.Has(1));
+    JPT_ENSURE(!hashSet.Has(2));
+    JPT_ENSURE(!hashSet.Has(3));
     JPT_ENSURE(hashSet.IsEmpty());
 
     return true;
@@ -50,24 +50,24 @@ bool UnitTest_HashSet_String()
     hashSet.Add("World");
     hashSet.Add("Jupiter");
 
-    JPT_ENSURE(hashSet.Contains("Hello"));
-    JPT_ENSURE(hashSet.Contains("World"));
-    JPT_ENSURE(hashSet.Contains("Jupiter"));
-    JPT_ENSURE(!hashSet.Contains("Engine"));
+    JPT_ENSURE(hashSet.Has("Hello"));
+    JPT_ENSURE(hashSet.Has("World"));
+    JPT_ENSURE(hashSet.Has("Jupiter"));
+    JPT_ENSURE(!hashSet.Has("Engine"));
     JPT_ENSURE(hashSet.Count() == 3);
 
     hashSet.Erase("World");
 
-    JPT_ENSURE(hashSet.Contains("Hello"));
-    JPT_ENSURE(!hashSet.Contains("World"));
-    JPT_ENSURE(hashSet.Contains("Jupiter"));
+    JPT_ENSURE(hashSet.Has("Hello"));
+    JPT_ENSURE(!hashSet.Has("World"));
+    JPT_ENSURE(hashSet.Has("Jupiter"));
     JPT_ENSURE(hashSet.Count() == 2);
 
     hashSet.Clear();
 
-    JPT_ENSURE(!hashSet.Contains("Hello"));
-    JPT_ENSURE(!hashSet.Contains("World"));
-    JPT_ENSURE(!hashSet.Contains("Jupiter"));
+    JPT_ENSURE(!hashSet.Has("Hello"));
+    JPT_ENSURE(!hashSet.Has("World"));
+    JPT_ENSURE(!hashSet.Has("Jupiter"));
     JPT_ENSURE(hashSet.IsEmpty());
 
     return true;
@@ -84,24 +84,24 @@ bool UnitTest_HashSet_Copy()
 
     for (int32 i = 0; i < 6; ++i)
 	{
-		JPT_ENSURE(hashSet.Contains(i));
-		JPT_ENSURE(copy.Contains(i));
+		JPT_ENSURE(hashSet.Has(i));
+		JPT_ENSURE(copy.Has(i));
 	}
 
     copy.Erase(0);
     copy.Erase(1);
 
-    JPT_ENSURE(!copy.Contains(0));
-    JPT_ENSURE(!copy.Contains(1));
+    JPT_ENSURE(!copy.Has(0));
+    JPT_ENSURE(!copy.Has(1));
 
     for (int32 i = 2; i < 6; ++i)
     {
-        JPT_ENSURE(copy.Contains(i));
+        JPT_ENSURE(copy.Has(i));
     }
 
     for (int32 i = 0; i < 6; ++i)
     {
-        JPT_ENSURE(hashSet.Contains(i));
+        JPT_ENSURE(hashSet.Has(i));
     }
 
     return true;
@@ -116,33 +116,33 @@ bool UnitTest_HashSet_Copy_String()
 
 	jpt::HashSet<jpt::String> copy = hashSet;
 
-	JPT_ENSURE(hashSet.Contains("Hello"));
-	JPT_ENSURE(hashSet.Contains("World"));
-	JPT_ENSURE(hashSet.Contains("Jupiter"));
-	JPT_ENSURE(hashSet.Contains("Engine"));
-	JPT_ENSURE(hashSet.Contains("Game"));
+	JPT_ENSURE(hashSet.Has("Hello"));
+	JPT_ENSURE(hashSet.Has("World"));
+	JPT_ENSURE(hashSet.Has("Jupiter"));
+	JPT_ENSURE(hashSet.Has("Engine"));
+	JPT_ENSURE(hashSet.Has("Game"));
 
-	JPT_ENSURE(copy.Contains("Hello"));
-	JPT_ENSURE(copy.Contains("World"));
-	JPT_ENSURE(copy.Contains("Jupiter"));
-	JPT_ENSURE(copy.Contains("Engine"));
-	JPT_ENSURE(copy.Contains("Game"));
+	JPT_ENSURE(copy.Has("Hello"));
+	JPT_ENSURE(copy.Has("World"));
+	JPT_ENSURE(copy.Has("Jupiter"));
+	JPT_ENSURE(copy.Has("Engine"));
+	JPT_ENSURE(copy.Has("Game"));
 
 	copy.Erase("Hello");
 	copy.Erase("World");
 
-	JPT_ENSURE(!copy.Contains("Hello"));
-	JPT_ENSURE(!copy.Contains("World"));
+	JPT_ENSURE(!copy.Has("Hello"));
+	JPT_ENSURE(!copy.Has("World"));
 
-	JPT_ENSURE(copy.Contains("Jupiter"));
-	JPT_ENSURE(copy.Contains("Engine"));
-	JPT_ENSURE(copy.Contains("Game"));
+	JPT_ENSURE(copy.Has("Jupiter"));
+	JPT_ENSURE(copy.Has("Engine"));
+	JPT_ENSURE(copy.Has("Game"));
 
-	JPT_ENSURE(hashSet.Contains("Hello"));
-	JPT_ENSURE(hashSet.Contains("World"));
-	JPT_ENSURE(hashSet.Contains("Jupiter"));
-	JPT_ENSURE(hashSet.Contains("Engine"));
-	JPT_ENSURE(hashSet.Contains("Game"));
+	JPT_ENSURE(hashSet.Has("Hello"));
+	JPT_ENSURE(hashSet.Has("World"));
+	JPT_ENSURE(hashSet.Has("Jupiter"));
+	JPT_ENSURE(hashSet.Has("Engine"));
+	JPT_ENSURE(hashSet.Has("Game"));
 
 	return true;
 }
@@ -156,8 +156,8 @@ bool UnitTest_HashSet_CopyAssign()
 
     for (int32 i = 0; i < 4; ++i)
     {
-        JPT_ENSURE(hashSet.Contains(i));
-		JPT_ENSURE(copy.Contains(i));
+        JPT_ENSURE(hashSet.Has(i));
+		JPT_ENSURE(copy.Has(i));
     }
 
     return true;
@@ -170,17 +170,17 @@ bool UnitTest_HashSet_CopyAssign_String()
 
     copy = hashSet;
 
-    JPT_ENSURE(copy.Contains("Hello"));
-    JPT_ENSURE(copy.Contains("World"));
-    JPT_ENSURE(copy.Contains("Jupiter"));
-    JPT_ENSURE(!copy.Contains("Engine"));
-    JPT_ENSURE(!copy.Contains("Game"));
+    JPT_ENSURE(copy.Has("Hello"));
+    JPT_ENSURE(copy.Has("World"));
+    JPT_ENSURE(copy.Has("Jupiter"));
+    JPT_ENSURE(!copy.Has("Engine"));
+    JPT_ENSURE(!copy.Has("Game"));
 
-    JPT_ENSURE(hashSet.Contains("Hello"));
-    JPT_ENSURE(hashSet.Contains("World"));
-    JPT_ENSURE(hashSet.Contains("Jupiter"));
-    JPT_ENSURE(!hashSet.Contains("Engine"));
-    JPT_ENSURE(!hashSet.Contains("Game"));
+    JPT_ENSURE(hashSet.Has("Hello"));
+    JPT_ENSURE(hashSet.Has("World"));
+    JPT_ENSURE(hashSet.Has("Jupiter"));
+    JPT_ENSURE(!hashSet.Has("Engine"));
+    JPT_ENSURE(!hashSet.Has("Game"));
 
     return true;
 }
@@ -196,18 +196,18 @@ bool UnitTest_HashSet_Move()
 
     for (int32 i = 0; i < 6; ++i)
 	{
-		JPT_ENSURE(moved.Contains(i));
+		JPT_ENSURE(moved.Has(i));
 	}
 
     JPT_ENSURE(hashSet.IsEmpty());
 
     moved.Erase(0);
 
-    JPT_ENSURE(!moved.Contains(0));
+    JPT_ENSURE(!moved.Has(0));
 
     for (int32 i = 1; i < 6; ++i)
 	{
-		JPT_ENSURE(moved.Contains(i));
+		JPT_ENSURE(moved.Has(i));
 	}
 
     return true;
@@ -222,11 +222,11 @@ bool UnitTest_HashSet_Move_String()
 
     jpt::HashSet<jpt::String> moved = jpt::Move(hashSet);
 
-    JPT_ENSURE(moved.Contains("Hello"));
-    JPT_ENSURE(moved.Contains("World"));
-    JPT_ENSURE(moved.Contains("Jupiter"));
-    JPT_ENSURE(moved.Contains("Engine"));
-    JPT_ENSURE(moved.Contains("Game"));
+    JPT_ENSURE(moved.Has("Hello"));
+    JPT_ENSURE(moved.Has("World"));
+    JPT_ENSURE(moved.Has("Jupiter"));
+    JPT_ENSURE(moved.Has("Engine"));
+    JPT_ENSURE(moved.Has("Game"));
 
     JPT_ENSURE(hashSet.IsEmpty());
 
@@ -242,7 +242,7 @@ bool UnitTest_HashSet_MoveAssign()
 
     for (int32 i = 0; i < 4; ++i)
     {
-        JPT_ENSURE(moved.Contains(i));
+        JPT_ENSURE(moved.Has(i));
     }
 
     JPT_ENSURE(hashSet.IsEmpty());
@@ -257,11 +257,11 @@ bool UnitTest_HashSet_MoveAssign_String()
 
     moved = jpt::Move(hashSet);
 
-    JPT_ENSURE(moved.Contains("Hello"));
-    JPT_ENSURE(moved.Contains("World"));
-    JPT_ENSURE(moved.Contains("Jupiter"));
-    JPT_ENSURE(!moved.Contains("Engine"));
-    JPT_ENSURE(!moved.Contains("Game"));
+    JPT_ENSURE(moved.Has("Hello"));
+    JPT_ENSURE(moved.Has("World"));
+    JPT_ENSURE(moved.Has("Jupiter"));
+    JPT_ENSURE(!moved.Has("Engine"));
+    JPT_ENSURE(!moved.Has("Game"));
 
     JPT_ENSURE(hashSet.IsEmpty());
 
@@ -279,7 +279,7 @@ bool UnitTest_HashSet_Grow()
 
     for (int32 i = 0; i < 1000; ++i)
     {
-        JPT_ENSURE(hashSet.Contains(i));
+        JPT_ENSURE(hashSet.Has(i));
     }
 
     return true;
@@ -297,11 +297,11 @@ bool UnitTest_HashSet_Iterate_Erase()
     };
 
     JPT_ENSURE(hashSet.Count() == 5);
-    JPT_ENSURE(hashSet.Contains('a'));
-    JPT_ENSURE(hashSet.Contains('b'));
-    JPT_ENSURE(hashSet.Contains('c'));
-    JPT_ENSURE(hashSet.Contains('d'));
-    JPT_ENSURE(hashSet.Contains('e'));
+    JPT_ENSURE(hashSet.Has('a'));
+    JPT_ENSURE(hashSet.Has('b'));
+    JPT_ENSURE(hashSet.Has('c'));
+    JPT_ENSURE(hashSet.Has('d'));
+    JPT_ENSURE(hashSet.Has('e'));
 
     for (auto itr = hashSet.begin(); itr != hashSet.end();)
     {
@@ -316,11 +316,11 @@ bool UnitTest_HashSet_Iterate_Erase()
     }
 
     JPT_ENSURE(hashSet.Count() == 3);
-    JPT_ENSURE(hashSet.Contains('a'));
-    JPT_ENSURE(hashSet.Contains('c'));
-    JPT_ENSURE(hashSet.Contains('d'));
-    JPT_ENSURE(!hashSet.Contains('e'));
-    JPT_ENSURE(!hashSet.Contains('b'));
+    JPT_ENSURE(hashSet.Has('a'));
+    JPT_ENSURE(hashSet.Has('c'));
+    JPT_ENSURE(hashSet.Has('d'));
+    JPT_ENSURE(!hashSet.Has('e'));
+    JPT_ENSURE(!hashSet.Has('b'));
 
     return true;
 }
@@ -338,11 +338,11 @@ bool UnitTest_HashSet_Iterate_Erase_String()
 
     JPT_ENSURE(hashSet.Count() == 5);
 
-    JPT_ENSURE(hashSet.Contains("Engine"));
-    JPT_ENSURE(hashSet.Contains("Client"));
-    JPT_ENSURE(hashSet.Contains("Platform"));
-    JPT_ENSURE(hashSet.Contains("Language"));
-    JPT_ENSURE(hashSet.Contains("Version"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(hashSet.Has("Client"));
+    JPT_ENSURE(hashSet.Has("Platform"));
+    JPT_ENSURE(hashSet.Has("Language"));
+    JPT_ENSURE(hashSet.Has("Version"));
 
     for (auto itr = hashSet.begin(); itr != hashSet.end();)
     {
@@ -358,11 +358,11 @@ bool UnitTest_HashSet_Iterate_Erase_String()
 
     JPT_ENSURE(hashSet.Count() == 3);
 
-    JPT_ENSURE(hashSet.Contains("Engine"));
-    JPT_ENSURE(!hashSet.Contains("Client"));
-    JPT_ENSURE(hashSet.Contains("Platform"));
-    JPT_ENSURE(!hashSet.Contains("Language"));
-    JPT_ENSURE(hashSet.Contains("Version"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(!hashSet.Has("Client"));
+    JPT_ENSURE(hashSet.Has("Platform"));
+    JPT_ENSURE(!hashSet.Has("Language"));
+    JPT_ENSURE(hashSet.Has("Version"));
 
     return true;
 }
@@ -380,11 +380,11 @@ bool UnitTest_HashSet_CStr()
 
     JPT_ENSURE(hashSet.Count() == 5);
 
-    JPT_ENSURE(hashSet.Contains("Engine"));
-    JPT_ENSURE(hashSet.Contains("Client"));
-    JPT_ENSURE(hashSet.Contains("Platform"));
-    JPT_ENSURE(hashSet.Contains("Language"));
-    JPT_ENSURE(hashSet.Contains("Version"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(hashSet.Has("Client"));
+    JPT_ENSURE(hashSet.Has("Platform"));
+    JPT_ENSURE(hashSet.Has("Language"));
+    JPT_ENSURE(hashSet.Has("Version"));
 
     for (auto itr = hashSet.begin(); itr != hashSet.end();)
 	{
@@ -400,11 +400,11 @@ bool UnitTest_HashSet_CStr()
 
     JPT_ENSURE(hashSet.Count() == 3);
 
-    JPT_ENSURE(hashSet.Contains("Engine"));
-    JPT_ENSURE(!hashSet.Contains("Client"));
-    JPT_ENSURE(hashSet.Contains("Platform"));
-    JPT_ENSURE(!hashSet.Contains("Language"));
-    JPT_ENSURE(hashSet.Contains("Version"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(!hashSet.Has("Client"));
+    JPT_ENSURE(hashSet.Has("Platform"));
+    JPT_ENSURE(!hashSet.Has("Language"));
+    JPT_ENSURE(hashSet.Has("Version"));
 
     return true;
 }

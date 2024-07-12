@@ -74,7 +74,7 @@ export namespace jpt::File
 		constexpr Path GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		constexpr size_t FindLastOf(const Path& path) const;
-		constexpr bool Contains(const Path& path) const;
+		constexpr bool Has(const Path& path) const;
 
 		constexpr const WString& ToWString() const { return m_path; }
 		constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
@@ -157,9 +157,9 @@ export namespace jpt::File
 		return m_path.FindLastOf(path.ToWString().ConstBuffer());
 	}
 
-	constexpr bool Path::Contains(const Path& path) const
+	constexpr bool Path::Has(const Path& path) const
 	{
-		return m_path.Contains(path.ToWString().ConstBuffer());
+		return m_path.Has(path.ToWString().ConstBuffer());
 	}
 
 	/** @return		 FilePath type of engine/client directories roots */

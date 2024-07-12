@@ -16,7 +16,7 @@ static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, in
 	{
 		const int32 complement = target - nums[i];
 
-		if (numToIndex.Contains(complement))
+		if (numToIndex.Has(complement))
 		{
 			return { numToIndex[complement], i };
 		}

@@ -303,29 +303,29 @@ bool UnitTest_WString_ConvertToNumber()
 	return true;
 }
 
-bool UnitTest_String_Contains()
+bool UnitTest_String_Has()
 {
 	jpt::String str = "Hello World Jupiter Engine";
-	JPT_ENSURE(str.Contains("Hello"));
-	JPT_ENSURE(str.Contains("World"));
-	JPT_ENSURE(str.Contains("Jupiter"));
-	JPT_ENSURE(str.Contains("Engine"));
+	JPT_ENSURE(str.Has("Hello"));
+	JPT_ENSURE(str.Has("World"));
+	JPT_ENSURE(str.Has("Jupiter"));
+	JPT_ENSURE(str.Has("Engine"));
 
-	JPT_ENSURE(str.Contains("Jupiter Engine"));
-	JPT_ENSURE(str.Contains("Hello World Jupiter Engine"));
+	JPT_ENSURE(str.Has("Jupiter Engine"));
+	JPT_ENSURE(str.Has("Hello World Jupiter Engine"));
 
 	return true;
 }
-bool UnitTest_WString_Contains()
+bool UnitTest_WString_Has()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
-	JPT_ENSURE(str.Contains(L"Hello"));
-	JPT_ENSURE(str.Contains(L"World"));
-	JPT_ENSURE(str.Contains(L"Jupiter"));
-	JPT_ENSURE(str.Contains(L"Engine"));
+	JPT_ENSURE(str.Has(L"Hello"));
+	JPT_ENSURE(str.Has(L"World"));
+	JPT_ENSURE(str.Has(L"Jupiter"));
+	JPT_ENSURE(str.Has(L"Engine"));
 
-	JPT_ENSURE(str.Contains(L"Jupiter Engine"));
-	JPT_ENSURE(str.Contains(L"Hello World Jupiter Engine"));
+	JPT_ENSURE(str.Has(L"Jupiter Engine"));
+	JPT_ENSURE(str.Has(L"Hello World Jupiter Engine"));
 
 	return true;
 }
@@ -644,8 +644,8 @@ export bool RunUnitTests_String()
 		JPT_ENSURE(UnitTest_String_ConvertToNumber());
 		JPT_ENSURE(UnitTest_WString_ConvertToNumber());
 
-		JPT_ENSURE(UnitTest_String_Contains());
-		JPT_ENSURE(UnitTest_WString_Contains());
+		JPT_ENSURE(UnitTest_String_Has());
+		JPT_ENSURE(UnitTest_WString_Has());
 
 		JPT_ENSURE(UnitTest_String_Split());
 		JPT_ENSURE(UnitTest_WString_Split());

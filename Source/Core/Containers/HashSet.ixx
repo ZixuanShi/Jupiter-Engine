@@ -72,7 +72,7 @@ export namespace jpt
 		// Searching
 		constexpr Iterator      Find(const TData& key);
 		constexpr ConstIterator Find(const TData& key) const;
-		constexpr bool Contains(const TData& key) const;
+		constexpr bool Has(const TData& key) const;
 
 	protected:
 		constexpr size_t GetBucketIndex(const TData& key) const;
@@ -226,7 +226,7 @@ export namespace jpt
 	}
 
 	template<typename TValue, typename TComparator>
-	constexpr bool HashSet<TValue, TComparator>::Contains(const TData& key) const
+	constexpr bool HashSet<TValue, TComparator>::Has(const TData& key) const
 	{
 		return Find(key) != end();
 	}
