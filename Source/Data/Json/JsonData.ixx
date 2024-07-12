@@ -155,6 +155,66 @@ namespace jpt
 		return false;
 	}
 
+	constexpr void RecurToString(const JsonMap& map, String& content, uint8 depth)
+	{
+		// Helper function to add tabs by depth
+		auto addTabs = [&content, depth]()
+		{
+			for (uint8 i = 0; i < depth; ++i)
+			{
+				content.Append("\t");
+			}
+		};
+
+		// Iterate through the map
+		size_t count = 0;
+		for (const auto& [key, value] : map)
+		{
+			addTabs();
+
+			// Add key
+			content.Append("\"");
+			content.Append(key);
+			content.Append("\": ");
+
+			// If the value is a map, add a new line and recurse to next depth
+			if (value.Is<JsonMap>())
+			{
+				content.Append("\n");
+				addTabs();
+				content.Append("{\n");
+
+				RecurToString(value.As<JsonMap>(), content, depth + 1);
+
+				addTabs();
+				content.Append("}");
+			}
+			// Standard data will be added as is after the key
+			else
+			{
+				content.Append(value.ToString());
+			}
+
+			// Add comma if it's not the last element
+			++count;
+			if (count < map.Count())
+			{
+				content.Append(",\n");
+			}
+			else
+			{
+				content.Append("\n");
+			}
+		}
+	}
+	export constexpr String ToString(const JsonMap& map)
+	{
+		String content("{\n");
+		RecurToString(map, content, 1);
+		content.Append("}");
+		return content;
+	}
+
 	constexpr String JsonData::ToString() const
 	{
 		if (m_data.Is<int32>())
@@ -184,33 +244,6 @@ namespace jpt
 		else if (m_data.Is<JsonArray>())
 		{
 			return jpt::ToString(m_data.As<JsonArray>());
-		}
-		else if (m_data.Is<JsonMap>())
-		{
-			String str("\n{\n");
-
-			const JsonMap& map = m_data.As<JsonMap>();
-			size_t count = 0;
-			for (const auto& [key, value] : map)
-			{
-				str.Append("\t\"");
-				str.Append(key);
-				str.Append("\": ");
-				str.Append(value.ToString());
-
-				++count;
-				if (count < map.Count())
-				{
-					str.Append(",\n");
-				}
-				else
-				{
-					str.Append("\n");
-				}
-			}
-
-			str.Append("}");
-			return str;
 		}
 
 		JPT_ASSERT(false, "Unsupported data type in json file");

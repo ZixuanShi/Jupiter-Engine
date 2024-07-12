@@ -215,34 +215,6 @@ namespace jpt
 		return {};
 	}
 
-	export constexpr String ToString(const JsonMap& map)
-	{
-		String str;
-		str.Append("{\n");
-
-		size_t count = 0;
-		for (const auto& [key, value] : map)
-		{
-			str.Append("\t\"");
-			str.Append(key);
-			str.Append("\": ");
-			str.Append(ToString(value));
-
-			++count;
-			if (count < map.Count())
-			{
-				str.Append(",\n");
-			}
-			else
-			{
-				str.Append("\n");
-			}
-		}
-
-		str.Append("}");
-		return str;
-	}
-
 	export void WriteJsonRoot(const Path& path, const JsonMap& jsonRoot)
 	{
 		std::ofstream file(path.ConstBuffer(), std::ios::out);

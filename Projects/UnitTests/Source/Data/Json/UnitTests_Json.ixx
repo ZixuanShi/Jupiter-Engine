@@ -54,7 +54,7 @@ bool UnitTest_Json_Read()
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonMap jsonRoot = jpt::ReadJsonRoot(path).Value();
 
-    // Access the data with Get<T>() 
+    // Access the data with operator[]
     JPT_ENSURE(jsonRoot["source"] == jpt::String("Engine"));
     JPT_ENSURE(jsonRoot["data_int"] == 12);
     JPT_ENSURE(jpt::AreValuesClose(jsonRoot["data_float"].As<float32>(), 1.55f));
