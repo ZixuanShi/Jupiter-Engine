@@ -48,7 +48,7 @@ namespace jpt
 
 		constexpr const JsonData& operator[](const String& key) const
 		{
-			JPT_ASSERT(m_map.Contains(key));
+			JPT_ASSERT(m_map.Contains(key), "Couldn't find key within current Json scope");
 			return m_map[key];
 		}
 	};
@@ -56,6 +56,7 @@ namespace jpt
 	template<typename T>
 	concept ValidType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
 
+	/** Represents a single data in Json file */
 	export class JsonData
 	{
 		using TData = Variant<int32,
@@ -78,10 +79,13 @@ namespace jpt
 		constexpr bool Is() const;
 
 		template<ValidType T>
-		constexpr const T& As() const { return m_data.As<T>(); }
+		constexpr const T& As() const;
 
 		template<ValidType T>
 		constexpr JsonData& operator=(const T& value);
+
+		template<ValidType T>
+		constexpr bool operator==(const T& other) const;
 
 		constexpr bool operator==(const JsonData& other) const;
 
@@ -101,37 +105,50 @@ namespace jpt
 	}
 
 	template<ValidType T>
+	constexpr const T& JsonData::As() const
+	{
+		return m_data.As<T>();
+	}
+
+	template<ValidType T>
 	constexpr JsonData& JsonData::operator=(const T& value)
 	{
 		m_data = value;
 		return *this;
 	}
 
+	template<ValidType T>
+	constexpr bool JsonData::operator==(const T& data) const
+	{
+		JPT_ASSERT(Is<T>());
+		return m_data.As<T>() == data;
+	}
+
 	constexpr bool JsonData::operator==(const JsonData& other) const
 	{
-		if (m_data.Is<int32>())
+		if (Is<int32>())
 		{
-			return m_data.As<int32>() == other.m_data.As<int32>();
+			return As<int32>() == other.As<int32>();
 		}
-		else if (m_data.Is<float32>())
+		else if (Is<float32>())
 		{
-			return m_data.As<float32>() == other.m_data.As<float32>();
+			return As<float32>() == other.As<float32>();
 		}
-		else if (m_data.Is<bool>())
+		else if (Is<bool>())
 		{
-			return m_data.As<bool>() == other.m_data.As<bool>();
+			return As<bool>() == other.As<bool>();
 		}
-		else if (m_data.Is<String>())
+		else if (Is<String>())
 		{
-			return m_data.As<String>() == other.m_data.As<String>();
+			return As<String>() == other.As<String>();
 		}
-		else if (m_data.Is<JsonArray>())
+		else if (Is<JsonArray>())
 		{
-			return m_data.As<JsonArray>() == other.m_data.As<JsonArray>();
+			return As<JsonArray>() == other.As<JsonArray>();
 		}
-		else if (m_data.Is<JsonMap>())
+		else if (Is<JsonMap>())
 		{
-			return m_data.As<JsonMap>() == other.m_data.As<JsonMap>();
+			return As<JsonMap>() == other.As<JsonMap>();
 		}
 
 		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
