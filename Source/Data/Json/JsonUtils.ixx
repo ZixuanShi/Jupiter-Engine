@@ -29,14 +29,14 @@ namespace jpt
 {
 	using namespace File;
 
-	String ParseKeyStr(const String& line)
+	static constexpr String ParseKeyStr(const String& line)
 	{
 		const size_t keyStart = line.Find("\"") + 1;
 		const size_t keyEnd = line.Find("\"", keyStart);
 		return line.SubStr(keyStart, keyEnd - keyStart);
 	}
 
-	String ParseValueStr(const String& line)
+	static constexpr String ParseValueStr(const String& line)
 	{
 		const size_t colonIndex = line.Find(":");
 		const size_t valueStart = [&line, colonIndex]()
@@ -77,7 +77,7 @@ namespace jpt
 		return line.SubStr(valueStart, valueEnd - valueStart);
 	}
 
-	JsonData ParseValueData(const String& valueStr)
+	static constexpr JsonData ParseValueData(const String& valueStr)
 	{
 		// Boolean
 		if (valueStr == "true")
@@ -215,7 +215,7 @@ namespace jpt
 		return {};
 	}
 
-	export String ToString(const JsonMap& map)
+	export constexpr String ToString(const JsonMap& map)
 	{
 		String str;
 		str.Append("{\n");

@@ -16,13 +16,13 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Variant;
 
-export namespace jpt
+namespace jpt
 {
 	class JsonData;
-	using JsonArray = DynamicArray<JsonData>;
+	export using JsonArray = DynamicArray<JsonData>;
 
 	/** Encapsulates a hashmap that contains Json data within a scope */
-	class JsonMap
+	export class JsonMap
 	{
 	private:
 		using TMap = HashMap<String, JsonData>;
@@ -53,7 +53,10 @@ export namespace jpt
 		}
 	};
 
-	class JsonData
+	template<typename T>
+	concept ValidType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
+
+	export class JsonData
 	{
 		using TData = Variant<int32,
 			                  float32,
@@ -66,39 +69,45 @@ export namespace jpt
 		TData m_data;
 
 	public:
-		JsonData() = default;
+		constexpr JsonData() = default;
 
-		template<typename T>
-		JsonData(const T& value);
+		template<ValidType T>
+		constexpr JsonData(const T& value);
 
-		template<typename T>
-		bool Is() const { return m_data.Is<T>(); }
+		template<ValidType T>
+		constexpr bool Is() const;
 
-		template<typename T>
-		const T& As() const { return m_data.As<T>(); }
+		template<ValidType T>
+		constexpr const T& As() const { return m_data.As<T>(); }
 
-		template<typename T>
-		JsonData& operator=(const T& value);
+		template<ValidType T>
+		constexpr JsonData& operator=(const T& value);
 
-		bool operator==(const JsonData& other) const;
+		constexpr bool operator==(const JsonData& other) const;
 
-		String ToString() const;
+		constexpr String ToString() const;
 	};
 
-	template<typename T>
-	JsonData::JsonData(const T& value)
+	template<ValidType T>
+	constexpr JsonData::JsonData(const T& value)
 		: m_data(value)
 	{
 	}
 
-	template<typename T>
-	JsonData& JsonData::operator=(const T& value)
+	template<ValidType T>
+	constexpr bool JsonData::Is() const
+	{
+		return m_data.Is<T>();
+	}
+
+	template<ValidType T>
+	constexpr JsonData& JsonData::operator=(const T& value)
 	{
 		m_data = value;
 		return *this;
 	}
 
-	bool JsonData::operator==(const JsonData& other) const
+	constexpr bool JsonData::operator==(const JsonData& other) const
 	{
 		if (m_data.Is<int32>())
 		{
@@ -129,7 +138,7 @@ export namespace jpt
 		return false;
 	}
 
-	String JsonData::ToString() const
+	constexpr String JsonData::ToString() const
 	{
 		if (m_data.Is<int32>())
 		{
