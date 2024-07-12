@@ -30,7 +30,7 @@ export namespace jpt
 	class JsonData
 	{
 	private:
-		TJsonData data;
+		TJsonData m_data;
 
 	public:
 		JsonData() = default;
@@ -39,10 +39,10 @@ export namespace jpt
 		JsonData(const T& value);
 
 		template<typename T>
-		bool Is() const { return data.Is<T>(); }
+		bool Is() const { return m_data.Is<T>(); }
 
 		template<typename T>
-		const T& As() const { return data.As<T>(); }
+		const T& As() const { return m_data.As<T>(); }
 
 		bool operator==(const JsonData& other) const;
 
@@ -51,35 +51,35 @@ export namespace jpt
 
 	template<typename T>
 	JsonData::JsonData(const T& value)
-		: data(value)
+		: m_data(value)
 	{
 	}
 
 	bool JsonData::operator==(const JsonData& other) const
 	{
-		if (data.Is<int32>())
+		if (m_data.Is<int32>())
 		{
-			return data.As<int32>() == other.data.As<int32>();
+			return m_data.As<int32>() == other.m_data.As<int32>();
 		}
-		else if (data.Is<float32>())
+		else if (m_data.Is<float32>())
 		{
-			return data.As<float32>() == other.data.As<float32>();
+			return m_data.As<float32>() == other.m_data.As<float32>();
 		}
-		else if (data.Is<bool>())
+		else if (m_data.Is<bool>())
 		{
-			return data.As<bool>() == other.data.As<bool>();
+			return m_data.As<bool>() == other.m_data.As<bool>();
 		}
-		else if (data.Is<String>())
+		else if (m_data.Is<String>())
 		{
-			return data.As<String>() == other.data.As<String>();
+			return m_data.As<String>() == other.m_data.As<String>();
 		}
-		else if (data.Is<JsonArray>())
+		else if (m_data.Is<JsonArray>())
 		{
-			return data.As<JsonArray>() == other.data.As<JsonArray>();
+			return m_data.As<JsonArray>() == other.m_data.As<JsonArray>();
 		}
-		else if (data.Is<JsonMap>())
+		else if (m_data.Is<JsonMap>())
 		{
-			return data.As<JsonMap>() == other.data.As<JsonMap>();
+			return m_data.As<JsonMap>() == other.m_data.As<JsonMap>();
 		}
 
 		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
@@ -88,21 +88,21 @@ export namespace jpt
 
 	String JsonData::ToString() const
 	{
-		if (data.Is<int32>())
+		if (m_data.Is<int32>())
 		{
-			return jpt::ToString(data.As<int32>());
+			return jpt::ToString(m_data.As<int32>());
 		}
-		else if (data.Is<float32>())
+		else if (m_data.Is<float32>())
 		{
-			return jpt::ToString(data.As<float32>());
+			return jpt::ToString(m_data.As<float32>());
 		}
-		else if (data.Is<bool>())
+		else if (m_data.Is<bool>())
 		{
-			return jpt::ToString(data.As<bool>());
+			return jpt::ToString(m_data.As<bool>());
 		}
-		else if (data.Is<String>())
+		else if (m_data.Is<String>())
 		{
-			const String& str = data.As<String>();
+			const String& str = m_data.As<String>();
 			if (str == "null")
 			{
 				return "null";
@@ -112,16 +112,17 @@ export namespace jpt
 				return "\"" + str + "\"";
 			}
 		}
-		else if (data.Is<JsonArray>())
+		else if (m_data.Is<JsonArray>())
 		{
-			return jpt::ToString(data.As<JsonArray>());
+			return jpt::ToString(m_data.As<JsonArray>());
 		}
-		else if (data.Is<JsonMap>())
+		else if (m_data.Is<JsonMap>())
 		{
 			String str("\n{\n");
 
+			const JsonMap& map = m_data.As<JsonMap>();
 			size_t count = 0;
-			for (const auto& [key, value] : data.As<JsonMap>())
+			for (const auto& [key, value] : map)
 			{
 				str.Append("\t\"");
 				str.Append(key);
@@ -129,7 +130,7 @@ export namespace jpt
 				str.Append(value.ToString());
 
 				++count;
-				if (count < data.As<JsonMap>().Count())
+				if (count < map.Count())
 				{
 					str.Append(",\n");
 				}
