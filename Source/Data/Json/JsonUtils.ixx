@@ -199,6 +199,7 @@ namespace jpt
 				// If this is the end of root map
 				if (jsonMaps.Count() == 1)
 				{
+					file.close();
 					return jsonMaps.Peek();
 				}
 
@@ -212,6 +213,7 @@ namespace jpt
 		}
 
 		// Empty file
+		file.close();
 		return {};
 	}
 
@@ -225,5 +227,6 @@ namespace jpt
 		}
 
 		file << ToString(jsonRoot).ConstBuffer();
+		file.close();
 	}
 }

@@ -39,7 +39,6 @@ bool UnitTest_Json_Write()
     subMap.Set("year", 2024);
     subMap.Set("month", 6);
     subMap.Set("day", 20);
-    subMap.Set("Calender", jpt::String("Made in China"));
     subMap.Set("Subset", subMap2);
 
     jsonRoot.Set("data_map", subMap);
@@ -70,7 +69,6 @@ bool UnitTest_Json_Read()
     JPT_ENSURE(subSet["year"] == 2024);
     JPT_ENSURE(subSet["month"] == 6);
     JPT_ENSURE(subSet["day"] == 20);
-    JPT_ENSURE(subSet["Calender"] == jpt::String("Made in China"));
 
     const jpt::JsonMap& subSet2 = subSet["Subset"].As<jpt::JsonMap>();
     JPT_ENSURE(subSet2["key1"] == 1);
@@ -80,10 +78,50 @@ bool UnitTest_Json_Read()
     return true;
 }
 
+bool UnitTest_Json_Update()
+{
+    // Reads a json file. All the data should have been read into memory with this call
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
+
+    // Update the data
+    jsonRoot.Set("source", jpt::String("Jupiter"));
+
+    // subset
+    jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
+    subSet.Set("year", 1999);
+    subSet.Set("Brand", jpt::String("MSI"));
+
+    // Add new data
+    jsonRoot.Set("new_data", jpt::String("New Data"));
+
+    jpt::WriteJsonFile(path, jsonRoot);
+
+    return true;
+}
+
+bool UnitTest_Json_ReadUpdated()
+{
+    // Reads a json file. All the data should have been read into memory with this call
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
+
+    JPT_ENSURE(jsonRoot["source"] == jpt::String("Jupiter"));
+
+    const jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
+    JPT_ENSURE(subSet["year"] == 1999);
+    JPT_ENSURE(subSet["Brand"] == jpt::String("MSI"));
+    JPT_ENSURE(subSet.Count() == 5);
+
+    JPT_ENSURE(jsonRoot["new_data"] == jpt::String("New Data"));
+
+    return true;
+}
+
 export bool RunUnitTests_Json()
 {
     JPT_ENSURE(UnitTest_Json_Write());
     JPT_ENSURE(UnitTest_Json_Read());
+    JPT_ENSURE(UnitTest_Json_Update());
+    JPT_ENSURE(UnitTest_Json_ReadUpdated());
 
     return true;
 }

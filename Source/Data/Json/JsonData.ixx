@@ -46,10 +46,21 @@ namespace jpt
 			m_map[key] = value;
 		}
 
+		constexpr JsonData& operator[](const String& key)
+		{
+			JPT_ASSERT(m_map.Contains(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
+			return m_map[key];
+		}
+
 		constexpr const JsonData& operator[](const String& key) const
 		{
-			JPT_ASSERT(m_map.Contains(key), "Couldn't find key within current Json scope");
+			JPT_ASSERT(m_map.Contains(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
 			return m_map[key];
+		}
+
+		constexpr bool Contains(const String& key) const
+		{
+			return m_map.Contains(key);
 		}
 	};
 
@@ -82,6 +93,9 @@ namespace jpt
 		constexpr const T& As() const;
 
 		template<ValidType T>
+		constexpr T& As();
+
+		template<ValidType T>
 		constexpr JsonData& operator=(const T& value);
 
 		template<ValidType T>
@@ -106,6 +120,12 @@ namespace jpt
 
 	template<ValidType T>
 	constexpr const T& JsonData::As() const
+	{
+		return m_data.As<T>();
+	}
+
+	template<ValidType T>
+	constexpr T& JsonData::As()
 	{
 		return m_data.As<T>();
 	}
