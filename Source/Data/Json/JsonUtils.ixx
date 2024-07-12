@@ -14,6 +14,7 @@ import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.String;
 import jpt.StringUtils;
+import jpt.ToString;
 import jpt.Optional;
 import jpt.Pair;
 import jpt.Stack;
@@ -169,7 +170,7 @@ namespace jpt
 		std::string stdLine;
 		while (std::getline(file, stdLine))
 		{
-			String line = stdLine.c_str();
+			const String line = stdLine.c_str();
 
 			if (const size_t colonIndex = line.Find(":"); colonIndex != npos)
 			{
@@ -179,7 +180,7 @@ namespace jpt
 				if (!valueStr.IsEmpty())
 				{
 					JsonData valueData = ParseValueData(valueStr);
-					jsonMaps.Peek().Add(keyStr, valueData);
+					jsonMaps.Peek().Set(keyStr, valueData);
 				}
 				// Start of map next line
 				else
@@ -205,7 +206,7 @@ namespace jpt
 				jsonMaps.Pop();
 
 				String mapName = mapNames.Peek();
-				jsonMaps.Peek().Add(mapName, map);
+				jsonMaps.Peek().Set(mapName, map);
 				mapNames.Pop();
 			}
 		}
@@ -225,7 +226,7 @@ namespace jpt
 			str.Append("\t\"");
 			str.Append(key);
 			str.Append("\": ");
-			str.Append(value.ToString());
+			str.Append(ToString(value));
 
 			++count;
 			if (count < map.Count())

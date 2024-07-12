@@ -22,28 +22,27 @@ bool UnitTest_Json_Write()
 {
     jpt::JsonMap jsonRoot;
 
-    jsonRoot.Add("source", jpt::String("Engine"));
-    jsonRoot.Add("data_int", 12);
-    jsonRoot.Add("data_float", 1.55f);
-    jsonRoot.Add("data_string", jpt::String("Hello from Jupiter Engine!"));
-    jsonRoot.Add("data_null", jpt::String("null"));
+    jsonRoot.Set("source", jpt::String("Engine"));
+    jsonRoot.Set("data_int", 12);
+    jsonRoot.Set("data_float", 1.55f);
+    jsonRoot.Set("data_string", jpt::String("Hello from Jupiter Engine!"));
+    jsonRoot.Set("data_null", jpt::String("null"));
 
-    jsonRoot.Add("data_array", jpt::JsonArray{111, jpt::String("Hello World"), 33, 4.77f, false});
+    jsonRoot.Set("data_array", jpt::JsonArray{111, jpt::String("Hello World"), 33, 4.77f, false});
 
-    jsonRoot.Add("data_map", jpt::JsonMap
-        {
-            { "year",      2024 },
-            { "month",     6    },
-            { "day",       20   },
-            { "Calender", jpt::String("Made in China")},
+    jpt::JsonMap subMap2;
+    subMap2.Set("key1", 1);
+    subMap2.Set("key2", 2);
+    subMap2.Set("key3", 3);
 
-            { "Subset", jpt::JsonMap 
-                        {
-            				{ "key1", 1 },
-							{ "key2", 2 },
-							{ "key3", 3 }
-                        }}
-        });
+    jpt::JsonMap subMap;
+    subMap.Set("year", 2024);
+    subMap.Set("month", 6);
+    subMap.Set("day", 20);
+    subMap.Set("Calender", jpt::String("Made in China"));
+    subMap.Set("Subset", subMap2);
+
+    jsonRoot.Set("data_map", subMap);
 
     jpt::WriteJsonRoot(path, jsonRoot);
 
@@ -62,7 +61,7 @@ bool UnitTest_Json_Read()
     JPT_ENSURE(jsonRoot["data_string"] == jpt::String("Hello from Jupiter Engine!"));
     JPT_ENSURE(jsonRoot["data_null"] == jpt::String("null"));
 
-    jpt::JsonArray data_array = jsonRoot["data_array"].As<jpt::JsonArray>();
+    const jpt::JsonArray& data_array = jsonRoot["data_array"].As<jpt::JsonArray>();
     jpt::JsonArray expected_data_array{ 111, jpt::String("Hello World"), 33, 4.77f, false};
     JPT_ENSURE(data_array == expected_data_array);
 
