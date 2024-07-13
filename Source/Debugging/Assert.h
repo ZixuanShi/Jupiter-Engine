@@ -33,14 +33,14 @@ namespace jpt
 		JPT_ASSERT(a == 9 && b == 10);
 		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10");
 		JPT_ASSERT(a == 9 && b == 10, "expected 9 and 10, received %d and %d", a, b);*/
-#define JPT_ASSERT(expression, ...) \
-		do\
-		{\
-			if (!(expression))\
-			{\
-				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__);\
-				JPT_DEBUG_BREAK();\
-			}\
+#define JPT_ASSERT(expression, ...)                                                   \
+		do                                                                            \
+		{                                                                             \
+			if (!(expression))                                                        \
+			{                                                                         \
+				jpt::OnAssertionFailed(__LINE__, __FILE__, #expression, __VA_ARGS__); \
+				JPT_DEBUG_BREAK();                                                    \
+			}                                                                         \
 		} while(false)
 }
 #else
