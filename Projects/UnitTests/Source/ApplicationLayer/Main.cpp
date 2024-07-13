@@ -22,4 +22,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, in
 
 	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
 }
+#else
+	#error "Platform not supported"
 #endif

@@ -15,7 +15,7 @@ module;
 export module jpt.EntryPoints;
 
 // TODO: When Win64Application is implemented, do conditional import for application
-export import jpt.Application_Base;
+import jpt.Application_Base;
 
 #if IS_PLATFORM_WIN64
 

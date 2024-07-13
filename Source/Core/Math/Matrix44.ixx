@@ -40,6 +40,8 @@ namespace jpt
 		constexpr Vector4<T> operator*(const Vector4<T>& rhs) const;
 		constexpr Matrix44<T>& operator*=(const Matrix44<T>& rhs);
 
+		constexpr T Determinant() const;
+
 		constexpr static Matrix44<T> Translation(const Vector3<T>& v);
 		constexpr static Matrix44<T> RotationX(T radians);
 		constexpr static Matrix44<T> RotationY(T radians);
@@ -134,6 +136,38 @@ namespace jpt
 	{
 		*this = *this * rhs;
 		return *this;
+	}
+
+	template<Numeric T>
+	constexpr T Matrix44<T>::Determinant() const
+	{
+		const T a = m[0][0];
+		const T b = m[0][1];
+		const T c = m[0][2];
+		const T d = m[0][3];
+		const T e = m[1][0];
+		const T f = m[1][1];
+		const T g = m[1][2];
+		const T h = m[1][3];
+		const T i = m[2][0];
+		const T j = m[2][1];
+		const T k = m[2][2];
+		const T l = m[2][3];
+		const T m = m[3][0];
+		const T n = m[3][1];
+		const T o = m[3][2];
+		const T p = m[3][3];
+
+		const T det = a * f * k * p + a * g * l * n + a * h * j * o +
+					  b * e * l * p + b * g * i * p + b * h * k * n +
+					  c * e * j * p + c * f * l * m + c * h * i * m +
+					  d * e * k * n + d * f * i * o + d * g * j * m -
+					  a * f * l * o - a * g * j * p - a * h * k * m -
+					  b * e * k * o - b * g * l * m - b * h * i * p -
+					  c * e * l * n - c * f * i * p - c * h * j * m -
+					  d * e * j * n - d * f * k * m - d * g * i * l;
+
+		return det;
 	}
 
 	template<Numeric T>

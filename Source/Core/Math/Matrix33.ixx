@@ -36,6 +36,8 @@ namespace jpt
 		constexpr Vector2<T> operator*(Vector2<T> v) const;
 		constexpr Matrix33<T> operator*(const Matrix33<T>& rhs) const;
 
+		constexpr T Determinant() const;
+
 		constexpr static Matrix33 Translation(Vector2<T> v);
 		constexpr static Matrix33 Rotation(T radians);
 		constexpr static Matrix33 RotationDegrees(T degrees);
@@ -104,6 +106,17 @@ namespace jpt
 		}
 
 		return result;
+	}
+
+	template<Numeric T>
+	constexpr T Matrix33<T>::Determinant() const
+	{
+		return m[0][0] * m[1][1] * m[2][2] +
+			   m[0][1] * m[1][2] * m[2][0] +
+			   m[0][2] * m[1][0] * m[2][1] -
+			   m[0][2] * m[1][1] * m[2][0] -
+			   m[0][1] * m[1][0] * m[2][2] -
+			   m[0][0] * m[1][2] * m[2][1];
 	}
 
 	template<Numeric T>
