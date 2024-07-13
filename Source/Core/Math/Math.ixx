@@ -179,11 +179,10 @@ export namespace jpt
 	}
 
 	/** @return true if two values are close enough */
-	template<Integral TInt1, Integral TInt2, typename TEpsilion>
-	constexpr bool AreValuesClose(TInt1 A, TInt2 B, TEpsilion epsilion = static_cast<TEpsilion>(0))
+	template<Integral TInt1, Integral TInt2>
+	constexpr bool AreValuesClose(TInt1 A, TInt2 B, TInt1 tolerance = static_cast<TInt1>(0))
 	{
-		JPT_IGNORE(epsilion);
-		return A == static_cast<TInt1>(B);
+		return Abs(A - static_cast<TInt1>(B)) < tolerance;
 	}
 
 	template<Floating TFloat1, Floating TFloat2>
