@@ -2,6 +2,8 @@
 
 export module jpt.Color;
 
+import jpt.LinearColor;
+import jpt.Math;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
@@ -56,6 +58,7 @@ namespace jpt
 	public:
 		constexpr Color() noexcept = default;
 		constexpr Color(uint32 rgba) noexcept;
+		constexpr Color(LinearColor linearColor) noexcept;
 		constexpr Color(uint8 r, uint8 g, uint8 b, uint8 a = 255) noexcept;
 
 		constexpr Color operator+(Color other) const noexcept;
@@ -68,7 +71,10 @@ namespace jpt
 		constexpr Color& operator*=(float32 scalar) noexcept;
 		constexpr Color& operator/=(float32 scalar) noexcept;
 
-		constexpr uint32 RGBA() const noexcept;
+		constexpr void FromRGBA(uint32 rgba) noexcept;
+		constexpr void FromLinearColor(LinearColor linearColor) noexcept;
+
+		constexpr uint32 ToRGBA() const noexcept;
 		constexpr String ToString() const noexcept;
 
 		constexpr bool operator==(Color other) const noexcept;
@@ -92,10 +98,12 @@ namespace jpt
 	// ------------------------------------------------------------------------------------------------
 	constexpr Color::Color(uint32 rgba) noexcept
 	{
-		r = static_cast<uint8>((rgba >> 24) & 0xFF);
-		g = static_cast<uint8>((rgba >> 16) & 0xFF);
-		b = static_cast<uint8>((rgba >> 8)  & 0xFF);
-		a = static_cast<uint8>(rgba & 0xFF);
+		FromRGBA(rgba);
+	}
+
+	constexpr Color::Color(LinearColor linearColor) noexcept
+	{
+		FromLinearColor(linearColor);
 	}
 
 	constexpr Color::Color(uint8 r, uint8 g, uint8 b, uint8 a /*= 255*/) noexcept
@@ -162,7 +170,23 @@ namespace jpt
 		return *this;
 	}
 
-	constexpr uint32 Color::RGBA() const noexcept
+	constexpr void Color::FromRGBA(uint32 rgba) noexcept
+	{
+		r = static_cast<uint8>((rgba >> 24) & 0xFF);
+		g = static_cast<uint8>((rgba >> 16) & 0xFF);
+		b = static_cast<uint8>((rgba >> 8)  & 0xFF);
+		a = static_cast<uint8>(rgba & 0xFF);
+	}
+
+	constexpr void Color::FromLinearColor(LinearColor linearColor) noexcept
+	{
+		r = static_cast<uint8>(linearColor.r * 255.0f);
+		g = static_cast<uint8>(linearColor.g * 255.0f);
+		b = static_cast<uint8>(linearColor.b * 255.0f);
+		a = static_cast<uint8>(linearColor.a * 255.0f);
+	}
+
+	constexpr uint32 Color::ToRGBA() const noexcept
 	{
 		uint32 rgba = 0;
 
@@ -192,36 +216,36 @@ export using Color = jpt::Color;
 template<> constexpr bool jpt::IsTrivial<Color> = true;
 
 #pragma region Presets
-const Color Color::Black         = {   0,   0,   0 };
-const Color Color::White         = { 255, 255, 255 };
-const Color Color::Red           = { 255,   0,   0 };
-const Color Color::Green         = {   0, 255,   0 };
-const Color Color::Blue          = {   0,   0, 255 };
-const Color Color::Yellow        = { 255, 255,   0 };
-const Color Color::Magenta       = { 255,   0, 255 };
-const Color Color::Cyan          = {   0, 255, 255 };
-const Color Color::Gray          = { 128, 128, 128 };
-const Color Color::LightGray     = { 192, 192, 192 };
-const Color Color::DarkGray      = {  64,  64,  64 };
-const Color Color::LightRed      = { 255, 128, 128 };
-const Color Color::LightGreen    = { 128, 255, 128 };
-const Color Color::LightBlue     = { 128, 128, 255 };
-const Color Color::LightYellow   = { 255, 255, 128 };
-const Color Color::LightMagenta  = { 255, 128, 255 };
-const Color Color::LightCyan     = { 128, 255, 255 };
-const Color Color::DarkRed       = { 128,   0,   0 };
-const Color Color::DarkGreen     = {   0, 128,   0 };
-const Color Color::DarkBlue      = {   0,   0, 128 };
-const Color Color::DarkYellow    = { 128, 128,   0 };
-const Color Color::DarkMagenta   = { 128,   0, 128 };
-const Color Color::DarkCyan      = {   0, 128, 128 };
-const Color Color::Orange        = { 255, 165,   0 };
-const Color Color::Brown         = { 165,  42,  42 };
-const Color Color::Pink          = { 255, 192, 203 };
-const Color Color::Purple        = { 128,   0, 128 };
-const Color Color::Violet        = { 238, 130, 238 };
-const Color Color::Gold          = { 255, 215,   0 };
-const Color Color::Silver        = { 192, 192, 192 };
-const Color Color::Bronze        = { 205, 127,  50 };
-const Color Color::Transparent   = { 0,   0,   0,   0 };
+const Color Color::Black        = {   0,   0,   0 };
+const Color Color::White        = { 255, 255, 255 };
+const Color Color::Red          = { 255,   0,   0 };
+const Color Color::Green        = {   0, 255,   0 };
+const Color Color::Blue         = {   0,   0, 255 };
+const Color Color::Yellow       = { 255, 255,   0 };
+const Color Color::Magenta      = { 255,   0, 255 };
+const Color Color::Cyan         = {   0, 255, 255 };
+const Color Color::Gray         = { 128, 128, 128 };
+const Color Color::LightGray    = { 192, 192, 192 };
+const Color Color::DarkGray     = {  64,  64,  64 };
+const Color Color::LightRed     = { 255, 128, 128 };
+const Color Color::LightGreen   = { 128, 255, 128 };
+const Color Color::LightBlue    = { 128, 128, 255 };
+const Color Color::LightYellow  = { 255, 255, 128 };
+const Color Color::LightMagenta = { 255, 128, 255 };
+const Color Color::LightCyan    = { 128, 255, 255 };
+const Color Color::DarkRed      = { 128,   0,   0 };
+const Color Color::DarkGreen    = {   0, 128,   0 };
+const Color Color::DarkBlue     = {   0,   0, 128 };
+const Color Color::DarkYellow   = { 128, 128,   0 };
+const Color Color::DarkMagenta  = { 128,   0, 128 };
+const Color Color::DarkCyan     = {   0, 128, 128 };
+const Color Color::Orange       = { 255, 165,   0 };
+const Color Color::Brown        = { 165,  42,  42 };
+const Color Color::Pink         = { 255, 192, 203 };
+const Color Color::Purple       = { 128,   0, 128 };
+const Color Color::Violet       = { 238, 130, 238 };
+const Color Color::Gold         = { 255, 215,   0 };
+const Color Color::Silver       = { 192, 192, 192 };
+const Color Color::Bronze       = { 205, 127,  50 };
+const Color Color::Transparent  = { 0,   0,   0,   0 };
 #pragma endregion Presets
