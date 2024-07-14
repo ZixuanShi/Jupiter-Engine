@@ -61,6 +61,9 @@ namespace jpt
 		constexpr Vector4& operator*=(T scalar) { return *this = *this * scalar; }
 		constexpr Vector4& operator/=(T scalar) { return *this = *this / scalar; }
 
+		constexpr bool IsDir() const;
+		constexpr bool IsPos() const;
+
 		constexpr bool operator==(const Vector4& other) const;
 
 		constexpr T& operator[](size_t index) { return (&x)[index]; }
@@ -231,6 +234,18 @@ namespace jpt
 	constexpr Vector4<T> Vector4<T>::operator/(T scalar) const
 	{
 		return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
+	}
+
+	template<Numeric T>
+	constexpr bool Vector4<T>::IsDir() const
+	{
+		return AreValuesClose(Length2(), static_cast<T>(1)) && AreValuesClose(w, static_cast<T>(0));
+	}
+
+	template<Numeric T>
+	constexpr bool Vector4<T>::IsPos() const
+	{
+		return w > static_cast<T>(0);
 	}
 
 	template<Numeric T>

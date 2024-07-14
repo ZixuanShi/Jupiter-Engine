@@ -24,12 +24,12 @@ namespace jpt
 		T y = static_cast<T>(0);
 
 	public:
-		static constexpr Vector2 Zero()  { return Vector2(static_cast<T>( 0), static_cast<T>(0 )); }
-		static constexpr Vector2 One()   { return Vector2(static_cast<T>( 1), static_cast<T>(1 )); }
-		static constexpr Vector2 Up()    { return Vector2(static_cast<T>( 0), static_cast<T>(1 )); }
-		static constexpr Vector2 Down()  { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
-		static constexpr Vector2 Left()  { return Vector2(static_cast<T>(-1), static_cast<T>(0 )); }
-		static constexpr Vector2 Right() { return Vector2(static_cast<T>( 1), static_cast<T>(0 )); }
+		static consteval Vector2 Zero()  { return Vector2(static_cast<T>( 0), static_cast<T>(0 )); }
+		static consteval Vector2 One()   { return Vector2(static_cast<T>( 1), static_cast<T>(1 )); }
+		static consteval Vector2 Up()    { return Vector2(static_cast<T>( 0), static_cast<T>(1 )); }
+		static consteval Vector2 Down()  { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
+		static consteval Vector2 Left()  { return Vector2(static_cast<T>(-1), static_cast<T>(0 )); }
+		static consteval Vector2 Right() { return Vector2(static_cast<T>( 1), static_cast<T>(0 )); }
 
 	public:
 		constexpr Vector2() = default;
