@@ -11,7 +11,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
 
-bool UnitTest_Vec3f_Operations()
+static bool UnitTest_Vec3f_Operations()
 {
     Vec3f v(1.0f, 2.0f, 3.0f);
 
@@ -54,7 +54,7 @@ bool UnitTest_Vec3f_Operations()
     return true;
 }
 
-bool UnitTest_Vec3f_Functionalities()
+static bool UnitTest_Vec3f_Functionalities()
 {
     Vec3f v(1.0f, 2.0f, 3.0f);
 

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTests_MathPractice_FindAngle2D;
+export module UnitTests_Math_FindAngle2D;
 
 import jpt.Constants;
 import jpt.TypeDefs;
@@ -43,7 +43,7 @@ float FindSignedAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 	return angleDegrees;
 }
 
-export bool UnitTest_MathPractice_FindAngle2D()
+export bool UnitTest_Math_FindAngle2D()
 {
 	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(0, 0), Vec2f(1, 0), Vec2f(10, 0)), 0.0f));
 	JPT_ENSURE(jpt::AreValuesClose(FindAngle2D(Vec2f(10, 0), Vec2f(1, 0), Vec2f(-10, 0)), 180.0f));

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/Headers.h"
 
-export module UnitTests_MathPractice_DistancePointToPlane3D;
+export module UnitTests_Math_DistancePointToPlane3D;
 
 import jpt.CoreModules;
 
@@ -22,7 +22,7 @@ float DistancePointToPlane3D(Vec3f point, Vec3f a, Vec3f b, Vec3f c)
 	return distance;
 }
 
-export bool UnitTest_MathPractice_DistancePointToPlane3D()
+export bool UnitTest_Math_DistancePointToPlane3D()
 {
 	Vec3f point = Vec3f(0.0f, 0.0f, 0.0f);
 	Vec3f a = Vec3f(0.0f, 0.0f, 0.0f);
