@@ -182,13 +182,13 @@ export namespace jpt
 	template<Integral TInt1, Integral TInt2>
 	constexpr bool AreValuesClose(TInt1 A, TInt2 B, TInt1 tolerance = static_cast<TInt1>(0))
 	{
-		return Abs(A - static_cast<TInt1>(B)) < tolerance;
+		return Abs(A - static_cast<TInt1>(B)) <= tolerance;
 	}
 
 	template<Floating TFloat1, Floating TFloat2>
 	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
 	{
-		return Abs(A - static_cast<TFloat1>(B)) < tolerance;
+		return Abs(A - static_cast<TFloat1>(B)) <= tolerance;
 	}
 
 	template<Floating TFloat = float32>

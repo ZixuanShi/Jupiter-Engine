@@ -30,7 +30,7 @@ bool UnitTest_Abs()
 {
 	JPT_ENSURE(jpt::Abs(-10) == 10);
 	JPT_ENSURE(jpt::Abs(10) == 10);
-	JPT_ENSURE(jpt::AreValuesClose(jpt::Abs(-10.55f), 10.55f) );
+	JPT_ENSURE(jpt::AreValuesClose(jpt::Abs(-10.55f), 10.55f));
 	JPT_ENSURE(jpt::AreValuesClose(jpt::Abs(10.55f), 10.55f));
 	return true;
 }
@@ -39,6 +39,13 @@ bool UnitTest_AreValuesClose()
 {
 	JPT_ENSURE(jpt::AreValuesClose(10.556677f, 10.556677f));
 	JPT_ENSURE(jpt::AreValuesClose(10.556677f, 10.956677f, 1.0f));
+
+	JPT_ENSURE(jpt::AreValuesClose(42, 42));
+	JPT_ENSURE(!jpt::AreValuesClose(42, 43));
+	JPT_ENSURE(jpt::AreValuesClose(42, 43, 1));
+	JPT_ENSURE(!jpt::AreValuesClose(42, 44, 1));
+	JPT_ENSURE(jpt::AreValuesClose(42, 44, 2));
+
 	return true;
 }
 
