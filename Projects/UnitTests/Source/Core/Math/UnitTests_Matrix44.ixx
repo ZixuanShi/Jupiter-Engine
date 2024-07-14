@@ -45,7 +45,7 @@ bool UnitTests_Matrix44_Rotation()
 	JPT_ENSURE(rotationResult == Vec3f(4.0f, -5.0f, -6.0f));
 
 	// 2
-	rotation = Matrix44f::Identity;
+	rotation = Matrix44f::Identity();
 	rotation.RotateX(jpt::ToRadians(45.0f));
 	rotation.RotateY(jpt::ToRadians(-29.0f));
 	rotation.RotateZ(jpt::ToRadians(90.0f));
@@ -55,7 +55,7 @@ bool UnitTests_Matrix44_Rotation()
 	JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
 
 	// 3
-	rotation = Matrix44f::Identity;
+	rotation = Matrix44f::Identity();
 	rotation.RotateX(jpt::ToRadians(23.0f));
 	rotation.RotateY(jpt::ToRadians(11.0f));
 	rotation.RotateZ(jpt::ToRadians(50.0f));
@@ -102,14 +102,14 @@ bool UnitTests_Matrix44_EulerAngles()
 export bool RunUnitTests_Matrix44()
 {
 	// Identity
-	Matrix44f matrix44 = Matrix44f::Identity;
+	Matrix44f matrix44 = Matrix44f::Identity();
 	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix44.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix44.m[2] == Vec4f(0.0f, 0.0f, 1.0f, 0.0f));
 	JPT_ENSURE(matrix44.m[3] == Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
 
 	// Transpose
-	matrix44 = Matrix44f::Identity;
+	matrix44 = Matrix44f::Identity();
 	matrix44.Transpose();
 	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix44.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));

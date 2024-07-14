@@ -14,38 +14,38 @@ namespace jpt
 	{
 #pragma region Presets
 	public:
-		static const LinearColor Black;
-		static const LinearColor White;
-		static const LinearColor Red;
-		static const LinearColor Green;
-		static const LinearColor Blue;
-		static const LinearColor Yellow;
-		static const LinearColor Magenta;
-		static const LinearColor Cyan;
-		static const LinearColor Gray;
-		static const LinearColor LightGray;
-		static const LinearColor DarkGray;
-		static const LinearColor LightRed;
-		static const LinearColor LightGreen;
-		static const LinearColor LightBlue;
-		static const LinearColor LightYellow;
-		static const LinearColor LightMagenta;
-		static const LinearColor LightCyan;
-		static const LinearColor DarkRed;
-		static const LinearColor DarkGreen;
-		static const LinearColor DarkBlue;
-		static const LinearColor DarkYellow;
-		static const LinearColor DarkMagenta;
-		static const LinearColor DarkCyan;
-		static const LinearColor Orange;
-		static const LinearColor Brown;
-		static const LinearColor Pink;
-		static const LinearColor Purple;
-		static const LinearColor Violet;
-		static const LinearColor Gold;
-		static const LinearColor Silver;
-		static const LinearColor Bronze;
-		static const LinearColor Transparent;
+		static consteval LinearColor Black()        { return {  0.0f,  0.0f,  0.0f }; }
+		static consteval LinearColor White()	    { return {  1.0f,  1.0f,  1.0f }; }
+		static consteval LinearColor Red()		    { return {  1.0f,  0.0f,  0.0f }; }
+		static consteval LinearColor Green()	    { return {  0.0f,  1.0f,  0.0f }; }
+		static consteval LinearColor Blue()		    { return {  0.0f,  0.0f,  1.0f }; }
+		static consteval LinearColor Yellow()	    { return {  1.0f,  1.0f,  0.0f }; }
+		static consteval LinearColor Magenta()	    { return {  1.0f,  0.0f,  1.0f }; }
+		static consteval LinearColor Cyan()		    { return {  0.0f,  1.0f,  1.0f }; }
+		static consteval LinearColor Gray()		    { return {  0.5f,  0.5f,  0.5f }; }
+		static consteval LinearColor LightGray()    { return { 0.75f, 0.75f, 0.75f }; }
+		static consteval LinearColor DarkGray()	    { return { 0.25f, 0.25f, 0.25f }; }
+		static consteval LinearColor LightRed()	    { return {  1.0f,  0.5f,  0.5f }; }
+		static consteval LinearColor LightGreen()   { return {  0.5f,  1.0f,  0.5f }; }
+		static consteval LinearColor LightBlue()    { return {  0.5f,  0.5f,  1.0f }; }
+		static consteval LinearColor LightYellow()  { return {  1.0f,  1.0f,  0.5f }; }
+		static consteval LinearColor LightMagenta() { return {  1.0f,  0.5f,  1.0f }; }
+		static consteval LinearColor LightCyan()    { return {  0.5f,  1.0f,  1.0f }; }
+		static consteval LinearColor DarkRed()	    { return {  0.5f,  0.0f,  0.0f }; }
+		static consteval LinearColor DarkGreen()    { return {  0.0f,  0.5f,  0.0f }; }
+		static consteval LinearColor DarkBlue()	    { return {  0.0f,  0.0f,  0.5f }; }
+		static consteval LinearColor DarkYellow()   { return {  0.5f,  0.5f,  0.0f }; }
+		static consteval LinearColor DarkMagenta()  { return {  0.5f,  0.0f,  0.5f }; }
+		static consteval LinearColor DarkCyan()	    { return {  0.0f,  0.5f,  0.5f }; }
+		static consteval LinearColor Orange()	    { return {  1.0f,  0.5f,  0.0f }; }
+		static consteval LinearColor Brown()	    { return {  0.6f,  0.4f,  0.2f }; }
+		static consteval LinearColor Pink()		    { return {  1.0f, 0.75f,  0.8f }; }
+		static consteval LinearColor Purple()	    { return {  0.5f,  0.0f,  0.5f }; }
+		static consteval LinearColor Violet()	    { return {  0.5f,  0.0f,  1.0f }; }
+		static consteval LinearColor Gold()		    { return {  1.0f, 0.84f,  0.0f }; }
+		static consteval LinearColor Silver()	    { return { 0.75f, 0.75f, 0.75f }; }
+		static consteval LinearColor Bronze()	    { return {  0.8f,  0.5f,  0.2f }; }
+		static consteval LinearColor Transparent()  { return { 0.0f,  0.0f,  0.0f,  0.0f }; }
 #pragma endregion Presets
 
 	public:
@@ -209,38 +209,3 @@ namespace jpt
 
 export using LinearColor = jpt::LinearColor;
 template<> constexpr bool jpt::IsTrivial<LinearColor> = true;
-
-#pragma region Presets
-const LinearColor LinearColor::Black        = {  0.0f,  0.0f,  0.0f };
-const LinearColor LinearColor::White        = {  1.0f,  1.0f,  1.0f };
-const LinearColor LinearColor::Red          = {  1.0f,  0.0f,  0.0f };
-const LinearColor LinearColor::Green        = {  0.0f,  1.0f,  0.0f };
-const LinearColor LinearColor::Blue         = {  0.0f,  0.0f,  1.0f };
-const LinearColor LinearColor::Yellow       = {  1.0f,  1.0f,  0.0f };
-const LinearColor LinearColor::Magenta      = {  1.0f,  0.0f,  1.0f };
-const LinearColor LinearColor::Cyan         = {  0.0f,  1.0f,  1.0f };
-const LinearColor LinearColor::Gray         = {  0.5f,  0.5f,  0.5f };
-const LinearColor LinearColor::LightGray    = { 0.75f, 0.75f, 0.75f };
-const LinearColor LinearColor::DarkGray     = { 0.25f, 0.25f, 0.25f };
-const LinearColor LinearColor::LightRed     = {  1.0f,  0.5f,  0.5f };
-const LinearColor LinearColor::LightGreen   = {  0.5f,  1.0f,  0.5f };
-const LinearColor LinearColor::LightBlue    = {  0.5f,  0.5f,  1.0f };
-const LinearColor LinearColor::LightYellow  = {  1.0f,  1.0f,  0.5f };
-const LinearColor LinearColor::LightMagenta = {  1.0f,  0.5f,  1.0f };
-const LinearColor LinearColor::LightCyan    = {  0.5f,  1.0f,  1.0f };
-const LinearColor LinearColor::DarkRed      = {  0.5f,  0.0f,  0.0f };
-const LinearColor LinearColor::DarkGreen    = {  0.0f,  0.5f,  0.0f };
-const LinearColor LinearColor::DarkBlue     = {  0.0f,  0.0f,  0.5f };
-const LinearColor LinearColor::DarkYellow   = {  0.5f,  0.5f,  0.0f };
-const LinearColor LinearColor::DarkMagenta  = {  0.5f,  0.0f,  0.5f };
-const LinearColor LinearColor::DarkCyan     = {  0.0f,  0.5f,  0.5f };
-const LinearColor LinearColor::Orange       = {  1.0f,  0.5f,  0.0f };
-const LinearColor LinearColor::Brown        = {  0.6f,  0.4f,  0.2f };
-const LinearColor LinearColor::Pink         = {  1.0f, 0.75f,  0.8f };
-const LinearColor LinearColor::Purple       = {  0.5f,  0.0f,  0.5f };
-const LinearColor LinearColor::Violet       = {  0.5f,  0.0f,  1.0f };
-const LinearColor LinearColor::Gold         = {  1.0f, 0.84f,  0.0f };
-const LinearColor LinearColor::Silver       = { 0.75f, 0.75f, 0.75f };
-const LinearColor LinearColor::Bronze       = {  0.8f,  0.5f,  0.2f };
-const LinearColor LinearColor::Transparent  = {  0.0f,  0.0f,  0.0f,  0.0f };
-#pragma endregion Presets

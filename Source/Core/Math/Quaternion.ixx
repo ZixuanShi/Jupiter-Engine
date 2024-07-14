@@ -28,7 +28,7 @@ namespace jpt
 		T w = static_cast<T>(1);
 
 	public:
-		static const TQuaternion<T> Identity;
+		static consteval TQuaternion<T> Identity() { return TQuaternion<T>(); }
 
 	public:
 		constexpr TQuaternion() = default;
@@ -71,9 +71,6 @@ namespace jpt
 		constexpr bool operator==(const TQuaternion& rhs) const;
 		constexpr String ToString() const;
 	};
-
-	template<Numeric T>
-	const TQuaternion<T> TQuaternion<T>::Identity = TQuaternion<T>();
 
 	template<Numeric T>
 	constexpr TQuaternion<T>::TQuaternion(T x, T y, T z, T w)

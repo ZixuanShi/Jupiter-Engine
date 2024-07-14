@@ -15,38 +15,38 @@ namespace jpt
 	{
 #pragma region Presets
 	public:
-		static const Color Black;
-		static const Color White;
-		static const Color Red;
-		static const Color Green;
-		static const Color Blue;
-		static const Color Yellow;
-		static const Color Magenta;
-		static const Color Cyan;
-		static const Color Gray;
-		static const Color LightGray;
-		static const Color DarkGray;
-		static const Color LightRed;
-		static const Color LightGreen;
-		static const Color LightBlue;
-		static const Color LightYellow;
-		static const Color LightMagenta;
-		static const Color LightCyan;
-		static const Color DarkRed;
-		static const Color DarkGreen;
-		static const Color DarkBlue;
-		static const Color DarkYellow;
-		static const Color DarkMagenta;
-		static const Color DarkCyan;
-		static const Color Orange;
-		static const Color Brown;
-		static const Color Pink;
-		static const Color Purple;
-		static const Color Violet;
-		static const Color Gold;
-		static const Color Silver;
-		static const Color Bronze;
-		static const Color Transparent;
+		static consteval Color Black()        { return {   0,   0,   0 }; }
+		static consteval Color White() 		  { return { 255, 255, 255 }; }
+		static consteval Color Red() 		  { return { 255,   0,   0 }; }
+		static consteval Color Green() 		  { return {   0, 255,   0 }; }
+		static consteval Color Blue() 		  { return {   0,   0, 255 }; }
+		static consteval Color Yellow() 	  { return { 255, 255,   0 }; }
+		static consteval Color Magenta() 	  { return { 255,   0, 255 }; }
+		static consteval Color Cyan() 		  { return {   0, 255, 255 }; }
+		static consteval Color Gray() 		  { return { 128, 128, 128 }; }
+		static consteval Color LightGray() 	  { return { 192, 192, 192 }; }
+		static consteval Color DarkGray() 	  { return {  64,  64,  64 }; }
+		static consteval Color LightRed() 	  { return { 255, 128, 128 }; }
+		static consteval Color LightGreen()   { return { 128, 255, 128 }; }
+		static consteval Color LightBlue() 	  { return { 128, 128, 255 }; }
+		static consteval Color LightYellow()  { return { 255, 255, 128 }; }
+		static consteval Color LightMagenta() { return { 255, 128, 255 }; }
+		static consteval Color LightCyan() 	  { return { 128, 255, 255 }; }
+		static consteval Color DarkRed() 	  { return { 128,   0,   0 }; }
+		static consteval Color DarkGreen() 	  { return {   0, 128,   0 }; }
+		static consteval Color DarkBlue() 	  { return {   0,   0, 128 }; }
+		static consteval Color DarkYellow()   { return { 128, 128,   0 }; }
+		static consteval Color DarkMagenta()  { return { 128,   0, 128 }; }
+		static consteval Color DarkCyan() 	  { return {   0, 128, 128 }; }
+		static consteval Color Orange() 	  { return { 255, 165,   0 }; }
+		static consteval Color Brown() 		  { return { 165,  42,  42 }; }
+		static consteval Color Pink() 		  { return { 255, 192, 203 }; }
+		static consteval Color Purple() 	  { return { 128,   0, 128 }; }
+		static consteval Color Violet() 	  { return { 238, 130, 238 }; }
+		static consteval Color Gold() 		  { return { 255, 215,   0 }; }
+		static consteval Color Silver() 	  { return { 192, 192, 192 }; }
+		static consteval Color Bronze() 	  { return { 205, 127,  50 }; }
+		static consteval Color Transparent()  { return { 0,   0,   0,   0 }; }
 #pragma endregion Presets
 
 	public:
@@ -214,38 +214,3 @@ namespace jpt
 
 export using Color = jpt::Color;
 template<> constexpr bool jpt::IsTrivial<Color> = true;
-
-#pragma region Presets
-const Color Color::Black        = {   0,   0,   0 };
-const Color Color::White        = { 255, 255, 255 };
-const Color Color::Red          = { 255,   0,   0 };
-const Color Color::Green        = {   0, 255,   0 };
-const Color Color::Blue         = {   0,   0, 255 };
-const Color Color::Yellow       = { 255, 255,   0 };
-const Color Color::Magenta      = { 255,   0, 255 };
-const Color Color::Cyan         = {   0, 255, 255 };
-const Color Color::Gray         = { 128, 128, 128 };
-const Color Color::LightGray    = { 192, 192, 192 };
-const Color Color::DarkGray     = {  64,  64,  64 };
-const Color Color::LightRed     = { 255, 128, 128 };
-const Color Color::LightGreen   = { 128, 255, 128 };
-const Color Color::LightBlue    = { 128, 128, 255 };
-const Color Color::LightYellow  = { 255, 255, 128 };
-const Color Color::LightMagenta = { 255, 128, 255 };
-const Color Color::LightCyan    = { 128, 255, 255 };
-const Color Color::DarkRed      = { 128,   0,   0 };
-const Color Color::DarkGreen    = {   0, 128,   0 };
-const Color Color::DarkBlue     = {   0,   0, 128 };
-const Color Color::DarkYellow   = { 128, 128,   0 };
-const Color Color::DarkMagenta  = { 128,   0, 128 };
-const Color Color::DarkCyan     = {   0, 128, 128 };
-const Color Color::Orange       = { 255, 165,   0 };
-const Color Color::Brown        = { 165,  42,  42 };
-const Color Color::Pink         = { 255, 192, 203 };
-const Color Color::Purple       = { 128,   0, 128 };
-const Color Color::Violet       = { 238, 130, 238 };
-const Color Color::Gold         = { 255, 215,   0 };
-const Color Color::Silver       = { 192, 192, 192 };
-const Color Color::Bronze       = { 205, 127,  50 };
-const Color Color::Transparent  = { 0,   0,   0,   0 };
-#pragma endregion Presets

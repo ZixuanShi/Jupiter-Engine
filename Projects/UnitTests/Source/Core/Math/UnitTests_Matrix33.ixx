@@ -11,7 +11,7 @@ import jpt.CoreModules;
 export bool RunUnitTests_Matrix33()
 {
 	// Matrix identity
-	Matrix33f matrix33 = Matrix33f::Identity;
+	Matrix33f matrix33 = Matrix33f::Identity();
 	JPT_ENSURE(matrix33.m[0] == Vec3f(1.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix33.m[1] == Vec3f(0.0f, 1.0f, 0.0f));
 	JPT_ENSURE(matrix33.m[2] == Vec3f(0.0f, 0.0f, 1.0f));

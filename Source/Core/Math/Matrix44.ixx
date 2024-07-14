@@ -25,7 +25,7 @@ namespace jpt
 		Vector4<T> m[4];
 
 	public:
-		static const Matrix44<T> Identity;
+		static consteval Matrix44<T> Identity() { return Matrix44<T>(); }
 
 	public:
 		constexpr Matrix44();
@@ -61,9 +61,6 @@ namespace jpt
 
 		constexpr String ToString() const;
 	};
-
-	template<Numeric T>
-	const Matrix44<T> Matrix44<T>::Identity = Matrix44<T>();
 
 	template<Numeric T>
 	constexpr Matrix44<T>::Matrix44()
@@ -251,7 +248,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		Matrix44<T> result = Matrix44<T>::Identity;
+		Matrix44<T> result = Matrix44<T>::Identity();
 		result.RotateX(ToRadians(degrees.x));
 		result.RotateY(ToRadians(degrees.y));
 		result.RotateZ(ToRadians(degrees.z));

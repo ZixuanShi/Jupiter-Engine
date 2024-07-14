@@ -24,7 +24,7 @@ namespace jpt
 		Vector3<T> m[3];
 
 	public:
-		static const Matrix33 Identity;
+		static consteval Matrix33<T> Identity() { return Matrix33<T>(); }
 
 	public:
 		constexpr Matrix33();
@@ -54,9 +54,6 @@ namespace jpt
 
 		constexpr String ToString() const;
 	};
-
-	template<Numeric T>
-	const Matrix33<T> Matrix33<T>::Identity = Matrix33<T>();
 
 	template<Numeric T>
 	constexpr Matrix33<T>::Matrix33()
