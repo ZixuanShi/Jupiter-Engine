@@ -8,7 +8,7 @@ module;
 export module UnitTests_Coding_FindMedianSortedArrays;
 
 import jpt.Constants;
-import jpt.Sorting;
+import jpt.Sort;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
 import jpt.SortedMap;

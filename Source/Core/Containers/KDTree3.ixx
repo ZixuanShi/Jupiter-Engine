@@ -3,7 +3,7 @@
 export module jpt.KDTree3;
 
 import jpt.Concepts;
-import jpt.Sorting;
+import jpt.Sort;
 import jpt.DynamicArray;
 import jpt.Vector3;
 import jpt_private.BinaryTreeIterator;

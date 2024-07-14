@@ -9,7 +9,7 @@ export module jpt.CoreModules;
 
 // Algorithms
 export import jpt.LinearFind;
-export import jpt.Sorting;
+export import jpt.Sort;
 
 // Containers
 export import jpt.StaticArray;

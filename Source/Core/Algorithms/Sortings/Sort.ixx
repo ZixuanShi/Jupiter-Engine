@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/Macros.h"
 
-export module jpt.Sorting;
+export module jpt.Sort;
 
 import jpt.Comparators;
 import jpt.Concepts;

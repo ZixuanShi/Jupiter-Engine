@@ -87,7 +87,8 @@ export namespace jpt
 		constexpr TData& EmplaceBack(TArgs&&... args);
 
 		// Erasing
-		constexpr void Erase(size_t index);
+		constexpr Iterator Erase(size_t index);
+		constexpr Iterator Erase(Iterator iterator);
 		constexpr void Pop();
 
 		void Serialize(Serializer& serializer) const;
@@ -284,7 +285,7 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::Erase(size_t index)
+	constexpr DynamicArray<TData, TAllocator>::Iterator DynamicArray<TData, TAllocator>::Erase(size_t index)
 	{
 		JPT_ASSERT(index <= m_count, "Calling Erase() with an invalid index");
 
@@ -295,6 +296,15 @@ export namespace jpt
 
 		--m_count;
 		ShiftDataToBegin(index);
+
+		return m_pBuffer + index;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::Iterator DynamicArray<TData, TAllocator>::Erase(Iterator iterator)
+	{
+		const size_t index = iterator - m_pBuffer;
+		return Erase(index);
 	}
 
 	template<typename TData, typename TAllocator>

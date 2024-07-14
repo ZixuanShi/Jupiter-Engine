@@ -12,7 +12,7 @@ import jpt.InsertionSort;
 import jpt.HeapSort;
 import jpt.QuickSort;
 import jpt.IntroSort;
-import jpt.Sorting;
+import jpt.Sort;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.StaticArray;

@@ -10,7 +10,7 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Math;
 import jpt.Utilities;
-import jpt.Sorting;
+import jpt.Sort;
 
 bool UnitTest_Clamping()
 {
