@@ -68,9 +68,16 @@ namespace jpt
 
 		constexpr bool operator==(const Vector4& other) const;
 
-		constexpr operator Vector3<T>() const;
-		constexpr Vector3<T> ToVec3() const;
+		constexpr Vector3<T> XYZ() const;
 
+		constexpr T Length2() const;
+		constexpr T Length2W() const;
+		constexpr T Length() const;
+		constexpr T LengthW() const;
+
+		constexpr T Dot(const Vector4& other) const;
+		constexpr T DotW(const Vector4& other) const;
+		constexpr Vector3<T> Cross(const Vector4& other) const;
 
 		// Homogeneous coordinates
 		constexpr bool IsDir() const;
@@ -268,15 +275,51 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector4<T>::ToVec3() const
+	constexpr Vector3<T> Vector4<T>::XYZ() const
 	{
 		return Vector3<T>(x, y, z);
 	}
 
 	template<Numeric T>
-	constexpr Vector4<T>::operator Vector3<T>() const
+	constexpr T Vector4<T>::Length2() const
 	{
-		return Vector3<T>(x, y, z);
+		return x * x + y * y + z * z;
+	}
+
+	template<Numeric T>
+	constexpr T Vector4<T>::Length2W() const
+	{
+		return x * x + y * y + z * z + w * w;
+	}
+
+	template<Numeric T>
+	constexpr T Vector4<T>::Length() const
+	{
+		return std::sqrt(Length2());
+	}
+
+	template<Numeric T>
+	constexpr T Vector4<T>::LengthW() const
+	{
+		return std::sqrt(Length2W());
+	}
+
+	template<Numeric T>
+	constexpr T Vector4<T>::Dot(const Vector4& other) const
+	{
+		return XYZ().Dot(other.XYZ());
+	}
+
+	template<Numeric T>
+	constexpr T Vector4<T>::DotW(const Vector4& other) const
+	{
+		return x * other.x + y * other.y + z * other.z + w * other.w;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector4<T>::Cross(const Vector4& other) const
+	{
+		return XYZ().Cross(other.XYZ());
 	}
 }
 
