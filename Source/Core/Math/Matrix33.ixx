@@ -35,6 +35,7 @@ namespace jpt
 
 		constexpr Vector2<T> operator*(Vector2<T> v) const;
 		constexpr Matrix33<T> operator*(const Matrix33<T>& rhs) const;
+		constexpr Matrix33<T>& operator*=(const Matrix33<T>& rhs);
 
 		constexpr T Determinant() const;
 
@@ -106,6 +107,13 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Matrix33<T>& Matrix33<T>::operator*=(const Matrix33<T>& rhs)
+	{
+		*this = *this * rhs;
+		return *this;
+	}
+
+	template<Numeric T>
 	constexpr T Matrix33<T>::Determinant() const
 	{
 		return m[0][0] * m[1][1] * m[2][2] +
@@ -160,31 +168,31 @@ namespace jpt
 	template<Numeric T>
 	constexpr void Matrix33<T>::Translate(Vector2<T> v)
 	{
-		*this = Translation(v) * *this; 
+		*this *= Translation(v); 
 	}
 
 	template<Numeric T>
 	constexpr void Matrix33<T>::Rotate(T radians)
 	{
-		*this = Rotation(radians) * *this;
+		*this *= Rotation(radians);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix33<T>::RotateDegrees(T degrees)
 	{
-		*this = RotationDegrees(degrees) * *this;
+		*this *= RotationDegrees(degrees);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix33<T>::Scale(Vector2<T> v)
 	{
-		*this = Scaling(v) * *this;
+		*this *= Scaling(v);
 	}
 
 	template<Numeric T>
 	constexpr void Matrix33<T>::Scale(T scalar)
 	{
-		*this = Scaling(scalar) * *this;
+		*this *= Scaling(scalar);
 	}
 
 	template<Numeric T>

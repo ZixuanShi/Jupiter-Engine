@@ -104,17 +104,9 @@ bool UnitTests_Matrix44_EulerAngles()
 	return true;
 }
 
-export bool RunUnitTests_Matrix44()
+bool UnitTests_Matrix44_Transpose()
 {
-	// Identity
 	Matrix44f matrix44 = Matrix44f::Identity();
-	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
-	JPT_ENSURE(matrix44.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
-	JPT_ENSURE(matrix44.m[2] == Vec4f(0.0f, 0.0f, 1.0f, 0.0f));
-	JPT_ENSURE(matrix44.m[3] == Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
-
-	// Transpose
-	matrix44 = Matrix44f::Identity();
 	matrix44.Transpose();
 	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
 	JPT_ENSURE(matrix44.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
@@ -132,10 +124,23 @@ export bool RunUnitTests_Matrix44()
 	JPT_ENSURE(matrix44.m[2] == Vec4f(3.0f, 7.0f, 11.0f, 15.0f));
 	JPT_ENSURE(matrix44.m[3] == Vec4f(4.0f, 8.0f, 12.0f, 16.0f));
 
+	return true;
+}
+
+export bool RunUnitTests_Matrix44()
+{
+	// Identity
+	Matrix44f matrix44 = Matrix44f::Identity();
+	JPT_ENSURE(matrix44.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
+	JPT_ENSURE(matrix44.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
+	JPT_ENSURE(matrix44.m[2] == Vec4f(0.0f, 0.0f, 1.0f, 0.0f));
+	JPT_ENSURE(matrix44.m[3] == Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+
 	JPT_ENSURE(UnitTests_Matrix44_Translation());
 	JPT_ENSURE(UnitTests_Matrix44_Rotation());
 	JPT_ENSURE(UnitTests_Matrix44_Scaling());
 	JPT_ENSURE(UnitTests_Matrix44_EulerAngles());
+	JPT_ENSURE(UnitTests_Matrix44_Transpose());
 
 	return true;
 }
