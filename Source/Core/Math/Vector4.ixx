@@ -58,19 +58,25 @@ namespace jpt
 		constexpr Vector4 operator*(T scalar) const;
 		constexpr Vector4 operator/(T scalar) const;
 
-		constexpr Vector4& operator+=(T scalar) { return *this = *this + scalar; }
-		constexpr Vector4& operator-=(T scalar) { return *this = *this - scalar; }
-		constexpr Vector4& operator*=(T scalar) { return *this = *this * scalar; }
-		constexpr Vector4& operator/=(T scalar) { return *this = *this / scalar; }
+		constexpr Vector4& operator+=(T scalar);
+		constexpr Vector4& operator-=(T scalar);
+		constexpr Vector4& operator*=(T scalar);
+		constexpr Vector4& operator/=(T scalar);
 
 		constexpr T& operator[](size_t index) { return (&x)[index]; }
 		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
 
 		constexpr bool operator==(const Vector4& other) const;
 
+		constexpr operator Vector3<T>() const;
+		constexpr Vector3<T> ToVec3() const;
+
+
 		// Homogeneous coordinates
 		constexpr bool IsDir() const;
 		constexpr bool IsPos() const;
+
+		constexpr String ToString() const;
 	};
 
 	template<Numeric T>
@@ -78,7 +84,7 @@ namespace jpt
 		: x(scalar)
 		, y(scalar)
 		, z(scalar)
-		, w(scalar) 
+		, w(static_cast<T>(1)) 
 	{
 	}
 
@@ -195,6 +201,46 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector4<T>& Vector4<T>::operator+=(T scalar)
+	{
+		x += scalar;
+		y += scalar;
+		z += scalar;
+		w += scalar;
+		return *this;
+	}
+
+	template<Numeric T>
+	constexpr Vector4<T>& Vector4<T>::operator-=(T scalar)
+	{
+		x -= scalar;
+		y -= scalar;
+		z -= scalar;
+		w -= scalar;
+		return *this;
+	}
+
+	template<Numeric T>
+	constexpr Vector4<T>& Vector4<T>::operator*=(T scalar)
+	{
+		x *= scalar;
+		y *= scalar;
+		z *= scalar;
+		w *= scalar;
+		return *this;
+	}
+
+	template<Numeric T>
+	constexpr Vector4<T>& Vector4<T>::operator/=(T scalar)
+	{
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
+		w /= scalar;
+		return *this;
+	}
+
+	template<Numeric T>
 	constexpr bool Vector4<T>::IsDir() const
 	{
 		return w == static_cast<T>(0);
@@ -207,6 +253,12 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr String Vector4<T>::ToString() const
+	{
+		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", x, y, z, w);
+	}
+
+	template<Numeric T>
 	constexpr bool Vector4<T>::operator==(const Vector4& other) const
 	{
 		return AreValuesClose(x, other.x, static_cast<T>(0.05)) && 
@@ -214,6 +266,47 @@ namespace jpt
 			   AreValuesClose(z, other.z, static_cast<T>(0.05)) && 
 			   AreValuesClose(w, other.w, static_cast<T>(0.05));
 	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector4<T>::ToVec3() const
+	{
+		return Vector3<T>(x, y, z);
+	}
+
+	template<Numeric T>
+	constexpr Vector4<T>::operator Vector3<T>() const
+	{
+		return Vector3<T>(x, y, z);
+	}
 }
 
 export using Vec4f = jpt::Vector4<float32>;
+export using Vec4d = jpt::Vector4<float64>;
+export using Vec4i = jpt::Vector4<int32>;
+
+template<> constexpr bool jpt::IsTrivial<Vec4f> = true;
+template<> constexpr bool jpt::IsTrivial<Vec4i> = true;
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector4<T> operator+(T scaler, const jpt::Vector4<T>& vector4)
+{
+	return vector4 + scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector4<T> operator-(T scaler, const jpt::Vector4<T>& vector4)
+{
+	return vector4 - scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector4<T> operator*(T scaler, const jpt::Vector4<T>& vector4)
+{
+	return vector4 * scaler;
+}
+
+export template<jpt::Numeric T>
+constexpr jpt::Vector4<T> operator/(T scaler, const jpt::Vector4<T>& vector4)
+{
+	return vector4 / scaler;
+}

@@ -32,6 +32,7 @@ import UnitTests_Slot;
 import UnitTests_Function;
 
 // Math
+import UnitTests_Vector4;
 import UnitTests_Color;
 import UnitTests_Box3;
 import UnitTests_Box2;
@@ -109,6 +110,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Macros());
 
 	// Math
+	JPT_ENSURE(RunUnitTests_Vector4());
 	JPT_ENSURE(RunUnitTests_Color());
 	JPT_ENSURE(RunUnitTests_Box3());
 	JPT_ENSURE(RunUnitTests_Box2());

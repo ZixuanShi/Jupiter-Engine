@@ -58,6 +58,8 @@ bool UnitTest_Quaternion_Rotate()
 	Quatf quaternion4 = Quatf::FromAxisAngle(Vec3f(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion4 == Quatf(0.707f, 0, 0, 0.707f));
 
+	JPT_LOG(quaternion);
+
 	return true;
 }
 

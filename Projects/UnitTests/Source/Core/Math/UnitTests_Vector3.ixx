@@ -57,6 +57,7 @@ static bool UnitTest_Vec3f_Operations()
 static bool UnitTest_Vec3f_Functionalities()
 {
     Vec3f v(1.0f, 2.0f, 3.0f);
+    //JPT_LOG(v);
 
     // Dot product
     JPT_ENSURE(Vec3f::Dot(v, Vec3f(3.0f, 2.0f, 1.0f)) == 10.0f);

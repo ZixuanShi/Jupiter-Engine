@@ -393,15 +393,7 @@ export namespace jpt
 	template<Numeric T>
 	constexpr String Vector3<T>::ToString() const
 	{
-		jpt::String result;
-		result += "{ x: ";
-		result += jpt::ToString(x);
-		result += ", y:";
-		result += jpt::ToString(y);
-		result += ", z:";
-		result += jpt::ToString(z);
-		result += " }";
-		return result;
+		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f", x, y, z);
 	}
 }
 

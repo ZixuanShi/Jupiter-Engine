@@ -11,8 +11,6 @@ import jpt.Constants;
 import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Vector3;
-import jpt.Matrix33;
-import jpt.Matrix44;
 import jpt.String;
 import jpt.ToString;
 
@@ -339,16 +337,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr String TQuaternion<T>::ToString() const
 	{
-		jpt::String result;
-		result += "x: ";
-		result += jpt::ToString(x);
-		result += ", y:";
-		result += jpt::ToString(y);
-		result += ", z:";
-		result += jpt::ToString(z);
-		result += ", w:";
-		result += jpt::ToString(w);
-		return result;
+		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", x, y, z, w);
 	}
 }
 

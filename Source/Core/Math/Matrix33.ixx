@@ -198,13 +198,9 @@ namespace jpt
 	template<Numeric T>
 	constexpr String Matrix33<T>::ToString() const
 	{
-		jpt::String result = "\n";
-
-		result += jpt::ToString(m[0][0]) + ", " + jpt::ToString(m[0][1]) + ", " + jpt::ToString(m[0][2]) + "\n";
-		result += jpt::ToString(m[1][0]) + ", " + jpt::ToString(m[1][1]) + ", " + jpt::ToString(m[1][2]) + "\n";
-		result += jpt::ToString(m[2][0]) + ", " + jpt::ToString(m[2][1]) + ", " + jpt::ToString(m[2][2]);
-
-		return result;
+		return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
+			                                                                                 m[1][0], m[1][1], m[1][2],
+			                                                                                 m[2][0], m[2][1], m[2][2]);
 	}
 }
 
