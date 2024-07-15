@@ -6,7 +6,9 @@ module;
 
 export module UnitTests_Matrix33;
 
-import jpt.CoreModules;
+import jpt.Matrix33;
+import jpt.Vector3;
+import jpt.Utilities;
 
 export bool RunUnitTests_Matrix33()
 {

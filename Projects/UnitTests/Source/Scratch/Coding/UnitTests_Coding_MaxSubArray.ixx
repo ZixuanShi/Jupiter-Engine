@@ -6,7 +6,10 @@ module;
 
 export module UnitTests_Coding_MaxSubArray;
 
-import jpt.CoreModules;
+import jpt.Math;
+import jpt.TypeDefs;
+import jpt.DynamicArray;
+import jpt.Utilities;
 
 int32 MaxSubArray(const jpt::DynamicArray<int32>& nums)
 {

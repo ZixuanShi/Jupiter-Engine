@@ -24,7 +24,7 @@ namespace jpt
 		Vector3<T> m[3];
 
 	public:
-		static consteval Matrix33<T> Identity() { return Matrix33<T>(); }
+		static consteval Matrix33 Identity() { return Matrix33(); }
 
 	public:
 		constexpr Matrix33();

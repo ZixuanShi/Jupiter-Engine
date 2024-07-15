@@ -6,7 +6,9 @@ module;
 
 export module UnitTests_Coding_RomanToInteger;
 
-import jpt.CoreModules;
+import jpt.String;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 int32 RomanToInteger(const jpt::String& roman)
 {

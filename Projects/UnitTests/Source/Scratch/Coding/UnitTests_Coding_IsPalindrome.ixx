@@ -6,7 +6,8 @@ module;
 
 export module UnitTests_Coding_IsPalindrome;
 
-import jpt.CoreModules;
+import jpt.Utilities;
+import jpt.TypeDefs;
 
 bool IsPalindrome(int32 x)
 {

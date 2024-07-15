@@ -6,10 +6,16 @@ module;
 
 export module UnitTests_TypeTraits;
 
-import jpt.CoreModules;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
+import jpt.Utilities;
+import jpt.Vector2;
+import jpt.Vector3;
+import jpt.Function;
+import jpt.Slot;
 import jpt.String;
+import jpt.StringView;
+import jpt.StaticArray;
 
 template<typename T>
 bool UnitTest_TRemoveTraits()

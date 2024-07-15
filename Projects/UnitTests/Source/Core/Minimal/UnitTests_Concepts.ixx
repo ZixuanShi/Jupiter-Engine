@@ -6,11 +6,12 @@ module;
 
 export module UnitTests_Concepts;
 
-import jpt.CoreModules;
 import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Utilities;
+import jpt.Vector2;
+import jpt.Vector3;
 
 template<jpt::Trivial T>
 bool IsTrivial()

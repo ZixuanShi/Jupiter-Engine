@@ -1,3 +1,4 @@
+
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
@@ -6,7 +7,11 @@ module;
 
 export module UnitTests_Matrix44;
 
-import jpt.CoreModules;
+import jpt.Matrix44;
+import jpt.Vector3;
+import jpt.Vector4;
+import jpt.Math;
+import jpt.Utilities;
 
 // https://www.andre-gaschler.com/rotationconverter/
 

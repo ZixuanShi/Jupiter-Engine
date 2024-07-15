@@ -25,7 +25,7 @@ namespace jpt
 		Vector4<T> m[4];
 
 	public:
-		static consteval Matrix44<T> Identity() { return Matrix44<T>(); }
+		static consteval Matrix44 Identity() { return Matrix44(); }
 
 	public:
 		constexpr Matrix44();

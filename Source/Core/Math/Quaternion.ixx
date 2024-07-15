@@ -28,7 +28,7 @@ namespace jpt
 		T w = static_cast<T>(1);
 
 	public:
-		static consteval TQuaternion<T> Identity() { return TQuaternion<T>(); }
+		static consteval TQuaternion Identity() { return TQuaternion(); }
 
 	public:
 		constexpr TQuaternion() = default;

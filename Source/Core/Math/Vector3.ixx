@@ -24,19 +24,21 @@ export namespace jpt
 		T z = static_cast<T>(0);
 
 	public:
-		static consteval Vector3 Zero()    { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 One()     { return Vector3(static_cast<T>( 1), static_cast<T>( 1), static_cast<T>( 1)); }
-		static consteval Vector3 Up()      { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
-		static consteval Vector3 Down()    { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
-		static consteval Vector3 Left()    { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 Right()   { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 Forward() { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
-		static consteval Vector3 Back()    { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
+		static consteval Vector3 Zero()     { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 0)); }
+		static consteval Vector3 One()      { return Vector3(static_cast<T>( 1), static_cast<T>( 1), static_cast<T>( 1)); }
+		static consteval Vector3 Up()       { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
+		static consteval Vector3 Down()     { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
+		static consteval Vector3 Left()     { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
+		static consteval Vector3 Right()    { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
+		static consteval Vector3 Forward()  { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
+		static consteval Vector3 Backward() { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
 
 	public:
 		constexpr Vector3() = default;
 		constexpr Vector3(T scalar);
 		constexpr Vector3(T _x, T _y, T _z);
+
+		constexpr Vector3 operator-() const;
 
 		constexpr Vector3 operator+(const Vector3& other) const;
 		constexpr Vector3 operator-(const Vector3& other) const;
@@ -107,6 +109,12 @@ export namespace jpt
 		, y(_y)
 		, z(_z)
 	{
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::operator-() const
+	{
+		return Vector3(-x, -y, -z);
 	}
 
 	template<Numeric T>

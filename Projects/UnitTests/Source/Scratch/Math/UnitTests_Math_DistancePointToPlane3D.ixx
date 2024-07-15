@@ -6,7 +6,9 @@ module;
 
 export module UnitTests_Math_DistancePointToPlane3D;
 
-import jpt.CoreModules;
+import jpt.Vector3;
+import jpt.Utilities;
+import jpt.Math;
 
 float DistancePointToPlane3D(Vec3f point, Vec3f a, Vec3f b, Vec3f c)
 {

@@ -6,7 +6,9 @@ module;
 
 export module UnitTests_Quaternion;
 
-import jpt.CoreModules;
+import jpt.Quaternion;
+import jpt.Utilities;
+import jpt.Math;
 
 bool UnitTest_Quaternion_Lerp()
 {

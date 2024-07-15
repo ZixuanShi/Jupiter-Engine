@@ -26,18 +26,20 @@ namespace jpt
 		T w = static_cast<T>(0);
 
 	public:
+		static consteval Vector4 Zero()     { return Vector4(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(0)); }
+		static consteval Vector4 One()      { return Vector4(static_cast<T>( 1), static_cast<T>( 1), static_cast<T>( 1), static_cast<T>(1)); }
+		static consteval Vector4 Up()       { return Vector4(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0), static_cast<T>(0)); }
+		static consteval Vector4 Down()     { return Vector4(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0), static_cast<T>(0)); }
+		static consteval Vector4 Left()     { return Vector4(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(0)); }
+		static consteval Vector4 Right()    { return Vector4(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(0)); }
+		static consteval Vector4 Forward()  { return Vector4(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1), static_cast<T>(0)); }
+		static consteval Vector4 Backward() { return Vector4(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1), static_cast<T>(0)); }
+
+	public:
 		constexpr Vector4() = default;
 		constexpr Vector4(T scalar);
 		constexpr Vector4(T x, T y, T z, T w);
 		constexpr Vector4(const Vector3<T>& vector, T w);
-
-		constexpr T Dot(const Vector4& other) const;
-		constexpr T Length() const;
-		constexpr T Length2() const;
-		constexpr void Normalize();
-
-		constexpr static T Dot(const Vector4& lhs, const Vector4& rhs);
-		constexpr static Vector4 Normalized(const Vector4& vector);
 
 		constexpr Vector4 operator-() const;
 
@@ -61,13 +63,14 @@ namespace jpt
 		constexpr Vector4& operator*=(T scalar) { return *this = *this * scalar; }
 		constexpr Vector4& operator/=(T scalar) { return *this = *this / scalar; }
 
-		constexpr bool IsDir() const;
-		constexpr bool IsPos() const;
+		constexpr T& operator[](size_t index) { return (&x)[index]; }
+		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
 
 		constexpr bool operator==(const Vector4& other) const;
 
-		constexpr T& operator[](size_t index) { return (&x)[index]; }
-		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
+		// Homogeneous coordinates
+		constexpr bool IsDir() const;
+		constexpr bool IsPos() const;
 	};
 
 	template<Numeric T>
@@ -95,51 +98,6 @@ namespace jpt
 		, z(vector.z)
 		, w(w) 
 	{
-	}
-
-	template<Numeric T>
-	constexpr T Vector4<T>::Dot(const Vector4& other) const
-	{
-		return x * other.x + y * other.y + z * other.z + w * other.w;
-	}
-
-	template<Numeric T>
-	constexpr T Vector4<T>::Length() const
-	{
-		return std::sqrt(x * x + y * y + z * z + w * w);
-	}
-
-	template<Numeric T>
-	constexpr T Vector4<T>::Length2() const
-	{
-		return x * x + y * y + z * z + w * w;
-	}
-
-	template<Numeric T>
-	constexpr void Vector4<T>::Normalize()
-	{
-		const T length = Length(*this);
-		if (length > static_cast<T>(0))
-		{
-			x /= length;
-			y /= length;
-			z /= length;
-			w /= length;
-		}
-	}
-
-	template<Numeric T>
-	constexpr T Vector4<T>::Dot(const Vector4& lhs, const Vector4& rhs)
-	{
-		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
-	}
-
-	template<Numeric T>
-	constexpr Vector4<T> Vector4<T>::Normalized(const Vector4& vector)
-	{
-		Vector4 result = vector;
-		result.Normalize();
-		return result;
 	}
 
 	template<Numeric T>
@@ -239,7 +197,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool Vector4<T>::IsDir() const
 	{
-		return AreValuesClose(Length2(), static_cast<T>(1)) && AreValuesClose(w, static_cast<T>(0));
+		return w == static_cast<T>(0);
 	}
 
 	template<Numeric T>

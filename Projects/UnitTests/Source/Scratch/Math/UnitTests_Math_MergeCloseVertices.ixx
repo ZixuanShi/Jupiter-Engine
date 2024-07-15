@@ -6,7 +6,12 @@ module;
 
 export module UnitTests_Math_MergeCloseVertices;
 
-import jpt.CoreModules;
+import jpt.DynamicArray;
+import jpt.Vector3;
+import jpt.Rand;
+import jpt.HashSet;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 jpt::DynamicArray<Vec3f> GetTestData()
 {

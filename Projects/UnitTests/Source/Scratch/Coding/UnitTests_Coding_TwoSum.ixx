@@ -6,7 +6,8 @@ module;
 
 export module UnitTests_Coding_TwoSum;
 
-import jpt.CoreModules;
+import jpt.DynamicArray;
+import jpt.Utilities;
 
 static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, int32 target)
 {

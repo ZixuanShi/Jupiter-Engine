@@ -42,7 +42,7 @@ export bool UnitTest_Math_IsLeftOfView()
 	JPT_ENSURE(IsLeftOfView(viewDir, viewPos, point));
 
 	// Different view direction
-	viewDir = Vec3f::Back();
+	viewDir = Vec3f::Backward();
 
 	// Test a point to the left of the view
 	point = Vec3f(-1, 0, -1);
