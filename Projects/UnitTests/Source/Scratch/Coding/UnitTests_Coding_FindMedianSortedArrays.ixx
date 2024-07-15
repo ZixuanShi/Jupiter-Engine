@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
 #include <algorithm>
 
 export module UnitTests_Coding_FindMedianSortedArrays;

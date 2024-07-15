@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/Macros.h"
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
 #include <typeinfo>

@@ -1,6 +1,6 @@
 ﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
 #include "Profiling/TimingProfiler.h"
 
 import jpt.CoreModules;

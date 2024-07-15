@@ -4,7 +4,7 @@ module;
 
 #pragma execution_character_set("utf-8")
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 #include <fstream>
 

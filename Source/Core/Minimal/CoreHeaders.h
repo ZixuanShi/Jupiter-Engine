@@ -3,7 +3,7 @@
 #pragma once
 
 // Building
-#include "Macros.h"
+#include "CoreMacros.h"
 
 // Core
 #include "Core/Types/Enum.h"
