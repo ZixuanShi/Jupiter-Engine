@@ -1,0 +1,1 @@
+Dummy file for common assets for sharing between Jupiter engine and client projects

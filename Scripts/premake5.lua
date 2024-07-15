@@ -175,3 +175,11 @@ project (project_name)
         (project_dir .. "Source/**.cpp"),
         (project_dir .. "Source/**.ixx"),
     }
+
+    -- TODO: Only xcopy if shipping config
+    -- postbuildcommands
+    -- {
+    --     -- Assets
+    --     "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+    --     "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
+    -- }
