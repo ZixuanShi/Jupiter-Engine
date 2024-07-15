@@ -1,4 +1,4 @@
 {
-	"engine_version": 1,
-	"graphics_API": "OpenGL"
+	"engine_version": 0,
+	"graphics_API": "Vulkan"
 }

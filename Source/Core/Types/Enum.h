@@ -2,7 +2,6 @@
 
 #pragma once
 #include "Debugging/Logger.h"
-#include "Debugging/Assert.h"
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -100,7 +99,7 @@ public:                                                                         
     }                                                                                                                        \
     constexpr static const jpt::String& Name(TSize index)                                                                    \
     {                                                                                                                        \
-        JPT_ASSERT(s_data.names.Has(index));                                                                                 \
+        JPT_ASSERT(s_data.names.Has(index), "Couldn't find associated enum name with given index \"%d\"", index);            \
         return s_data.names[index];                                                                                          \
     }                                                                                                                        \
     constexpr static TSize FromName(const jpt::String& name)                                                                 \

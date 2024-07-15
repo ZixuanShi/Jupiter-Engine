@@ -16,6 +16,8 @@ import jpt.JsonData;
 import jpt.File.Path;
 import jpt.FileIO;
 
+import jpt.Graphics.Enums;
+
 static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
 static const jpt::File::Path engineJsonPath = { jpt::File::ESource::Engine, "Assets/TestJson_UnitTest.json" };
 
@@ -122,20 +124,26 @@ static bool Engine_Write()
     jpt::JsonMap engineJson;
 
     engineJson.Set("engine_version", 0);
-    engineJson.Set("graphics_API", jpt::String("Vulkan"));
+
+    jpt::Graphics::API graphicsAPI = jpt::Graphics::API::Vulkan;
+    engineJson.Set("graphics_API", graphicsAPI.ToString());
+
     jpt::WriteJsonFile(engineJsonPath, engineJson);
 
     return true;
 }
 
-static bool Engine_Update()
+static bool Engine_Read()
 {
     jpt::JsonMap engineJson = jpt::ReadJsonFile(engineJsonPath).Value();
 
-    engineJson.Set("engine_version", 1);
-    engineJson.Set("graphics_API", jpt::String("OpenGL"));
+    JPT_ENSURE(engineJson["engine_version"] == 0);
 
-    jpt::WriteJsonFile(engineJsonPath, engineJson);
+    const jpt::String& graphicsAPIStr = engineJson["graphics_API"].As<jpt::String>();
+    JPT_ENSURE(graphicsAPIStr == "Vulkan");
+
+    jpt::Graphics::API graphicsAPI(graphicsAPIStr);
+    JPT_ENSURE(graphicsAPI == jpt::Graphics::API::Vulkan);
 
     return true;
 }
@@ -148,7 +156,7 @@ export bool RunUnitTests_Json()
     JPT_ENSURE(UnitTest_Json_ReadUpdated());
 
     JPT_ENSURE(Engine_Write());
-    JPT_ENSURE(Engine_Update());
+    JPT_ENSURE(Engine_Read());
 
     return true;
 }
