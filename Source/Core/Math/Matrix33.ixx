@@ -14,6 +14,7 @@ import jpt.Vector2;
 import jpt.Vector3;
 import jpt.String;
 import jpt.ToString;
+import jpt.Utilities;
 
 namespace jpt
 {
@@ -44,12 +45,16 @@ namespace jpt
 		constexpr static Matrix33 RotationDegrees(T degrees);
 		constexpr static Matrix33 Scaling(Vector2<T> v);
 		constexpr static Matrix33 Scaling(T scalar);
+		constexpr static Matrix33 Orthographic(T left, T right, T bottom, T top, T near, T far);
 
 		constexpr void Translate(Vector2<T> v);
 		constexpr void Rotate(T radians);
 		constexpr void RotateDegrees(T degrees);
 		constexpr void Scale(Vector2<T> v);
 		constexpr void Scale(T scalar);
+		constexpr void Transpose();
+		constexpr void Inverse();
+		constexpr bool IsOrthogonal() const;
 
 		constexpr bool operator==(const Matrix33<T>& rhs) const;
 
@@ -166,6 +171,25 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Matrix33<T> Matrix33<T>::Orthographic(T left, T right, T bottom, T top, T near, T far)
+	{
+		Matrix33<T> result = Identity();
+
+		const T width = right - left;
+		const T height = top - bottom;
+		const T depth = far - near;
+
+		result.m[0][0] = 2 / width;
+		result.m[1][1] = 2 / height;
+		result.m[2][2] = -2 / depth;
+		result.m[0][2] = -(right + left) / width;
+		result.m[1][2] = -(top + bottom) / height;
+		result.m[2][2] = -(far + near) / depth;
+
+		return result;
+	}
+
+	template<Numeric T>
 	constexpr void Matrix33<T>::Translate(Vector2<T> v)
 	{
 		*this *= Translation(v); 
@@ -193,6 +217,51 @@ namespace jpt
 	constexpr void Matrix33<T>::Scale(T scalar)
 	{
 		*this *= Scaling(scalar);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix33<T>::Transpose()
+	{
+		Swap(m[0][1], m[1][0]);
+		Swap(m[0][2], m[2][0]);
+		Swap(m[1][2], m[2][1]);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix33<T>::Inverse()
+	{
+		const T det = Determinant();
+		if (det == 0)
+		{
+			return;
+		}
+
+		const T invDet = 1 / det;
+
+		Matrix33<T> result;
+		result.m[0][0] = (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * invDet;
+		result.m[0][1] = (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invDet;
+		result.m[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invDet;
+		result.m[1][0] = (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invDet;
+		result.m[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invDet;
+		result.m[1][2] = (m[0][2] * m[1][0] - m[0][0] * m[1][2]) * invDet;
+		result.m[2][0] = (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * invDet;
+		result.m[2][1] = (m[0][1] * m[2][0] - m[0][0] * m[2][1]) * invDet;
+		result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
+
+		*this = result;
+	}
+
+	template<Numeric T>
+	constexpr bool Matrix33<T>::IsOrthogonal() const
+	{
+		const T dotX = m[0].Dot(m[1]);
+		const T dotY = m[1].Dot(m[2]);
+		const T dotZ = m[2].Dot(m[0]);
+
+		return AreValuesClose(dotX, static_cast<T>(0)) &&
+			   AreValuesClose(dotY, static_cast<T>(0)) &&
+			   AreValuesClose(dotZ, static_cast<T>(0));
 	}
 
 	template<Numeric T>

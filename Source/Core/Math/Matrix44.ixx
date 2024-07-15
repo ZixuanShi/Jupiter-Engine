@@ -58,6 +58,8 @@ namespace jpt
 		constexpr void RotateZ(T radians);
 		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Transpose();
+		constexpr void Inverse();
+		constexpr bool IsOrthogonal() const;
 
 		constexpr String ToString() const;
 	};
@@ -229,7 +231,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::Orthographic(T left, T right, T bottom, T top, T near, T far)
 	{
-		Matrix44<T> result = Matrix44<T>::Identity;
+		Matrix44<T> result = Matrix44<T>::Identity();
 
 		const T width = right - left;
 		const T height = top - bottom;
@@ -294,13 +296,70 @@ namespace jpt
 	template<Numeric T>
 	constexpr void Matrix44<T>::Transpose()
 	{
-		for (size_t i = 0; i < 4; ++i)
+		Swap(m[0][1], m[1][0]);
+		Swap(m[0][2], m[2][0]);
+		Swap(m[0][3], m[3][0]);
+		Swap(m[1][2], m[2][1]);
+		Swap(m[1][3], m[3][1]);
+		Swap(m[2][3], m[3][2]);
+	}
+
+	template<Numeric T>
+	constexpr void Matrix44<T>::Inverse()
+	{
+		const T det = Determinant();
+		if (det == 0)
 		{
-			for (size_t j = i + 1; j < 4; ++j)
-			{
-				Swap(m[i][j], m[j][i]);
-			}
+			return;
 		}
+
+		const T invDet = 1 / det;
+
+		const T a = m[0][0];
+		const T b = m[0][1];
+		const T c = m[0][2];
+		const T d = m[0][3];
+		const T e = m[1][0];
+		const T f = m[1][1];
+		const T g = m[1][2];
+		const T h = m[1][3];
+		const T i = m[2][0];
+		const T j = m[2][1];
+		const T k = m[2][2];
+		const T l = m[2][3];
+		const T m = m[3][0];
+		const T n = m[3][1];
+		const T o = m[3][2];
+		const T p = m[3][3];
+
+		m[0][0] = (f * k * p + g * l * n + h * j * o - f * l * o - g * j * p - h * k * n) * invDet;
+		m[0][1] = (b * l * o + c * j * p + d * k * n - b * k * p - c * l * n - d * j * o) * invDet;
+		m[0][2] = (b * g * p + c * h * n + d * f * o - b * h * o - c * f * p - d * g * n) * invDet;
+		m[0][3] = (b * h * k + c * f * l + d * g * j - b * g * l - c * h * j - d * f * k) * invDet;
+		m[1][0] = (e * l * o + g * i * p + h * k * m - e * k * p - g * l * m - h * i * o) * invDet;
+		m[1][1] = (a * k * p + c * l * m + d * i * o - a * l * o - c * i * p - d * k * m) * invDet;
+		m[1][2] = (a * h * o + c * f * p + d * g * m - a * g * p - c * h * m - d * f * o) * invDet;
+		m[1][3] = (a * g * l + c * h * m + d * f * k - a * h * k - c * f * l - d * g * m) * invDet;
+		m[2][0] = (e * j * p + f * l * m + h * i * n - e * l * n - f * i * p - h * j * m) * invDet;
+		m[2][1] = (a * l * n + b * i * p + d * j * m - a * j * p - b * l * m - d * i * n) * invDet;
+		m[2][2] = (a * f * p + b * h * m + d * e * n - a * h * n - b * e * p - d * f * m) * invDet;
+		m[2][3] = (a * h * j + b * e * l + d * f * i - a * f * l - b * h * i - d * e * j) * invDet;
+		m[3][0] = (e * k * n + f * i * o + g * j * m - e * j * o - f * k * m - g * i * n) * invDet;
+		m[3][1] = (a * j * o + b * k * m + c * i * n - a * k * n - b * i * o - c * j * m) * invDet;
+		m[3][2] = (a * g * n + b * e * o + c * f * m - a * f * o - b * g * m - c * e * n) * invDet;
+		m[3][3] = (a * f * k + b * g * m + c * e * j - a * g * j - b * e * k - c * f * m) * invDet;
+	}
+
+	template<Numeric T>
+	constexpr bool Matrix44<T>::IsOrthogonal() const
+	{
+		const T dotX = m[0].Dot(m[1]);
+		const T dotY = m[1].Dot(m[2]);
+		const T dotZ = m[2].Dot(m[0]);
+
+		return AreValuesClose(dotX, static_cast<T>(0)) &&
+			   AreValuesClose(dotY, static_cast<T>(0)) &&
+			   AreValuesClose(dotZ, static_cast<T>(0));
 	}
 
 	template<Numeric T>
