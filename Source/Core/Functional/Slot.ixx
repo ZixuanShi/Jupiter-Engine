@@ -6,8 +6,7 @@ module;
 
 export module jpt.Slot;
 
-export import jpt.Function;
-
+import jpt.Function;
 import jpt.DynamicArray;
 import jpt.Utilities;
 import jpt.Math;

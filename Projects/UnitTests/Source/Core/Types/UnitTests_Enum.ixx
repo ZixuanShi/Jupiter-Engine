@@ -254,6 +254,21 @@ bool UnitTest_Enum_Hex()
 	return true;
 }
 
+static bool StringToEnum()
+{
+	EColor_Local color("Green");
+	JPT_ENSURE(color == EColor_Local::Green);
+	JPT_ENSURE(color == 0x00FF0000);
+	JPT_ENSURE(color < EColor_Local::Yellow);
+
+	color = "Red";
+	JPT_ENSURE(color == EColor_Local::Red);
+	JPT_ENSURE(color == 0xFF000000);
+	JPT_ENSURE(color < EColor_Local::Yellow);
+
+	return true;
+}
+
 export bool RunUnitTests_Enum()
 {
 	JPT_ENSURE(UnitTest_Enum_NonSequence<EFruit_Local>());
@@ -266,6 +281,7 @@ export bool RunUnitTests_Enum()
 
 	JPT_ENSURE(UnitTest_Enum_Flag());
 	JPT_ENSURE(UnitTest_Enum_Hex());
+	JPT_ENSURE(StringToEnum());
 
 	return true;
 }

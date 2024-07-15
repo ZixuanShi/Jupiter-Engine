@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Debugging/Logger.h"
+#include "Debugging/Assert.h"
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -99,13 +100,27 @@ public:                                                                         
     }                                                                                                                        \
     constexpr static const jpt::String& Name(TSize index)                                                                    \
     {                                                                                                                        \
-        JPT_ASSERT(s_data.names.Has(index));                                                                            \
+        JPT_ASSERT(s_data.names.Has(index));                                                                                 \
         return s_data.names[index];                                                                                          \
+    }                                                                                                                        \
+    constexpr static TSize FromName(const jpt::String& name)                                                                 \
+    {                                                                                                                        \
+		for (const auto& [key, value] : s_data.names)                                                                        \
+		{                                                                                                                    \
+			if (value == name)                                                                                               \
+			{                                                                                                                \
+				return key;                                                                                                  \
+			}                                                                                                                \
+		}                                                                                                                    \
+		JPT_ASSERT(false, "Couldn't find associated enum value with given name \"%s\"", name.ConstBuffer());                 \
+		return 0;                                                                                                            \
     }                                                                                                                        \
                                                                                                                              \
 public:                                                                                                                      \
     /** Member Constructor & operator= */                                                                                    \
     constexpr EnumName() = default;                                                                                          \
+                                                                                                                             \
+    /** Integer ctor & operator= */                                                                                          \
                                                                                                                              \
     constexpr EnumName(EnumName::Values value)	                                                                             \
         : m_value(value)                                                                                                     \
@@ -131,6 +146,19 @@ public:                                                                         
     	return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
+    /** String ctor & operator= */                                                                                           \
+                                                                                                                             \
+    constexpr EnumName(const jpt::String& name)                                                                              \
+    {                                                                                                                        \
+		m_value = FromName(name);                                                                                            \
+	}                                                                                                                        \
+																															 \
+    constexpr EnumName& operator=(const jpt::String& name)                                                                   \
+	{                                                                                                                        \
+		m_value = FromName(name);                                                                                            \
+		return *this;                                                                                                        \
+	}                                                                                                                        \
+																															 \
     /** Math operators */                                                                                                    \
     /** If you are using math operators. Make sure you exactly know the result is a valid JPT_ENUM(YourEnum)'s value */      \
     /** JPT_ENUM's values are not guaranteed linear and contigous, you will have assertion failed if that's the case */      \
@@ -140,14 +168,14 @@ public:                                                                         
     constexpr EnumName& operator+=(TInt offset)                                                                              \
     {                                                                                                                        \
     	m_value += static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Has(m_value));                                                                          \
+    	JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
     	return *this;                                                                                                        \
     }                                                                                                                        \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator-=(TInt offset)                                                                              \
     {                                                                                                                        \
     	m_value -= static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Has(m_value));                                                                          \
+    	JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
     	return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
