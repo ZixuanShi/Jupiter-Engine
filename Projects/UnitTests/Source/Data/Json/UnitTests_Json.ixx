@@ -17,12 +17,13 @@ import jpt.File.Path;
 import jpt.FileIO;
 
 static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
+static const jpt::File::Path engineJsonPath = { jpt::File::ESource::Engine, "Assets/TestJson_UnitTest.json" };
 
 bool UnitTest_Json_Write()
 {
     jpt::JsonMap jsonRoot;
 
-    jsonRoot.Set("source", jpt::String("Engine"));
+    jsonRoot.Set("source", jpt::String("Client"));
     jsonRoot.Set("data_int", 12);
     jsonRoot.Set("data_float", 1.55f);
     jsonRoot.Set("data_string", jpt::String("Hello from Jupiter Engine!"));
@@ -54,7 +55,7 @@ bool UnitTest_Json_Read()
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
     // Access the data with operator[]
-    JPT_ENSURE(jsonRoot["source"] == jpt::String("Engine"));
+    JPT_ENSURE(jsonRoot["source"] == jpt::String("Client"));
     JPT_ENSURE(jsonRoot["data_int"] == 12);
     JPT_ENSURE(jpt::AreValuesClose(jsonRoot["data_float"].As<float32>(), 1.55f));
     JPT_ENSURE(jsonRoot["data_string"] == jpt::String("Hello from Jupiter Engine!"));
@@ -84,7 +85,7 @@ bool UnitTest_Json_Update()
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
     // Update the data
-    jsonRoot.Set("source", jpt::String("Jupiter"));
+    jsonRoot.Set("source", jpt::String("Jupiter Client"));
 
     // subset
     jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
@@ -104,7 +105,7 @@ bool UnitTest_Json_ReadUpdated()
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
-    JPT_ENSURE(jsonRoot["source"] == jpt::String("Jupiter"));
+    JPT_ENSURE(jsonRoot["source"] == jpt::String("Jupiter Client"));
 
     const jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
     JPT_ENSURE(subSet["year"] == 1999);
@@ -116,12 +117,38 @@ bool UnitTest_Json_ReadUpdated()
     return true;
 }
 
+static bool Engine_Write()
+{
+    jpt::JsonMap engineJson;
+
+    engineJson.Set("engine_version", 0);
+    engineJson.Set("graphics_API", jpt::String("Vulkan"));
+    jpt::WriteJsonFile(engineJsonPath, engineJson);
+
+    return true;
+}
+
+static bool Engine_Update()
+{
+    jpt::JsonMap engineJson = jpt::ReadJsonFile(engineJsonPath).Value();
+
+    engineJson.Set("engine_version", 1);
+    engineJson.Set("graphics_API", jpt::String("OpenGL"));
+
+    jpt::WriteJsonFile(engineJsonPath, engineJson);
+
+    return true;
+}
+
 export bool RunUnitTests_Json()
 {
     JPT_ENSURE(UnitTest_Json_Write());
     JPT_ENSURE(UnitTest_Json_Read());
     JPT_ENSURE(UnitTest_Json_Update());
     JPT_ENSURE(UnitTest_Json_ReadUpdated());
+
+    JPT_ENSURE(Engine_Write());
+    JPT_ENSURE(Engine_Update());
 
     return true;
 }
