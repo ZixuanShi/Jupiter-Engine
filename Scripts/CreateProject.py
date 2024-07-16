@@ -62,12 +62,10 @@ def create_scripts():
 def create_main_cpp():
 	main_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
+#include "Application_<ProjectName>.h"
 
-import jpt.CoreModules;
 import jpt.EntryPoints;
-
-import Application_<ProjectName>;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
@@ -92,18 +90,20 @@ def create_application_communications_ixx():
 
 // This file overrides the global communication functions through out both engine and client
 
+module;
+
+#include "Application_<ProjectName>.h"
+
 export module ApplicationCommunications;
 
 import jpt.Application_Base;
-import jpt.FilePathUtils;
-
-import Application_<ProjectName>;
+import jpt.File.Path;
 
 /** Must Overrides Application GetInstance here */
-jpt::Application_Base& jpt::Application_Base::GetInstance()
+jpt::Application_Base* jpt::Application_Base::GetInstance()
 {
 	static Application_<ProjectName> s_instance;
-	return s_instance;
+	return &s_instance;
 }
 
 /** Must Overrides GetClientDir here */
@@ -121,18 +121,14 @@ const wchar_t* jpt::GetClientDirW()
 		file.write(communications_content)
 
 
-def create_application_ixx():
+def create_application_header():
 	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Minimal/Headers.h"
-
-export module Application_<ProjectName>;
+#pragma once
 
 import jpt.Application_Base;
 
-export class Application_<ProjectName> final : public jpt::Application_Base
+class Application_<ProjectName> final : public jpt::Application_Base
 {
 private:
 	using Super = jpt::Application_Base;
@@ -140,7 +136,17 @@ private:
 };
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
-	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".ixx", "w") as file:
+	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".h", "w") as file:
+	    file.write(application_content)
+
+
+def create_application_cpp():
+	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+#include "Application_<ProjectName>.h"
+"""
+	application_content = application_content.replace("<ProjectName>", project_name)		
+	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".cpp", "w") as file:
 	    file.write(application_content)
 
 
@@ -149,7 +155,8 @@ def create_source():
 
 	create_main_cpp()
 	create_application_communications_ixx()
-	create_application_ixx()
+	create_application_header()
+	create_application_cpp()
 
 
 if __name__ == "__main__":

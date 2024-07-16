@@ -10,7 +10,7 @@ private:
 	using Super = jpt::Application_Base;
 
 public:
-	virtual const char* GetName() const override final { return "Jupiter_Unit_Tests"; }
+	//virtual const char* GetName() const override final { return "Jupiter_Unit_Tests"; }
 
 public:
 	virtual bool Init() override final;
