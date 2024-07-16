@@ -13,7 +13,7 @@ static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, in
 {
 	jpt::HashMap<size_t, size_t> numToIndex;
 
-	for (size_t i = 0; i < nums.Size(); ++i)
+	for (size_t i = 0; i < nums.Count(); ++i)
 	{
 		const int32 complement = target - nums[i];
 
