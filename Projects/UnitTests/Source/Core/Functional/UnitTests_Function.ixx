@@ -194,6 +194,12 @@ bool UnitTest_Function_Lambda()
     return true;
 }
 
+void LambdaCapturesLocalVar(jpt::Function<int32()>& outLambda)
+{
+    int32 x = 10;
+    outLambda = [x]() { return x; };
+    //outLambda = [&x]() { return x; }; // Error: 'x' cannot be captured because it does not have automatic storage duration
+}
 jpt::Function<int32()> LambdaCapturesLocalVar()
 {
     int32 x = 10;
@@ -201,8 +207,11 @@ jpt::Function<int32()> LambdaCapturesLocalVar()
 }
 bool UnitTest_Function_LambdaCapturesLocalVar()
 {
-    auto lambda = LambdaCapturesLocalVar();
+    jpt::Function<int32()> lambda;
+    LambdaCapturesLocalVar(lambda);
     JPT_ENSURE(lambda() == 10);
+    JPT_ENSURE(lambda() == 10);
+    JPT_ENSURE(LambdaCapturesLocalVar()() == 10);
     return true;
 }
 
