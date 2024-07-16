@@ -3,10 +3,9 @@
 #include "Core/Minimal/CoreHeaders.h"
 #include "Profiling/TimingProfiler.h"
 
-import jpt.CoreModules;
-import jpt.EntryPoints;
+#include "Application_JupiterUnitTests.h"
 
-import UnitTestsApplication;
+import jpt.EntryPoints;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64

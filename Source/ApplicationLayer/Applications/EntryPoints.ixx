@@ -19,22 +19,22 @@ import jpt.Application_Base;
 
 #if IS_PLATFORM_WIN64
 
-export namespace jpt
+namespace jpt
 {
-	int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
+	export int MainImplWin64(HINSTANCE /*hInstance*/, HINSTANCE, LPSTR, int /*nCmdShow*/)
 	{
 #if !IS_RELEASE
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 #endif
 
-		jpt::Application_Base& app = jpt::Application_Base::GetInstance();
-		if (app.Init())
+		Application_Base* app = Application_Base::GetInstance();
+		if (app->Init())
 		{
-			app.Run();
+			app->Run();
 		}
 
-		app.Terminate();
+		app->Terminate();
 
 		return 0;
 	}	

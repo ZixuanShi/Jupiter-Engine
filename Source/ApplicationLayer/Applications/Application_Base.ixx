@@ -12,6 +12,9 @@ namespace jpt
 		It holds window, renderer, audio, collision managers, etc.*/
 	export class Application_Base
 	{
+	protected:
+		bool m_shouldTerminate = false;
+
 	public:
 		virtual ~Application_Base() = default;
 
@@ -23,9 +26,11 @@ namespace jpt
 
 		/** Designed to be implemented in client project's application
 			@return An Application's reference to the client project. */
-		static Application_Base& GetInstance();
+		static Application_Base* GetInstance();
 
-	private:
+		virtual const char* GetName() const { return "Application_Base"; }
+
+	protected:
 		void PollInput();
 		void Render();
 	};
@@ -49,7 +54,7 @@ namespace jpt
 		StopWatch timer;
 		timer.Start();
 		
-		while (true)
+		while (!m_shouldTerminate)
 		{
 			PollInput();
 			Update();
@@ -57,7 +62,7 @@ namespace jpt
 		
 			if (timer.GetDuration() > 0)
 			{
-				break;
+				m_shouldTerminate = true;
 			}
 		}
 	}
