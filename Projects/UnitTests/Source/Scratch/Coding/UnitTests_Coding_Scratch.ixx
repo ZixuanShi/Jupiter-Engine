@@ -16,6 +16,7 @@ export bool UnitTest_Coding_Scratch()
 	Application_JupiterUnitTests* app = static_cast<Application_JupiterUnitTests*>(Application_JupiterUnitTests::GetInstance());
 
 	JPT_LOG(app->GetName());
+	JPT_LOG(app->m_settings.Width);
 
 	return true;
 }

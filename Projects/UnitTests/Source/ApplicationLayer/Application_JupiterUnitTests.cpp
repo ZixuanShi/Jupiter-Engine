@@ -16,6 +16,8 @@ bool Application_JupiterUnitTests::Init()
 {
 	JPT_ENSURE(Super::Init(), "");
 
+	m_settings.Width = 680;
+
 	JPT_LOG("Core      Unit Tests %s", RunUnitTests_Core()      ? "Succeeded" : "Failed");
 	JPT_LOG("Data      Unit Tests %s", RunUnitTests_Data()      ? "Succeeded" : "Failed");
 	JPT_LOG("Debugging Unit Tests %s", RunUnitTests_Debugging() ? "Succeeded" : "Failed");

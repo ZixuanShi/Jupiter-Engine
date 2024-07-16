@@ -74,9 +74,32 @@ export namespace jpt
 	template<Numeric T>
 	constexpr bool Box3<T>::Intersects(const Box3<T>& other) const noexcept
 	{
-		return (min.x <= other.max.x && max.x >= other.min.x) &&
-			   (min.y <= other.max.y && max.y >= other.min.y) &&
-			   (min.z <= other.max.z && max.z >= other.min.z);
+		if (min.x > other.max.x)
+		{
+			return false;
+		}
+		if (max.x < other.min.x)
+		{
+			return false;
+		}
+		if (min.y > other.max.y)
+		{
+			return false;
+		}
+		if (max.y < other.min.y)
+		{
+			return false;
+		}
+		if (min.z > other.max.z)
+		{
+			return false;
+		}
+		if (max.z < other.min.z)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	template<Numeric T>
