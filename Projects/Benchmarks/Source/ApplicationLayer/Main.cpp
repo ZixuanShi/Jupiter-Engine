@@ -1,11 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
+#include "Application_Benchmarks.h"
 
 import jpt.CoreModules;
 import jpt.EntryPoints;
-
-import BenchmarksApplication;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
