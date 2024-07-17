@@ -9,9 +9,8 @@
 -- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
 -- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
 
--- <> To be specified by client premake5.lua
-local project_name = "<ProjectName>"
-local project_dir  = "<ProjectDirectory>"
+local project_name = _ARGS[1]
+local project_dir  = _ARGS[2]
 local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
 local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 

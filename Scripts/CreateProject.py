@@ -22,37 +22,28 @@ def get_info():
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generate_project_files_bat():
-	generator_bat = """
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action>
+	generator_bat = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+
+set args="<ProjectName>" "<ProjectDirectory>"
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action> %args%
+
 pause
 """
+	generator_bat = generator_bat.replace("<ProjectName>", project_name)
+	generator_bat = generator_bat.replace("<ProjectDirectory>", project_directory)
+	
 	# 2022
 	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2022.bat", "w") as file:
 		vs2022 = generator_bat.replace("<action>", "vs2022")
 		file.write(vs2022)
 
 	# Add any other versions here
- 
-
-def copy_premake5_lua():
-	destination = project_directory + "/Scripts/premake5.lua"
-	shutil.copyfile("C:/Program Files/Jupiter Technologies/Jupiter-Engine/Scripts/premake5.lua", destination)
 	
-	content = ""
-	with open(destination, "r") as file:
-		content = file.read()
-
-	content = content.replace("<ProjectName>", project_name)
-	content = content.replace("<ProjectDirectory>", project_directory)
-
-	with open(destination, "w") as file:
-		file.write(content)
 
 def create_scripts():
 	os.makedirs(project_directory + "/Scripts")
 
 	create_generate_project_files_bat()
-	copy_premake5_lua()
 
 
 # -----------------------------------------------------------------------------------------------------
