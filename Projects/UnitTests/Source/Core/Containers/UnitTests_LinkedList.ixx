@@ -37,7 +37,7 @@ auto locHelper = [](size_t i) -> const char*
         }
     };
 
-bool UnitTest_LinkedList_Trivial()
+bool UnitTests_LinkedList_Trivial()
 {
     jpt::LinkedList<int32> list{ 7,8,9 };
 
@@ -73,7 +73,7 @@ bool UnitTest_LinkedList_Trivial()
     return true;
 }
 
-bool UnitTest_LinkedList_String()
+bool UnitTests_LinkedList_String()
 {
     jpt::LinkedList<jpt::String> list{ "Seven", "Eight", "Nine" };
 
@@ -117,7 +117,7 @@ JPT_ENUM_UINT32(ETest2,
     Four = (1 << 8),
     Five,
     Six);
-bool UnitTest_LinkedList_Enum()
+bool UnitTests_LinkedList_Enum()
 {
 	jpt::LinkedList<ETest2> list{ ETest2::Zero, ETest2::Two, ETest2::Four };
 
@@ -142,7 +142,7 @@ bool UnitTest_LinkedList_Enum()
 	return true;
 }
 
-bool UnitTest_LinkedList_Any()
+bool UnitTests_LinkedList_Any()
 {
     jpt::LinkedList<jpt::Any> list;
 
@@ -180,7 +180,7 @@ bool UnitTest_LinkedList_Any()
     return true;
 }
 
-bool UnitTest_LinkedList_Variant()
+bool UnitTests_LinkedList_Variant()
 {
 	jpt::LinkedList<jpt::Variant<int32, jpt::String>> list;
 
@@ -204,7 +204,7 @@ bool UnitTest_LinkedList_Variant()
 	return true;
 }
 
-bool UnitTest_LinkedList_Tuple()
+bool UnitTests_LinkedList_Tuple()
 {
     using TTuple = jpt::Tuple<int32, jpt::String>;
 	jpt::LinkedList<TTuple> list;
@@ -238,7 +238,7 @@ bool UnitTest_LinkedList_Tuple()
 	return true;
 }
 
-bool UnitTest_LinkedList_Reverse()
+bool UnitTests_LinkedList_Reverse()
 {
     jpt::LinkedList<int32> list{ 1, 2, 3, 4, 5 };
 
@@ -250,14 +250,14 @@ bool UnitTest_LinkedList_Reverse()
 
 export bool RunUnitTests_LinkedList()
 {
-    JPT_ENSURE(UnitTest_LinkedList_Trivial());
-    JPT_ENSURE(UnitTest_LinkedList_Reverse());
+    JPT_ENSURE(UnitTests_LinkedList_Trivial());
+    JPT_ENSURE(UnitTests_LinkedList_Reverse());
 
-    JPT_ENSURE(UnitTest_LinkedList_String());
-    JPT_ENSURE(UnitTest_LinkedList_Enum());
-    JPT_ENSURE(UnitTest_LinkedList_Any());
-    JPT_ENSURE(UnitTest_LinkedList_Variant());
-    JPT_ENSURE(UnitTest_LinkedList_Tuple());
+    JPT_ENSURE(UnitTests_LinkedList_String());
+    JPT_ENSURE(UnitTests_LinkedList_Enum());
+    JPT_ENSURE(UnitTests_LinkedList_Any());
+    JPT_ENSURE(UnitTests_LinkedList_Variant());
+    JPT_ENSURE(UnitTests_LinkedList_Tuple());
 
     return true;
 }

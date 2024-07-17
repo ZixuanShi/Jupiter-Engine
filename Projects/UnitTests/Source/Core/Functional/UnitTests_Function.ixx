@@ -22,7 +22,7 @@ int32 Subtract(int32 a, int32 b)
 	return a - b;
 }
 
-bool UnitTest_Function_Global()
+bool UnitTests_Function_Global()
 {
     jpt::Function<int32(int32, int32)> func;
 
@@ -78,7 +78,7 @@ struct Test
     }
 };
 
-bool UnitTest_Function_MemberFunction()
+bool UnitTests_Function_MemberFunction()
 {
     jpt::Function<int32(int32)> func;
     Test test(13);
@@ -101,7 +101,7 @@ bool UnitTest_Function_MemberFunction()
     return true;
 }
 
-bool UnitTest_Function_Functor()
+bool UnitTests_Function_Functor()
 {
     struct Functor
     {
@@ -117,7 +117,7 @@ bool UnitTest_Function_Functor()
     return true;
 }
 
-bool UnitTest_Function_Copy()
+bool UnitTests_Function_Copy()
 {
     jpt::Function<int32(int32, int32)> func1;
     func1.Connect(&Add);
@@ -141,7 +141,7 @@ bool UnitTest_Function_Copy()
     return true;
 }
 
-bool UnitTest_Function_Lambda()
+bool UnitTests_Function_Lambda()
 {
     // rvalue lambda
     jpt::Function<int32(int32, int32)> func;
@@ -205,7 +205,7 @@ jpt::Function<int32()> LambdaCapturesLocalVar()
     int32 x = 10;
     return [x]() { return x; };
 }
-bool UnitTest_Function_LambdaCapturesLocalVar()
+bool UnitTests_Function_LambdaCapturesLocalVar()
 {
     jpt::Function<int32()> lambda;
     LambdaCapturesLocalVar(lambda);
@@ -215,7 +215,7 @@ bool UnitTest_Function_LambdaCapturesLocalVar()
     return true;
 }
 
-bool UnitTest_Function_LambdaCapturesThis()
+bool UnitTests_Function_LambdaCapturesThis()
 {
 	Test test(13);
 	JPT_ENSURE(test.m_func2(2) == 15);
@@ -234,7 +234,7 @@ void VoidFunction()
 {
     JPT_LOG("Hello Void Func");
 }
-bool UnitTest_Function_Void()
+bool UnitTests_Function_Void()
 {
     jpt::Function<void()> func;
     func.Connect(&VoidFunction);
@@ -245,16 +245,16 @@ bool UnitTest_Function_Void()
 
 export bool RunUnitTests_Function()
 {
-    JPT_ENSURE(UnitTest_Function_Global());
-    JPT_ENSURE(UnitTest_Function_MemberFunction());
-    JPT_ENSURE(UnitTest_Function_Functor());
-    JPT_ENSURE(UnitTest_Function_Copy());
+    JPT_ENSURE(UnitTests_Function_Global());
+    JPT_ENSURE(UnitTests_Function_MemberFunction());
+    JPT_ENSURE(UnitTests_Function_Functor());
+    JPT_ENSURE(UnitTests_Function_Copy());
 
-    JPT_ENSURE(UnitTest_Function_Lambda());
-    JPT_ENSURE(UnitTest_Function_LambdaCapturesLocalVar());
-    JPT_ENSURE(UnitTest_Function_LambdaCapturesThis());
+    JPT_ENSURE(UnitTests_Function_Lambda());
+    JPT_ENSURE(UnitTests_Function_LambdaCapturesLocalVar());
+    JPT_ENSURE(UnitTests_Function_LambdaCapturesThis());
 
-    JPT_ENSURE(UnitTest_Function_Void());
+    JPT_ENSURE(UnitTests_Function_Void());
 
     return true;
 }

@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.Utilities;
 import jpt.Sort;
 
-bool UnitTest_Clamping()
+bool UnitTests_Clamping()
 {
 	int32 n = jpt::Clamp(5, 10, 13);
 	JPT_ENSURE(n == 10);
@@ -26,7 +26,7 @@ bool UnitTest_Clamping()
 	return true;
 }
 
-bool UnitTest_Abs()
+bool UnitTests_Abs()
 {
 	JPT_ENSURE(jpt::Abs(-10) == 10);
 	JPT_ENSURE(jpt::Abs(10) == 10);
@@ -35,7 +35,7 @@ bool UnitTest_Abs()
 	return true;
 }
 
-bool UnitTest_AreValuesClose()
+bool UnitTests_AreValuesClose()
 {
 	JPT_ENSURE(jpt::AreValuesClose(10.556677f, 10.556677f));
 	JPT_ENSURE(jpt::AreValuesClose(10.556677f, 10.956677f, 1.0f));
@@ -62,7 +62,7 @@ public:
 template<>
 constexpr bool jpt::IsTrivial<Foo> = true;
 
-bool UnitTest_MinMax()
+bool UnitTests_MinMax()
 {
 	JPT_ENSURE(jpt::Min(1, 5) == 1);
 	JPT_ENSURE(jpt::Min(2, 5, 10) == 2);
@@ -79,10 +79,10 @@ bool UnitTest_MinMax()
 
 export bool RunUnitTests_Math()
 {
-	JPT_ENSURE(UnitTest_Clamping());
-	JPT_ENSURE(UnitTest_Abs());
-	JPT_ENSURE(UnitTest_AreValuesClose());
-	JPT_ENSURE(UnitTest_MinMax());
+	JPT_ENSURE(UnitTests_Clamping());
+	JPT_ENSURE(UnitTests_Abs());
+	JPT_ENSURE(UnitTests_AreValuesClose());
+	JPT_ENSURE(UnitTests_MinMax());
 
 	return true;
 }

@@ -10,7 +10,7 @@ import jpt.Triangle2;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Triangle2_PointInsideTriangle()
+bool UnitTests_Triangle2_PointInsideTriangle()
 {
 	Triangle2f triangle2(Vec2f(0.0f, 0.0f), Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
 	Vec2f point(0.5f, 0.5f);
@@ -26,7 +26,7 @@ bool UnitTest_Triangle2_PointInsideTriangle()
 
 export bool RunUnitTests_Triangle2()
 {
-    JPT_ENSURE(UnitTest_Triangle2_PointInsideTriangle());
+    JPT_ENSURE(UnitTests_Triangle2_PointInsideTriangle());
 
     return true;
 }

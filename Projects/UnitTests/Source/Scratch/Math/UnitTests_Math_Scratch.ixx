@@ -8,7 +8,7 @@ export module UnitTests_Math_Scratch;
 
 import jpt.Utilities;
 
-export bool UnitTest_Math_Scratch()
+export bool UnitTests_Math_Scratch()
 {
 	
 	return true;

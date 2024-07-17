@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.Utilities;
 
 template<class TString>
-bool UnitTest_StringLen()
+bool UnitTests_StringLen()
 {
 	using TChar = TString::TChar;
 
@@ -22,7 +22,7 @@ bool UnitTest_StringLen()
 }
 
 template<class TString>
-bool UnitTest_ToCStr()
+bool UnitTests_ToCStr()
 {
 	using TChar = TString::TChar;
 
@@ -54,7 +54,7 @@ bool UnitTest_ToCStr()
 }
 
 template<class TString>
-bool UnitTest_StrCpy()
+bool UnitTests_StrCpy()
 {
 	using TChar = TString::TChar;
 
@@ -168,14 +168,14 @@ bool RunUnitTests_StringUtils_WStrToCStr()
 
 export bool RunUnitTests_StringUtils()
 {
-	JPT_ENSURE(UnitTest_StringLen<jpt::String>());
-	JPT_ENSURE(UnitTest_StringLen<jpt::WString>());
+	JPT_ENSURE(UnitTests_StringLen<jpt::String>());
+	JPT_ENSURE(UnitTests_StringLen<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_ToCStr<jpt::String>());
-	JPT_ENSURE(UnitTest_ToCStr<jpt::WString>());
+	JPT_ENSURE(UnitTests_ToCStr<jpt::String>());
+	JPT_ENSURE(UnitTests_ToCStr<jpt::WString>());
 
-	JPT_ENSURE(UnitTest_StrCpy<jpt::String>());
-	JPT_ENSURE(UnitTest_StrCpy<jpt::WString>());
+	JPT_ENSURE(UnitTests_StrCpy<jpt::String>());
+	JPT_ENSURE(UnitTests_StrCpy<jpt::WString>());
 
 	JPT_ENSURE(RunUnitTests_IsValidDataCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_IntegerToCStr());

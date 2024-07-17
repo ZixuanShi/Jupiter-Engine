@@ -14,7 +14,7 @@ import jpt.String;
 import jpt.ToString;
 
 template<jpt::Numeric TNum>
-bool UnitTest_TAllocatorrivialType()
+bool UnitTests_TAllocatorrivialType()
 {
 	// Single
 	TNum* pSingle = jpt::Allocator<TNum>::Allocate();
@@ -54,7 +54,7 @@ bool UnitTest_TAllocatorrivialType()
 	return true;
 }
 
-bool UnitTest_TAllocator_NonTrivial()
+bool UnitTests_TAllocator_NonTrivial()
 {
 	// If uncomment the following JPT_LOGs, only one "Foo copy ctor called" should be printed
 
@@ -155,12 +155,12 @@ bool UnitTest_TAllocator_NonTrivial()
 
 export bool RunUnitTests_Allocator()
 {
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<uint8>());
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<int32>());
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<float>());
-	JPT_ENSURE(UnitTest_TAllocatorrivialType<double>());
+	JPT_ENSURE(UnitTests_TAllocatorrivialType<uint8>());
+	JPT_ENSURE(UnitTests_TAllocatorrivialType<int32>());
+	JPT_ENSURE(UnitTests_TAllocatorrivialType<float>());
+	JPT_ENSURE(UnitTests_TAllocatorrivialType<double>());
 
-	JPT_ENSURE(UnitTest_TAllocator_NonTrivial());
+	JPT_ENSURE(UnitTests_TAllocator_NonTrivial());
 
 	return true;
 }

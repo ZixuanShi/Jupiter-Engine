@@ -24,7 +24,7 @@ import jpt.FileIO;
 
 using namespace jpt::File;
 
-bool UnitTest_FileIO_Exists()
+bool UnitTests_FileIO_Exists()
 {
     // Engine
     JPT_ENSURE(Exists({ ESource::Engine, "Assets/Configs/TextTxt.txt" }));
@@ -37,7 +37,7 @@ bool UnitTest_FileIO_Exists()
     return true;
 }
 
-bool UnitTest_FileIO_Directory()
+bool UnitTests_FileIO_Directory()
 {
     // Create
     jpt::File::MakeDirectory({ ESource::Engine, "Assets/NewDirectory_UnitTest" });
@@ -62,7 +62,7 @@ bool UnitTest_FileIO_Directory()
     return true;
 }
 
-bool UnitTest_FileIO_TextFile()
+bool UnitTests_FileIO_TextFile()
 {
 	// Load existing file
     //jpt::String text;
@@ -87,7 +87,7 @@ bool UnitTest_FileIO_TextFile()
 	return true;
 }
 
-bool UnitTest_FileIO_BinaryFile()
+bool UnitTests_FileIO_BinaryFile()
 {
     struct Foo
     {
@@ -126,7 +126,7 @@ bool UnitTest_FileIO_BinaryFile()
     return true;
 }
 
-bool UnitTest_FileIO_Serialization()
+bool UnitTests_FileIO_Serialization()
 {
     struct Foo
     {
@@ -184,13 +184,13 @@ bool UnitTest_FileIO_Serialization()
     return true;
 }
 
-bool UnitTest_FileIO_DataArray()
+bool UnitTests_FileIO_DataArray()
 {
 
     return true;
 }
 
-bool UnitTest_FileIO_DataMap()
+bool UnitTests_FileIO_DataMap()
 {
 
 
@@ -199,15 +199,15 @@ bool UnitTest_FileIO_DataMap()
 
 export bool RunUnitTests_FileIO()
 {
-    JPT_ENSURE(UnitTest_FileIO_Exists());
-	JPT_ENSURE(UnitTest_FileIO_Directory());
+    JPT_ENSURE(UnitTests_FileIO_Exists());
+	JPT_ENSURE(UnitTests_FileIO_Directory());
 
-	JPT_ENSURE(UnitTest_FileIO_TextFile());
-	JPT_ENSURE(UnitTest_FileIO_BinaryFile());
-	JPT_ENSURE(UnitTest_FileIO_Serialization());
+	JPT_ENSURE(UnitTests_FileIO_TextFile());
+	JPT_ENSURE(UnitTests_FileIO_BinaryFile());
+	JPT_ENSURE(UnitTests_FileIO_Serialization());
 
-	JPT_ENSURE(UnitTest_FileIO_DataArray());
-	JPT_ENSURE(UnitTest_FileIO_DataMap());
+	JPT_ENSURE(UnitTests_FileIO_DataArray());
+	JPT_ENSURE(UnitTests_FileIO_DataMap());
 
     return true;
 }

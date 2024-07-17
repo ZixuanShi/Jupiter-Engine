@@ -31,7 +31,7 @@ bool operator==(const Foo& a, const Foo& b)
 	return a.GetData() == b.GetData();
 }
 
-bool UnitTest_Tuple()
+bool UnitTests_Tuple()
 {
 	jpt::Tuple<int, char, bool, Foo, int, jpt::String> tuple{3, 'C', false, Foo(10), 4, "Hello"};
 	
@@ -75,7 +75,7 @@ bool UnitTest_Tuple()
 	return true;
 }
 
-bool UnitTest_EmptyTuple()
+bool UnitTests_EmptyTuple()
 {
 	jpt::Tuple<int, char, bool, Foo, int, jpt::String> tuple;
 
@@ -113,7 +113,7 @@ bool UnitTest_EmptyTuple()
 	return true;
 }
 
-bool UnitTest_ConstTuple()
+bool UnitTests_ConstTuple()
 {
 	const jpt::Tuple<int, char, bool, Foo, jpt::String> tuple{ 3, 'C', false, Foo(10), "Hello" };
 
@@ -130,7 +130,7 @@ bool UnitTest_ConstTuple()
 	return true;
 }
 
-bool UnitTest_ConstTDatauple()
+bool UnitTests_ConstTDatauple()
 {
 	jpt::Tuple<int, char, const bool, Foo, const int, const jpt::String> tuple{ 3, 'C', false, Foo(10), 4, "Hello" };
 
@@ -164,7 +164,7 @@ bool UnitTest_ConstTDatauple()
 	return true;
 }
 
-bool UnitTest_Tie()
+bool UnitTests_Tie()
 {
 	auto tuple = jpt::Tie(3, 'C', false, Foo(10), 4, jpt::String("Hello"));
 
@@ -207,7 +207,7 @@ bool UnitTest_Tie()
 	return true;
 }
 
-bool UnitTest_OneTypeTuple()
+bool UnitTests_OneTypeTuple()
 {
 	jpt::Tuple<int> tuple{42};
 
@@ -219,12 +219,12 @@ bool UnitTest_OneTypeTuple()
 
 export bool RunUnitTests_Tuple()
 {
-	JPT_ENSURE(UnitTest_Tuple());
-	JPT_ENSURE(UnitTest_EmptyTuple());
-	JPT_ENSURE(UnitTest_OneTypeTuple());
-	JPT_ENSURE(UnitTest_ConstTuple());
-	JPT_ENSURE(UnitTest_ConstTDatauple());
-	JPT_ENSURE(UnitTest_Tie());
+	JPT_ENSURE(UnitTests_Tuple());
+	JPT_ENSURE(UnitTests_EmptyTuple());
+	JPT_ENSURE(UnitTests_OneTypeTuple());
+	JPT_ENSURE(UnitTests_ConstTuple());
+	JPT_ENSURE(UnitTests_ConstTDatauple());
+	JPT_ENSURE(UnitTests_Tie());
 
 	return true;
 }

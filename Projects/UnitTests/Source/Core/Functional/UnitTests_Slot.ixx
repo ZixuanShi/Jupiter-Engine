@@ -27,7 +27,7 @@ struct Test
 	}
 };
 
-bool UnitTest_Slot()
+bool UnitTests_Slot()
 {
 	jpt::Slot<int32(int32, int32)> slot;
 
@@ -89,7 +89,7 @@ void VoidFunction(int32& i)
 	i *= 2;
 }
 
-bool UnitTest_Slot_Void()
+bool UnitTests_Slot_Void()
 {
 	jpt::Slot<void(int32&)> voidSlots;
 
@@ -107,7 +107,7 @@ bool UnitTest_Slot_Void()
 	return true;
 }
 
-bool UnitTest_Slot_Function()
+bool UnitTests_Slot_Function()
 {
 	jpt::Slot<void(int32&)> slot;
 
@@ -141,9 +141,9 @@ bool UnitTest_Slot_Function()
 
 export bool RunUnitTests_Slot()
 {
-	JPT_ENSURE(UnitTest_Slot());
-	JPT_ENSURE(UnitTest_Slot_Void());
-	JPT_ENSURE(UnitTest_Slot_Function());
+	JPT_ENSURE(UnitTests_Slot());
+	JPT_ENSURE(UnitTests_Slot_Void());
+	JPT_ENSURE(UnitTests_Slot_Function());
 
     return true;
 }

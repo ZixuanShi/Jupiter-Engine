@@ -10,7 +10,7 @@ import jpt.File.Path;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_FilePath()
+bool UnitTests_FilePath()
 {
 
     return true;
@@ -18,7 +18,7 @@ bool UnitTest_FilePath()
 
 export bool RunUnitTests_FilePath()
 {
-    JPT_ENSURE(UnitTest_FilePath());
+    JPT_ENSURE(UnitTests_FilePath());
 
     return true;
 }

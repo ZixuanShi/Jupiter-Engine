@@ -38,7 +38,7 @@ auto locHelper = [](size_t i) -> const char*
         }
     };
 
-bool UnitTest_DynamicArray_Trivial()
+bool UnitTests_DynamicArray_Trivial()
 {
     jpt::DynamicArray<int32> dynamicArray{ 0,2,4 };
     int32 i = 0;
@@ -152,7 +152,7 @@ bool UnitTest_DynamicArray_Trivial()
     return true;
 }
 
-bool UnitTest_DynamicArray_NonTrivial()
+bool UnitTests_DynamicArray_NonTrivial()
 {
     jpt::DynamicArray<jpt::String> dynamicArray{ "Zero", "Two", "Four" };
     size_t i = 0;
@@ -276,7 +276,7 @@ JPT_ENUM_UINT32(ETest,
     Four = (1 << 8),
     Five, 
     Six);
-bool UnitTest_DynamicArray_Enum()
+bool UnitTests_DynamicArray_Enum()
 {
     jpt::DynamicArray<ETest> dynamicArray{ ETest::Zero, ETest::Two, ETest::Four };
     
@@ -300,7 +300,7 @@ bool UnitTest_DynamicArray_Enum()
     return true;
 }
 
-bool UnitTest_DynamicArray_Any()
+bool UnitTests_DynamicArray_Any()
 {
     jpt::DynamicArray<jpt::Any> dynamicArray{ 1, 2.0f, jpt::String("Four"), jpt::Tuple<int32, bool>(5, false), jpt::Variant<int32>(7) };
 
@@ -335,7 +335,7 @@ bool UnitTest_DynamicArray_Any()
     return true;
 }
 
-bool UnitTest_DynamicArray_Tuple()
+bool UnitTests_DynamicArray_Tuple()
 {
     using TTuple = jpt::Tuple<int32, float, jpt::String, jpt::Variant<int32, char, bool>>;
     jpt::DynamicArray<TTuple> dynamicArray;
@@ -374,7 +374,7 @@ bool UnitTest_DynamicArray_Tuple()
     return true;
 }
 
-bool UnitTest_DynamicArray_Variant()
+bool UnitTests_DynamicArray_Variant()
 {
     using TVariant = jpt::Variant<int32, float, jpt::String, jpt::Tuple<int32, char, bool>>;
     jpt::DynamicArray<TVariant> dynamicArray;
@@ -418,13 +418,13 @@ bool UnitTest_DynamicArray_Variant()
 
 export bool RunUnitTests_DynamicArray()
 {
-    JPT_ENSURE(UnitTest_DynamicArray_Trivial());
-    JPT_ENSURE(UnitTest_DynamicArray_NonTrivial());
+    JPT_ENSURE(UnitTests_DynamicArray_Trivial());
+    JPT_ENSURE(UnitTests_DynamicArray_NonTrivial());
 
-    JPT_ENSURE(UnitTest_DynamicArray_Enum());
-    JPT_ENSURE(UnitTest_DynamicArray_Any());
-    JPT_ENSURE(UnitTest_DynamicArray_Tuple());
-    JPT_ENSURE(UnitTest_DynamicArray_Variant());
+    JPT_ENSURE(UnitTests_DynamicArray_Enum());
+    JPT_ENSURE(UnitTests_DynamicArray_Any());
+    JPT_ENSURE(UnitTests_DynamicArray_Tuple());
+    JPT_ENSURE(UnitTests_DynamicArray_Variant());
 
     return true;
 }

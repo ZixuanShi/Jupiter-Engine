@@ -10,7 +10,7 @@ import jpt.ToString;
 import jpt.String;
 import jpt.Utilities;
 
-bool UnitTest_Logger_Data()
+bool UnitTests_Logger_Data()
 {
 	JPT_LOG("%d", 1);
 	JPT_LOG(1);
@@ -46,7 +46,7 @@ bool UnitTest_Logger_Data()
 
 export bool RunUnitTests_Logger()
 {
-	//JPT_ENSURE(UnitTest_Logger_Data());
+	//JPT_ENSURE(UnitTests_Logger_Data());
 
 	return true;
 }

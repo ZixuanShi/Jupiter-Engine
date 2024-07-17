@@ -24,7 +24,7 @@ float DistancePointToPlane3D(Vec3f point, Vec3f a, Vec3f b, Vec3f c)
 	return distance;
 }
 
-export bool UnitTest_Math_DistancePointToPlane3D()
+export bool UnitTests_Math_DistancePointToPlane3D()
 {
 	Vec3f point = Vec3f(0.0f, 0.0f, 0.0f);
 	Vec3f a = Vec3f(0.0f, 0.0f, 0.0f);

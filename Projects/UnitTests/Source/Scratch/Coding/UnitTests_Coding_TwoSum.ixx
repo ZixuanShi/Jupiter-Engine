@@ -28,7 +28,7 @@ static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, in
 	return {};
 }
 
-export bool UnitTest_Coding_TwoSum()
+export bool UnitTests_Coding_TwoSum()
 {
 	jpt::DynamicArray<int32> nums = { 2, 7, 11, 15 };
 	int32 target = 9;

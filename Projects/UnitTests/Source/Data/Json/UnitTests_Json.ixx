@@ -21,7 +21,7 @@ import jpt.Graphics.Enums;
 static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
 static const jpt::File::Path engineJsonPath = { jpt::File::ESource::Engine, "Assets/TestJson_UnitTest.json" };
 
-bool UnitTest_Json_Write()
+bool UnitTests_Json_Write()
 {
     jpt::JsonMap jsonRoot;
 
@@ -51,7 +51,7 @@ bool UnitTest_Json_Write()
     return true;
 }
 
-bool UnitTest_Json_Read()
+bool UnitTests_Json_Read()
 {
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
@@ -81,7 +81,7 @@ bool UnitTest_Json_Read()
     return true;
 }
 
-bool UnitTest_Json_Update()
+bool UnitTests_Json_Update()
 {
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
@@ -102,7 +102,7 @@ bool UnitTest_Json_Update()
     return true;
 }
 
-bool UnitTest_Json_ReadUpdated()
+bool UnitTests_Json_ReadUpdated()
 {
     // Reads a json file. All the data should have been read into memory with this call
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
@@ -150,10 +150,10 @@ static bool Engine_Read()
 
 export bool RunUnitTests_Json()
 {
-    JPT_ENSURE(UnitTest_Json_Write());
-    JPT_ENSURE(UnitTest_Json_Read());
-    JPT_ENSURE(UnitTest_Json_Update());
-    JPT_ENSURE(UnitTest_Json_ReadUpdated());
+    JPT_ENSURE(UnitTests_Json_Write());
+    JPT_ENSURE(UnitTests_Json_Read());
+    JPT_ENSURE(UnitTests_Json_Update());
+    JPT_ENSURE(UnitTests_Json_ReadUpdated());
 
     JPT_ENSURE(Engine_Write());
     JPT_ENSURE(Engine_Read());

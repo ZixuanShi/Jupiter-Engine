@@ -18,7 +18,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
 
-bool UnitTest_StopWatch()
+bool UnitTests_StopWatch()
 {
 #if IS_PLATFORM_WIN64
     const jpt::StopWatch::Point start = jpt::StopWatch::Now();
@@ -36,7 +36,7 @@ bool UnitTest_StopWatch()
     return true;
 }
 
-bool UnitTest_Timer()
+bool UnitTests_Timer()
 {
 #if IS_PLATFORM_WIN64
     jpt::StopWatch timer;
@@ -53,8 +53,8 @@ bool UnitTest_Timer()
 
 export bool RunUnitTests_StopWatch()
 {
-    //JPT_ENSURE(UnitTest_StopWatch());
-    //JPT_ENSURE(UnitTest_Timer());
+    //JPT_ENSURE(UnitTests_StopWatch());
+    //JPT_ENSURE(UnitTests_Timer());
 
     return true;
 }

@@ -18,11 +18,11 @@ import UnitTests_Math_MergeCloseVertices;
 // Main entry point for math practice. import any test modules above and add them to this function
 export bool RunUnitTests_MathPractice()
 {
-	JPT_ENSURE(UnitTest_Math_Scratch());
-	JPT_ENSURE(UnitTest_Math_IsLeftOfView());
-	JPT_ENSURE(UnitTest_Math_FindAngle2D());
-	JPT_ENSURE(UnitTest_Math_DistancePointToPlane3D());
-	JPT_ENSURE(UnitTest_Math_MergeCloseVertices());
+	JPT_ENSURE(UnitTests_Math_Scratch());
+	JPT_ENSURE(UnitTests_Math_IsLeftOfView());
+	JPT_ENSURE(UnitTests_Math_FindAngle2D());
+	JPT_ENSURE(UnitTests_Math_DistancePointToPlane3D());
+	JPT_ENSURE(UnitTests_Math_MergeCloseVertices());
 
 	return true;
 }

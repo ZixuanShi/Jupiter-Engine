@@ -10,7 +10,7 @@ import jpt.Quaternion;
 import jpt.Utilities;
 import jpt.Math;
 
-bool UnitTest_Quaternion_Lerp()
+bool UnitTests_Quaternion_Lerp()
 {
 	Quatf quaternion = Quatf::Identity();
 	Quatf quaternion2 = Quatf(0.707f, 0, 0, 0.707f);
@@ -20,7 +20,7 @@ bool UnitTest_Quaternion_Lerp()
 	return true;
 }
 
-bool UnitTest_Quaternion_SLerp()
+bool UnitTests_Quaternion_SLerp()
 {
 	Quatf quaternion = Quatf::Identity();
 	Quatf quaternion2 = Quatf(0.707f, 0, 0, 0.707f);
@@ -30,7 +30,7 @@ bool UnitTest_Quaternion_SLerp()
 	return true;
 }
 
-bool UnitTest_Quaternion_Rotate()
+bool UnitTests_Quaternion_Rotate()
 {
 	// 1
 	Quatf quaternion = Quatf::Identity();
@@ -63,7 +63,7 @@ bool UnitTest_Quaternion_Rotate()
 	return true;
 }
 
-bool UnitTest_Quaternion_Multiplication()
+bool UnitTests_Quaternion_Multiplication()
 {
 	Quatf quaternion = Quatf::Identity();
 	Quatf quaternion2 = Quatf(0.707f, 0, 0, 0.707f);
@@ -77,7 +77,7 @@ bool UnitTest_Quaternion_Multiplication()
 	return true;
 }
 
-bool UnitTest_Quaternion_AxisAngles()
+bool UnitTests_Quaternion_AxisAngles()
 {
 	Quatf quaternion = Quatf::FromAxisAngle(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion == Quatf(0.0f,0.383f, 0.0f, 0.924f));
@@ -85,7 +85,7 @@ bool UnitTest_Quaternion_AxisAngles()
 	return true;
 }
 
-bool UnitTest_Quaternion_EulerAngles()
+bool UnitTests_Quaternion_EulerAngles()
 {
 	Quatf quaternion = Quatf::FromDegrees(Vec3f(90, 45, 90));
 	JPT_ENSURE(quaternion == Quatf(0.653f, -0.271f, 0.653f, 0.271f));
@@ -98,12 +98,12 @@ export bool RunUnitTests_Quaternion()
 	Quatf quaternion = Quatf::Identity();
 	JPT_ENSURE(quaternion == Quatf(0, 0, 0, 1));
 
-	JPT_ENSURE(UnitTest_Quaternion_Rotate());
-	JPT_ENSURE(UnitTest_Quaternion_Lerp());
-	JPT_ENSURE(UnitTest_Quaternion_SLerp());
-	JPT_ENSURE(UnitTest_Quaternion_Multiplication());
-	JPT_ENSURE(UnitTest_Quaternion_AxisAngles());
-	JPT_ENSURE(UnitTest_Quaternion_EulerAngles());
+	JPT_ENSURE(UnitTests_Quaternion_Rotate());
+	JPT_ENSURE(UnitTests_Quaternion_Lerp());
+	JPT_ENSURE(UnitTests_Quaternion_SLerp());
+	JPT_ENSURE(UnitTests_Quaternion_Multiplication());
+	JPT_ENSURE(UnitTests_Quaternion_AxisAngles());
+	JPT_ENSURE(UnitTests_Quaternion_EulerAngles());
 
 	return true;
 }

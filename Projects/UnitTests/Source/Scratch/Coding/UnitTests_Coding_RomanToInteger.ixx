@@ -47,7 +47,7 @@ int32 RomanToInteger(const jpt::String& roman)
 	return result;
 }
 
-export bool UnitTest_Coding_RomanToInteger()
+export bool UnitTests_Coding_RomanToInteger()
 {
 	JPT_ENSURE(RomanToInteger("III") == 3);
 	JPT_ENSURE(RomanToInteger("IV") == 4);

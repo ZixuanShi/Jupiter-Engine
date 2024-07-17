@@ -25,7 +25,7 @@ auto locHelper = [](size_t i) -> const char*
         }
     };
 
-bool UnitTest_StaticArray_Constructing_Trivial()
+bool UnitTests_StaticArray_Constructing_Trivial()
 {
     jpt::StaticArray<int32, 5> staticArray{ 0,1,2,3,4 };
 
@@ -51,7 +51,7 @@ bool UnitTest_StaticArray_Constructing_Trivial()
     return true;
 }
 
-bool UnitTest_StaticArray_Constructing_NonTrivial()
+bool UnitTests_StaticArray_Constructing_NonTrivial()
 {
     jpt::StaticArray<jpt::String, 5> staticArray{ "Zero", "One", "Two", "Three", "Four" };
 
@@ -75,7 +75,7 @@ bool UnitTest_StaticArray_Constructing_NonTrivial()
     return true;
 }
 
-bool UnitTest_StaticArray_Copying_Trivial()
+bool UnitTests_StaticArray_Copying_Trivial()
 {
     jpt::StaticArray<int32, 5> staticArray1{ 9,8,7,6,5 };
     jpt::StaticArray<int32, 5> staticArray2{ 0,1,2,3,4 };
@@ -92,7 +92,7 @@ bool UnitTest_StaticArray_Copying_Trivial()
     return true;
 }
 
-bool UnitTest_StaticArray_Copying_NonTrivial()
+bool UnitTests_StaticArray_Copying_NonTrivial()
 {
     jpt::StaticArray<jpt::String, 5> staticArray1{ "Four", "Three", "Two", "One", "Zero" };
     jpt::StaticArray<jpt::String, 5> staticArray2{ "Zero", "One", "Two", "Three", "Four" };
@@ -108,7 +108,7 @@ bool UnitTest_StaticArray_Copying_NonTrivial()
     return true;
 }
 
-bool UnitTest_StaticArray_Moving()
+bool UnitTests_StaticArray_Moving()
 {
     jpt::StaticArray<jpt::String, 5> staticArray1{ "Four", "Three", "Two", "One", "Zero" };
     jpt::StaticArray<jpt::String, 5> staticArray2{ "Zero", "One", "Two", "Three", "Four" };
@@ -126,7 +126,7 @@ bool UnitTest_StaticArray_Moving()
     return true;
 }
 
-bool UnitTest_StaticArray_HeapAllocating()
+bool UnitTests_StaticArray_HeapAllocating()
 {
     jpt::StaticArray<jpt::String*, 5> staticArray1{ new jpt::String("Four"), new jpt::String("Three"), new jpt::String("Two"), new jpt::String("One"), new jpt::String("Zero") };
     jpt::StaticArray<jpt::String*, 5> staticArray2{ new jpt::String("Zero"), new jpt::String("One"), new jpt::String("Two"), new jpt::String("Three"), new jpt::String("Four") };
@@ -153,12 +153,12 @@ bool UnitTest_StaticArray_HeapAllocating()
 
 export bool RunUnitTests_StaticArray()
 {
-    JPT_ENSURE(UnitTest_StaticArray_Constructing_Trivial());
-    JPT_ENSURE(UnitTest_StaticArray_Constructing_NonTrivial());
-    JPT_ENSURE(UnitTest_StaticArray_Copying_Trivial());
-    JPT_ENSURE(UnitTest_StaticArray_Copying_NonTrivial());
-    JPT_ENSURE(UnitTest_StaticArray_Moving());
-    JPT_ENSURE(UnitTest_StaticArray_HeapAllocating());
+    JPT_ENSURE(UnitTests_StaticArray_Constructing_Trivial());
+    JPT_ENSURE(UnitTests_StaticArray_Constructing_NonTrivial());
+    JPT_ENSURE(UnitTests_StaticArray_Copying_Trivial());
+    JPT_ENSURE(UnitTests_StaticArray_Copying_NonTrivial());
+    JPT_ENSURE(UnitTests_StaticArray_Moving());
+    JPT_ENSURE(UnitTests_StaticArray_HeapAllocating());
 
     return true;
 }

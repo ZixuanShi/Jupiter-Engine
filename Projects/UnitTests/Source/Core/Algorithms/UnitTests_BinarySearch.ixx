@@ -12,7 +12,7 @@ import jpt.StaticArray;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_BinarySearch_Fixed()
+bool UnitTests_BinarySearch_Fixed()
 {
 	jpt::StaticArray<int32, 10> data = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
@@ -25,7 +25,7 @@ bool UnitTest_BinarySearch_Fixed()
 
 export bool RunUnitTests_BinarySearch()
 {
-    JPT_ENSURE(UnitTest_BinarySearch_Fixed());
+    JPT_ENSURE(UnitTests_BinarySearch_Fixed());
 
     return true;
 }

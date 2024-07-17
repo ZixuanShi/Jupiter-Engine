@@ -82,7 +82,7 @@ static void MergeCloseVertices(jpt::DynamicArray<Vec3f>& positions, float32 thre
 	}
 }
 
-export bool UnitTest_Math_MergeCloseVertices()
+export bool UnitTests_Math_MergeCloseVertices()
 {
 	jpt::DynamicArray<Vec3f> positions = GetTestData();
 	const float32 threshold = 0.1f;

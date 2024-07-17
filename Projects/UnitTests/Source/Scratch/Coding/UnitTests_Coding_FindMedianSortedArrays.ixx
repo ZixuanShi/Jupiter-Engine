@@ -118,7 +118,7 @@ double FindMedianSortedArrays_BinarySearch(const jpt::DynamicArray<int32>& nums1
 	return 0.0f;
 }
 
-export bool UnitTest_Coding_FindMedianSortedArrays()
+export bool UnitTests_Coding_FindMedianSortedArrays()
 {
 	JPT_ENSURE(FindMedianSortedArrays_BruteForce({ 1, 3 }, { 2 }) == 2.0);
 	JPT_ENSURE(FindMedianSortedArrays_BruteForce({ 1, 2 }, { 3, 4 }) == 2.5);

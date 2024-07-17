@@ -11,7 +11,7 @@ import jpt.Vector3;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Box3()
+bool UnitTests_Box3()
 {
     Box3f box1(Vec3f(-10, -10, -5), Vec3f(10, 10, 5));
     JPT_ENSURE(box1.Center() == Vec3f(0, 0, 0));
@@ -36,7 +36,7 @@ bool UnitTest_Box3()
 
 export bool RunUnitTests_Box3()
 {
-    JPT_ENSURE(UnitTest_Box3());
+    JPT_ENSURE(UnitTests_Box3());
 
     return true;
 }

@@ -41,7 +41,7 @@ auto locHelper = [](size_t i) -> const char*
 		}
 	};
 
-bool UnitTest_String_Constructing()
+bool UnitTests_String_Constructing()
 {
 	jpt::String str = "Hello";
 	JPT_ENSURE(str == "Hello");
@@ -54,7 +54,7 @@ bool UnitTest_String_Constructing()
 
 	return true;
 }
-bool UnitTest_WString_Constructing()
+bool UnitTests_WString_Constructing()
 {
 	jpt::WString str = L"Hello";
 	JPT_ENSURE(str == L"Hello");
@@ -68,7 +68,7 @@ bool UnitTest_WString_Constructing()
 	return true;
 }
 
-bool UnitTest_String_Copying()
+bool UnitTests_String_Copying()
 {
 	jpt::String str = "Hello";
 	jpt::String strCopy = str;
@@ -85,7 +85,7 @@ bool UnitTest_String_Copying()
 
 	return true;
 }
-bool UnitTest_WString_Copying()
+bool UnitTests_WString_Copying()
 {
 	jpt::WString str = L"Hello";
 	jpt::WString strCopy = str;
@@ -100,7 +100,7 @@ bool UnitTest_WString_Copying()
 	return true;
 }
 
-bool UnitTest_String_Concatenating()
+bool UnitTests_String_Concatenating()
 {
 	jpt::String str = "Hello";
 	str += " World";
@@ -114,7 +114,7 @@ bool UnitTest_String_Concatenating()
 
 	return true;
 }
-bool UnitTest_WString_Concatenating()
+bool UnitTests_WString_Concatenating()
 {
 	jpt::WString str = L"Hello";
 	str += L" World";
@@ -129,7 +129,7 @@ bool UnitTest_WString_Concatenating()
 	return true;
 }
 
-bool UnitTest_String_Moving()
+bool UnitTests_String_Moving()
 {
 	jpt::String str = "Hello";
 	jpt::String strMove = jpt::Move(str);
@@ -143,7 +143,7 @@ bool UnitTest_String_Moving()
 
 	return true;
 }
-bool UnitTest_WString_Moving()
+bool UnitTests_WString_Moving()
 {
 	jpt::WString str = L"Hello";
 	jpt::WString strMove = jpt::Move(str);
@@ -158,7 +158,7 @@ bool UnitTest_WString_Moving()
 	return true;
 }
 
-bool UnitTest_String_Comparison()
+bool UnitTests_String_Comparison()
 {
 	jpt::String str = "Hello";
 	JPT_ENSURE(str == "Hello");
@@ -168,7 +168,7 @@ bool UnitTest_String_Comparison()
 
 	return true;
 }
-bool UnitTest_WString_Comparison()
+bool UnitTests_WString_Comparison()
 {
 	jpt::WString str = L"Hello";
 	JPT_ENSURE(str == L"Hello");
@@ -179,7 +179,7 @@ bool UnitTest_WString_Comparison()
 	return true;
 }
 
-bool UnitTest_String_Find()
+bool UnitTests_String_Find()
 {
 	jpt::String str = "Hello World Jupiter Engine";
 	JPT_ENSURE(str.Find("Hello") == 0);
@@ -192,7 +192,7 @@ bool UnitTest_String_Find()
 
 	return true;
 }
-bool UnitTest_WString_Find()
+bool UnitTests_WString_Find()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
 	JPT_ENSURE(str.Find(L"Hello") == 0);
@@ -206,7 +206,7 @@ bool UnitTest_WString_Find()
 	return true;
 }
 
-bool UnitTest_String_Replace()
+bool UnitTests_String_Replace()
 {
 	// Single word
 	jpt::String str = "Hello World Jupiter Engine";
@@ -238,7 +238,7 @@ bool UnitTest_String_Replace()
 	
 	return true;
 }
-bool UnitTest_WString_Replace()
+bool UnitTests_WString_Replace()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
 	str.Replace(L"Jupiter", L"Mars");
@@ -270,7 +270,7 @@ bool UnitTest_WString_Replace()
 	return true;
 }
 
-bool UnitTest_String_ConvertToNumber()
+bool UnitTests_String_ConvertToNumber()
 {
 	jpt::String str = "42";
 	int32 number = str.ToInt();
@@ -286,7 +286,7 @@ bool UnitTest_String_ConvertToNumber()
 
 	return true;
 }
-bool UnitTest_WString_ConvertToNumber()
+bool UnitTests_WString_ConvertToNumber()
 {
 	jpt::WString str = L"42";
 	int32 number = str.ToInt();
@@ -303,7 +303,7 @@ bool UnitTest_WString_ConvertToNumber()
 	return true;
 }
 
-bool UnitTest_String_Has()
+bool UnitTests_String_Has()
 {
 	jpt::String str = "Hello World Jupiter Engine";
 	JPT_ENSURE(str.Has("Hello"));
@@ -316,7 +316,7 @@ bool UnitTest_String_Has()
 
 	return true;
 }
-bool UnitTest_WString_Has()
+bool UnitTests_WString_Has()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
 	JPT_ENSURE(str.Has(L"Hello"));
@@ -330,7 +330,7 @@ bool UnitTest_WString_Has()
 	return true;
 }
 
-bool UnitTest_String_Split()
+bool UnitTests_String_Split()
 {
 	jpt::String str = "Zero, One, Two, Three, Four, Five, Six";
 	jpt::DynamicArray<jpt::String> substrs = str.Split(", ");
@@ -340,7 +340,7 @@ bool UnitTest_String_Split()
 
 	return true;
 }
-bool UnitTest_WString_Split()
+bool UnitTests_WString_Split()
 {
 	jpt::WString str = L"Zero, One, Two, Three, Four, Five, Six";
 	jpt::DynamicArray<jpt::WString> substrs = str.Split(L", ");
@@ -351,7 +351,7 @@ bool UnitTest_WString_Split()
 	return true;
 }
 
-bool UnitTest_String_Insert()
+bool UnitTests_String_Insert()
 {
 	jpt::String str = "Hello Jupiter Engine";
 
@@ -373,7 +373,7 @@ bool UnitTest_String_Insert()
 
 	return true;
 }
-bool UnitTest_WString_Insert()
+bool UnitTests_WString_Insert()
 {
 	jpt::WString str = L"Hello Jupiter Engine";
 
@@ -396,7 +396,7 @@ bool UnitTest_WString_Insert()
 	return true;
 }
 
-bool UnitTest_String_TrimLeft()
+bool UnitTests_String_TrimLeft()
 {
 	jpt::String str = "   Hello Jupiter Engine";
 	str.TrimLeft();
@@ -412,7 +412,7 @@ bool UnitTest_String_TrimLeft()
 
 	return true;
 }
-bool UnitTest_WString_TrimLeft()
+bool UnitTests_WString_TrimLeft()
 {
 	jpt::WString str = L"   Hello Jupiter Engine";
 	str.TrimLeft();
@@ -429,7 +429,7 @@ bool UnitTest_WString_TrimLeft()
 	return true;
 }
 
-bool UnitTest_String_TrimRight()
+bool UnitTests_String_TrimRight()
 {
 	jpt::String str = "Hello Jupiter Engine   ";
 	str.TrimRight();
@@ -445,7 +445,7 @@ bool UnitTest_String_TrimRight()
 
 	return true;
 }
-bool UnitTest_WString_TrimRight()
+bool UnitTests_WString_TrimRight()
 {
 	jpt::WString str = L"Hello Jupiter Engine   ";
 	str.TrimRight();
@@ -462,7 +462,7 @@ bool UnitTest_WString_TrimRight()
 	return true;
 }
 
-bool UnitTest_String_Iterator()
+bool UnitTests_String_Iterator()
 {
 	jpt::String str("0123456789");
 
@@ -486,7 +486,7 @@ bool UnitTest_String_Iterator()
 
 	return true;
 }
-bool UnitTest_WString_Iterator()
+bool UnitTests_WString_Iterator()
 {
 	jpt::WString str(L"0123456789");
 
@@ -511,7 +511,7 @@ bool UnitTest_WString_Iterator()
 	return true;
 }
 
-bool UnitTest_String_Format()
+bool UnitTests_String_Format()
 {
 	jpt::String str = jpt::String::Format<32>("%s %d %s", "Hello", 42, "World");
 	JPT_ENSURE(str == "Hello 42 World");
@@ -521,7 +521,7 @@ bool UnitTest_String_Format()
 
 	return true;
 }
-bool UnitTest_WString_Format()
+bool UnitTests_WString_Format()
 {
 	jpt::WString str = jpt::WString::Format<32>(L"%s %d %s", L"Hello", 42, L"World");
 	JPT_ENSURE(str == L"Hello 42 World");
@@ -532,7 +532,7 @@ bool UnitTest_WString_Format()
 	return true;
 }
 
-bool UnitTest_String_MakeUpper()
+bool UnitTests_String_MakeUpper()
 {
 	jpt::String str = "Hello World Jupiter Engine";
 	str.MakeUpper();
@@ -543,7 +543,7 @@ bool UnitTest_String_MakeUpper()
 
 	return true;
 }
-bool UnitTest_WString_MakeUpper()
+bool UnitTests_WString_MakeUpper()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
 	str.MakeUpper();
@@ -555,7 +555,7 @@ bool UnitTest_WString_MakeUpper()
 	return true;
 }
 
-bool UnitTest_String_MakeLower()
+bool UnitTests_String_MakeLower()
 {
 	jpt::String str = "Hello World Jupiter Engine";
 	str.MakeLower();
@@ -566,7 +566,7 @@ bool UnitTest_String_MakeLower()
 
 	return true;
 }
-bool UnitTest_WString_MakeLower()
+bool UnitTests_WString_MakeLower()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
 	str.MakeLower();
@@ -578,7 +578,7 @@ bool UnitTest_WString_MakeLower()
 	return true;
 }
 
-bool UnitTest_String_ToString()
+bool UnitTests_String_ToString()
 {
 	JPT_ENSURE(jpt::ToString(L"") == "");
 	JPT_ENSURE(jpt::ToString(L"Hello") == "Hello");
@@ -587,7 +587,7 @@ bool UnitTest_String_ToString()
 
 	return true;
 }
-bool UnitTest_String_ToWString()
+bool UnitTests_String_ToWString()
 {
 	JPT_ENSURE(jpt::ToWString("") == L"");
 	JPT_ENSURE(jpt::ToWString("Hello") == L"Hello");
@@ -597,7 +597,7 @@ bool UnitTest_String_ToWString()
 	return true;
 }
 
-bool UnitTest_String_StringCompareWCStr()
+bool UnitTests_String_StringCompareWCStr()
 {
 	jpt::String str = "Hello";
 	JPT_ENSURE(str == L"Hello");
@@ -605,7 +605,7 @@ bool UnitTest_String_StringCompareWCStr()
 
 	return true;
 }
-bool UnitTest_String_WStringCompareCStr()
+bool UnitTests_String_WStringCompareCStr()
 {
 	jpt::WString str = L"Hello";
 	JPT_ENSURE(str == "Hello");
@@ -620,62 +620,62 @@ export bool RunUnitTests_String()
 
 	//for (size_t i = 0; i < 10'000; ++i)
 	{
-		JPT_ENSURE(UnitTest_String_Constructing());
-		JPT_ENSURE(UnitTest_WString_Constructing());
+		JPT_ENSURE(UnitTests_String_Constructing());
+		JPT_ENSURE(UnitTests_WString_Constructing());
 
-		JPT_ENSURE(UnitTest_String_Copying());
-		JPT_ENSURE(UnitTest_WString_Copying());
+		JPT_ENSURE(UnitTests_String_Copying());
+		JPT_ENSURE(UnitTests_WString_Copying());
 
-		JPT_ENSURE(UnitTest_String_Moving());
-		JPT_ENSURE(UnitTest_WString_Moving());
+		JPT_ENSURE(UnitTests_String_Moving());
+		JPT_ENSURE(UnitTests_WString_Moving());
 
-		JPT_ENSURE(UnitTest_String_Concatenating());
-		JPT_ENSURE(UnitTest_WString_Concatenating());
+		JPT_ENSURE(UnitTests_String_Concatenating());
+		JPT_ENSURE(UnitTests_WString_Concatenating());
 
-		JPT_ENSURE(UnitTest_String_Comparison());
-		JPT_ENSURE(UnitTest_WString_Comparison());
+		JPT_ENSURE(UnitTests_String_Comparison());
+		JPT_ENSURE(UnitTests_WString_Comparison());
 
-		JPT_ENSURE(UnitTest_String_Find());
-		JPT_ENSURE(UnitTest_WString_Find());
+		JPT_ENSURE(UnitTests_String_Find());
+		JPT_ENSURE(UnitTests_WString_Find());
 
-		JPT_ENSURE(UnitTest_String_Replace());
-		JPT_ENSURE(UnitTest_WString_Replace());
+		JPT_ENSURE(UnitTests_String_Replace());
+		JPT_ENSURE(UnitTests_WString_Replace());
 
-		JPT_ENSURE(UnitTest_String_ConvertToNumber());
-		JPT_ENSURE(UnitTest_WString_ConvertToNumber());
+		JPT_ENSURE(UnitTests_String_ConvertToNumber());
+		JPT_ENSURE(UnitTests_WString_ConvertToNumber());
 
-		JPT_ENSURE(UnitTest_String_Has());
-		JPT_ENSURE(UnitTest_WString_Has());
+		JPT_ENSURE(UnitTests_String_Has());
+		JPT_ENSURE(UnitTests_WString_Has());
 
-		JPT_ENSURE(UnitTest_String_Split());
-		JPT_ENSURE(UnitTest_WString_Split());
+		JPT_ENSURE(UnitTests_String_Split());
+		JPT_ENSURE(UnitTests_WString_Split());
 
-		JPT_ENSURE(UnitTest_String_Insert());
-		JPT_ENSURE(UnitTest_WString_Insert());
+		JPT_ENSURE(UnitTests_String_Insert());
+		JPT_ENSURE(UnitTests_WString_Insert());
 
-		JPT_ENSURE(UnitTest_String_TrimLeft());
-		JPT_ENSURE(UnitTest_WString_TrimLeft());
+		JPT_ENSURE(UnitTests_String_TrimLeft());
+		JPT_ENSURE(UnitTests_WString_TrimLeft());
 
-		JPT_ENSURE(UnitTest_String_TrimRight());
-		JPT_ENSURE(UnitTest_WString_TrimRight());
+		JPT_ENSURE(UnitTests_String_TrimRight());
+		JPT_ENSURE(UnitTests_WString_TrimRight());
 
-		JPT_ENSURE(UnitTest_String_Iterator());
-		JPT_ENSURE(UnitTest_WString_Iterator());
+		JPT_ENSURE(UnitTests_String_Iterator());
+		JPT_ENSURE(UnitTests_WString_Iterator());
 
-		JPT_ENSURE(UnitTest_String_Format());
-		JPT_ENSURE(UnitTest_WString_Format());
+		JPT_ENSURE(UnitTests_String_Format());
+		JPT_ENSURE(UnitTests_WString_Format());
 
-		JPT_ENSURE(UnitTest_String_MakeUpper());
-		JPT_ENSURE(UnitTest_WString_MakeUpper());
+		JPT_ENSURE(UnitTests_String_MakeUpper());
+		JPT_ENSURE(UnitTests_WString_MakeUpper());
 
-		JPT_ENSURE(UnitTest_String_MakeLower());
-		JPT_ENSURE(UnitTest_WString_MakeLower());
+		JPT_ENSURE(UnitTests_String_MakeLower());
+		JPT_ENSURE(UnitTests_WString_MakeLower());
 
-		JPT_ENSURE(UnitTest_String_ToString());
-		JPT_ENSURE(UnitTest_String_ToWString());
+		JPT_ENSURE(UnitTests_String_ToString());
+		JPT_ENSURE(UnitTests_String_ToWString());
 
-		JPT_ENSURE(UnitTest_String_StringCompareWCStr());
-		JPT_ENSURE(UnitTest_String_WStringCompareCStr());
+		JPT_ENSURE(UnitTests_String_StringCompareWCStr());
+		JPT_ENSURE(UnitTests_String_WStringCompareCStr());
 	}
 
 	return true;

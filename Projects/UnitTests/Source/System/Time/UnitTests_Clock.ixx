@@ -15,7 +15,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
 
-bool UnitTest_Clock()
+bool UnitTests_Clock()
 {
     jpt::DateTime now = jpt::Clock::GetCurrentDateTime();
     jpt::DateTime ago = jpt::Clock::RawNow() - 60 * 50;
@@ -28,7 +28,7 @@ bool UnitTest_Clock()
     return true;
 }
 
-bool UnitTest_DateTime()
+bool UnitTests_DateTime()
 {    
     jpt::DateTime now = jpt::Clock::GetCurrentDateTime();
 
@@ -46,8 +46,8 @@ bool UnitTest_DateTime()
 export bool RunUnitTests_Clock()
 {
     //JPT_LOG("Current Time: " + jpt::Clock::GetCurrentDateTime().ToString());
-    //JPT_ENSURE(UnitTest_Clock());
-    //JPT_ENSURE(UnitTest_DateTime());
+    //JPT_ENSURE(UnitTests_Clock());
+    //JPT_ENSURE(UnitTests_DateTime());
 
     return true;
 }

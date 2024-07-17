@@ -18,7 +18,7 @@ import jpt.StringView;
 import jpt.StaticArray;
 
 template<typename T>
-bool UnitTest_TRemoveTraits()
+bool UnitTests_TRemoveTraits()
 {
 	bool value = false;
 
@@ -64,7 +64,7 @@ bool UnitTest_TRemoveTraits()
 }
 
 template<typename T>
-bool UnitTest_TDecay()
+bool UnitTests_TDecay()
 {
 	bool value = false;
 
@@ -89,7 +89,7 @@ bool UnitTest_TDecay()
 	return true;
 }
 
-bool UnitTest_IsLValueRefType()
+bool UnitTests_IsLValueRefType()
 {
 	bool value = false;
 
@@ -102,7 +102,7 @@ bool UnitTest_IsLValueRefType()
 	return true;
 }
 
-bool UnitTest_IsRValueRefType()
+bool UnitTests_IsRValueRefType()
 {
 	bool value = false;
 
@@ -115,7 +115,7 @@ bool UnitTest_IsRValueRefType()
 	return true;
 }
 
-bool UnitTest_IsRef()
+bool UnitTests_IsRef()
 {
 	bool value = false;
 
@@ -131,7 +131,7 @@ bool UnitTest_IsRef()
 	return true;
 }
 
-bool UnitTest_AreSameType()
+bool UnitTests_AreSameType()
 {
 	bool value = false;
 
@@ -178,7 +178,7 @@ struct Foo
 	}
 };
 
-bool UnitTest_IsAnyOf()
+bool UnitTests_IsAnyOf()
 {
 	bool value = false;
 	auto helper = [](const auto& var) -> bool
@@ -235,7 +235,7 @@ bool UnitTest_IsAnyOf()
 	return true;
 }
 
-bool UnitTest_IsArray()
+bool UnitTests_IsArray()
 {
 	int32 num = 0;
 	JPT_ENSURE(!jpt::IsArray<decltype(num)>);
@@ -279,7 +279,7 @@ struct ComplexStruct2
 	ComplexStruct2(int32 n) { JPT_IGNORE(n); };
 };
 
-bool UnitTest_IsTrivial()
+bool UnitTests_IsTrivial()
 {
 	JPT_ENSURE(jpt::IsTrivial<int32>);
 	JPT_ENSURE(jpt::IsTrivial<int64>);
@@ -311,19 +311,19 @@ bool UnitTest_IsTrivial()
 
 export bool RunUnitTests_TypeTraits()
 {
-	JPT_ENSURE(UnitTest_TRemoveTraits<int32>());
-	JPT_ENSURE(UnitTest_TRemoveTraits<jpt::String>());
+	JPT_ENSURE(UnitTests_TRemoveTraits<int32>());
+	JPT_ENSURE(UnitTests_TRemoveTraits<jpt::String>());
 
-	JPT_ENSURE(UnitTest_TDecay<int32>());
-	JPT_ENSURE(UnitTest_TDecay<jpt::String>());
+	JPT_ENSURE(UnitTests_TDecay<int32>());
+	JPT_ENSURE(UnitTests_TDecay<jpt::String>());
 
-	JPT_ENSURE(UnitTest_IsLValueRefType());
-	JPT_ENSURE(UnitTest_IsLValueRefType());
-	JPT_ENSURE(UnitTest_IsRef());
-	JPT_ENSURE(UnitTest_AreSameType());
-	JPT_ENSURE(UnitTest_IsAnyOf());
-	JPT_ENSURE(UnitTest_IsArray());
-	JPT_ENSURE(UnitTest_IsTrivial());
+	JPT_ENSURE(UnitTests_IsLValueRefType());
+	JPT_ENSURE(UnitTests_IsLValueRefType());
+	JPT_ENSURE(UnitTests_IsRef());
+	JPT_ENSURE(UnitTests_AreSameType());
+	JPT_ENSURE(UnitTests_IsAnyOf());
+	JPT_ENSURE(UnitTests_IsArray());
+	JPT_ENSURE(UnitTests_IsTrivial());
 
 	return true;
 }

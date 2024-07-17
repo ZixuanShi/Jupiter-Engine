@@ -11,7 +11,7 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Stack()
+bool UnitTests_Stack()
 {
     jpt::Stack<int32> stack;
 
@@ -31,7 +31,7 @@ bool UnitTest_Stack()
     return true;
 }
 
-bool UnitTest_Stack_String()
+bool UnitTests_Stack_String()
 {
     jpt::Stack<jpt::String> stack;
 
@@ -52,7 +52,7 @@ bool UnitTest_Stack_String()
     return true;
 }
 
-bool UnitTest_Stack_Copy()
+bool UnitTests_Stack_Copy()
 {
     jpt::Stack<int32> stack;
 
@@ -82,7 +82,7 @@ bool UnitTest_Stack_Copy()
     return true;
 }
 
-bool UnitTest_Stack_Copy_String()
+bool UnitTests_Stack_Copy_String()
 {
     jpt::Stack<jpt::String> stack;
 
@@ -113,7 +113,7 @@ bool UnitTest_Stack_Copy_String()
     return true;
 }
 
-bool UnitTest_Stack_Move()
+bool UnitTests_Stack_Move()
 {
     jpt::Stack<int32> stack;
 
@@ -138,7 +138,7 @@ bool UnitTest_Stack_Move()
     return true;
 }
 
-bool UnitTest_Stack_Move_String()
+bool UnitTests_Stack_Move_String()
 {
     jpt::Stack<jpt::String> stack;
 
@@ -165,14 +165,14 @@ bool UnitTest_Stack_Move_String()
 
 export bool RunUnitTests_Stack()
 {
-    JPT_ENSURE(UnitTest_Stack());
-    JPT_ENSURE(UnitTest_Stack_String());
+    JPT_ENSURE(UnitTests_Stack());
+    JPT_ENSURE(UnitTests_Stack_String());
     
-    JPT_ENSURE(UnitTest_Stack_Copy());
-    JPT_ENSURE(UnitTest_Stack_Copy_String());
+    JPT_ENSURE(UnitTests_Stack_Copy());
+    JPT_ENSURE(UnitTests_Stack_Copy_String());
     
-    JPT_ENSURE(UnitTest_Stack_Move());
-    JPT_ENSURE(UnitTest_Stack_Move_String());
+    JPT_ENSURE(UnitTests_Stack_Move());
+    JPT_ENSURE(UnitTests_Stack_Move_String());
 
     return true;
 }

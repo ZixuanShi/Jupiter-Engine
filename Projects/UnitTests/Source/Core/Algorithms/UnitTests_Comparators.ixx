@@ -11,7 +11,7 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Comparators_Less()
+bool UnitTests_Comparators_Less()
 {
     jpt::Comparator_Less<int32> intComparator;
     JPT_ENSURE(intComparator(1, 2));
@@ -24,7 +24,7 @@ bool UnitTest_Comparators_Less()
     return true;
 }
 
-bool UnitTest_Comparators_Greater()
+bool UnitTests_Comparators_Greater()
 {
     jpt::Comparator_Greater<int32> intComparator;
     JPT_ENSURE(intComparator(2, 1));
@@ -37,7 +37,7 @@ bool UnitTest_Comparators_Greater()
     return true;
 }
 
-bool UnitTest_Comparators_Equal()
+bool UnitTests_Comparators_Equal()
 {
     // int
     jpt::Comparator_Equal<int32> intComparator;
@@ -94,9 +94,9 @@ bool UnitTest_Comparators_Equal()
 
 export bool RunUnitTests_Comparators()
 {
-    JPT_ENSURE(UnitTest_Comparators_Less());
-    JPT_ENSURE(UnitTest_Comparators_Greater());
-    JPT_ENSURE(UnitTest_Comparators_Equal());
+    JPT_ENSURE(UnitTests_Comparators_Less());
+    JPT_ENSURE(UnitTests_Comparators_Greater());
+    JPT_ENSURE(UnitTests_Comparators_Equal());
 
     return true;
 }

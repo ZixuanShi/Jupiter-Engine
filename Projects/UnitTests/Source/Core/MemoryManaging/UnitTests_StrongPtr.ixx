@@ -11,7 +11,7 @@ export module UnitTests_StrongPtr;
 import jpt.Utilities;
 import jpt.StrongPtr;
 
-bool UnitTest_StrongPtr_Char()
+bool UnitTests_StrongPtr_Char()
 {
 	jpt::StrongPtr<char> sharedCharPtr1 = jpt::MakeStrong<char>('C');
 	JPT_ENSURE(sharedCharPtr1.IsValid());
@@ -69,7 +69,7 @@ bool UnitTest_StrongPtr_Char()
 	return true;
 }
 
-bool UnitTest_StrongPtr_Class()
+bool UnitTests_StrongPtr_Class()
 {
 	struct Bar;
 
@@ -92,7 +92,7 @@ bool UnitTest_StrongPtr_Class()
 	return true;
 }
 
-bool UnitTest_StrongPtr_Class2()
+bool UnitTests_StrongPtr_Class2()
 {
 	struct Bar;
 	
@@ -128,9 +128,9 @@ bool UnitTest_StrongPtr_Class2()
 
 export bool RunUnitTests_StrongPtr()
 {
-	JPT_ENSURE(UnitTest_StrongPtr_Char());
-	JPT_ENSURE(UnitTest_StrongPtr_Class());
-	JPT_ENSURE(UnitTest_StrongPtr_Class2());
+	JPT_ENSURE(UnitTests_StrongPtr_Char());
+	JPT_ENSURE(UnitTests_StrongPtr_Class());
+	JPT_ENSURE(UnitTests_StrongPtr_Class2());
 
 	return true;
 }

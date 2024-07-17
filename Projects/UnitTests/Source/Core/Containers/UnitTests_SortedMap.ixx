@@ -15,7 +15,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.String;
 
-bool UnitTest_SortedMap_Copy()
+bool UnitTests_SortedMap_Copy()
 {
     jpt::SortedMap<int32, jpt::DynamicArray<jpt::String>> sortedMap;
     sortedMap.Add(4, { "Unity", "Unreal", "CryEngine" });
@@ -34,7 +34,7 @@ bool UnitTest_SortedMap_Copy()
     return true;
 }
 
-bool UnitTest_SortedMap_Move()
+bool UnitTests_SortedMap_Move()
 {
     jpt::SortedMap<int32, jpt::DynamicArray<jpt::String>> sortedMap;
     sortedMap.Add(4, { "Unity", "Unreal", "CryEngine" });
@@ -55,7 +55,7 @@ bool UnitTest_SortedMap_Move()
     return true;
 }
 
-bool UnitTest_SortedMap_Add()
+bool UnitTests_SortedMap_Add()
 {
     jpt::SortedMap<int32, char> sortedMap;
     sortedMap[4] = '4';
@@ -88,7 +88,7 @@ bool UnitTest_SortedMap_Add()
     return true;
 }
 
-bool UnitTest_SortedMap_Erase()
+bool UnitTests_SortedMap_Erase()
 {
     jpt::SortedMap<int32, char> sortedMap;
     sortedMap[4] = '4';
@@ -124,7 +124,7 @@ bool UnitTest_SortedMap_Erase()
     return true;
 }
 
-bool UnitTest_SortedMap_Walk()
+bool UnitTests_SortedMap_Walk()
 {
 	jpt::SortedMap<int32, char> sortedMap;
 	sortedMap.Add(4, '4');
@@ -154,7 +154,7 @@ bool UnitTest_SortedMap_Walk()
 	return true;
 }
 
-bool UnitTest_SortedMap_Iterators()
+bool UnitTests_SortedMap_Iterators()
 {
     jpt::SortedMap<int32, char> sortedMap;
     sortedMap.Add(4, '4');
@@ -178,13 +178,13 @@ bool UnitTest_SortedMap_Iterators()
 
 export bool RunUnitTests_SortedMap()
 {
-    JPT_ENSURE(UnitTest_SortedMap_Copy());
-    JPT_ENSURE(UnitTest_SortedMap_Move());
+    JPT_ENSURE(UnitTests_SortedMap_Copy());
+    JPT_ENSURE(UnitTests_SortedMap_Move());
 
-    JPT_ENSURE(UnitTest_SortedMap_Add());
-    JPT_ENSURE(UnitTest_SortedMap_Erase());
-    //JPT_ENSURE(UnitTest_SortedMap_Walk());
-    JPT_ENSURE(UnitTest_SortedMap_Iterators());
+    JPT_ENSURE(UnitTests_SortedMap_Add());
+    JPT_ENSURE(UnitTests_SortedMap_Erase());
+    //JPT_ENSURE(UnitTests_SortedMap_Walk());
+    JPT_ENSURE(UnitTests_SortedMap_Iterators());
 
     return true;
 }

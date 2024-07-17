@@ -38,7 +38,7 @@ jpt::DynamicArray<Vec3f> GetTestData()
 	return points;
 }
 
-bool UnitTest_KDTree3()
+bool UnitTests_KDTree3()
 {
 	// Creating
     KDTree3f tree(GetTestData());
@@ -88,7 +88,7 @@ bool UnitTest_KDTree3()
 
 export bool RunUnitTests_KDTree3()
 {
-    JPT_ENSURE(UnitTest_KDTree3());
+    JPT_ENSURE(UnitTests_KDTree3());
 
     return true;
 }

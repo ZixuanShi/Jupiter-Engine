@@ -36,7 +36,7 @@ int SubArraySum(const jpt::DynamicArray<int32>& nums, int k)
 	return count;
 }
 
-export bool UnitTest_Coding_SubArraySum()
+export bool UnitTests_Coding_SubArraySum()
 {
 	JPT_ENSURE(SubArraySum({ 1,1,1 }, 2) == 2);
 	JPT_ENSURE(SubArraySum({ 1,2,3 }, 3) == 2);

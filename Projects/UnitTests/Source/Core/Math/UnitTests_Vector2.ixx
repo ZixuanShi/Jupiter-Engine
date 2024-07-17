@@ -11,7 +11,7 @@ import jpt.Utilities;
 import jpt.TypeDefs;
 import jpt.Math;
 
-bool UnitTest_Vec2f_Operations()
+bool UnitTests_Vec2f_Operations()
 {
     Vec2f v(2.0f, 2.0f);
 
@@ -54,7 +54,7 @@ bool UnitTest_Vec2f_Operations()
     return true;
 }
 
-bool UnitTest_Vec2f_Functionalities()
+bool UnitTests_Vec2f_Functionalities()
 {
     Vec2f v(2.0f, 2.0f);
 
@@ -139,8 +139,8 @@ bool RunUnitTests_Vector2_Rotation()
 
 export bool RunUnitTests_Vector2()
 {
-    JPT_ENSURE(UnitTest_Vec2f_Operations());
-    JPT_ENSURE(UnitTest_Vec2f_Functionalities());
+    JPT_ENSURE(UnitTests_Vec2f_Operations());
+    JPT_ENSURE(UnitTests_Vec2f_Functionalities());
     JPT_ENSURE(RunUnitTests_Vector2_Angle());
     JPT_ENSURE(RunUnitTests_Vector2_Rotation());
     

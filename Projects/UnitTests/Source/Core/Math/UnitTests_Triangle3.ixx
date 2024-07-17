@@ -12,7 +12,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
 
-bool UnitTest_Triangle3_Normal()
+bool UnitTests_Triangle3_Normal()
 {
     JPT_ENSURE(Triangle3f(Vec3f(0, 0, 0), Vec3f(1, 0, 0), Vec3f(0, 1, 0)).Normal() == Vec3f(0, 0, 1));
     JPT_ENSURE(Triangle3f(Vec3f(0, 0, 0), Vec3f(0, 1, 0), Vec3f(1, 0, 0)).Normal() == Vec3f(0, 0, -1));
@@ -20,7 +20,7 @@ bool UnitTest_Triangle3_Normal()
     return true;
 }
 
-bool UnitTest_Triangle3_PointInside()
+bool UnitTests_Triangle3_PointInside()
 {
 	Triangle3f triangle(Vec3f(0.0f, 0.0f, 0.0f), Vec3f(1.0f, 0.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
 
@@ -48,7 +48,7 @@ bool UnitTest_Triangle3_PointInside()
     return true;
 }
 
-bool UnitTest_Triangle3_DistanceToPoint()
+bool UnitTests_Triangle3_DistanceToPoint()
 {
 	Vec3f point(0.0f, 0.0f, 0.0f);
 	Triangle3f triangle(Vec3f(0.0f, 0.0f, 0.0f), Vec3f(1.0f, 0.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
@@ -74,9 +74,9 @@ bool UnitTest_Triangle3_DistanceToPoint()
 
 export bool RunUnitTests_Triangle3()
 {
-    JPT_ENSURE(UnitTest_Triangle3_Normal());
-    JPT_ENSURE(UnitTest_Triangle3_PointInside());
-    JPT_ENSURE(UnitTest_Triangle3_DistanceToPoint());
+    JPT_ENSURE(UnitTests_Triangle3_Normal());
+    JPT_ENSURE(UnitTests_Triangle3_PointInside());
+    JPT_ENSURE(UnitTests_Triangle3_DistanceToPoint());
 
     return true;
 }

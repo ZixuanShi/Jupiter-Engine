@@ -10,7 +10,7 @@ import jpt.Hash;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Hash_Primitive()
+bool UnitTests_Hash_Primitive()
 {
     (jpt::Hash(true));            // bool
     (jpt::Hash(false));           // bool
@@ -40,7 +40,7 @@ struct TrivialStruct
 //template<>
 //constexpr bool jpt::IsTrivial<TrivialStruct> = false;
 
-bool UnitTest_Hash_TrivialStruct()
+bool UnitTests_Hash_TrivialStruct()
 {
     TrivialStruct testStruct = { 42, 41 };
 
@@ -65,7 +65,7 @@ struct NonTrivialStruct
 };
 //template<> constexpr bool jpt::IsTrivial<NonTrivialStruct> = true;
 //template<> constexpr bool jpt::IsSmall<NonTrivialStruct> = true;
-bool UnitTest_Hash_NonTrivialStruct()
+bool UnitTests_Hash_NonTrivialStruct()
 {
 	NonTrivialStruct testStruct = { 42, 41, 42.0415f, 42.0415, "Hello" };
 
@@ -76,9 +76,9 @@ bool UnitTest_Hash_NonTrivialStruct()
 
 export bool RunUnitTests_Hash()
 {
-    JPT_ENSURE(UnitTest_Hash_Primitive());
-    JPT_ENSURE(UnitTest_Hash_TrivialStruct());
-    JPT_ENSURE(UnitTest_Hash_NonTrivialStruct());
+    JPT_ENSURE(UnitTests_Hash_Primitive());
+    JPT_ENSURE(UnitTests_Hash_TrivialStruct());
+    JPT_ENSURE(UnitTests_Hash_NonTrivialStruct());
 
     return true;
 }

@@ -9,14 +9,14 @@ export module UnitTests_Byte;
 import jpt.Byte;
 import jpt.Utilities;
 
-bool UnitTest_Byte()
+bool UnitTests_Byte()
 {
     return true;
 }
 
 export bool RunUnitTests_Byte()
 {
-    JPT_ENSURE(UnitTest_Byte());
+    JPT_ENSURE(UnitTests_Byte());
 
     return true;
 }

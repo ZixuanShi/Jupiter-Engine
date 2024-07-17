@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-static bool UnitTest_Color()
+static bool UnitTests_Color()
 {
     Color color(0xFF00FFFF);
     JPT_ENSURE(color.r == 0xFF);
@@ -30,7 +30,7 @@ static bool UnitTest_Color()
     return true;
 }
 
-static bool UnitTest_Color_Lerp()
+static bool UnitTests_Color_Lerp()
 {
     Color color1(0x000000FF);
 	Color color2(0x00FF00FF);
@@ -40,7 +40,7 @@ static bool UnitTest_Color_Lerp()
 	return true;
 }
 
-static bool UnitTest_Color_FromRGBA()
+static bool UnitTests_Color_FromRGBA()
 {
     Color color;
 
@@ -61,7 +61,7 @@ static bool UnitTest_Color_FromRGBA()
     return true;
 }
 
-static bool UnitTest_Color_FromLinearColor()
+static bool UnitTests_Color_FromLinearColor()
 {
     Color color;
 
@@ -82,7 +82,7 @@ static bool UnitTest_Color_FromLinearColor()
     return true;
 }
 
-static bool UnitTest_LinearColor()
+static bool UnitTests_LinearColor()
 {
 	LinearColor linearColor(1.0f, 0.0f, 1.0f);
 	JPT_ENSURE(linearColor.r == 1.0f);
@@ -100,7 +100,7 @@ static bool UnitTest_LinearColor()
 	return true;
 }
 
-static bool UnitTest_LinearColor_Lerp()
+static bool UnitTests_LinearColor_Lerp()
 {
 	LinearColor linearColor1(0.0f, 0.0f, 0.0f);
 	LinearColor linearColor2(1.0f, 1.0f, 1.0f);
@@ -112,7 +112,7 @@ static bool UnitTest_LinearColor_Lerp()
 	return true;
 }
 
-static bool UnitTest_LinearColor_FromRGBA()
+static bool UnitTests_LinearColor_FromRGBA()
 {
 	LinearColor linearColor;
 
@@ -137,14 +137,14 @@ static bool UnitTest_LinearColor_FromRGBA()
 
 export bool RunUnitTests_Color()
 {
-    JPT_ENSURE(UnitTest_Color());
-    JPT_ENSURE(UnitTest_Color_Lerp());
-    JPT_ENSURE(UnitTest_Color_FromRGBA());
-    JPT_ENSURE(UnitTest_Color_FromLinearColor());
+    JPT_ENSURE(UnitTests_Color());
+    JPT_ENSURE(UnitTests_Color_Lerp());
+    JPT_ENSURE(UnitTests_Color_FromRGBA());
+    JPT_ENSURE(UnitTests_Color_FromLinearColor());
 
-    JPT_ENSURE(UnitTest_LinearColor());
-    JPT_ENSURE(UnitTest_LinearColor_Lerp());
-    JPT_ENSURE(UnitTest_LinearColor_FromRGBA());
+    JPT_ENSURE(UnitTests_LinearColor());
+    JPT_ENSURE(UnitTests_LinearColor_Lerp());
+    JPT_ENSURE(UnitTests_LinearColor_FromRGBA());
 
     return true;
 }

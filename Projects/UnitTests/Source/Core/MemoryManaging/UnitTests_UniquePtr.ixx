@@ -13,7 +13,7 @@ import jpt.UniquePtr;
 import jpt.ToString;
 import jpt.String;
 
-bool UnitTest_UniquePtr_Char()
+bool UnitTests_UniquePtr_Char()
 {
 	auto deleter = [](char* pCharPtr)
 		{
@@ -72,7 +72,7 @@ bool UnitTest_UniquePtr_Char()
 	return true;
 }
 
-bool UnitTest_UniquePtr_Int()
+bool UnitTests_UniquePtr_Int()
 {
 	auto deleter = [](int32* pint32Ptr)
 		{
@@ -130,7 +130,7 @@ bool UnitTest_UniquePtr_Int()
 	return true;
 }
 
-bool UnitTest_UniquePtr_String()
+bool UnitTests_UniquePtr_String()
 {
 	using String = jpt::String;
 
@@ -182,7 +182,7 @@ bool UnitTest_UniquePtr_String()
 	return true;
 }
 
-bool UnitTest_UniquePtr_Class()
+bool UnitTests_UniquePtr_Class()
 {
 	struct Foo
 	{
@@ -266,10 +266,10 @@ bool UnitTest_UniquePtr_Class()
 
 export bool RunUnitTests_UniquePtr()
 {
-	JPT_ENSURE(UnitTest_UniquePtr_Char());
-	JPT_ENSURE(UnitTest_UniquePtr_Int());
-	JPT_ENSURE(UnitTest_UniquePtr_String());
-	JPT_ENSURE(UnitTest_UniquePtr_Class());
+	JPT_ENSURE(UnitTests_UniquePtr_Char());
+	JPT_ENSURE(UnitTests_UniquePtr_Int());
+	JPT_ENSURE(UnitTests_UniquePtr_String());
+	JPT_ENSURE(UnitTests_UniquePtr_Class());
 
 	return true;
 }

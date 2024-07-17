@@ -11,7 +11,7 @@ import jpt.Utilities;
 import jpt.TypeDefs;
 import jpt.String;
 
-bool UnitTest_Variant()
+bool UnitTests_Variant()
 {
     jpt::Variant<int32, char, bool, jpt::String> variant = 1;
 
@@ -42,7 +42,7 @@ bool UnitTest_Variant()
     return true;
 }
 
-bool UnitTest_Variant_Copy()
+bool UnitTests_Variant_Copy()
 {
     jpt::Variant<int32, char, bool, jpt::String> originalVariant;
     originalVariant = jpt::String("Original");
@@ -90,7 +90,7 @@ bool UnitTest_Variant_Copy()
     return true;
 }
 
-bool UnitTest_Variant_Move()
+bool UnitTests_Variant_Move()
 {
     jpt::Variant<int32, char, bool, jpt::String> originalVariant;
     originalVariant = jpt::String("Original");
@@ -115,9 +115,9 @@ bool UnitTest_Variant_Move()
 
 export bool RunUnitTests_Variant()
 {
-    JPT_ENSURE(UnitTest_Variant());
-    JPT_ENSURE(UnitTest_Variant_Copy());
-    JPT_ENSURE(UnitTest_Variant_Move());
+    JPT_ENSURE(UnitTests_Variant());
+    JPT_ENSURE(UnitTests_Variant_Copy());
+    JPT_ENSURE(UnitTests_Variant_Move());
 
     return true;
 }

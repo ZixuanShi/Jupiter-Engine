@@ -101,7 +101,7 @@ static void MergeCloseVertices_SpatialHashing(jpt::DynamicArray<Vec3f>& position
 	}
 }
 
-export bool UnitTest_Coding_MergeCloseVertices()
+export bool UnitTests_Coding_MergeCloseVertices()
 {
 	jpt::DynamicArray<Vec3f> positions = GetTestData();
 	MergeCloseVertices_BruteForce(positions, kThreshold);

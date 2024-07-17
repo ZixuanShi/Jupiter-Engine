@@ -11,7 +11,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.String;
 
-bool UnitTest_HashSet()
+bool UnitTests_HashSet()
 {
     jpt::HashSet<int32> hashSet;
 
@@ -42,7 +42,7 @@ bool UnitTest_HashSet()
     return true;
 }
 
-bool UnitTest_HashSet_String()
+bool UnitTests_HashSet_String()
 {
     jpt::HashSet<jpt::String> hashSet;
 
@@ -73,7 +73,7 @@ bool UnitTest_HashSet_String()
     return true;
 }
 
-bool UnitTest_HashSet_Copy()
+bool UnitTests_HashSet_Copy()
 {
     jpt::HashSet<int32> hashSet{ 0,1,2,3 };
 
@@ -107,7 +107,7 @@ bool UnitTest_HashSet_Copy()
     return true;
 }
 
-bool UnitTest_HashSet_Copy_String()
+bool UnitTests_HashSet_Copy_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
 
@@ -147,7 +147,7 @@ bool UnitTest_HashSet_Copy_String()
 	return true;
 }
 
-bool UnitTest_HashSet_CopyAssign()
+bool UnitTests_HashSet_CopyAssign()
 {
     jpt::HashSet<int32> hashSet{ 0,1,2,3 };
     jpt::HashSet<int32> copy{ 4,5,6,7 };
@@ -163,7 +163,7 @@ bool UnitTest_HashSet_CopyAssign()
     return true;
 }
 
-bool UnitTest_HashSet_CopyAssign_String()
+bool UnitTests_HashSet_CopyAssign_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
     jpt::HashSet<jpt::String> copy{ "Engine", "Game" };
@@ -185,7 +185,7 @@ bool UnitTest_HashSet_CopyAssign_String()
     return true;
 }
 
-bool UnitTest_HashSet_Move()
+bool UnitTests_HashSet_Move()
 {
     jpt::HashSet<int32> hashSet{ 0,1,2,3 };
 
@@ -213,7 +213,7 @@ bool UnitTest_HashSet_Move()
     return true;
 }
 
-bool UnitTest_HashSet_Move_String()
+bool UnitTests_HashSet_Move_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
 
@@ -233,7 +233,7 @@ bool UnitTest_HashSet_Move_String()
     return true;
 }
 
-bool UnitTest_HashSet_MoveAssign()
+bool UnitTests_HashSet_MoveAssign()
 {
     jpt::HashSet<int32> hashSet{ 0,1,2,3 };
     jpt::HashSet<int32> moved{ 4,5,6,7 };
@@ -250,7 +250,7 @@ bool UnitTest_HashSet_MoveAssign()
     return true;
 }
 
-bool UnitTest_HashSet_MoveAssign_String()
+bool UnitTests_HashSet_MoveAssign_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
     jpt::HashSet<jpt::String> moved{ "Engine", "Game" };
@@ -268,7 +268,7 @@ bool UnitTest_HashSet_MoveAssign_String()
     return true;
 }
 
-bool UnitTest_HashSet_Grow()
+bool UnitTests_HashSet_Grow()
 {
     jpt::HashSet<int32> hashSet;
 
@@ -285,7 +285,7 @@ bool UnitTest_HashSet_Grow()
     return true;
 }
 
-bool UnitTest_HashSet_Iterate_Erase()
+bool UnitTests_HashSet_Iterate_Erase()
 {
     jpt::HashSet<char> hashSet
     {
@@ -325,7 +325,7 @@ bool UnitTest_HashSet_Iterate_Erase()
     return true;
 }
 
-bool UnitTest_HashSet_Iterate_Erase_String()
+bool UnitTests_HashSet_Iterate_Erase_String()
 {
     jpt::HashSet<jpt::String> hashSet
     {
@@ -367,7 +367,7 @@ bool UnitTest_HashSet_Iterate_Erase_String()
     return true;
 }
 
-bool UnitTest_HashSet_CStr()
+bool UnitTests_HashSet_CStr()
 {
     jpt::HashSet<const char*> hashSet
 	{
@@ -411,27 +411,27 @@ bool UnitTest_HashSet_CStr()
 
 export bool RunUnitTests_HashSet()
 {
-    JPT_ENSURE(UnitTest_HashSet());
-    JPT_ENSURE(UnitTest_HashSet_String());
+    JPT_ENSURE(UnitTests_HashSet());
+    JPT_ENSURE(UnitTests_HashSet_String());
 
-    JPT_ENSURE(UnitTest_HashSet_Copy());
-    JPT_ENSURE(UnitTest_HashSet_Copy_String());
+    JPT_ENSURE(UnitTests_HashSet_Copy());
+    JPT_ENSURE(UnitTests_HashSet_Copy_String());
 
-    JPT_ENSURE(UnitTest_HashSet_CopyAssign());
-    JPT_ENSURE(UnitTest_HashSet_CopyAssign_String());
+    JPT_ENSURE(UnitTests_HashSet_CopyAssign());
+    JPT_ENSURE(UnitTests_HashSet_CopyAssign_String());
 
-    JPT_ENSURE(UnitTest_HashSet_Move());
-    JPT_ENSURE(UnitTest_HashSet_Move_String());
+    JPT_ENSURE(UnitTests_HashSet_Move());
+    JPT_ENSURE(UnitTests_HashSet_Move_String());
 
-    JPT_ENSURE(UnitTest_HashSet_MoveAssign());
-    JPT_ENSURE(UnitTest_HashSet_MoveAssign_String());
+    JPT_ENSURE(UnitTests_HashSet_MoveAssign());
+    JPT_ENSURE(UnitTests_HashSet_MoveAssign_String());
 
-    JPT_ENSURE(UnitTest_HashSet_Grow());
+    JPT_ENSURE(UnitTests_HashSet_Grow());
 
-    JPT_ENSURE(UnitTest_HashSet_Iterate_Erase());
-    JPT_ENSURE(UnitTest_HashSet_Iterate_Erase_String());
+    JPT_ENSURE(UnitTests_HashSet_Iterate_Erase());
+    JPT_ENSURE(UnitTests_HashSet_Iterate_Erase_String());
 
-    JPT_ENSURE(UnitTest_HashSet_CStr());
+    JPT_ENSURE(UnitTests_HashSet_CStr());
 
     return true;
 }

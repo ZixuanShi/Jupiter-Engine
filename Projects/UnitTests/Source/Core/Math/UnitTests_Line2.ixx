@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Line2_DistanceToPoint()
+bool UnitTests_Line2_DistanceToPoint()
 {
 	Line2f line = { Vec2f(-1, 0), Vec2f(1, 0) };
 	JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(0, 0)), 0.0f));
@@ -42,7 +42,7 @@ bool UnitTest_Line2_DistanceToPoint()
 
 export bool RunUnitTests_Line2()
 {
-    JPT_ENSURE(UnitTest_Line2_DistanceToPoint());
+    JPT_ENSURE(UnitTests_Line2_DistanceToPoint());
 
     return true;
 }

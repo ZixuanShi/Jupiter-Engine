@@ -29,7 +29,7 @@ bool IsPalindrome(int32 x)
 	return reversed == x;
 }
 
-export bool UnitTest_Coding_IsPalindrome()
+export bool UnitTests_Coding_IsPalindrome()
 {
 	JPT_ENSURE(IsPalindrome(121) == true);
 	JPT_ENSURE(IsPalindrome(-121) == false);

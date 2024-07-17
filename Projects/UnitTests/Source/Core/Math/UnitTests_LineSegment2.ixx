@@ -12,7 +12,7 @@ import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_LineSegment2_DistanceToPoint()
+bool UnitTests_LineSegment2_DistanceToPoint()
 {
 	Vec2f point = Vec2f(0.0f, 0.0f);
 	LineSegment2f line = LineSegment2f(Vec2f(1.0f, 0.0f), Vec2f(1.0f, 1.0f));
@@ -34,7 +34,7 @@ bool UnitTest_LineSegment2_DistanceToPoint()
 
 export bool RunUnitTests_LineSegment2()
 {
-    JPT_ENSURE(UnitTest_LineSegment2_DistanceToPoint());
+    JPT_ENSURE(UnitTests_LineSegment2_DistanceToPoint());
 
     return true;
 }

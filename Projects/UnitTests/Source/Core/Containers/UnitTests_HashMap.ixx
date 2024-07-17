@@ -19,7 +19,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Variant;
 
-bool UnitTest_HashMap_Trivial()
+bool UnitTests_HashMap_Trivial()
 {
     jpt::HashMap<char, int32> map;
 
@@ -57,7 +57,7 @@ bool UnitTest_HashMap_Trivial()
     return true;
 }
 
-bool UnitTest_HashMap_Trivial_Copy()
+bool UnitTests_HashMap_Trivial_Copy()
 {
     jpt::HashMap<char, int32> map{ {'a', 1},{'b', 2},{'c', 3} };
     JPT_ENSURE(map['a'] == 1);
@@ -85,7 +85,7 @@ bool UnitTest_HashMap_Trivial_Copy()
     return true;
 }
 
-bool UnitTest_HashMap_Trivial_Move()
+bool UnitTests_HashMap_Trivial_Move()
 {
     jpt::HashMap<char, int32> map{ {'a', 1},{'b', 2},{'c', 3} };
     JPT_ENSURE(map['a'] == 1);
@@ -115,7 +115,7 @@ bool UnitTest_HashMap_Trivial_Move()
     return true;
 }
 
-bool UnitTest_HashMap_NonTrivial()
+bool UnitTests_HashMap_NonTrivial()
 {
     jpt::HashMap<jpt::String, jpt::String> map;
 
@@ -154,7 +154,7 @@ bool UnitTest_HashMap_NonTrivial()
     return true;
 }
 
-bool UnitTest_HashMap_NonTrivial_Copy()
+bool UnitTests_HashMap_NonTrivial_Copy()
 {
     jpt::HashMap<jpt::String, jpt::String> map{ {"Champ A", "Aatrox"},{"Champ B","Jax"},{"Champ C", "Darius"} };
     JPT_ENSURE(map["Champ A"] == "Aatrox");
@@ -182,7 +182,7 @@ bool UnitTest_HashMap_NonTrivial_Copy()
     return true;
 }
 
-bool UnitTest_HashMap_NonTrivial_Move()
+bool UnitTests_HashMap_NonTrivial_Move()
 {
     jpt::HashMap<jpt::String, jpt::String> map{ {"Champ A", "Aatrox"},{"Champ B","Jax"},{"Champ C", "Darius"} };
     JPT_ENSURE(map["Champ A"] == "Aatrox");
@@ -215,7 +215,7 @@ void Func(int32& num)
     ++num;
 }
 
-bool UnitTest_HashMap_Function()
+bool UnitTests_HashMap_Function()
 {
     auto lambda = [](int32& num)->void
         {
@@ -240,7 +240,7 @@ bool UnitTest_HashMap_Function()
     return true;
 }
 
-bool UnitTest_HashMap_Erase()
+bool UnitTests_HashMap_Erase()
 {
     jpt::HashMap<int32, int32> hashMap;
 
@@ -258,7 +258,7 @@ bool UnitTest_HashMap_Erase()
     return true;
 }
 
-bool UnitTest_HashMap_Grow()
+bool UnitTests_HashMap_Grow()
 {
     jpt::HashMap<int32, int32> hashMap;
 
@@ -279,7 +279,7 @@ bool UnitTest_HashMap_Grow()
     return true;
 }
 
-bool UnitTest_HashMap_Iterate_Erase()
+bool UnitTests_HashMap_Iterate_Erase()
 {
     jpt::HashMap<char, int32> hashMap
     { 
@@ -319,7 +319,7 @@ bool UnitTest_HashMap_Iterate_Erase()
     return true;
 }
 
-bool UnitTest_HashMap_Iterate_Erase_String()
+bool UnitTests_HashMap_Iterate_Erase_String()
 {
     jpt::HashMap<jpt::String, jpt::String> hashMap
     { 
@@ -361,7 +361,7 @@ bool UnitTest_HashMap_Iterate_Erase_String()
     return true;
 }
 
-bool UnitTest_HashMap_Iterate_Erase_Container()
+bool UnitTests_HashMap_Iterate_Erase_Container()
 {
     jpt::HashMap<jpt::String, jpt::DynamicArray<jpt::String>> hashMap
     {
@@ -410,7 +410,7 @@ JPT_ENUM_UINT8(EWeapon,
     Hammer,
     Axe = 5,
     Spear);
-bool UnitTest_HashMap_Enum()
+bool UnitTests_HashMap_Enum()
 {
     jpt::HashMap<EWeapon, int32> hashMap
 	{
@@ -441,7 +441,7 @@ bool UnitTest_HashMap_Enum()
     return true;
 }
 
-bool UnitTest_HashMap_Variant()
+bool UnitTests_HashMap_Variant()
 {
     using JsonBasicVariant = jpt::Variant<int32, float64, bool, jpt::String>;
 
@@ -477,7 +477,7 @@ bool UnitTest_HashMap_Variant()
     return true;
 }
 
-bool UnitTest_HashMap_Tuple()
+bool UnitTests_HashMap_Tuple()
 {
     jpt::HashMap<int32, jpt::Tuple<int32, jpt::String, float64>> hashMap;
 
@@ -514,7 +514,7 @@ bool UnitTest_HashMap_Tuple()
     return true;
 }
 
-bool UnitTest_HashMap_Any()
+bool UnitTests_HashMap_Any()
 {
     jpt::HashMap<EWeapon, jpt::Any> hashMap;
 
@@ -548,7 +548,7 @@ bool UnitTest_HashMap_Any()
     return true;
 }
 
-bool UnitTest_HashMap_CStrKey()
+bool UnitTests_HashMap_CStrKey()
 {
     jpt::HashMap<const char*, int32> hashMap;
 
@@ -567,27 +567,27 @@ bool UnitTest_HashMap_CStrKey()
 
 export bool RunUnitTests_HashMap()
 {
-    JPT_ENSURE(UnitTest_HashMap_Trivial());
-    JPT_ENSURE(UnitTest_HashMap_Trivial_Copy());
-    JPT_ENSURE(UnitTest_HashMap_Trivial_Move());
+    JPT_ENSURE(UnitTests_HashMap_Trivial());
+    JPT_ENSURE(UnitTests_HashMap_Trivial_Copy());
+    JPT_ENSURE(UnitTests_HashMap_Trivial_Move());
 
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial());
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Copy());
-    JPT_ENSURE(UnitTest_HashMap_NonTrivial_Move());
+    JPT_ENSURE(UnitTests_HashMap_NonTrivial());
+    JPT_ENSURE(UnitTests_HashMap_NonTrivial_Copy());
+    JPT_ENSURE(UnitTests_HashMap_NonTrivial_Move());
     
-    JPT_ENSURE(UnitTest_HashMap_Function());
-    JPT_ENSURE(UnitTest_HashMap_Erase());
-    JPT_ENSURE(UnitTest_HashMap_Grow());
+    JPT_ENSURE(UnitTests_HashMap_Function());
+    JPT_ENSURE(UnitTests_HashMap_Erase());
+    JPT_ENSURE(UnitTests_HashMap_Grow());
 
-    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase());
-    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_String());
-    JPT_ENSURE(UnitTest_HashMap_Iterate_Erase_Container());
+    JPT_ENSURE(UnitTests_HashMap_Iterate_Erase());
+    JPT_ENSURE(UnitTests_HashMap_Iterate_Erase_String());
+    JPT_ENSURE(UnitTests_HashMap_Iterate_Erase_Container());
 
-    JPT_ENSURE(UnitTest_HashMap_Enum());
-    JPT_ENSURE(UnitTest_HashMap_Variant());
-    JPT_ENSURE(UnitTest_HashMap_Tuple());
-    JPT_ENSURE(UnitTest_HashMap_Any());
-    JPT_ENSURE(UnitTest_HashMap_CStrKey());
+    JPT_ENSURE(UnitTests_HashMap_Enum());
+    JPT_ENSURE(UnitTests_HashMap_Variant());
+    JPT_ENSURE(UnitTests_HashMap_Tuple());
+    JPT_ENSURE(UnitTests_HashMap_Any());
+    JPT_ENSURE(UnitTests_HashMap_CStrKey());
 
     return true;
 }

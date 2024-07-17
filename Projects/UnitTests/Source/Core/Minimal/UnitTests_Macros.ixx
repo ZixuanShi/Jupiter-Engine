@@ -23,7 +23,7 @@ bool TestFormatHelper(const char* expectedResult, const char* format, ...)
     return jpt::AreStringsSame(buffer, expectedResult);
 }
 
-bool UnitTest_Macro_String()
+bool UnitTests_Macro_String()
 {
     JPT_ENSURE(TestFormatHelper("Hello World", "Hello World"));
     JPT_ENSURE(TestFormatHelper("42", "%d", 42));
@@ -77,7 +77,7 @@ void InitializerList(const std::initializer_list<T>& list)
 	}
 }
 
-bool UnitTest_Macro_VA_ARGS()
+bool UnitTests_Macro_VA_ARGS()
 {
     JPT_ENSURE(JPT_HAS_ARGS() == false);
     JPT_ENSURE(JPT_HAS_ARGS(false));
@@ -105,8 +105,8 @@ bool UnitTests_Macro_ArgsCount()
 
 export bool RunUnitTests_Macros()
 {
-    JPT_ENSURE(UnitTest_Macro_String());
-    JPT_ENSURE(UnitTest_Macro_VA_ARGS());
+    JPT_ENSURE(UnitTests_Macro_String());
+    JPT_ENSURE(UnitTests_Macro_VA_ARGS());
     JPT_ENSURE(UnitTests_Macro_ArgsCount());
 
     return true;

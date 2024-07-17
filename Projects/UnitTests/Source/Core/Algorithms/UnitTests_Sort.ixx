@@ -21,7 +21,7 @@ import jpt.String;
 import jpt.Rand;
 import jpt.Utilities;
 
-bool UnitTest_QuickSort()
+bool UnitTests_QuickSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -34,7 +34,7 @@ bool UnitTest_QuickSort()
     return true;
 }
 
-bool UnitTest_InsertionSort()
+bool UnitTests_InsertionSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -47,7 +47,7 @@ bool UnitTest_InsertionSort()
     return true;
 }
 
-bool UnitTest_HeapSort()
+bool UnitTests_HeapSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -60,7 +60,7 @@ bool UnitTest_HeapSort()
     return true;
 }
 
-bool UnitTest_IntroSort()
+bool UnitTests_IntroSort()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -73,7 +73,7 @@ bool UnitTest_IntroSort()
     return true;
 }
 
-bool UnitTest_Sorting_Partial()
+bool UnitTests_Sorting_Partial()
 {
     jpt::StaticArray<int32, 10> arr = { 2,3,1,0,4,6,9,5,7,8 };
 
@@ -104,7 +104,7 @@ bool UnitTest_Sorting_Partial()
     return true;
 }
 
-bool UnitTest_Sorting_Random()
+bool UnitTests_Sorting_Random()
 {
     static constexpr size_t kArraySize = 10;
 
@@ -142,7 +142,7 @@ bool UnitTest_Sorting_Random()
     return true;
 }
 
-bool UnitTest_Sorting_StackArray()
+bool UnitTests_Sorting_StackArray()
 {
     int32 arr[] = { 5,2,4,6,1,3 };
 
@@ -211,7 +211,7 @@ struct NonTrivialStruct
     bool operator>(const NonTrivialStruct& other) const { return m_int > other.m_int; }
 };
 
-bool UnitTest_Sorting_NonTrivialStruct()
+bool UnitTests_Sorting_NonTrivialStruct()
 {
 	jpt::DynamicArray<NonTrivialStruct> arr;
 	arr.EmplaceBack(2, "two");
@@ -255,15 +255,15 @@ bool UnitTest_Sorting_NonTrivialStruct()
 
 export bool RunUnitTests_Sorting()
 {
-    JPT_ENSURE(UnitTest_QuickSort());
-    JPT_ENSURE(UnitTest_InsertionSort());
-    JPT_ENSURE(UnitTest_HeapSort());
-    JPT_ENSURE(UnitTest_IntroSort());
+    JPT_ENSURE(UnitTests_QuickSort());
+    JPT_ENSURE(UnitTests_InsertionSort());
+    JPT_ENSURE(UnitTests_HeapSort());
+    JPT_ENSURE(UnitTests_IntroSort());
 
-    JPT_ENSURE(UnitTest_Sorting_Partial());
-    JPT_ENSURE(UnitTest_Sorting_Random());
-    JPT_ENSURE(UnitTest_Sorting_StackArray());
-    JPT_ENSURE(UnitTest_Sorting_NonTrivialStruct());
+    JPT_ENSURE(UnitTests_Sorting_Partial());
+    JPT_ENSURE(UnitTests_Sorting_Random());
+    JPT_ENSURE(UnitTests_Sorting_StackArray());
+    JPT_ENSURE(UnitTests_Sorting_NonTrivialStruct());
 
     return true;
 }

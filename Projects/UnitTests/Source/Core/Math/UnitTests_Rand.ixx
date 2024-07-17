@@ -9,7 +9,7 @@ export module UnitTests_Rand;
 import jpt.Rand;
 import jpt.Utilities;
 
-bool UnitTest_GenerateRandomNumbers()
+bool UnitTests_GenerateRandomNumbers()
 {
 	for (size_t i = 0; i < 10; ++i)
 	{
@@ -29,7 +29,7 @@ bool UnitTest_GenerateRandomNumbers()
 	return true;
 }
 
-bool UnitTest_FixedSeedGenerateRandomNumbers()
+bool UnitTests_FixedSeedGenerateRandomNumbers()
 {
 	jpt::RNG rng(990726);
 
@@ -53,8 +53,8 @@ bool UnitTest_FixedSeedGenerateRandomNumbers()
 
 export bool RunUnitTests_Rand()
 {
-	JPT_ENSURE(UnitTest_GenerateRandomNumbers());
-	JPT_ENSURE(UnitTest_FixedSeedGenerateRandomNumbers());
+	JPT_ENSURE(UnitTests_GenerateRandomNumbers());
+	JPT_ENSURE(UnitTests_FixedSeedGenerateRandomNumbers());
 
 	return true;
 }

@@ -21,15 +21,15 @@ import UnitTests_Coding_MergeCloseVertices;
 
 export bool RunUnitTests_Coding()
 {
-	JPT_ENSURE(UnitTest_Coding_Scratch());
-	JPT_ENSURE(UnitTest_Coding_FindMedianSortedArrays());
-	JPT_ENSURE(UnitTest_Coding_SubArraySum());
-	JPT_ENSURE(UnitTest_Coding_IsPalindrome());
-	JPT_ENSURE(UnitTest_Coding_TwoSum());
-	JPT_ENSURE(UnitTest_Coding_RomanToInteger());
-	JPT_ENSURE(UnitTest_Coding_MaxSubArray());
-	JPT_ENSURE(UnitTest_Coding_DeleteDuplicatesFromList());
-	JPT_ENSURE(UnitTest_Coding_MergeCloseVertices());
+	JPT_ENSURE(UnitTests_Coding_Scratch());
+	JPT_ENSURE(UnitTests_Coding_FindMedianSortedArrays());
+	JPT_ENSURE(UnitTests_Coding_SubArraySum());
+	JPT_ENSURE(UnitTests_Coding_IsPalindrome());
+	JPT_ENSURE(UnitTests_Coding_TwoSum());
+	JPT_ENSURE(UnitTests_Coding_RomanToInteger());
+	JPT_ENSURE(UnitTests_Coding_MaxSubArray());
+	JPT_ENSURE(UnitTests_Coding_DeleteDuplicatesFromList());
+	JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
 
 	return true;
 }

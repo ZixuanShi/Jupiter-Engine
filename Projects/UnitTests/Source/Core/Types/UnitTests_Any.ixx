@@ -17,7 +17,7 @@ import jpt.TypeDefs;
 import jpt.Variant;
 import jpt.Utilities;
 
-bool UnitTest_Any()
+bool UnitTests_Any()
 {
     jpt::Any any;
 
@@ -44,7 +44,7 @@ bool UnitTest_Any()
     return true;
 }
 
-bool UnitTest_Any_Copy()
+bool UnitTests_Any_Copy()
 {
     jpt::Any any;
 
@@ -93,7 +93,7 @@ bool UnitTest_Any_Copy()
     return true;
 }
 
-bool UnitTest_Any_Move()
+bool UnitTests_Any_Move()
 {
     jpt::String str1 = "Hello";
     jpt::String str2 = "World";
@@ -130,7 +130,7 @@ bool UnitTest_Any_Move()
 }
 
 
-bool UnitTest_Any_CStr()
+bool UnitTests_Any_CStr()
 {
     //jpt::Any any;
     //
@@ -147,11 +147,11 @@ bool UnitTest_Any_CStr()
 
 export bool RunUnitTests_Any()
 {
-    JPT_ENSURE(UnitTest_Any());
-    JPT_ENSURE(UnitTest_Any_Copy());
-    JPT_ENSURE(UnitTest_Any_Move());
+    JPT_ENSURE(UnitTests_Any());
+    JPT_ENSURE(UnitTests_Any_Copy());
+    JPT_ENSURE(UnitTests_Any_Move());
 
-    JPT_ENSURE(UnitTest_Any_CStr());
+    JPT_ENSURE(UnitTests_Any_CStr());
 
     return true;
 }

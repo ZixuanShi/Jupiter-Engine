@@ -11,7 +11,7 @@ import jpt.Utilities;
 import jpt.Optional;
 import jpt.String;
 
-bool UnitTest_Optional()
+bool UnitTests_Optional()
 {
 	jpt::Optional<int32> intOptional;
 	JPT_ENSURE(!intOptional.HasValue());
@@ -46,7 +46,7 @@ bool UnitTest_Optional()
 
 export bool RunUnitTests_Optional()
 {
-	JPT_ENSURE(UnitTest_Optional());
+	JPT_ENSURE(UnitTests_Optional());
 
 	return true;
 }

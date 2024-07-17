@@ -9,7 +9,7 @@ export module UnitTests_Pair;
 import jpt.Pair;
 import jpt.Utilities;
 
-bool UnitTest_Pair()
+bool UnitTests_Pair()
 {
 	jpt::Pair<int, bool> pair{ 42, true };
 	//JPT_LOG(pair);
@@ -28,7 +28,7 @@ bool UnitTest_Pair()
 
 export bool RunUnitTests_Pair()
 {
-	JPT_ENSURE(UnitTest_Pair());
+	JPT_ENSURE(UnitTests_Pair());
 
 	return true;
 }

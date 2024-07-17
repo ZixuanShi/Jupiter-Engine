@@ -11,7 +11,7 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_Queue()
+bool UnitTests_Queue()
 {
     jpt::Queue<int32> queue;
 
@@ -30,7 +30,7 @@ bool UnitTest_Queue()
     return true;
 }
 
-bool UnitTest_Queue_String()
+bool UnitTests_Queue_String()
 {
     jpt::Queue<jpt::String> queue;
 
@@ -51,7 +51,7 @@ bool UnitTest_Queue_String()
     return true;
 }
 
-bool UnitTest_Queue_Copy()
+bool UnitTests_Queue_Copy()
 {
     jpt::Queue<int32> queue;
 
@@ -79,7 +79,7 @@ bool UnitTest_Queue_Copy()
     return true;
 }
 
-bool UnitTest_Queue_Copy_String()
+bool UnitTests_Queue_Copy_String()
 {
     jpt::Queue<jpt::String> queue;
 
@@ -110,7 +110,7 @@ bool UnitTest_Queue_Copy_String()
     return true;
 }
 
-bool UnitTest_Queue_Move()
+bool UnitTests_Queue_Move()
 {
     jpt::Queue<int32> queue;
 
@@ -133,7 +133,7 @@ bool UnitTest_Queue_Move()
     return true;
 }
 
-bool UnitTest_Queue_Move_String()
+bool UnitTests_Queue_Move_String()
 {
     jpt::Queue<jpt::String> queue;
 
@@ -160,14 +160,14 @@ bool UnitTest_Queue_Move_String()
 
 export bool RunUnitTests_Queue()
 {
-    JPT_ENSURE(UnitTest_Queue());
-    JPT_ENSURE(UnitTest_Queue_String());
+    JPT_ENSURE(UnitTests_Queue());
+    JPT_ENSURE(UnitTests_Queue_String());
 
-    JPT_ENSURE(UnitTest_Queue_Copy());
-    JPT_ENSURE(UnitTest_Queue_Copy_String());
+    JPT_ENSURE(UnitTests_Queue_Copy());
+    JPT_ENSURE(UnitTests_Queue_Copy_String());
 
-    JPT_ENSURE(UnitTest_Queue_Move());
-    JPT_ENSURE(UnitTest_Queue_Move_String());
+    JPT_ENSURE(UnitTests_Queue_Move());
+    JPT_ENSURE(UnitTests_Queue_Move_String());
 
     return true;
 }

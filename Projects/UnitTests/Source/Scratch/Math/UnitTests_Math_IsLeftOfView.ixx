@@ -21,7 +21,7 @@ static bool IsLeftOfView(Vec3f viewDir, Vec3f viewPos, Vec3f point)
 	return cross.y > 0;
 }
 
-export bool UnitTest_Math_IsLeftOfView()
+export bool UnitTests_Math_IsLeftOfView()
 {
 	Vec3f viewDir = Vec3f::Forward();
 	Vec3f viewPos = Vec3f::Zero();

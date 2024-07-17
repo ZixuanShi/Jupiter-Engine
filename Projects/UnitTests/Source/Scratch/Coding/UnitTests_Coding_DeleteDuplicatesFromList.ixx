@@ -62,7 +62,7 @@ ListNode* DeleteDuplicates(ListNode* head)
 	return head;
 }
 
-export bool UnitTest_Coding_DeleteDuplicatesFromList()
+export bool UnitTests_Coding_DeleteDuplicatesFromList()
 {
 	ListNode* pHead = new ListNode(1);
 	pHead->next = new ListNode(1);

@@ -19,7 +19,7 @@ bool IsTrivial()
     return true;
 }
 
-bool UnitTest_Trivial()
+bool UnitTests_Trivial()
 {
     JPT_ENSURE(IsTrivial<int32>());
     JPT_ENSURE(IsTrivial<int64>());
@@ -35,7 +35,7 @@ bool UnitTest_Trivial()
 
 export bool RunUnitTests_Concepts()
 {
-    JPT_ENSURE(UnitTest_Trivial());
+    JPT_ENSURE(UnitTests_Trivial());
 
     return true;
 }

@@ -25,7 +25,7 @@ int32 MaxSubArray(const jpt::DynamicArray<int32>& nums)
 	return maxSum;
 }
 
-export bool UnitTest_Coding_MaxSubArray()
+export bool UnitTests_Coding_MaxSubArray()
 {
 	JPT_ENSURE(MaxSubArray({ -2, 1, -3, 4, -1, 2, 1, -5, 4 }) == 6);
 	JPT_ENSURE(MaxSubArray({ 1 }) == 1);

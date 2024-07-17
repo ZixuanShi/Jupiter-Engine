@@ -14,7 +14,7 @@ import jpt.StaticArray;
 import jpt.LinkedList;
 import jpt.String;
 
-bool UnitTest_Searching_StaticArray()
+bool UnitTests_Searching_StaticArray()
 {
     const jpt::StaticArray<int32, 5> staticArray = { 1, 2, 3, 4, 5 };
 
@@ -31,7 +31,7 @@ bool UnitTest_Searching_StaticArray()
     return true;
 }
 
-bool UnitTest_Searching_DynamicArray()
+bool UnitTests_Searching_DynamicArray()
 {
     jpt::DynamicArray<int32> dynamicArray = { 1, 2, 3, 4, 5 };
 
@@ -66,7 +66,7 @@ bool UnitTest_Searching_DynamicArray()
     return true;
 }
 
-bool UnitTest_Searching_LinkedList()
+bool UnitTests_Searching_LinkedList()
 {
     jpt::LinkedList<int32> linkedList = { 1, 2, 3, 4, 5 };
 
@@ -101,7 +101,7 @@ bool UnitTest_Searching_LinkedList()
     return true;
 }
 
-bool UnitTest_Searching_RawArray()
+bool UnitTests_Searching_RawArray()
 {
 	int32 rawArray[] = { 1, 2, 3, 4, 5 };
 
@@ -118,10 +118,10 @@ bool UnitTest_Searching_RawArray()
 
 export bool RunUnitTests_Searching()
 {
-    JPT_ENSURE(UnitTest_Searching_StaticArray());
-    JPT_ENSURE(UnitTest_Searching_DynamicArray());
-    JPT_ENSURE(UnitTest_Searching_LinkedList());
-    JPT_ENSURE(UnitTest_Searching_RawArray());
+    JPT_ENSURE(UnitTests_Searching_StaticArray());
+    JPT_ENSURE(UnitTests_Searching_DynamicArray());
+    JPT_ENSURE(UnitTests_Searching_LinkedList());
+    JPT_ENSURE(UnitTests_Searching_RawArray());
 
     return true;
 }

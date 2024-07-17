@@ -9,7 +9,7 @@ export module UnitTests_Utilities;
 import jpt.Utilities;
 import jpt.String;
 
-bool UnitTest_Move()
+bool UnitTests_Move()
 {
 	// String
 	jpt::String str1 = "Jupiter";
@@ -24,7 +24,7 @@ bool UnitTest_Move()
 
 export bool RunUnitTests_Utilities()
 {
-	JPT_ENSURE(UnitTest_Move());
+	JPT_ENSURE(UnitTests_Move());
 
 	return true;
 }
