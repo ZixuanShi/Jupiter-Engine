@@ -1,5 +1,7 @@
 import jpt.EntryPoints;
 
+#include "Debugging/Logger.h"
+
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
 
