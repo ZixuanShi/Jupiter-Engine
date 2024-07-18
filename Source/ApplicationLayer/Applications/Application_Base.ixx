@@ -18,7 +18,9 @@ namespace jpt
 	public:
 		virtual ~Application_Base() = default;
 
+		virtual bool PreInit();
 		virtual bool Init();
+
 		virtual void Update();
 		virtual void Terminate();
 
@@ -28,12 +30,15 @@ namespace jpt
 			@return An Application's reference to the client project. */
 		static Application_Base* GetInstance();
 
-		virtual const char* GetName() const { return "Application_Base"; }
-
 	protected:
 		void PollInput();
 		void Render();
 	};
+
+	bool Application_Base::PreInit()
+	{
+		return true;
+	}
 
 	bool Application_Base::Init()
 	{

@@ -9,15 +9,22 @@
 -- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
 -- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
 
-local project_name = _ARGS[1]
-local project_dir  = _ARGS[2]
-local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
-local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 for i = 1, #_ARGS do
     print("Argument " .. i .. " = " .. _ARGS[i])
 end
 
+---------------------------------------------------------------------------------------------------
+-- local data
+---------------------------------------------------------------------------------------------------
+local project_name = _ARGS[1]
+local project_dir  = _ARGS[2]
+local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
+local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
+
+---------------------------------------------------------------------------------------------------
+-- Helper functions
+---------------------------------------------------------------------------------------------------
 function HasArg(name)
     for i = 1, #_ARGS do
         if _ARGS[i] == name then
@@ -27,7 +34,9 @@ function HasArg(name)
     return false
 end
 
+---------------------------------------------------------------------------------------------------
 -- Jupiter workspace
+---------------------------------------------------------------------------------------------------
 workspace (project_name)
     configurations 
     { 
