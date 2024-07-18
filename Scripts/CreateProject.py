@@ -111,13 +111,28 @@ const wchar_t* jpt::GetClientDirW()
 def create_application_header():
 	application_content = """#pragma once
 
-import jpt.Application_Base;
+#if IS_PLATFORM_WIN64
+	import jpt.Application_Win64;
+#else
+	import jpt.Application_Base;
+#endif
 
-class Application_<ProjectName> final : public jpt::Application_Base
+class Application_<ProjectName> final : 
+#if IS_PLATFORM_WIN64
+	public jpt::Application_Win64
+#else
+	public jpt::Application_Base
+#endif
 {
 private:
-	using Super = jpt::Application_Base;
+	#if IS_PLATFORM_WIN64
+		using Super = jpt::Application_Win64;
+	#else
+		using Super = jpt::Application_Base;
+	#endif
 
+public:
+	virtual bool Init() override final;
 };
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
@@ -127,6 +142,17 @@ private:
 
 def create_application_cpp():
 	application_content = """#include "Application_<ProjectName>.h"
+
+#include "Core/Minimal/CoreHeaders.h"
+
+import jpt.CoreModules;
+
+bool Application_<ProjectName>::Init()
+{
+	JPT_ENSURE(Super::Init());
+
+	return true;
+}
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
 	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".cpp", "w") as file:
