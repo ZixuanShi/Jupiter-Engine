@@ -51,12 +51,7 @@ def create_scripts():
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Source/ApplicationLayer/Main.cpp and ProjectNameApplication.ixx
 def create_main_cpp():
-	main_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
-
-#include "Core/Minimal/CoreHeaders.h"
-#include "Application_<ProjectName>.h"
-
-import jpt.EntryPoints;
+	main_content = """import jpt.EntryPoints;
 
 /** Main entry point for different platforms */
 #if IS_PLATFORM_WIN64
@@ -66,20 +61,21 @@ import jpt.EntryPoints;
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
 {
-	JPT_LOG("Hello World %s. Powered by Jupiter Engine", "<ProjectName>");
-	return jpt::MainImplWin64(hInstance, hPrevInstance, lPStr, nCmdShow);
+	return jpt::MainImpl_Win64(hInstance, hPrevInstance, lPStr, nCmdShow);
+}
+#else
+int main(int argc, char* argv[])
+{
+	return jpt::MainImpl(argc, argv);
 }
 #endif
 """
-	main_content = main_content.replace("<ProjectName>", project_name)
 	with open(project_directory + "/Source/ApplicationLayer/Main.cpp", "w") as file:
 	    file.write(main_content)
 
 
 def create_application_communications_ixx():
-	communications_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
-
-// This file overrides the global communication functions through out both engine and client
+	communications_content = """// This file overrides the global communication functions through out both engine and client
 
 module;
 
@@ -113,9 +109,7 @@ const wchar_t* jpt::GetClientDirW()
 
 
 def create_application_header():
-	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
-
-#pragma once
+	application_content = """#pragma once
 
 import jpt.Application_Base;
 
@@ -132,9 +126,7 @@ private:
 
 
 def create_application_cpp():
-	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
-
-#include "Application_<ProjectName>.h"
+	application_content = """#include "Application_<ProjectName>.h"
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
 	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".cpp", "w") as file:
