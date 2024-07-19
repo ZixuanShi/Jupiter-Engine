@@ -21,7 +21,7 @@ file_content_template = """// Copyright Jupiter Technologies, Inc. All Rights Re
 
 module;
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 export module UnitTests_<SubjectName>;
 
@@ -29,7 +29,7 @@ import jpt.<SubjectName>;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-bool UnitTest_<SubjectName>()
+bool UnitTests_<SubjectName>()
 {
 
     return true;
@@ -37,7 +37,7 @@ bool UnitTest_<SubjectName>()
 
 export bool RunUnitTests_<SubjectName>()
 {
-    JPT_ENSURE(UnitTest_<SubjectName>());
+    JPT_ENSURE(UnitTests_<SubjectName>());
 
     return true;
 }
@@ -47,7 +47,7 @@ unit_tests_content_template = """// Copyright Jupiter Technologies, Inc. All Rig
 
 module;
 
-#include "Core/Minimal/Headers.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 export module UnitTests_<SubjectName>;
 

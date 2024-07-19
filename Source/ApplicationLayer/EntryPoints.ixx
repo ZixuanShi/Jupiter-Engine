@@ -17,7 +17,7 @@ import jpt.LaunchArgs;
 
 namespace jpt
 {
-	static int MainFinal()
+	static int MainImpl()
 	{
 #if IS_DEBUG
 		MemoryLeakDetector::Init();
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 	app->SetHINSTANCE(hInstance);
 	app->SetnCmdShow(nCmdShow);
 
-	return MainFinal();
+	return MainImpl();
 }
 #else
 
@@ -57,6 +57,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 	{
 		jpt::LaunchArgs::GetInstance().Parse(argc, argv);
 
-		return jpt::MainFinal();
+		return jpt::MainImpl();
 	}
 #endif

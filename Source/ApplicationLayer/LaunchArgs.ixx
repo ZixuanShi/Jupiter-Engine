@@ -2,15 +2,18 @@
 
 module;
 
-#include "Core/Minimal/CoreHeaders.h"
-
-#include <string>
+#include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Assert.h"
+#include "Debugging/Logger.h"
 
 export module jpt.LaunchArgs;
 
 import jpt.TypeDefs;
 import jpt.String;
+import jpt.StringUtils;
 import jpt.HashMap;
+import jpt.DynamicArray;
+import jpt.Utilities;
 
 namespace jpt
 {
@@ -24,18 +27,24 @@ namespace jpt
 		static LaunchArgs& GetInstance();
 
 		/** Parse command line arguments and store them in a map
+			Expected Launch Args format: { "-key=value", "-flag", "-key_2=value", "-flag2" }
 			@param argsCount	How many arguments got passed in when launching
 			@param arguments	An array of arguments */
 		void Parse(int32 argsCount, char* arguments[]);
 
-		/** @param argumentStr	A string of arguments */
-		void Parse(char* argumentStr);
+		/** @param argumentStr	A string of arguments
+			Expected Launch Args format: "-key=value -flag -key_2=value -flag2" */
+		void Parse(const char* argumentStr);
 
 		/**	@return		True if a key exists. Either has value or flag */
 		bool Has(const String& key) const;
 
 		/** @return		Value of the key */
 		const String& Get(const String& key) const;
+
+	private:
+		/** Parse a single argument "-key=value" and store into arguments map */
+		void Parse(String&& argument);
 	};
 
 	LaunchArgs& LaunchArgs::GetInstance()
@@ -50,51 +59,39 @@ namespace jpt
 
 		for (int32 i = 0; i < argsCount; ++i)
 		{
-			char* argument = arguments[i];
-			String argumentStr = argument;
-			argumentStr.TrimRight();
-
-			String key;
-			String value;
-
-			const size_t equalPos = argumentStr.Find('=');
-
-			// Flag
-			if (equalPos == npos)
-			{
-				key = argumentStr;
-			}
-			// Key-Value pair
-			else
-			{
-				key = argumentStr.SubStr(0, equalPos);
-				value = argumentStr.SubStr(equalPos + 1);
-			}
-
-			JPT_ASSERT(!key.IsEmpty());
-			JPT_ASSERT(!m_arguments.Has(key), "Duplicated launch argument found \"%s\"", key.ConstBuffer());
-			m_arguments.Add(key, value);
+			String argumentStr = arguments[i];
+			Parse(Move(argumentStr));
 		}
 	}
 
-	void LaunchArgs::Parse(char* argumentStr)
+	void LaunchArgs::Parse(const char* argumentStr)
 	{
-		int32 argsCount = 0;
-		char* arguments[256];
-
-		const char* delimiter = "-";
-		char* nextToken = nullptr;
-
-		char* token = strtok_s(argumentStr, delimiter, &nextToken);
-
-		while (token)
+		if (FindCharsCount(argumentStr) == 0)
 		{
-			arguments[argsCount] = token;
-			token = strtok_s(nullptr, delimiter, &nextToken);
-			++argsCount;
+			return;
 		}
 
-		Parse(argsCount, arguments);
+		String argumentsCopy = argumentStr;
+
+		while (true)
+		{
+			const Index start = argumentsCopy.FindFirstOf('-');
+			if (start == npos)
+			{
+				break;
+			}
+
+			Index end = argumentsCopy.FindFirstOf('-', start + 1);
+			if (end == npos)
+			{
+				end = argumentsCopy.Count();
+			}
+
+			String argument = argumentsCopy.SubStr(start, end - start);
+			Parse(Move(argument));
+
+			argumentsCopy = argumentsCopy.SubStr(end);
+		}
 	}
 
 	bool LaunchArgs::Has(const String& key) const
@@ -106,5 +103,32 @@ namespace jpt
 	{
 		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
 		return m_arguments[key];
+	}
+
+	void LaunchArgs::Parse(String&& argument)
+	{
+		argument.TrimLeft(1);	// Remove the leading '-'
+		argument.TrimRight();
+
+		String key;
+		String value;
+
+		const size_t equalPos = argument.Find('=');
+
+		// Flag
+		if (equalPos == npos)
+		{
+			key = argument;
+		}
+		// Key-Value pair
+		else
+		{
+			key = argument.SubStr(0, equalPos);
+			value = argument.SubStr(equalPos + 1);
+		}
+
+		JPT_ASSERT(!key.IsEmpty());
+		JPT_ASSERT(!m_arguments.Has(key), "Duplicated launch argument found \"%s\"", key.ConstBuffer());
+		m_arguments.Add(key, value);
 	}
 }
