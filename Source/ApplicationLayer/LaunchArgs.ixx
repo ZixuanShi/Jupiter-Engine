@@ -107,7 +107,11 @@ namespace jpt
 
 	void LaunchArgs::Parse(String&& argument)
 	{
-		argument.TrimLeft(1);	// Remove the leading '-'
+		// Remove the leading '-'
+		if (argument.Front() == '-')
+		{
+			argument.TrimLeft(1);
+		}
 		argument.TrimRight();
 
 		String key;
