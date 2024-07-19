@@ -63,8 +63,8 @@ bool UnitTests_Main_0()
 {
     jpt::LaunchArgs localLaunchArgs;
 
-    int32 argc = 6;
-    char* args[6] = 
+    static constexpr int32 argc = 6;
+    char* args[argc] = 
     {
         new char[] { "D:\\Programming\\Practice\\C++\\CppInternal\\Builds\\C++Test_Debug_x64_Output\\C++Test.exe" },
         new char[] { "-bool_flag_0" },

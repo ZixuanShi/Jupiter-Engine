@@ -56,8 +56,15 @@ namespace jpt
 	void LaunchArgs::Parse(int32 argsCount, char* arguments[])
 	{
 		m_arguments.Reserve(argsCount);
+		
+		int32 i = 0;
+		if (arguments[0][0] != '-')
+		{
+			m_arguments.Add("exe_path", arguments[0]);
+			++i;
+		}
 
-		for (int32 i = 0; i < argsCount; ++i)
+		for (i; i < argsCount; ++i)
 		{
 			String argumentStr = arguments[i];
 			Parse(Move(argumentStr));
