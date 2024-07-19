@@ -15,17 +15,13 @@ import jpt.LaunchArgs;
 	import jpt.MemoryLeakDetector;
 #endif
 
-#if IS_PLATFORM_WIN64
-	import jpt.Application_Win64;
-#endif
-
 namespace jpt
 {
 	static int MainFinal()
 	{
-		#if IS_DEBUG
-			MemoryLeakDetector::Init();
-		#endif
+#if IS_DEBUG
+		MemoryLeakDetector::Init();
+#endif
 
 		Application_Base* app = Application_Base::GetInstance();
 		if (app->PreInit() && app->Init())
@@ -37,24 +33,30 @@ namespace jpt
 
 		return 0;
 	}
+}
 
 #if IS_PLATFORM_WIN64
-	export int MainImpl_Win64(HINSTANCE hInstance, HINSTANCE, LPSTR args, int nCmdShow)
-	{
-		LaunchArgs::GetInstance().Parse(args);
+import jpt.Application_Win64;
 
-		Application_Win64* app = static_cast<Application_Win64*>(Application_Win64::GetInstance());
-		app->SetHINSTANCE(hInstance);
-		app->SetnCmdShow(nCmdShow);
+_Use_decl_annotations_
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
+{
+	using namespace jpt;
 
-		return MainFinal();
-	}	
+	LaunchArgs::GetInstance().Parse(launchArgs);
+
+	Application_Win64* app = static_cast<Application_Win64*>(Application_Win64::GetInstance());
+	app->SetHINSTANCE(hInstance);
+	app->SetnCmdShow(nCmdShow);
+
+	return MainFinal();
 }
 #else
-	export int MainImpl(int argc, char* argv[])
-	{
-		LaunchArgs::GetInstance().Parse(argc, argv);
 
-		return MainFinal();
+	int main(int argc, char* argv[])
+	{
+		jpt::LaunchArgs::GetInstance().Parse(argc, argv);
+
+		return jpt::MainFinal();
 	}
 #endif

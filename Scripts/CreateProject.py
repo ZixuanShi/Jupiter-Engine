@@ -49,31 +49,6 @@ def create_scripts():
 # -----------------------------------------------------------------------------------------------------
 # Source folder
 # -----------------------------------------------------------------------------------------------------
-# <ProjectDirectory>/Source/ApplicationLayer/Main.cpp and ProjectNameApplication.ixx
-def create_main_cpp():
-	main_content = """import jpt.EntryPoints;
-
-/** Main entry point for different platforms */
-#if IS_PLATFORM_WIN64
-
-#include <Windows.h>
-
-_Use_decl_annotations_
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lPStr, int nCmdShow)
-{
-	return jpt::MainImpl_Win64(hInstance, hPrevInstance, lPStr, nCmdShow);
-}
-#else
-int main(int argc, char* argv[])
-{
-	return jpt::MainImpl(argc, argv);
-}
-#endif
-"""
-	with open(project_directory + "/Source/ApplicationLayer/Main.cpp", "w") as file:
-	    file.write(main_content)
-
-
 def create_application_communications_ixx():
 	communications_content = """// This file overrides the global communication functions through out both engine and client
 
@@ -162,7 +137,6 @@ bool Application_<ProjectName>::Init()
 def create_source():
 	os.makedirs(project_directory + "/Source/ApplicationLayer")
 
-	create_main_cpp()
 	create_application_communications_ixx()
 	create_application_header()
 	create_application_cpp()

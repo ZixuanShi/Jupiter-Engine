@@ -117,7 +117,6 @@ workspace (project_name)
     filter "platforms:Win64"
         defines { "IS_PLATFORM_WIN64" }
 
-        
 -- Jupiter Engine
 project "Engine"
     location  (jupiter_dir .. "_ProjectFiles")
@@ -125,16 +124,15 @@ project "Engine"
     objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
     kind "StaticLib"
 
-    includedirs
-    {
-        (jupiter_dir .. "Source"),
-    }
-
     defines
     {
         ("IS_CLIENT=0"),
     }
 
+    includedirs
+    {
+        (jupiter_dir .. "Source"),
+    }
     files 
     {
         (jupiter_dir .. "Source/**.h"),
@@ -147,12 +145,29 @@ project (project_name)
     filter "platforms:Win64"
         kind "WindowedApp"
 
+    defines
+    {
+        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
+        ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
+        ("IS_CLIENT=1"),
+    }
+
     includedirs
     {
         (jupiter_dir .. "Source"),
-        (project_dir .. "Source")
+        (project_dir .. "Source"),
+    }    
+    files
+    {
+        (project_dir .. "Source/**.h"),
+        (project_dir .. "Source/**.cpp"),
+        (project_dir .. "Source/**.ixx"),
     }
 
+    libdirs
+    {
+        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output/"),
+    }
     links
     {
         -- Engine's functions, classes, and modules
@@ -163,25 +178,6 @@ project (project_name)
         "d3d12",
         "dxgi",
         "d3dcompiler",
-    }
-
-    defines
-    {
-        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
-        ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
-        ("IS_CLIENT=1"),
-    }
-
-    libdirs
-    {
-        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output/")
-    }
-
-    files
-    {
-        (project_dir .. "Source/**.h"),
-        (project_dir .. "Source/**.cpp"),
-        (project_dir .. "Source/**.ixx"),
     }
 
     -- TODO: Only xcopy if shipping config
