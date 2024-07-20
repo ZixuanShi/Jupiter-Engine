@@ -7,12 +7,15 @@ module;
 
 #if IS_PLATFORM_WIN64
 #include <Windows.h>
+#include <GLFW/glfw3.h>
 
 export module jpt.Application_Win64;
 
 import jpt.Application_Base;
 import jpt.TypeDefs;
 import jpt.Utilities;
+
+struct GLFWwindow;
 
 namespace jpt
 {
@@ -30,8 +33,13 @@ namespace jpt
 		/** A flag that indicates whether the main application window is minimized, maximized, or shown normally. */
 		int32 m_nCmdShow = 0;
 
+		GLFWwindow* m_pWindow = nullptr;
+
 	public:
 		virtual bool PreInit() override;
+		virtual bool Init() override;
+		virtual void Update() override;
+		virtual void Terminate() override;
 
 	public:
 		void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
@@ -44,6 +52,51 @@ namespace jpt
 		JPT_ENSURE(m_hInstance != nullptr);
 
 		return true;
+	}
+
+	bool Application_Win64::Init()
+	{
+		/* Initialize the library */
+		if (!glfwInit())
+		{
+			return false;
+		}
+
+		/* Create a windowed mode window and its OpenGL context */
+		m_pWindow = glfwCreateWindow(640, 480, "Jupiter Engine", NULL, NULL);
+		if (!m_pWindow)
+		{
+			glfwTerminate();
+			return false;
+		}
+
+		/* Make the window's context current */
+		glfwMakeContextCurrent(m_pWindow);
+
+		return true;
+	}
+
+	void Application_Win64::Update()
+	{
+		Super::Terminate();
+
+		m_shouldTerminate = glfwWindowShouldClose(m_pWindow);
+
+		/* Render here */
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(m_pWindow);
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
+
+	void Application_Win64::Terminate()
+	{
+		Super::Terminate();
+
+		glfwTerminate();
 	}
 }
 

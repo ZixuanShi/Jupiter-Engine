@@ -74,8 +74,15 @@ workspace (project_name)
     }
 
     -- Global filters for configurations
+    flags
+    {
+        "OmitDefaultLibrary",
+    }
     filter "configurations:Release or configurations:Profiling"
-        flags{ "FatalCompileWarnings" }
+        flags
+        {
+            "FatalCompileWarnings" 
+        }
 
     filter "configurations:Debug"
         defines 
@@ -132,6 +139,7 @@ project "Engine"
     includedirs
     {
         (jupiter_dir .. "Source"),
+        (jupiter_dir .. "Dependencies/*/Include"),
     }
     files 
     {
@@ -155,6 +163,7 @@ project (project_name)
     includedirs
     {
         (jupiter_dir .. "Source"),
+        (jupiter_dir .. "Dependencies/*/Include"),
         (project_dir .. "Source"),
     }    
     files
@@ -166,7 +175,8 @@ project (project_name)
 
     libdirs
     {
-        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output/"),
+        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output"),
+        (jupiter_dir .. "Dependencies/*/Lib"),
     }
     links
     {
@@ -174,11 +184,28 @@ project (project_name)
         "Engine.lib",
         "Engine",
 
-        -- DirectX 12
-        "d3d12",
-        "dxgi",
-        "d3dcompiler",
+        -- OpenGL
+        "glfw3",
+        "opengl32",
     }
+    filter "configurations:Debug"
+        links
+        {
+            "msvcrtd",
+        }
+    filter "configurations:not Debug"
+        links
+        {
+            "msvcrt",
+        }
+    filter "platforms:Win64"
+        links
+        {
+            -- DirectX 12
+            "d3d12",
+            "dxgi",
+            "d3dcompiler",
+        }
 
     -- TODO: Only xcopy if shipping config
     -- postbuildcommands

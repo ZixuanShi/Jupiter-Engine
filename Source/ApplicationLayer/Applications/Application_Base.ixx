@@ -4,8 +4,6 @@ module;
 
 export module jpt.Application_Base;
 
-import jpt.StopWatch;
-
 namespace jpt
 {
 	/** Base abstract class for applications.
@@ -56,19 +54,11 @@ namespace jpt
 
 	void Application_Base::Run()
 	{
-		StopWatch timer;
-		timer.Start();
-		
 		while (!m_shouldTerminate)
 		{
 			PollInput();
 			Update();
 			Render();
-		
-			if (timer.GetDuration() > 0)
-			{
-				m_shouldTerminate = true;
-			}
 		}
 	}
 
