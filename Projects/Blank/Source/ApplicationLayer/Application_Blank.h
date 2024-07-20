@@ -6,7 +6,7 @@
 	import jpt.Application_Base;
 #endif
 
-class Application_Sandbox final : 
+class Application_Blank final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
 #else

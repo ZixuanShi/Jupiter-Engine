@@ -2,7 +2,7 @@
 
 module;
 
-#include "Application_Sandbox.h"
+#include "Application_Blank.h"
 
 export module ApplicationCommunications;
 
@@ -12,7 +12,7 @@ import jpt.File.Path;
 /** Must Overrides Application GetInstance here */
 jpt::Application_Base* jpt::Application_Base::GetInstance()
 {
-	static Application_Sandbox s_instance;
+	static Application_Blank s_instance;
 	return &s_instance;
 }
 

@@ -1,14 +1,12 @@
-#include "Application_Sandbox.h"
+#include "Application_Blank.h"
 
 #include "Core/Minimal/CoreHeaders.h"
 
 import jpt.CoreModules;
-import jpt.LaunchArgs;
 
-bool Application_Sandbox::Init()
+bool Application_Blank::Init()
 {
 	JPT_ENSURE(Super::Init());
-
 
 	return true;
 }
