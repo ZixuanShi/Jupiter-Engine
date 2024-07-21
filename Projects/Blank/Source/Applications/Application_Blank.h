@@ -1,3 +1,5 @@
+// This file overrides the global communication functions through out both engine and client
+
 #pragma once
 
 #if IS_PLATFORM_WIN64

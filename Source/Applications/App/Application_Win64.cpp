@@ -19,6 +19,7 @@ namespace jpt
 		JPT_ENSURE(Super::PreInit());
 		JPT_ENSURE(m_hInstance != nullptr);
 
+
 		return true;
 	}
 
