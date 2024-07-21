@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_LaunchArgs;
 
-import jpt.LaunchArgs;
+import jpt.CommandLine;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.String;
@@ -16,7 +16,7 @@ bool UnitTests_WinMain_0()
 {
     const char* args = "-bool_flag_0 -graphics_api=dx12 -magic_value=4.2 -magic_str=wow -bool_flag_1";
 
-    jpt::LaunchArgs localLaunchArgs;
+    jpt::CommandLine localLaunchArgs;
     localLaunchArgs.Parse(args);
 
     JPT_ENSURE(localLaunchArgs.Has("bool_flag_0"));
@@ -41,7 +41,7 @@ bool UnitTests_WinMain_1()
         "-magic_value=4.2"
         "-magic_str=w ow          -bool_flag_1";
 
-    jpt::LaunchArgs localLaunchArgs;
+    jpt::CommandLine localLaunchArgs;
     localLaunchArgs.Parse(args);
 
     JPT_ENSURE(localLaunchArgs.Has("bool_flag_0"));
@@ -61,7 +61,7 @@ bool UnitTests_WinMain_1()
 
 bool UnitTests_Main_0()
 {
-    jpt::LaunchArgs localLaunchArgs;
+    jpt::CommandLine localLaunchArgs;
 
     static constexpr int32 argc = 6;
     char* args[argc] = 

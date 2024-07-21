@@ -4,11 +4,11 @@
 
 module;
 
+#include "Applications/App/Application_Base.h"
 #include "Application_JupiterUnitTests.h"
 
 export module ApplicationCommunications;
 
-import jpt.Application_Base;
 import jpt.File.Path;
 
 /** Must Overrides Application GetInstance here */

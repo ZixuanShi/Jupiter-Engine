@@ -4,12 +4,12 @@
 
 module;
 
-#include "Core/Minimal/CoreHeaders.h"
+#include "Applications/App/Application_Base.h"
 #include "Application_Benchmarks.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 export module ApplicationCommunications;
 
-import jpt.Application_Base;
 import jpt.File.Path;
 
 /** Must Overrides Application GetInstance here */

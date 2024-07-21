@@ -29,6 +29,8 @@ namespace jpt
 		void Run();
 		void TerminateApp();
 
+		virtual const char* GetName() const { return "Application_Base"; }
+
 	protected:
 		void PollInput() { }
 		void Render()    { }

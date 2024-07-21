@@ -32,7 +32,7 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init());
 
-		m_pWindow = glfwCreateWindow(800, 600, "Jupiter Technologies", nullptr, nullptr);
+		m_pWindow = glfwCreateWindow(800, 600, Application_Base::GetInstance()->GetName(), nullptr, nullptr);
 		if (!m_pWindow)
 		{
 			glfwTerminate();

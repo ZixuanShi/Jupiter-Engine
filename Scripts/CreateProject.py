@@ -49,50 +49,24 @@ def create_scripts():
 # -----------------------------------------------------------------------------------------------------
 # Source folder
 # -----------------------------------------------------------------------------------------------------
-def create_application_communications_ixx():
-	communications_content = """// This file overrides the global communication functions through out both engine and client
+def create_application_ixx():
+	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 module;
 
-#include "Application_<ProjectName>.h"
+#include "Applications/App/Application_Base.h"
+#include "Core/Minimal/CoreHeaders.h"
 
-export module ApplicationCommunications;
-
-import jpt.Application_Base;
-import jpt.File.Path;
-
-/** Must Overrides Application GetInstance here */
-jpt::Application_Base* jpt::Application_Base::GetInstance()
-{
-	static Application_<ProjectName> s_instance;
-	return &s_instance;
-}
-
-/** Must Overrides GetClientDir here */
-const char* jpt::GetClientDir()
-{
-	return JPT_CLIENT_DIR;
-}
-const wchar_t* jpt::GetClientDirW()
-{
-	return JPT_CLIENT_DIR_W;
-}
-"""
-	communications_content = communications_content.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Source/ApplicationLayer/ApplicationCommunications.ixx", "w") as file:
-		file.write(communications_content)
-
-
-def create_application_header():
-	application_content = """#pragma once
+export module <ProjectName>;
 
 #if IS_PLATFORM_WIN64
-	import jpt.Application_Win64;
-#else
-	import jpt.Application_Base;
+import jpt.Application_Win64;
 #endif
 
-class Application_<ProjectName> final : 
+import jpt.Utilities;
+import jpt.File.Path;
+
+export class <ProjectName> final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
 #else
@@ -107,39 +81,36 @@ private:
 	#endif
 
 public:
-	virtual bool Init() override final;
+	virtual bool PreInit() override;
 };
-"""
-	application_content = application_content.replace("<ProjectName>", project_name)		
-	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".h", "w") as file:
-	    file.write(application_content)
 
-
-def create_application_cpp():
-	application_content = """#include "Application_<ProjectName>.h"
-
-#include "Core/Minimal/CoreHeaders.h"
-
-import jpt.CoreModules;
-
-bool Application_<ProjectName>::Init()
+bool <ProjectName>::PreInit()
 {
-	JPT_ENSURE(Super::Init());
+	JPT_ENSURE(Super::PreInit());
 
 	return true;
 }
+
+#pragma region Engine-Client Communications
+const char* jpt::GetClientDir() { return JPT_CLIENT_DIR; }
+const wchar_t* jpt::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+
+jpt::Application_Base* jpt::Application_Base::GetInstance()
+{
+	static <ProjectName> s_instance;
+	return &s_instance;
+}
+#pragma endregion
 """
 	application_content = application_content.replace("<ProjectName>", project_name)		
-	with open(project_directory + "/Source/ApplicationLayer/" + "Application_" + project_name + ".cpp", "w") as file:
+	with open(project_directory + "/Source/Applications/" + "Application_" + project_name + ".ixx", "w") as file:
 	    file.write(application_content)
 
 
 def create_source():
-	os.makedirs(project_directory + "/Source/ApplicationLayer")
+	os.makedirs(project_directory + "/Source/Applications")
 
-	create_application_communications_ixx()
-	create_application_header()
-	create_application_cpp()
+	create_application_ixx()
 
 
 if __name__ == "__main__":

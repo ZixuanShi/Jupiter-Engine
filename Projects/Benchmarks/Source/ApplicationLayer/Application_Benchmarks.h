@@ -2,7 +2,7 @@
 
 #pragma once
 
-import jpt.Application_Base;
+#include "Applications/App/Application_Base.h"
 
 class Application_Benchmarks final : public jpt::Application_Base
 {
@@ -10,5 +10,5 @@ private:
 	using Super = jpt::Application_Base;
 
 public:
-	virtual bool Init() override final;
+	virtual bool Init() override;
 };
