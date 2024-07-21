@@ -22,7 +22,7 @@ namespace jpt
 {
 	static int MainImpl()
 	{
-		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().GetAll());
+		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 #if IS_DEBUG
 		MemoryLeakDetector::Init();

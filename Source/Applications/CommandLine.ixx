@@ -50,7 +50,7 @@ namespace jpt
 		const String& Get(const String& key) const;
 
 		/** @return		All arguments in a string format */
-		const String GetAll() const;
+		const String ToString() const;
 
 	private:
 		/** Parse a single argument "-key=value" and store into arguments map */
@@ -135,9 +135,9 @@ namespace jpt
 		return m_arguments[key];
 	}
 
-	const String CommandLine::GetAll() const
+	const String CommandLine::ToString() const
 	{
-		return ToString(m_arguments);
+		return jpt::ToString(m_arguments);
 	}
 
 	void CommandLine::Parse(String&& argument)
