@@ -1,9 +1,9 @@
 #pragma once
 
 #if IS_PLATFORM_WIN64
-	import jpt.Application_Win64;
+	#include "Applications/App/Application_Win64.h"
 #else
-	import jpt.Application_Base;
+	#include "Applications/App/Application_Base.h"
 #endif
 
 class Application_Blank final : 
