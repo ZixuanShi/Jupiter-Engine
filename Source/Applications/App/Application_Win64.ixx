@@ -4,6 +4,7 @@ module;
 
 #if IS_PLATFORM_WIN64
 
+#include "Applications/App/Application_Base.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
@@ -16,7 +17,6 @@ export module jpt.Application_Win64;
 
 #if IS_PLATFORM_WIN64
 
-import jpt.Application_Base;
 import jpt.TypeDefs;
 import jpt.CommandLine;
 import jpt.Utilities;
@@ -42,8 +42,6 @@ namespace jpt
 	public:
 		virtual bool PreInit() override;
 		virtual bool Init() override;
-		virtual void Update() override;
-		virtual void Terminate() override;
 
 	public:
 		void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
@@ -54,12 +52,6 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::PreInit());
 		JPT_ENSURE(m_hInstance != nullptr);
-
-		m_pFramework = new Framework_GLFW;
-		m_pFramework->Init();
-
-		m_pWindow = new Window_GLFW;
-		m_pWindow->Init();
 
 		return true;
 	}
@@ -75,25 +67,6 @@ namespace jpt
 		}
 
 		return true;
-	}
-
-	void Application_Win64::Update()
-	{
-		Super::Update();
-
-		m_pFramework->Update();
-		m_pWindow->Update();
-	}
-
-	void Application_Win64::Terminate()
-	{
-		Super::Terminate();
-
-		m_pFramework->Terminate();
-		JPT_SAFE_DELETE(m_pFramework);
-
-		m_pWindow->Terminate();
-		JPT_SAFE_DELETE(m_pWindow);
 	}
 }
 

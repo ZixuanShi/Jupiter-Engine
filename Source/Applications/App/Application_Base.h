@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Application_Base;
+#pragma once
 
 import jpt.Framework_Base;
 import jpt.Window_Base;
@@ -10,7 +10,7 @@ namespace jpt
 {
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
-	export class Application_Base
+	class Application_Base
 	{
 	protected:
 		Window_Base* m_pWindow = nullptr;
@@ -21,26 +21,16 @@ namespace jpt
 		virtual ~Application_Base() = default;
 		static Application_Base* GetInstance();
 
-		virtual bool PreInit()   { return true; }
-		virtual bool Init()		 { return true; }
-		virtual void Update()    { }
-		virtual void Terminate() { }
+		virtual bool PreInit();
+		virtual bool Init() { return true; }
+		virtual void Update();
+		virtual void Terminate();
 
 		void Run();
-		void TerminateApp() { m_shouldTerminate = true; }
+		void TerminateApp();
 
 	protected:
 		void PollInput() { }
 		void Render()    { }
 	};
-
-	void Application_Base::Run()
-	{
-		while (!m_shouldTerminate)
-		{
-			PollInput();
-			Update();
-			Render();
-		}
-	}
 }

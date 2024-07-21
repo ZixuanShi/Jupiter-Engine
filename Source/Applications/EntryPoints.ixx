@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application_Base.h"
 #include "Debugging/Logger.h"
 
 #if IS_PLATFORM_WIN64
@@ -10,7 +11,6 @@ module;
 
 export module jpt.EntryPoints;
 
-import jpt.Application_Base;
 import jpt.Application_Win64;
 import jpt.CommandLine;
 

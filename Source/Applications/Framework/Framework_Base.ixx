@@ -4,6 +4,8 @@ module;
 
 export module jpt.Framework_Base;
 
+import jpt.CommandLine;
+
 namespace jpt
 {
 	export class Framework_Base

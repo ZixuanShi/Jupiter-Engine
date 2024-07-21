@@ -2,14 +2,13 @@
 
 module;
 
+#include "Applications/App/Application_Base.h"
 #include "Core/Minimal/CoreHeaders.h"
 
 export module Application_Blank;
 
 #if IS_PLATFORM_WIN64
 import jpt.Application_Win64;
-#else
-import jpt.Application_Base;
 #endif
 
 import jpt.Utilities;

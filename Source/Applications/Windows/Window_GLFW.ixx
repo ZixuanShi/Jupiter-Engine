@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application_Base.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
@@ -12,7 +13,6 @@ export module jpt.Window_GLFW;
 
 import jpt.Window_Base;
 import jpt.Utilities;
-import jpt.Application_Base;
 
 namespace jpt
 {
