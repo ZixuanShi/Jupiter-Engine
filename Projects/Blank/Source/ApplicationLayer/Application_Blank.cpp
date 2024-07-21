@@ -4,9 +4,13 @@
 
 import jpt.CoreModules;
 
-bool Application_Blank::Init()
+import jpt.CommandLine;
+
+bool Application_Blank::PreInit()
 {
-	JPT_ENSURE(Super::Init());
+	JPT_ENSURE(Super::PreInit());
+
+	jpt::CommandLine::GetInstance().Add("no_window");
 
 	return true;
 }

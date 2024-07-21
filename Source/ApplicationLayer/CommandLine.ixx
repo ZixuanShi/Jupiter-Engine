@@ -6,7 +6,7 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.LaunchArgs;
+export module jpt.CommandLine;
 
 import jpt.TypeDefs;
 import jpt.String;
@@ -18,13 +18,13 @@ import jpt.Utilities;
 namespace jpt
 {
 	/** Launch Arguments parser and access */
-	export class LaunchArgs
+	export class CommandLine
 	{
 	private:
 		HashMap<String, String> m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
 
 	public:
-		static LaunchArgs& GetInstance();
+		static CommandLine& GetInstance();
 
 		/** Parse command line arguments and store them in a map
 			Expected Launch Args format: { "-key=value", "-flag", "-key_2=value", "-flag2" }
@@ -36,8 +36,14 @@ namespace jpt
 			Expected Launch Args format: "-key=value -flag -key_2=value -flag2" */
 		void Parse(const char* argumentStr);
 
+		/** Adds a key-value pair to the arguments map. value could be empty if key is a flag */
+		void Add(const String& key, const String& value = String());
+
 		/**	@return		True if a key exists. Either has value or flag */
 		bool Has(const String& key) const;
+
+		/** Removes a key from the arguments map */
+		void Erase(const String& key);
 
 		/** @return		Value of the key */
 		const String& Get(const String& key) const;
@@ -47,13 +53,13 @@ namespace jpt
 		void Parse(String&& argument);
 	};
 
-	LaunchArgs& LaunchArgs::GetInstance()
+	CommandLine& CommandLine::GetInstance()
 	{
-		static LaunchArgs s_instance;
+		static CommandLine s_instance;
 		return s_instance;
 	}
 
-	void LaunchArgs::Parse(int32 argsCount, char* arguments[])
+	void CommandLine::Parse(int32 argsCount, char* arguments[])
 	{
 		m_arguments.Reserve(argsCount);
 		
@@ -71,7 +77,7 @@ namespace jpt
 		}
 	}
 
-	void LaunchArgs::Parse(const char* argumentStr)
+	void CommandLine::Parse(const char* argumentStr)
 	{
 		if (FindCharsCount(argumentStr) == 0)
 		{
@@ -101,18 +107,31 @@ namespace jpt
 		}
 	}
 
-	bool LaunchArgs::Has(const String& key) const
+	void CommandLine::Add(const String& key, const String& value /*" = String()"*/)
+	{
+		JPT_ASSERT(!key.IsEmpty());
+		JPT_ASSERT(!m_arguments.Has(key), "Duplicated launch argument found \"%s\"", key.ConstBuffer());
+		m_arguments.Add(key, value);
+	}
+
+	bool CommandLine::Has(const String& key) const
 	{
 		return m_arguments.Has(key);
 	}
 
-	const String& LaunchArgs::Get(const String& key) const
+	void CommandLine::Erase(const String& key)
+	{
+		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
+		m_arguments.Erase(key);
+	}
+
+	const String& CommandLine::Get(const String& key) const
 	{
 		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
 		return m_arguments[key];
 	}
 
-	void LaunchArgs::Parse(String&& argument)
+	void CommandLine::Parse(String&& argument)
 	{
 		// Remove the leading '-'
 		if (argument.Front() == '-')
@@ -138,8 +157,6 @@ namespace jpt
 			value = argument.SubStr(equalPos + 1);
 		}
 
-		JPT_ASSERT(!key.IsEmpty());
-		JPT_ASSERT(!m_arguments.Has(key), "Duplicated launch argument found \"%s\"", key.ConstBuffer());
-		m_arguments.Add(key, value);
+		Add(key, value);
 	}
 }

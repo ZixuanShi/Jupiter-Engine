@@ -2,10 +2,11 @@
 
 module;
 
+#if IS_PLATFORM_WIN64
+
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-#if IS_PLATFORM_WIN64
 #include <Windows.h>
 #include <GLFW/glfw3.h>
 
@@ -14,6 +15,7 @@ export module jpt.Application_Win64;
 import jpt.Application_Base;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.CommandLine;
 
 struct GLFWwindow;
 
@@ -56,6 +58,14 @@ namespace jpt
 
 	bool Application_Win64::Init()
 	{
+		JPT_ENSURE(Super::Init());
+
+		if (CommandLine::GetInstance().Has("no_window"))
+		{
+			m_shouldTerminate = true;
+			return true;
+		}
+
 		/* Initialize the library */
 		if (!glfwInit())
 		{

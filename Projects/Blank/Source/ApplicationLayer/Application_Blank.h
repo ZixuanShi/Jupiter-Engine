@@ -21,5 +21,5 @@ private:
 	#endif
 
 public:
-	virtual bool Init() override final;
+	virtual bool PreInit() override final;
 };

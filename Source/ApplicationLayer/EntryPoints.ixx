@@ -9,7 +9,7 @@ module;
 export module jpt.EntryPoints;
 
 import jpt.Application_Base;
-import jpt.LaunchArgs;
+import jpt.CommandLine;
 
 #if IS_DEBUG
 	import jpt.MemoryLeakDetector;
@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 {
 	using namespace jpt;
 
-	LaunchArgs::GetInstance().Parse(launchArgs);
+	CommandLine::GetInstance().Parse(launchArgs);
 
 	Application_Win64* app = static_cast<Application_Win64*>(Application_Win64::GetInstance());
 	app->SetHINSTANCE(hInstance);
@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
 	int main(int argc, char* argv[])
 	{
-		jpt::LaunchArgs::GetInstance().Parse(argc, argv);
+		jpt::CommandLine::GetInstance().Parse(argc, argv);
 
 		return jpt::MainImpl();
 	}
