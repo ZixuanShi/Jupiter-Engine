@@ -41,7 +41,6 @@ namespace jpt
 
 	public:
 		virtual bool PreInit() override;
-		virtual bool Init() override;
 
 	public:
 		void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
@@ -52,19 +51,6 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::PreInit());
 		JPT_ENSURE(m_hInstance != nullptr);
-
-		return true;
-	}
-
-	bool Application_Win64::Init()
-	{
-		JPT_ENSURE(Super::Init());
-
-		if (CommandLine::GetInstance().Has("no_window"))
-		{
-			m_shouldTerminate = true;
-			return true;
-		}
 
 		return true;
 	}

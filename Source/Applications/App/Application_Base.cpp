@@ -4,11 +4,18 @@
 #include "Core/Minimal/CoreMacros.h"
 
 import jpt.Application_Factories;
+import jpt.CommandLine;
 
 namespace jpt
 {
 	bool jpt::Application_Base::PreInit()
 	{
+		if (CommandLine::GetInstance().Has("no_window"))
+		{
+			m_shouldTerminate = true;
+			return true;
+		}
+
 		m_pFramework = Framework_Create();
 		m_pFramework->Init();
 
@@ -26,11 +33,17 @@ namespace jpt
 
 	void Application_Base::Terminate()
 	{
-		m_pFramework->Terminate();
-		JPT_SAFE_DELETE(m_pFramework);
+		if (m_pFramework)
+		{
+			m_pFramework->Terminate();
+			JPT_DELETE(m_pFramework);
+		}
 
-		m_pWindow->Terminate();
-		JPT_SAFE_DELETE(m_pWindow);
+		if (m_pWindow)
+		{
+			m_pWindow->Terminate();
+			JPT_DELETE(m_pWindow);
+		}
 	}
 
 	void Application_Base::Run()

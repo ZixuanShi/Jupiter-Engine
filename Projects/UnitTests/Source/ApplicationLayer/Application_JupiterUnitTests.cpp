@@ -4,6 +4,7 @@
 
 #include "Core/Minimal/CoreHeaders.h"
 
+import jpt.CommandLine;
 import jpt.Utilities;
 
 import UnitTests_ApplicationLayer;
@@ -12,6 +13,15 @@ import UnitTests_Data;
 import UnitTests_Debugging;
 import UnitTests_System;
 import UnitTests_Scratch;
+
+bool Application_JupiterUnitTests::PreInit()
+{
+	jpt::CommandLine::GetInstance().Add("no_window");
+
+	JPT_ENSURE(Super::PreInit());
+
+	return true;
+}
 
 bool Application_JupiterUnitTests::Init()
 {

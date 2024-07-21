@@ -37,7 +37,7 @@ namespace jpt
 			Expected Launch Args format: "-key=value -flag -key_2=value -flag2" */
 		void Parse(const char* argumentStr);
 
-		/** Adds a key-value pair to the arguments map. value could be empty if key is a flag */
+		/** Adds a key-value pair to the arguments map. Could be empty if key is a flag */
 		void Add(const String& key, const String& value = String());
 
 		/**	@return		True if a key exists. Either has value or flag */
