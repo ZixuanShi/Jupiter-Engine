@@ -8,11 +8,12 @@ module;
 
 export module jpt.CommandLine;
 
-import jpt.TypeDefs;
+import jpt.DynamicArray;
+import jpt.HashMap;
 import jpt.String;
 import jpt.StringUtils;
-import jpt.HashMap;
-import jpt.DynamicArray;
+import jpt.ToString;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 namespace jpt
@@ -47,6 +48,9 @@ namespace jpt
 
 		/** @return		Value of the key */
 		const String& Get(const String& key) const;
+
+		/** @return		All arguments in a string format */
+		const String GetAll() const;
 
 	private:
 		/** Parse a single argument "-key=value" and store into arguments map */
@@ -129,6 +133,11 @@ namespace jpt
 	{
 		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
 		return m_arguments[key];
+	}
+
+	const String CommandLine::GetAll() const
+	{
+		return ToString(m_arguments);
 	}
 
 	void CommandLine::Parse(String&& argument)

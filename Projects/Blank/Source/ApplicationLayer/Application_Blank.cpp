@@ -10,7 +10,5 @@ bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
-	jpt::CommandLine::GetInstance().Add("no_window");
-
 	return true;
 }
