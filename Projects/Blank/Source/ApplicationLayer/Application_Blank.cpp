@@ -4,8 +4,6 @@
 
 import jpt.CoreModules;
 
-import jpt.CommandLine;
-
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());

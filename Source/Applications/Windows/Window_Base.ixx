@@ -11,9 +11,9 @@ namespace jpt
 	public:
 		virtual ~Window_Base() = default;
 
-		virtual void Create() = 0;
-		virtual void Destroy() = 0;
-		virtual void Update() = 0;
-		virtual void Render() = 0;
+		virtual void Create()  {}
+		virtual void Destroy() {}
+		virtual void Update()  {}
+		virtual void Render()  {}
 	};
 }

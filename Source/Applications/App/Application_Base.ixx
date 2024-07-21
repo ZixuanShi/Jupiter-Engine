@@ -16,39 +16,19 @@ namespace jpt
 
 	public:
 		virtual ~Application_Base() = default;
+		static Application_Base* GetInstance();
 
-		virtual bool PreInit();
-		virtual bool Init();
-		virtual void Update();
-		virtual void Terminate();
+		virtual bool PreInit()   { return true; }
+		virtual bool Init()      { return true; }
+		virtual void Update()    { }
+		virtual void Terminate() { }
 
 		void Run();
 
-		static Application_Base* GetInstance();
-
 	protected:
-		void PollInput();
-		void Render();
+		void PollInput() { }
+		void Render()    { }
 	};
-
-	bool Application_Base::PreInit()
-	{
-		return true;
-	}
-
-	bool Application_Base::Init()
-	{
-		return true;
-	}
-
-	void Application_Base::Update()
-	{
-	}
-
-	void Application_Base::Terminate()
-	{
-
-	}
 
 	void Application_Base::Run()
 	{
@@ -58,13 +38,5 @@ namespace jpt
 			Update();
 			Render();
 		}
-	}
-
-	void Application_Base::PollInput()
-	{
-	}
-
-	void Application_Base::Render()
-	{
 	}
 }
