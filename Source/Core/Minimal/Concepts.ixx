@@ -29,6 +29,9 @@ export namespace jpt
 	template<typename T>
 	concept Primitive = std::is_fundamental_v<T>;
 
+	template<typename TParent , typename TDerived>
+	concept BaseOf = std::is_base_of_v<TParent, TDerived>;
+
 	// If a simple struct is deduced as non-trivial, you can override jpt::IsTrivial<T> to return true in your struct. Refer to Vector2
 	template<typename T>
 	concept Trivial = jpt::IsTrivial<T> && jpt::IsSmall<T>;

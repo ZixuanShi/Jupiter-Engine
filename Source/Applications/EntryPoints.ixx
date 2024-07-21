@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
 	CommandLine::GetInstance().Parse(launchArgs);
 
-	Application_Win64* app = static_cast<Application_Win64*>(Application_Win64::GetInstance());
+	Application_Win64* app = static_cast<Application_Win64*>(Application_Base::GetInstance());
 	app->SetHINSTANCE(hInstance);
 	app->SetnCmdShow(nCmdShow);
 

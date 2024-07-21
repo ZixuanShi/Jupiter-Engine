@@ -13,9 +13,11 @@ module;
 export module jpt.Application_Win64;
 
 import jpt.Application_Base;
+import jpt.CommandLine;
+import jpt.String;
+import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;
-import jpt.CommandLine;
 
 struct GLFWwindow;
 
@@ -79,6 +81,11 @@ namespace jpt
 			glfwTerminate();
 			return false;
 		}
+
+		glfwSetErrorCallback([](int32 error, const char* description)
+			{
+				JPT_LOG("GLFW Error: " + ToString(error) + " - " + description);
+			});
 
 		/* Make the window's context current */
 		glfwMakeContextCurrent(m_pWindow);

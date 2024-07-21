@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
 export module jpt.Application_Base;
+
+class Window_Base;
 
 namespace jpt
 {
@@ -11,6 +11,7 @@ namespace jpt
 	export class Application_Base
 	{
 	protected:
+		Window_Base* m_pWindow = nullptr;
 		bool m_shouldTerminate = false;
 
 	public:
@@ -18,14 +19,11 @@ namespace jpt
 
 		virtual bool PreInit();
 		virtual bool Init();
-
 		virtual void Update();
 		virtual void Terminate();
 
 		void Run();
 
-		/** Designed to be implemented in client project's application
-			@return An Application's reference to the client project. */
 		static Application_Base* GetInstance();
 
 	protected:
