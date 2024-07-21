@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
+export module jpt.Application_Base;
 
 import jpt.Framework_Base;
 import jpt.Window_Base;
@@ -10,7 +10,7 @@ namespace jpt
 {
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
-	class Application_Base
+	export class Application_Base
 	{
 	protected:
 		Window_Base* m_pWindow = nullptr;
@@ -33,4 +33,14 @@ namespace jpt
 		void PollInput() { }
 		void Render()    { }
 	};
+
+	void Application_Base::Run()
+	{
+		while (!m_shouldTerminate)
+		{
+			PollInput();
+			Update();
+			Render();
+		}
+	}
 }
