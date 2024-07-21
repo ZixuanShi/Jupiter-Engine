@@ -10,5 +10,9 @@ namespace jpt
 	{
 	public:
 		virtual ~Framework_Base() = default;
+
+		virtual bool Init() { return true; }
+		virtual void Update() {}
+		virtual void Terminate() {}
 	};
 }

@@ -2,6 +2,8 @@
 
 #include "Applications/App/Application_Base.h"
 
+#include "Core/Minimal/CoreMacros.h"
+
 namespace jpt
 {
 	void Application_Base::Run()

@@ -2,7 +2,9 @@
 
 #pragma once
 
-class Window_Base;
+import jpt.Framework_Base;
+import jpt.Window_Base;
+import jpt.Renderer_Base;
 
 namespace jpt
 {
@@ -12,6 +14,7 @@ namespace jpt
 	{
 	protected:
 		Window_Base* m_pWindow = nullptr;
+		Framework_Base* m_pFramework = nullptr;
 		bool m_shouldTerminate = false;
 
 	public:
@@ -19,11 +22,12 @@ namespace jpt
 		static Application_Base* GetInstance();
 
 		virtual bool PreInit()   { return true; }
-		virtual bool Init()      { return true; }
+		virtual bool Init()		 { return true; }
 		virtual void Update()    { }
 		virtual void Terminate() { }
 
 		void Run();
+		void TerminateApp() { m_shouldTerminate = true; }
 
 	protected:
 		void PollInput() { }

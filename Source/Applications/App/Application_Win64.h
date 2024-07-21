@@ -10,8 +10,6 @@
 
 import jpt.TypeDefs;
 
-struct GLFWwindow;
-
 namespace jpt
 {
 	class Application_Win64 : public Application_Base
@@ -27,8 +25,6 @@ namespace jpt
 
 		/** A flag that indicates whether the main application window is minimized, maximized, or shown normally. */
 		int32 m_nCmdShow = 0;
-
-		GLFWwindow* m_pWindow = nullptr;
 
 	public:
 		virtual bool PreInit() override;
