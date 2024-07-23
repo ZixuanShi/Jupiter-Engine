@@ -71,6 +71,7 @@ workspace (project_name)
         ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),
         ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
+        ("GLFW_STATIC"), -- To use GLFW as a static library
     }
 
     -- Global filters for configurations
