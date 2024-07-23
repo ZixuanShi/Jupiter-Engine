@@ -160,7 +160,6 @@ project (project_name)
         "Engine",
 
         -- OpenGL
-        "glfw3",
         "opengl32",
 
         -- DirectX 12
@@ -168,3 +167,13 @@ project (project_name)
         "dxgi",
         "d3dcompiler",
     }
+    filter "configurations:Debug"
+        links
+        {
+            "glfw3_Debug",
+        }
+    filter "configurations:not Debug"
+        links
+        {
+            "glfw3_Release",
+        }
