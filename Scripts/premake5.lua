@@ -42,7 +42,6 @@ workspace (project_name)
     { 
         "Debug",        -- Debugging. No optimization will be performed
         "Development",  -- Develop the project. Use Engine's editors and tools 
-        "Profiling",    -- Profiling. Same configurations with Release but enables Profiling code
         "Release",      -- Relese/Shipping
     }
 
@@ -52,11 +51,6 @@ workspace (project_name)
     }
 
     startproject (project_name)
-
-    -- Paths
-    location  (project_dir .. "_ProjectFiles")
-    targetdir (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
-    objdir    (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
 
     -- Programming
     language   "C++"
@@ -75,29 +69,21 @@ workspace (project_name)
     }
 
     -- Global filters for configurations
-    filter "configurations:Release or configurations:Profiling"
-        flags
-        {
-            "FatalCompileWarnings" 
-        }
+    filter "configurations:Release"
+        flags{ "FatalCompileWarnings" }
 
     filter "configurations:Debug"
-        defines { "IS_DEBUG", }
+        defines { "IS_DEBUG" }
         optimize "Off"
         symbols "On"
 
     filter "configurations:Development"
-        defines { "IS_DEVELOPMENT", }
-        optimize "Size"
+        defines { "IS_DEVELOPMENT" }
+        optimize "Speed"
         symbols "On"
 
-    filter "configurations:Profiling"
-        defines { "IS_PROFILING", }
-        optimize "Speed"
-        symbols "off"
-
     filter "configurations:Release"
-        defines { "IS_RELEASE", }
+        defines { "IS_RELEASE" }
         optimize "Speed"
         symbols "off"
 
@@ -126,6 +112,9 @@ project "Engine"
 
 -- Client Project
 project (project_name)
+    location  (project_dir .. "_ProjectFiles")
+    targetdir (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
+    objdir    (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
     filter "platforms:Win64"
         kind "WindowedApp"
 
@@ -151,7 +140,7 @@ project (project_name)
     libdirs
     {
         (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output"),
-        (jupiter_dir .. "Dependencies/*/Lib"),
+        (jupiter_dir .. "Dependencies/*/Libs"),
     }
     links
     {
