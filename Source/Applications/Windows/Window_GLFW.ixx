@@ -13,9 +13,15 @@ export module jpt.Window_GLFW;
 
 import jpt.Window_Base;
 import jpt.Utilities;
+import jpt.File.Path;
+import jpt.JsonUtils;
+import jpt.JsonData;
+import jpt.Optional;
+import jpt.String;
 
 namespace jpt
 {
+
 	export class Window_GLFW final : public Window_Base
 	{
 		using Super = Window_Base;
@@ -32,7 +38,19 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init(pApp));
 
-		m_pWindow = glfwCreateWindow(800, 600, "To read from Json config", nullptr, nullptr);
+		const File::Path clientConfigPath = { File::ESource::Client, "Assets/Config/Settings.json" };
+		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
+		if (!settings)
+		{
+			JPT_ERROR("Failed to read settings from file: %ls", clientConfigPath.ConstBuffer());
+			return false;
+		}
+
+		const jpt::JsonMap& settingsMap = settings.Value();
+		const int32 width = settingsMap["window_width"].As<int32>();
+		const int32 height = settingsMap["window_height"].As<int32>();
+		const String title = settingsMap["window_title"].As<String>();
+		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)
 		{
 			glfwTerminate();

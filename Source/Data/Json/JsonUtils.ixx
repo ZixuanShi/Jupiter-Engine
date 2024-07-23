@@ -3,7 +3,7 @@
 module;
 
 #include "Debugging/Assert.h"
-#include "Debugging/Logger.h"	// temp
+#include "Debugging/Logger.h"
 
 #include <fstream>
 #include <string>
