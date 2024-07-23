@@ -63,17 +63,17 @@ bool UnitTests_Json_Read()
     JPT_ENSURE(jsonRoot["data_string"] == jpt::String("Hello from Jupiter Engine!"));
     JPT_ENSURE(jsonRoot["data_null"] == jpt::String("null"));
 
-    const jpt::JsonArray& data_array = jsonRoot["data_array"].As<jpt::JsonArray>();
+    const jpt::JsonArray& data_array = jsonRoot["data_array"];
     jpt::JsonArray expected_data_array{ 111, jpt::String("Hello World"), 33, 4.77f, false};
     JPT_ENSURE(data_array == expected_data_array);
 
     // Subset map
-    const jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
+    const jpt::JsonMap& subSet = jsonRoot["data_map"];
     JPT_ENSURE(subSet["year"] == 2024);
     JPT_ENSURE(subSet["month"] == 6);
     JPT_ENSURE(subSet["day"] == 20);
 
-    const jpt::JsonMap& subSet2 = subSet["Subset"].As<jpt::JsonMap>();
+    const jpt::JsonMap& subSet2 = subSet["Subset"];
     JPT_ENSURE(subSet2["key1"] == 1);
     JPT_ENSURE(subSet2["key2"] == 2);
     JPT_ENSURE(subSet2["key3"] == 3);
@@ -90,7 +90,7 @@ bool UnitTests_Json_Update()
     jsonRoot.Set("source", jpt::String("Jupiter Client"));
 
     // subset
-    jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
+    jpt::JsonMap& subSet = jsonRoot["data_map"];
     subSet.Set("year", 1999);
     subSet.Set("Brand", jpt::String("MSI"));
 
@@ -109,7 +109,7 @@ bool UnitTests_Json_ReadUpdated()
 
     JPT_ENSURE(jsonRoot["source"] == jpt::String("Jupiter Client"));
 
-    const jpt::JsonMap& subSet = jsonRoot["data_map"].As<jpt::JsonMap>();
+    const jpt::JsonMap& subSet = jsonRoot["data_map"];
     JPT_ENSURE(subSet["year"] == 1999);
     JPT_ENSURE(subSet["Brand"] == jpt::String("MSI"));
     JPT_ENSURE(subSet.Count() == 5);
@@ -139,7 +139,7 @@ static bool Engine_Read()
 
     JPT_ENSURE(engineJson["engine_version"] == 0);
 
-    const jpt::String& graphicsAPIStr = engineJson["graphics_API"].As<jpt::String>();
+    const jpt::String& graphicsAPIStr = engineJson["graphics_API"];
     JPT_ENSURE(graphicsAPIStr == "Vulkan");
 
     jpt::Graphics::API graphicsAPI(graphicsAPIStr);
