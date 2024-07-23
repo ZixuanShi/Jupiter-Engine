@@ -52,6 +52,11 @@ workspace (project_name)
 
     startproject (project_name)
 
+    -- Path
+    location  (project_dir .. "_ProjectFiles")
+    targetdir (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
+    objdir    (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
+
     -- Programming
     language   "C++"
     cppdialect "C++latest"
@@ -112,9 +117,6 @@ project "Engine"
 
 -- Client Project
 project (project_name)
-    location  (project_dir .. "_ProjectFiles")
-    targetdir (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
-    objdir    (project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
     filter "platforms:Win64"
         kind "WindowedApp"
 
