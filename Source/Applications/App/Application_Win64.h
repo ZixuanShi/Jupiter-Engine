@@ -1,31 +1,17 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
+#pragma once
 
 #if IS_PLATFORM_WIN64
 
 #include "Applications/App/Application_Base.h"
-#include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
-#include "Debugging/Logger.h"
-
 #include <Windows.h>
 
-#endif;
-
-export module jpt.Application_Win64;
-
-#if IS_PLATFORM_WIN64
-
 import jpt.TypeDefs;
-import jpt.CommandLine;
-import jpt.Utilities;
-import jpt.Framework_GLFW;
-import jpt.Window_GLFW;
 
 namespace jpt
 {
-	export class Application_Win64 : public Application_Base
+	class Application_Win64 : public Application_Base
 	{
 	private:
 		using Super = Application_Base;
@@ -46,14 +32,6 @@ namespace jpt
 		void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
 		void SetnCmdShow(int32 nCmdShow) { m_nCmdShow = nCmdShow; }
 	};
-
-	bool Application_Win64::PreInit()
-	{
-		JPT_ENSURE(Super::PreInit());
-		JPT_ENSURE(m_hInstance != nullptr);
-
-		return true;
-	}
 }
 
 #endif // IS_PLATFORM_WIN64

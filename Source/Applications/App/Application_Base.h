@@ -19,10 +19,9 @@ namespace jpt
 
 	public:
 		virtual ~Application_Base() = default;
-		static Application_Base* GetInstance();
 
 		virtual bool PreInit();
-		virtual bool Init() { return true; }
+		virtual bool Init();
 		virtual void Update();
 		virtual void Terminate();
 

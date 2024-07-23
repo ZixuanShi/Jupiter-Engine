@@ -2,6 +2,8 @@
 
 #pragma once
 
+import jpt.Utilities;
+
 #pragma region Building
 /** Used for hacky fix unused parameters */
 #define JPT_IGNORE(...) __VA_ARGS__

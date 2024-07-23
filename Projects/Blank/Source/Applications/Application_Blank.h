@@ -5,9 +5,8 @@
 #include "Applications/App/Application_Base.h"
 
 #if IS_PLATFORM_WIN64
-import jpt.Application_Win64;
+	#include "Applications/App/Application_Win64.h"
 #endif
-
 
 class Application_Blank final : 
 #if IS_PLATFORM_WIN64
@@ -26,8 +25,3 @@ private:
 public:
 	virtual bool PreInit() override;
 };
-
-
-
-
-

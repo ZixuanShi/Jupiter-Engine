@@ -20,11 +20,20 @@ namespace jpt
 		}
 
 		m_pFramework = Framework_Create();
-		m_pFramework->Init();
-
 		m_pWindow = Window_Create();
-		m_pWindow->Init();
 
+		return true;
+	}
+
+	bool Application_Base::Init()
+	{
+		if (m_shouldTerminate)
+		{
+			return false;
+		}
+
+		m_pFramework->Init();
+		m_pWindow->Init(this);
 		return true;
 	}
 

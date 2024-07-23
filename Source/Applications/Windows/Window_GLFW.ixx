@@ -24,15 +24,15 @@ namespace jpt
 		GLFWwindow* m_pWindow = nullptr;
 
 	public:
-		virtual bool Init() override;
+		virtual bool Init(Application_Base* pApp) override;
 		virtual void Update() override;
 	};
 
-	bool Window_GLFW::Init()
+	bool Window_GLFW::Init(Application_Base* pApp)
 	{
-		JPT_ENSURE(Super::Init());
+		JPT_ENSURE(Super::Init(pApp));
 
-		m_pWindow = glfwCreateWindow(800, 600, Application_Base::GetInstance()->GetName(), nullptr, nullptr);
+		m_pWindow = glfwCreateWindow(800, 600, "To read from Json config", nullptr, nullptr);
 		if (!m_pWindow)
 		{
 			glfwTerminate();
@@ -51,7 +51,7 @@ namespace jpt
 
 		if (glfwWindowShouldClose(m_pWindow))
 		{
-			Application_Base::GetInstance()->TerminateApp();
+			m_pApp->TerminateApp();
 		}
 
 		/* Render here */
