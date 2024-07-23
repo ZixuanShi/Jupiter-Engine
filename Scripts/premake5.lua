@@ -74,10 +74,6 @@ workspace (project_name)
     }
 
     -- Global filters for configurations
-    flags
-    {
-        "OmitDefaultLibrary",
-    }
     filter "configurations:Release or configurations:Profiling"
         flags
         {
@@ -85,37 +81,25 @@ workspace (project_name)
         }
 
     filter "configurations:Debug"
-        defines 
-        { 
-            "IS_DEBUG",
-        }
+        defines { "IS_DEBUG", }
         buildoptions { "/MTd" }
         optimize "Off"
         symbols "On"
 
     filter "configurations:Development"
-        defines 
-        { 
-            "IS_DEVELOPMENT",
-        }
+        defines { "IS_DEVELOPMENT", }
         buildoptions { "/MT" }
         optimize "Size"
         symbols "On"
 
     filter "configurations:Profiling"
-        defines 
-        { 
-            "IS_PROFILING",
-        }
+        defines { "IS_PROFILING", }
         buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"
 
     filter "configurations:Release"
-        defines 
-        { 
-            "IS_RELEASE",
-        }
+        defines { "IS_RELEASE", }
         buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"
@@ -130,11 +114,6 @@ project "Engine"
     targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
     objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
     kind "StaticLib"
-
-    defines
-    {
-        ("IS_CLIENT=0"),
-    }
 
     includedirs
     {
@@ -157,7 +136,6 @@ project (project_name)
     {
         ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
         ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
-        ("IS_CLIENT=1"),
     }
 
     includedirs
