@@ -89,11 +89,17 @@ namespace jpt
 		template<ValidType T>
 		constexpr bool Is() const;
 
+		template<ValidType T> 
+		constexpr       T& As();
+
 		template<ValidType T>
 		constexpr const T& As() const;
 
 		template<ValidType T>
-		constexpr T& As();
+		constexpr operator       T& ();
+
+		template<ValidType T>
+		constexpr operator const T& () const;
 
 		template<ValidType T>
 		constexpr JsonData& operator=(const T& value);
@@ -119,13 +125,25 @@ namespace jpt
 	}
 
 	template<ValidType T>
+	constexpr T& JsonData::As()
+	{
+		return m_data.As<T>();
+	}
+
+	template<ValidType T>
 	constexpr const T& JsonData::As() const
 	{
 		return m_data.As<T>();
 	}
 
 	template<ValidType T>
-	constexpr T& JsonData::As()
+	constexpr JsonData::operator T& ()
+	{
+		return m_data.As<T>();
+	}
+
+	template<ValidType T>
+	constexpr JsonData::operator const T& () const
 	{
 		return m_data.As<T>();
 	}
