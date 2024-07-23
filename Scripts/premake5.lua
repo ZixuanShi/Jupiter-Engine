@@ -82,25 +82,21 @@ workspace (project_name)
 
     filter "configurations:Debug"
         defines { "IS_DEBUG", }
-        buildoptions { "/MTd" }
         optimize "Off"
         symbols "On"
 
     filter "configurations:Development"
         defines { "IS_DEVELOPMENT", }
-        buildoptions { "/MT" }
         optimize "Size"
         symbols "On"
 
     filter "configurations:Profiling"
         defines { "IS_PROFILING", }
-        buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"
 
     filter "configurations:Release"
         defines { "IS_RELEASE", }
-        buildoptions { "/MT" }
         optimize "Speed"
         symbols "off"
 
@@ -165,30 +161,9 @@ project (project_name)
         -- OpenGL
         "glfw3",
         "opengl32",
-    }
-    filter "configurations:Debug"
-        links
-        {
-            "msvcrtd",
-        }
-    filter "configurations:not Debug"
-        links
-        {
-            "msvcrt",
-        }
-    filter "platforms:Win64"
-        links
-        {
-            -- DirectX 12
-            "d3d12",
-            "dxgi",
-            "d3dcompiler",
-        }
 
-    -- TODO: Only xcopy if shipping config
-    -- postbuildcommands
-    -- {
-    --     -- Assets
-    --     "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-    --     "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
-    -- }
+        -- DirectX 12
+        "d3d12",
+        "dxgi",
+        "d3dcompiler",
+    }
