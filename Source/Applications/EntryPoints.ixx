@@ -20,7 +20,7 @@ import jpt.CommandLine;
 
 namespace jpt
 {
-	export int MainImpl(Application_Base* pApp)
+	int MainImpl_Final(Application_Base* pApp)
 	{
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
@@ -37,4 +37,23 @@ namespace jpt
 
 		return 0;
 	}
+
+#if IS_PLATFORM_WIN64
+	export int MainImpl_Win64(Application_Win64* pApp, HINSTANCE hInstance, LPSTR launchArgs, int nCmdShow)
+	{
+		CommandLine::GetInstance().Parse(launchArgs);
+
+		pApp->SetHINSTANCE(hInstance);
+		pApp->SetnCmdShow(nCmdShow);
+
+		return MainImpl_Final(pApp);
+	}
+#else
+	export int MainImpl(Application_Base* pApp)
+	{
+		CommandLine::GetInstance().Parse(argc, argv);
+
+		return MainImpl_Final(pApp);
+	}
+#endif
 }
