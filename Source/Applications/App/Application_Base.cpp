@@ -29,7 +29,7 @@ namespace jpt
 	{
 		if (m_shouldTerminate)
 		{
-			return false;
+			return true;
 		}
 
 		m_pFramework->Init();

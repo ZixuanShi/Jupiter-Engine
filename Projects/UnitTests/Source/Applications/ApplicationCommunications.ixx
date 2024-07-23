@@ -11,13 +11,6 @@ export module ApplicationCommunications;
 
 import jpt.File.Path;
 
-/** Must Overrides Application GetInstance here */
-jpt::Application_Base* jpt::Application_Base::GetInstance()
-{
-	static Application_JupiterUnitTests s_instance;
-	return &s_instance;
-}
-
 /** Must Overrides GetClientDir here */
 const char* jpt::GetClientDir()
 {
