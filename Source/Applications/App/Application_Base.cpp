@@ -5,6 +5,9 @@
 
 import jpt.Application_Factories;
 import jpt.CommandLine;
+import jpt.Framework_Base;
+import jpt.Window_Base;
+import jpt.Renderer_Base;
 
 namespace jpt
 {

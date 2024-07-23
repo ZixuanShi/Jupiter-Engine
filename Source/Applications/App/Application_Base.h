@@ -2,12 +2,12 @@
 
 #pragma once
 
-import jpt.Framework_Base;
-import jpt.Window_Base;
-import jpt.Renderer_Base;
-
 namespace jpt
 {
+	class Window_Base;
+	class Framework_Base;
+	class Renderer_Base;
+
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
 	class Application_Base
