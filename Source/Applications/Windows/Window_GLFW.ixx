@@ -49,7 +49,7 @@ namespace jpt
 		const jpt::JsonMap& settingsMap = settings.Value();
 		const int32 width = settingsMap["window_width"];
 		const int32 height = settingsMap["window_height"];
-		const String title = settingsMap["window_title"];
+		const String& title = settingsMap["window_title"];
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)
 		{
