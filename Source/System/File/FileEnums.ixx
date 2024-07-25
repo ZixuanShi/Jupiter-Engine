@@ -15,7 +15,8 @@ export namespace jpt::File
 	{
 		Unknown,
 		Engine,
-		Client,
+		Client,		// Client development folder
+		Output,		// Build output folder
 	};
 
 	/** Supported file types */
