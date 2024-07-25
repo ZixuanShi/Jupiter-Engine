@@ -15,14 +15,6 @@ for i = 1, #_ARGS do
 end
 
 ---------------------------------------------------------------------------------------------------
--- local data
----------------------------------------------------------------------------------------------------
-local project_name = _ARGS[1]
-local project_dir  = _ARGS[2]
-local jupiter_dir = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"   -- Needs to be changed if the Jupiter-Engine or Premake5.exe moves.
-local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
-
----------------------------------------------------------------------------------------------------
 -- Helper functions
 ---------------------------------------------------------------------------------------------------
 function HasArg(name)
@@ -33,6 +25,21 @@ function HasArg(name)
     end
     return false
 end
+
+function FindJupiterRootDir()
+    local path = debug.getinfo(1).source
+    local index = path:lower():find("jupiter%-engine")
+    path = path:sub(2, index + #"Jupiter-Engine")   -- C:/Program Files/Jupiter Technologies/Jupiter-Engine/Scripts/premake5.lua
+    return path
+end
+
+---------------------------------------------------------------------------------------------------
+-- local data
+---------------------------------------------------------------------------------------------------
+local project_name = _ARGS[1]
+local project_dir  = _ARGS[2]
+local jupiter_dir = FindJupiterRootDir()
+local output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 ---------------------------------------------------------------------------------------------------
 -- Jupiter workspace

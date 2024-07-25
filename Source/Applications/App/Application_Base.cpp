@@ -6,6 +6,7 @@
 
 import jpt.Application_Factories;
 import jpt.CommandLine;
+import jpt.SystemPaths;
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
@@ -14,6 +15,8 @@ namespace jpt
 {
 	bool jpt::Application_Base::PreInit()
 	{
+		File::SystemPaths::GetInstance().Init();
+
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
 			m_shouldTerminate = true;
