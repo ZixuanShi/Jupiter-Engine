@@ -9,9 +9,9 @@ export namespace jpt::File
 	class SystemPaths
 	{
 	private:
-		Path m_engineRoot;		/**< Engine folder root */
-		Path m_clientRoot;		/**< release config: Output build folder. other: Development project folder */
-
+		Path m_engineFolder;	/**< Engine folder root */
+		Path m_clientFolder;	/**< Development project folder */
+		Path m_outputFolder;	/**< Output folder */
 		Path m_userFolder;		/**< User's documents folder */
 		Path m_tempFolder;		/**< Temporary folder */
 
@@ -22,12 +22,16 @@ export namespace jpt::File
 	public:
 		static SystemPaths& GetInstance();
 
-		void Init() {}
+		void Init();
 	};
 
 	SystemPaths& SystemPaths::GetInstance()
 	{
 		static SystemPaths instance;
 		return instance;
+	}
+
+	void SystemPaths::Init()
+	{
 	}
 }

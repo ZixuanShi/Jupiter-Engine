@@ -14,6 +14,7 @@ export module jpt.Window_GLFW;
 import jpt.Window_Base;
 import jpt.Utilities;
 import jpt.File.Path;
+import jpt.File.Path.Utils;
 import jpt.Json;
 import jpt.JsonData;
 import jpt.Optional;
@@ -37,7 +38,7 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init(pApp));
 
-		const File::Path clientConfigPath = { File::ESource::Client, "Assets/Config/Settings.json" };
+		const File::Path clientConfigPath = File::GetAbsoluteFullPath(File::ESource::Client, "Assets/Config/Settings.json");
 		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
 		if (!settings)
 		{

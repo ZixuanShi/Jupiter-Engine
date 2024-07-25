@@ -4,28 +4,29 @@ module;
 
 #include "Debugging/Assert.h"
 
-export module jptFile.Path.Utils;
+export module jpt.File.Path.Utils;
 
 import jpt.File.Enums;
 import jpt.File.Path;
+import jpt.SystemPaths;
 
 export namespace jpt::File
 {
 	const Path EnginePath = JPT_ENGINE_DIR_W;
 	const Path ClientPath = GetClientDirW();
 
-	Path GetSourcePath(ESource source)
+	constexpr Path GetSourcePath(ESource source)
 	{
 		switch (source)
 		{
-		case ESource::Engine: return EnginePath;
-		case ESource::Client: return ClientPath;
-		default: JPT_ASSERT(false, "Invalid source"); return Path();
+			case ESource::Engine: return EnginePath;
+			case ESource::Client: return ClientPath;
+			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}
 
 	/** @return		The absolute full path of the given relative path */
-	Path GetAbsoluteFullPath(ESource source, const Path& relativePath)
+	constexpr Path GetAbsoluteFullPath(ESource source, const Path& relativePath)
 	{
 		Path result;
 

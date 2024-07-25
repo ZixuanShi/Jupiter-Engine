@@ -165,6 +165,14 @@ project (project_name)
         "dxgi",
         "d3dcompiler",
     }
+
+    postbuildcommands
+    {
+        -- Assets
+        "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+        "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
+    }
+
     filter "configurations:Debug"
         links
         {

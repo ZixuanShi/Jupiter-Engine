@@ -40,7 +40,6 @@ export namespace jpt::File
 		constexpr Path(const char* path);
 		constexpr Path(const wchar_t* path);
 		constexpr Path(const TString& path);
-		Path(ESource source, const Path& relativePath);
 
 		constexpr void Append(const Path& path);
 		constexpr void operator+=(const WString& path);
@@ -56,7 +55,7 @@ export namespace jpt::File
 		constexpr size_t Count() const { return m_path.Count(); }
 	};
 
-	// Non member functions -------------------------------------------------------------------------------------------------------------------
+	// Non member functions -----------------------------------------------------------------------------------------------
 
 	constexpr bool operator==(const Path& filePath, const typename Path::TChar* CString)
 	{
@@ -89,19 +88,6 @@ export namespace jpt::File
 	constexpr Path::Path(const TString& path)
 		: m_path(path)
 	{
-		FixSeparators(m_path);
-	}
-
-	// TODO: Move to PathUtils.ixx MakePath();
-	Path::Path(ESource source, const Path& relativePath)
-	{
-		switch (source)
-		{
-			case ESource::Engine: m_path = JPT_ENGINE_DIR_W; break;
-			case ESource::Client: m_path = GetClientDirW(); break;
-		}
-
-		m_path.Append(relativePath.ToWString());
 		FixSeparators(m_path);
 	}
 
