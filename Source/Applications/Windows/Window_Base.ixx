@@ -2,14 +2,15 @@
 
 module;
 
-#include "Applications/App/Application_Base.h"
 #include "Debugging/Assert.h"
 
 export module jpt.Window_Base;
 
-namespace jpt
+export namespace jpt
 {
-	export class Window_Base
+	class Application_Base;
+
+	class Window_Base
 	{
 	protected:
 		Application_Base* m_pApp = nullptr;

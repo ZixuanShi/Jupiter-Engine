@@ -21,7 +21,6 @@ import jpt.String;
 
 namespace jpt
 {
-
 	export class Window_GLFW final : public Window_Base
 	{
 		using Super = Window_Base;
