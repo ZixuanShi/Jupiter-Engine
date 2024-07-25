@@ -6,6 +6,7 @@
 #include "Debugging/Logger.h"
 
 import jpt.CommandLine;
+import jpt.String;
 import jpt.String.Helpers;
 
 namespace jpt

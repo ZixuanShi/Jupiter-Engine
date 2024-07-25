@@ -6,6 +6,7 @@ module;
 
 export module jptFile.Path.Utils;
 
+import jpt.File.Enums;
 import jpt.File.Path;
 
 export namespace jpt::File
