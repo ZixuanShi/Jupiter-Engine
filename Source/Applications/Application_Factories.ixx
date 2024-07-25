@@ -2,15 +2,15 @@
 
 export module jpt.Application_Factories;
 
-import jpt.Framework_Base;
 import jpt.Framework_GLFW;
-
-import jpt.Window_Base;
 import jpt.Window_GLFW;
 
-namespace jpt
+export namespace jpt
 {
-	export Framework_Base* Framework_Create()
+	class Framework_Base;
+	class Window_Base;
+
+	Framework_Base* Framework_Create()
 	{
 #if IS_PLATFORM_WIN64
 		return new Framework_GLFW();
@@ -20,7 +20,7 @@ namespace jpt
 #endif
 	}
 
-	export Window_Base* Window_Create()
+	Window_Base* Window_Create()
 	{
 #if IS_PLATFORM_WIN64
 		return new Window_GLFW();
