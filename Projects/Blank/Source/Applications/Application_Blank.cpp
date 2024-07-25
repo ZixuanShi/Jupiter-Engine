@@ -1,6 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "Applications/Application_Blank.h"
+
 #include "Core/Minimal/CoreHeaders.h"
 
 import jpt.CoreModules;

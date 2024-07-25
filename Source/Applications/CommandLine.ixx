@@ -65,16 +65,11 @@ namespace jpt
 
 	void CommandLine::Parse(int32 argsCount, char* arguments[])
 	{
-		m_arguments.Reserve(argsCount);
-		
-		int32 i = 0;
-		if (arguments[0][0] != '-')
-		{
-			m_arguments.Add("exe_path", arguments[0]);
-			++i;
-		}
+		m_arguments.Reserve(argsCount - 1);
 
-		for (i; i < argsCount; ++i)
+		// Skip the first argument which is the executable path. It will be added by Engine/System/File/SystemPaths.ixx
+
+		for (int32 i = 1; i < argsCount; ++i)
 		{
 			String argumentStr = arguments[i];
 			Parse(Move(argumentStr));

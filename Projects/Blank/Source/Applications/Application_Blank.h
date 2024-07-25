@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Applications/App/Application_Base.h"
-
 #if IS_PLATFORM_WIN64
 	#include "Applications/App/Application_Win64.h"
+#else
+	#include "Applications/App/Application_Base.h"
 #endif
 
 class Application_Blank final : 

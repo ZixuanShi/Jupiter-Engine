@@ -1,6 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #include "Applications/App/Application_Base.h"
+
 #include "Core/Minimal/CoreMacros.h"
 
 import jpt.Application_Factories;
