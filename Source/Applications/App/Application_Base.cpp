@@ -46,17 +46,8 @@ namespace jpt
 
 	void Application_Base::Terminate()
 	{
-		if (m_pFramework)
-		{
-			m_pFramework->Terminate();
-			JPT_DELETE(m_pFramework);
-		}
-
-		if (m_pWindow)
-		{
-			m_pWindow->Terminate();
-			JPT_DELETE(m_pWindow);
-		}
+		JPT_TERMINATE(m_pFramework);
+		JPT_TERMINATE(m_pWindow);
 	}
 
 	void Application_Base::Run()

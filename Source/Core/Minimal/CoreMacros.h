@@ -39,6 +39,13 @@ import jpt.Utilities;
 			JPT_DELETE_ARRAY(pPointer); \
 		}
 
+#define JPT_TERMINATE(pPointer)         \
+		if (pPointer)                   \
+		{                               \
+			pPointer->Terminate();      \
+			JPT_DELETE(pPointer);       \
+		}
+
 #pragma endregion
 
 #pragma region Logging
