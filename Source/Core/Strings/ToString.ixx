@@ -8,7 +8,7 @@ module;
 export module jpt.ToString;
 
 import jpt.String;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.Concepts;
 import jpt.TypeTraits;
 import jpt.TypeDefs;

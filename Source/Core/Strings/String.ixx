@@ -18,7 +18,7 @@ import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.Hash;
 import jpt.Math;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Serializer;

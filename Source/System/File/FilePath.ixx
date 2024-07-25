@@ -2,7 +2,6 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
 export module jpt.File.Path;
@@ -10,8 +9,8 @@ export module jpt.File.Path;
 import jpt.String;
 import jpt.ToString;
 import jpt.Utilities;
-import jpt.TypeTraits;
 import jpt.File.Enums;
+export import jpt.File.Path.Helpers;
 
 export namespace jpt
 {
@@ -23,31 +22,6 @@ export namespace jpt
 
 export namespace jpt::File
 {
-	/** Replaces directory slashes to platform-correct version */
-	template<typename TString>
-	constexpr void FixSeparators(TString& path)
-	{
-		using TChar = typename TString::TChar;
-
-#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		path.Replace(JPT_GET_PROPER_STRING(TChar, / ), JPT_GET_PROPER_STRING(TChar, \\));
-#else
-		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
-#endif
-	}
-
-	template<typename TString>
-	constexpr TString GetSeparator()
-	{
-		using TChar = typename TString::TChar;
-
-#if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		return JPT_GET_PROPER_STRING(TChar, \\);
-#else
-		return JPT_GET_PROPER_STRING(TChar, / );
-#endif
-	}
-
 	/** Identifies address of a file */
 	class Path
 	{

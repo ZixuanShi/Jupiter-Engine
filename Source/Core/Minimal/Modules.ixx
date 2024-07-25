@@ -58,7 +58,7 @@ export import jpt.WeakPtr;
 
 // Strings
 export import jpt.String;
-export import jpt.StringUtils;
+export import jpt.String.Helpers;
 export import jpt.StringView;
 export import jpt.ToString;
 

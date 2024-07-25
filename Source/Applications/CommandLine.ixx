@@ -11,7 +11,7 @@ export module jpt.CommandLine;
 import jpt.DynamicArray;
 import jpt.HashMap;
 import jpt.String;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;

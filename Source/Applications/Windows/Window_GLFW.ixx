@@ -14,7 +14,7 @@ export module jpt.Window_GLFW;
 import jpt.Window_Base;
 import jpt.Utilities;
 import jpt.File.Path;
-import jpt.JsonUtils;
+import jpt.Json;
 import jpt.JsonData;
 import jpt.Optional;
 import jpt.String;

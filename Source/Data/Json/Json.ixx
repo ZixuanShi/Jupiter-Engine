@@ -8,12 +8,12 @@ module;
 #include <fstream>
 #include <string>
 
-export module jpt.JsonUtils;
+export module jpt.Json;
 
 import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.String;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.ToString;
 import jpt.Optional;
 import jpt.Pair;

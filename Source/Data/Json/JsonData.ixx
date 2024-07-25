@@ -10,7 +10,7 @@ import jpt.Concepts;
 import jpt.DynamicArray;
 import jpt.HashMap;
 import jpt.String;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
@@ -87,22 +87,13 @@ namespace jpt
 		constexpr JsonData(const T& value);
 
 		template<ValidType T>
-		constexpr bool Is() const;
-
-		template<ValidType T> 
-		constexpr       T& As();
-
-		template<ValidType T>
-		constexpr const T& As() const;
-
-		template<ValidType T>
-		constexpr operator       T& ();
-
-		template<ValidType T>
-		constexpr operator const T& () const;
-
-		template<ValidType T>
 		constexpr JsonData& operator=(const T& value);
+
+		template<ValidType T> constexpr              bool Is() const { return m_data.Is<T>(); }
+		template<ValidType T> constexpr                T& As() 	     { return m_data.As<T>(); }
+		template<ValidType T> constexpr          const T& As() const { return m_data.As<T>(); }
+		template<ValidType T> constexpr operator       T& ()         { return m_data.As<T>(); }
+		template<ValidType T> constexpr operator const T& ()   const { return m_data.As<T>(); }
 
 		template<ValidType T>
 		constexpr bool operator==(const T& other) const;
@@ -116,36 +107,6 @@ namespace jpt
 	constexpr JsonData::JsonData(const T& value)
 		: m_data(value)
 	{
-	}
-
-	template<ValidType T>
-	constexpr bool JsonData::Is() const
-	{
-		return m_data.Is<T>();
-	}
-
-	template<ValidType T>
-	constexpr T& JsonData::As()
-	{
-		return m_data.As<T>();
-	}
-
-	template<ValidType T>
-	constexpr const T& JsonData::As() const
-	{
-		return m_data.As<T>();
-	}
-
-	template<ValidType T>
-	constexpr JsonData::operator T& ()
-	{
-		return m_data.As<T>();
-	}
-
-	template<ValidType T>
-	constexpr JsonData::operator const T& () const
-	{
-		return m_data.As<T>();
 	}
 
 	template<ValidType T>

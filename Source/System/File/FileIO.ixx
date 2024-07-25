@@ -12,7 +12,7 @@ module;
 export module jpt.FileIO;
 
 import jpt.String;
-import jpt.StringUtils;
+import jpt.String.Helpers;
 import jpt.Optional;
 import jpt.Serializer;
 
