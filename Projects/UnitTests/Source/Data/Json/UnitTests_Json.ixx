@@ -10,7 +10,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
 
-import jpt.JsonUtils;
+import jpt.Json;
 import jpt.JsonData;
 
 import jpt.File.Path;
