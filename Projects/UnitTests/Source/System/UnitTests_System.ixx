@@ -11,7 +11,7 @@ import jpt.Utilities;
 /** Unit Test Modules */
 
 // File
-import UnitTests_FileUtils;
+import UnitTests_File.Path.Helpers;
 
 // FileIO
 import UnitTests_FileIO;

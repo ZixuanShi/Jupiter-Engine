@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/CoreHeaders.h"
 
-export module UnitTests_FileUtils;
+export module UnitTests_File.Path.Helpers;
 
 import jpt.String;
 import jpt.TypeDefs;
@@ -12,7 +12,7 @@ import jpt.Utilities;
 
 import jpt.File.Path;
 
-bool UnitTests_FilePathUtils_Getters()
+bool UnitTests_FilePathHelpers_Getters()
 {
     //JPT_LOG(jpt::File::GetClientPath());
     //JPT_LOG(jpt::File::GetEnginePath());
@@ -20,7 +20,7 @@ bool UnitTests_FilePathUtils_Getters()
     return true;
 }
 
-bool UnitTests_FilePathUtils_GetSeparator()
+bool UnitTests_FilePathHelpers_GetSeparator()
 {
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
     JPT_ENSURE(jpt::File::GetSeparator<jpt::File::Path>() == L"\\");
@@ -31,7 +31,7 @@ bool UnitTests_FilePathUtils_GetSeparator()
     return true;
 }
 
-bool UnitTests_FilePathUtils_FixSeparators()
+bool UnitTests_FilePathHelpers_FixSeparators()
 {
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
     jpt::File::Path path = "C:/Users/<user_name>/Documents/UnitTests";
@@ -48,9 +48,9 @@ bool UnitTests_FilePathUtils_FixSeparators()
 
 export bool RunUnitTests_FilePathUtils()
 {
-    JPT_ENSURE(UnitTests_FilePathUtils_Getters());
-    JPT_ENSURE(UnitTests_FilePathUtils_FixSeparators());
-    JPT_ENSURE(UnitTests_FilePathUtils_GetSeparator());
+    JPT_ENSURE(UnitTests_FilePathHelpers_Getters());
+    JPT_ENSURE(UnitTests_FilePathHelpers_FixSeparators());
+    JPT_ENSURE(UnitTests_FilePathHelpers_GetSeparator());
 
     return true;
 }
