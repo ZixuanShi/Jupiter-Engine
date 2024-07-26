@@ -42,19 +42,14 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init(pApp));
 
-		int32 width = 600;
-		int32 height = 400;
-		String title = "Jupiter Engine";
-
-		const File::Path clientConfigPath = File::FixDependency("Assets/Config/Settings.json");
+		const File::Path clientConfigPath = File::FixDependencies("Assets/Config/Settings.json");
 		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
-		if (settings)
-		{
-			const jpt::JsonMap& settingsMap = settings.Value();
-			width = settingsMap["window_width"];
-			height = settingsMap["window_height"];
-			title = settingsMap["window_title"];
-		}
+		JPT_ASSERT(settings, "Failed to read settings file.");
+
+		const jpt::JsonMap& settingsMap = settings.Value();
+		int32 width = settingsMap["window_width"];
+		int32 height = settingsMap["window_height"];
+		String title = settingsMap["window_title"];
 
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)

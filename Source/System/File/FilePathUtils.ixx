@@ -9,7 +9,6 @@ export module jpt.File.Path.Utils;
 import jpt.Environment;
 import jpt.File.Enums;
 import jpt.File.Path;
-import jpt.SystemPaths;
 
 export namespace jpt::File
 {
@@ -37,7 +36,7 @@ export namespace jpt::File
 
 	/** @return Either full absolute path if ran from VS debugger, or relative path if ran from executable
 		@param relativePath		Expected in client's folder. Not engine */
-	Path FixDependency(const Path& relativePath)
+	Path FixDependencies(const Path& relativePath)
 	{
 		// If ran from VS debugger, use the project's root directory
 		if (IsDebuggerPresent())
