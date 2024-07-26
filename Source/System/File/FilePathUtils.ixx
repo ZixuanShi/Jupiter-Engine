@@ -6,6 +6,7 @@ module;
 
 export module jpt.File.Path.Utils;
 
+import jpt.Environment;
 import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.SystemPaths;
@@ -34,14 +35,23 @@ export namespace jpt::File
 		return result;
 	}
 
-	/** @param relativePath		Expected in client's folder. Not engine */
-	constexpr Path FixDependency(const Path& relativePath)
+	/** @return Either full absolute path if ran from VS debugger, or relative path if ran from executable
+		@param relativePath		Expected in client's folder. Not engine */
+	Path FixDependency(const Path& relativePath)
 	{
 		// If ran from VS debugger, use the project's root directory
+		if (IsDebuggerPresent())
+		{
+			return GetAbsoluteFullPath(ESource::Client, relativePath);
+		}
 
-
-		// If ran from the executable, use the executable's directory
-
+		// If ran from the executable
+#if IS_RELEASE
+		// Release config will have copied assets to the output directory
 		return relativePath;
+#else
+		// Non-Release config will use the client's directory
+		return GetAbsoluteFullPath(ESource::Client, relativePath);
+#endif
 	}
 }

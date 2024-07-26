@@ -7,12 +7,12 @@ export module ApplicationCommunications;
 import jpt.File.Path.Helpers;
 
 /** Must Overrides GetClientDir here */
-const char* jpt::File::GetClientDir()
+constexpr const wchar_t* jpt::File::GetOutputDirW()
 {
-	return JPT_CLIENT_DIR;
+	return JPT_OUTPUT_DIR_W;
 }
 
-const wchar_t* jpt::File::GetClientDirW()
+constexpr const wchar_t* jpt::File::GetClientDirW()
 {
 	return JPT_CLIENT_DIR_W;
 }

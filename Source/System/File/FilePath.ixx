@@ -14,6 +14,9 @@ export import jpt.File.Path.Helpers;
 
 export namespace jpt::File
 {
+	class Path;
+	constexpr Path GetAbsoluteFullPath(ESource source, const Path& relativePath);
+
 	/** Identifies address of a file */
 	class Path
 	{
@@ -31,7 +34,7 @@ export namespace jpt::File
 		constexpr Path(const char* path);
 		constexpr Path(const wchar_t* path);
 		constexpr Path(const TString& path);
-		constexpr Path(ESource source, const Path& relativePath);
+		Path(ESource source, const Path& relativePath);
 
 		constexpr void Append(const Path& path);
 		constexpr void operator+=(const WString& path);
@@ -83,32 +86,9 @@ export namespace jpt::File
 		FixSeparators(m_path);
 	}
 
-	constexpr Path::Path(ESource source, const Path& relativePath)
+	Path::Path(ESource source, const Path& relativePath)
 	{
-		switch (source)
-		{
-			case ESource::Engine:
-			{
-				m_path.Append(JPT_ENGINE_DIR_W);
-				break;
-			}
-			case ESource::Client:
-			{
-				m_path.Append(GetClientDirW());
-				break;
-			}
-			case ESource::Output:
-			{
-				m_path.Append(GetOutputDirW());
-				break;
-			}
-			default:
-			{
-				JPT_ASSERT(false, "Invalid source");
-			}
-		}
-
-		Append(relativePath);
+		m_path = GetAbsoluteFullPath(source, relativePath).ToWString();
 	}
 
 	constexpr void Path::Append(const Path& path)
