@@ -12,13 +12,23 @@ import jpt.File.Path;
 
 export namespace jpt::File
 {
+	constexpr const wchar_t* GetClientDirW();
+	constexpr const wchar_t* GetOutputDirW();
+
+	const Path EngineDir = JPT_ENGINE_DIR_W;
+	const Path ClientDir = GetClientDirW();
+	const Path OutputDir = GetOutputDirW();
+}
+
+export namespace jpt::File
+{
 	constexpr Path GetSourcePath(ESource source)
 	{
 		switch (source)
 		{
-			case ESource::Engine: return JPT_ENGINE_DIR_W;
-			case ESource::Client: return GetClientDirW();
-			case ESource::Output: return GetOutputDirW();
+			case ESource::Engine: return EngineDir;
+			case ESource::Client: return ClientDir;
+			case ESource::Output: return OutputDir;
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}
