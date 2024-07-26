@@ -14,6 +14,6 @@ bool Application_Blank::PreInit()
 }
 
 #pragma region Engine-Client Communications
-const char* jpt::File::GetClientDir() { return JPT_CLIENT_DIR; }
-const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
 #pragma endregion

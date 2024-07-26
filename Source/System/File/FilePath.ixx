@@ -97,6 +97,11 @@ export namespace jpt::File
 				m_path.Append(GetClientDirW());
 				break;
 			}
+			case ESource::Output:
+			{
+				m_path.Append(GetOutputDirW());
+				break;
+			}
 			default:
 			{
 				JPT_ASSERT(false, "Invalid source");

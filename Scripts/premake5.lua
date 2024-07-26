@@ -74,7 +74,6 @@ workspace (project_name)
     -- Macro defines
     defines
     {
-        ("JPT_ENGINE_DIR=\""    .. jupiter_dir .."\""),
         ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
         ("NOMINMAX"),   -- To get rid of built-in min/max macros
         ("GLFW_STATIC"), -- To use GLFW as a static library
@@ -129,8 +128,8 @@ project (project_name)
 
     defines
     {
-        ("JPT_CLIENT_DIR=\""    .. project_dir .."\""),
         ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
+        ("JPT_OUTPUT_DIR_W=L\"" .. project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output\""),
     }
 
     includedirs
@@ -166,13 +165,6 @@ project (project_name)
         "d3dcompiler",
     }
 
-    postbuildcommands
-    {
-        -- Assets
-        "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-        "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
-    }
-
     filter "configurations:Debug"
         links
         {
@@ -182,4 +174,11 @@ project (project_name)
         links
         {
             "glfw3_Release",
+        }
+    filter "configurations:Release"
+        postbuildcommands
+        {
+            -- Assets
+            "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+            "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
         }

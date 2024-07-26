@@ -12,15 +12,13 @@ import jpt.SystemPaths;
 
 export namespace jpt::File
 {
-	const Path EnginePath = JPT_ENGINE_DIR_W;
-	const Path ClientPath = GetClientDirW();
-
 	constexpr Path GetSourcePath(ESource source)
 	{
 		switch (source)
 		{
-			case ESource::Engine: return EnginePath;
-			case ESource::Client: return ClientPath;
+			case ESource::Engine: return JPT_ENGINE_DIR_W;
+			case ESource::Client: return GetClientDirW();
+			case ESource::Output: return GetOutputDirW();
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}
@@ -36,8 +34,8 @@ export namespace jpt::File
 		return result;
 	}
 
-	// TODO: Implement this function
-	constexpr Path ToCurrentRoot(const Path& relativePath)
+	/** @param relativePath		Expected in client's folder. Not engine */
+	constexpr Path FixDependency(const Path& relativePath)
 	{
 		// If ran from VS debugger, use the project's root directory
 

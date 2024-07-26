@@ -12,13 +12,17 @@ module;
 export module jpt.Window_GLFW;
 
 import jpt.Window_Base;
-import jpt.Utilities;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
-import jpt.Json;
-import jpt.JsonData;
+
 import jpt.Optional;
 import jpt.String;
+import jpt.TypeDefs;
+import jpt.Utilities;
+
+import jpt.Json;
+import jpt.JsonData;
+
+import jpt.File.Path;
+import jpt.File.Path.Utils;
 
 namespace jpt
 {
@@ -42,7 +46,7 @@ namespace jpt
 		int32 height = 400;
 		String title = "Jupiter Engine";
 
-		const File::Path clientConfigPath = File::ToCurrentRoot("Assets/Config/Settings.json");
+		const File::Path clientConfigPath = File::FixDependency("Assets/Config/Settings.json");
 		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
 		if (settings)
 		{
