@@ -48,6 +48,7 @@ export namespace jpt::File
 		constexpr const WString& ToWString() const { return m_path; }
 		constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 		constexpr size_t Count() const { return m_path.Count(); }
+		constexpr bool IsEmpty() const { return m_path.IsEmpty(); }
 	};
 
 	// Non member functions -----------------------------------------------------------------------------------------------
@@ -88,7 +89,20 @@ export namespace jpt::File
 
 	Path::Path(ESource source, const Path& relativePath)
 	{
-		m_path = GetAbsoluteFullPath(source, relativePath).ToWString();
+		switch (source)
+		{
+		case ESource::Engine:
+			Append(JPT_ENGINE_DIR_W);
+			break;
+		case ESource::Client:
+			Append(GetClientDirW());
+			break;
+		case ESource::Output:
+			Append(GetOutputDirW());
+			break;
+		}
+
+		Append(relativePath);
 	}
 
 	constexpr void Path::Append(const Path& path)

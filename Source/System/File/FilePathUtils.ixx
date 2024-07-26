@@ -9,16 +9,7 @@ export module jpt.File.Path.Utils;
 import jpt.Environment;
 import jpt.File.Enums;
 import jpt.File.Path;
-
-export namespace jpt::File
-{
-	constexpr const wchar_t* GetClientDirW();
-	constexpr const wchar_t* GetOutputDirW();
-
-	const Path EngineDir = JPT_ENGINE_DIR_W;
-	const Path ClientDir = GetClientDirW();
-	const Path OutputDir = GetOutputDirW();
-}
+import jpt.System.Paths;
 
 export namespace jpt::File
 {
@@ -26,9 +17,9 @@ export namespace jpt::File
 	{
 		switch (source)
 		{
-			case ESource::Engine: return EngineDir;
-			case ESource::Client: return ClientDir;
-			case ESource::Output: return OutputDir;
+			case ESource::Engine: return System::Paths::GetInstance().GetEngineDir();
+			case ESource::Client: return System::Paths::GetInstance().GetClientDir();
+			case ESource::Output: return System::Paths::GetInstance().GetOutputDir();
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}
@@ -59,8 +50,14 @@ export namespace jpt::File
 		// Release config will have copied assets to the output directory
 		return relativePath;
 #else
-		// Non-Release config will use the client's directory
-		return GetAbsoluteFullPath(ESource::Client, relativePath);
+		if (relativePath.Has("Jupiter_Common"))
+		{
+			return GetAbsoluteFullPath(ESource::Engine, relativePath);
+		}
+		else
+		{
+			return GetAbsoluteFullPath(ESource::Client, relativePath);
+		}
 #endif
 	}
 }

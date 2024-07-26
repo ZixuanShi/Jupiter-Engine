@@ -11,6 +11,9 @@ import jpt.TypeTraits;
 
 export namespace jpt::File
 {
+	constexpr const wchar_t* GetClientDirW();
+	constexpr const wchar_t* GetOutputDirW();
+
 	/** Replaces directory slashes to platform-correct version */
 	template<typename TString>
 	constexpr void FixSeparators(TString& path)

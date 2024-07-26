@@ -9,11 +9,14 @@ import jpt.CommandLine;
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
+import jpt.System.Paths;
 
 namespace jpt
 {
 	bool jpt::Application_Base::PreInit()
 	{
+		System::Paths::GetInstance().PreInit(jpt::File::GetClientDirW(), jpt::File::GetOutputDirW());
+
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
 			m_shouldTerminate = true;
