@@ -35,4 +35,15 @@ export namespace jpt::File
 
 		return result;
 	}
+
+	// TODO: Implement this function
+	constexpr Path ToCurrentRoot(const Path& relativePath)
+	{
+		// If ran from VS debugger, use the project's root directory
+
+
+		// If ran from the executable, use the executable's directory
+
+		return relativePath;
+	}
 }

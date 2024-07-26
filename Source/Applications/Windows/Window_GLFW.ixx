@@ -38,18 +38,20 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init(pApp));
 
-		const File::Path clientConfigPath = File::GetAbsoluteFullPath(File::ESource::Client, "Assets/Config/Settings.json");
+		int32 width = 600;
+		int32 height = 400;
+		String title = "Jupiter Engine";
+
+		const File::Path clientConfigPath = File::ToCurrentRoot("Assets/Config/Settings.json");
 		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
-		if (!settings)
+		if (settings)
 		{
-			JPT_ERROR("Failed to read settings from file: %ls", clientConfigPath.ConstBuffer());
-			return false;
+			const jpt::JsonMap& settingsMap = settings.Value();
+			width = settingsMap["window_width"];
+			height = settingsMap["window_height"];
+			title = settingsMap["window_title"];
 		}
 
-		const jpt::JsonMap& settingsMap = settings.Value();
-		const int32 width = settingsMap["window_width"];
-		const int32 height = settingsMap["window_height"];
-		const String& title = settingsMap["window_title"];
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)
 		{

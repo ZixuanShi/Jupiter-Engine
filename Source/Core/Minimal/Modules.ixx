@@ -72,3 +72,5 @@ export import jpt.Variant;
 
 // System
 export import jpt.File.Path;
+export import jpt.File.Path.Helpers;
+export import jpt.File.Path.Utils;

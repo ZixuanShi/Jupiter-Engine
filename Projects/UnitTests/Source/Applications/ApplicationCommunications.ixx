@@ -2,22 +2,17 @@
 
 // This file overrides the global communication functions through out both engine and client
 
-module;
-
-#include "Applications/App/Application_Base.h"
-#include "Application_JupiterUnitTests.h"
-
 export module ApplicationCommunications;
 
-import jpt.File.Path;
+import jpt.File.Path.Helpers;
 
 /** Must Overrides GetClientDir here */
-const char* jpt::GetClientDir()
+const char* jpt::File::GetClientDir()
 {
 	return JPT_CLIENT_DIR;
 }
 
-const wchar_t* jpt::GetClientDirW()
+const wchar_t* jpt::File::GetClientDirW()
 {
 	return JPT_CLIENT_DIR_W;
 }

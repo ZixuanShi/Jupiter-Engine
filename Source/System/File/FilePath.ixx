@@ -12,15 +12,6 @@ import jpt.Utilities;
 import jpt.File.Enums;
 export import jpt.File.Path.Helpers;
 
-// TODO: Remove this when we have a better solution
-export namespace jpt
-{
-	/** Designed to be implemented in client project's application
-		@return Client's project root directory. */
-	const char* GetClientDir();
-	const wchar_t* GetClientDirW();
-}
-
 export namespace jpt::File
 {
 	/** Identifies address of a file */
@@ -40,6 +31,7 @@ export namespace jpt::File
 		constexpr Path(const char* path);
 		constexpr Path(const wchar_t* path);
 		constexpr Path(const TString& path);
+		constexpr Path(ESource source, const Path& relativePath);
 
 		constexpr void Append(const Path& path);
 		constexpr void operator+=(const WString& path);
@@ -89,6 +81,29 @@ export namespace jpt::File
 		: m_path(path)
 	{
 		FixSeparators(m_path);
+	}
+
+	constexpr Path::Path(ESource source, const Path& relativePath)
+	{
+		switch (source)
+		{
+			case ESource::Engine:
+			{
+				m_path.Append(JPT_ENGINE_DIR_W);
+				break;
+			}
+			case ESource::Client:
+			{
+				m_path.Append(GetClientDirW());
+				break;
+			}
+			default:
+			{
+				JPT_ASSERT(false, "Invalid source");
+			}
+		}
+
+		Append(relativePath);
 	}
 
 	constexpr void Path::Append(const Path& path)
