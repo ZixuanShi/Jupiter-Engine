@@ -319,7 +319,7 @@ export namespace jpt
 		serializer.Write(m_count);
 		serializer.Write(m_capacity);
 
-		if constexpr (!std::is_trivial_v<TData>)
+		if constexpr (IsSerializeOverridden<TData>)
 		{
 			for (size_t i = 0; i < m_count; ++i)
 			{
@@ -342,7 +342,7 @@ export namespace jpt
 
 		Resize(count);
 
-		if constexpr (!std::is_trivial_v<TData>)
+		if constexpr (IsSerializeOverridden<TData>)
 		{
 			for (size_t i = 0; i < count; ++i)
 			{

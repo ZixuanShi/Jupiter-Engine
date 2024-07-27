@@ -24,6 +24,27 @@ import jpt.FileIO;
 
 using namespace jpt::File;
 
+static bool IsSerializeOverridden()
+{
+    struct Foo {};
+    struct Bar
+    {
+        void Serialize(jpt::Serializer& serializer) const { JPT_IGNORE(serializer); }
+        void Deserialize(jpt::Serializer& serializer) { JPT_IGNORE(serializer); }
+    };
+
+    static_assert(!jpt::IsSerializeOverridden<int32>);
+    static_assert(!jpt::IsSerializeOverridden<char>);
+    static_assert(!jpt::IsSerializeOverridden<Foo>);
+
+    static_assert(jpt::IsSerializeOverridden<jpt::String>);
+    static_assert(jpt::IsSerializeOverridden<jpt::DynamicArray<int32>>);
+    static_assert(jpt::IsSerializeOverridden<jpt::DynamicArray<jpt::String>>);
+    static_assert(jpt::IsSerializeOverridden<Bar>);
+
+    return true;
+}
+
 bool UnitTests_FileIO_Exists()
 {
     // Engine
@@ -273,6 +294,8 @@ bool UnitTests_FileIO_DataMap()
 
 export bool RunUnitTests_FileIO()
 {
+    JPT_ENSURE(IsSerializeOverridden());
+
     JPT_ENSURE(UnitTests_FileIO_Exists());
 	JPT_ENSURE(UnitTests_FileIO_Directory());
 

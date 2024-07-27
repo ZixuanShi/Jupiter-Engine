@@ -30,14 +30,14 @@ export namespace jpt
 	class Serializer;
 
 	template<typename T>
-	concept Serializable = requires(T obj, Serializer& serializer)
+	concept SerializationOverridden = requires(T obj, Serializer& serializer)
 	{
 		obj.Serialize(serializer);
 		obj.Deserialize(serializer);
 	};
 
-	template<typename T>     constexpr bool IsSerializable = false;
-	template<Serializable T> constexpr bool IsSerializable<T> = true;
+	template<typename T>                constexpr bool IsSerializeOverridden    = false;
+	template<SerializationOverridden T> constexpr bool IsSerializeOverridden<T> = true;
 
 	class Serializer
 	{
@@ -51,7 +51,6 @@ export namespace jpt
 
 		void Open(const wchar_t* path, SerializerMode mode);
 		bool IsOpen() const;
-
 		void Close();
 
 		/** Writes raw buffer for given size to disk */
@@ -59,11 +58,11 @@ export namespace jpt
 
 		/** Writes object without built-in Serialize() to disk */
 		template<typename T> 
-		requires(!Serializable<T>)
+		requires(!SerializationOverridden<T>)
 		void Write(const T& obj);
 
 		/** Writes object with built-in Serialize() to disk */
-		template<Serializable T> 
+		template<SerializationOverridden T> 
 		void Write(const T& obj);
 
 		/** Reads raw buffer for given size from disk */
@@ -71,11 +70,11 @@ export namespace jpt
 
 		/** Reads object without built-in Deserialize() from disk */
 		template<typename T> 
-		requires(!Serializable<T>)
+		requires(!SerializationOverridden<T>)
 		void Read(T& obj);
 
 		/** Reads object with built-in Deserialize() from disk */
-		template <Serializable T>
+		template <SerializationOverridden T>
 		void Read(T& obj);
 
 		char* ReadText();
@@ -113,13 +112,13 @@ export namespace jpt
 	}
 
 	template<typename T> 
-	requires(!Serializable<T>)
+	requires(!SerializationOverridden<T>)
 	void Serializer::Write(const T& obj)
 	{
 		Write(reinterpret_cast<const char*>(&obj), sizeof(T));
 	}
 
-	template<Serializable T>
+	template<SerializationOverridden T>
 	void Serializer::Write(const T& obj)
 	{
 		obj.Serialize(*this);
@@ -131,13 +130,13 @@ export namespace jpt
 	}
 
 	template<typename T> 
-	requires(!Serializable<T>)
+	requires(!SerializationOverridden<T>)
 	void Serializer::Read(T& obj)
 	{
 		Read(reinterpret_cast<char*>(&obj), sizeof(T));
 	}
 
-	template<Serializable T>
+	template<SerializationOverridden T>
 	void Serializer::Read(T& obj)
 	{
 		obj.Deserialize(*this);
