@@ -318,7 +318,18 @@ export namespace jpt
 	{
 		serializer.Write(m_count);
 		serializer.Write(m_capacity);
-		serializer.Write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TData));
+
+		if constexpr (!std::is_trivial_v<TData>)
+		{
+			for (size_t i = 0; i < m_count; ++i)
+			{
+				serializer.Write(m_pBuffer[i]);
+			}
+		}
+		else
+		{
+			serializer.Write(reinterpret_cast<const char*>(m_pBuffer), m_count * sizeof(TData));
+		}
 	}
 
 	template<typename TData, typename TAllocator>
@@ -330,7 +341,19 @@ export namespace jpt
 		serializer.Read(capacity);
 
 		Resize(count);
-		serializer.Read(reinterpret_cast<char*>(m_pBuffer), count * sizeof(TData));
+
+		if constexpr (!std::is_trivial_v<TData>)
+		{
+			for (size_t i = 0; i < count; ++i)
+			{
+				serializer.Read(m_pBuffer[i]);
+			}
+		}
+		else
+		{
+			serializer.Read(reinterpret_cast<char*>(m_pBuffer), count * sizeof(TData));
+		}
+
 		m_count = count;
 		m_capacity = capacity;
 	}
@@ -375,11 +398,11 @@ export namespace jpt
 	{
 		m_pBuffer  = other.m_pBuffer;
 		m_capacity = other.m_capacity;
-		m_count     = other.m_count;
+		m_count    = other.m_count;
 
 		other.m_pBuffer  = nullptr;
 		other.m_capacity = 0;
-		other.m_count     = 0;
+		other.m_count    = 0;
 	}
 
 	template<typename TData, typename TAllocator>

@@ -81,6 +81,9 @@ namespace jpt
 		/** Impl of printing message to output console */
 		void SendToOutputWindow(const char* string);
 		void SendToOutputWindow(const wchar_t* wideString);
+
+		void AppendToSaveFile(const char* string);
+		void AppendToSaveFile(const wchar_t* wideString);
 	};
 }
 #else

@@ -2,10 +2,10 @@
 
 #if !IS_RELEASE
 
-#include "Logger.h"
+#include "Debugging/Logger.h"
 
 #include "Core/Minimal/CoreMacros.h"
-#include "Assert.h"
+#include "Debugging/Assert.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -17,6 +17,7 @@
 #endif
 
 import jpt.File.Path;
+import jpt.FileIO;
 
 namespace jpt
 {
@@ -74,19 +75,21 @@ namespace jpt
 		contentToLog += "\n";
 
 		SendToOutputWindow(contentToLog.ConstBuffer());
+		AppendToSaveFile(contentToLog.ConstBuffer());
 	}
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
 	{
 		std::lock_guard<std::mutex> lock(g_logMutex);
 
-		const String stamp = GetStamp(type, line, file);		
-		WString wStamp = ToWString(stamp);
+		const String contentToLog = GetStamp(type, line, file);
+		WString ContentToLogW = ToWString(contentToLog);
 
-		wStamp += pMessage;
-		wStamp += L"\n";
+		ContentToLogW += pMessage;
+		ContentToLogW += L"\n";
 
-		SendToOutputWindow(wStamp.ConstBuffer());
+		SendToOutputWindow(ContentToLogW.ConstBuffer());
+		AppendToSaveFile(ContentToLogW.ConstBuffer());
 	}
 
 	void Logger::SendToOutputWindow(const char* string)
@@ -101,6 +104,18 @@ namespace jpt
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
 #endif
+	}
+
+	void Logger::AppendToSaveFile(const char* string)
+	{
+		// TODO
+		JPT_IGNORE(string);
+	}
+
+	void Logger::AppendToSaveFile(const wchar_t* wideString)
+	{
+		// TODO
+		JPT_IGNORE(wideString);
 	}
 
 	Logger& Logger::GetInstance()

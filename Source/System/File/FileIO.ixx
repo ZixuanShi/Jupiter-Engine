@@ -133,4 +133,20 @@ export namespace jpt::File
 		serializer.Write(obj);
 		return true;
 	}
+
+	///** Appends content to file on disk. Write if not present */
+	//template<typename T>
+	//bool AppendFile(const File::Path& path, const T& obj)
+	//{
+	//	Serializer serializer(path.ConstBuffer(), SerializerMode::Append);
+
+	//	if (!serializer.IsOpen())
+	//	{
+	//		JPT_ERROR("Failed to open file for writing with SerializerMode::Append: %ls", path.ConstBuffer());
+	//		return false;
+	//	}
+
+	//	serializer.Write(obj);
+	//	return true;
+	//}
 }

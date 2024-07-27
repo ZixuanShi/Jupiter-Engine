@@ -72,13 +72,13 @@ bool UnitTests_FileIO_TextFile()
     const Path path = { ESource::Client, "Assets/NewTextFile_UnitTest.txt" };
 
     // Save new file
-    jpt::String newContent = "Hello, World! I'm a new text file";
+    jpt::String newContent = "Hello, World! I'm a new text file\n I'm the second line";
 	WriteTextFile(path, newContent);
     JPT_ENSURE(Exists(path));
 
     // Load again
     jpt::Optional<jpt::String> loaded = ReadTextFile(path);
-    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file");
+    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file\n I'm the second line");
 
 	// Clean up
 	Delete(path);
@@ -184,8 +184,82 @@ bool UnitTests_FileIO_Serialization()
     return true;
 }
 
-bool UnitTests_FileIO_DataArray()
+static bool Array_String_Text()
 {
+    jpt::DynamicArray<jpt::String> data = { "Hello", "World", "I'm", "a", "DynamicArray" };
+
+    const Path path = { ESource::Client, "Assets/ArrayText_UnitTest.txt" };
+
+    // Save
+    WriteTextFile(path, jpt::ToString(data));
+
+    // Load
+    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
+    JPT_ENSURE(jpt::ToString(data) == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
+
+    return true;
+}
+
+static bool Array_String_Serialization()
+{
+    jpt::DynamicArray<jpt::String> data = { "Hello", "World", "I'm", "a", "DynamicArray" };
+
+    const Path path = { ESource::Client, "Assets/ArraySerialization_UnitTest.bin" };
+
+    // Save
+    WriteBinaryFile(path, data);
+
+    // Load
+    jpt::Optional<jpt::DynamicArray<jpt::String>> loaded = ReadBinaryFile<jpt::DynamicArray<jpt::String>>(path);
+    JPT_ENSURE(data == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
+
+    return true;
+}
+
+static bool Array_Float_Text()
+{
+    jpt::DynamicArray<float64> data = { 3.14, 2.718, 1.618, 0.618, 0.577 };
+
+    const Path path = { ESource::Client, "Assets/ArrayText_UnitTest.txt" };
+
+    // Save
+    WriteTextFile(path, jpt::ToString(data));
+
+    // Load
+    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
+    JPT_ENSURE(jpt::ToString(data) == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
+
+    return true;
+}
+
+static bool Array_Float_Serialization()
+{
+    jpt::DynamicArray<float64> data = { 3.14, 2.718, 1.618, 0.618, 0.577 };
+
+    const Path path = { ESource::Client, "Assets/ArraySerialization_UnitTest.bin" };
+
+    // Save
+    WriteBinaryFile(path, data);
+
+    // Load
+    jpt::Optional<jpt::DynamicArray<float64>> loaded = ReadBinaryFile<jpt::DynamicArray<float64>>(path);
+    JPT_ENSURE(data == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
 
     return true;
 }
@@ -206,7 +280,11 @@ export bool RunUnitTests_FileIO()
 	JPT_ENSURE(UnitTests_FileIO_BinaryFile());
 	JPT_ENSURE(UnitTests_FileIO_Serialization());
 
-	JPT_ENSURE(UnitTests_FileIO_DataArray());
+	JPT_ENSURE(Array_String_Text());
+	JPT_ENSURE(Array_String_Serialization());
+    JPT_ENSURE(Array_Float_Text());
+    JPT_ENSURE(Array_Float_Serialization());
+
 	JPT_ENSURE(UnitTests_FileIO_DataMap());
 
     return true;

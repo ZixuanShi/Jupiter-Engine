@@ -13,16 +13,16 @@ export namespace jpt
 {
 	enum class SerializerMode : std::ios_base::openmode
 	{
-		Read = std::ios_base::in,
-		Write = std::ios_base::out,
-		Append = std::ios_base::app,
-		Binary = std::ios_base::binary,
+		Read     = std::ios_base::in,
+		Write    = std::ios_base::out,
+		Append   = std::ios_base::app,
+		Binary   = std::ios_base::binary,
 		Truncate = std::ios_base::trunc,
 
-		ReadBinary = Read | Binary,
+		ReadBinary  = Read  | Binary,
 		WriteBinary = Write | Binary,
-		ReadAll = Read | Binary | Truncate,
-		WriteAll = Write | Binary | Truncate,
+		ReadAll     = Read  | Binary | Truncate,
+		WriteAll    = Write | Binary | Truncate,
 
 		All = Read | Write | Binary | Truncate,
 	};
@@ -30,11 +30,14 @@ export namespace jpt
 	class Serializer;
 
 	template<typename T>
-	concept Serializable = requires(T obj, Serializer & serializer)
+	concept Serializable = requires(T obj, Serializer& serializer)
 	{
 		obj.Serialize(serializer);
 		obj.Deserialize(serializer);
 	};
+
+	template<typename T>     constexpr bool IsSerializable = false;
+	template<Serializable T> constexpr bool IsSerializable<T> = true;
 
 	class Serializer
 	{
