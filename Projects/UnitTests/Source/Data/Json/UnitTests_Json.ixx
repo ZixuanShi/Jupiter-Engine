@@ -158,5 +158,8 @@ export bool RunUnitTests_Json()
     JPT_ENSURE(Engine_Write());
     JPT_ENSURE(Engine_Read());
 
+    jpt::File::Delete(path);
+    jpt::File::Delete(engineJsonPath);
+
     return true;
 }

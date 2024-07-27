@@ -108,6 +108,35 @@ bool UnitTests_FileIO_TextFile()
 	return true;
 }
 
+static bool FileIO_AppendTextFile()
+{
+    const Path path = { ESource::Client, "Assets/StackFile_UnitTest.txt" };
+    jpt::String newContent;
+
+    // Save new file
+    newContent = "1";
+    jpt::File::AppendTextFile(path, newContent);
+    JPT_ENSURE(Exists(path));
+
+    newContent = "2";
+    jpt::File::AppendTextFile(path, newContent);
+
+    newContent = "3\n";
+    jpt::File::AppendTextFile(path, newContent);
+
+    newContent = "4";
+    jpt::File::AppendTextFile(path, newContent);
+
+    // Load
+    jpt::String loaded = jpt::File::ReadTextFile(path).Value();
+    JPT_ENSURE(loaded == "123\n4");
+
+    // Clean up
+    Delete(path);
+
+    return true;
+}
+
 bool UnitTests_FileIO_BinaryFile()
 {
     struct Foo
@@ -300,6 +329,7 @@ export bool RunUnitTests_FileIO()
 	JPT_ENSURE(UnitTests_FileIO_Directory());
 
 	JPT_ENSURE(UnitTests_FileIO_TextFile());
+	JPT_ENSURE(FileIO_AppendTextFile());
 	JPT_ENSURE(UnitTests_FileIO_BinaryFile());
 	JPT_ENSURE(UnitTests_FileIO_Serialization());
 
