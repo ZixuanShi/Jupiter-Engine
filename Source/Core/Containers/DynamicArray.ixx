@@ -335,6 +335,8 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	void DynamicArray<TData, TAllocator>::Deserialize(Serializer& serializer)
 	{
+		Clear();
+
 		size_t count = 0;
 		size_t capacity = 0;
 		serializer.Read(count);

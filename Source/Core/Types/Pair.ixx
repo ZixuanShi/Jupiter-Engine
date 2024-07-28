@@ -5,6 +5,7 @@ export module jpt.Pair;
 import jpt.Utilities;
 import jpt.ToString;
 import jpt.String;
+import jpt.Serializer;
 
 export namespace jpt 
 {
@@ -23,6 +24,8 @@ export namespace jpt
 		constexpr Pair(TFirst&& inFirst, TSecond&& inSecond);
 
 		constexpr String ToString() const;
+		void Serialize(Serializer& serializer) const;
+		void Deserialize(Serializer& serializer);
 	};
 
 	template<typename TFirst, typename TSecond>
@@ -71,5 +74,19 @@ export namespace jpt
 		str.Append(" }");
 
 		return str;
+	}
+
+	template<typename TFirst, typename TSecond>
+	void Pair<TFirst, TSecond>::Serialize(Serializer& serializer) const
+	{
+		serializer.Write(first);
+		serializer.Write(second);
+	}
+
+	template<typename TFirst, typename TSecond>
+	void Pair<TFirst, TSecond>::Deserialize(Serializer& serializer)
+	{
+		serializer.Read(first);
+		serializer.Read(second);
 	}
 }

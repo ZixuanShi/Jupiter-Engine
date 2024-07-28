@@ -314,9 +314,52 @@ static bool Array_Float_Serialization()
     return true;
 }
 
-bool UnitTests_FileIO_DataMap()
+static bool FileIO_HashMap_Text()
 {
+    const Path path = { ESource::Client, "Assets/HashMapText_UnitTest.txt" };
+    jpt::HashMap<jpt::String, int32> data;
 
+    data["Hello"] = 1;
+    data["World"] = 2;
+    data["I'm"] = 3;
+    data["a"] = 4;
+    data["HashMap"] = 5;
+
+    // Save
+    WriteTextFile(path, jpt::ToString(data));
+
+    // Load
+    jpt::Optional<jpt::String> loaded = ReadTextFile(path);
+    JPT_ENSURE(jpt::ToString(data) == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
+
+    return true;
+}
+
+static bool FileIO_HashMap_Serialization()
+{
+    const Path path = { ESource::Client, "Assets/HashMapSerialization_UnitTest.txt" };
+    jpt::HashMap<jpt::String, int32> data;
+
+    data["Hello"] = 1;
+    data["World"] = 2;
+    data["I'm"] = 3;
+    data["a"] = 4;
+    data["HashMap"] = 5;
+
+    // Save
+    WriteBinaryFile(path, data);
+
+    // Load
+    jpt::Optional<jpt::HashMap<jpt::String, int32>> loaded = ReadBinaryFile<jpt::HashMap<jpt::String, int32>>(path);
+    JPT_ENSURE(data == loaded.Value());
+
+    // Clean
+    Delete(path);
+    JPT_ENSURE(!Exists(path));
 
     return true;
 }
@@ -338,7 +381,8 @@ export bool RunUnitTests_FileIO()
     JPT_ENSURE(Array_Float_Text());
     JPT_ENSURE(Array_Float_Serialization());
 
-	JPT_ENSURE(UnitTests_FileIO_DataMap());
+	JPT_ENSURE(FileIO_HashMap_Text());
+	JPT_ENSURE(FileIO_HashMap_Serialization());
 
     return true;
 }

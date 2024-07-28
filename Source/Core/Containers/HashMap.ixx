@@ -18,6 +18,7 @@ import jpt.LinkedList;
 import jpt.Math;
 import jpt.Pair;
 import jpt.Utilities;
+import jpt.Serializer;
 
 import jpt_private.HashTableIterator;
 
@@ -86,6 +87,9 @@ export namespace jpt
 		constexpr Iterator      Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Has(const TKey& key) const;
+
+		void Serialize(Serializer& serializer) const;
+		void Deserialize(Serializer& serializer);
 
 	private:
 		constexpr size_t GetBucketIndex(const TKey& key) const;
@@ -349,6 +353,38 @@ export namespace jpt
 	constexpr bool HashMap<TKey, TValue, TComparator>::Has(const TKey& key) const
 	{
 		return Find(key) != cend();
+	}
+
+	template<typename _TKey, typename _TValue, typename _Comparator>
+	void HashMap<_TKey, _TValue, _Comparator>::Serialize(Serializer& serializer) const
+	{
+		serializer.Write(m_count);
+
+		for (const auto& [key, value] : *this)
+		{
+			serializer.Write(key);
+			serializer.Write(value);
+		}
+	}
+
+	template<typename _TKey, typename _TValue, typename _Comparator>
+	void HashMap<_TKey, _TValue, _Comparator>::Deserialize(Serializer& serializer)
+	{
+		Clear();
+
+		size_t count;
+		serializer.Read(count);
+
+		for (size_t i = 0; i < count; ++i)
+		{
+			TKey key;
+			TValue value;
+
+			serializer.Read(key);
+			serializer.Read(value);
+
+			Add(key, value);
+		}
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
