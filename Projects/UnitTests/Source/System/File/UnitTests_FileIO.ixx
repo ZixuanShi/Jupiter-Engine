@@ -49,15 +49,15 @@ static bool IsSerializeOverridden()
 bool UnitTests_FileIO_Exists()
 {
     // Engine
-    jpt::File::WriteTextFile({ ESource::Engine, "Assets/Configs/TextTxt.txt" }, "Hello, World!");
+    jpt::File::WriteTextFile({ ESource::Engine, "Assets/Config/TextTxt.txt" }, "Hello, World!");
     jpt::File::WriteTextFile({ ESource::Engine, L"Assets/中文测试/中文文本.txt" }, "中文测试");
 
-    JPT_ENSURE(Exists({ ESource::Engine, "Assets/Configs/TextTxt.txt" }));
-    JPT_ENSURE(!Exists({ ESource::Engine, "Assets/Configs/NotExist.txt" }));
+    JPT_ENSURE(Exists({ ESource::Engine, "Assets/Config/TextTxt.txt" }));
+    JPT_ENSURE(!Exists({ ESource::Engine, "Assets/Config/NotExist.txt" }));
     JPT_ENSURE(Exists({ ESource::Engine, L"Assets/中文测试/中文文本.txt" }));
 
-    jpt::File::Delete({ ESource::Engine, "Assets/Configs/TextTxt.txt" });
-    jpt::File::Delete({ ESource::Engine, L"Assets/中文测试/中文文本.txt" });
+    jpt::File::Delete({ ESource::Engine, "Assets/Config/TextTxt.txt" });
+    jpt::File::Delete({ ESource::Engine, L"Assets/中文测试" });
 
     // Client
     jpt::File::WriteTextFile({ ESource::Client, L"Assets/好家伙/中文文本.txt" }, "中文测试");

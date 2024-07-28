@@ -1,6 +1,6 @@
 # Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-# Generate a new unit test file for a subject and integrate it into the ApplicationLayer automatically.
+# Generate a new unit test file for a subject and integrate it into the Applications automatically.
 
 import os
 import subprocess
@@ -115,9 +115,9 @@ def update_application_layer():
         secondary_category  = categories_list[1]
 
     unit_test_name = "UnitTests_" + main_category + ".ixx"
-    unit_test_path = source_dir + "ApplicationLayer/" + unit_test_name
+    unit_test_path = source_dir + "Applications/" + unit_test_name
 
-    # Create main_category_UnitTests.ixx under ApplicationLayer if it doesn't exist
+    # Create main_category_UnitTests.ixx under Applications if it doesn't exist
     if not os.path.exists(unit_test_path):
         unit_tests_content_content = unit_tests_content_template.replace("<SubjectName>", main_category)
         with open(unit_test_path, "w") as file:

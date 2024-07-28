@@ -16,6 +16,8 @@
 	#include <Windows.h>
 #endif
 
+import jpt.Clock;
+import jpt.DateTime;
 import jpt.FileIO;
 import jpt.File.Path;
 import jpt.System.Paths;
@@ -52,7 +54,7 @@ namespace jpt
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
-	String Logger::GetStamp(ELogType type, int32 line, const char* file)
+	String Logger::GetInfoStamp(ELogType type, int32 line, const char* file)
 	{
 		String stamp;
 		stamp.Reserve(kMaxMessageSize);
@@ -67,26 +69,33 @@ namespace jpt
 		return stamp;
 	}
 
+	String Logger::GetTimeStamp()
+	{
+		const DateTime now = Clock::GetCurrentDateTime();
+		const String nowStr = now.ToString() + " - ";
+		return nowStr;
+	}
+
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
 	{
-		String contentToLog = GetStamp(type, line, file);
+		String contentToLog = GetInfoStamp(type, line, file);
 		contentToLog += pMessage;
 		contentToLog += "\n";
 
 		SendToOutputWindow(contentToLog.ConstBuffer());
-		AppendToSaveFile(contentToLog);
+		File::AppendTextFile(kLogFilePath, GetTimeStamp() + contentToLog);
 	}
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
 	{
-		const String contentToLog = GetStamp(type, line, file);
+		const String contentToLog = GetInfoStamp(type, line, file);
 		WString ContentToLogW = ToWString(contentToLog);
 
 		ContentToLogW += pMessage;
 		ContentToLogW += L"\n";
 
 		SendToOutputWindow(ContentToLogW.ConstBuffer());
-		AppendToSaveFile(ContentToLogW);
+		File::AppendTextFile(kLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
 	}
 
 	void Logger::SendToOutputWindow(const char* string)
@@ -101,16 +110,6 @@ namespace jpt
 #if IS_PLATFORM_WIN64
 		::OutputDebugStringW(wideString);
 #endif
-	}
-
-	void Logger::AppendToSaveFile(const String& string)
-	{
-		File::AppendTextFile(kLogFilePath, string);
-	}
-
-	void Logger::AppendToSaveFile(const WString& wideString)
-	{
-		File::AppendTextFile(kLogFilePath, ToString(wideString));
 	}
 
 	Logger& Logger::GetInstance()

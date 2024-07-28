@@ -11,6 +11,10 @@ import jpt.Utilities;
 
 /** Unit Test Modules */
 
+
+// CSV
+import UnitTests_CSV;
+
 // Json
 import UnitTests_Json;
 
@@ -18,6 +22,10 @@ import UnitTests_Json;
 export bool RunUnitTests_Data()
 {
 	/** Unit Test Functions */
+
+
+	// CSV
+	JPT_ENSURE(RunUnitTests_CSV());
 
 	// Json
 	JPT_ENSURE(RunUnitTests_Json());
