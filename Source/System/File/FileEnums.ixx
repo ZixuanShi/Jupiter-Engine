@@ -17,6 +17,7 @@ export namespace jpt::File
 		Engine,
 		Client,		// Client development folder
 		Output,		// Build output folder
+		Saved,		
 	};
 
 	/** Supported file types */

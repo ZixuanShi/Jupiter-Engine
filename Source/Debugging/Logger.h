@@ -82,8 +82,8 @@ namespace jpt
 		void SendToOutputWindow(const char* string);
 		void SendToOutputWindow(const wchar_t* wideString);
 
-		void AppendToSaveFile(const char* string);
-		void AppendToSaveFile(const wchar_t* wideString);
+		void AppendToSaveFile(const String& string);
+		void AppendToSaveFile(const WString& wideString);
 	};
 }
 #else

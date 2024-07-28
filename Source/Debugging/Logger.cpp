@@ -16,12 +16,15 @@
 	#include <Windows.h>
 #endif
 
-import jpt.File.Path;
 import jpt.FileIO;
+import jpt.File.Path;
+import jpt.System.Paths;
+import jpt.String.Helpers;
 
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 1024;
+	static const File::Path kLogFilePath = { File::ESource::Saved, "Log.txt" };
 
 	const char* locGetLogStr(Logger::ELogType type)
 	{
@@ -64,24 +67,18 @@ namespace jpt
 		return stamp;
 	}
 
-	std::mutex g_logMutex;
-
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
 	{
-		std::lock_guard<std::mutex> lock(g_logMutex);
-
 		String contentToLog = GetStamp(type, line, file);
 		contentToLog += pMessage;
 		contentToLog += "\n";
 
 		SendToOutputWindow(contentToLog.ConstBuffer());
-		AppendToSaveFile(contentToLog.ConstBuffer());
+		AppendToSaveFile(contentToLog);
 	}
 
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
 	{
-		std::lock_guard<std::mutex> lock(g_logMutex);
-
 		const String contentToLog = GetStamp(type, line, file);
 		WString ContentToLogW = ToWString(contentToLog);
 
@@ -89,7 +86,7 @@ namespace jpt
 		ContentToLogW += L"\n";
 
 		SendToOutputWindow(ContentToLogW.ConstBuffer());
-		AppendToSaveFile(ContentToLogW.ConstBuffer());
+		AppendToSaveFile(ContentToLogW);
 	}
 
 	void Logger::SendToOutputWindow(const char* string)
@@ -106,16 +103,14 @@ namespace jpt
 #endif
 	}
 
-	void Logger::AppendToSaveFile(const char* string)
+	void Logger::AppendToSaveFile(const String& string)
 	{
-		// TODO
-		JPT_IGNORE(string);
+		File::AppendTextFile(kLogFilePath, string);
 	}
 
-	void Logger::AppendToSaveFile(const wchar_t* wideString)
+	void Logger::AppendToSaveFile(const WString& wideString)
 	{
-		// TODO
-		JPT_IGNORE(wideString);
+		File::AppendTextFile(kLogFilePath, ToString(wideString));
 	}
 
 	Logger& Logger::GetInstance()

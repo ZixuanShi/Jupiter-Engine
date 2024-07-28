@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
 export module jpt.File.Path;
@@ -44,6 +45,7 @@ export namespace jpt::File
 
 		constexpr size_t FindLastOf(const Path& path) const;
 		constexpr bool Has(const Path& path) const;
+		constexpr Path GetParent() const;
 
 		constexpr const WString& ToWString() const { return m_path; }
 		constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
@@ -60,6 +62,13 @@ export namespace jpt::File
 	constexpr bool operator==(const Path& lhs, const Path& rhs)
 	{
 		return lhs.ToWString() == rhs.ToWString();
+	}
+
+	constexpr Path operator+(const Path& lhs, const Path& rhs)
+	{
+		Path result = lhs;
+		result.Append(rhs);
+		return result;
 	}
 
 	// Member Functions Definitions ---------------------------------------------------------------------------------------
@@ -100,6 +109,17 @@ export namespace jpt::File
 		case ESource::Output:
 			Append(GetOutputDirW());
 			break;
+		case ESource::Saved:
+#if IS_RELEASE
+			Append(GetOutputDirW());
+#else
+			Append(GetClientDirW());
+#endif
+			Append(L"_Saved/");
+			break;
+
+		default:
+			JPT_ASSERT(false, "Unknown source");
 		}
 
 		Append(relativePath);
@@ -136,5 +156,17 @@ export namespace jpt::File
 	constexpr bool Path::Has(const Path& path) const
 	{
 		return m_path.Has(path.ToWString().ConstBuffer());
+	}
+
+	constexpr Path Path::GetParent() const
+	{
+		const TString seprator = GetSeparator<TString>();
+		const size_t lastSeparatorIndex = m_path.FindLastOf(seprator.ConstBuffer());
+		if (lastSeparatorIndex == npos)
+		{
+			return Path();
+		}
+
+		return m_path.SubStr(0, lastSeparatorIndex + seprator.Count());
 	}
 }

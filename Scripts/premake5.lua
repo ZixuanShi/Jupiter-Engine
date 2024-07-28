@@ -1,13 +1,13 @@
 -- Client project should have a Generate.bat file that should be like this:
 
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+-- cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 -- set args="<ProjectName>" "<ProjectDirectory>"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
 
 -- Example:
--- cd "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
+-- cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
 -- set args="UnitTests" "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/UnitTests/"
--- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\_Bin\premake5.exe" vs2022 %args%
+-- call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
 
 
 for i = 1, #_ARGS do
@@ -129,7 +129,7 @@ project (project_name)
     defines
     {
         ("JPT_CLIENT_DIR_W=L\"" .. project_dir .."\""),
-        ("JPT_OUTPUT_DIR_W=L\"" .. project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output\""),
+        ("JPT_OUTPUT_DIR_W=L\"" .. project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output/\""),
     }
 
     includedirs

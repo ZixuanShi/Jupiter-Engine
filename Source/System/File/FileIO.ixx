@@ -61,7 +61,7 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	Optional<String> ReadTextFile(const File::Path& path)
+	Optional<String> ReadTextFile(const Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 
@@ -79,7 +79,7 @@ export namespace jpt::File
 	}
 
 	/** Saves text data to a file */
-	bool WriteTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
+	bool WriteTextFile(const Path& path, const char* data, size_t sizeInBytes)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 
@@ -92,18 +92,24 @@ export namespace jpt::File
 		serializer.Write(data, sizeInBytes);
 		return true;
 	}
-	bool WriteTextFile(const File::Path& path, const char* data)
+	bool WriteTextFile(const Path& path, const char* data)
 	{
 		return WriteTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
-	bool WriteTextFile(const File::Path& path, const String& data)
+	bool WriteTextFile(const Path& path, const String& data)
 	{
 		return WriteTextFile(path, data.ConstBuffer(), data.Size());
 	}
 
 	/** Appends content to file on disk. Write if not present */
-	bool AppendTextFile(const File::Path& path, const char* data, size_t sizeInBytes)
+	bool AppendTextFile(const Path& path, const char* data, size_t sizeInBytes)
 	{
+		if (!Exists(path))
+		{
+			const Path parentPath = path.GetParent();
+			MakeDirectory(parentPath);
+		}
+
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Append);
 
 		if (!serializer.IsOpen())
@@ -115,18 +121,18 @@ export namespace jpt::File
 		serializer.Write(data, sizeInBytes);
 		return true;
 	}
-	bool AppendTextFile(const File::Path& path, const char* data)
+	bool AppendTextFile(const Path& path, const char* data)
 	{
 		return AppendTextFile(path, data, FindCharsCount(data) * sizeof(char));
 	}
-	bool AppendTextFile(const File::Path& path, const String& data)
+	bool AppendTextFile(const Path& path, const String& data)
 	{
 		return AppendTextFile(path, data.ConstBuffer(), data.Size());
 	}
 
 	/** Loads binary data from a file */
 	template<typename T>
-	Optional<T> ReadBinaryFile(const File::Path& path)
+	Optional<T> ReadBinaryFile(const Path& path)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 
@@ -143,7 +149,7 @@ export namespace jpt::File
 
 	/** Saves binary data to a file */
 	template<typename T>
-	bool WriteBinaryFile(const File::Path& path, const T& obj)
+	bool WriteBinaryFile(const Path& path, const T& obj)
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 

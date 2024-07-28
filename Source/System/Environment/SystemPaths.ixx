@@ -22,6 +22,7 @@ namespace jpt::System
 		Path m_engineDir;
 		Path m_clientDir;
 		Path m_outputDir;
+		Path m_savedDir;
 
 		Path m_executablePath;
 
@@ -34,6 +35,7 @@ namespace jpt::System
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
 		const Path& GetClientDir()      const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
 		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
+		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
 	};
 
@@ -48,6 +50,7 @@ namespace jpt::System
 		m_engineDir = JPT_ENGINE_DIR_W;
 		m_clientDir = clientDir;
 		m_outputDir = outputDir;
+		m_savedDir = clientDir + L"_Saved";
 
 #if IS_PLATFORM_WIN64
 		wchar_t buffer[MAX_PATH];
