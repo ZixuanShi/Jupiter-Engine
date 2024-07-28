@@ -1,3 +1,0 @@
-// Hello World
-I'm a test text file for Jupiter Engine
-Nice to meet you :)

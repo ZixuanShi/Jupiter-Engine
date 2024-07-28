@@ -65,8 +65,9 @@ namespace jpt::System
 
 		JPT_ASSERT(!m_engineDir.IsEmpty());
 		JPT_ASSERT(!m_clientDir.IsEmpty());
-		JPT_ASSERT(!m_savedDir.IsEmpty());
 		JPT_ASSERT(!m_outputDir.IsEmpty());
+		JPT_ASSERT(!m_savedDir.IsEmpty());
+		JPT_ASSERT(!m_executablePath.IsEmpty());
 		m_isInitialized = true;
 	}
 }

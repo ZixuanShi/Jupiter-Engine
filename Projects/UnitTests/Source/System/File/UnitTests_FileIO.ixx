@@ -21,6 +21,7 @@ import jpt.Optional;
 
 import jpt.File.Enums;
 import jpt.FileIO;
+import jpt.System.Paths;
 
 using namespace jpt::File;
 
@@ -48,13 +49,21 @@ static bool IsSerializeOverridden()
 bool UnitTests_FileIO_Exists()
 {
     // Engine
+    jpt::File::WriteTextFile({ ESource::Engine, "Assets/Configs/TextTxt.txt" }, "Hello, World!");
+    jpt::File::WriteTextFile({ ESource::Engine, L"Assets/中文测试/中文文本.txt" }, "中文测试");
+
     JPT_ENSURE(Exists({ ESource::Engine, "Assets/Configs/TextTxt.txt" }));
     JPT_ENSURE(!Exists({ ESource::Engine, "Assets/Configs/NotExist.txt" }));
     JPT_ENSURE(Exists({ ESource::Engine, L"Assets/中文测试/中文文本.txt" }));
 
+    jpt::File::Delete({ ESource::Engine, "Assets/Configs/TextTxt.txt" });
+    jpt::File::Delete({ ESource::Engine, L"Assets/中文测试/中文文本.txt" });
+
     // Client
+    jpt::File::WriteTextFile({ ESource::Client, L"Assets/好家伙/中文文本.txt" }, "中文测试");
     JPT_ENSURE(Exists({ ESource::Client, L"Assets/好家伙/中文文本.txt" }));
-    
+    jpt::File::Delete(jpt::System::Paths::GetInstance().GetClientDir() + L"Assets/好家伙");
+
     return true;
 }
 

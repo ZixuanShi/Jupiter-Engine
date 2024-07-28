@@ -162,10 +162,7 @@ export namespace jpt::File
 	{
 		const TString seprator = GetSeparator<TString>();
 		const size_t lastSeparatorIndex = m_path.FindLastOf(seprator.ConstBuffer());
-		if (lastSeparatorIndex == npos)
-		{
-			return Path();
-		}
+		JPT_ASSERT(lastSeparatorIndex != npos, "Path has no parent");
 
 		return m_path.SubStr(0, lastSeparatorIndex + seprator.Count());
 	}
