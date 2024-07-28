@@ -50,7 +50,12 @@ namespace jpt::System
 		m_engineDir = JPT_ENGINE_DIR_W;
 		m_clientDir = clientDir;
 		m_outputDir = outputDir;
+
+#if IS_RELEASE
+		m_savedDir = outputDir + L"_Saved";
+#else
 		m_savedDir = clientDir + L"_Saved";
+#endif
 
 #if IS_PLATFORM_WIN64
 		wchar_t buffer[MAX_PATH];
@@ -60,6 +65,7 @@ namespace jpt::System
 
 		JPT_ASSERT(!m_engineDir.IsEmpty());
 		JPT_ASSERT(!m_clientDir.IsEmpty());
+		JPT_ASSERT(!m_savedDir.IsEmpty());
 		JPT_ASSERT(!m_outputDir.IsEmpty());
 		m_isInitialized = true;
 	}
