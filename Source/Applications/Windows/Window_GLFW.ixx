@@ -19,7 +19,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 
 import jpt.Json;
-import jpt.JsonData;
+import jpt.Json.Data;
 
 import jpt.File.Path;
 import jpt.File.Path.Utils;

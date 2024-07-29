@@ -11,6 +11,7 @@ module;
 export module jpt.System.Paths;
 
 import jpt.File.Path;
+import jpt.File.IO;
 
 using namespace jpt::File;
 
@@ -56,6 +57,7 @@ namespace jpt::System
 #else
 		m_savedDir = clientDir + L"_Saved";
 #endif
+		File::Delete(m_savedDir);
 
 #if IS_PLATFORM_WIN64
 		wchar_t buffer[MAX_PATH];

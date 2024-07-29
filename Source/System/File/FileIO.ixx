@@ -9,7 +9,7 @@ module;
 #include <filesystem>
 #include <fstream>
 
-export module jpt.FileIO;
+export module jpt.File.IO;
 
 import jpt.String;
 import jpt.String.Helpers;

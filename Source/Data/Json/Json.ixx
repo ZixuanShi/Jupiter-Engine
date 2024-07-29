@@ -20,10 +20,10 @@ import jpt.Pair;
 import jpt.Stack;
 import jpt.Utilities;
 
-import jpt.JsonData;
+import jpt.Json.Data;
 
 import jpt.File.Path;
-import jpt.FileIO;
+import jpt.File.IO;
 
 namespace jpt
 {

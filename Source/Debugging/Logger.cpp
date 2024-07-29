@@ -18,7 +18,7 @@
 
 import jpt.Clock;
 import jpt.DateTime;
-import jpt.FileIO;
+import jpt.File.IO;
 import jpt.File.Path;
 import jpt.System.Paths;
 import jpt.String.Helpers;

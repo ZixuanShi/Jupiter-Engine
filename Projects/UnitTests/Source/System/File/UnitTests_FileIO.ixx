@@ -20,7 +20,7 @@ import jpt.Serializer;
 import jpt.Optional;
 
 import jpt.File.Enums;
-import jpt.FileIO;
+import jpt.File.IO;
 import jpt.System.Paths;
 
 using namespace jpt::File;

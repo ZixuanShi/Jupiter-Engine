@@ -11,10 +11,10 @@ import jpt.Utilities;
 import jpt.Math;
 
 import jpt.Json;
-import jpt.JsonData;
+import jpt.Json.Data;
 
 import jpt.File.Path;
-import jpt.FileIO;
+import jpt.File.IO;
 
 import jpt.Graphics.Enums;
 

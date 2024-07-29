@@ -4,7 +4,7 @@ module;
 
 #include "Debugging/Assert.h"
 
-export module jpt.JsonData;
+export module jpt.Json.Data;
 
 import jpt.Concepts;
 import jpt.DynamicArray;

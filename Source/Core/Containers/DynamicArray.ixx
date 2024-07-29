@@ -85,6 +85,7 @@ export namespace jpt
 		constexpr TData& Emplace(size_t index, TArgs&&... args);
 		template<typename ...TArgs>
 		constexpr TData& EmplaceBack(TArgs&&... args);
+		constexpr DynamicArray& operator+=(const DynamicArray& other);
 
 		// Erasing
 		constexpr Iterator Erase(size_t index);
@@ -282,6 +283,19 @@ export namespace jpt
 	constexpr DynamicArray<TData, TAllocator>::TData& DynamicArray<TData, TAllocator>::EmplaceBack(TArgs&& ...args)
 	{
 		return Emplace(m_count, Forward<TArgs>(args)...);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>& DynamicArray<TData, TAllocator>::operator+=(const DynamicArray& other)
+	{
+		Reserve(m_count + other.Count());
+
+		for (size_t i = 0; i < other.Count(); ++i)
+		{
+			EmplaceBack(other[i]);
+		}
+
+		return *this;
 	}
 
 	template<typename TData, typename TAllocator>
