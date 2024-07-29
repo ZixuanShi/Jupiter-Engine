@@ -3,7 +3,6 @@
 module;
 
 #include "Applications/App/Application_Base.h"
-#include "Debugging/Logger.h"
 
 #if IS_PLATFORM_WIN64
 	#include "Applications/App/Application_Win64.h"
@@ -22,8 +21,6 @@ namespace jpt
 {
 	int MainImpl_Final(Application_Base* pApp)
 	{
-		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
-
 #if IS_DEBUG
 		MemoryLeakDetector::Init();
 #endif

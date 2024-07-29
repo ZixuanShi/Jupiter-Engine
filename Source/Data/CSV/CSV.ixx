@@ -86,4 +86,9 @@ export namespace jpt
 
 		return csvData;
 	}
+
+	void WriteCSV(const Path& path, const CSVData& data)
+	{
+		WriteTextFile(path, data.ToString());
+	}
 }

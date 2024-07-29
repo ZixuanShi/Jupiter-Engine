@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/CoreHeaders.h"
 
-export module UnitTests_ApplicationLayer;
+export module UnitTests_Applications;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
@@ -15,7 +15,7 @@ import jpt.Utilities;
 import UnitTests_LaunchArgs;
 
 
-export bool RunUnitTests_ApplicationLayer()
+export bool RunUnitTests_Applications()
 {
 	/** Unit Test Functions */
 

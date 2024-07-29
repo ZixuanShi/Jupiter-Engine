@@ -3,6 +3,7 @@
 #include "Applications/App/Application_Base.h"
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Logger.h"
 
 import jpt.Application_Factories;
 import jpt.CommandLine;
@@ -16,6 +17,8 @@ namespace jpt
 	bool jpt::Application_Base::PreInit()
 	{
 		System::Paths::GetInstance().PreInit(jpt::File::GetClientDirW(), jpt::File::GetOutputDirW());
+
+		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
