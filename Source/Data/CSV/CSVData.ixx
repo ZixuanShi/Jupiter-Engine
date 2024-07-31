@@ -1,14 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Debugging/Logger.h"
-#include "Debugging/Assert.h"
-
 export module jpt.CSV.Data;
 
 import jpt.DynamicArray;
 import jpt.String;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
