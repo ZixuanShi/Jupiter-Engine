@@ -16,7 +16,7 @@ namespace jpt
 {
 	bool jpt::Application_Base::PreInit()
 	{
-		System::Paths::GetInstance().PreInit(jpt::File::GetClientDirW(), jpt::File::GetOutputDirW());
+		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 

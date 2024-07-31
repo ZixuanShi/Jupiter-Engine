@@ -18,6 +18,27 @@ def get_info():
 
 
 # -----------------------------------------------------------------------------------------------------
+# Assets folder
+# -----------------------------------------------------------------------------------------------------
+def create_config():
+	os.makedirs(project_directory + "/Assets/Config")
+
+	content_settings = """{
+	"window_width": 600,
+    "window_height": 400,
+    "window_title": "<ProjectName>"
+}"""
+
+	content_settings = content_settings.replace("<ProjectName>", project_name)
+	with open(project_directory + "/Assets/Config/Settings.json", "w") as file:
+	    file.write(content_settings)
+
+def create_assets():
+	os.makedirs(project_directory + "/Assets")
+
+	create_config()
+
+# -----------------------------------------------------------------------------------------------------
 # Scripts folder
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProject.bat
@@ -49,24 +70,16 @@ def create_scripts():
 # -----------------------------------------------------------------------------------------------------
 # Source folder
 # -----------------------------------------------------------------------------------------------------
-def create_application_ixx():
-	application_content = """// Copyright Jupiter Technologies, Inc. All Rights Reserved.
-
-module;
-
-#include "Applications/App/Application_Base.h"
-#include "Core/Minimal/CoreHeaders.h"
-
-export module <ProjectName>;
+def create_application_header():
+	content = """#pragma once
 
 #if IS_PLATFORM_WIN64
-import jpt.Application_Win64;
+	#include "Applications/App/Application_Win64.h"
+#else
+	#include "Applications/App/Application_Base.h"
 #endif
 
-import jpt.Utilities;
-import jpt.File.Path;
-
-export class <ProjectName> final : 
+class <ProjectName> final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
 #else
@@ -82,7 +95,18 @@ private:
 
 public:
 	virtual bool PreInit() override;
-};
+};"""
+
+	content = content.replace("<ProjectName>", project_name)
+	with open(project_directory + "/Source/Applications/" + project_name + ".h", "w") as file:
+	    file.write(content)
+
+def create_application_cpp():
+	content = """#include "Applications/<ProjectName>.h"
+
+#include "Core/Minimal/CoreHeaders.h"
+
+import jpt.CoreModules;
 
 bool <ProjectName>::PreInit()
 {
@@ -92,30 +116,54 @@ bool <ProjectName>::PreInit()
 }
 
 #pragma region Engine-Client Communications
-const char* jpt::GetClientDir() { return JPT_CLIENT_DIR; }
-const wchar_t* jpt::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
+#pragma endregion"""
 
-jpt::Application_Base* jpt::Application_Base::GetInstance()
+	content = content.replace("<ProjectName>", project_name)
+	with open(project_directory + "/Source/Applications/" + project_name + ".cpp", "w") as file:
+	    file.write(content)
+
+
+def create_main_cpp():
+	content = """#include "Applications/<ProjectName>.h"
+
+import jpt.EntryPoints;
+
+#if IS_PLATFORM_WIN64
+
+_Use_decl_annotations_
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
 {
-	static <ProjectName> s_instance;
-	return &s_instance;
+	<ProjectName> app;
+	return jpt::MainImpl_Win64(&app, hInstance, launchArgs, nCmdShow);
 }
-#pragma endregion
-"""
-	application_content = application_content.replace("<ProjectName>", project_name)		
-	with open(project_directory + "/Source/Applications/" + "Application_" + project_name + ".ixx", "w") as file:
-	    file.write(application_content)
+#else
+
+int main(int argc, char* argv[])
+{
+	<ProjectName> app;
+	return jpt::MainImpl(&app);
+}
+#endif"""
+
+	content = content.replace("<ProjectName>", project_name)
+	with open(project_directory + "/Source/Main.cpp", "w") as file:
+	    file.write(content)
 
 
 def create_source():
 	os.makedirs(project_directory + "/Source/Applications")
 
-	create_application_ixx()
+	create_application_header()
+	create_application_cpp()
+	create_main_cpp()
 
 
 if __name__ == "__main__":
 	get_info()
 
+	create_assets()
 	create_scripts()
 	create_source()
 

@@ -20,6 +20,7 @@ static bool Write()
 {
     jpt::CSVData csvData;
 
+    csvData.Reserve(5);
     csvData.AddRow({ "Name", "Address", "Phone", "URL" });
     csvData.AddRow({ "De Sabla, APT", "10 De Sabla Rd, San Mateo, CA 94402", "(650) 684-1937", "https://desabla.com/" });
     csvData.AddRow({ "Westlake", "331 Park Plaza Dr, Daly City, CA 94015", "(650) 755-8133", "https://www.westlakedalycity.com/" });
@@ -41,13 +42,10 @@ static bool Read()
     // Iterate
     for (Index row = 0; row < data.RowsCount(); ++row)
 	{
-        jpt::String rowStr;
 		for (Index col = 0; col < data[row].Count(); ++col)
 		{
-			rowStr += data[row][col] + ",";
+            JPT_IGNORE(data[row][col]);
 		}
-
-        //JPT_LOG(rowStr);
 	}
 
     // Single access
