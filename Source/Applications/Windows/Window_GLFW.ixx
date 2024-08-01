@@ -24,6 +24,8 @@ import jpt.Json.Data;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 
+import jpt.Time.TypeDefs;
+
 namespace jpt
 {
 	export class Window_GLFW final : public Window_Base
@@ -35,7 +37,7 @@ namespace jpt
 
 	public:
 		virtual bool Init(Application_Base* pApp) override;
-		virtual void Update() override;
+		virtual void Update(TimePrecision deltaSeconds) override;
 	};
 
 	bool Window_GLFW::Init(Application_Base* pApp)
@@ -69,9 +71,9 @@ namespace jpt
 		return true;
 	}
 
-	void Window_GLFW::Update()
+	void Window_GLFW::Update(TimePrecision deltaSeconds)
 	{
-		Super::Update();
+		Super::Update(deltaSeconds);
 
 		if (glfwWindowShouldClose(m_pWindow))
 		{

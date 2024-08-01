@@ -10,10 +10,17 @@ import jpt.CommandLine;
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
+
 import jpt.System.Paths;
+import jpt.StopWatch;
 
 namespace jpt
 {
+	void locFindFPS()
+	{
+
+	}
+
 	bool jpt::Application_Base::PreInit()
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
@@ -44,10 +51,10 @@ namespace jpt
 		return true;
 	}
 
-	void Application_Base::Update()
+	void Application_Base::Update(TimePrecision deltaSeconds)
 	{
-		m_pFramework->Update();
-		m_pWindow->Update();
+		m_pFramework->Update(deltaSeconds);
+		m_pWindow->Update(deltaSeconds);
 	}
 
 	void Application_Base::Terminate()
@@ -58,11 +65,29 @@ namespace jpt
 
 	void Application_Base::Run()
 	{
+		StopWatch::Point previous = StopWatch::Now();
+		TimePrecision accumulator = 0.0;
+		uint32 frameCount = 0;
+
 		while (!m_shouldTerminate)
 		{
-			PollInput();
-			Update();
+			const StopWatch::Point current = StopWatch::Now();
+			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
+
+			ProcessInput();
+			Update(deltaSeconds);
 			Render();
+
+			previous = current;
+
+			++frameCount;
+			accumulator += deltaSeconds;
+			if (accumulator >= 1.0)
+			{
+				JPT_LOG("FPS: " + ToString(frameCount));
+				frameCount = 0;
+				accumulator = 0.0;
+			}
 		}
 	}
 

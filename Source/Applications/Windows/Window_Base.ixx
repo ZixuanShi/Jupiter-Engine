@@ -6,6 +6,8 @@ module;
 
 export module jpt.Window_Base;
 
+import jpt.Time.TypeDefs;
+
 export namespace jpt
 {
 	class Application_Base;
@@ -19,7 +21,7 @@ export namespace jpt
 		virtual ~Window_Base() = default;
 
 		virtual bool Init(Application_Base* pApp);
-		virtual void Update() {}
+		virtual void Update(TimePrecision) {}
 		virtual void Terminate() {}
 	};
 

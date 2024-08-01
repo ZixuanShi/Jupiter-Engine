@@ -4,6 +4,8 @@ module;
 
 export module jpt.Framework_Base;
 
+import jpt.Time.TypeDefs;
+
 namespace jpt
 {
 	export class Framework_Base
@@ -12,7 +14,7 @@ namespace jpt
 		virtual ~Framework_Base() = default;
 
 		virtual bool Init() { return true; }
-		virtual void Update() {}
+		virtual void Update(TimePrecision) {}
 		virtual void Terminate() {}
 	};
 }

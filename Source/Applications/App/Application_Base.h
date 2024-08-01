@@ -2,6 +2,8 @@
 
 #pragma once
 
+import jpt.Time.TypeDefs;
+
 namespace jpt
 {
 	class Window_Base;
@@ -22,14 +24,14 @@ namespace jpt
 
 		virtual bool PreInit();
 		virtual bool Init();
-		virtual void Update();
+		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Terminate();
 
 		void Run();
 		void TerminateApp();
 
 	protected:
-		void PollInput() { }
+		void ProcessInput() { }
 		void Render()    { }
 	};
 }
