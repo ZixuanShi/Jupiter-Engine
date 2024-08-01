@@ -14,6 +14,7 @@ import jpt.Allocator;
 import jpt.Byte;
 import jpt.Constants;
 import jpt.TypeTraits;
+import jpt.TypeRegistry;
 import jpt.Utilities;
 
 static constexpr size_t kLocSmallDataSize = 8;
@@ -33,7 +34,7 @@ export namespace jpt
 		Constructor m_constructor = nullptr;   /**< Constructor function pointer. Needed for copy constructing */
 		Destructor  m_destructor  = nullptr;   /**< Destructor function pointer. Needed for destructing */
 
-		size_t m_currentTypeHash = 0;       /**< Hash code of the current type. Used for comparing */
+		size_t m_currentTypeId   = 0;       /**< Id of the current type. Used for comparing */
 		size_t m_currentTypeSize = 0;       /**< Size in bytes of the current type */
 
 	public:
@@ -208,13 +209,13 @@ export namespace jpt
 	template<typename T>
 	constexpr bool Any::Is() const
 	{
-		return m_currentTypeSize == sizeof(T) && m_currentTypeHash == typeid(T).hash_code();
+		return m_currentTypeSize == sizeof(T) && m_currentTypeId == TypeRegistry::Id<T>();
 	}
 
 	constexpr bool Any::IsEmpty() const
 	{
 		return m_currentTypeSize == 0 || 
-			   m_currentTypeHash == 0 || 
+			   m_currentTypeId == 0 || 
 			   m_pBuffer == nullptr;
 	}
 
@@ -225,13 +226,13 @@ export namespace jpt
 		m_pBuffer     = nullptr;
 		m_constructor = nullptr;
 		m_destructor  = nullptr;
-		m_currentTypeHash = 0;
+		m_currentTypeId = 0;
 		m_currentTypeSize = 0;
 	}
 
 	void Any::CopyAny(const Any& other)
 	{
-		m_currentTypeHash = other.m_currentTypeHash;
+		m_currentTypeId = other.m_currentTypeId;
 		m_currentTypeSize = other.m_currentTypeSize;
 
 		if (m_currentTypeSize <= kLocSmallDataSize)
@@ -256,7 +257,7 @@ export namespace jpt
 
 	void Any::MoveAny(Any&& other)
 	{
-		m_currentTypeHash = other.m_currentTypeHash;
+		m_currentTypeId = other.m_currentTypeId;
 		m_currentTypeSize = other.m_currentTypeSize;
 
 		std::memmove(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
@@ -275,7 +276,7 @@ export namespace jpt
 		other.m_pBuffer     = nullptr;
 		other.m_constructor = nullptr;
 		other.m_destructor  = nullptr;
-		other.m_currentTypeHash = 0;
+		other.m_currentTypeId   = 0;
 		other.m_currentTypeSize = 0;
 	}
 
@@ -327,8 +328,8 @@ export namespace jpt
 					reinterpret_cast<T*>(pBuffer)->~T();
 				}
 			};
-
-		m_currentTypeHash = typeid(T).hash_code();
+		
+		m_currentTypeId   = TypeRegistry::Id<T>();
 		m_currentTypeSize = newSize;
 	}
 }

@@ -69,6 +69,7 @@ export import jpt.Optional;
 export import jpt.Pair;
 export import jpt.Tuple;
 export import jpt.Variant;
+export import jpt.TypeRegistry;
 
 // System
 export import jpt.File.Path;
