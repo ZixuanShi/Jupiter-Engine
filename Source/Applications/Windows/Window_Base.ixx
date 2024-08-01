@@ -20,6 +20,7 @@ export namespace jpt
 	public:
 		virtual ~Window_Base() = default;
 
+		virtual bool PreInit() { return true; }
 		virtual bool Init(Application_Base* pApp);
 		virtual void Update(TimePrecision) {}
 		virtual void Terminate() {}

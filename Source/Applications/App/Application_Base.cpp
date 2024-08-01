@@ -16,33 +16,26 @@ import jpt.StopWatch;
 
 namespace jpt
 {
-	void locFindFPS()
-	{
-
-	}
-
 	bool jpt::Application_Base::PreInit()
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 
-		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
-
-		if (CommandLine::GetInstance().Has("no_window"))
-		{
-			m_shouldTerminate = true;
-			return true;
-		}
-
 		m_pFramework = Framework_Create();
 		m_pWindow = Window_Create();
+
+		m_pFramework->PreInit();
+		m_pWindow->PreInit();
+
+		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		return true;
 	}
 
 	bool Application_Base::Init()
 	{
-		if (m_shouldTerminate)
+		if (CommandLine::GetInstance().Has("no_window"))
 		{
+			m_shouldTerminate = true;
 			return true;
 		}
 
