@@ -18,6 +18,8 @@ import UnitTests_Coding_RomanToInteger;
 import UnitTests_Coding_MaxSubArray;
 import UnitTests_Coding_DeleteDuplicatesFromList;
 import UnitTests_Coding_MergeCloseVertices;
+import UnitTests_Coding_BuildPalindromeWithRemains;
+import UnitTests_Coding_MaximumVisitableCities;
 
 export bool RunUnitTests_Coding()
 {
@@ -30,6 +32,8 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_MaxSubArray());
 	JPT_ENSURE(UnitTests_Coding_DeleteDuplicatesFromList());
 	JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
+	JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
+	JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
 
 	return true;
 }

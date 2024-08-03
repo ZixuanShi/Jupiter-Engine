@@ -78,6 +78,9 @@ import UnitTests_Enum;
 import UnitTests_Tuple;
 import UnitTests_Pair;
 
+// Threading
+import UnitTests_Threading;
+
 export bool RunUnitTests_Core()
 {
 	/** Unit Test Functions */
@@ -147,6 +150,9 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Enum());
 	JPT_ENSURE(RunUnitTests_Tuple());
 	JPT_ENSURE(RunUnitTests_Pair());
+
+	// Threading
+	JPT_ENSURE(RunUnitTests_Threading());
 
 	return true;
 }
