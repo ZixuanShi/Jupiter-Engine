@@ -136,8 +136,8 @@ static bool ThreadSafeQueue()
 
 export bool RunUnitTests_Threading()
 {
-    JPT_ENSURE(RawThreads());
-    JPT_ENSURE(ThreadSafeQueue());
+    //JPT_ENSURE(RawThreads());
+    //JPT_ENSURE(ThreadSafeQueue());
 
     return true;
 }

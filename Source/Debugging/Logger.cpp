@@ -33,7 +33,7 @@ namespace jpt
 		switch (type)
 		{
 			case Logger::ELogType::Log:			return "Log";
-			case Logger::ELogType::SystemInfo:	return "SystemInfo";
+			case Logger::ELogType::Info:		return "Info";
 			case Logger::ELogType::Warning:		return "Warning";
 			case Logger::ELogType::Error:		return "Error";
 			default:  JPT_ASSERT(false, "Unrecognized Log category"); return nullptr;
