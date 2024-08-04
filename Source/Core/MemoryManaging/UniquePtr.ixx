@@ -78,7 +78,7 @@ export namespace jpt
 
 	template<typename TData, class TDeleter>
 	constexpr UniquePtr<TData, TDeleter>::UniquePtr(UniquePtr<TData, TDeleter>&& other) noexcept
-		: m_pPtr(other.Get())
+		: m_pPtr(other.m_pPtr)
 		, m_deleter(Move(other.GetDeleter()))
 	{
 	}

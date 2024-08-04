@@ -76,15 +76,21 @@ static bool ThreadSafeQueue()
         }
 
     protected:
-        void Init() override 
-		{
-            for (int32 i = 0; i < 10; ++i)
-			{
-				m_queue.Push(i);
-                jpt::SleepMs(100);
+        void Update() override
+        {
+            static int32 i = 0;
+            if (i < 10)
+            {
+                m_queue.Push(i);
                 JPT_LOG("Produced: " + jpt::ToString(i));
-			}
-		}
+                ++i;
+                jpt::SleepMs(100);
+            }
+            else
+            {
+                m_shouldTerminate = true;
+            }
+        }
     };
 
     class ConsumerThread final : public jpt::Thread_Base
@@ -101,21 +107,19 @@ static bool ThreadSafeQueue()
     protected:
         void Update() override
         {
-            auto value = m_queue.WaitPop();
-            if (value) 
+            auto value = m_queue.TryPop();
+            if (value)
             {
                 JPT_LOG("Consumed: " + jpt::ToString(value.Value()));
             }
-            else 
+            else
             {
-                // Queue is shut down and empty
-                m_isRunning = false;
+                jpt::SleepMs(10);
             }
         }
     };
     
     jpt::ThreadSafeQueue<int32> queue;
-
     ProducerThread producerThread(queue);
     ConsumerThread consumerThread(queue);
 
@@ -125,9 +129,12 @@ static bool ThreadSafeQueue()
     // Allow some time for operations
     jpt::SleepMs(2000);
 
-    queue.Terminate(); // Signal the queue to shut down
     producerThread.Stop();
+    queue.Terminate(); // Signal the queue to shut down
     consumerThread.Stop();
+
+    // Add a small delay to ensure threads have fully stopped
+    jpt::SleepMs(100);
 
     return true;
 }
