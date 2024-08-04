@@ -12,6 +12,7 @@ export module jpt.Thread;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Constants;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -20,28 +21,76 @@ export namespace jpt
 		class MyThread : public jpt::Thread_Base */
 	class Thread_Base
 	{
+	protected:
+		String m_name = "Unnamed";
+
 	private:
 		std::thread m_thread;
 		std::atomic_bool m_isRunning = false;
 
 	public:
-		virtual ~Thread_Base();
+		Thread_Base() noexcept = default;
+		Thread_Base(const char* name) noexcept;
+		virtual ~Thread_Base() noexcept;
+
+		Thread_Base(Thread_Base&& other) noexcept;
+		Thread_Base& operator=(Thread_Base&& other) noexcept;
+
+		Thread_Base(const Thread_Base&) noexcept = default;
+		Thread_Base& operator=(const Thread_Base&)  noexcept = default;
 
 		void Start();
 		void Stop();
 
+		const String& GetName() const noexcept;
+		uint32 GetId() const noexcept;
+
 	protected:
 		virtual void Init() {}
-		virtual void Update() = 0;
+		virtual void Update() {}
 		virtual void Terminate() {}
 
 	private:
 		void Run();
 	};
 
-	Thread_Base::~Thread_Base()
+	Thread_Base::Thread_Base(const char* name) noexcept
+		: m_name(name) 
+	{
+	}
+
+	Thread_Base::~Thread_Base() noexcept
 	{
 		Stop();
+	}
+
+	Thread_Base::Thread_Base(Thread_Base&& other) noexcept
+		: m_isRunning(other.m_isRunning.load())
+	{
+		if (m_isRunning)
+		{
+			m_thread = Move(other.m_thread);
+			other.m_isRunning.store(false);
+		}
+	}
+
+	Thread_Base& Thread_Base::operator=(Thread_Base&& other) noexcept
+	{
+		if (this != &other)
+		{
+			Stop();
+
+			const bool isRunning = other.m_isRunning.load();
+			other.m_isRunning.store(false);
+
+			if (isRunning)
+			{
+				m_thread = Move(other.m_thread);
+				m_isRunning.store(true);
+			}
+		}
+
+		return *this;
 	}
 
 	void Thread_Base::Start()
@@ -60,6 +109,16 @@ export namespace jpt
 			m_isRunning = false;
 			m_thread.join();
 		}
+	}
+
+	const String& Thread_Base::GetName() const noexcept
+	{
+		return m_name;
+	}
+
+	uint32 Thread_Base::GetId() const noexcept
+	{
+		return m_thread.get_id()._Get_underlying_id();
 	}
 
 	void Thread_Base::Run()
