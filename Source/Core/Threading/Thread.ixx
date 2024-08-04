@@ -23,14 +23,15 @@ export namespace jpt
 	{
 	protected:
 		String m_name = "Unnamed";
+		std::atomic_bool m_isRunning = false;
 
 	private:
 		std::thread m_thread;
-		std::atomic_bool m_isRunning = false;
 
 	public:
 		Thread_Base() noexcept = default;
 		Thread_Base(const char* name) noexcept;
+
 		virtual ~Thread_Base() noexcept;
 
 		Thread_Base(Thread_Base&& other) noexcept;
@@ -49,9 +50,6 @@ export namespace jpt
 		virtual void Init() {}
 		virtual void Update() {}
 		virtual void Terminate() {}
-
-	private:
-		void Run();
 	};
 
 	Thread_Base::Thread_Base(const char* name) noexcept
@@ -101,7 +99,17 @@ export namespace jpt
 		if (!m_isRunning)
 		{
 			m_isRunning = true;
-			m_thread = std::thread(&Thread_Base::Run, this);
+			m_thread = std::thread([this]()
+				{
+					Init();
+
+					while (m_isRunning)
+					{
+						Update();
+					}
+
+					Terminate();
+				});
 		}
 	}
 
@@ -110,7 +118,11 @@ export namespace jpt
 		if (m_isRunning)
 		{
 			m_isRunning = false;
-			m_thread.join();
+			
+			if (m_thread.joinable())
+			{
+				m_thread.join();
+			}
 		}
 	}
 
@@ -122,17 +134,5 @@ export namespace jpt
 	uint32 Thread_Base::GetId() const noexcept
 	{
 		return m_thread.get_id()._Get_underlying_id();
-	}
-
-	void Thread_Base::Run()
-	{
-		Init();
-
-		while (m_isRunning)
-		{
-			Update();
-		}
-
-		Terminate();
 	}
 }

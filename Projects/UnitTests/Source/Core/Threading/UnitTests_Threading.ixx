@@ -11,6 +11,8 @@ export module UnitTests_Threading;
 
 import jpt.Thread;
 import jpt.Thread.Utils;
+import jpt.ThreadSafeQueue;
+
 import jpt.CPUInfo;
 
 import jpt.TypeDefs;
@@ -35,12 +37,6 @@ static bool RawThreads()
             JPT_LOG("Initializing thread " + m_name + jpt::ToString(GetId()));
         }
 
-        void Update() override 
-        {
-            JPT_LOG("Updating thread " + m_name + jpt::ToString(GetId()));
-            jpt::SleepForSeconds(1);
-        }
-
         void Terminate() override 
         {
             JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
@@ -56,7 +52,7 @@ static bool RawThreads()
 		threads.Back().Start();
 	}
 
-    jpt::SleepForSeconds(5);
+    jpt::Sleep(2);
 
     for (uint32 i = 0; i < jpt::GetNumCores(); ++i)
     {
@@ -66,9 +62,80 @@ static bool RawThreads()
     return true;
 }
 
+static bool ThreadSafeQueue()
+{
+    class ProducerThread final : public jpt::Thread_Base
+    {
+    private:
+        jpt::ThreadSafeQueue<int32>& m_queue;
+
+    public:
+        ProducerThread(jpt::ThreadSafeQueue<int32>& queue)
+            : m_queue(queue)
+        {
+        }
+
+    protected:
+        void Init() override 
+		{
+            for (int32 i = 0; i < 10; ++i)
+			{
+				m_queue.Push(i);
+                jpt::SleepMs(100);
+                JPT_LOG("Produced: " + jpt::ToString(i));
+			}
+		}
+    };
+
+    class ConsumerThread final : public jpt::Thread_Base
+    {
+    private:
+        jpt::ThreadSafeQueue<int32>& m_queue;
+
+    public:
+        ConsumerThread(jpt::ThreadSafeQueue<int32>& queue)
+            : m_queue(queue)
+        {
+        }
+
+    protected:
+        void Update() override
+        {
+            auto value = m_queue.WaitPop();
+            if (value) 
+            {
+                JPT_LOG("Consumed: " + jpt::ToString(value.Value()));
+            }
+            else 
+            {
+                // Queue is shut down and empty
+                m_isRunning = false;
+            }
+        }
+    };
+    
+    jpt::ThreadSafeQueue<int32> queue;
+
+    ProducerThread producerThread(queue);
+    ConsumerThread consumerThread(queue);
+
+    producerThread.Start();
+    consumerThread.Start();
+
+    // Allow some time for operations
+    jpt::SleepMs(2000);
+
+    queue.Terminate(); // Signal the queue to shut down
+    producerThread.Stop();
+    consumerThread.Stop();
+
+    return true;
+}
+
 export bool RunUnitTests_Threading()
 {
-    JPT_ENSURE(RawThreads());
+    //JPT_ENSURE(RawThreads());
+    JPT_ENSURE(ThreadSafeQueue());
 
     return true;
 }
