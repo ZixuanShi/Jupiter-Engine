@@ -66,6 +66,7 @@ export namespace jpt
 
 	Thread_Base::Thread_Base(Thread_Base&& other) noexcept
 		: m_isRunning(other.m_isRunning.load())
+		, m_name(Move(other.m_name))
 	{
 		if (m_isRunning)
 		{
@@ -79,6 +80,8 @@ export namespace jpt
 		if (this != &other)
 		{
 			Stop();
+
+			m_name = Move(other.m_name);
 
 			const bool isRunning = other.m_isRunning.load();
 			other.m_isRunning.store(false);
