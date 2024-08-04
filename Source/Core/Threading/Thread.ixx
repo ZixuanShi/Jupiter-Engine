@@ -6,7 +6,6 @@ module;
 
 #include <thread>
 #include <atomic>
-#include <memory>
 
 export module jpt.Thread;
 
@@ -65,10 +64,10 @@ export namespace jpt
     }
 
     Thread_Base::Thread_Base(Thread_Base&& other) noexcept
-        : m_name(std::move(other.m_name))
+        : m_name(Move(other.m_name))
         , m_isRunning(other.m_isRunning.Load())
         , m_shouldTerminate(other.m_shouldTerminate.Load())
-        , m_thread(std::move(other.m_thread))
+        , m_thread(Move(other.m_thread))
     {
         other.m_isRunning = false;
         other.m_shouldTerminate = true;
@@ -80,10 +79,10 @@ export namespace jpt
         {
             Stop();
 
-            m_name = std::move(other.m_name);
+            m_name = Move(other.m_name);
             m_isRunning = other.m_isRunning.Load();
             m_shouldTerminate = other.m_shouldTerminate.Load();
-            m_thread = std::move(other.m_thread);
+            m_thread = Move(other.m_thread);
 
             other.m_isRunning = false;
             other.m_shouldTerminate = true;

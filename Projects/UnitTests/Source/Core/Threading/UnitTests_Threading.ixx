@@ -76,20 +76,16 @@ static bool ThreadSafeQueue()
         }
 
     protected:
-        void Update() override
+        void Init() override
         {
-            static int32 i = 0;
-            if (i < 10)
+            for (int32 i = 0; i < 10; ++i)
             {
                 m_queue.Push(i);
                 JPT_LOG("Produced: " + jpt::ToString(i));
-                ++i;
                 jpt::SleepMs(100);
             }
-            else
-            {
-                m_shouldTerminate = true;
-            }
+
+            m_shouldTerminate = true;
         }
     };
 
@@ -130,7 +126,6 @@ static bool ThreadSafeQueue()
     jpt::SleepMs(2000);
 
     producerThread.Stop();
-    queue.Terminate(); // Signal the queue to shut down
     consumerThread.Stop();
 
     // Add a small delay to ensure threads have fully stopped
@@ -141,7 +136,7 @@ static bool ThreadSafeQueue()
 
 export bool RunUnitTests_Threading()
 {
-    //JPT_ENSURE(RawThreads());
+    JPT_ENSURE(RawThreads());
     JPT_ENSURE(ThreadSafeQueue());
 
     return true;

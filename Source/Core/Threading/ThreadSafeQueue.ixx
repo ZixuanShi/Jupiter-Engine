@@ -32,6 +32,7 @@ export namespace jpt
 		Optional<T> TryPop();
 		Optional<T> WaitPop();
 
+		/** @note	Should explicitly call Terminate() when a thread is using WaitPop() */
 		void Terminate();
 
 		bool IsEmpty() const;
