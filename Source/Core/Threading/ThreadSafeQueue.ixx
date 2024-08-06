@@ -26,11 +26,11 @@ export namespace jpt
 	public:
 		ThreadSafeQueue() = default;
 
-		void Push(const T& value);
-		void Push(T&& value);
+		void Enqueue(const T& value);
+		void Enqueue(T&& value);
 
-		Optional<T> TryPop();
-		Optional<T> WaitPop();
+		Optional<T> TryDequeue();
+		Optional<T> WaitDequeue();
 
 		/** @note	Should explicitly call Terminate() when a thread is using WaitPop() */
 		void Terminate();
@@ -39,7 +39,7 @@ export namespace jpt
 	};
 
 	template<typename T>
-	void ThreadSafeQueue<T>::Push(const T& value)
+	void ThreadSafeQueue<T>::Enqueue(const T& value)
 	{
 		LockGuard lock(m_mutex);
 		m_queue.Enqueue(value);
@@ -47,7 +47,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	void ThreadSafeQueue<T>::Push(T&& value)
+	void ThreadSafeQueue<T>::Enqueue(T&& value)
 	{
 		LockGuard lock(m_mutex);
 		m_queue.Enqueue(Move(value));
@@ -55,7 +55,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	Optional<T> ThreadSafeQueue<T>::TryPop()
+	Optional<T> ThreadSafeQueue<T>::TryDequeue()
 	{
 		LockGuard lock(m_mutex);
 
@@ -70,7 +70,7 @@ export namespace jpt
 	}
 
 	template<typename T>
-	Optional<T> ThreadSafeQueue<T>::WaitPop()
+	Optional<T> ThreadSafeQueue<T>::WaitDequeue()
 	{
 		auto lock = m_mutex.CreateUniqueLock();
 

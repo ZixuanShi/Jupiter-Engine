@@ -14,7 +14,7 @@ import jpt.QuickSort;
 import jpt.HeapSort;
 import jpt.Utilities;
 
-export namespace jpt
+namespace jpt
 {
 	template<Indexable TContainer, typename TComparator>
 	constexpr void IntroSortDepth(TContainer& container, size_t beginIndex, size_t endIndex, size_t depth, TComparator&& comparator)
@@ -45,7 +45,7 @@ export namespace jpt
 		}
 	}
 
-	template<Indexable TContainer, typename TComparator>
+	export template<Indexable TContainer, typename TComparator>
 	constexpr void IntroSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
 	{
 		const size_t depth = static_cast<size_t>(std::log2(endIndex - beginIndex + 1) * 2);

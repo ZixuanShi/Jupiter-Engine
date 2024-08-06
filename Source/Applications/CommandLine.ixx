@@ -67,7 +67,7 @@ namespace jpt
 	{
 		m_arguments.Reserve(argsCount - 1);
 
-		// Skip the first argument which is the executable path. It will be added by Engine/System/File/SystemPaths.ixx
+		// Skip the first argument which is the executable path. It will be added by Engine/System/Environment/SystemPaths.ixx
 
 		for (int32 i = 1; i < argsCount; ++i)
 		{

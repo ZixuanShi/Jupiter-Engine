@@ -46,7 +46,7 @@ namespace jpt
 		return MainImpl_Final(pApp);
 	}
 #else
-	export int MainImpl(Application_Base* pApp)
+	export int MainImpl(int argc, char* argv[])
 	{
 		CommandLine::GetInstance().Parse(argc, argv);
 

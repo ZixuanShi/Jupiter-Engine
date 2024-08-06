@@ -19,7 +19,25 @@ export namespace jpt
 {
 	/** Base class for all threads
 		@example:
-		class MyThread : public jpt::Thread_Base */
+		    class TestThread final : public jpt::Thread_Base
+            {
+            protected:
+                void Init() override 
+                {
+                    JPT_LOG("Initializing thread " + m_name + jpt::ToString(GetId()));
+                }
+
+                void Update() override 
+                {
+                    JPT_LOG("Updating thread " + m_name + jpt::ToString(GetId()));
+                    jpt::Sleep(1);
+                }
+
+                void Terminate() override 
+                {
+                    JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
+                }
+            }; */
     class Thread_Base
     {
     protected:

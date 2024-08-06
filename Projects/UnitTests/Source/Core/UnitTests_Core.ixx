@@ -152,7 +152,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Pair());
 
 	// Threading
-	JPT_ENSURE(RunUnitTests_Threading());
+	//JPT_ENSURE(RunUnitTests_Threading());
 
 	return true;
 }
