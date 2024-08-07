@@ -118,6 +118,7 @@ project "Engine"
     {
         (jupiter_dir .. "Source/**.h"),
         (jupiter_dir .. "Source/**.cpp"),
+        (jupiter_dir .. "Source/**.c"),
         (jupiter_dir .. "Source/**.ixx"),
     }
 

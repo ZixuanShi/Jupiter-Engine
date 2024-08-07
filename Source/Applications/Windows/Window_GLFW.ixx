@@ -7,6 +7,7 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 export module jpt.Window_GLFW;
@@ -25,6 +26,11 @@ import jpt.File.Path;
 import jpt.File.Path.Utils;
 
 import jpt.Time.TypeDefs;
+
+void ResizeViewportCallback(GLFWwindow*, int32 width, int32 height)
+{
+	glViewport(0, 0, width, height);
+}
 
 namespace jpt
 {
@@ -61,12 +67,21 @@ namespace jpt
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)
 		{
+			JPT_ERROR("Failed to create GLFW window");
 			glfwTerminate();
 			return false;
 		}
 
-		/* Make the window's context current */
 		glfwMakeContextCurrent(m_pWindow);
+
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			JPT_ERROR("Failed to initialize GLAD");
+			return false;
+		}
+
+		glfwSetFramebufferSizeCallback(m_pWindow, ResizeViewportCallback);
+		glfwGetFramebufferSize(m_pWindow, &width, &height);
 
 		return true;
 	}
@@ -81,7 +96,7 @@ namespace jpt
 		}
 
 		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(m_pWindow);

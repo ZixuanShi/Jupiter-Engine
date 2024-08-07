@@ -7,6 +7,7 @@ module;
 export module jpt.Window_Base;
 
 import jpt.Time.TypeDefs;
+import jpt.TypeDefs;
 
 export namespace jpt
 {

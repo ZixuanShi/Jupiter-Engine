@@ -20,6 +20,7 @@ export namespace jpt::File
 			case ESource::Engine: return System::Paths::GetInstance().GetEngineDir();
 			case ESource::Client: return System::Paths::GetInstance().GetClientDir();
 			case ESource::Output: return System::Paths::GetInstance().GetOutputDir();
+			case ESource::Saved:  return System::Paths::GetInstance().GetSavedDir();
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}

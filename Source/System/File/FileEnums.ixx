@@ -13,7 +13,6 @@ export namespace jpt::File
 {
 	enum class ESource : uint8
 	{
-		Unknown,
 		Engine,
 		Client,		// Client development folder
 		Output,		// Build output folder
