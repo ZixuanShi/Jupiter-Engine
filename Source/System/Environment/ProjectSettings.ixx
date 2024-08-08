@@ -12,11 +12,14 @@ import jpt.Optional;
 
 export namespace jpt
 {
-	/** Get & Set config at File::FixDependencies("Assets/Config/Settings.json") */
+	/** Get & Set config at File::FixDependencies("Assets/Config/Settings.json")
+		framework_api
+		graphics_api */
 	class ProjectSettings
 	{
 	private:
 		JsonMap m_settings;
+		bool m_hasSettings = false;
 
 	public:
 		static ProjectSettings& GetInstance();
@@ -30,8 +33,6 @@ export namespace jpt
 		const T& Get(const String& key) const;
 
 		void Set(const String& key, const JsonData& value);
-
-		const JsonMap& GetSettings() const { return m_settings; }
 	};
 
 	ProjectSettings& ProjectSettings::GetInstance()
@@ -46,6 +47,7 @@ export namespace jpt
 		if (Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson))
 		{
 			m_settings = settings.Value();
+			m_hasSettings = true;
 			return true;
 		}
 

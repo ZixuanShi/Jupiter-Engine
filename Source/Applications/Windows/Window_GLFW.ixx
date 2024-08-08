@@ -43,6 +43,8 @@ namespace jpt
 	public:
 		virtual bool Init(Application_Base* pApp) override;
 		virtual void Update(TimePrecision deltaSeconds) override;
+
+		GLFWwindow* GetGLFWwindow() const { return m_pWindow; }
 	};
 
 	bool Window_GLFW::Init(Application_Base* pApp)
@@ -82,14 +84,6 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		/* Render here */
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* Swap front and back buffers */
 		glfwSwapBuffers(m_pWindow);
-
-		/* Poll for and process events */
-		glfwPollEvents();
 	}
 }

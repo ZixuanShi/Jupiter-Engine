@@ -9,7 +9,7 @@ export namespace jpt
 	public:
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
-		virtual void Update() { }
+		virtual void Render() { }
 		virtual void Terminate() { }
 	};
 }

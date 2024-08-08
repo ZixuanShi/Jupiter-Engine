@@ -39,6 +39,8 @@ namespace jpt
 		void Run();
 		void TerminateApp() { m_shouldTerminate = true; }
 
+		Window_Base* GetWindow() const { return m_pWindow; }
+
 	protected:
 		void ProcessInput();
 		void Render();

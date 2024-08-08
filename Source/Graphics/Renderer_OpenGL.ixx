@@ -22,6 +22,7 @@ export namespace jpt
 
 	public:
 		virtual bool Init() override;
+		virtual void Render() override;
 	};
 
 	bool Renderer_OpenGL::Init()
@@ -35,5 +36,13 @@ export namespace jpt
 		}
 
 		return true;
+	}
+
+	void Renderer_OpenGL::Render()
+	{
+		Super::Render();
+
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 }

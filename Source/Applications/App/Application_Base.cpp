@@ -51,7 +51,7 @@ namespace jpt
 			return true;
 		}
 
-		m_pFramework->Init();
+		m_pFramework->Init(this);
 		m_pWindow->Init(this);
 		m_pRenderer->Init();
 		m_pInputManager->Init();
@@ -63,7 +63,6 @@ namespace jpt
 	{
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
-		m_pRenderer->Update();
 		m_pInputManager->Update();
 	}
 
@@ -113,5 +112,6 @@ namespace jpt
 
 	void Application_Base::Render()
 	{
+		m_pRenderer->Render();
 	}
 }
