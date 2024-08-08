@@ -27,6 +27,8 @@ export namespace jpt::Input
 		Backend_Base* m_pBackend = nullptr;		/**< Input backend framework */
 
 	public:
+		SINGLETON_DECLARATION(Manager);
+
 		bool PreInit();
 		bool Init();
 		void Update();
@@ -49,23 +51,33 @@ export namespace jpt::Input
 			JPT_ERROR("Unsupported framework API: " + frameworkAPI.ToString());
 			return false;
 		}
+
+		for (Device_Base* pDevice : m_devices)
+		{
+			if (!pDevice->PreInit())
+			{
+				return false;
+			}
+		}
 		
 		return true;
 	}
 
 	bool Manager::Init()
 	{
-		m_pBackend->Init();
-
-		// Initialize input devices
+		for (Device_Base* pDevice : m_devices)
+		{
+			if (!pDevice->Init())
+			{
+				return false;
+			}
+		}
 
 		return true;
 	}
 
 	void Manager::Update()
 	{
-		m_pBackend->Update();
-
 		for (Device_Base* pDevice : m_devices)
 		{
 			pDevice->Update();
@@ -74,7 +86,7 @@ export namespace jpt::Input
 
 	void Manager::Terminate()
 	{
-		JPT_TERMINATE(m_pBackend);
+		JPT_DELETE(m_pBackend);
 
 		for (Device_Base* pDevice : m_devices)
 		{

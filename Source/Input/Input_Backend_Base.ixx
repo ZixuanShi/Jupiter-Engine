@@ -11,11 +11,6 @@ export namespace jpt::Input
 	class Backend_Base
 	{
 	public:
-		virtual bool PreInit() { return true; }
-		virtual bool Init() { return true; }
-		virtual void Update() { }
-		virtual void Terminate() { }
-
 		virtual bool IsKeyPressed(KeyCode) const { return false; }
 		virtual uint32 FromKeyCode(KeyCode) const { return kInvalidValue<uint32>; }
 	};

@@ -158,3 +158,11 @@ import jpt.Utilities;
 template <typename T, unsigned int kNumber>
 char(&ArrayCountHelper(const T(&)[kNumber]))[kNumber + 1];
 #define JPT_ARRAY_COUNT(inArray) (sizeof(ArrayCountHelper(inArray)) - 1)
+
+#define SINGLETON_DECLARATION(ClassName)  \
+public:                                   \
+	static ClassName& GetInstance()       \
+	{                                     \
+		static ClassName instance;        \
+		return instance;                  \
+	}                                     

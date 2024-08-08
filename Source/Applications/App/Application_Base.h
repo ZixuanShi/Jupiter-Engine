@@ -24,8 +24,6 @@ namespace jpt
 		Window_Base*    m_pWindow       = nullptr;
 		Renderer_Base*  m_pRenderer     = nullptr;
 
-		Input::Manager* m_pInputManager = nullptr;
-
 		bool m_shouldTerminate = false;
 
 	public:
@@ -40,6 +38,8 @@ namespace jpt
 		void TerminateApp() { m_shouldTerminate = true; }
 
 		Window_Base* GetWindow() const { return m_pWindow; }
+		Framework_Base* GetFramework() const { return m_pFramework; }
+		Renderer_Base* GetRenderer() const { return m_pRenderer; }
 
 	protected:
 		void ProcessInput();

@@ -9,6 +9,7 @@ export module jpt.Input.Backend_GLFW;
 
 import jpt.Input.Backend_Base;
 import jpt.Input.KeyCode;
+
 import jpt.TypeDefs;
 import jpt.Constants;
 

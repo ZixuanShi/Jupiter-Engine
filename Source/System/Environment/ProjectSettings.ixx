@@ -25,6 +25,7 @@ export namespace jpt
 		static ProjectSettings& GetInstance();
 
 		bool PreInit();
+		void Terminate();
 
 		template<typename T>
 		bool TryGet(const String& key, T& value) const;
@@ -52,6 +53,15 @@ export namespace jpt
 		}
 
 		return false;
+	}
+
+	void ProjectSettings::Terminate()
+	{
+		if (m_hasSettings)
+		{
+			const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/Settings.json");
+			WriteJsonFile(projectSettingsJson, m_settings);
+		}	
 	}
 
 	void ProjectSettings::Set(const String& key, const JsonData& value)
