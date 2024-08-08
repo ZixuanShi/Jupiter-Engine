@@ -10,6 +10,7 @@ export module jpt.Graphics.Enums;
 export namespace jpt::Graphics
 {
 	JPT_ENUM_UINT8(API, 
+		Unknown,
 		OpenGL,
 		DirectX12,
 		Vulkan)

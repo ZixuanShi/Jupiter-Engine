@@ -74,12 +74,6 @@ namespace jpt
 
 		glfwMakeContextCurrent(m_pWindow);
 
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
-			JPT_ERROR("Failed to initialize GLAD");
-			return false;
-		}
-
 		glfwSetFramebufferSizeCallback(m_pWindow, ResizeViewportCallback);
 		glfwGetFramebufferSize(m_pWindow, &width, &height);
 

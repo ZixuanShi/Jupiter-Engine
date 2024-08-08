@@ -1,5 +1,6 @@
 {
+	"window_title": "My Blank Jupiter Game",
 	"window_width": 600,
-    "window_height": 400,
-    "window_title": "My Blank Jupiter Game"
+	"window_height": 400,
+	"graphics_api": "OpenGL"
 }

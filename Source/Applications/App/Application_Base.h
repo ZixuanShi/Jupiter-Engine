@@ -15,8 +15,9 @@ namespace jpt
 	class Application_Base
 	{
 	protected:
-		Window_Base* m_pWindow = nullptr;
 		Framework_Base* m_pFramework = nullptr;
+		Window_Base* m_pWindow = nullptr;
+		Renderer_Base* m_pRenderer = nullptr;
 		bool m_shouldTerminate = false;
 
 	public:

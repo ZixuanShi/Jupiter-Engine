@@ -19,14 +19,17 @@ namespace jpt
 	bool jpt::Application_Base::PreInit()
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
+		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		m_pFramework = Framework_Create();
-		m_pWindow = Window_Create();
+		m_pWindow    = Window_Create();
+		m_pRenderer  = Renderer_Create();
 
 		m_pFramework->PreInit();
 		m_pWindow->PreInit();
+		m_pRenderer->PreInit();
 
-		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
+		JPT_LOG("Application PreInit CommandLines: " + CommandLine::GetInstance().ToString());
 
 		return true;
 	}
@@ -41,6 +44,8 @@ namespace jpt
 
 		m_pFramework->Init();
 		m_pWindow->Init(this);
+		m_pRenderer->Init();
+
 		return true;
 	}
 
@@ -48,12 +53,14 @@ namespace jpt
 	{
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
+		m_pRenderer->Update();
 	}
 
 	void Application_Base::Terminate()
 	{
 		JPT_TERMINATE(m_pFramework);
 		JPT_TERMINATE(m_pWindow);
+		JPT_TERMINATE(m_pRenderer);
 	}
 
 	void Application_Base::Run()

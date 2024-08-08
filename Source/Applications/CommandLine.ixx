@@ -37,8 +37,8 @@ namespace jpt
 			Expected Launch Args format: "-key=value -flag -key_2=value -flag2" */
 		void Parse(const char* argumentStr);
 
-		/** Adds a key-value pair to the arguments map. Could be empty if key is a flag */
-		void Add(const String& key, const String& value = String());
+		/** Set a key-value pair to the arguments map. Could be empty if key is a flag. Will update value if key already exists */
+		void Set(const String& key, const String& value = String());
 
 		/**	@return		True if a key exists. Either has value or flag */
 		bool Has(const String& key) const;
@@ -106,11 +106,10 @@ namespace jpt
 		}
 	}
 
-	void CommandLine::Add(const String& key, const String& value /*" = String()"*/)
+	void CommandLine::Set(const String& key, const String& value /*" = String()"*/)
 	{
 		JPT_ASSERT(!key.IsEmpty());
-		JPT_ASSERT(!m_arguments.Has(key), "Duplicated launch argument found \"%s\"", key.ConstBuffer());
-		m_arguments.Add(key, value);
+		m_arguments[key] = value; // If value is empty, it will be [key = ""
 	}
 
 	bool CommandLine::Has(const String& key) const
@@ -161,6 +160,6 @@ namespace jpt
 			value = argument.SubStr(equalPos + 1);
 		}
 
-		Add(key, value);
+		Set(key, value);
 	}
 }
