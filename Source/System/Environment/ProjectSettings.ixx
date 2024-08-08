@@ -2,6 +2,8 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
+
 export module jpt.ProjectSettings;
 
 import jpt.Json;
@@ -22,7 +24,7 @@ export namespace jpt
 		bool m_hasSettings = false;
 
 	public:
-		static ProjectSettings& GetInstance();
+		SINGLETON_DECLARATION(ProjectSettings);
 
 		bool PreInit();
 		void Terminate();
@@ -35,12 +37,6 @@ export namespace jpt
 
 		void Set(const String& key, const JsonData& value);
 	};
-
-	ProjectSettings& ProjectSettings::GetInstance()
-	{
-		static ProjectSettings instance;
-		return instance;
-	}
 
 	bool ProjectSettings::PreInit()
 	{

@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
 #if IS_PLATFORM_WIN64
@@ -30,7 +31,7 @@ namespace jpt::System
 		bool m_isInitialized = false;
 
 	public:
-		static Paths& GetInstance();
+		SINGLETON_DECLARATION(Paths);
 		void PreInit(const Path& clientDir, const Path& outputDir);
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
@@ -39,12 +40,6 @@ namespace jpt::System
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
 	};
-
-	Paths& Paths::GetInstance()
-	{
-		static Paths instance;
-		return instance;
-	}
 
 	void Paths::PreInit(const Path& clientDir, const Path& outputDir)
 	{

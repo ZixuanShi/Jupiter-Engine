@@ -25,7 +25,7 @@ namespace jpt
 		HashMap<String, String> m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
 
 	public:
-		static CommandLine& GetInstance();
+		SINGLETON_DECLARATION(CommandLine);
 
 		/** Parse command line arguments and store them in a map
 			Expected Launch Args format: { "-key=value", "-flag", "-key_2=value", "-flag2" }
@@ -56,12 +56,6 @@ namespace jpt
 		/** Parse a single argument "-key=value" and store into arguments map */
 		void Parse(String&& argument);
 	};
-
-	CommandLine& CommandLine::GetInstance()
-	{
-		static CommandLine s_instance;
-		return s_instance;
-	}
 
 	void CommandLine::Parse(int32 argsCount, char* arguments[])
 	{
