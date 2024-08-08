@@ -1,7 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#if !IS_RELEASE
-
 #include "Debugging/Logger.h"
 
 #include "Core/Minimal/CoreMacros.h"
@@ -26,7 +24,7 @@ import jpt.String.Helpers;
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 1024;
-	static const File::Path kLogFilePath = { File::ESource::Saved, "Log.txt" };
+	static const File::Path kLogFilePath = { File::Source::Saved, "Log.txt" };
 
 	const char* locGetLogStr(Logger::ELogType type)
 	{
@@ -118,5 +116,3 @@ namespace jpt
 		return s_logger;
 	}
 }
-
-#endif // !IS_RELEASE

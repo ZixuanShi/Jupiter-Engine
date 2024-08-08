@@ -14,7 +14,7 @@ import jpt.File.Path;
 import jpt.File.IO;
 import jpt.Optional;
 
-const jpt::File::Path kCSVPath = { jpt::File::ESource::Client, "Assets/Test.csv" };
+const jpt::File::Path kCSVPath = { jpt::File::Source::Client, "Assets/Test.csv" };
 
 static bool Write()
 {

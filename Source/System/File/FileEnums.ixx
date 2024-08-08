@@ -11,7 +11,7 @@ import jpt.TypeDefs;
 
 export namespace jpt::File
 {
-	enum class ESource : uint8
+	enum class Source : uint8
 	{
 		Engine,
 		Client,		// Client development folder

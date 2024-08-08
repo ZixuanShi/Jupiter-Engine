@@ -14,6 +14,8 @@ import jpt.Renderer_Base;
 import jpt.System.Paths;
 import jpt.StopWatch;
 
+import jpt.ToString;
+
 namespace jpt
 {
 	bool jpt::Application_Base::PreInit()

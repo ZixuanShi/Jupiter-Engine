@@ -18,8 +18,8 @@ import jpt.File.IO;
 
 import jpt.Graphics.Enums;
 
-static const jpt::File::Path path = { jpt::File::ESource::Client, "Assets/TestJson_UnitTest.json" };
-static const jpt::File::Path engineJsonPath = { jpt::File::ESource::Engine, "Assets/TestJson_UnitTest.json" };
+static const jpt::File::Path path = { jpt::File::Source::Client, "Assets/TestJson_UnitTest.json" };
+static const jpt::File::Path engineJsonPath = { jpt::File::Source::Engine, "Assets/TestJson_UnitTest.json" };
 
 bool UnitTests_Json_Write()
 {

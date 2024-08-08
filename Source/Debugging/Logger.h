@@ -2,8 +2,6 @@
 
 #pragma once
 
-#if !IS_RELEASE
-
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.ToString;
@@ -81,10 +79,3 @@ namespace jpt
 		void SendToOutputWindow(const wchar_t* wideString);
 	};
 }
-#else
-	#define JPT_LOG(message, ...)	      static_cast<void>(message)		
-	#define JPT_SYSTEM_INFO(message, ...) static_cast<void>(message)	
-	#define JPT_WARNING(message, ...)     static_cast<void>(message)	
-	#define JPT_ERROR(message, ...)		  static_cast<void>(message)	
-
-#endif // !IS_RELEASE

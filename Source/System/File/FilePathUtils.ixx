@@ -13,20 +13,20 @@ import jpt.System.Paths;
 
 export namespace jpt::File
 {
-	constexpr Path GetSourcePath(ESource source)
+	constexpr Path GetSourcePath(Source source)
 	{
 		switch (source)
 		{
-			case ESource::Engine: return System::Paths::GetInstance().GetEngineDir();
-			case ESource::Client: return System::Paths::GetInstance().GetClientDir();
-			case ESource::Output: return System::Paths::GetInstance().GetOutputDir();
-			case ESource::Saved:  return System::Paths::GetInstance().GetSavedDir();
+			case Source::Engine: return System::Paths::GetInstance().GetEngineDir();
+			case Source::Client: return System::Paths::GetInstance().GetClientDir();
+			case Source::Output: return System::Paths::GetInstance().GetOutputDir();
+			case Source::Saved:  return System::Paths::GetInstance().GetSavedDir();
 			default: JPT_ASSERT(false, "Invalid source"); return Path();
 		}
 	}
 
 	/** @return		The absolute full path of the given relative path */
-	constexpr Path GetAbsoluteFullPath(ESource source, const Path& relativePath)
+	constexpr Path GetAbsoluteFullPath(Source source, const Path& relativePath)
 	{
 		Path result;
 
@@ -43,7 +43,7 @@ export namespace jpt::File
 		// If ran from VS debugger, use the project's root directory
 		if (IsDebuggerPresent())
 		{
-			return GetAbsoluteFullPath(ESource::Client, relativePath);
+			return GetAbsoluteFullPath(Source::Client, relativePath);
 		}
 
 		// If ran from the executable
@@ -53,11 +53,11 @@ export namespace jpt::File
 #else
 		if (relativePath.Has("Jupiter_Common"))
 		{
-			return GetAbsoluteFullPath(ESource::Engine, relativePath);
+			return GetAbsoluteFullPath(Source::Engine, relativePath);
 		}
 		else
 		{
-			return GetAbsoluteFullPath(ESource::Client, relativePath);
+			return GetAbsoluteFullPath(Source::Client, relativePath);
 		}
 #endif
 	}
