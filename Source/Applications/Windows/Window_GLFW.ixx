@@ -82,12 +82,8 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		if (glfwWindowShouldClose(m_pWindow))
-		{
-			m_pApp->TerminateApp();
-		}
-
 		/* Render here */
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		/* Swap front and back buffers */

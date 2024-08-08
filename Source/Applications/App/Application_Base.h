@@ -10,14 +10,22 @@ namespace jpt
 	class Framework_Base;
 	class Renderer_Base;
 
+	namespace Input
+	{
+		class Manager;
+	}
+
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
 	class Application_Base
 	{
 	protected:
-		Framework_Base* m_pFramework = nullptr;
-		Window_Base* m_pWindow = nullptr;
-		Renderer_Base* m_pRenderer = nullptr;
+		Framework_Base* m_pFramework    = nullptr;
+		Window_Base*    m_pWindow       = nullptr;
+		Renderer_Base*  m_pRenderer     = nullptr;
+
+		Input::Manager* m_pInputManager = nullptr;
+
 		bool m_shouldTerminate = false;
 
 	public:
@@ -29,10 +37,10 @@ namespace jpt
 		virtual void Terminate();
 
 		void Run();
-		void TerminateApp();
+		void TerminateApp() { m_shouldTerminate = true; }
 
 	protected:
-		void ProcessInput() { }
-		void Render()    { }
+		void ProcessInput();
+		void Render();
 	};
 }

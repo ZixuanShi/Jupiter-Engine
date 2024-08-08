@@ -7,6 +7,7 @@ module;
 export module jpt.Application_Factories;
 
 import jpt.Framework_GLFW;
+import jpt.Framework_Enums;
 import jpt.Window_GLFW;
 import jpt.Renderer_OpenGL;
 import jpt.Graphics.Enums;
@@ -18,6 +19,7 @@ import jpt.Optional;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 import jpt.ProjectSettings;
+import jpt.String;
 
 export namespace jpt
 {
@@ -27,7 +29,11 @@ export namespace jpt
 
 	Framework_Base* Framework_Create()
 	{
+		Framework::API api = Framework::API::Unknown;
+
 #if IS_PLATFORM_WIN64
+		api = Framework::API::GLFW;
+		ProjectSettings::GetInstance().Set("framework_api", api.ToString());
 		return new Framework_GLFW();
 #else
 #error "Framework_Create() is not implemented for this platform."
@@ -90,6 +96,7 @@ export namespace jpt
 			JPT_ERROR("Failed to create Renderer.");
 		}
 
+		ProjectSettings::GetInstance().Set("graphics_api", api.ToString());
 		return renderer;
 	}
 }

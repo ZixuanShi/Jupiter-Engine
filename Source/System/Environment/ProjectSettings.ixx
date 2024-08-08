@@ -26,6 +26,11 @@ export namespace jpt
 		template<typename T>
 		bool TryGet(const String& key, T& value) const;
 
+		template<typename T>
+		const T& Get(const String& key) const;
+
+		void Set(const String& key, const JsonData& value);
+
 		const JsonMap& GetSettings() const { return m_settings; }
 	};
 
@@ -47,6 +52,11 @@ export namespace jpt
 		return false;
 	}
 
+	void ProjectSettings::Set(const String& key, const JsonData& value)
+	{
+		m_settings.Set(key, value);
+	}
+
 	template<typename T>
 	bool ProjectSettings::TryGet(const String& key, T& value) const
 	{
@@ -57,5 +67,11 @@ export namespace jpt
 		}
 
 		return false;
+	}
+
+	template<typename T>
+	const T& ProjectSettings::Get(const String& key) const
+	{
+		return m_settings[key].As<T>();
 	}
 }

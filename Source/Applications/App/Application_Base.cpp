@@ -11,6 +11,8 @@ import jpt.ProjectSettings;
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
+import jpt.Input.Manager;
+import jpt.Input.KeyCode;
 
 import jpt.System.Paths;
 import jpt.StopWatch;
@@ -29,10 +31,12 @@ namespace jpt
 		m_pFramework = Framework_Create();
 		m_pWindow    = Window_Create();
 		m_pRenderer  = Renderer_Create();
+		m_pInputManager = new Input::Manager();
 
 		m_pFramework->PreInit();
 		m_pWindow->PreInit();
 		m_pRenderer->PreInit();
+		m_pInputManager->PreInit();
 
 		JPT_LOG("Application PreInit CommandLines: " + CommandLine::GetInstance().ToString());
 
@@ -50,6 +54,7 @@ namespace jpt
 		m_pFramework->Init();
 		m_pWindow->Init(this);
 		m_pRenderer->Init();
+		m_pInputManager->Init();
 
 		return true;
 	}
@@ -59,6 +64,7 @@ namespace jpt
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
 		m_pRenderer->Update();
+		m_pInputManager->Update();
 	}
 
 	void Application_Base::Terminate()
@@ -66,6 +72,7 @@ namespace jpt
 		JPT_TERMINATE(m_pFramework);
 		JPT_TERMINATE(m_pWindow);
 		JPT_TERMINATE(m_pRenderer);
+		JPT_TERMINATE(m_pInputManager);
 	}
 
 	void Application_Base::Run()
@@ -96,8 +103,15 @@ namespace jpt
 		}
 	}
 
-	void Application_Base::TerminateApp()
+	void Application_Base::ProcessInput()
 	{
-		m_shouldTerminate = true;
+		if (m_pInputManager->IsKeyPressed(Input::KeyCode::Keyboard_Escape))
+		{
+			m_shouldTerminate = true;
+		}
+	}
+
+	void Application_Base::Render()
+	{
 	}
 }

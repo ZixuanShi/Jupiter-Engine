@@ -1,0 +1,137 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+module;
+
+#include "Core/Types/Enum.h"
+#include "Debugging/Assert.h"
+
+export module jpt.Input.KeyCode;
+
+export namespace jpt::Input
+{
+	JPT_ENUM_UINT8(KeyCode,
+		// Mouse
+		Mouse_Left,
+		Mouse_Right,
+		Mouse_Wheel,
+		Mouse_Button4,
+		Mouse_Button5,
+		Mouse_Button6,
+		Mouse_Button7,
+
+		// Keyboard
+		Keyboard_A,
+		Keyboard_B,
+		Keyboard_C,
+		Keyboard_D,
+		Keyboard_E,
+		Keyboard_F,
+		Keyboard_G,
+		Keyboard_H,
+		Keyboard_I,
+		Keyboard_J,
+		Keyboard_K,
+		Keyboard_L,
+		Keyboard_M,
+		Keyboard_N,
+		Keyboard_O,
+		Keyboard_P,
+		Keyboard_Q,
+		Keyboard_R,
+		Keyboard_S,
+		Keyboard_T,
+		Keyboard_U,
+		Keyboard_V,
+		Keyboard_W,
+		Keyboard_X,
+		Keyboard_Y,
+		Keyboard_Z,
+		Keyboard_0,
+		Keyboard_1,
+		Keyboard_2,
+		Keyboard_3,
+		Keyboard_4,
+		Keyboard_5,
+		Keyboard_6,
+		Keyboard_7,
+		Keyboard_8,
+		Keyboard_9,
+		Keyboard_F1,
+		Keyboard_F2,
+		Keyboard_F3,
+		Keyboard_F4,
+		Keyboard_F5,
+		Keyboard_F6,
+		Keyboard_F7,
+		Keyboard_F8,
+		Keyboard_F9,
+		Keyboard_F10,
+		Keyboard_F11,
+		Keyboard_F12,
+
+		// Special keys
+		Keyboard_Escape,
+		Keyboard_Tab,
+		Keyboard_CapsLock,
+		Keyboard_Shift_Left,
+		Keyboard_Shift_Right,
+		Keyboard_Ctrl_Left,
+		Keyboard_Ctrl_Right,
+		Keyboard_Alt_Left,
+		Keyboard_Alt_Right,
+		Keyboard_Space,
+		Keyboard_Enter,
+		Keyboard_Backspace,
+		Keyboard_Bracket_Left,
+		Keyboard_Bracket_Right,
+		Keyboard_Semicolon,
+		Keyboard_Quote,
+		Keyboard_Comma,
+		Keyboard_Period,
+		Keyboard_Slash,
+		Keyboard_Backslash,
+		Keyboard_Tilde,
+		Keyboard_Equal,
+		Keyboard_Hyphen,
+
+		// Function keys
+		Keyboard_Insert,
+		Keyboard_Delete,
+		Keyboard_Home,
+		Keyboard_End,
+		Keyboard_PageUp,
+		Keyboard_PageDown,
+		Keyboard_PrintScreen,
+		Keyboard_ScrollLock,
+		Keyboard_Pause,
+
+		// Arrows
+		Keyboard_Arrow_Left,
+		Keyboard_Arrow_Right,
+		Keyboard_Arrow_Up,
+		Keyboard_Arrow_Down,
+
+		// Numpad
+		Keyboard_Numpad_Lock,
+		Keyboard_Numpad_0,
+		Keyboard_Numpad_1,
+		Keyboard_Numpad_2,
+		Keyboard_Numpad_3,
+		Keyboard_Numpad_4,
+		Keyboard_Numpad_5,
+		Keyboard_Numpad_6,
+		Keyboard_Numpad_7,
+		Keyboard_Numpad_8,
+		Keyboard_Numpad_9,
+		Keyboard_Numpad_Add,
+		Keyboard_Numpad_Subtract,
+		Keyboard_Numpad_Multiply,
+		Keyboard_Numpad_Divide,
+		Keyboard_Numpad_Decimal,
+		Keyboard_Numpad_Enter,
+
+		// Utils
+		ItemCount,
+		Unknown,
+	);
+}
