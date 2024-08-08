@@ -46,55 +46,53 @@ export namespace jpt
 
 	Renderer_Base* Renderer_Create()
 	{
-		const File::Path settingsPath = File::FixDependencies("Assets/Config/Settings.json");
-		Optional<JsonMap> settingsOpt = ReadJsonFile(settingsPath);
+		Renderer_Base* renderer = nullptr;
+		Graphics::API api = Graphics::API::Unknown;
 
-		if (settingsOpt)
-		{
-			const JsonMap& settings = settingsOpt.Value();
-
-			if (settings.Has("graphics_api"))
+		auto pickAPI = [&renderer](Graphics::API api) -> Renderer_Base*
 			{
-				Graphics::API api = settings["graphics_api"].As<String>();
-				CommandLine::GetInstance().Set("graphics_api", api.ToString());
-
 				switch (api.Value())
 				{
 				case Graphics::API::OpenGL:
 					return new Renderer_OpenGL();
 
-				case Graphics::API::DirectX12:
-					JPT_ERROR("DirectX12 is not implemented.");
-					break;
-
-				case Graphics::API::Vulkan:
-					JPT_ERROR("Vulkan is not implemented.");
-					break;
-
 				default:
-					JPT_ERROR("Unknown Graphics API: " + api.ToString());
-					break;
+					JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
+					return nullptr;
 				}
+			};
+
+		// Check CommandLine for graphics_api
+		if (CommandLine::GetInstance().Has("graphics_api"))
+		{
+			api = CommandLine::GetInstance().Get("graphics_api");
+		}
+		// Check Assets/Config/ProjectSettings.json
+		else if (Optional<JsonMap> settingsOpt = ReadJsonFile(File::FixDependencies("Assets/Config/Settings.json")))
+		{
+			const JsonMap& settings = settingsOpt.Value();
+			if (settings.Has("graphics_api"))
+			{
+				api = settings["graphics_api"].As<String>();
 			}
 		}
-
-		Graphics::API api = Graphics::API::Unknown;
-
-#if IS_PLATFORM_WIN64
-		api = Graphics::API::OpenGL;
-		CommandLine::GetInstance().Set("graphics_api", api.ToString());
-
-		if (settingsOpt)
+		// Default based on platform
+		else
 		{
-			JsonMap& settings = settingsOpt.Value();
-			settings.Set("graphics_api", api.ToString());
-			WriteJsonFile(settingsPath, settings);
+		#if IS_PLATFORM_WIN64
+			api = Graphics::API::OpenGL;
+		#else
+			JPT_ERROR("No Graphics API specified in CommandLine or ProjectSettings.json.");
+			return nullptr;
+		#endif
 		}
 
-		return new Renderer_OpenGL();
-#else
-#error "Renderer_Create() is not implemented for this platform."
-		return nullptr;
-#endif
+		renderer = pickAPI(api);
+		if (renderer == nullptr)
+		{
+			JPT_ERROR("Failed to create Renderer.");
+		}
+
+		return renderer;
 	}
 }
