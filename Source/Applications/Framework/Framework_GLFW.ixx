@@ -33,7 +33,7 @@ namespace jpt
 
 		glfwSetErrorCallback([](int32 error, const char* description)
 			{
-				JPT_LOG("GLFW Error: " + ToString(error) + " - " + description);
+				JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
 			});
 
 		return true;

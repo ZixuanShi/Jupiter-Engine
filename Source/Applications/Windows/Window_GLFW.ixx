@@ -27,8 +27,9 @@ import jpt.File.Path.Utils;
 
 import jpt.Time.TypeDefs;
 
-void ResizeViewportCallback(GLFWwindow*, int32 width, int32 height)
+void ResizeViewportCallback(GLFWwindow* pGLFWwindow, int32 width, int32 height)
 {
+	JPT_LOG("Resized window %lu to width: %i, height: %i", pGLFWwindow, width, height);
 	glViewport(0, 0, width, height);
 }
 
@@ -64,6 +65,10 @@ namespace jpt
 			title = settingsMap["window_title"];
 		}
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)
 		{
@@ -90,7 +95,7 @@ namespace jpt
 		}
 
 		/* Render here */
-		//glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(m_pWindow);
