@@ -18,11 +18,12 @@ export namespace jpt::Input
 	class Backend_GLFW final : public Backend_Base
 	{
 	public:
-		virtual bool IsKeyPressed(KeyCode key) const override;
+		virtual bool IsPressed(KeyCode key) const override;
+		virtual bool IsReleased(KeyCode key) const override;
 		virtual uint32 FromKeyCode(KeyCode key) const override;
 	};
 
-	bool Backend_GLFW::IsKeyPressed(KeyCode key) const
+	bool Backend_GLFW::IsPressed(KeyCode key) const
 	{
 		const uint32 glfwKey = FromKeyCode(key);
 		if (glfwKey != kInvalidValue<uint32>)
@@ -30,6 +31,11 @@ export namespace jpt::Input
 			return glfwGetKey(glfwGetCurrentContext(), glfwKey) == GLFW_PRESS;
 		}
 
+		return false;
+	}
+
+	bool Backend_GLFW::IsReleased(KeyCode) const
+	{
 		return false;
 	}
 

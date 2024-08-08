@@ -1,1 +1,11 @@
-CommandLine > Assets/Config/Settings ? Default Code
+Config override priorities:
+    - CommandLine > Assets/Config/Settings > System Default
+
+Object Life Cycle:
+    - PreInit
+    - Init
+    - PostInit
+    - PreUpdate
+    - Update
+    - FixedUpdate
+    - Terminate

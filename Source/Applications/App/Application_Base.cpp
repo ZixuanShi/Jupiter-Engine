@@ -62,7 +62,8 @@ namespace jpt
 	{
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
-		Input::Manager::GetInstance().Update();
+		m_pRenderer->Update(deltaSeconds);
+		Input::Manager::GetInstance().Update(deltaSeconds);
 	}
 
 	void Application_Base::Terminate()
@@ -104,7 +105,7 @@ namespace jpt
 
 	void Application_Base::ProcessInput()
 	{
-		if (Input::Manager::GetInstance().IsKeyPressed(Input::KeyCode::Keyboard_Escape))
+		if (Input::Manager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
 		{
 			m_shouldTerminate = true;
 		}

@@ -219,14 +219,6 @@ namespace jpt
 
 	export void WriteJsonFile(const Path& path, const JsonMap& jsonRoot)
 	{
-		std::ofstream file(path.ConstBuffer(), std::ios::out);
-		if (!file.is_open())
-		{
-			JPT_ERROR("Failed to open json file: %ls", path.ConstBuffer());
-			return;
-		}
-
-		file << ToString(jsonRoot).ConstBuffer();
-		file.close();
+		WriteTextFile(path, ToString(jsonRoot));
 	}
 }

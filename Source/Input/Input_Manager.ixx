@@ -17,6 +17,7 @@ import jpt.Framework_Enums;
 import jpt.DynamicArray;
 import jpt.String;
 import jpt.ProjectSettings;
+import jpt.Time.TypeDefs;
 
 export namespace jpt::Input
 {
@@ -31,10 +32,14 @@ export namespace jpt::Input
 
 		bool PreInit();
 		bool Init();
-		void Update();
+		void Update(TimePrecision deltaSeconds);
 		void Terminate();
 
-		bool IsKeyPressed(KeyCode key) const;
+		/** @return		true if the key was newly pressed */
+		bool IsPressed(KeyCode key) const;
+
+		/** @return		true if the key was newly released */
+		bool IsReleased(KeyCode key) const;
 	};
 
 	bool Manager::PreInit()
@@ -76,11 +81,11 @@ export namespace jpt::Input
 		return true;
 	}
 
-	void Manager::Update()
+	void Manager::Update(TimePrecision deltaSeconds)
 	{
 		for (Device_Base* pDevice : m_devices)
 		{
-			pDevice->Update();
+			pDevice->Update(deltaSeconds);
 		}
 	}
 
@@ -94,8 +99,13 @@ export namespace jpt::Input
 		}
 	}
 
-	bool Manager::IsKeyPressed(KeyCode key) const
+	bool Manager::IsPressed(KeyCode key) const
 	{
-		return m_pBackend->IsKeyPressed(key);
+		return m_pBackend->IsPressed(key);
+	}
+
+	bool Manager::IsReleased(KeyCode key) const
+	{
+		return m_pBackend->IsReleased(key);
 	}
 }

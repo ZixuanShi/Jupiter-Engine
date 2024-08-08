@@ -2,6 +2,8 @@
 
 export module jpt.Input.Device_Base;
 
+import jpt.Time.TypeDefs;
+
 export namespace jpt::Input
 {
 	class Device_Base
@@ -9,7 +11,7 @@ export namespace jpt::Input
 	public:
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
-		virtual void Update() { }
+		virtual void Update(TimePrecision) { }
 		virtual void Terminate() { }
 	};
 }

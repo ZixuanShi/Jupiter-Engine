@@ -16,4 +16,15 @@ export namespace jpt::Input
 		ItemCount,
 		Unknown,
 	);
+
+	enum class KeyState
+	{
+		Free,	 // Not pressed
+		Pressed,
+		Released,
+		Held,    // Pressed for more than one frame
+		Smashed, // Repeatedly pressed within a short time
+		Unknown,
+		ItemCount,
+	};
 }
