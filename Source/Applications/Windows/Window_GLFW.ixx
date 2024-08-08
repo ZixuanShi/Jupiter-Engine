@@ -18,13 +18,11 @@ import jpt.Optional;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
-
+import jpt.ProjectSettings;
 import jpt.Json;
 import jpt.Json.Data;
-
 import jpt.File.Path;
 import jpt.File.Path.Utils;
-
 import jpt.Time.TypeDefs;
 
 void ResizeViewportCallback(GLFWwindow* pGLFWwindow, int32 width, int32 height)
@@ -51,23 +49,18 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init(pApp));
 
-		const File::Path clientConfigPath = File::FixDependencies("Assets/Config/Settings.json");
-		Optional<jpt::JsonMap> settings = ReadJsonFile(clientConfigPath);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		int32 width = 800;
 		int32 height = 600;
 		String title = "Unnamed";
-		if (settings)
-		{
-			const jpt::JsonMap& settingsMap = settings.Value();
-			width = settingsMap["window_width"];
-			height = settingsMap["window_height"];
-			title = settingsMap["window_title"];
-		}
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+		projectSettings.TryGet("window_width", width);
+		projectSettings.TryGet("window_height", height);
+		projectSettings.TryGet("window_title", title);
 
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)

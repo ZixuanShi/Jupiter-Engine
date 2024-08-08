@@ -17,6 +17,7 @@ import jpt.CommandLine;
 import jpt.Optional;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
+import jpt.ProjectSettings;
 
 export namespace jpt
 {
@@ -67,14 +68,10 @@ export namespace jpt
 		{
 			api = CommandLine::GetInstance().Get("graphics_api");
 		}
-		// Check Assets/Config/ProjectSettings.json
-		else if (Optional<JsonMap> settingsOpt = ReadJsonFile(File::FixDependencies("Assets/Config/Settings.json")))
+		// Check Assets/Config/ProjectSettings.json project settings
+		else if (String graphicsApi; ProjectSettings::GetInstance().TryGet("graphics_api", graphicsApi))
 		{
-			const JsonMap& settings = settingsOpt.Value();
-			if (settings.Has("graphics_api"))
-			{
-				api = settings["graphics_api"].As<String>();
-			}
+			api = graphicsApi;
 		}
 		// Default based on platform
 		else

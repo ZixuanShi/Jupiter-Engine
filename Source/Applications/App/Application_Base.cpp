@@ -7,6 +7,7 @@
 
 import jpt.Application_Factories;
 import jpt.CommandLine;
+import jpt.ProjectSettings;
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
@@ -22,6 +23,8 @@ namespace jpt
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
+
+		ProjectSettings::GetInstance().PreInit();
 
 		m_pFramework = Framework_Create();
 		m_pWindow    = Window_Create();
