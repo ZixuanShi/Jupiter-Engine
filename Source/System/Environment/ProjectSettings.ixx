@@ -14,9 +14,7 @@ import jpt.Optional;
 
 export namespace jpt
 {
-	/** Get & Set config at File::FixDependencies("Assets/Config/Settings.json")
-		framework_api
-		graphics_api */
+	/** Get & Set config at File::FixDependencies("Assets/Config/ProjectSettings.json") */
 	class ProjectSettings
 	{
 	private:
@@ -40,7 +38,7 @@ export namespace jpt
 
 	bool ProjectSettings::PreInit()
 	{
-		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/Settings.json");
+		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
 		if (Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson))
 		{
 			m_settings = settings.Value();
@@ -55,7 +53,7 @@ export namespace jpt
 	{
 		if (m_hasSettings)
 		{
-			const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/Settings.json");
+			const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
 			WriteJsonFile(projectSettingsJson, m_settings);
 		}	
 	}
