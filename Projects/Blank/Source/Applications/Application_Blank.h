@@ -8,6 +8,8 @@
 	#include "Applications/App/Application_Base.h"
 #endif
 
+import jpt.Time.TypeDefs;
+
 class Application_Blank final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
@@ -24,4 +26,5 @@ private:
 
 public:
 	virtual bool PreInit() override;
+	virtual void Update(jpt::TimePrecision deltaSeconds) override;
 };

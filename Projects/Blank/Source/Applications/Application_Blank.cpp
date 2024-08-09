@@ -6,11 +6,24 @@
 
 import jpt.CoreModules;
 
+import jpt.Input.Manager;
+import jpt.Input.KeyCode;
+
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
 	return true;
+}
+
+void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
+{
+	Super::Update(deltaSeconds);
+
+	if (jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Numpad_0))
+	{
+		m_shouldTerminate = true;
+	}
 }
 
 #pragma region Engine-Client Communications
