@@ -9,6 +9,8 @@ export namespace jpt::Input
 	class Device_Base
 	{
 	public:
+		virtual ~Device_Base() = default;
+
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
 		virtual void Update(TimePrecision) { }

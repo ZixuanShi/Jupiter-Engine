@@ -44,8 +44,8 @@ export namespace jpt::Input
 
 	bool Manager::PreInit()
 	{
-		ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-		Framework::API frameworkAPI = projectSettings.Get<String>("framework_api");
+		const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+		const Framework::API frameworkAPI = projectSettings.Get<String>("framework_api");
 		switch (frameworkAPI.Value())
 		{
 		case Framework::API::GLFW:
