@@ -14,12 +14,12 @@ import jpt.Optional;
 
 export namespace jpt
 {
-	/** Get & Set config at File::FixDependencies("Assets/Config/ProjectSettings.json") */
+	/** Get & Set config at File::FixDependencies("Assets/Config/ProjectSettings.json")
+		Source of truth. Runtime should use this instead of command line */
 	class ProjectSettings
 	{
 	private:
 		JsonMap m_settings;
-		bool m_hasSettings = false;
 
 	public:
 		SINGLETON_DECLARATION(ProjectSettings);
@@ -42,7 +42,6 @@ export namespace jpt
 		if (Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson))
 		{
 			m_settings = settings.Value();
-			m_hasSettings = true;
 			return true;
 		}
 
@@ -51,11 +50,8 @@ export namespace jpt
 
 	void ProjectSettings::Terminate()
 	{
-		if (m_hasSettings)
-		{
-			const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
-			WriteJsonFile(projectSettingsJson, m_settings);
-		}	
+		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
+		WriteJsonFile(projectSettingsJson, m_settings);
 	}
 
 	void ProjectSettings::Set(const String& key, const JsonData& value)

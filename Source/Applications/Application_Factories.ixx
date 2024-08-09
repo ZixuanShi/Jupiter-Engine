@@ -29,16 +29,51 @@ export namespace jpt
 
 	Framework_Base* Framework_Create()
 	{
+		Framework_Base* framework = nullptr;
 		Framework::API api = Framework::API::Unknown;
 
-#if IS_PLATFORM_WIN64
-		api = Framework::API::GLFW;
+		auto pickAPI = [&framework](Framework::API api) -> Framework_Base*
+			{
+				switch (api.Value())
+				{
+				case Framework::API::GLFW:
+					return new Framework_GLFW();
+
+				default:
+					JPT_ERROR("Un-implemented Framework API: " + api.ToString());
+					return nullptr;
+				}
+			};
+
+		// Check CommandLine for framework_api
+		if (CommandLine::GetInstance().Has("framework_api"))
+		{
+			api = CommandLine::GetInstance().Get("framework_api");
+		}
+		// Check Assets/Config/ProjectSettings.json project settings
+		else if (String frameworkApi; ProjectSettings::GetInstance().TryGet("framework_api", frameworkApi))
+		{
+			api = frameworkApi;
+		}
+		// Default based on platform
+		else
+		{
+		#if IS_PLATFORM_WIN64
+			api = Framework::API::GLFW;
+		#else
+			JPT_ERROR("No Framework API specified in CommandLine or ProjectSettings.json.");
+			return nullptr;
+		#endif
+		}
+
+		framework = pickAPI(api);
+		if (framework == nullptr)
+		{
+			JPT_ERROR("Failed to create Framework.");
+		}
+
 		ProjectSettings::GetInstance().Set("framework_api", api.ToString());
-		return new Framework_GLFW();
-#else
-#error "Framework_Create() is not implemented for this platform."
-		return nullptr;
-#endif
+		return framework;
 	}
 
 	Window_Base* Window_Create()
