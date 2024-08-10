@@ -13,6 +13,7 @@ export module jpt.Renderer_OpenGL;
 
 import jpt.Renderer_Base;
 import jpt.Utilities;
+import jpt.BouncingValue_1D;
 
 export namespace jpt
 {
@@ -21,8 +22,7 @@ export namespace jpt
 		using Super = Renderer_Base;
 
 	private:
-		float b = 0.2f;
-		bool bIncreasing = true;
+		BouncingValue_1D<float> m_b{ 0.3f, 0.7f, 0.3f, 0.1f };
 
 	public:
 		virtual bool Init() override;
@@ -46,32 +46,14 @@ export namespace jpt
 	void Renderer_OpenGL::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
-
-		if (bIncreasing)
-		{
-			b += 0.2f * static_cast<float>(deltaSeconds);
-		}
-		else
-		{
-			b -= 0.2f * static_cast<float>(deltaSeconds);
-		}
-
-		if (b >= 0.8f)
-		{
-			bIncreasing = false;
-		}
-		else if (b <= 0.2f)
-		{
-			bIncreasing = true;
-		}
+		m_b.Update(deltaSeconds);
 	}
 
 	void Renderer_OpenGL::Render()
 	{
 		Super::Render();
 
-		glClearColor(0.2f, 0.3f, b, 1.0f);
-
+		glClearColor(0.2f, 0.3f, m_b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 }
