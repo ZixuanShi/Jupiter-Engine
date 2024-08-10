@@ -10,11 +10,6 @@ namespace jpt
 	class Framework_Base;
 	class Renderer_Base;
 
-	namespace Input
-	{
-		class Manager;
-	}
-
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
 	class Application_Base
@@ -37,9 +32,9 @@ namespace jpt
 		void Run();
 		void ShutdownApp() { m_shouldShutdown = true; }
 
-		Window_Base* GetWindow() const { return m_pWindow; }
+		Window_Base*    GetWindow()    const { return m_pWindow;    }
 		Framework_Base* GetFramework() const { return m_pFramework; }
-		Renderer_Base* GetRenderer() const { return m_pRenderer; }
+		Renderer_Base*  GetRenderer()  const { return m_pRenderer;  }
 
 	protected:
 		void ProcessInput();

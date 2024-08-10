@@ -20,8 +20,13 @@ export namespace jpt
 	{
 		using Super = Renderer_Base;
 
+	private:
+		float b = 0.2f;
+		bool bIncreasing = true;
+
 	public:
 		virtual bool Init() override;
+		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Render() override;
 	};
 
@@ -38,11 +43,35 @@ export namespace jpt
 		return true;
 	}
 
+	void Renderer_OpenGL::Update(TimePrecision deltaSeconds)
+	{
+		Super::Update(deltaSeconds);
+
+		if (bIncreasing)
+		{
+			b += 0.2f * static_cast<float>(deltaSeconds);
+		}
+		else
+		{
+			b -= 0.2f * static_cast<float>(deltaSeconds);
+		}
+
+		if (b >= 0.8f)
+		{
+			bIncreasing = false;
+		}
+		else if (b <= 0.2f)
+		{
+			bIncreasing = true;
+		}
+	}
+
 	void Renderer_OpenGL::Render()
 	{
 		Super::Render();
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.2f, 0.3f, b, 1.0f);
+
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 }
