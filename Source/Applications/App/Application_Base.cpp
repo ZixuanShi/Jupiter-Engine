@@ -25,7 +25,6 @@ namespace jpt
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
-
 		ProjectSettings::GetInstance().PreInit();
 
 		m_pFramework = Framework_Create();
@@ -36,8 +35,6 @@ namespace jpt
 		m_pWindow->PreInit();
 		m_pRenderer->PreInit();
 		Input::Manager::GetInstance().PreInit();
-
-		JPT_LOG("Application PreInit CommandLines: " + CommandLine::GetInstance().ToString());
 
 		return true;
 	}

@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Logger.h"
 
 export module jpt.ProjectSettings;
 
@@ -11,6 +12,7 @@ import jpt.Json.Data;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 import jpt.Optional;
+import jpt.CommandLine;
 
 export namespace jpt
 {
@@ -39,13 +41,25 @@ export namespace jpt
 	bool ProjectSettings::PreInit()
 	{
 		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
-		if (Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson))
+		Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson);
+		if (!settings)
 		{
-			m_settings = settings.Value();
-			return true;
+			return false;
 		}
 
-		return false;
+		m_settings = settings.Value();
+
+		// Override settings with command line
+		for (const auto& [key, value] : CommandLine::GetInstance().GetArgs())
+		{
+			if (m_settings.Has(key))
+			{
+				JPT_LOG("Overriding ProjectSettings key: %s with value: %s", key.ConstBuffer(), value.ConstBuffer());
+				m_settings.Set(key, value);
+			}
+		}
+
+		return true;
 	}
 
 	void ProjectSettings::Terminate()

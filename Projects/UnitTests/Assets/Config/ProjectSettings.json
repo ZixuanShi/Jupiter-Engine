@@ -1,4 +1,4 @@
 {
 	"framework_api": "GLFW",
-	"graphics_api": "OpenGL"
+	"graphics_api": "OpenGL",
 }

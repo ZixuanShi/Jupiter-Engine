@@ -52,6 +52,9 @@ namespace jpt
 		/** @return		All arguments in a string format */
 		const String ToString() const;
 
+		/** @return		All arguments in a map format */
+		const HashMap<String, String>& GetArgs() const { return m_arguments; }
+
 	private:
 		/** Parse a single argument "-key=value" and store into arguments map */
 		void Parse(String&& argument);

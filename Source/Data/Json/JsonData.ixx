@@ -48,7 +48,6 @@ namespace jpt
 
 		constexpr JsonData& operator[](const String& key)
 		{
-			JPT_ASSERT(m_map.Has(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
 			return m_map[key];
 		}
 

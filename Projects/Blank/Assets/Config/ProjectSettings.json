@@ -1,5 +1,5 @@
 {
-	"window_title": "My Blank Jupiter Game",
+	"window_title": "Blank",
 	"framework_api": "GLFW",
 	"graphics_api": "OpenGL"
 }
