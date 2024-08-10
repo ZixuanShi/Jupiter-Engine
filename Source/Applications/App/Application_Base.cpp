@@ -43,7 +43,7 @@ namespace jpt
 	{
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
-			m_shouldTerminate = true;
+			m_shouldShutdown = true;
 			return true;
 		}
 
@@ -63,13 +63,13 @@ namespace jpt
 		Input::Manager::GetInstance().Update(deltaSeconds);
 	}
 
-	void Application_Base::Terminate()
+	void Application_Base::Shutdown()
 	{
-		JPT_TERMINATE(m_pFramework);
-		JPT_TERMINATE(m_pWindow);
-		JPT_TERMINATE(m_pRenderer);
-		Input::Manager::GetInstance().Terminate();
-		ProjectSettings::GetInstance().Terminate();
+		JPT_SHUTDOWN(m_pFramework);
+		JPT_SHUTDOWN(m_pWindow);
+		JPT_SHUTDOWN(m_pRenderer);
+		Input::Manager::GetInstance().Shutdown();
+		ProjectSettings::GetInstance().Shutdown();
 	}
 
 	void Application_Base::Run()
@@ -78,7 +78,7 @@ namespace jpt
 		TimePrecision accumulator = 0.0;
 		uint32 frameCount = 0;
 
-		while (!m_shouldTerminate)
+		while (!m_shouldShutdown)
 		{
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
@@ -104,7 +104,7 @@ namespace jpt
 	{
 		if (Input::Manager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
 		{
-			m_shouldTerminate = true;
+			m_shouldShutdown = true;
 		}
 	}
 

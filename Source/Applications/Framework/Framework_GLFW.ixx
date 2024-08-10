@@ -27,7 +27,7 @@ export namespace jpt
 	public:
 		virtual bool Init(Application_Base*) override;
 		virtual void Update(TimePrecision deltaSeconds) override;
-		virtual void Terminate() override;
+		virtual void Shutdown() override;
 
 	private:
 		Window_GLFW* m_pWindow = nullptr;
@@ -54,15 +54,15 @@ export namespace jpt
 
 		if (glfwWindowShouldClose(m_pWindow->GetGLFWwindow()))
 		{
-			m_pApp->TerminateApp();
+			m_pApp->ShutdownApp();
 		}
 
 		glfwPollEvents();
 	}
 
-	void Framework_GLFW::Terminate()
+	void Framework_GLFW::Shutdown()
 	{
-		Super::Terminate();
+		Super::Shutdown();
 
 		glfwTerminate();
 	}

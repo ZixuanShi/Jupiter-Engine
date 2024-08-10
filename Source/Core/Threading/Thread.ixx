@@ -33,7 +33,7 @@ export namespace jpt
                     jpt::Sleep(1);
                 }
 
-                void Terminate() override 
+                void Shutdown() override 
                 {
                     JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
                 }
@@ -43,7 +43,7 @@ export namespace jpt
     protected:
         String m_name = "Unnamed";
         Atomic<bool> m_isRunning{ false };
-        Atomic<bool> m_shouldTerminate{ false };
+        Atomic<bool> m_shouldShutdown{ false };
 
     private:
         UniquePtr<std::thread> m_thread;
@@ -68,7 +68,7 @@ export namespace jpt
     protected:
         virtual void Init() {}
         virtual void Update() {}
-        virtual void Terminate() {}
+        virtual void Shutdown() {}
     };
 
     Thread_Base::Thread_Base(const char* name) noexcept
@@ -84,11 +84,11 @@ export namespace jpt
     Thread_Base::Thread_Base(Thread_Base&& other) noexcept
         : m_name(Move(other.m_name))
         , m_isRunning(other.m_isRunning.Load())
-        , m_shouldTerminate(other.m_shouldTerminate.Load())
+        , m_shouldShutdown(other.m_shouldShutdown.Load())
         , m_thread(Move(other.m_thread))
     {
         other.m_isRunning = false;
-        other.m_shouldTerminate = true;
+        other.m_shouldShutdown = true;
     }
 
     Thread_Base& Thread_Base::operator=(Thread_Base&& other) noexcept
@@ -99,11 +99,11 @@ export namespace jpt
 
             m_name = Move(other.m_name);
             m_isRunning = other.m_isRunning.Load();
-            m_shouldTerminate = other.m_shouldTerminate.Load();
+            m_shouldShutdown = other.m_shouldShutdown.Load();
             m_thread = Move(other.m_thread);
 
             other.m_isRunning = false;
-            other.m_shouldTerminate = true;
+            other.m_shouldShutdown = true;
         }
 
         return *this;
@@ -113,16 +113,16 @@ export namespace jpt
     {
         if (!m_isRunning)
         {
-            m_shouldTerminate = false;
+            m_shouldShutdown = false;
             m_isRunning = true;
             m_thread = MakeUnique<std::thread>([this]()
                 {
                     Init();
-                    while (!m_shouldTerminate)
+                    while (!m_shouldShutdown)
                     {
                         Update();
                     }
-                    Terminate();
+                    Shutdown();
                     m_isRunning = false;
                 });
         }
@@ -130,7 +130,7 @@ export namespace jpt
 
     void Thread_Base::Stop()
     {
-        m_shouldTerminate = true;
+        m_shouldShutdown = true;
         if (m_thread && m_thread->joinable())
         {
             m_thread->join();

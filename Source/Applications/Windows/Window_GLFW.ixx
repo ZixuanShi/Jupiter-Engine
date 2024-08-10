@@ -24,6 +24,7 @@ import jpt.Json.Data;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 import jpt.Time.TypeDefs;
+import jpt.Framework_Base;
 
 void ResizeViewportCallback(GLFWwindow* pGLFWwindow, int32 width, int32 height)
 {
@@ -68,7 +69,7 @@ namespace jpt
 		if (!m_pWindow)
 		{
 			JPT_ERROR("Failed to create GLFW window");
-			glfwTerminate();
+			pApp->GetFramework()->Shutdown();
 			return false;
 		}
 

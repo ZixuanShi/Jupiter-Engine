@@ -33,7 +33,7 @@ export namespace jpt::Input
 		bool PreInit();
 		bool Init();
 		void Update(TimePrecision deltaSeconds);
-		void Terminate();
+		void Shutdown();
 
 		/** @return		true if the key was newly pressed */
 		bool IsPressed(KeyCode key) const;
@@ -91,13 +91,13 @@ export namespace jpt::Input
 		}
 	}
 
-	void Manager::Terminate()
+	void Manager::Shutdown()
 	{
 		JPT_DELETE(m_pBackend);
 
 		for (Device_Base* pDevice : m_devices)
 		{
-			pDevice->Terminate();
+			pDevice->Shutdown();
 		}
 	}
 

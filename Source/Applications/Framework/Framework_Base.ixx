@@ -23,7 +23,7 @@ export namespace jpt
 		virtual bool PreInit() { return true; }
 		virtual bool Init(Application_Base* pApp);
 		virtual void Update(TimePrecision) {}
-		virtual void Terminate() {}
+		virtual void Shutdown() {}
 	};
 
 	bool Framework_Base::Init(Application_Base* pApp)

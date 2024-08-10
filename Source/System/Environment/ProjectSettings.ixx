@@ -27,7 +27,7 @@ export namespace jpt
 		SINGLETON_DECLARATION(ProjectSettings);
 
 		bool PreInit();
-		void Terminate();
+		void Shutdown();
 
 		template<typename T>
 		bool TryGet(const String& key, T& value) const;
@@ -62,7 +62,7 @@ export namespace jpt
 		return true;
 	}
 
-	void ProjectSettings::Terminate()
+	void ProjectSettings::Shutdown()
 	{
 		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
 		WriteJsonFile(projectSettingsJson, m_settings);

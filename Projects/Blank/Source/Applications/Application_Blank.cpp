@@ -23,7 +23,7 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 	if (jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Hyphen) &&
 		jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Numpad_1))
 	{
-		m_shouldTerminate = true;
+		m_shouldShutdown = true;
 	}
 }
 

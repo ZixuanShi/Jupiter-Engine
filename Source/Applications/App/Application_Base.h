@@ -24,7 +24,7 @@ namespace jpt
 		Window_Base*    m_pWindow       = nullptr;
 		Renderer_Base*  m_pRenderer     = nullptr;
 
-		bool m_shouldTerminate = false;
+		bool m_shouldShutdown = false;
 
 	public:
 		virtual ~Application_Base() = default;
@@ -32,10 +32,10 @@ namespace jpt
 		virtual bool PreInit();
 		virtual bool Init();
 		virtual void Update(TimePrecision deltaSeconds);
-		virtual void Terminate();
+		virtual void Shutdown();
 
 		void Run();
-		void TerminateApp() { m_shouldTerminate = true; }
+		void ShutdownApp() { m_shouldShutdown = true; }
 
 		Window_Base* GetWindow() const { return m_pWindow; }
 		Framework_Base* GetFramework() const { return m_pFramework; }

@@ -39,10 +39,10 @@ import jpt.Utilities;
 			JPT_DELETE_ARRAY(pPointer); \
 		}
 
-#define JPT_TERMINATE(pPointer)         \
+#define JPT_SHUTDOWN(pPointer)         \
 		if (pPointer)                   \
 		{                               \
-			pPointer->Terminate();      \
+			pPointer->Shutdown();      \
 			JPT_DELETE(pPointer);       \
 		}
 

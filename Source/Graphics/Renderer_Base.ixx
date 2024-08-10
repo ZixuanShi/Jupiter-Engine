@@ -13,6 +13,6 @@ export namespace jpt
 		virtual bool Init() { return true; }
 		virtual void Update(TimePrecision) { }
 		virtual void Render() { }
-		virtual void Terminate() { }
+		virtual void Shutdown() { }
 	};
 }
