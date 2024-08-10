@@ -57,6 +57,8 @@ export namespace jpt::Input
 			return false;
 		}
 
+		// Add connected devices
+
 		for (Device_Base* pDevice : m_devices)
 		{
 			if (!pDevice->PreInit())

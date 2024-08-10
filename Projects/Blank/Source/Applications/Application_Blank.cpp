@@ -20,7 +20,8 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 {
 	Super::Update(deltaSeconds);
 
-	if (jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Numpad_0))
+	if (jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Hyphen) &&
+		jpt::Input::Manager::GetInstance().IsPressed(jpt::Input::KeyCode::Keyboard_Numpad_1))
 	{
 		m_shouldTerminate = true;
 	}
