@@ -37,7 +37,7 @@ static bool RawThreads()
             JPT_LOG("Initializing thread " + m_name + jpt::ToString(GetId()));
         }
 
-        void Terminate() override 
+        void Shutdown() override 
         {
             JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
         }
@@ -85,7 +85,7 @@ static bool ThreadSafeQueue()
                 jpt::SleepMs(100);
             }
 
-            m_shouldTerminate = true;
+            m_shouldShutdown = true;
         }
     };
 

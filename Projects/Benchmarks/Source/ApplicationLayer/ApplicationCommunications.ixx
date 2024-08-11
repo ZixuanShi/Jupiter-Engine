@@ -4,28 +4,41 @@
 
 module;
 
-#include "Applications/App/Application_Base.h"
-#include "Application_Benchmarks.h"
-#include "Core/Minimal/CoreHeaders.h"
+#include "ApplicationLayer/Application_Benchmarks.h"
+
+#if IS_PLATFORM_WIN64
+#include <Windows.h>
+#endif
 
 export module ApplicationCommunications;
 
-import jpt.File.Path;
-
-/** Must Overrides Application GetInstance here */
-jpt::Application_Base* jpt::Application_Base::GetInstance()
-{
-	static Application_Benchmarks s_instance;
-	return &s_instance;
-}
+import jpt.File.Path.Helpers;
+import jpt.EntryPoints;
 
 /** Must Overrides GetClientDir here */
-const char* jpt::GetClientDir()
+constexpr const wchar_t* jpt::File::GetOutputDirW()
 {
-	return JPT_CLIENT_DIR;
+	return JPT_OUTPUT_DIR_W;
 }
 
-const wchar_t* jpt::GetClientDirW()
+constexpr const wchar_t* jpt::File::GetClientDirW()
 {
 	return JPT_CLIENT_DIR_W;
 }
+
+#if IS_PLATFORM_WIN64
+
+_Use_decl_annotations_
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
+{
+	Application_Benchmarks app;
+	return jpt::MainImpl_Win64(&app, hInstance, launchArgs, nCmdShow);
+}
+#else
+
+int main(int argc, char* argv[])
+{
+	Application_JupiterUnitTests app;
+	return jpt::MainImpl(&app);
+}
+#endif
