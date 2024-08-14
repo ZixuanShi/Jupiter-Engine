@@ -25,7 +25,7 @@ namespace jpt
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
-		ProjectSettings::GetInstance().PreInit();
+		ProjectSettings::GetInstance().Load();
 
 		m_pFramework = Framework_Create();
 		m_pWindow    = Window_Create();
@@ -69,7 +69,7 @@ namespace jpt
 		JPT_SHUTDOWN(m_pWindow);
 		JPT_SHUTDOWN(m_pRenderer);
 		Input::Manager::GetInstance().Shutdown();
-		ProjectSettings::GetInstance().Shutdown();
+		ProjectSettings::GetInstance().Save();
 	}
 
 	void Application_Base::Run()
@@ -93,7 +93,13 @@ namespace jpt
 			accumulator += deltaSeconds;
 			if (accumulator >= 1.0)
 			{
-				JPT_LOG("FPS: " + ToString(frameCount));
+				bool showFPS = false;
+				ProjectSettings::GetInstance().TryGet("show_fps", showFPS);
+				if (showFPS)
+				{
+					JPT_LOG("FPS: " + ToString(frameCount));
+				}
+
 				frameCount = 0;
 				accumulator = 0.0;
 			}

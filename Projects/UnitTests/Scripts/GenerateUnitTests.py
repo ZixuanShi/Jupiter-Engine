@@ -115,7 +115,7 @@ def update_application_layer():
         secondary_category  = categories_list[1]
 
     unit_test_name = "UnitTests_" + main_category + ".ixx"
-    unit_test_path = source_dir + "Applications/" + unit_test_name
+    unit_test_path = source_dir + main_category + "/" + unit_test_name
 
     # Create main_category_UnitTests.ixx under Applications if it doesn't exist
     if not os.path.exists(unit_test_path):

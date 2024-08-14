@@ -1,5 +1,6 @@
 {
 	"window_title": "Blank",
 	"framework_api": "GLFW",
+	"show_fps": true,
 	"graphics_api": "OpenGL"
 }

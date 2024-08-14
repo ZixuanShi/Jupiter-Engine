@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
 export module jpt.ProjectSettings;
@@ -26,8 +27,8 @@ export namespace jpt
 	public:
 		SINGLETON_DECLARATION(ProjectSettings);
 
-		bool PreInit();
-		void Shutdown();
+		bool Load();
+		void Save();
 
 		template<typename T>
 		bool TryGet(const String& key, T& value) const;
@@ -38,7 +39,7 @@ export namespace jpt
 		void Set(const String& key, const JsonData& value);
 	};
 
-	bool ProjectSettings::PreInit()
+	bool ProjectSettings::Load()
 	{
 		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
 		Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson);
@@ -55,14 +56,16 @@ export namespace jpt
 			if (m_settings.Has(key))
 			{
 				JPT_LOG("Overriding ProjectSettings key: %s with value: %s", key.ConstBuffer(), value.ConstBuffer());
-				m_settings.Set(key, value);
+
+				const JsonData jsonData = ParseValueData(value);
+				m_settings.Set(key, jsonData);
 			}
 		}
 
 		return true;
 	}
 
-	void ProjectSettings::Shutdown()
+	void ProjectSettings::Save()
 	{
 		const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
 		WriteJsonFile(projectSettingsJson, m_settings);
@@ -88,6 +91,7 @@ export namespace jpt
 	template<typename T>
 	const T& ProjectSettings::Get(const String& key) const
 	{
+		JPT_ASSERT(m_settings.Has(key));
 		return m_settings[key].As<T>();
 	}
 }
