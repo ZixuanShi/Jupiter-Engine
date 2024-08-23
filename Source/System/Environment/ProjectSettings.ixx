@@ -36,6 +36,9 @@ export namespace jpt
 		template<typename T>
 		const T& Get(const String& key) const;
 
+		template<typename T>
+		const T& Get(const String& key, const T& defaultValue) const;
+
 		void Set(const String& key, const JsonData& value);
 	};
 
@@ -93,5 +96,16 @@ export namespace jpt
 	{
 		JPT_ASSERT(m_settings.Has(key));
 		return m_settings[key].As<T>();
+	}
+
+	template<typename T>
+	const T& ProjectSettings::Get(const String& key, const T& defaultValue) const
+	{
+		if (m_settings.Has(key))
+		{
+			return m_settings[key].As<T>();
+		}
+
+		return defaultValue;
 	}
 }

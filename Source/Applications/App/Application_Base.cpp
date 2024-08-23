@@ -93,8 +93,7 @@ namespace jpt
 			accumulator += deltaSeconds;
 			if (accumulator >= 1.0)
 			{
-				bool showFPS = false;
-				ProjectSettings::GetInstance().TryGet("show_fps", showFPS);
+				const bool showFPS = ProjectSettings::GetInstance().Get("show_fps", false);
 				if (showFPS)
 				{
 					JPT_LOG("FPS: " + ToString(frameCount));
