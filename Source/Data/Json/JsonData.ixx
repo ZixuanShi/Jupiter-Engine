@@ -61,6 +61,11 @@ namespace jpt
 		{
 			return m_map.Has(key);
 		}
+
+		constexpr void Reserve(Index count)
+		{
+			m_map.Reserve(count);
+		}
 	};
 
 	template<typename T>

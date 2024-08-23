@@ -23,5 +23,6 @@ private:
 #endif
 
 public:
+	virtual bool PreInit() override;
 	virtual bool Init() override;
 };

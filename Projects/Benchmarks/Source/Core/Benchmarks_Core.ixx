@@ -6,6 +6,7 @@ export module Benchmarks_Core;
 
 // Containers
 import Benchmarks_DynamicArray;
+import Benchmarks_HashMap;
 
 export void RunBenchmarks_Core()
 {
@@ -13,4 +14,5 @@ export void RunBenchmarks_Core()
 
 	// Containers
 	RunBenchmarks_DynamicArray();
+	RunBenchmarks_HashMap();
 }

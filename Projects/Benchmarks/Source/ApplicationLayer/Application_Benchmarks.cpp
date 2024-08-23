@@ -6,8 +6,18 @@
 #include "Debugging/Logger.h"
 
 import jpt.Utilities;
+import jpt.CommandLine;
 
 import Benchmarks_Core;
+
+bool Application_Benchmarks::PreInit()
+{
+	JPT_ENSURE(Super::PreInit());
+
+	jpt::CommandLine::GetInstance().Set("no_window");
+
+	return true;
+}
 
 bool Application_Benchmarks::Init()
 {

@@ -79,6 +79,8 @@ export namespace jpt
 		// Modifiers
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
+		constexpr TValue& Emplace(TKey&& key, TValue&& value);
+		constexpr TValue& Emplace(TData&& element);
 		constexpr Iterator Erase(const TKey& key);
 		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
@@ -93,6 +95,7 @@ export namespace jpt
 
 	private:
 		constexpr size_t GetBucketIndex(const TKey& key) const;
+		constexpr size_t GetBucketIndex(const TKey& key, size_t bucketCount) const;
 		constexpr       TBucket& GetBucket(const TKey& key);
 		constexpr const TBucket& GetBucket(const TKey& key) const;
 
@@ -252,10 +255,10 @@ export namespace jpt
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr TValue& HashMap<TKey, TValue, TComparator>::Add(const TKey& key, const TValue& value)
 	{
-		// Grow if needed
-		if (m_count >= m_buckets.Count() * kGrowMultiplier)
+		// Grow if needed. Grow when the count is 75% of the bucket size
+		if (m_count >= (m_buckets.Count() * 3) / 4)
 		{
-			Reserve(m_count * kGrowMultiplier);
+			Reserve(m_buckets.Count() * kGrowMultiplier);
 		}
 
 		TBucket& bucket = GetBucket(key);
@@ -280,6 +283,39 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue, TComparator>::Add(const TData& element)
 	{
 		return Add(element.first, element.second);
+	}
+
+	template<typename TKey, typename TValue, typename TComparator>
+	constexpr HashMap<TKey, TValue, TComparator>::TValue& HashMap<TKey, TValue, TComparator>::Emplace(TKey&& key, TValue&& value)
+	{
+		// Grow if needed. Grow when the count is 75% of the bucket size
+		if (m_count >= (m_buckets.Count() * 3) / 4)
+		{
+			Reserve(m_buckets.Count() * kGrowMultiplier);
+		}
+
+		TBucket& bucket = GetBucket(key);
+
+		// Check if the key already exists. If it does, update the value and return it
+		for (TData& element : bucket)
+		{
+			if (kComparator(element.first, key))
+			{
+				element.second = Move(value);
+				return element.second;
+			}
+		}
+
+		// If the key does not exist, add and return it
+		++m_count;
+		TData& inserted = bucket.EmplaceBack(Pair{ Move(key), Move(value) });
+		return inserted.second;
+	}
+
+	template<typename TKey, typename TValue, typename TComparator>
+	constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(TData&& element)
+	{
+		return Emplace(Move(element.first), Move(element.second));
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
@@ -390,26 +426,33 @@ export namespace jpt
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr void HashMap<TKey, TValue, TComparator>::Reserve(size_t capacity)
 	{
-		static constexpr size_t kMinCapacity = 8;
+		static constexpr size_t kMinCapacity = 16;
 
-		TBuckets oldDataCopy = m_buckets;
-		m_buckets.Clear();
-		m_buckets.Resize(Max(kMinCapacity, capacity));
+		TBuckets newBuckets;
+		newBuckets.Resize(Max(kMinCapacity, capacity));
 
-		for (const TBucket& bucket : oldDataCopy)
+		for (const TBucket& bucket : m_buckets)
 		{
 			for (const TData& element : bucket)
 			{
-				const size_t index = GetBucketIndex(element.first);
-				m_buckets[index].EmplaceBack(element);
+				const size_t index = GetBucketIndex(element.first, newBuckets.Count());
+				newBuckets[index].EmplaceBack(Move(element));
 			}
 		}
+
+		m_buckets = Move(newBuckets);
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr size_t HashMap<TKey, TValue, TComparator>::GetBucketIndex(const TKey& key) const
 	{
 		return Hash(key) % m_buckets.Count();
+	}
+
+	template<typename _TKey, typename _TValue, typename _Comparator>
+	constexpr size_t HashMap<_TKey, _TValue, _Comparator>::GetBucketIndex(const TKey& key, size_t bucketCount) const
+	{
+		return Hash(key) % bucketCount;
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
