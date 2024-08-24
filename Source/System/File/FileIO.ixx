@@ -28,7 +28,7 @@ export namespace jpt::File
 		const bool result = std::filesystem::exists(absoluteFullPath.ConstBuffer(), errorCode);
 		if (errorCode)
 		{
-			JPT_ERROR("Error checking if file exists: %s", errorCode.message().c_str());
+			JPT_ERROR("Error checking if file exists (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
 
 		return result;
@@ -41,7 +41,7 @@ export namespace jpt::File
 		std::filesystem::create_directories(absoluteFullPath.ConstBuffer(), errorCode);
 		if (errorCode)
 		{
-			JPT_ERROR("Error creating file: %s", errorCode.message().c_str());
+			JPT_ERROR("Error creating file (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
 	}
 
@@ -62,7 +62,7 @@ export namespace jpt::File
 		const bool result = std::filesystem::remove_all(absoluteFullPath.ConstBuffer(), errorCode);
 		if (errorCode)
 		{
-			JPT_ERROR("Error deleting file: %s", errorCode.message().c_str());
+			JPT_ERROR("Error deleting file (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
 
 		return result;

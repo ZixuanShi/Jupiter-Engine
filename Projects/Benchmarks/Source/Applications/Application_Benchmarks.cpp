@@ -6,6 +6,7 @@
 #include "Debugging/Logger.h"
 
 import jpt.CoreModules;
+import jpt.BenchmarksReporter;
 
 import Benchmarks_Core;
 
@@ -22,7 +23,12 @@ bool Application_Benchmarks::Init()
 {
 	JPT_ENSURE(Super::Init());
 
-	RunBenchmarks_Core();
+	jpt::BenchmarksReporter reporter;
+
+	RunBenchmarks_Core(reporter);
+
+	reporter.Finalize();
+	reporter.LogResults();
 
 	return true;
 }

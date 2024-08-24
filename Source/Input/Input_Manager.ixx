@@ -125,6 +125,7 @@ export namespace jpt::Input
 
 	bool Manager::IsDown(KeyCode key) const
 	{
+		JPT_IGNORE(key);
 		return false;
 	}
 

@@ -21,6 +21,10 @@ export namespace jpt
 		constexpr CSVData() = default;
 
 		constexpr void AddRow(const Row& row);
+
+		/** @param row		Already comma separated formatted string */
+		constexpr void AddRow(const String& row);
+
 		constexpr void Reserve(Index rowsCount);
 
 		constexpr       Row& operator[](Index index);
@@ -33,6 +37,11 @@ export namespace jpt
 	constexpr void CSVData::AddRow(const Row& row)
 	{
 		m_rows.EmplaceBack(row);
+	}
+
+	constexpr void CSVData::AddRow(const String& row)
+	{
+		m_rows.EmplaceBack(row.Split(','));
 	}
 
 	constexpr void CSVData::Reserve(Index rowsCount)

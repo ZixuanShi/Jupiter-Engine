@@ -14,14 +14,14 @@ import jpt.Utilities;
 
 static void JPT_HashMap_Add()
 {
-	JPT_SCOPED_TIMING_PROFILER("JPT_HashMap_Add");
+	//JPT_SCOPED_TIMING_PROFILER("JPT_HashMap_Add");
 
-	jpt::HashMap<int32, jpt::String> map;
+	//jpt::HashMap<int32, jpt::String> map;
 
-	for (int32 i = 0; i < 1'000'000; ++i)
-	{
-		map.Add(i, "Hello World");
-	}
+	//for (int32 i = 0; i < 1'000'000; ++i)
+	//{
+	//	map.Add(i, "Hello World");
+	//}
 }
 
 export void RunBenchmarks_HashMap()

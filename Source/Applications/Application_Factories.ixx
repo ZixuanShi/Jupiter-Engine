@@ -118,7 +118,7 @@ export namespace jpt
 		else
 		{
 		#if IS_PLATFORM_WIN64
-			api = Graphics::API::OpenGL;
+			api = Graphics::API::OpenGL;	// TODO: Change to Vulkan or DirectX
 		#else
 			JPT_ERROR("No Graphics API specified in CommandLine or ProjectSettings.json.");
 			return nullptr;

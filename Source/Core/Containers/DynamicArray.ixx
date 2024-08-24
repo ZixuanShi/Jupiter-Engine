@@ -324,7 +324,11 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Pop()
 	{
-		Erase(m_count - 1);
+		if constexpr (!std::is_trivially_destructible_v<TData>)
+		{
+			TAllocator::Destruct(m_pBuffer + m_count - 1);
+		}
+		--m_count;
 	}
 
 	template<typename TData, typename TAllocator>

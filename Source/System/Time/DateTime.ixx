@@ -66,6 +66,7 @@ export namespace jpt
 		/** Utilities */
 		bool IsValid() const;
 		String ToString() const;
+		String ToFileString() const;
 	};
 
 	DateTime::DateTime(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second)
@@ -305,5 +306,11 @@ export namespace jpt
 	{
 		// MM/DD/YYYY. HH:MM:SS
 		return String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second);
+	}
+
+	String DateTime::ToFileString() const
+	{
+		// MM_DD_YYYY_HH_MM_SS
+		return String::Format<32>("%d_%d_%d_%d_%d_%d", month, day, year, hour, minute, second);
 	}
 }
