@@ -13,17 +13,22 @@ export namespace jpt::Input
 		Keyboard,
 		Mouse,
 		Gamepad,
+
 		ItemCount,
 		Unknown,
 	);
 
 	enum class KeyState
 	{
-		Free,	 // Not pressed
-		Pressed,
-		Released,
-		Held,    // Pressed for more than one frame
-		Smashed, // Repeatedly pressed within a short time
+		Pressed,    // Newly pressed in last frame
+		Released,   // Newly released in last frame
+
+		Down,       // Currently down. No matter if it's newly pressed in last frame
+		Up,         // Currently up. No matter if it's newly released in last frame
+
+		Held,       // Pressed for more than one frame
+		Smashed,    // Repeatedly pressed within a short time
+
 		Unknown,
 		ItemCount,
 	};

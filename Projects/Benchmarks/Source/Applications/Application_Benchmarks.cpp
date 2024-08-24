@@ -5,8 +5,7 @@
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-import jpt.Utilities;
-import jpt.CommandLine;
+import jpt.CoreModules;
 
 import Benchmarks_Core;
 
@@ -27,3 +26,8 @@ bool Application_Benchmarks::Init()
 
 	return true;
 }
+
+#pragma region Engine-Client Communications
+constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
+constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
+#pragma endregion

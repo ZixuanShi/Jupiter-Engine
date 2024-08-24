@@ -7,6 +7,9 @@
 
 export module jpt.CoreModules;
 
+// Applications
+export import jpt.CommandLine;
+
 // Algorithms
 export import jpt.LinearFind;
 export import jpt.Sort;
