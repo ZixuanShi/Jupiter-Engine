@@ -40,13 +40,6 @@ export namespace jpt::File
 		@param relativePath		Expected in client's folder. Not engine */
 	Path FixDependencies(const Path& relativePath)
 	{
-		// If ran from VS debugger, use the project's root directory
-		if (IsDebuggerPresent())
-		{
-			return GetAbsoluteFullPath(Source::Client, relativePath);
-		}
-
-		// If ran from the executable
 #if IS_RELEASE
 		// Release config will have copied assets to the output directory
 		return relativePath;
