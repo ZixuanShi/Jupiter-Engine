@@ -27,13 +27,17 @@ namespace jpt
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 		ProjectSettings::GetInstance().Load();
 
-		m_pFramework = Framework_Create();
-		m_pWindow    = Window_Create();
-		m_pRenderer  = Renderer_Create();
+		if (!CommandLine::GetInstance().Has("no_window"))
+		{
+			m_pFramework = Framework_Create();
+			m_pWindow = Window_Create();
+			m_pRenderer = Renderer_Create();
 
-		m_pFramework->PreInit();
-		m_pWindow->PreInit();
-		m_pRenderer->PreInit();
+			m_pFramework->PreInit();
+			m_pWindow->PreInit();
+			m_pRenderer->PreInit();
+		}
+
 		Input::Manager::GetInstance().PreInit();
 
 		return true;
@@ -44,12 +48,14 @@ namespace jpt
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
 			m_shouldShutdown = true;
-			return true;
+		}
+		else
+		{
+			m_pFramework->Init(this);
+			m_pWindow->Init(this);
+			m_pRenderer->Init();
 		}
 
-		m_pFramework->Init(this);
-		m_pWindow->Init(this);
-		m_pRenderer->Init();
 		Input::Manager::GetInstance().Init();
 
 		return true;
@@ -65,9 +71,13 @@ namespace jpt
 
 	void Application_Base::Shutdown()
 	{
-		JPT_SHUTDOWN(m_pFramework);
-		JPT_SHUTDOWN(m_pWindow);
-		JPT_SHUTDOWN(m_pRenderer);
+		if (!CommandLine::GetInstance().Has("no_window"))
+		{
+			JPT_SHUTDOWN(m_pFramework);
+			JPT_SHUTDOWN(m_pWindow);
+			JPT_SHUTDOWN(m_pRenderer);
+		}
+
 		Input::Manager::GetInstance().Shutdown();
 		ProjectSettings::GetInstance().Save();
 	}
