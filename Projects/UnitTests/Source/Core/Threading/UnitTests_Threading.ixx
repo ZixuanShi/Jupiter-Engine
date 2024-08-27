@@ -80,7 +80,7 @@ static bool ThreadSafeQueue()
         {
             for (int32 i = 0; i < 10; ++i)
             {
-                m_queue.Enqueue(i);
+                m_queue.Push(i);
                 JPT_LOG("Produced: " + jpt::ToString(i));
                 jpt::SleepMs(100);
             }
@@ -103,7 +103,7 @@ static bool ThreadSafeQueue()
     protected:
         void Update() override
         {
-            auto value = m_queue.TryDequeue();
+            auto value = m_queue.TryPop();
             if (value)
             {
                 JPT_LOG("Consumed: " + jpt::ToString(value.Value()));
