@@ -350,7 +350,7 @@ static bool FileIO_HashMap_Text()
 
 static bool FileIO_HashMap_Serialization()
 {
-    const Path path = { Source::Client, "Assets/HashMapSerialization_UnitTest.txt" };
+    const Path path = jpt::System::Paths::GetInstance().GetOutputDir() + "HashMapSerialization_UnitTest.bin";
     jpt::HashMap<jpt::String, int32> data;
 
     data["Hello"] = 1;

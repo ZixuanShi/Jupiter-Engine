@@ -48,9 +48,9 @@ namespace jpt::System
 		m_outputDir = outputDir;
 
 #if IS_RELEASE
-		m_savedDir = outputDir + L"_Saved";
+		m_savedDir = outputDir + L"_Saved/";
 #else
-		m_savedDir = clientDir + L"_Saved";
+		m_savedDir = clientDir + L"_Saved/";
 #endif
 
 #if IS_PLATFORM_WIN64

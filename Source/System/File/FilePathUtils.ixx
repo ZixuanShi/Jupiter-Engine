@@ -41,8 +41,16 @@ export namespace jpt::File
 	Path FixDependencies(const Path& relativePath)
 	{
 #if IS_RELEASE
+		// If ran from VS debugger, use absolute path to Client as it's using Visual Studio's working directory
+		if (IsDebuggerPresent())
+		{
+			return GetAbsoluteFullPath(Source::Client, relativePath);
+		}
 		// Release config will have copied assets to the output directory
-		return relativePath;
+		else
+		{
+			return relativePath;
+		}
 #else
 		if (relativePath.Has("Jupiter_Common"))
 		{
