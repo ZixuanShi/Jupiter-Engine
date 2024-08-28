@@ -51,7 +51,7 @@ export namespace jpt
 			return false;
 		}
 
-		m_settings = settings.Value();
+		m_settings = Move(settings.Value());
 
 		// Override settings with command line
 		for (const auto& [key, value] : CommandLine::GetInstance().GetArgs())
