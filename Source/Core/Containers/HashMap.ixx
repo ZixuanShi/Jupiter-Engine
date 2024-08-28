@@ -79,6 +79,7 @@ export namespace jpt
 		// Modifiers
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
+		constexpr void Set(const TKey& key, const TValue& value);
 		constexpr TValue& Emplace(TKey&& key, TValue&& value);
 		constexpr TValue& Emplace(TData&& element);
 		constexpr Iterator Erase(const TKey& key);
@@ -283,6 +284,12 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue, TComparator>::Add(const TData& element)
 	{
 		return Add(element.first, element.second);
+	}
+
+	template<typename _TKey, typename _TValue, typename _Comparator>
+	constexpr void HashMap<_TKey, _TValue, _Comparator>::Set(const TKey& key, const TValue& value)
+	{
+		Add(key, value);
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>

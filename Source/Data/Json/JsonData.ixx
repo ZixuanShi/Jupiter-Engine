@@ -20,53 +20,7 @@ namespace jpt
 {
 	class JsonData;
 	export using JsonArray = DynamicArray<JsonData>;
-
-	/** Encapsulates a hashmap that Has Json data within a scope */
-	export class JsonMap
-	{
-	private:
-		using TMap = HashMap<String, JsonData>;
-
-	private:
-		TMap m_map;
-
-	public:
-		constexpr TMap::Iterator      begin()        { return m_map.begin();  }
-		constexpr TMap::Iterator      end()          { return m_map.end();    }
-		constexpr TMap::ConstIterator begin()  const { return m_map.begin();  }
-		constexpr TMap::ConstIterator end()    const { return m_map.end();    }
-		constexpr TMap::ConstIterator cbegin() const { return m_map.cbegin(); }
-		constexpr TMap::ConstIterator cend()   const { return m_map.cend();   }
-		constexpr Index Count() const { return m_map.Count(); }
-		constexpr bool operator==(const JsonMap& other) const { return m_map == other.m_map; }
-
-		template<typename T>
-		constexpr void Set(const String& key, const T& value)
-		{
-			m_map[key] = value;
-		}
-
-		constexpr JsonData& operator[](const String& key)
-		{
-			return m_map[key];
-		}
-
-		constexpr const JsonData& operator[](const String& key) const
-		{
-			JPT_ASSERT(m_map.Has(key), "Couldn't find key \"%s\" within current Json scope", key.ConstBuffer());
-			return m_map[key];
-		}
-
-		constexpr bool Has(const String& key) const
-		{
-			return m_map.Has(key);
-		}
-
-		constexpr void Reserve(Index count)
-		{
-			m_map.Reserve(count);
-		}
-	};
+	export using JsonMap = HashMap<String, JsonData>;
 
 	template<typename T>
 	concept ValidType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
