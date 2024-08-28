@@ -26,6 +26,10 @@ import jpt.File.Path.Utils;
 import jpt.Time.TypeDefs;
 import jpt.Framework_Base;
 
+static constexpr int32   kDefaultWidth  = 800;
+static constexpr int32   kDefaultHeight = 600;
+static const jpt::String kDefaultTitle  = "Unnamed";
+
 void ResizeViewportCallback(GLFWwindow* pGLFWwindow, int32 width, int32 height)
 {
 	JPT_LOG("Resized window %lu to width: %i, height: %i", pGLFWwindow, width, height);
@@ -56,14 +60,10 @@ namespace jpt
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		int32 width = 800;
-		int32 height = 600;
-		String title = "Unnamed";
-
 		ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-		projectSettings.TryGet("window_width", width);
-		projectSettings.TryGet("window_height", height);
-		projectSettings.TryGet("window_title", title);
+		int32 width  = projectSettings.Get("window_width",  kDefaultWidth);
+		int32 height = projectSettings.Get("window_height", kDefaultHeight);
+		String title = projectSettings.Get("window_title",  kDefaultTitle);
 
 		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
 		if (!m_pWindow)

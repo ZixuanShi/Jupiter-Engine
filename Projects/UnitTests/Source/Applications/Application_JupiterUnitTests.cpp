@@ -17,7 +17,7 @@ import UnitTests_Scratch;
 
 bool Application_JupiterUnitTests::PreInit()
 {
-	jpt::CommandLine::GetInstance().Set("no_window");
+	//jpt::CommandLine::GetInstance().Set("no_window");
 
 	JPT_ENSURE(Super::PreInit());
 

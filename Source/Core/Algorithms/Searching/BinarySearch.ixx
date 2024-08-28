@@ -16,7 +16,7 @@ export namespace jpt
 
 		while (begin < end)
 		{
-			auto mid = begin + (end - begin) / 2;
+			const auto& mid = begin + (end - begin) / 2;
 
 			if (dataToFind == *mid)
 			{

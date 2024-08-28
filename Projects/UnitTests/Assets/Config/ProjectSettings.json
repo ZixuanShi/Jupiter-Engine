@@ -1,4 +1,5 @@
 {
+	"window_title": "UnitTests",
 	"framework_api": "GLFW",
 	"graphics_api": "OpenGL"
 }
