@@ -55,7 +55,7 @@ export import jpt.Triangle3;
 
 // Memory Managing
 export import jpt.Allocator;
-export import jpt.StrongPtr;
+export import jpt.SharedPtr;
 export import jpt.UniquePtr;
 export import jpt.WeakPtr;
 

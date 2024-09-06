@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 
-export module jpt.StrongPtr;
+export module jpt.SharedPtr;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
@@ -14,11 +14,11 @@ import jpt.WeakPtr;
 
 namespace jpt
 {
-	/** Retains shared ownership of an object through a pointer. Several StrongPtr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
-		- the last remaining StrongPtr owning the object is destroyed;
-		- the last remaining StrongPtr owning the object is assigned another pointer via operator= or Reset(). */
+	/** Retains shared ownership of an object through a pointer. Several SharedPtr objects may own the same object. The object is destroyed and its memory deallocated when either of the following happens: 
+		- the last remaining SharedPtr owning the object is destroyed;
+		- the last remaining SharedPtr owning the object is assigned another pointer via operator= or Reset(). */
 	export template<typename TData>
-	class StrongPtr
+	class SharedPtr
 	{
 		friend class WeakPtr<TData>;
 
@@ -27,24 +27,24 @@ namespace jpt
 		jpt_private::ReferenceCounter* m_pRefCounter = nullptr;
 
 	public:
-		constexpr StrongPtr() noexcept = default;
-		constexpr StrongPtr(TData* pPtr) noexcept;
-		constexpr StrongPtr(const StrongPtr& other);
-		constexpr StrongPtr(const WeakPtr<TData>& weakPtr);
-		constexpr StrongPtr(StrongPtr&& other) noexcept;
-		StrongPtr& operator=(const StrongPtr& other);
-		StrongPtr& operator=(const WeakPtr<TData>& weakPtr);
-		StrongPtr& operator=(StrongPtr&& other) noexcept;
-		constexpr ~StrongPtr();
+		constexpr SharedPtr() noexcept = default;
+		constexpr SharedPtr(TData* pPtr) noexcept;
+		constexpr SharedPtr(const SharedPtr& other);
+		constexpr SharedPtr(const WeakPtr<TData>& weakPtr);
+		constexpr SharedPtr(SharedPtr&& other) noexcept;
+		SharedPtr& operator=(const SharedPtr& other);
+		SharedPtr& operator=(const WeakPtr<TData>& weakPtr);
+		SharedPtr& operator=(SharedPtr&& other) noexcept;
+		constexpr ~SharedPtr();
 
 		template <typename TOther>
-		StrongPtr(const StrongPtr<TOther>& other) = delete;
+		SharedPtr(const SharedPtr<TOther>& other) = delete;
 
 		/** Replaces the managed object with the new pPtr */
 		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
 		constexpr void Reset(TData* pPtr = nullptr, const TDeleter& deleter = TDeleter());
 
-		/** @returns    number of StrongPtr objects referring to the same managed object */
+		/** @returns    number of SharedPtr objects referring to the same managed object */
 		constexpr int32 GetRefCount() const;
 
 		/** @return		Reference or pointer to the managed object */
@@ -57,7 +57,7 @@ namespace jpt
 
 	private:
 		/** Resets this->m_pPtr with the passed in pPtr
-			Will destroy Ref counter and m_pPtr object if this is the last StrongPtr holding the data */
+			Will destroy Ref counter and m_pPtr object if this is the last SharedPtr holding the data */
 		template<typename TDeleter = jpt_private::DefaultDelete<TData>>
 		constexpr void InternalReset(TData* pPtr, const TDeleter& deleter = TDeleter());
 
@@ -65,20 +65,20 @@ namespace jpt
 	};
 
 	export template<typename TData, class... TArgs>
-	[[nodiscard]] constexpr StrongPtr<TData> MakeStrong(TArgs&&... args)
+	[[nodiscard]] constexpr SharedPtr<TData> MakeStrong(TArgs&&... args)
 	{
-		return StrongPtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
+		return SharedPtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
 	}
 
 	template<typename TData>
-	constexpr StrongPtr<TData>::StrongPtr(TData* pPtr) noexcept
+	constexpr SharedPtr<TData>::SharedPtr(TData* pPtr) noexcept
 		: m_pPtr(pPtr)
 		, m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
 	{
 	}
 
 	template<typename TData>
-	constexpr StrongPtr<TData>::StrongPtr(const StrongPtr& other)
+	constexpr SharedPtr<TData>::SharedPtr(const SharedPtr& other)
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -86,7 +86,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	constexpr StrongPtr<TData>::StrongPtr(const WeakPtr<TData>& weakPtr)
+	constexpr SharedPtr<TData>::SharedPtr(const WeakPtr<TData>& weakPtr)
 		: m_pPtr(weakPtr.m_pPtr)
 		, m_pRefCounter(weakPtr.m_pRefCounter)
 	{
@@ -94,7 +94,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	constexpr StrongPtr<TData>::StrongPtr(StrongPtr&& other) noexcept
+	constexpr SharedPtr<TData>::SharedPtr(SharedPtr&& other) noexcept
 		: m_pPtr(other.m_pPtr)
 		, m_pRefCounter(other.m_pRefCounter)
 	{
@@ -103,7 +103,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>& StrongPtr<TData>::operator=(const StrongPtr& other)
+	SharedPtr<TData>& SharedPtr<TData>::operator=(const SharedPtr& other)
 	{
 		if (this != &other)
 		{
@@ -116,7 +116,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>& StrongPtr<TData>::operator=(const WeakPtr<TData>& weakPtr)
+	SharedPtr<TData>& SharedPtr<TData>::operator=(const WeakPtr<TData>& weakPtr)
 	{
 		InternalReset(weakPtr.m_pPtr);
 		m_pRefCounter = weakPtr.m_pRefCounter;
@@ -126,7 +126,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	StrongPtr<TData>& StrongPtr<TData>::operator=(StrongPtr&& other) noexcept
+	SharedPtr<TData>& SharedPtr<TData>::operator=(SharedPtr&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -141,13 +141,13 @@ namespace jpt
 	}
 
 	template<typename TData>
-	constexpr StrongPtr<TData>::~StrongPtr()
+	constexpr SharedPtr<TData>::~SharedPtr()
 	{
 		Reset(nullptr);
 	}
 
 	template<typename TData>
-	constexpr int32 StrongPtr<TData>::GetRefCount() const
+	constexpr int32 SharedPtr<TData>::GetRefCount() const
 	{
 		if (m_pRefCounter)
 		{
@@ -159,7 +159,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	constexpr void StrongPtr<TData>::Reset(TData* pPtr/* = nullptr*/, const TDeleter& deleter/* = TDeleter()*/)
+	constexpr void SharedPtr<TData>::Reset(TData* pPtr/* = nullptr*/, const TDeleter& deleter/* = TDeleter()*/)
 	{
 		// If the old pointer was non-empty, deletes the previously managed object
 		if (m_pPtr != pPtr)
@@ -175,7 +175,7 @@ namespace jpt
 
 	template<typename TData>
 	template<typename TDeleter>
-	constexpr void StrongPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter/* = TDeleter()*/)
+	constexpr void SharedPtr<TData>::InternalReset(TData* pPtr, const TDeleter& deleter/* = TDeleter()*/)
 	{
 		if (m_pRefCounter)
 		{
@@ -195,7 +195,7 @@ namespace jpt
 	}
 
 	template<typename TData>
-	constexpr void StrongPtr<TData>::IncrementStrongRef()
+	constexpr void SharedPtr<TData>::IncrementStrongRef()
 	{
 		if (m_pRefCounter)
 		{

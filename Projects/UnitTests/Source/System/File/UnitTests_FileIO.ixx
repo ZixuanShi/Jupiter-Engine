@@ -12,7 +12,7 @@ export module UnitTests_FileIO;
 
 import jpt.TypeDefs;
 import jpt.Utilities;
-import jpt.StrongPtr;
+import jpt.SharedPtr;
 import jpt.Math;
 import jpt.HashMap;
 import jpt.DynamicArray;

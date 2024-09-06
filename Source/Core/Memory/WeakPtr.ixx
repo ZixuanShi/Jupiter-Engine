@@ -12,14 +12,14 @@ import jpt_private.ReferenceCounter;
 export namespace jpt
 {
 	template<typename TData>
-	class StrongPtr;
+	class SharedPtr;
 
-	/** Holds a non-owning ("weak") reference to an object that is managed by jpt::StrongPtr.
-		It must be converted to jpt::StrongPtr in order to access the referenced object */
+	/** Holds a non-owning ("weak") reference to an object that is managed by jpt::SharedPtr.
+		It must be converted to jpt::SharedPtr in order to access the referenced object */
 	template<typename TData>
 	class WeakPtr
 	{
-		friend class StrongPtr<TData>;
+		friend class SharedPtr<TData>;
 
 	private:
 		TData* m_pPtr = nullptr;
@@ -29,16 +29,16 @@ export namespace jpt
 		constexpr WeakPtr() noexcept = default;
 		constexpr WeakPtr(const WeakPtr& other);
 		constexpr WeakPtr(WeakPtr&& other) noexcept;
-		constexpr WeakPtr(const StrongPtr<TData>& shared);
+		constexpr WeakPtr(const SharedPtr<TData>& shared);
 		WeakPtr& operator=(const WeakPtr& other);
-		WeakPtr& operator=(const StrongPtr<TData>& shared);
+		WeakPtr& operator=(const SharedPtr<TData>& shared);
 		WeakPtr& operator=(WeakPtr&& other) noexcept;
 		constexpr ~WeakPtr();
 
 		/** Releases the ownership of the managed object */
 		constexpr void Reset() { InternalReset(nullptr); }
 
-		/** @return		number of StrongPtr objects referring to the same managed object */
+		/** @return		number of SharedPtr objects referring to the same managed object */
 		constexpr int32 GetRefCount() const;
 
 		/** @return		true if the managed object has already been deleted, false otherwise. */
@@ -87,7 +87,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	WeakPtr<TData>& WeakPtr<TData>::operator=(const StrongPtr<TData>& shared)
+	WeakPtr<TData>& WeakPtr<TData>::operator=(const SharedPtr<TData>& shared)
 	{
 		InternalReset(shared.m_pPtr);
 		m_pRefCounter = shared.m_pRefCounter;
@@ -112,7 +112,7 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	constexpr WeakPtr<TData>::WeakPtr(const StrongPtr<TData>& shared)
+	constexpr WeakPtr<TData>::WeakPtr(const SharedPtr<TData>& shared)
 		: m_pPtr(shared.m_pPtr)
 		, m_pRefCounter(shared.m_pRefCount)
 	{

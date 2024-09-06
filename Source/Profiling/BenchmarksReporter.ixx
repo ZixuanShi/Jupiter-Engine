@@ -18,6 +18,28 @@ import jpt.System.Paths;
 
 export namespace jpt
 {
+	/** @example
+		void ProfileSomething()
+		{
+			jpt::BenchmarksReporter reporter;
+			jpt::StopWatch stopWatch;
+
+			{
+				stopWatch.Start();
+
+				// Do some work here
+				jpt::SleepMs(1000);
+
+				reporter.Add({ "Test", "Test", stopWatch.GetDurationMs() });
+			}
+			// Other tests...
+			{				
+			}
+
+			reporter.Finalize();	// Outputs to CSV file
+			reporter.LogResults();	// Outputs to log
+		}
+	*/
 	class BenchmarksReporter
 	{
 	private:
@@ -34,6 +56,8 @@ export namespace jpt
 
 	BenchmarksReporter::BenchmarksReporter()
 	{
+		// Add Platform, CPU, GPU, Memory
+
 		CSVData::Row header{ "Topic", "Context", "Result (MS)", "[Optional] std comparison" };
 		m_results.AddRow(header);
 	}

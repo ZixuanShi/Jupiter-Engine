@@ -53,7 +53,7 @@ import UnitTests_Quaternion;
 
 // Memory Managing
 import UnitTests_Allocator;
-import UnitTests_StrongPtr;
+import UnitTests_SharedPtr;
 import UnitTests_UniquePtr;
 import UnitTests_WeakPtr;
 
@@ -133,7 +133,7 @@ export bool RunUnitTests_Core()
 
 	// Memory Managing
 	JPT_ENSURE(RunUnitTests_Allocator());
-	JPT_ENSURE(RunUnitTests_StrongPtr());
+	JPT_ENSURE(RunUnitTests_SharedPtr());
 	JPT_ENSURE(RunUnitTests_UniquePtr());
 	JPT_ENSURE(RunUnitTests_WeakPtr());
 

@@ -7,10 +7,22 @@ module;
 export module jpt.CPUInfo;
 
 import jpt.TypeDefs;
+import jpt.String;
 
-namespace jpt
+export namespace jpt
 {
-	export uint32 GetNumCores()
+	class CPUInfo
+	{
+	private:
+		struct CPUData
+		{
+
+		};
+
+	public:
+	};
+
+	uint32 GetNumCores()
 	{
 		return std::thread::hardware_concurrency();
 	}
