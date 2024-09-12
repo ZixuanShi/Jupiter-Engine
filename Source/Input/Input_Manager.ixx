@@ -35,14 +35,17 @@ export namespace jpt::Input
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
-		/** @return		true if the key(s) was newly pressed */
+		/** @return		true if the key is currently down at this frame */
+		bool IsDown(KeyCode key) const;
+
+		/** @return		true if the key is currently up at this frame */
+		bool IsUp(KeyCode key) const;
+
+		/** @return		true if the key(s) was newly pressed at this frame. Last frame was Up */
 		bool IsPressed(KeyCode key) const;
 		bool ArePressed(const DynamicArray<KeyCode>& keys) const;
 
-		/** @return		true if the key is currently down. No matter if it's newly pressed in last frame */
-		bool IsDown(KeyCode key) const;
-
-		/** @return		true if the key was newly released */
+		/** @return		true if the key was newly released at this frame. Last frame was Down */
 		bool IsReleased(KeyCode key) const;
 	};
 
@@ -105,6 +108,18 @@ export namespace jpt::Input
 		}
 	}
 
+	bool Manager::IsDown(KeyCode key) const
+	{
+		JPT_IGNORE(key);
+		return false;
+	}
+
+	bool Manager::IsUp(KeyCode key) const
+	{
+		JPT_IGNORE(key);
+		return false;
+	}
+
 	bool Manager::IsPressed(KeyCode key) const
 	{
 		return m_pBackend->IsPressed(key);
@@ -121,12 +136,6 @@ export namespace jpt::Input
 		}
 
 		return true;
-	}
-
-	bool Manager::IsDown(KeyCode key) const
-	{
-		JPT_IGNORE(key);
-		return false;
 	}
 
 	bool Manager::IsReleased(KeyCode key) const
