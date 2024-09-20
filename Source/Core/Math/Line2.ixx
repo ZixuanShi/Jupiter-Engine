@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Assert.h"
+
 #include <cmath>
 
 export module jpt.Line2;
@@ -24,21 +26,29 @@ namespace jpt
 
 	public:
 		constexpr Line2() = default;
-		constexpr Line2(Vector2<T> a, Vector2<T> b);
+		constexpr Line2(const Vector2<T>& a, const Vector2<T>& b);
 
-		constexpr Vector3<T> GetLine() const;
-		constexpr T Distance(Vector2<T> point) const;
+		/** ax + by + c = 0 */
+		constexpr Vector3<T> Coefficients() const;
+
+		/** distance from point to line */
+		constexpr T Distance(const Vector2<T>& point) const;
+		constexpr T Dist(const Vector2<T>& point) const;
+
+		/** The projected point is the closest point on the line to the given point
+            We can find it by moving from the original point perpendicular to the line */
+		constexpr Vector2<T> Project(const Vector2<T>& point) const;
 	};
 
 	template<Numeric T>
-	constexpr Line2<T>::Line2(Vector2<T> a, Vector2<T> b)
+	constexpr Line2<T>::Line2(const Vector2<T>& a, const Vector2<T>& b)
 		: a(a)
 		, b(b) 
 	{
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Line2<T>::GetLine() const
+	constexpr Vector3<T> Line2<T>::Coefficients() const
 	{
 		const T x = a.y - b.y;
 		const T y = b.x - a.x;
@@ -47,11 +57,36 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Line2<T>::Distance(Vector2<T> point) const
+	constexpr T Line2<T>::Distance(const Vector2<T>& point) const
 	{
-		const Vector3<T> lineData = GetLine();
-		const T distance = Abs(lineData.x * point.x + lineData.y * point.y + lineData.z) / std::sqrt(lineData.x * lineData.x + lineData.y * lineData.y);
-		return distance;
+		// d = |Ax0 + By0 + C| / sqrt(A^2 + B^2)
+
+		const Vector3<T> coefficients = Coefficients();
+		
+		const T numerator = Abs(coefficients.x * point.x + coefficients.y * point.y + coefficients.z);
+		const T denominator = Sqrt(coefficients.x * coefficients.x + coefficients.y * coefficients.y);
+		
+		JPT_ASSERT(denominator != 0.0f);
+		return numerator / denominator;
+	}
+
+	template<Numeric T>
+	constexpr T Line2<T>::Dist(const Vector2<T>& point) const
+	{
+		return Distance(point);
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Line2<T>::Project(const Vector2<T>& point) const
+	{
+		const Vector3<T> coefficients = Coefficients();
+
+		const T denominator = coefficients.x * coefficients.x + coefficients.y * coefficients.y;
+		JPT_ASSERT(denominator != 0.0f);
+
+		const T invDenominator = T(1) / denominator;
+		const T t = -(coefficients.x * point.x + coefficients.y * point.y + coefficients.z) * invDenominator;
+		return Vector2<T>(point.x + t * coefficients.x, point.y + t * coefficients.y);
 	}
 }
 

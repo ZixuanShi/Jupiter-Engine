@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Assert.h"
+
 #include <cmath>
 
 export module jpt.Line3;
@@ -24,8 +26,17 @@ namespace jpt
 		constexpr Line3() = default;
 		constexpr Line3(const Vector3<T>& a, const Vector3<T>& b);
 
-		constexpr Vector3<T> GetLine() const;
+		/** Calculate the direction vector of the line */
+		constexpr Vector3<T> Direction() const;
+		constexpr Vector3<T> Dir() const;
+
+		/** Closest distance from point to line */
 		constexpr T Distance(const Vector3<T>& point) const;
+		constexpr T Dist(const Vector3<T>& point) const;
+
+		/** The projected point is the closest point on the line to the given point
+			We can find it by moving from the original point perpendicular to the line */
+		constexpr Vector3<T> Project(const Vector3<T>& point) const;
 	};
 
 	template<Numeric T>
@@ -36,20 +47,39 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Line3<T>::GetLine() const
+	constexpr Vector3<T> Line3<T>::Direction() const
 	{
-		const T x = a.y - b.y;
-		const T y = b.x - a.x;
-		const T z = a.x * b.y - a.y * b.x;
-		return Vector3<T>(x, y, z);
+		return (b - a).Normalized();
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Line3<T>::Dir() const
+	{
+		return Direction(); 
 	}
 
 	template<Numeric T>
 	constexpr T Line3<T>::Distance(const Vector3<T>& point) const
 	{
-		const Vector3<T> lineData = GetLine();
-		const T distance = Abs(lineData.x * point.x + lineData.y * point.y + lineData.z) / std::sqrt(lineData.x * lineData.x + lineData.y * lineData.y);
-		return distance;
+		const Vector3<T> ab = b - a;
+		const Vector3<T> ap = point - a;
+		const Vector3<T> cross = ab.Cross(ap);
+		return Sqrt(cross.Length2() / ab.Length2());
+	}
+
+	template<Numeric T>
+	constexpr T Line3<T>::Dist(const Vector3<T>& point) const 
+	{
+		return Distance(point); 
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Line3<T>::Project(const Vector3<T>& point) const
+	{
+		const Vector3<T> ab = b - a;
+		const Vector3<T> ap = point - a;
+		const T t = ap.Dot(ab) / ab.Dot(ab);
+		return a + ab * t;
 	}
 }
 

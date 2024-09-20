@@ -16,9 +16,15 @@ namespace jpt
 
 	public:
 		constexpr T Length() const noexcept;
+
 		constexpr T Distance(const Vector3<T>& point) const noexcept;
+		constexpr T Dist(const Vector3<T>& point) const noexcept;
+
 		constexpr Vector3<T> Direction() const noexcept;
-		constexpr Vector3<T> ClosestPoint(const Vector3<T>& point) const noexcept;
+		constexpr Vector3<T> Dir() const noexcept;
+
+		constexpr Vector3<T> Project(const Vector3<T>& point) const noexcept;
+
 		constexpr bool Intersects(const LineSegment3<T>& other) const noexcept;
 	};
 
@@ -31,7 +37,15 @@ namespace jpt
 	template<Numeric T>
 	constexpr T LineSegment3<T>::Distance(const Vector3<T>& point) const noexcept
 	{
-		return ClosestPoint(point).Distance(point);
+		const Vector3<T> pointOnLine = Project(point);
+		const Vector3<T> pointToLine = point - pointOnLine;
+		return pointToLine.Length();
+	}
+
+	template<Numeric T>
+	constexpr T LineSegment3<T>::Dist(const Vector3<T>& point) const noexcept
+	{
+		return Distance(point);
 	}
 
 	template<Numeric T>
@@ -41,22 +55,19 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> LineSegment3<T>::ClosestPoint(const Vector3<T>& point) const noexcept
+	constexpr Vector3<T> LineSegment3<T>::Dir() const noexcept
+	{
+		return Direction();
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> LineSegment3<T>::Project(const Vector3<T>& point) const noexcept
 	{
 		const Vector3<T> ab = b - a;
-		const T t = (point - a).Dot(ab) / ab.Dot(ab);
-		if (t <= static_cast<T>(0))
-		{
-			return a;
-		}
-		else if (t >= static_cast<T>(1))
-		{
-			return b;
-		}
-		else
-		{
-			return a + ab * t;
-		}	
+		const Vector3<T> ap = point - a;
+		T t = ab.Dot(ap) / ab.Dot(ab);
+		ClampTo(t, static_cast<T>(0), static_cast<T>(1));
+		return a + ab * t;
 	}
 
 	template<Numeric T>

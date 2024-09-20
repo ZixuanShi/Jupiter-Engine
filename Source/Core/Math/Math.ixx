@@ -4,6 +4,8 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 
+#include <cmath>
+
 export module jpt.Math;
 
 import jpt.Concepts;
@@ -178,17 +180,16 @@ export namespace jpt
 		return (value >= static_cast<TNum>(0) ? value : -value);
 	}
 
-	/** @return true if two values are close enough */
-	template<Integral TInt1, Integral TInt2>
-	constexpr bool AreValuesClose(TInt1 A, TInt2 B, TInt1 tolerance = static_cast<TInt1>(0))
+	template<Numeric TNum>
+	constexpr TNum Sqrt(TNum value)
 	{
-		return Abs(A - static_cast<TInt1>(B)) <= tolerance;
+		return static_cast<TNum>(std::sqrt(value));
 	}
 
-	template<Floating TFloat1, Floating TFloat2>
-	constexpr bool AreValuesClose(TFloat1 A, TFloat2 B, TFloat1 tolerance = static_cast<TFloat1>(0.000001))
+	template<Numeric TNum1, Numeric TNum2>
+	constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001))
 	{
-		return Abs(A - static_cast<TFloat1>(B)) <= tolerance;
+		return Abs(A - static_cast<TNum1>(B)) <= tolerance;
 	}
 
 	template<Floating TFloat = float32>

@@ -75,8 +75,10 @@ export namespace jpt
 		constexpr Vector3 Normalized() const;
 		constexpr T Angle(const Vector3& other) const;
 		constexpr Vector3 Lerp(const Vector3& other, T t) const;
-		constexpr Vector3 InvLerp(const Vector3& other, const Vector3&value) const;
-		constexpr Vector3 Rotate(const Vector3& axis, T angle) const;
+		constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
+		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
+		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
+		constexpr Vector3 Project(const Vector3& vector3, const Vector3& normal) const;
 
 		constexpr static T Dot(const Vector3& left, const Vector3&right);
 		constexpr static Vector3 Cross(const Vector3& left, const Vector3&right);
@@ -322,10 +324,37 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Rotate(const Vector3& axis, T angle) const
+	constexpr Vector3<T> Vector3<T>::RotateAxis(const Vector3& axis, T radians) const
 	{
-		// TODO: Implement
-		return Vector3();
+		// Rotates a position vector around an axis by a given angle
+		// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+
+		const T cosTheta = std::cos(radians);
+		const T sinTheta = std::sin(radians);
+
+		const Vector3<T> cross = axis.Cross(*this);
+		const Vector3<T> crossCross = axis.Cross(cross);
+
+		return *this * cosTheta + cross * sinTheta + crossCross * (static_cast<T>(1) - cosTheta);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::RotatePoint(const Vector3& point, const Vector3& axis, T radians) const
+	{
+		// Rotates this position vector around a point by a given angle around a specified axis
+		const Vector3<T> offset = *this - point;
+		const Vector3<T> rotated = offset.RotateAxis(axis, radians);
+		return rotated + point;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& vector3, const Vector3& normal) const
+	{
+		// projection = v - (v · n) / (n · n) * n
+		
+		const T dotProduct = this->Dot(normal);
+		const T normalLengthSquared = normal.Dot(normal);
+		return *this - normal * (dotProduct / normalLengthSquared);
 	}
 
 	template<Numeric T>

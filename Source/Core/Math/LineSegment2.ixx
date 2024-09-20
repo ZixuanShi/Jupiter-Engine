@@ -18,14 +18,28 @@ namespace jpt
 
 	public:
 		constexpr Vector2<T> Direction() const noexcept;
+		constexpr Vector2<T> Dir() const noexcept;
+
 		constexpr T Length() const noexcept;
-		constexpr T Distance(Vector2<T> point) const noexcept;
+
+		/** @return Closest distance from line segment to point in 2d space */
+		constexpr T Distance(const Vector2<T>& point) const noexcept;
+		constexpr T Dist(const Vector2<T>& point) const noexcept;
+
+		/** @return Projected point to this line segment */
+		constexpr Vector2<T> Project(const Vector2<T>& point) const noexcept;
 	};
 
 	template<Numeric T>
 	constexpr Vector2<T> LineSegment2<T>::Direction() const noexcept
-	{ 
-		return b - a; 
+	{
+		return (b - a).Normalized();
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> LineSegment2<T>::Dir() const noexcept
+	{
+		return Direction(); 
 	}
 
 	template<Numeric T>
@@ -35,28 +49,27 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T LineSegment2<T>::Distance(Vector2<T> point) const noexcept
+	constexpr T LineSegment2<T>::Distance(const Vector2<T>& point) const noexcept
 	{
-		const Vec2f direction = Direction();
-		const float length2 = direction.Length2();
+		const Vector2<T> pointOnLine = Project(point);
+		const Vector2<T> pointToLine = point - pointOnLine;
+		return pointToLine.Length();
+	}
 
-		// If the line segment is a point, return the distance between the point and the segment's endpoint
-		if (AreValuesClose(length2, 0.0f))
-		{
-			return (point - a).Length();
-		}
+	template<Numeric T>
+	constexpr T LineSegment2<T>::Dist(const Vector2<T>& point) const noexcept
+	{ 
+		return Distance(point); 
+	}
 
-		// Calculate the parameter t of the closest point on the line segment
-		const Vec2f toPoint = point - a;
-		float t = Vec2f::Dot(toPoint, direction) / length2;
-		ClampTo(t, 0.0f, 1.0f);
-
-		// Calculate the closest point on the line segment
-		const Vec2f projection = a + direction * t;
-
-		// Return the distance between the point and the closest point on the line segment
-		const float distance = (point - projection).Length();
-		return distance;
+	template<Numeric T>
+	constexpr Vector2<T> LineSegment2<T>::Project(const Vector2<T>& point) const noexcept
+	{
+		const Vector2<T> ab = b - a;
+		const Vector2<T> ap = point - a;
+		T t = ab.Dot(ap) / ab.Dot(ab);
+		ClampTo(t, static_cast<T>(0), static_cast<T>(1));
+		return a + ab * t;
 	}
 }
 

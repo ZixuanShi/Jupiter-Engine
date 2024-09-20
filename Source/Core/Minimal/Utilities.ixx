@@ -16,7 +16,7 @@ export namespace jpt
 {
 	/** Returns a rvalue of the object */
 	template<MoveConstructible T>
-	constexpr TRemoveReference<T>&& Move(T&& object)
+	constexpr TRemoveReference<T>&& Move(T&& object) noexcept
 	{
 		using TCast = TRemoveReference<T>;
 		return static_cast<TCast&&>(object);
