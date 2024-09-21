@@ -3,6 +3,7 @@
 module;
 
 #include "Debugging/Logger.h"
+
 #include <GLFW/glfw3.h>
 
 export module jpt.Input.Backend_GLFW;
@@ -176,8 +177,14 @@ export namespace jpt::Input
 		return false;
 	}
 
-	bool Backend_GLFW::IsReleased(KeyCode) const
+	bool Backend_GLFW::IsReleased(KeyCode key) const
 	{
+		const uint32 glfwKey = FromKeyCode(key);
+		if (glfwKey != kInvalidValue<uint32>)
+		{
+			return glfwGetKey(glfwGetCurrentContext(), glfwKey) == GLFW_RELEASE;
+		}
+
 		return false;
 	}
 

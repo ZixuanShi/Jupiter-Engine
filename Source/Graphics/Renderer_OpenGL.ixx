@@ -14,9 +14,9 @@ export module jpt.Renderer_OpenGL;
 import jpt.Renderer_Base;
 import jpt.Utilities;
 import jpt.BouncingValue_1D;
-
 import jpt.Optional;
 import jpt.String;
+import jpt.TypeDefs;
 
 import jpt.File.IO;
 import jpt.File.Path;

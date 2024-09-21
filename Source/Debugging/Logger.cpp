@@ -2,6 +2,8 @@
 
 #include "Debugging/Logger.h"
 
+#if IS_LOGGER_ENABLED
+
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
@@ -116,3 +118,5 @@ namespace jpt
 		return s_logger;
 	}
 }
+
+#endif

@@ -2,15 +2,14 @@
 
 #pragma once
 
+#define IS_LOGGER_ENABLED 1
+
+#if IS_LOGGER_ENABLED
+
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.ToString;
 import jpt.String;
-
-	#define JPT_LOG(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,        __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_INFO(message, ...)        { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Info,       __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_WARNING(message, ...)     { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,    __LINE__, __FILE__, message, __VA_ARGS__); }
-	#define JPT_ERROR(message, ...)       { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,      __LINE__, __FILE__, message, __VA_ARGS__); }
 
 namespace jpt
 {
@@ -20,7 +19,7 @@ namespace jpt
 	public:
 		enum class ELogType : uint8
 		{
-			Log,			// From Client games
+			Log,			// From Client project
 			Info,		    // From Engine
 			Warning,
 			Error
@@ -79,3 +78,37 @@ namespace jpt
 		void SendToOutputWindow(const wchar_t* wideString);
 	};
 }
+
+#define JPT_LOG(message, ...)          { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,        __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_INFO(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Info,       __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_WARNING(message, ...)      { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,    __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_ERROR(message, ...)        { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,      __LINE__, __FILE__, message, __VA_ARGS__); }
+
+/** Log only once, 
+	if the message is the same as the last time, it will not log again
+	if the message is different, it will log again
+	@param message		Expects single object or formatted string */
+#define JPT_LOG_ONCE(message)              \
+{                                          \
+	static auto s_copy = message;          \
+	static bool s_hasLogged = false;       \
+	if (!s_hasLogged || s_copy != message) \
+	{                                      \
+		s_copy = message;                  \
+		s_hasLogged = true;                \
+		JPT_LOG(message);                  \
+	}                                      \
+}
+
+#else 
+	template<typename... TArgs>
+	void DummyLogFunction(TArgs&&...)
+	{
+		static_cast<void>(0);
+	}
+
+	#define JPT_LOG(message, ...)         DummyLogFunction(message, __VA_ARGS__);
+	#define JPT_INFO(message, ...)   	  DummyLogFunction(message, __VA_ARGS__);
+	#define JPT_WARNING(message, ...)	  DummyLogFunction(message, __VA_ARGS__);
+	#define JPT_ERROR(message, ...)  	  DummyLogFunction(message, __VA_ARGS__);
+#endif
