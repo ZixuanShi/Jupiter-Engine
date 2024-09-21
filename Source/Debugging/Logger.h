@@ -84,21 +84,28 @@ namespace jpt
 #define JPT_WARNING(message, ...)      { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,    __LINE__, __FILE__, message, __VA_ARGS__); }
 #define JPT_ERROR(message, ...)        { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,      __LINE__, __FILE__, message, __VA_ARGS__); }
 
-/** Log only once, 
+/** Log only once,
 	if the message is the same as the last time, it will not log again
 	if the message is different, it will log again
-	@param message		Expects single object or formatted string */
-#define JPT_LOG_ONCE(message)              \
-{                                          \
-	static auto s_copy = message;          \
-	static bool s_hasLogged = false;       \
-	if (!s_hasLogged || s_copy != message) \
-	{                                      \
-		s_copy = message;                  \
-		s_hasLogged = true;                \
-		JPT_LOG(message);                  \
-	}                                      \
+	@param type    The type of log (Log, Info, Warning, Error)
+	@param message Expects single object or formatted string */
+#define JPT_LOG_ONCE_IMPL(type, message)        \
+{                                               \
+    static auto s_copy = message;               \
+    static bool s_hasLogged = false;            \
+    if (!s_hasLogged || s_copy != message)      \
+    {                                           \
+        s_copy = message;                       \
+        s_hasLogged = true;                     \
+        jpt::Logger::GetInstance().Log(         \
+            type, __LINE__, __FILE__, message); \
+    }                                           \
 }
+
+#define JPT_LOG_ONCE(message)     JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Log, message)
+#define JPT_INFO_ONCE(message)    JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Info, message)
+#define JPT_WARNING_ONCE(message) JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Warning, message)
+#define JPT_ERROR_ONCE(message)   JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Error, message)
 
 #else 
 	template<typename... TArgs>
@@ -111,4 +118,9 @@ namespace jpt
 	#define JPT_INFO(message, ...)   	  DummyLogFunction(message, __VA_ARGS__);
 	#define JPT_WARNING(message, ...)	  DummyLogFunction(message, __VA_ARGS__);
 	#define JPT_ERROR(message, ...)  	  DummyLogFunction(message, __VA_ARGS__);
+
+	#define JPT_LOG_ONCE(message)         DummyLogFunction(message);
+	#define JPT_INFO_ONCE(message)        DummyLogFunction(message);
+	#define JPT_WARNING_ONCE(message)     DummyLogFunction(message);
+	#define JPT_ERROR_ONCE(message)       DummyLogFunction(message);
 #endif

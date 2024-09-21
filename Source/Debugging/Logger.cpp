@@ -21,6 +21,7 @@ import jpt.DateTime;
 import jpt.File.IO;
 import jpt.File.Path;
 import jpt.System.Paths;
+import jpt.Environment;
 import jpt.String.Helpers;
 
 namespace jpt
@@ -82,7 +83,11 @@ namespace jpt
 		contentToLog += pMessage;
 		contentToLog += "\n";
 
-		SendToOutputWindow(contentToLog.ConstBuffer());
+		if (jpt::IsDebuggerPresent())
+		{
+			SendToOutputWindow(contentToLog.ConstBuffer());
+		}
+
 		File::AppendTextFile(kLogFilePath, GetTimeStamp() + contentToLog);
 	}
 
@@ -94,7 +99,11 @@ namespace jpt
 		ContentToLogW += pMessage;
 		ContentToLogW += L"\n";
 
-		SendToOutputWindow(ContentToLogW.ConstBuffer());
+		if (jpt::IsDebuggerPresent())
+		{
+			SendToOutputWindow(ContentToLogW.ConstBuffer());
+		}
+
 		File::AppendTextFile(kLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
 	}
 
