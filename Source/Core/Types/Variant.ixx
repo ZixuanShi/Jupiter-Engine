@@ -16,6 +16,7 @@ import jpt.Math;
 import jpt.TypeTraits;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.String;
 
 export namespace jpt
 {
@@ -46,6 +47,7 @@ export namespace jpt
 		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant(T&& value);
 		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant& operator=(const T& value);
 		template<typename T> requires IsAnyOf<T, TArgs...> constexpr Variant& operator=(T&& value);
+		constexpr Variant& operator=(const char* pCStr) requires IsAnyOf<String, TArgs...>;
 
 		/** @return		Reference to the current buffer data that casted to given T */
 		template<typename T> requires IsAnyOf<T, TArgs...> constexpr       T& As();
@@ -145,6 +147,14 @@ export namespace jpt
 	{
 		Destruct<TArgs...>();
 		Construct<T>(Move(value));
+		return *this;
+	}
+
+	template<typename ...TArgs>
+	constexpr Variant<TArgs...>& Variant<TArgs...>::operator=(const char* pCStr) requires IsAnyOf<String, TArgs...>
+	{
+		Destruct<TArgs...>();
+		Construct<String>(pCStr);
 		return *this;
 	}
 
