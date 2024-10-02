@@ -76,10 +76,12 @@ namespace jpt
 	template<Numeric T>
 	constexpr Vector3<T> Line3<T>::Project(const Vector3<T>& point) const
 	{
-		const Vector3<T> ab = b - a;
-		const Vector3<T> ap = point - a;
-		const T t = ap.Dot(ab) / ab.Dot(ab);
-		return a + ab * t;
+		const Vector3<T> dir = Dir();
+		const Vector3<T> pToLine = point - a;
+
+		const T t = pToLine.Dot(dir);
+		const Vector3<T> projected = a + dir * t;
+		return projected;
 	}
 }
 
