@@ -69,16 +69,19 @@ export namespace jpt
 		constexpr 	    TValue& Max();
 		constexpr const TValue& Max() const;
 
-		/** Root-left-right
-			Used for prefixing. i.e. Creating a copy of the tree */
+		/** Traverse
+			    A
+			   / \
+			  B   C
+			 / \
+			D   E       		*/
+		/** Root-Left-Right. A, B, D, E, C. Used for copying or serializing the tree */
 		constexpr void PreOrderWalk(const WalkerFunc& function);
 
-		/** Left-root-right
-			Used for sorting and finding the successor/predecessor of a node */
+		/** Left - Root - Right. D, B, E, A, C.Used for sorting and finding the successor / predecessor of a node */
 		constexpr void InOrderWalk(const WalkerFunc& function);
 
-		/** Left-right-root
-			Used for postfixing. i.e. Deleting the tree */
+		/** Left - Right - Root. D, E, B, C, A.Used for deleting the tree */
 		constexpr void PostOrderWalk(const WalkerFunc& function);
 
 		// Iterators
@@ -90,19 +93,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const;
 
 	private:
-		/** Traverse
-			    A
-			   / \
-			  B   C
-			 / \
-			D   E       		*/
-		// Root-Left-Right. A, B, D, E, C. Used for copying or serializing the tree
 		constexpr void PreOrderWalk(TNode* pNode, const WalkerFunc& function);
-
-		// Left-Root-Right. D, B, E, A, C. Used for sorting and finding the successor/predecessor of a node
 		constexpr void InOrderWalk(TNode* pNode, const WalkerFunc& function);
-
-		// Left-Right-Root. D, E, B, C, A. Used for deleting the tree
 		constexpr void PostOrderWalk(TNode* pNode, const WalkerFunc& function);
 		constexpr void PostOrderWalkNode(TNode* pNode, const Function<void(TNode*)>& func);
 
