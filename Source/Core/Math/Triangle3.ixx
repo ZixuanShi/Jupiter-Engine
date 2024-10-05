@@ -25,17 +25,17 @@ namespace jpt
 
 	public:
 		constexpr Triangle3() = default;
-		constexpr Triangle3(Vector3<T> _a, Vector3<T> _b, Vector3<T> _c);
+		constexpr Triangle3(const Vector3<T>& _a, const Vector3<T>& _b, const Vector3<T>& _c);
 
 		constexpr T Perimeter() const;
 		constexpr T Area() const;
 		constexpr Vector3<T> Normal() const;
-		constexpr T Distance(Vector3<T> point) const;
+		constexpr T Distance(const Vector3<T>& point) const;
 		constexpr bool Inside(const Vector3<T>& point) const;
 	};
 
 	template<Numeric T>
-	constexpr Triangle3<T>::Triangle3(Vector3<T> _a, Vector3<T> _b, Vector3<T> _c)
+	constexpr Triangle3<T>::Triangle3(const Vector3<T>& _a, const Vector3<T>& _b, const Vector3<T>& _c)
 		: a(_a), b(_b), c(_c)
 	{
 	}
@@ -67,13 +67,13 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Triangle3<T>::Distance(Vector3<T> point) const
+	constexpr T Triangle3<T>::Distance(const Vector3<T>& point) const
 	{
 		const Vector3 normal = Normal();
 
 		// Compute the vector from the point to the triangle
 		const Vector3 pointToTriangle = a - point;
-		const float distance = Abs(pointToTriangle.Dot(normal));
+		const T distance = Abs(pointToTriangle.Dot(normal));
 
 		return distance;
 	}
