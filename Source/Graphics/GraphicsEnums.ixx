@@ -11,7 +11,6 @@ export namespace jpt::Graphics
 {
 	JPT_ENUM_UINT8(API, 
 		Unknown,
-		OpenGL,
 		DirectX12,
 		Vulkan)
 }

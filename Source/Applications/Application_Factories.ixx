@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
 export module jpt.Application_Factories;
@@ -9,7 +10,6 @@ export module jpt.Application_Factories;
 import jpt.Framework_GLFW;
 import jpt.Framework_Enums;
 import jpt.Window_GLFW;
-import jpt.Renderer_OpenGL;
 import jpt.Graphics.Enums;
 
 import jpt.Json;
@@ -93,15 +93,16 @@ export namespace jpt
 
 		auto pickAPI = [&renderer](Graphics::API api) -> Renderer_Base*
 			{
-				switch (api.Value())
-				{
-				case Graphics::API::OpenGL:
-					return new Renderer_OpenGL();
+				JPT_IGNORE(api);
+				return nullptr;
 
-				default:
-					JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
-					return nullptr;
-				}
+				// TODO: Vulkan
+				//switch (api.Value())
+				//{
+				//	default:
+				//		JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
+				//		return nullptr;
+				//}
 			};
 
 		// Check CommandLine for graphics_api
@@ -118,7 +119,7 @@ export namespace jpt
 		else
 		{
 		#if IS_PLATFORM_WIN64
-			api = Graphics::API::OpenGL;	// TODO: Change to Vulkan or DirectX
+			api = Graphics::API::DirectX12;
 		#else
 			JPT_ERROR("No Graphics API specified in CommandLine or ProjectSettings.json.");
 			return nullptr;

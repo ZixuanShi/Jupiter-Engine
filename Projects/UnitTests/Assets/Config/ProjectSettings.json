@@ -1,5 +1,4 @@
 {
 	"window_title": "UnitTests Dev",
-	"framework_api": "GLFW",
-	"graphics_api": "OpenGL"
+	"framework_api": "GLFW"
 }

@@ -32,11 +32,11 @@ namespace jpt
 		{
 			m_pFramework = Framework_Create();
 			m_pWindow = Window_Create();
-			m_pRenderer = Renderer_Create();
+			//m_pRenderer = Renderer_Create();
 
 			m_pFramework->PreInit();
 			m_pWindow->PreInit();
-			m_pRenderer->PreInit();
+			//m_pRenderer->PreInit();
 		}
 
 		Input::Manager::GetInstance().PreInit();
@@ -54,7 +54,7 @@ namespace jpt
 		{
 			m_pFramework->Init(this);
 			m_pWindow->Init(this);
-			m_pRenderer->Init();
+			//m_pRenderer->Init();
 		}
 
 		Input::Manager::GetInstance().Init();
@@ -66,7 +66,7 @@ namespace jpt
 	{
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
-		m_pRenderer->Update(deltaSeconds);
+		//m_pRenderer->Update(deltaSeconds);
 		Input::Manager::GetInstance().Update(deltaSeconds);
 	}
 
@@ -76,7 +76,7 @@ namespace jpt
 		{
 			JPT_SHUTDOWN(m_pFramework);
 			JPT_SHUTDOWN(m_pWindow);
-			JPT_SHUTDOWN(m_pRenderer);
+			//JPT_SHUTDOWN(m_pRenderer);
 		}
 
 		Input::Manager::GetInstance().Shutdown();
@@ -126,6 +126,6 @@ namespace jpt
 
 	void Application_Base::Render()
 	{
-		m_pRenderer->Render();
+		//m_pRenderer->Render();
 	}
 }
