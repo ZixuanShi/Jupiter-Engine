@@ -25,6 +25,7 @@ namespace jpt
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
+
 		ProjectSettings::GetInstance().Load();
 
 		if (!CommandLine::GetInstance().Has("no_window"))

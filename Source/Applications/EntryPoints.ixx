@@ -19,6 +19,7 @@ import jpt.CommandLine;
 
 namespace jpt
 {
+	// Called by platform-specific entry points
 	int MainImpl_Final(Application_Base* pApp)
 	{
 #if IS_DEBUG
@@ -35,6 +36,8 @@ namespace jpt
 		return 0;
 	}
 
+	// Platform-specific entry points
+	// Should handle command line arguments and call MainImpl_Final
 #if IS_PLATFORM_WIN64
 	export int MainImpl_Win64(Application_Win64* pApp, HINSTANCE hInstance, LPSTR launchArgs, int nCmdShow)
 	{
