@@ -34,12 +34,12 @@ static bool RawThreads()
     protected:
         void Init() override 
         {
-            JPT_LOG("Initializing thread " + m_name + jpt::ToString(GetId()));
+            JPT_LOG("Initializing thread " + m_name);
         }
 
         void Shutdown() override 
         {
-            JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
+            JPT_LOG("Terminating thread " + m_name);
         }
     };
 

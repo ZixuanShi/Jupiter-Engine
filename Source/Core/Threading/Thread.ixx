@@ -10,9 +10,10 @@ module;
 export module jpt.Thread;
 
 import jpt.Atomic;
-import jpt.UniquePtr;
+import jpt.Hash;
 import jpt.String;
 import jpt.TypeDefs;
+import jpt.UniquePtr;
 import jpt.Utilities;
 
 export namespace jpt
@@ -63,7 +64,6 @@ export namespace jpt
         void Stop();
 
         const String& GetName() const noexcept;
-        uint32 GetId() const noexcept;
 
     protected:
         virtual void Init() {}
@@ -141,10 +141,5 @@ export namespace jpt
     const String& Thread_Base::GetName() const noexcept
     {
         return m_name;
-    }
-
-    uint32 Thread_Base::GetId() const noexcept
-    {
-        return m_thread ? m_thread->get_id()._Get_underlying_id() : 0;
     }
 }

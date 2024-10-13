@@ -6,6 +6,7 @@ module;
 #include <stdlib.h>
 #include <cstring>
 #include <initializer_list>
+#include <memory>
 
 export module jpt.Allocator;
 
@@ -101,13 +102,13 @@ export namespace jpt
 	template<typename ...TArgs>
 	constexpr void Allocator<T>::Construct(T* pPointer, TArgs&& ...args)
 	{
-		new(pPointer) T(Forward<TArgs>(args)...);
+		std::construct_at(pPointer, Forward<TArgs>(args)...);
 	}
 
 	template<typename T>
 	constexpr void Allocator<T>::Destruct(T* pPointer)
 	{
-		pPointer->~T();
+		std::destroy_at(pPointer);
 	}
 
 	template<typename T>

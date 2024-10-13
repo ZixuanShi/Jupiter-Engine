@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <compare>
+
 export module jpt.Pair;
 
 import jpt.Utilities;

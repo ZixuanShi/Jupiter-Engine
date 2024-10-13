@@ -321,7 +321,7 @@ export namespace jpt
 			{
 				Allocator<T>::Construct(reinterpret_cast<T*>(pBuffer), *reinterpret_cast<const T*>(pValue));
 			};
-		m_destructor = [](Byte* pBuffer)
+		m_destructor = []([[maybe_unused]] Byte* pBuffer)
 			{
 				if constexpr (!std::is_trivially_destructible_v<T>)
 				{

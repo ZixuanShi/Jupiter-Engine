@@ -6,6 +6,7 @@ module;
 #include "Debugging/Assert.h"
 
 #include <initializer_list>
+#include <compare>
 
 export module jpt.HashMap;
 
