@@ -1,20 +1,6 @@
-for i = 1, #_ARGS do
-    print("Argument " .. i .. " = " .. _ARGS[i])
-end
-
 ---------------------------------------------------------------------------------------------------
 -- Helper functions
 ---------------------------------------------------------------------------------------------------
--- @return True if the argument is found in the command line arguments
-function HasArg(name)
-    for i = 1, #_ARGS do
-        if _ARGS[i] == name then
-            return true
-        end
-    end
-    return false
-end
-
 -- @return The root directory of Jupiter Engine
 local function GetJupiterRootDir()
     local currentDir = path.getdirectory(_SCRIPT)
@@ -32,6 +18,26 @@ output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 -- Client can override context variables to modify build settings
 context = {}
+
+---------------------------------------------------------------------------------------------------
+--- Processing arguments
+---------------------------------------------------------------------------------------------------
+for i = 1, #_ARGS do
+    -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
+    arg = _ARGS[i]
+
+    -- Key-value paired arguments
+    if arg:find("=") then
+        local key, value = arg:match("([^=]+)=([^=]+)")
+        context[key] = value
+    else
+        context[arg] = true
+    end
+end
+
+for key, value in pairs(context) do
+    print(key, value)
+end
 
 ---------------------------------------------------------------------------------------------------
 -- Jupiter workspace

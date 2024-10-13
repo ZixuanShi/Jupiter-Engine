@@ -49,7 +49,6 @@ static bool RawThreads()
 
         void Shutdown() override 
         {
-            jpt::LockGuard lock(rawThreadsMutex);
             JPT_LOG("Terminating thread " + m_name);
         }
     };
