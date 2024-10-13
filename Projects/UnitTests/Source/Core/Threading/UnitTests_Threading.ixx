@@ -12,6 +12,8 @@ export module UnitTests_Threading;
 import jpt.Thread;
 import jpt.Thread.Utils;
 import jpt.ThreadSafeQueue;
+import jpt.Mutex;
+import jpt.LockGuard;
 
 import jpt.CPUInfo;
 
@@ -21,24 +23,33 @@ import jpt.ToString;
 import jpt.Utilities;
 import jpt.DynamicArray;
 
+jpt::Mutex rawThreadsMutex;
+
 static bool RawThreads()
 {
     class TestThread final : public jpt::Thread_Base
     {
     public:
         TestThread(): 
-            jpt::Thread_Base("Test Thread")
+            jpt::Thread_Base("Test Thread ")
         {
         }
 
     protected:
         void Init() override 
         {
+			jpt::LockGuard lock(rawThreadsMutex);
+
+            static size_t s_id = 0;
+			m_name += jpt::ToString(s_id);
+			++s_id;
+
             JPT_LOG("Initializing thread " + m_name);
         }
 
         void Shutdown() override 
         {
+            jpt::LockGuard lock(rawThreadsMutex);
             JPT_LOG("Terminating thread " + m_name);
         }
     };
