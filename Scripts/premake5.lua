@@ -20,29 +20,9 @@ output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 context = {}
 
 ---------------------------------------------------------------------------------------------------
---- Processing arguments
----------------------------------------------------------------------------------------------------
-for i = 1, #_ARGS do
-    -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
-    arg = _ARGS[i]
-
-    -- Key-value paired arguments
-    if arg:find("=") then
-        local key, value = arg:match("([^=]+)=([^=]+)")
-        context[key] = value
-    else
-        context[arg] = true
-    end
-end
-
-for key, value in pairs(context) do
-    print(key, value)
-end
-
----------------------------------------------------------------------------------------------------
 -- Jupiter workspace
 ---------------------------------------------------------------------------------------------------
-function CreateEngineWorkspace(context)
+function CreateEngineWorkspace()
     workspace (context.project_name)
         configurations 
         { 
@@ -122,8 +102,7 @@ function CreateEngineWorkspace(context)
         }
 end
 
--- Default template for clients
-function CreateClientProject(context)
+function CreateClientProject()
     project (context.project_name)
     filter "platforms:Win64"
         kind "WindowedApp"
@@ -184,4 +163,31 @@ function CreateClientProject(context)
             "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
             "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
         }
+end
+
+function GenerateProjectFiles()
+    -- Parse command line arguments to context
+    for i = 1, #_ARGS do
+        -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
+        arg = _ARGS[i]
+
+        -- Key-value paired arguments
+        if arg:find("=") then
+            local key, value = arg:match("([^=]+)=([^=]+)")
+            context[key] = value
+        else
+            context[arg] = true
+        end
+    end
+
+    assert(context.project_name, "Project name is not provided")
+    assert(context.project_dir, "Project directory is not provided")
+
+    -- Log context variables
+    for key, value in pairs(context) do
+        print(key, value)
+    end
+
+    CreateEngineWorkspace()
+    CreateClientProject()
 end

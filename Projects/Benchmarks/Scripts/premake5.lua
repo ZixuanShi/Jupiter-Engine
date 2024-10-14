@@ -10,5 +10,4 @@ include (FindJupiterRootDir() .. "Scripts/premake5.lua")
 context.project_name = "Benchmarks"
 context.project_dir  = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/Benchmarks/"
 
-CreateEngineWorkspace(context)
-CreateClientProject(context)
+GenerateProjectFiles()
