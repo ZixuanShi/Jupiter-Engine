@@ -316,17 +316,30 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		const TQuaternion<T> x = FromAxisAngle(Vector3<T>::Right(),   ToRadians(degrees.x));
-		const TQuaternion<T> y = FromAxisAngle(Vector3<T>::Up(),      ToRadians(degrees.y));
-		const TQuaternion<T> z = FromAxisAngle(Vector3<T>::Forward(), ToRadians(degrees.z));
+		// Step 1: Convert degrees to radians
+		const Vector3<T> radians = degrees * (kPi<T> / static_cast<T>(180));
 
-		return x * y * z;
+		// Step 2: Calculate cosine and sine of half angles
+		const T cx = std::cos(radians.x * static_cast<T>(0.5));
+		const T cy = std::cos(radians.y * static_cast<T>(0.5));
+		const T cz = std::cos(radians.z * static_cast<T>(0.5));
+		const T sx = std::sin(radians.x * static_cast<T>(0.5));
+		const T sy = std::sin(radians.y * static_cast<T>(0.5));
+		const T sz = std::sin(radians.z * static_cast<T>(0.5));
+
+		// Step 3: Apply the conversion formula
+		const T qw = cx * cy * cz - sx * sy * sz;
+		const T qx = sx * cy * cz + cx * sy * sz;
+		const T qy = cx * sy * cz - sx * cy * sz;
+		const T qz = cx * cy * sz + sx * sy * cz;
+
+		return TQuaternion<T>(qx, qy, qz, qw);
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(T yaw, T pitch, T row)
+	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(T pitch, T yaw, T row)
 	{
-		return FromDegrees(Vector3<T>(yaw, pitch, row));
+		return FromDegrees(Vector3<T>(pitch, yaw, row));
 	}
 
 	template<Numeric T>
