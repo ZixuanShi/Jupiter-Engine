@@ -166,6 +166,7 @@ function CreateClientProject()
 end
 
 function GenerateProjectFiles()
+    print("----------------------------------------------------\n-- Parsing command line arguments\n----------------------------------------------------")
     -- Parse command line arguments to context
     for i = 1, #_ARGS do
         -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
@@ -188,6 +189,7 @@ function GenerateProjectFiles()
         print(key, value)
     end
 
+    print("----------------------------------------------------\n-- Generating Project Files\n----------------------------------------------------")
     CreateEngineWorkspace()
     CreateClientProject()
 end
