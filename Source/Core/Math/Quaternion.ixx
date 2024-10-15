@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Assert.h"
+
 #include <cmath>
 
 export module jpt.Quaternion;
@@ -297,6 +299,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
 	{
+		JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
+
 		const T halfAngle = radians * static_cast<T>(0.5);
 		const T sinHalfAngle = std::sin(halfAngle);
 		const T cosHalfAngle = std::cos(halfAngle);
@@ -312,8 +316,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		const TQuaternion<T> x = FromAxisAngle(Vector3<T>::Right(), ToRadians(degrees.x));
-		const TQuaternion<T> y = FromAxisAngle(Vector3<T>::Up(), ToRadians(degrees.y));
+		const TQuaternion<T> x = FromAxisAngle(Vector3<T>::Right(),   ToRadians(degrees.x));
+		const TQuaternion<T> y = FromAxisAngle(Vector3<T>::Up(),      ToRadians(degrees.y));
 		const TQuaternion<T> z = FromAxisAngle(Vector3<T>::Forward(), ToRadians(degrees.z));
 
 		return x * y * z;
@@ -337,7 +341,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr String TQuaternion<T>::ToString() const
 	{
-		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", x, y, z, w);
+		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f, w: %.3f", x, y, z, w);
 	}
 }
 

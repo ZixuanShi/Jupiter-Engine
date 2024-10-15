@@ -78,7 +78,6 @@ export namespace jpt
 		constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
 		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
 		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
-		constexpr Vector3 Project(const Vector3& vector3, const Vector3& normal) const;
 
 		constexpr static T Dot(const Vector3& left, const Vector3&right);
 		constexpr static Vector3 Cross(const Vector3& left, const Vector3&right);
@@ -90,6 +89,7 @@ export namespace jpt
 		constexpr static T Angle(const Vector3& left, const Vector3&right);
 		constexpr static Vector3 Lerp(const Vector3& start, const Vector3&end, T t);
 		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3&end, const Vector3&value);
+		constexpr static Vector3 Project(const Vector3& vector3, const Vector3& normal);
 
 		constexpr String ToString() const;
 	};
@@ -348,16 +348,6 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& vector3, const Vector3& normal) const
-	{
-		// projection = v - (v · n) / (n · n) * n
-		
-		const T dotProduct = this->Dot(normal);
-		const T normalLengthSquared = normal.Dot(normal);
-		return *this - normal * (dotProduct / normalLengthSquared);
-	}
-
-	template<Numeric T>
 	constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3&right)
 	{
 		return left.Dot(right);
@@ -417,6 +407,16 @@ export namespace jpt
 	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& start, const Vector3&end, const Vector3&value)
 	{
 		return start.InvLerp(end, value);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& vector3, const Vector3& normal)
+	{
+		// projection = v - (v · n) / (n · n) * n
+
+		const T dotProduct = vector3.Dot(normal);
+		const T normalLengthSquared = normal.Dot(normal);
+		return vector3 - normal * (dotProduct / normalLengthSquared);
 	}
 
 	template<Numeric T>

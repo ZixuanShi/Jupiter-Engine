@@ -82,6 +82,9 @@ bool UnitTests_Quaternion_AxisAngles()
 	Quatf quaternion = Quatf::FromAxisAngle(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion == Quatf(0.0f,0.383f, 0.0f, 0.924f));
 
+	quaternion = Quatf::FromAxisAngle(Vec3f(1, 0, 0), jpt::ToRadians(90.0f));
+	JPT_ENSURE(quaternion == Quatf(0.707f, 0, 0, 0.707f));
+
 	return true;
 }
 
@@ -89,6 +92,9 @@ bool UnitTests_Quaternion_EulerAngles()
 {
 	Quatf quaternion = Quatf::FromDegrees(Vec3f(90, 45, 90));
 	JPT_ENSURE(quaternion == Quatf(0.653f, -0.271f, 0.653f, 0.271f));
+
+	quaternion = Quatf::FromDegrees(Vec3f(12, 136, 25));
+	JPT_ENSURE(quaternion == Quatf(0.238f, 0.892f, 0.175f, 0.343f));
 
 	return true;
 }
