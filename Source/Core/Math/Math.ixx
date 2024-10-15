@@ -197,9 +197,19 @@ export namespace jpt
 	{
 		return radians * static_cast<TFloat>(180) / kPi<TFloat>;
 	}
+	template<typename T>
+	constexpr T ToDegrees(const T& obj)
+	{
+		return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
+	}
 	template<Floating TFloat = float32>
 	constexpr TFloat ToRadians(TFloat degrees)
 	{
 		return degrees * kPi<TFloat> / static_cast<TFloat>(180);
+	}
+	template<typename T>
+	constexpr T ToRadians(const T& obj)
+	{
+		return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
 	}
 }
