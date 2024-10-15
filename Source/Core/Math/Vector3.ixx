@@ -24,6 +24,8 @@ export namespace jpt
 		T z = static_cast<T>(0);
 
 	public:
+		using NumericType = T;
+
 		static consteval Vector3 Zero()     { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 0)); }
 		static consteval Vector3 One()      { return Vector3(static_cast<T>( 1), static_cast<T>( 1), static_cast<T>( 1)); }
 		static consteval Vector3 Up()       { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }

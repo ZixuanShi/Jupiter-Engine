@@ -25,6 +25,8 @@ namespace jpt
 		Vector4<T> m[4];
 
 	public:
+		using NumericType = T;
+
 		static consteval Matrix44 Identity() { return Matrix44(); }
 
 	public:
@@ -50,7 +52,7 @@ namespace jpt
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& degrees);
-		constexpr static Matrix44<T> FromDegrees(T yaw, T pitch, T row);
+		constexpr static Matrix44<T> FromDegrees(T pitch, T yaw, T row);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -250,17 +252,39 @@ namespace jpt
 	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		Matrix44<T> result = Matrix44<T>::Identity();
-		result.RotateX(ToRadians(degrees.x));
-		result.RotateY(ToRadians(degrees.y));
-		result.RotateZ(ToRadians(degrees.z));
-		return result;
+		// Step 1: Convert degrees to radians
+		const Vector3<T> radians = ToRadians(degrees);
+
+		// Step 2: Calculate the cosine and sine of the angles
+		const T cx = std::cos(radians.x);
+		const T cy = std::cos(radians.y);
+		const T cz = std::cos(radians.z);
+		const T sx = std::sin(radians.x);
+		const T sy = std::sin(radians.y);
+		const T sz = std::sin(radians.z);
+
+		// Step 3: Apply the rotation matrix formula
+		const T m00 = cy * cz;
+		const T m01 = -cy * sz;
+		const T m02 = sy;
+		const T m10 = cx * sz + sx * sy * cz;
+		const T m11 = cx * cz - sx * sy * sz;
+		const T m12 = -sx * cy;
+		const T m20 = sx * sz - cx * sy * cz;
+		const T m21 = sx * cz + cx * sy * sz;
+		const T m22 = cx * cy;
+
+		// Step 4: Fill in the matrix
+		return Matrix44<T>(m00, m01, m02, 0,
+			               m10, m11, m12, 0,
+			               m20, m21, m22, 0,
+			               0,   0,   0,   1);
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T yaw, T pitch, T row)
+	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T pitch, T yaw, T row)
 	{
-		return FromDegrees(Vector3<T>(yaw, pitch, row));
+		return FromDegrees(Vector3<T>(pitch, yaw, row));
 	}
 
 	template<Numeric T>

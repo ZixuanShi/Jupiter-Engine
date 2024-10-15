@@ -28,6 +28,8 @@ namespace jpt
 		T w = static_cast<T>(1);
 
 	public:
+		using NumericType = T;
+
 		static consteval TQuaternion Identity() { return TQuaternion(); }
 
 	public:
@@ -317,7 +319,7 @@ namespace jpt
 	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const Vector3<T>& degrees)
 	{
 		// Step 1: Convert degrees to radians
-		const Vector3<T> radians = degrees * (kPi<T> / static_cast<T>(180));
+		const Vector3<T> radians = ToRadians(degrees);
 
 		// Step 2: Calculate cosine and sine of half angles
 		const T cx = std::cos(radians.x * static_cast<T>(0.5));
