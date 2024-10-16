@@ -11,10 +11,11 @@ export module jpt.Quaternion;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.Math;
-import jpt.TypeDefs;
-import jpt.Vector3;
+import jpt.Matrix44;
 import jpt.String;
 import jpt.ToString;
+import jpt.TypeDefs;
+import jpt.Vector3;
 
 namespace jpt
 {
@@ -53,6 +54,7 @@ namespace jpt
 		constexpr void Normalize();
 		constexpr void Conjugate();
 		constexpr void Inverse();
+		constexpr Matrix44<T> ToMatrix() const;
 
 		constexpr TQuaternion Normalized() const;
 		constexpr TQuaternion Conjugated() const;
@@ -195,6 +197,35 @@ namespace jpt
 			z = -z * invLength2;
 			w = w * invLength2;
 		}
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> TQuaternion<T>::ToMatrix() const
+	{
+		const T xx = x * x;
+		const T yy = y * y;
+		const T zz = z * z;
+		const T xy = x * y;
+		const T xz = x * z;
+		const T xw = x * w;
+		const T yz = y * z;
+		const T yw = y * w;
+		const T zw = z * w;
+
+		const T m00 = 1 - 2 * (yy + zz);
+		const T m01 = 2 * (xy - zw);
+		const T m02 = 2 * (xz + yw);
+		const T m10 = 2 * (xy + zw);
+		const T m11 = 1 - 2 * (xx + zz);
+		const T m12 = 2 * (yz - xw);
+		const T m20 = 2 * (xz - yw);
+		const T m21 = 2 * (yz + xw);
+		const T m22 = 1 - 2 * (xx + yy);
+
+		return Matrix44<T>(m00, m01, m02, 0,
+			               m10, m11, m12, 0,
+			               m20, m21, m22, 0,
+			                 0,   0,   0, 1);
 	}
 
 	template<Numeric T>

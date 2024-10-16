@@ -9,6 +9,7 @@ export module UnitTests_Quaternion;
 import jpt.Quaternion;
 import jpt.Utilities;
 import jpt.Math;
+import jpt.Matrix44;
 
 bool UnitTests_Quaternion_Lerp()
 {
@@ -99,6 +100,19 @@ bool UnitTests_Quaternion_EulerAngles()
 	return true;
 }
 
+bool UnitTests_Quaternion_ToMatrix()
+{
+	Matrix44f matrix = Matrix44f::FromDegrees(180, -60, 22);
+	Quatf quaternion = Quatf::FromDegrees(180, -60, 22);
+	JPT_ENSURE(matrix == quaternion.ToMatrix());
+
+	matrix = Matrix44f::FromDegrees(90, 45, 90);
+	quaternion = Quatf::FromDegrees(90, 45, 90);
+	JPT_ENSURE(matrix == quaternion.ToMatrix());
+
+	return true;
+}
+
 export bool RunUnitTests_Quaternion()
 {
 	Quatf quaternion = Quatf::Identity();
@@ -110,6 +124,7 @@ export bool RunUnitTests_Quaternion()
 	JPT_ENSURE(UnitTests_Quaternion_Multiplication());
 	JPT_ENSURE(UnitTests_Quaternion_AxisAngles());
 	JPT_ENSURE(UnitTests_Quaternion_EulerAngles());
+	JPT_ENSURE(UnitTests_Quaternion_ToMatrix());
 
 	return true;
 }

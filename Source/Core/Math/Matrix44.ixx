@@ -64,6 +64,7 @@ namespace jpt
 		constexpr bool IsOrthogonal() const;
 
 		constexpr String ToString() const;
+		constexpr bool operator==(const Matrix44<T>& rhs) const;
 	};
 
 	template<Numeric T>
@@ -393,6 +394,15 @@ namespace jpt
 			                                                                                                                           m[1][0], m[1][1], m[1][2], m[1][3],
 			                                                                                                                           m[2][0], m[2][1], m[2][2], m[2][3],
 			                                                                                                                           m[3][0], m[3][1], m[3][2], m[3][3]);
+	}
+
+	template<Numeric T>
+	constexpr bool Matrix44<T>::operator==(const Matrix44<T>& rhs) const
+	{
+		return m[0] == rhs.m[0] &&
+			   m[1] == rhs.m[1] &&
+			   m[2] == rhs.m[2] &&
+			   m[3] == rhs.m[3];
 	}
 }
 
