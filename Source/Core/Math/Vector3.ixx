@@ -26,14 +26,14 @@ export namespace jpt
 	public:
 		using NumericType = T;
 
-		static consteval Vector3 Zero()     { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 One()      { return Vector3(static_cast<T>( 1), static_cast<T>( 1), static_cast<T>( 1)); }
-		static consteval Vector3 Up()       { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
-		static consteval Vector3 Down()     { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
-		static consteval Vector3 Left()     { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 Right()    { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
-		static consteval Vector3 Forward()  { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
-		static consteval Vector3 Backward() { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
+		static consteval Vector3 Zero()     { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
+		static consteval Vector3 One()      { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
+		static consteval Vector3 Up()       { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
+		static consteval Vector3 Down()     { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
+		static consteval Vector3 Left()     { return Vector3(static_cast<T>(-1),  static_cast<T>(0),  static_cast<T>(0)); }
+		static consteval Vector3 Right()    { return Vector3( static_cast<T>(1),  static_cast<T>(0),  static_cast<T>(0)); }
+		static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
+		static consteval Vector3 Backward() { return Vector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
 
 	public:
 		constexpr Vector3() = default;
@@ -80,18 +80,19 @@ export namespace jpt
 		constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
 		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
 		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
+		constexpr Vector3 Project(const Vector3& to) const;
 
-		constexpr static T Dot(const Vector3& left, const Vector3&right);
-		constexpr static Vector3 Cross(const Vector3& left, const Vector3&right);
+		constexpr static T Dot(const Vector3& left, const Vector3& right);
+		constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
 		constexpr static T Length(const Vector3& vector3);
 		constexpr static T Length2(const Vector3& vector3);
-		constexpr static T Distance(const Vector3& left, const Vector3&right);
-		constexpr static T Distance2(const Vector3& left, const Vector3&right);
+		constexpr static T Distance(const Vector3& left, const Vector3& right);
+		constexpr static T Distance2(const Vector3& left, const Vector3& right);
 		constexpr static Vector3 Normalize(const Vector3& vector3);
-		constexpr static T Angle(const Vector3& left, const Vector3&right);
-		constexpr static Vector3 Lerp(const Vector3& start, const Vector3&end, T t);
-		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3&end, const Vector3&value);
-		constexpr static Vector3 Project(const Vector3& vector3, const Vector3& normal);
+		constexpr static T Angle(const Vector3& left, const Vector3& right);
+		constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
+		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3& end, const Vector3& value);
+		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
 
 		constexpr String ToString() const;
 	};
@@ -350,6 +351,22 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& to) const
+	{
+		// Projects from this vector to the other
+		// Formula: proj_v(u) = (u . v / |v|^2) * v
+
+		const T length2 = to.Length2();
+		if (length2 == static_cast<T>(0))
+		{
+			return Vector3<T>::Zero();
+		}
+
+		const T dot = this->Dot(to);
+		return to * (dot / length2);
+	}
+
+	template<Numeric T>
 	constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3&right)
 	{
 		return left.Dot(right);
@@ -412,19 +429,15 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& vector3, const Vector3& normal)
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& from, const Vector3& to)
 	{
-		// projection = v - (v · n) / (n · n) * n
-
-		const T dotProduct = vector3.Dot(normal);
-		const T normalLengthSquared = normal.Dot(normal);
-		return vector3 - normal * (dotProduct / normalLengthSquared);
+		return from.Project(to);
 	}
 
 	template<Numeric T>
 	constexpr String Vector3<T>::ToString() const
 	{
-		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f", x, y, z);
+		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", x, y, z);
 	}
 }
 
