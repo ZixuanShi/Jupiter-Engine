@@ -1,8 +1,12 @@
 function FindJupiterRootDir()
-    local path = debug.getinfo(1).source
-    local index = path:lower():find("jupiter%-engine")
-    path = path:sub(2, index + #"Jupiter-Engine")   -- Default path C:/Program Files/Jupiter Technologies/Jupiter-Engine/
-    return path
+    local envVar = os.getenv("JUPITER_ENGINE_DIR")
+    if envVar then
+        print("Jupiter Engine directory found at: " .. envVar)
+        return envVar
+    else
+        print("Jupiter Engine directory not found. Using default path C:/Program Files/Jupiter Technologies/Jupiter-Engine/")
+        return "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"
+    end
 end
 
 include (FindJupiterRootDir() .. "Scripts/premake5.lua")

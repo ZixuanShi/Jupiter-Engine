@@ -30,7 +30,7 @@ def create_config():
 }"""
 
 	content_settings = content_settings.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Assets/Config/Settings.json", "w") as file:
+	with open(project_directory + "/Assets/Config/ProjectSettings.json", "w") as file:
 	    file.write(content_settings)
 
 def create_assets():
@@ -43,15 +43,10 @@ def create_assets():
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generate_project_files_bat():
-	generator_bat = """cd /d "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Scripts"
-
-set args="<ProjectName>" "<ProjectDirectory>"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" <action> %args%
-
+	generator_bat = """set args="platform=win64"
+call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
 pause
 """
-	generator_bat = generator_bat.replace("<ProjectName>", project_name)
-	generator_bat = generator_bat.replace("<ProjectDirectory>", project_directory)
 	
 	# 2022
 	with open(project_directory + "/Scripts/GenerateProjectFiles_vs2022.bat", "w") as file:
@@ -59,12 +54,37 @@ pause
 		file.write(vs2022)
 
 	# Add any other versions here
-	
+
+# <ProjectDirectory>/Scripts/premake5.lua
+def create_premake_lua():
+	premake_lua = """function FindJupiterRootDir()
+    local envVar = os.getenv("JUPITER_ENGINE_DIR")
+    if envVar then
+        print("Jupiter Engine directory found at: " .. envVar)
+        return envVar
+    else
+        print("Jupiter Engine directory not found. Using default path C:/Program Files/Jupiter Technologies/Jupiter-Engine/")
+        return "C:/Program Files/Jupiter Technologies/Jupiter-Engine/"
+    end
+end
+
+include (FindJupiterRootDir() .. "Scripts/premake5.lua")
+
+context.project_name = "<ProjectName>"
+context.project_dir  = "<ProjectDirectory>"
+
+GenerateProjectFiles()
+"""
+	premake_lua = premake_lua.replace("<ProjectName>", project_name)
+	premake_lua = premake_lua.replace("<ProjectDirectory>", project_directory)
+	with open(project_directory + "/Scripts/premake5.lua", "w") as file:
+	    file.write(premake_lua)
 
 def create_scripts():
 	os.makedirs(project_directory + "/Scripts")
 
 	create_generate_project_files_bat()
+	create_premake_lua()
 
 
 # -----------------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 -- Helper functions
 ---------------------------------------------------------------------------------------------------
 -- @return The root directory of Jupiter Engine
-local function GetJupiterRootDir()
+local function GetJupiterDir()
     local currentDir = path.getdirectory(_SCRIPT)
 
     -- Removes "/Scripts" from the path
@@ -13,7 +13,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Data
 ---------------------------------------------------------------------------------------------------
-jupiter_dir = GetJupiterRootDir()
+jupiter_dir = GetJupiterDir()
 output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 -- Client can override context variables to modify build settings
