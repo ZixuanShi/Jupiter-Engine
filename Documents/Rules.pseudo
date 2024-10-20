@@ -9,3 +9,9 @@ Object Life Cycle:
     - Update
     - FixedUpdate
     - Terminate
+
+External Dependencies/Tools Folder:
+    - Bin
+    - Include
+    - Libs
+    - Source
