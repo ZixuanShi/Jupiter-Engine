@@ -2,13 +2,19 @@
 
 module;
 
+#include "Profiling/TimingProfiler.h"
+#include "Debugging/Logger.h"
+
 #include <vector>
 
 export module Benchmarks_DynamicArray;
 
 import jpt.BenchmarksReporter;
 import jpt.DynamicArray;
+import jpt.String;
+import jpt.ToString;
 import jpt.TypeDefs;
+import jpt.Rand;
 
 static void Add_Trivial(jpt::BenchmarksReporter& reporter)
 {
@@ -88,10 +94,29 @@ static void Erase_Trivial(jpt::BenchmarksReporter& reporter)
 	reporter.Add(unit);
 }
 
+static void Iterate()
+{
+	JPT_SCOPED_TIMING_PROFILER("DynamicArrray iterate");
+
+	static constexpr size_t kCount = 1'000'000;
+
+	jpt::DynamicArray<jpt::String> dynamicArray;
+	dynamicArray.Resize(kCount);
+
+	int32 i = 0;
+	for (jpt::DynamicArray<jpt::String>::Iterator iterator = dynamicArray.begin(); iterator < dynamicArray.end(); ++iterator)
+	{
+		*iterator = jpt::ToString(i);
+		++i;
+	}
+
+	JPT_LOG(dynamicArray[jpt::RNG::Global().MaxInt(kCount)]);	
+}
+
 export void RunBenchmarks_DynamicArray(jpt::BenchmarksReporter& reporter)
 {
 	Add_Trivial(reporter);
 	Erase_Trivial(reporter);
 
-
+	Iterate();
 }

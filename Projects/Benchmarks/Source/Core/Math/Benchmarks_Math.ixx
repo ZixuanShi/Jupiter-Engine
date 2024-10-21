@@ -26,5 +26,5 @@ static void Min([[maybe_unused]] jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_Math(jpt::BenchmarksReporter& reporter)
 {
-	Min(reporter);
+	//Min(reporter);
 }
