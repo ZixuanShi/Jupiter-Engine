@@ -45,7 +45,7 @@ function CreateEngineWorkspace()
 
         -- Programming
         language   "C++"
-        cppdialect "C++latest"
+        cppdialect "C++20"
         warnings   "Extra"
         staticruntime    "On"
         allmodulespublic "On"
