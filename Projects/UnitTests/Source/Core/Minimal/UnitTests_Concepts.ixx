@@ -13,10 +13,10 @@ import jpt.Utilities;
 import jpt.Vector2;
 import jpt.Vector3;
 
-template<typename T>
+template<jpt::Trivial T>
 bool IsTrivial()
 {
-    return jpt::IsTrivial<T>;
+    return true;
 }
 
 bool UnitTests_Trivial()

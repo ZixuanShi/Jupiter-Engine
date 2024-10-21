@@ -32,6 +32,13 @@ export namespace jpt
 	template<typename TParent , typename TDerived>
 	concept BaseOf = std::is_base_of_v<TParent, TDerived>;
 
+	// If a simple struct is deduced as non-trivial, you can override jpt::IsTrivial<T> to return true in your struct. Refer to Vector2
+	template<typename T>
+	concept Trivial = jpt::IsTrivial<T> && jpt::IsSmall<T>;
+
+	template<typename T>
+	concept NonTrivial = !jpt::IsTrivial<T> || !jpt::IsSmall<T>;
+
 #pragma endregion
 
 #pragma region Constructing
@@ -54,6 +61,12 @@ export namespace jpt
 		left < right;
 		left > right;
 	};
+
+	/** Avoid copy-constructing when comparing non-trivially copiable objects */
+	template<typename T>
+	concept ComparableTrivial = Comparable<T> && Trivial<T>;
+	template<typename T>
+	concept ComparableNonTrivial = Comparable<T> && NonTrivial<T>;
 
 #pragma endregion
 
@@ -89,5 +102,11 @@ export namespace jpt
 	{
 		typename T::TData;
 	};
+
+	template<typename TContainer>
+	concept IndexableTrivial = Indexable<TContainer> && Trivial<typename TContainer::TData>;
+
+	template<typename TContainer>
+	concept IndexableNonTrivial = Indexable<TContainer> && NonTrivial<typename TContainer::TData>;
 #pragma endregion Container
 }
