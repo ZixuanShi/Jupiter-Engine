@@ -158,7 +158,7 @@ namespace jpt
 	export Optional<JsonMap> ReadJsonFile(const Path& path)
 	{
 		std::ifstream file(path.ConstBuffer(), std::ios::in);
-		if (!file.is_open())
+		if (!file.is_open()) [[unlikely]]
 		{
 			JPT_LOG("Couldn't find Json File: %ls", path.ConstBuffer());
 			return {};

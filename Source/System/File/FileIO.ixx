@@ -26,7 +26,7 @@ export namespace jpt::File
 	{
 		std::error_code errorCode;
 		const bool result = std::filesystem::exists(absoluteFullPath.ConstBuffer(), errorCode);
-		if (errorCode)
+		if (errorCode) [[unlikely]]
 		{
 			JPT_ERROR("Error checking if file exists (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
@@ -39,9 +39,9 @@ export namespace jpt::File
 	{
 		std::error_code errorCode;
 		std::filesystem::create_directories(absoluteFullPath.ConstBuffer(), errorCode);
-		if (errorCode)
+		if (errorCode) [[unlikely]]
 		{
-			JPT_ERROR("Error creating file (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
+			JPT_ERROR("Error creating directory (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
 	}
 
@@ -49,7 +49,7 @@ export namespace jpt::File
 	void EnsureParentDirExists(const Path& absoluteFullPath)
 	{
 		const Path parentPath = absoluteFullPath.GetParent();
-		if (!Exists(parentPath))
+		if (!Exists(parentPath)) [[unlikely]]
 		{
 			MakeDirectory(parentPath);
 		}
@@ -60,7 +60,7 @@ export namespace jpt::File
 	{
 		std::error_code errorCode;
 		const bool result = std::filesystem::remove_all(absoluteFullPath.ConstBuffer(), errorCode);
-		if (errorCode)
+		if (errorCode) [[unlikely]]
 		{
 			JPT_ERROR("Error deleting file (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
 		}
@@ -73,7 +73,7 @@ export namespace jpt::File
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
 
-		if (!serializer.IsOpen())
+		if (!serializer.IsOpen()) [[unlikely]]
 		{
 			JPT_ERROR("Failed to open file for reading with SerializerMode::Read: %ls", path.ConstBuffer());
 			return Optional<String>();
@@ -92,7 +92,7 @@ export namespace jpt::File
 		EnsureParentDirExists(path);
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 
-		if (!serializer.IsOpen())
+		if (!serializer.IsOpen()) [[unlikely]]
 		{
 			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
 			return false;
@@ -116,7 +116,7 @@ export namespace jpt::File
 		EnsureParentDirExists(path);
 		Serializer serializer(path.ConstBuffer(), SerializerMode::Append);
 
-		if (!serializer.IsOpen())
+		if (!serializer.IsOpen()) [[unlikely]]
 		{
 			JPT_ERROR("Failed to open file for writing with SerializerMode::Append: %ls", path.ConstBuffer());
 			return false;
@@ -140,7 +140,7 @@ export namespace jpt::File
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
 
-		if (!serializer.IsOpen())
+		if (!serializer.IsOpen()) [[unlikely]]
 		{
 			JPT_ERROR("Failed to open file for reading with SerializerMode::ReadBinary: %ls", path.ConstBuffer());
 			return Optional<T>();
@@ -157,7 +157,7 @@ export namespace jpt::File
 	{
 		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
 
-		if (!serializer.IsOpen())
+		if (!serializer.IsOpen()) [[unlikely]]
 		{
 			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
 			return false;
