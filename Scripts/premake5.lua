@@ -18,24 +18,24 @@ output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 
 -- Client can override context variables to modify build settings
 context = {}
+context.configurations =
+{
+    "Debug",        -- Debugging. No optimization will be performed
+    "Development",  -- Develop the project. Use Engine's editors and tools 
+    "Release",      -- Relese/Shipping
+}
+context.platforms =
+{
+    "Win64",
+}
 
 ---------------------------------------------------------------------------------------------------
 -- Jupiter workspace
 ---------------------------------------------------------------------------------------------------
 function CreateEngineWorkspace()
     workspace (context.project_name)
-        configurations 
-        { 
-            "Debug",        -- Debugging. No optimization will be performed
-            "Development",  -- Develop the project. Use Engine's editors and tools 
-            "Release",      -- Relese/Shipping
-        }
-
-        platforms 
-        {
-            "Win64",
-        }
-
+        configurations(context.configurations)
+        platforms(context.platforms)
         startproject (context.project_name)
 
         -- Path
@@ -157,8 +157,7 @@ function CreateClientProject()
         }
 end
 
-function GenerateProjectFiles()
-    print("----------------------------------------------------\n-- Parsing command line arguments\n----------------------------------------------------")
+function ParseContext()
     -- Parse command line arguments to context
     for i = 1, #_ARGS do
         -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
@@ -180,6 +179,11 @@ function GenerateProjectFiles()
     for key, value in pairs(context) do
         print(key, value)
     end
+end
+
+function GenerateProjectFiles()
+    print("----------------------------------------------------\n-- Parsing command line arguments\n----------------------------------------------------")
+    ParseContext()
 
     print("----------------------------------------------------\n-- Generating Project Files\n----------------------------------------------------")
     CreateEngineWorkspace()

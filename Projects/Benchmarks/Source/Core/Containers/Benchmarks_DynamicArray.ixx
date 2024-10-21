@@ -10,7 +10,7 @@ import jpt.BenchmarksReporter;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 
-static void Add(jpt::BenchmarksReporter& reporter)
+static void Add_Trivial(jpt::BenchmarksReporter& reporter)
 {
 	static constexpr size_t kCount = 1'000'000;
 	jpt::StopWatch::Point now;
@@ -49,7 +49,7 @@ static void Add(jpt::BenchmarksReporter& reporter)
 	reporter.Add(unit);
 }
 
-static void Erase(jpt::BenchmarksReporter& reporter)
+static void Erase_Trivial(jpt::BenchmarksReporter& reporter)
 {
 	static constexpr size_t kCount = 1'000'000;
 	jpt::StopWatch::Point now;
@@ -90,6 +90,8 @@ static void Erase(jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_DynamicArray(jpt::BenchmarksReporter& reporter)
 {
-	Add(reporter);
-	Erase(reporter);
+	Add_Trivial(reporter);
+	Erase_Trivial(reporter);
+
+
 }

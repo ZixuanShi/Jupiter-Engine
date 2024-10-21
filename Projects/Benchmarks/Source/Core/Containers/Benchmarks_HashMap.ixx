@@ -7,24 +7,36 @@ module;
 
 export module Benchmarks_HashMap;
 
+import jpt.BenchmarksReporter;
 import jpt.HashMap;
 import jpt.TypeDefs;
 import jpt.String;
 import jpt.Utilities;
 
-static void JPT_HashMap_Add()
+static void Add_Trivial(jpt::BenchmarksReporter& reporter)
 {
-	//JPT_SCOPED_TIMING_PROFILER("JPT_HashMap_Add");
+	static constexpr size_t kCount = 1'000'000;
+	jpt::StopWatch::Point now;
+	jpt::TimePrecision jptResult = 0.0;
 
-	//jpt::HashMap<int32, jpt::String> map;
+	{
+		now = jpt::StopWatch::Now();
 
-	//for (int32 i = 0; i < 1'000'000; ++i)
-	//{
-	//	map.Add(i, "Hello World");
-	//}
+		jpt::HashMap<int32, int32> map;
+		map.Reserve(kCount);
+		for (int32 i = 0; i < kCount; ++i)
+		{
+			map.Add(i, i);
+		}
+
+		jptResult = jpt::StopWatch::GetMsFrom(now);
+	}
+
+	jpt::BenchmarkUnit unit{ "HashMap", "Add 1'000'000 elements", jptResult };
+	reporter.Add(unit);
 }
 
-export void RunBenchmarks_HashMap()
+export void RunBenchmarks_HashMap(jpt::BenchmarksReporter& reporter)
 {
-	JPT_HashMap_Add();
+	Add_Trivial(reporter);
 }

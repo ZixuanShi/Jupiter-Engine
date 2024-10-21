@@ -17,20 +17,7 @@ export namespace jpt
 {
 #pragma region Clamping
 	/** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
-	template<ComparableTrivial T>
-	constexpr T Clamp(T value, T min, T max)
-	{
-		if (value < min)
-		{
-			return min;
-		}
-		else if (value > max)
-		{
-			return max;
-		}
-		return value;
-	}
-	template<ComparableNonTrivial T>
+	template<typename T>
 	constexpr T Clamp(const T& value, const T& min, const T& max)
 	{
 		if (value < min)
@@ -46,19 +33,7 @@ export namespace jpt
 
 	/** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
 		@param outValue:	Will be changed if less than min or bigger than max */
-	template<ComparableTrivial T>
-	constexpr void ClampTo(T& outValue, T min, T max)
-	{
-		if (outValue < min)
-		{
-			outValue = min;
-		}
-		else if (outValue > max)
-		{
-			outValue = max;
-		}
-	}
-	template<ComparableNonTrivial T>
+	template<typename T>
 	constexpr void ClampTo(T& outValue, const T& min, const T& max)
 	{
 		if (outValue < min)
@@ -70,61 +45,28 @@ export namespace jpt
 			outValue = max;
 		}
 	}
-
 #pragma endregion Clamping
 
 #pragma region Lerp
-	template<NonTrivial T, Floating TFloat = float32>
+	template<typename T, Floating TFloat = float32>
 	constexpr T Lerp(const T& start, const T& end, TFloat t)
 	{
 		return start + t * (end - start);
 	}
-	template<Trivial T, Floating TFloat = float32>
-	constexpr T Lerp(T start, T end, TFloat t)
-	{
-		return start + t * (end - start);
-	}
-	template<NonTrivial T, Floating TFloat = float32>
+	template<typename T, Floating TFloat = float32>
 	constexpr void Lerp(T& value, const T& start, const T& end, TFloat t)
 	{
 		value = start + t * (end - start);
 	}
-	template<Trivial T, Floating TFloat = float32>
-	constexpr void Lerp(T& value, T start, T end, TFloat t)
-	{
-		value = start + t * (end - start);
-	}
-
-	template<NonTrivial T>
+	template<typename T>
 	constexpr T InvLerp(const T& start, const T& end, const T& value)
-	{
-		return (value - start) / (end - start);
-	}
-	template<Trivial T>
-	constexpr T InvLerp(T start, T end, T value)
 	{
 		return (value - start) / (end - start);
 	}
 #pragma endregion Lerp
 
 #pragma region MinMax
-
-	template <Trivial TFirst, typename... TRest>
-	constexpr TFirst Min(TFirst first, TRest... inputs)
-	{
-		TFirst smallestVal = first;
-
-		([&]
-			{
-				if (smallestVal > inputs)
-				{
-					smallestVal = inputs;
-				}
-			} (), ...);
-
-		return smallestVal;
-	}
-	template <NonTrivial TFirst, typename... TRest>
+	template <typename TFirst, typename... TRest>
 	constexpr TFirst Min(const TFirst& first, const TRest&... inputs)
 	{
 		TFirst smallestVal = first;
@@ -140,22 +82,7 @@ export namespace jpt
 		return smallestVal;
 	}
 
-	template <Trivial TFirst, typename... TRest>
-	constexpr TFirst Max(TFirst first, TRest... inputs)
-	{
-		TFirst largestVal = first;
-
-		([&]
-			{
-				if (largestVal < inputs)
-				{
-					largestVal = inputs;
-				}
-			} (), ...);
-
-		return largestVal;
-	}
-	template <NonTrivial TFirst, typename... TRest>
+	template <typename TFirst, typename... TRest>
 	constexpr TFirst Max(const TFirst& first, const TRest&... inputs)
 	{
 		TFirst largestVal = first;

@@ -23,12 +23,12 @@ bool Application_Benchmarks::Init()
 {
 	JPT_ENSURE(Super::Init());
 
-	//jpt::BenchmarksReporter reporter;
-	//
-	//RunBenchmarks_Core(reporter);
-	//
-	//reporter.Finalize();
-	//reporter.LogResults();
+	jpt::BenchmarksReporter reporter;
+	
+	RunBenchmarks_Core(reporter);
+	
+	reporter.Finalize();
+	reporter.LogResults();
 
 	return true;
 }
