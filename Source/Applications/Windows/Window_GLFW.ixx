@@ -7,7 +7,6 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 export module jpt.Window_GLFW;
@@ -33,7 +32,6 @@ static const jpt::String kDefaultTitle  = "Unnamed";
 void ResizeViewportCallback(GLFWwindow* pGLFWwindow, int32 width, int32 height)
 {
 	JPT_LOG("Resized window %lu to width: %i, height: %i", pGLFWwindow, width, height);
-	glViewport(0, 0, width, height);
 }
 
 namespace jpt

@@ -136,14 +136,6 @@ function CreateClientProject()
         -- Engine's functions, classes, and modules
         "Engine.lib",
         "Engine",
-
-        -- OpenGL
-        "opengl32",
-
-        -- DirectX 12
-        "d3d12",
-        "dxgi",
-        "d3dcompiler",
     }
 
     filter "configurations:Debug"
