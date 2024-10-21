@@ -177,7 +177,19 @@ function ParseContext()
 
     -- Log context variables
     for key, value in pairs(context) do
-        print(key, value)
+        local valueStr = ""
+
+        if type(value) == "table" then
+            valueStr = valueStr .. "{ "
+            for _, v in pairs(value) do
+                valueStr = valueStr .. v .. ", "
+            end
+            valueStr = valueStr .. "}"
+        else
+            valueStr = value
+        end
+
+        print(key, valueStr)
     end
 end
 
