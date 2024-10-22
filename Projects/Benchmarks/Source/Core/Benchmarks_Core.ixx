@@ -10,6 +10,9 @@ import jpt.BenchmarksReporter;
 import Benchmarks_DynamicArray;
 import Benchmarks_HashMap;
 
+// Strings
+import Benchmarks_String;
+
 // Math
 import Benchmarks_Math;
 
@@ -18,9 +21,12 @@ export void RunBenchmarks_Core(jpt::BenchmarksReporter& reporter)
 	/** Benchmark Functions */
 
 	// Containers
-	RunBenchmarks_DynamicArray(reporter);
-	RunBenchmarks_HashMap(reporter);
+	//RunBenchmarks_DynamicArray(reporter);
+	//RunBenchmarks_HashMap(reporter);
+
+	// Strings
+	RunBenchmarks_String(reporter);
 
 	// Math
-	RunBenchmarks_Math(reporter);
+	//RunBenchmarks_Math(reporter);
 }
