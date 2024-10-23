@@ -28,10 +28,16 @@ export namespace jpt
 
 		static consteval Vector3 Zero()     { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
 		static consteval Vector3 One()      { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
+
+		// X. Pitch
+		static consteval Vector3 Left() { return Vector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
+		static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
+
+		// Y. Yaw
 		static consteval Vector3 Up()       { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
 		static consteval Vector3 Down()     { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
-		static consteval Vector3 Left()     { return Vector3(static_cast<T>(-1),  static_cast<T>(0),  static_cast<T>(0)); }
-		static consteval Vector3 Right()    { return Vector3( static_cast<T>(1),  static_cast<T>(0),  static_cast<T>(0)); }
+
+		// Z. Roll
 		static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
 		static consteval Vector3 Backward() { return Vector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
 
