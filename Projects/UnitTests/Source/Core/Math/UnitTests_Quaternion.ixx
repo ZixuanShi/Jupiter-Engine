@@ -91,16 +91,18 @@ bool UnitTests_Quaternion_AxisAngles()
 
 bool UnitTests_Quaternion_EulerAngles()
 {
-	Vec3f degrees = Vec3f(89, 45, 90);
-	Quatf quaternion = Quatf::FromDegrees(degrees);
-	JPT_ENSURE(quaternion == Quatf(0.651f, -0.265f, 0.276f, 0.656f));
-	JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
-
-	degrees = Vec3f(12, 136, 25);
-	quaternion = Quatf::FromDegrees(degrees);
-	JPT_ENSURE(quaternion == Quatf(0.238f, 0.892f, -0.014f, 0.385f));
-	JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
-
+	{
+		Vec3f degrees = Vec3f(89, 45, 90);
+		Quatf quaternion = Quatf::FromDegrees(degrees);
+		JPT_ENSURE(quaternion == Quatf(0.651f, -0.265f, 0.276f, 0.656f));
+		JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
+	}
+	{
+		Vec3f degrees = Vec3f(12, 136, 25);
+		Quatf quaternion = Quatf::FromDegrees(degrees);
+		JPT_ENSURE(quaternion == Quatf(0.238f, 0.892f, -0.014f, 0.385f));
+		JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
+	}
 	return true;
 }
 
@@ -128,7 +130,7 @@ export bool RunUnitTests_Quaternion()
 	JPT_ENSURE(UnitTests_Quaternion_Multiplication());
 	JPT_ENSURE(UnitTests_Quaternion_AxisAngles());
 	JPT_ENSURE(UnitTests_Quaternion_EulerAngles());
-	//JPT_ENSURE(UnitTests_Quaternion_ToMatrix()); // TODO: Test when Matrix44 is fixed by rotation order
+	JPT_ENSURE(UnitTests_Quaternion_ToMatrix());
 
 	return true;
 }

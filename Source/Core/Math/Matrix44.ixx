@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Assert.h"
+
 #include <cmath>
 
 export module jpt.Matrix44;
@@ -10,6 +12,7 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Math;
+import jpt.Math.Settings;
 import jpt.Vector3;
 import jpt.Vector4;
 import jpt.Utilities;
@@ -62,8 +65,12 @@ namespace jpt
 		constexpr bool IsOrthogonal() const;
 
 		// Euler Conversion
+		constexpr Vector3<T> ToEulerDegrees() const;
+		constexpr Vector3<T> ToEulerRadians() const;
 		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& degrees);
 		constexpr static Matrix44<T> FromDegrees(T pitch, T yaw, T roll);
+		constexpr static Matrix44<T> FromRadians(const Vector3<T>& radians);
+		constexpr static Matrix44<T> FromRadians(T pitch, T yaw, T roll);
 
 		constexpr String ToString() const;
 		constexpr bool operator==(const Matrix44<T>& rhs) const;
@@ -253,41 +260,267 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector3<T> Matrix44<T>::ToEulerDegrees() const
+	{
+		return ToDegrees(ToEulerRadians());
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Matrix44<T>::ToEulerRadians() const
+	{
+		Vector3<T> euler;
+
+		switch (MathSettings::RotationOrder)
+		{
+		case RotationOrder::YXZ:
+		{
+			euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
+				euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(-m[2][0], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		case RotationOrder::XYZ:
+		{
+			euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
+				euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(m[2][0], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		case RotationOrder::ZYX:
+		{
+			euler.x = std::asin(Clamp(-m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(m[2][0], m[2][2]);     // Yaw
+				euler.z = std::atan2(m[0][1], m[1][1]);     // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(-m[0][2], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		case RotationOrder::YZX:
+		{
+			euler.x = std::asin(Clamp(m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(-m[2][0], m[2][2]);    // Yaw
+				euler.z = std::atan2(-m[0][1], m[1][1]);    // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(m[0][2], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		case RotationOrder::XZY:
+		{
+			euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
+				euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(-m[2][0], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		case RotationOrder::ZXY:
+		{
+			euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			{
+				euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
+				euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+			}
+			else
+			{
+				euler.y = std::atan2(m[2][0], m[0][0]);
+				euler.z = 0;
+			}
+			break;
+		}
+
+		default:
+			JPT_ASSERT(false, "Invalid Rotation Order");
+			return Vector3<T>();
+		}
+
+		return euler;
+	}
+
+	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		// Step 1: Convert degrees to radians
 		const Vector3<T> radians = ToRadians(degrees);
-
-		// Step 2: Calculate the cosine and sine of the angles
-		const T cx = std::cos(radians.x);
-		const T cy = std::cos(radians.y);
-		const T cz = std::cos(radians.z);
-		const T sx = std::sin(radians.x);
-		const T sy = std::sin(radians.y);
-		const T sz = std::sin(radians.z);
-
-		// Step 3: Apply the rotation matrix formula
-		const T m00 = cy * cz;
-		const T m01 = -cy * sz;
-		const T m02 = sy;
-		const T m10 = cx * sz + sx * sy * cz;
-		const T m11 = cx * cz - sx * sy * sz;
-		const T m12 = -sx * cy;
-		const T m20 = sx * sz - cx * sy * cz;
-		const T m21 = sx * cz + cx * sy * sz;
-		const T m22 = cx * cy;
-
-		// Step 4: Fill in the matrix
-		return Matrix44<T>(m00, m01, m02, 0,
-			               m10, m11, m12, 0,
-			               m20, m21, m22, 0,
-			               0,   0,   0,   1);
+		return FromRadians(radians);
 	}
 
 	template<Numeric T>
 	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T pitch, T yaw, T roll)
 	{
 		return FromDegrees(Vector3<T>(pitch, yaw, roll));
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::FromRadians(const Vector3<T>& radians)
+	{
+		// Calculate the cosine and sine of the angles
+		const T cx = std::cos(radians.x);  // pitch
+		const T cy = std::cos(radians.y);  // yaw
+		const T cz = std::cos(radians.z);  // roll
+		const T sx = std::sin(radians.x);
+		const T sy = std::sin(radians.y);
+		const T sz = std::sin(radians.z);
+
+		// Apply rotation based on order
+		switch (MathSettings::RotationOrder)
+		{
+		case RotationOrder::YXZ:
+		{
+			const T m00 = cy * cz + sy * sx * sz;
+			const T m01 = -cy * sz + sy * sx * cz;
+			const T m02 = sy * cx;
+			const T m10 = cx * sz;
+			const T m11 = cx * cz;
+			const T m12 = -sx;
+			const T m20 = -sy * cz + cy * sx * sz;
+			const T m21 = sy * sz + cy * sx * cz;
+			const T m22 = cy * cx;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		case RotationOrder::XYZ:
+		{
+			const T m00 = cy * cz;
+			const T m01 = -cy * sz;
+			const T m02 = sy;
+			const T m10 = sx * sy * cz + cx * sz;
+			const T m11 = -sx * sy * sz + cx * cz;
+			const T m12 = -sx * cy;
+			const T m20 = -cx * sy * cz + sx * sz;
+			const T m21 = cx * sy * sz + sx * cz;
+			const T m22 = cx * cy;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		case RotationOrder::ZYX:
+		{
+			const T m00 = cy * cz;
+			const T m01 = -sz;
+			const T m02 = sy * cz;
+			const T m10 = cy * sz * cx + sy * sx;
+			const T m11 = cz * cx;
+			const T m12 = sy * sz * cx - cy * sx;
+			const T m20 = cy * sz * sx - sy * cx;
+			const T m21 = cz * sx;
+			const T m22 = sy * sz * sx + cy * cx;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		case RotationOrder::YZX:
+		{
+			const T m00 = cy * cz;
+			const T m01 = -sz;
+			const T m02 = sy;
+			const T m10 = cx * cy * sz + sx * sy;
+			const T m11 = cx * cz;
+			const T m12 = -cx * sy * sz + sx * cy;
+			const T m20 = sx * cy * sz - cx * sy;
+			const T m21 = sx * cz;
+			const T m22 = -sx * sy * sz - cx * cy;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		case RotationOrder::XZY:
+		{
+			const T m00 = cy * cz;
+			const T m01 = -cy * sz * cx + sy * sx;
+			const T m02 = cy * sz * sx + sy * cx;
+			const T m10 = sz;
+			const T m11 = cx * cz;
+			const T m12 = -sx * cz;
+			const T m20 = -sy * cz;
+			const T m21 = sy * sz * cx + cy * sx;
+			const T m22 = -sy * sz * sx + cy * cx;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		case RotationOrder::ZXY:
+		{
+			const T m00 = cy * cz - sy * sx * sz;
+			const T m01 = -cx * sz;
+			const T m02 = sy * cz + cy * sx * sz;
+			const T m10 = cy * sz + sy * sx * cz;
+			const T m11 = cx * cz;
+			const T m12 = sy * sz - cy * sx * cz;
+			const T m20 = -sy * cx;
+			const T m21 = sx;
+			const T m22 = cy * cx;
+			return Matrix44<T>(m00, m01, m02, 0,
+				m10, m11, m12, 0,
+				m20, m21, m22, 0,
+				0, 0, 0, 1);
+		}
+
+		default:
+			JPT_ASSERT(false, "Invalid Rotation Order");
+			return Matrix44<T>();
+		}
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::FromRadians(T pitch, T yaw, T roll)
+	{
+		return FromRadians(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
