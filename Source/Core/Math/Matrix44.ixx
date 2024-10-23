@@ -51,8 +51,6 @@ namespace jpt
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
-		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& degrees);
-		constexpr static Matrix44<T> FromDegrees(T pitch, T yaw, T row);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -62,6 +60,10 @@ namespace jpt
 		constexpr void Transpose();
 		constexpr void Inverse();
 		constexpr bool IsOrthogonal() const;
+
+		// Euler Conversion
+		constexpr static Matrix44<T> FromDegrees(const Vector3<T>& degrees);
+		constexpr static Matrix44<T> FromDegrees(T pitch, T yaw, T roll);
 
 		constexpr String ToString() const;
 		constexpr bool operator==(const Matrix44<T>& rhs) const;
@@ -283,9 +285,9 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T pitch, T yaw, T row)
+	constexpr Matrix44<T> Matrix44<T>::FromDegrees(T pitch, T yaw, T roll)
 	{
-		return FromDegrees(Vector3<T>(pitch, yaw, row));
+		return FromDegrees(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
