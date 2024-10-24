@@ -381,119 +381,108 @@ namespace jpt
 
 		switch (MathSettings::RotationOrder)
 		{
-		case RotationOrder::YXZ:
-		{
-			// Assuming Y1 X2 Z3 order
-			// Singularity at cos(X) = 0 (pitch = ±90°)
-			euler.x = std::asin(Clamp(-m23, static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m23) < static_cast<T>(0.9999999))
+			case RotationOrder::XYZ:
 			{
-				euler.y = std::atan2(m13, m33);     // Yaw
-				euler.z = std::atan2(m21, m22);     // Roll
-			}
-			else
-			{
-				// Gimbal lock - arbitrary choice for remaining angle
-				euler.y = std::atan2(-m31, m11);    // Yaw
-				euler.z = 0;                        // Roll
-			}
-		}
-		break;
+				euler.y = std::asin(Clamp(m13, static_cast<T>(-1), static_cast<T>(1)));
 
-		case RotationOrder::XYZ:
-		{
-			// Assuming X1 Y2 Z3 order
-			euler.y = std::asin(Clamp(m13, static_cast<T>(-1), static_cast<T>(1)));
-
-			if (std::abs(m13) < static_cast<T>(0.9999999))
-			{
-				euler.x = std::atan2(-m23, m33);
-				euler.z = std::atan2(-m12, m11);
+				if (std::abs(m13) < static_cast<T>(0.9999999))
+				{
+					euler.x = std::atan2(-m23, m33);
+					euler.z = std::atan2(-m12, m11);
+				}
+				else
+				{
+					euler.x = std::atan2(m32, m22);
+					euler.z = 0;
+				}
+				break;
 			}
-			else
+			case RotationOrder::XZY:
 			{
-				euler.x = std::atan2(m32, m22);
-				euler.z = 0;
+				euler.z = std::asin(Clamp(-m12, static_cast<T>(-1), static_cast<T>(1)));
+
+				if (std::abs(m12) < static_cast<T>(0.9999999))
+				{
+					euler.x = std::atan2(m32, m22);
+					euler.y = std::atan2(m13, m11);
+				}
+				else
+				{
+					euler.x = std::atan2(-m23, m33);
+					euler.y = 0;
+				}
+				break;
 			}
-		}
-		break;
-
-		case RotationOrder::ZYX:
-		{
-			// Assuming Z1 Y2 X3 order
-			euler.y = std::asin(Clamp(-m31, static_cast<T>(-1), static_cast<T>(1)));
-
-			if (std::abs(m31) < static_cast<T>(0.9999999))
+			[[likely]] case RotationOrder::YXZ:
 			{
-				euler.z = std::atan2(m21, m11);
-				euler.x = std::atan2(m32, m33);
-			}
-			else
-			{
-				euler.z = std::atan2(-m12, m22);
-				euler.x = 0;
-			}
-		}
-		break;
+				euler.x = std::asin(Clamp(-m23, static_cast<T>(-1), static_cast<T>(1)));  // Pitch
 
-		case RotationOrder::YZX:
-		{
-			// Assuming Y1 Z2 X3 order
-			euler.z = std::asin(Clamp(m21, static_cast<T>(-1), static_cast<T>(1)));
-
-			if (std::abs(m21) < static_cast<T>(0.9999999))
-			{
-				euler.y = std::atan2(-m23, m22);
-				euler.x = std::atan2(-m31, m11);
+				if (std::abs(m23) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(m13, m33);     // Yaw
+					euler.z = std::atan2(m21, m22);     // Roll
+				}
+				else
+				{
+					// Gimbal lock - arbitrary choice for remaining angle
+					euler.y = std::atan2(-m31, m11);    // Yaw
+					euler.z = 0;                        // Roll
+				}
+				break;
 			}
-			else
+			case RotationOrder::YZX:
 			{
-				euler.y = std::atan2(m13, m33);
-				euler.x = 0;
+				euler.z = std::asin(Clamp(m21, static_cast<T>(-1), static_cast<T>(1)));
+
+				if (std::abs(m21) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(-m23, m22);
+					euler.x = std::atan2(-m31, m11);
+				}
+				else
+				{
+					euler.y = std::atan2(m13, m33);
+					euler.x = 0;
+				}
+				break;
 			}
-		}
-		break;
-
-		case RotationOrder::XZY:
-		{
-			// Assuming X1 Z2 Y3 order
-			euler.z = std::asin(Clamp(-m12, static_cast<T>(-1), static_cast<T>(1)));
-
-			if (std::abs(m12) < static_cast<T>(0.9999999))
+			case RotationOrder::ZXY:
 			{
-				euler.x = std::atan2(m32, m22);
-				euler.y = std::atan2(m13, m11);
-			}
-			else
-			{
-				euler.x = std::atan2(-m23, m33);
-				euler.y = 0;
-			}
-		}
-		break;
+				euler.x = std::asin(Clamp(m32, static_cast<T>(-1), static_cast<T>(1)));
 
-		case RotationOrder::ZXY:
-		{
-			// Assuming Z1 X2 Y3 order
-			euler.x = std::asin(Clamp(m32, static_cast<T>(-1), static_cast<T>(1)));
-
-			if (std::abs(m32) < static_cast<T>(0.9999999))
-			{
-				euler.z = std::atan2(-m12, m22);
-				euler.y = std::atan2(-m31, m33);
+				if (std::abs(m32) < static_cast<T>(0.9999999))
+				{
+					euler.z = std::atan2(-m12, m22);
+					euler.y = std::atan2(-m31, m33);
+				}
+				else
+				{
+					euler.z = std::atan2(m21, m11);
+					euler.y = 0;
+				}
+				break;
 			}
-			else
+			case RotationOrder::ZYX:
 			{
-				euler.z = std::atan2(m21, m11);
-				euler.y = 0;
-			}
-		}
-		break;
+				euler.y = std::asin(Clamp(-m31, static_cast<T>(-1), static_cast<T>(1)));
 
-		default:
-			JPT_ASSERT(false, "Invalid Rotation Order");
-			return Vector3<T>();
+				if (std::abs(m31) < static_cast<T>(0.9999999))
+				{
+					euler.z = std::atan2(m21, m11);
+					euler.x = std::atan2(m32, m33);
+				}
+				else
+				{
+					euler.z = std::atan2(-m12, m22);
+					euler.x = 0;
+				}
+				break;
+			}
+			default:
+			{
+				JPT_ASSERT(false, "Invalid Rotation Order");
+				return Vector3<T>();
+			}
 		}
 
 		return euler;
@@ -524,51 +513,59 @@ namespace jpt
 
 		switch (MathSettings::RotationOrder)
 		{
-		case RotationOrder::XYZ:
-			qw = cx * cy * cz - sx * sy * sz;
-			qx = sx * cy * cz + cx * sy * sz;
-			qy = cx * sy * cz - sx * cy * sz;
-			qz = cx * cy * sz + sx * sy * cz;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		case RotationOrder::YXZ:
-			qw = cy * cx * cz + sy * sx * sz;
-			qx = cy * sx * cz + sy * cx * sz;
-			qy = sy * cx * cz - cy * sx * sz;
-			qz = cy * cx * sz - sy * sx * cz;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		case RotationOrder::ZXY:
-			qw = cz * cx * cy - sz * sx * sy;
-			qx = cz * sx * cy + sz * cx * sy;
-			qy = cz * cx * sy + sz * sx * cy;
-			qz = sz * cx * cy - cz * sx * sy;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		case RotationOrder::XZY:
-			qw = cx * cz * cy + sx * sy * sz;
-			qx = sx * cz * cy - cx * sy * sz;
-			qy = cx * sy * cz + sx * cy * sz;
-			qz = cx * cy * sz - sx * sy * cz;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		case RotationOrder::YZX:
-			qw = cy * cz * cx - sy * sx * sz;
-			qx = cy * sz * cx + sy * sx * cz;
-			qy = sy * cz * cx + cy * sx * sz;
-			qz = cy * sx * cz - sy * sz * cx;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		case RotationOrder::ZYX:
-			qw = cz * cy * cx + sz * sy * sx;
-			qx = cz * cy * sx - sz * sy * cx;
-			qy = cz * sy * cx + sz * cy * sx;
-			qz = sz * cy * cx - cz * sy * sx;
-			return TQuaternion<T>(qx, qy, qz, qw);
-
-		default:
-			JPT_ASSERT(false, "Invalid Rotation Order");
-			return TQuaternion<T>();
+			case RotationOrder::XYZ:
+			{
+				qw = cx * cy * cz - sx * sy * sz;
+				qx = sx * cy * cz + cx * sy * sz;
+				qy = cx * sy * cz - sx * cy * sz;
+				qz = cx * cy * sz + sx * sy * cz;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			case RotationOrder::XZY:
+			{
+				qw = cx * cz * cy + sx * sy * sz;
+				qx = sx * cz * cy - cx * sy * sz;
+				qy = cx * sy * cz + sx * cy * sz;
+				qz = cx * cy * sz - sx * sy * cz;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			[[likely]] case RotationOrder::YXZ:
+			{
+				qw = cy * cx * cz + sy * sx * sz;
+				qx = cy * sx * cz + sy * cx * sz;
+				qy = sy * cx * cz - cy * sx * sz;
+				qz = cy * cx * sz - sy * sx * cz;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			case RotationOrder::YZX:
+			{
+				qw = cy * cz * cx - sy * sx * sz;
+				qx = cy * sz * cx + sy * sx * cz;
+				qy = sy * cz * cx + cy * sx * sz;
+				qz = cy * sx * cz - sy * sz * cx;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			case RotationOrder::ZXY:
+			{
+				qw = cz * cx * cy - sz * sx * sy;
+				qx = cz * sx * cy + sz * cx * sy;
+				qy = cz * cx * sy + sz * sx * cy;
+				qz = sz * cx * cy - cz * sx * sy;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			case RotationOrder::ZYX:
+			{
+				qw = cz * cy * cx + sz * sy * sx;
+				qx = cz * cy * sx - sz * sy * cx;
+				qy = cz * sy * cx + sz * cy * sx;
+				qz = sz * cy * cx - cz * sy * sx;
+				return TQuaternion<T>(qx, qy, qz, qw);
+			}
+			default:
+			{
+				JPT_ASSERT(false, "Invalid Rotation Order");
+				return TQuaternion<T>();
+			}
 		}
 	}
 

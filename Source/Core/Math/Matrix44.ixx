@@ -272,111 +272,107 @@ namespace jpt
 
 		switch (MathSettings::RotationOrder)
 		{
-		case RotationOrder::YXZ:
-		{
-			euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			case RotationOrder::XYZ:
 			{
-				euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
-				euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
-			}
-			else
-			{
-				euler.y = std::atan2(-m[2][0], m[0][0]);
-				euler.z = 0;
-			}
-			break;
-		}
+				euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
 
-		case RotationOrder::XYZ:
-		{
-			euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-			{
-				euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
-				euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
+					euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(m[2][0], m[0][0]);
+					euler.z = 0;
+				}
+				break;
 			}
-			else
+			case RotationOrder::XZY:
 			{
-				euler.y = std::atan2(m[2][0], m[0][0]);
-				euler.z = 0;
+				euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
+					euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(-m[2][0], m[0][0]);
+					euler.z = 0;
+				}
+				break;
 			}
-			break;
-		}
-
-		case RotationOrder::ZYX:
-		{
-			euler.x = std::asin(Clamp(-m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
+			[[likely]] case RotationOrder::YXZ:
 			{
-				euler.y = std::atan2(m[2][0], m[2][2]);     // Yaw
-				euler.z = std::atan2(m[0][1], m[1][1]);     // Roll
-			}
-			else
-			{
-				euler.y = std::atan2(-m[0][2], m[0][0]);
-				euler.z = 0;
-			}
-			break;
-		}
+				euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
 
-		case RotationOrder::YZX:
-		{
-			euler.x = std::asin(Clamp(m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
-			{
-				euler.y = std::atan2(-m[2][0], m[2][2]);    // Yaw
-				euler.z = std::atan2(-m[0][1], m[1][1]);    // Roll
+				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
+					euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(-m[2][0], m[0][0]);
+					euler.z = 0;
+				}
+				break;
 			}
-			else
+			case RotationOrder::YZX:
 			{
-				euler.y = std::atan2(m[0][2], m[0][0]);
-				euler.z = 0;
+				euler.x = std::asin(Clamp(m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
+
+				if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(-m[2][0], m[2][2]);    // Yaw
+					euler.z = std::atan2(-m[0][1], m[1][1]);    // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(m[0][2], m[0][0]);
+					euler.z = 0;
+				}
+				break;
 			}
-			break;
-		}
-
-		case RotationOrder::XZY:
-		{
-			euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+			case RotationOrder::ZXY:
 			{
-				euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
-				euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
-			}
-			else
-			{
-				euler.y = std::atan2(-m[2][0], m[0][0]);
-				euler.z = 0;
-			}
-			break;
-		}
+				euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
 
-		case RotationOrder::ZXY:
-		{
-			euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-			if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-			{
-				euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
-				euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
+					euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(m[2][0], m[0][0]);
+					euler.z = 0;
+				}
+				break;
 			}
-			else
+			case RotationOrder::ZYX:
 			{
-				euler.y = std::atan2(m[2][0], m[0][0]);
-				euler.z = 0;
-			}
-			break;
-		}
+				euler.x = std::asin(Clamp(-m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
 
-		default:
-			JPT_ASSERT(false, "Invalid Rotation Order");
-			return Vector3<T>();
+				if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
+				{
+					euler.y = std::atan2(m[2][0], m[2][2]);     // Yaw
+					euler.z = std::atan2(m[0][1], m[1][1]);     // Roll
+				}
+				else
+				{
+					euler.y = std::atan2(-m[0][2], m[0][0]);
+					euler.z = 0;
+				}
+				break;
+			}
+			default:
+			{
+				JPT_ASSERT(false, "Invalid Rotation Order");
+				return Vector3<T>();
+			}
 		}
 
 		return euler;
@@ -409,111 +405,107 @@ namespace jpt
 		// Apply rotation based on order
 		switch (MathSettings::RotationOrder)
 		{
-		case RotationOrder::YXZ:
-		{
-			const T m00 = cy * cz + sy * sx * sz;
-			const T m01 = -cy * sz + sy * sx * cz;
-			const T m02 = sy * cx;
-			const T m10 = cx * sz;
-			const T m11 = cx * cz;
-			const T m12 = -sx;
-			const T m20 = -sy * cz + cy * sx * sz;
-			const T m21 = sy * sz + cy * sx * cz;
-			const T m22 = cy * cx;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		case RotationOrder::XYZ:
-		{
-			const T m00 = cy * cz;
-			const T m01 = -cy * sz;
-			const T m02 = sy;
-			const T m10 = sx * sy * cz + cx * sz;
-			const T m11 = -sx * sy * sz + cx * cz;
-			const T m12 = -sx * cy;
-			const T m20 = -cx * sy * cz + sx * sz;
-			const T m21 = cx * sy * sz + sx * cz;
-			const T m22 = cx * cy;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		case RotationOrder::ZYX:
-		{
-			const T m00 = cy * cz;
-			const T m01 = -sz;
-			const T m02 = sy * cz;
-			const T m10 = cy * sz * cx + sy * sx;
-			const T m11 = cz * cx;
-			const T m12 = sy * sz * cx - cy * sx;
-			const T m20 = cy * sz * sx - sy * cx;
-			const T m21 = cz * sx;
-			const T m22 = sy * sz * sx + cy * cx;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		case RotationOrder::YZX:
-		{
-			const T m00 = cy * cz;
-			const T m01 = -sz;
-			const T m02 = sy;
-			const T m10 = cx * cy * sz + sx * sy;
-			const T m11 = cx * cz;
-			const T m12 = -cx * sy * sz + sx * cy;
-			const T m20 = sx * cy * sz - cx * sy;
-			const T m21 = sx * cz;
-			const T m22 = -sx * sy * sz - cx * cy;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		case RotationOrder::XZY:
-		{
-			const T m00 = cy * cz;
-			const T m01 = -cy * sz * cx + sy * sx;
-			const T m02 = cy * sz * sx + sy * cx;
-			const T m10 = sz;
-			const T m11 = cx * cz;
-			const T m12 = -sx * cz;
-			const T m20 = -sy * cz;
-			const T m21 = sy * sz * cx + cy * sx;
-			const T m22 = -sy * sz * sx + cy * cx;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		case RotationOrder::ZXY:
-		{
-			const T m00 = cy * cz - sy * sx * sz;
-			const T m01 = -cx * sz;
-			const T m02 = sy * cz + cy * sx * sz;
-			const T m10 = cy * sz + sy * sx * cz;
-			const T m11 = cx * cz;
-			const T m12 = sy * sz - cy * sx * cz;
-			const T m20 = -sy * cx;
-			const T m21 = sx;
-			const T m22 = cy * cx;
-			return Matrix44<T>(m00, m01, m02, 0,
-				m10, m11, m12, 0,
-				m20, m21, m22, 0,
-				0, 0, 0, 1);
-		}
-
-		default:
-			JPT_ASSERT(false, "Invalid Rotation Order");
-			return Matrix44<T>();
+			case RotationOrder::XZY:
+			{
+				const T m00 = cy * cz;
+				const T m01 = -cy * sz * cx + sy * sx;
+				const T m02 = cy * sz * sx + sy * cx;
+				const T m10 = sz;
+				const T m11 = cx * cz;
+				const T m12 = -sx * cz;
+				const T m20 = -sy * cz;
+				const T m21 = sy * sz * cx + cy * sx;
+				const T m22 = -sy * sz * sx + cy * cx;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			case RotationOrder::XYZ:
+			{
+				const T m00 = cy * cz;
+				const T m01 = -cy * sz;
+				const T m02 = sy;
+				const T m10 = sx * sy * cz + cx * sz;
+				const T m11 = -sx * sy * sz + cx * cz;
+				const T m12 = -sx * cy;
+				const T m20 = -cx * sy * cz + sx * sz;
+				const T m21 = cx * sy * sz + sx * cz;
+				const T m22 = cx * cy;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			[[likely]] case RotationOrder::YXZ:
+			{
+				const T m00 = cy * cz + sy * sx * sz;
+				const T m01 = -cy * sz + sy * sx * cz;
+				const T m02 = sy * cx;
+				const T m10 = cx * sz;
+				const T m11 = cx * cz;
+				const T m12 = -sx;
+				const T m20 = -sy * cz + cy * sx * sz;
+				const T m21 = sy * sz + cy * sx * cz;
+				const T m22 = cy * cx;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			case RotationOrder::YZX:
+			{
+				const T m00 = cy * cz;
+				const T m01 = -sz;
+				const T m02 = sy;
+				const T m10 = cx * cy * sz + sx * sy;
+				const T m11 = cx * cz;
+				const T m12 = -cx * sy * sz + sx * cy;
+				const T m20 = sx * cy * sz - cx * sy;
+				const T m21 = sx * cz;
+				const T m22 = -sx * sy * sz - cx * cy;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			case RotationOrder::ZXY:
+			{
+				const T m00 = cy * cz - sy * sx * sz;
+				const T m01 = -cx * sz;
+				const T m02 = sy * cz + cy * sx * sz;
+				const T m10 = cy * sz + sy * sx * cz;
+				const T m11 = cx * cz;
+				const T m12 = sy * sz - cy * sx * cz;
+				const T m20 = -sy * cx;
+				const T m21 = sx;
+				const T m22 = cy * cx;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			case RotationOrder::ZYX:
+			{
+				const T m00 = cy * cz;
+				const T m01 = -sz;
+				const T m02 = sy * cz;
+				const T m10 = cy * sz * cx + sy * sx;
+				const T m11 = cz * cx;
+				const T m12 = sy * sz * cx - cy * sx;
+				const T m20 = cy * sz * sx - sy * cx;
+				const T m21 = cz * sx;
+				const T m22 = sy * sz * sx + cy * cx;
+				return Matrix44<T>(m00, m01, m02, 0,
+					               m10, m11, m12, 0,
+					               m20, m21, m22, 0,
+					                 0,   0,   0, 1);
+			}
+			default:
+			{
+				JPT_ASSERT(false, "Invalid Rotation Order");
+				return Matrix44<T>();
+			}
 		}
 	}
 

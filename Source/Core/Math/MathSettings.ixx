@@ -6,12 +6,12 @@ export namespace jpt
 {
 	enum class RotationOrder
 	{
-		YXZ,
 		XYZ,
-		ZYX,
-		YZX,
 		XZY,
+		YXZ,	// Default
+		YZX,
 		ZXY,
+		ZYX,
 	};
 
 	enum class AngleUnit
