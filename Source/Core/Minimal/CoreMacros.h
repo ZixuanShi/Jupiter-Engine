@@ -166,3 +166,6 @@ public:                                   \
 		static ClassName instance;        \
 		return instance;                  \
 	}                                     
+
+/** @return Offset of a member variable in a struct/class */
+#define JPT_OFFSET_OF(type, member) (reinterpret_cast<size_t>(&reinterpret_cast<type*>(0)->member))

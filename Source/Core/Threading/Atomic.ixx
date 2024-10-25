@@ -16,7 +16,7 @@ export namespace jpt
 
 	public:
         Atomic();
-        explicit Atomic(T value);
+        Atomic(T value);
 
         T Load() const;
         void Store(T value);
@@ -27,6 +27,7 @@ export namespace jpt
 
         operator T() const;
         Atomic& operator=(T value);
+		Atomic& operator++();
 	};
 
     template<typename T>
@@ -81,6 +82,13 @@ export namespace jpt
     Atomic<T>& Atomic<T>::operator=(T value)
     {
         Store(value);
+		return *this;
+    }
+
+    template<typename T>
+    Atomic<T>& Atomic<T>::operator++()
+    {
+		++m_value;
 		return *this;
     }
 }

@@ -212,4 +212,10 @@ export namespace jpt
 	{
 		return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
 	}
+
+	template<Integral TInt>
+	constexpr bool IsPowerOfTwo(TInt value)
+	{
+		return (value & (value - 1)) == 0;
+	}
 }
