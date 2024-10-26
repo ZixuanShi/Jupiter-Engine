@@ -13,6 +13,7 @@ import jpt.Atomic;
 import jpt.Mutex;
 import jpt.LockGuard;
 import jpt.TypeDefs;
+import jpt.Math;
 
 export namespace jpt
 {
