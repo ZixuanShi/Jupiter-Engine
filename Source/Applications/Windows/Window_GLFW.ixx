@@ -44,15 +44,15 @@ namespace jpt
 		GLFWwindow* m_pWindow = nullptr;
 
 	public:
-		virtual bool Init(Application_Base* pApp) override;
+		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 
 		GLFWwindow* GetGLFWwindow() const { return m_pWindow; }
 	};
 
-	bool Window_GLFW::Init(Application_Base* pApp)
+	bool Window_GLFW::Init()
 	{
-		JPT_ENSURE(Super::Init(pApp));
+		JPT_ENSURE(Super::Init());
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -67,7 +67,7 @@ namespace jpt
 		if (!m_pWindow)
 		{
 			JPT_ERROR("Failed to create GLFW window");
-			pApp->GetFramework()->Shutdown();
+			GetApplication()->GetFramework()->Shutdown();
 			return false;
 		}
 

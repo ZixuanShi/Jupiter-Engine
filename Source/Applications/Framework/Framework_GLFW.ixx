@@ -24,8 +24,11 @@ export namespace jpt
 	{
 		using Super = Framework_Base;
 
+	private:
+		Application_Base* m_pApp = nullptr;
+
 	public:
-		virtual bool Init(Application_Base*) override;
+		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
 
@@ -33,9 +36,9 @@ export namespace jpt
 		Window_GLFW* m_pWindow = nullptr;
 	};
 
-	bool Framework_GLFW::Init(Application_Base* pApp)
+	bool Framework_GLFW::Init()
 	{
-		JPT_ENSURE(Super::Init(pApp));
+		JPT_ENSURE(Super::Init());
 		JPT_ENSURE(glfwInit());
 
 		glfwSetErrorCallback([](int32 error, const char* description)
@@ -43,7 +46,8 @@ export namespace jpt
 				JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
 			});
 
-		m_pWindow = static_cast<Window_GLFW*>(pApp->GetWindow());
+		m_pApp = GetApplication();
+		m_pWindow = static_cast<Window_GLFW*>(m_pApp->GetWindow());
 
 		return true;
 	}

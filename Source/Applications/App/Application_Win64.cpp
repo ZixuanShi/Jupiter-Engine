@@ -14,4 +14,9 @@ namespace jpt
 
 		return true;
 	}
+
+	Application_Win64* GetWin64Application()
+	{
+		return static_cast<Application_Win64*>(GetApplication());
+	}
 }

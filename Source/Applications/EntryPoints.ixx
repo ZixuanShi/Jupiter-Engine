@@ -5,8 +5,8 @@ module;
 #include "Applications/App/Application_Base.h"
 
 #if IS_PLATFORM_WIN64
-	#include "Applications/App/Application_Win64.h"
-	#include <Windows.h>
+#include "Applications/App/Application_Win64.h"
+#include <Windows.h>
 #endif
 
 export module jpt.EntryPoints;
@@ -14,18 +14,19 @@ export module jpt.EntryPoints;
 import jpt.CommandLine;
 
 #if IS_DEBUG
-	import jpt.MemoryLeakDetector;
+import jpt.MemoryLeakDetector;
 #endif
 
 namespace jpt
 {
 	// Called by platform-specific entry points
-	int MainImpl_Final(Application_Base* pApp)
+	int MainImpl()
 	{
 #if IS_DEBUG
 		MemoryLeakDetector::Init();
 #endif
 
+		Application_Base* pApp = GetApplication();
 		if (pApp->PreInit() && pApp->Init())
 		{
 			pApp->Run();
@@ -35,25 +36,31 @@ namespace jpt
 
 		return 0;
 	}
-
-	// Platform-specific entry points
-	// Should handle command line arguments and call MainImpl_Final
-#if IS_PLATFORM_WIN64
-	export int MainImpl_Win64(Application_Win64* pApp, HINSTANCE hInstance, LPSTR launchArgs, int nCmdShow)
-	{
-		CommandLine::GetInstance().Parse(launchArgs);
-
-		pApp->SetHINSTANCE(hInstance);
-		pApp->SetnCmdShow(nCmdShow);
-
-		return MainImpl_Final(pApp);
-	}
-#else
-	export int MainImpl(int argc, char* argv[])
-	{
-		CommandLine::GetInstance().Parse(argc, argv);
-
-		return MainImpl_Final(pApp);
-	}
-#endif
 }
+
+// Platform-specific entry points
+// Should handle command line arguments and call MainImpl_Final
+#if IS_PLATFORM_WIN64
+
+_Use_decl_annotations_
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
+{
+	using namespace jpt;
+
+	CommandLine::GetInstance().Parse(launchArgs);
+
+	Application_Win64* pApp = GetWin64Application();
+	pApp->SetHINSTANCE(hInstance);
+	pApp->SetnCmdShow(nCmdShow);
+
+	return MainImpl();
+}
+#else
+int main(int argc, char* argv[])
+{
+	using namespace jpt;
+
+	CommandLine::GetInstance().Parse(argc, argv);
+	return jpt::MainImpl();
+}
+#endif

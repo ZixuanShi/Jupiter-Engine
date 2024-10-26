@@ -52,8 +52,8 @@ namespace jpt
 		}
 		else
 		{
-			m_pFramework->Init(this);
-			m_pWindow->Init(this);
+			m_pFramework->Init();
+			m_pWindow->Init();
 			//m_pRenderer->Init();
 		}
 

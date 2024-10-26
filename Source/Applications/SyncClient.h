@@ -1,0 +1,14 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+#pragma once
+
+#define JPT_SYNC_CLIENT(ApplicationName)                                      \
+jpt::Application_Base* jpt::GetApplication()                                         \
+{																					 \
+	static ApplicationName app;													     \
+	return &app;																	 \
+}                                                                                    \
+																					 \
+constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }     \
+constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }     
+

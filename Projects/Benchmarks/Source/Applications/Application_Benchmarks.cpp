@@ -2,11 +2,13 @@
 
 #include "Application_Benchmarks.h"
 
+#include "Applications/SyncClient.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
 import jpt.CoreModules;
 import jpt.BenchmarksReporter;
+import jpt.File.Path.Helpers;
 
 import Benchmarks_Core;
 
@@ -33,7 +35,4 @@ bool Application_Benchmarks::Init()
 	return true;
 }
 
-#pragma region Engine-Client Communications
-constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
-constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
-#pragma endregion
+JPT_SYNC_CLIENT(Application_Benchmarks)

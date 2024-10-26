@@ -32,6 +32,8 @@ namespace jpt
 		void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
 		void SetnCmdShow(int32 nCmdShow) { m_nCmdShow = nCmdShow; }
 	};
+
+	Application_Win64* GetWin64Application();
 }
 
 #endif // IS_PLATFORM_WIN64

@@ -14,23 +14,12 @@ export namespace jpt
 
 	class Framework_Base
 	{
-	protected:
-		Application_Base* m_pApp = nullptr;
-
 	public:
 		virtual ~Framework_Base() = default;
 
 		virtual bool PreInit() { return true; }
-		virtual bool Init(Application_Base* pApp);
+		virtual bool Init() { return true; }
 		virtual void Update(TimePrecision) {}
 		virtual void Shutdown() {}
 	};
-
-	bool Framework_Base::Init(Application_Base* pApp)
-	{
-		JPT_ASSERT(pApp);
-
-		m_pApp = pApp;
-		return true;
-	}
 }

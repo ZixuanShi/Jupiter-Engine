@@ -3,10 +3,11 @@
 #include "Application_JupiterUnitTests.h"
 
 #include "Core/Minimal/CoreHeaders.h"
+#include "Applications/SyncClient.h"
 
 import jpt.CommandLine;
 import jpt.Utilities;
-import jpt.File.Path.Utils;
+import jpt.File.Path.Helpers;
 
 import UnitTests_Applications;
 import UnitTests_Core;
@@ -37,3 +38,5 @@ bool Application_JupiterUnitTests::Init()
 
 	return true;
 }
+
+JPT_SYNC_CLIENT(Application_JupiterUnitTests)

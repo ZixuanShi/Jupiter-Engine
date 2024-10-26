@@ -40,4 +40,6 @@ namespace jpt
 		void ProcessInput();
 		void Render();
 	};
+
+	Application_Base* GetApplication();
 }

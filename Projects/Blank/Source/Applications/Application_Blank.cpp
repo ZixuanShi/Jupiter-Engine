@@ -3,6 +3,7 @@
 #include "Applications/Application_Blank.h"
 
 #include "Core/Minimal/CoreHeaders.h"
+#include "Applications/SyncClient.h"
 
 import jpt.CoreModules;
 
@@ -32,7 +33,4 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 	}
 }
 
-#pragma region Engine-Client Communications
-constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
-constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
-#pragma endregion
+JPT_SYNC_CLIENT(Application_Blank)
