@@ -159,13 +159,16 @@ template <typename T, unsigned int kNumber>
 char(&ArrayCountHelper(const T(&)[kNumber]))[kNumber + 1];
 #define JPT_ARRAY_COUNT(inArray) (sizeof(ArrayCountHelper(inArray)) - 1)
 
-#define SINGLETON_DECLARATION(ClassName)  \
-public:                                   \
-	static ClassName& GetInstance()       \
-	{                                     \
-		static ClassName instance;        \
-		return instance;                  \
+#define JPT_SINGLETON_DECLARATION(ClassName)  \
+public:                                       \
+	static ClassName& GetInstance()           \
+	{                                         \
+		static ClassName instance;            \
+		return instance;                      \
 	}                                     
 
 /** @return Offset of a member variable in a struct/class */
 #define JPT_OFFSET_OF(type, member) (reinterpret_cast<size_t>(&reinterpret_cast<type*>(0)->member))
+
+/** @return Bits of left shift from 1 */
+#define JPT_BIT(x) (1 << x)
