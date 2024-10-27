@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define JPT_SYNC_CLIENT(ApplicationName)                                      \
+#define JPT_SYNC_CLIENT(ApplicationName)                                             \
 jpt::Application_Base* jpt::GetApplication()                                         \
 {																					 \
 	static ApplicationName app;													     \
