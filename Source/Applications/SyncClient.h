@@ -2,6 +2,7 @@
 
 #pragma once
 
+// Should be called in client's Application.cpp file once
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
 jpt::Application_Base* jpt::GetApplication()                                         \
 {																					 \

@@ -8,7 +8,6 @@
 
 using namespace jpt;
 
-import jpt.TypeDefs;
 import jpt.Optional;
 import jpt.StringView;
 import jpt.Utilities;

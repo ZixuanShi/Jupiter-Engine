@@ -1,6 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
 #pragma once
+
+#include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
 import jpt.TypeDefs;

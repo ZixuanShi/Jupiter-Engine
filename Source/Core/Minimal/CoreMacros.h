@@ -169,6 +169,3 @@ public:                                       \
 
 /** @return Offset of a member variable in a struct/class */
 #define JPT_OFFSET_OF(type, member) (reinterpret_cast<size_t>(&reinterpret_cast<type*>(0)->member))
-
-/** @return Bits of left shift from 1 */
-#define JPT_BIT(x) (1 << x)
