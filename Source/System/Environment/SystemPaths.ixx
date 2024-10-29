@@ -39,6 +39,8 @@ namespace jpt::System
 		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
+
+		bool IsInitialized() const { return m_isInitialized; }
 	};
 
 	void Paths::PreInit(const Path& clientDir, const Path& outputDir)

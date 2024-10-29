@@ -6,7 +6,6 @@
 
 #include "Core/Strings/StringMacros.h"
 #include "Debugging/Assert.h"
-#include "Applications/App/Application_Base.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -89,7 +88,7 @@ namespace jpt
 			SendToOutputWindow(contentToLog.ConstBuffer());
 		}
 
-		if (GetApplication()->IsPreInitialized())
+		if (System::Paths::GetInstance().IsInitialized())
 		{
 			File::AppendTextFile(kLogFilePath, GetTimeStamp() + contentToLog);
 		}
@@ -108,7 +107,7 @@ namespace jpt
 			SendToOutputWindow(ContentToLogW.ConstBuffer());
 		}
 
-		if (GetApplication()->IsPreInitialized())
+		if (System::Paths::GetInstance().IsInitialized())
 		{
 			File::AppendTextFile(kLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
 		}

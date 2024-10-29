@@ -20,7 +20,6 @@ namespace jpt
 		//Renderer_Base*  m_pRenderer     = nullptr;
 
 		bool m_shouldShutdown = false;
-		bool m_isPreInitialized = false;
 
 	public:
 		virtual ~Application_Base() = default;
@@ -36,7 +35,6 @@ namespace jpt
 		Window_Base*    GetWindow()    const { return m_pWindow;    }
 		Framework_Base* GetFramework() const { return m_pFramework; }
 		//Renderer_Base*  GetRenderer()  const { return m_pRenderer;  }
-		bool IsPreInitialized() const { return m_isPreInitialized; }
 
 	protected:
 		void ProcessInput();
