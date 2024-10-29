@@ -10,9 +10,14 @@ import jpt.CoreModules;
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
 
+import jpt.Status;
+
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
+
+	jpt::Status status = jpt::Status::Pending;
+	JPT_LOG(status);
 
 	return true;
 }

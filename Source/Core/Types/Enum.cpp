@@ -2,10 +2,6 @@
 
 #include "Enum.h"
 
-#include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
-#include "Debugging/Logger.h"
-
 using namespace jpt;
 
 import jpt.Optional;
@@ -15,34 +11,34 @@ import jpt.Utilities;
 /** @return		Each individual enum data tokens */
 DynamicArray<String> GetTokens(const char* pSource)
 {
-	jpt::String source = pSource;
+	String source = pSource;
 	source.Replace(" ", "");	
 	return source.Split(',');
 }
 
-enum class EOperation
+enum class locOperation
 {
 	LeftShift,
 	Or
 };
 
-template<jpt::Integral TInt>
-Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView operatorStr, EOperation operation)
+template<Integral TInt>
+Optional<TInt> EvaluateOperator(StringView expression, StringView operatorStr, locOperation operation)
 {
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-	if (const size_t shiftIndex = expression.Find(operatorStr.ConstBuffer()); shiftIndex != jpt::npos)
+	if (const size_t shiftIndex = expression.Find(operatorStr.ConstBuffer()); shiftIndex != npos)
 	{
-		const jpt::StringView left  = expression.SubStr(0, shiftIndex);
-		const jpt::StringView right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
-		const TInt leftValue  = jpt::CStrToInteger<char, TInt>(left.ConstBuffer(),  left.Count());
-		const TInt rightValue = jpt::CStrToInteger<char, TInt>(right.ConstBuffer(), right.Count());
+		const StringView left  = expression.SubStr(0, shiftIndex);
+		const StringView right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
+		const TInt leftValue  = CStrToInteger<char, TInt>(left.ConstBuffer(),  left.Count());
+		const TInt rightValue = CStrToInteger<char, TInt>(right.ConstBuffer(), right.Count());
 
 		switch (operation)
 		{
-		case EOperation::LeftShift:
+		case locOperation::LeftShift:
 			return (leftValue << rightValue);
 
-		case EOperation::Or:
+		case locOperation::Or:
 			return (leftValue | rightValue);
 
 		default:
@@ -53,51 +49,51 @@ Optional<TInt> EvaluateOperator(jpt::StringView expression, jpt::StringView oper
 	return Optional<TInt>();
 }
 
-template<jpt::Integral TInt>
-TInt Evaluate(jpt::StringView valueStr)
+template<Integral TInt>
+TInt Evaluate(StringView valueStr)
 {
 	// Remove parenthesis if present
-	jpt::StringView expression = valueStr;
+	StringView expression = valueStr;
 	if (expression.Front() == '(' && expression.Back() == ')')
 	{
 		expression = expression.SubStr(1, expression.Count() - 2);
 	}
 
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-	if (Optional<TInt> result = EvaluateOperator<TInt>(expression, "<<", EOperation::LeftShift); result.HasValue())
+	if (Optional<TInt> result = EvaluateOperator<TInt>(expression, "<<", locOperation::LeftShift); result.HasValue())
 	{
 		return result.Value();
 	}
 	// Hex. starts with 0x
 	else if (const size_t hexIndex = expression.Find("0x"); hexIndex == 0)
 	{
-		return jpt::CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
+		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}
 
-	return jpt::CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
+	return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
 }
 
-template<jpt::Integral TInt>
+template<Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource)
 {
 	EnumData<TInt> data;
 
-	DynamicArray<jpt::String> tokens = GetTokens(pSource);
+	DynamicArray<String> tokens = GetTokens(pSource);
 	data.names.Reserve(tokens.Count());
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
-	for (jpt::String& token : tokens)
+	for (String& token : tokens)
 	{
-		jpt::String name;
+		String name;
 
 		// If token Has an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
-		// Example: "Name", Name=5", "Name=(1<<2)"
-		if (const size_t equalIndex = token.Find('='); equalIndex != jpt::npos)
+		// Example: "Name", Name=5", "Name=(1<<2)", "Nanme=0x10", "Name=0xFF00|Foo"
+		if (const size_t equalIndex = token.Find('='); equalIndex != npos)
 		{
 			name = token.SubStr(0, equalIndex);
 
-			const jpt::String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
+			const String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
 			key  = Evaluate<TInt>(valueStr);
 		}
 		else

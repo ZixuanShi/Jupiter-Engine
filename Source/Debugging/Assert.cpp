@@ -4,7 +4,7 @@
 
 #include "Assert.h"
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Strings/StringMacros.h"
 #include "Logger.h"
 
 #include <stdio.h>
