@@ -29,7 +29,7 @@ namespace jpt
 	static constexpr size_t kMaxMessageSize = 1024;
 	static const File::Path kLogFilePath = { File::Source::Saved, "Log.txt" };
 
-	const char* locGetLogStr(Logger::ELogType type)
+	static const char* locGetLogStr(Logger::ELogType type)
 	{
 		switch (type)
 		{
