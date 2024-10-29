@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Strings/StringMacros.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 

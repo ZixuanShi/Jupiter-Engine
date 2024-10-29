@@ -2,8 +2,8 @@
 
 module;
 
+#include "Core/Strings/StringMacros.h"
 #include "Debugging/Assert.h"
-#include "Core/Minimal/CoreMacros.h"
 
 #include <string.h>
 #include <stdio.h>

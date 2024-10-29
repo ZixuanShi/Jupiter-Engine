@@ -4,7 +4,7 @@
 
 #if IS_LOGGER_ENABLED
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Strings/StringMacros.h"
 #include "Debugging/Assert.h"
 
 #include <stdio.h>

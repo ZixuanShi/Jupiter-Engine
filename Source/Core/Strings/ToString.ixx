@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Strings/StringMacros.h"
 #include "Debugging/Assert.h"
 
 export module jpt.ToString;
