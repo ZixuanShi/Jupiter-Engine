@@ -12,9 +12,10 @@ export namespace jpt
 		Pending  = 1 << 0,		// Not started
 		Running  = 1 << 1,		// In progress
 
-		Failure  = 1 << 2,
-		Success  = 1 << 3,
+		Failure = 1 << 2,		// Completed with errors
+		Success = 1 << 3,		// Completed successfully
+		Warning = 1 << 4,		// Completed with warnings
 
-		//Complete = Failure | Success
+		//Complete = Failure | Success | Warning
 	);
 }

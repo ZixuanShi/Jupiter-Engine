@@ -41,6 +41,8 @@ namespace jpt
 
 		Input::Manager::GetInstance().PreInit();
 
+		m_isPreInitialized = true;
+
 		return true;
 	}
 

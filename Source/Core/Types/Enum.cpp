@@ -23,13 +23,13 @@ enum class locOperation
 };
 
 template<Integral TInt>
-Optional<TInt> EvaluateOperator(StringView expression, StringView operatorStr, locOperation operation)
+Optional<TInt> EvaluateOperator(const String& expression, const String& operatorStr, locOperation operation)
 {
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
 	if (const size_t shiftIndex = expression.Find(operatorStr.ConstBuffer()); shiftIndex != npos)
 	{
-		const StringView left  = expression.SubStr(0, shiftIndex);
-		const StringView right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
+		const String left  = expression.SubStr(0, shiftIndex);
+		const String right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
 		const TInt leftValue  = CStrToInteger<char, TInt>(left.ConstBuffer(),  left.Count());
 		const TInt rightValue = CStrToInteger<char, TInt>(right.ConstBuffer(), right.Count());
 
@@ -50,10 +50,10 @@ Optional<TInt> EvaluateOperator(StringView expression, StringView operatorStr, l
 }
 
 template<Integral TInt>
-TInt Evaluate(StringView valueStr)
+TInt Evaluate(const String& valueStr)
 {
 	// Remove parenthesis if present
-	StringView expression = valueStr;
+	String expression = valueStr;
 	if (expression.Front() == '(' && expression.Back() == ')')
 	{
 		expression = expression.SubStr(1, expression.Count() - 2);
@@ -80,6 +80,11 @@ EnumData<TInt> GenerateData(const char* pSource)
 
 	DynamicArray<String> tokens = GetTokens(pSource);
 	data.names.Reserve(tokens.Count());
+
+	if (tokens.Has("Success=1<<3"))
+	{
+		JPT_LOG("");
+	}
 
 	// Parse each token to extract name and value.
 	TInt key = 0;
