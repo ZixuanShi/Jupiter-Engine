@@ -65,7 +65,7 @@ TInt Evaluate(const String& valueStr)
 		return result.Value();
 	}
 	// Hex. starts with 0x
-	else if (const size_t hexIndex = expression.Find("0x"); hexIndex == 0)
+	else if (expression.BeginsWith("0x"))
 	{
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}

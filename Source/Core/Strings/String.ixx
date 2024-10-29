@@ -91,7 +91,9 @@ export namespace jpt
 		constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
 		constexpr bool   Has(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
 		constexpr bool   Has(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
-		
+		constexpr bool BeginsWith(const TChar* pStringToFind) const { return Find(pStringToFind) == 0; }
+		constexpr bool EndsWith(const TChar* pStringToFind) const { return FindLastOf(pStringToFind) == (m_count - FindCharsCount(pStringToFind)); }
+
 		/* Deallocate the memory that this string holds */
 		constexpr void Clear();
 
