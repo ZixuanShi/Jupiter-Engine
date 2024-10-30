@@ -296,6 +296,12 @@ export namespace jpt
 			return false;
 		}
 
+		// 0x prefix
+		if (pString[0] == '0' && pString[1] == 'x')
+		{
+			pString += 2;
+		}
+
 		// Check each char validness
 		size_t i = 0;
 		while (true)

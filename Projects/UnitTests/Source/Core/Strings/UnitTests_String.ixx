@@ -667,6 +667,9 @@ bool UnitTests_String_IsInteger()
 	jpt::String str = "1456566";
 	JPT_ENSURE(str.IsInteger());
 
+	str = "-1456566";
+	JPT_ENSURE(str.IsInteger());
+
 	str = "1999-1456566";
 	JPT_ENSURE(!str.IsInteger());
 
@@ -678,6 +681,9 @@ bool UnitTests_String_IsInteger()
 bool UnitTests_WString_IsInteger()
 {
 	jpt::WString str = L"1456566";
+	JPT_ENSURE(str.IsInteger());
+
+	str = L"-1456566";
 	JPT_ENSURE(str.IsInteger());
 
 	str = L"1999-1456566";
@@ -694,14 +700,57 @@ bool UnitTests_String_IsHexInteger()
 	jpt::String str = "0xFF0045FF";
 	JPT_ENSURE(str.IsHexInteger());
 
+	str = "FF0045FF";
+	JPT_ENSURE(str.IsHexInteger());
+
 	str = "0x1999-1456566";
 	JPT_ENSURE(!str.IsHexInteger());
 
 	str = "Hello World";
 	JPT_ENSURE(!str.IsHexInteger());
 
-	str = "FF0045FF";
+	return true;
+}
+bool UnitTests_WString_IsHexInteger()
+{
+	jpt::WString str = L"0xFF0045FF";
+	JPT_ENSURE(str.IsHexInteger());
+
+	str = L"FF0045FF";
+	JPT_ENSURE(str.IsHexInteger());
+
+	str = L"0x1999-1456566";
 	JPT_ENSURE(!str.IsHexInteger());
+
+	str = L"Hello World";
+	JPT_ENSURE(!str.IsHexInteger());
+
+	return true;
+}
+
+bool UnitTests_String_IsFloat()
+{
+	jpt::String str = "3.14159";
+	JPT_ENSURE(str.IsFloat());
+
+	str = "3.14159.0";
+	JPT_ENSURE(!str.IsFloat());
+
+	str = "Hello World";
+	JPT_ENSURE(!str.IsFloat());
+
+	return true;
+}
+bool UnitTests_WString_IsFloat()
+{
+	jpt::WString str = L"3.14159";
+	JPT_ENSURE(str.IsFloat());
+
+	str = L"3.14159.0";
+	JPT_ENSURE(!str.IsFloat());
+
+	str = L"Hello World";
+	JPT_ENSURE(!str.IsFloat());
 
 	return true;
 }
@@ -777,6 +826,12 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTests_String_IsInteger());
 		JPT_ENSURE(UnitTests_WString_IsInteger());
+
+		JPT_ENSURE(UnitTests_String_IsHexInteger());
+		JPT_ENSURE(UnitTests_WString_IsHexInteger());
+
+		JPT_ENSURE(UnitTests_String_IsFloat());
+		JPT_ENSURE(UnitTests_WString_IsFloat());
 	}
 
 	return true;
