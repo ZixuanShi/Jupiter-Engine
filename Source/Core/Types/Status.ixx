@@ -16,6 +16,10 @@ export namespace jpt
 		Success = 1 << 3,		// Completed successfully
 		Warning = 1 << 4,		// Completed with warnings
 
+		Dummy = 255,
+		//Dummy2 = Dummy,
+
+		//Foo = Success,			// Alias
 		//Complete = Failure | Success | Warning
 	);
 }

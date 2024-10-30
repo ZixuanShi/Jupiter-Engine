@@ -113,6 +113,7 @@ export namespace jpt
 
 		/** @return		A sub string within the given range at index and length */
 		constexpr String_Base SubStr(size_t index, size_t count = npos) const;
+		constexpr void PopBack();
 
 		/** Trim string from the left or right at given index
 			@param index:	[optional] The index to trim to. Default to npos if just trim out white spaces */
@@ -625,6 +626,12 @@ export namespace jpt
 		}
 
 		return result;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr void String_Base<_TChar, _TAllocator>::PopBack()
+	{
+		Resize(m_count - 1);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

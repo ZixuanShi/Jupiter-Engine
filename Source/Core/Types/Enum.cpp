@@ -7,20 +7,28 @@ using namespace jpt;
 import jpt.Optional;
 import jpt.StringView;
 import jpt.Utilities;
- 
-/** @return		Each individual enum data tokens */
-DynamicArray<String> GetTokens(const char* pSource)
-{
-	String source = pSource;
-	source.Replace(" ", "");	
-	return source.Split(',');
-}
 
 enum class locOperation
 {
 	LeftShift,
 	Or
 };
+
+static String locGetEnumSourceStr(const char* pSource)
+{
+	String source = pSource;
+
+	// Remove spaces
+	source.Replace(" ", ""); 
+
+	// Remove trailing commas
+	if (source.Back() == ',')
+	{
+		source.PopBack();
+	}
+
+	return source;
+}
 
 template<Integral TInt>
 Optional<TInt> EvaluateOperator(const String& expression, const String& operatorStr, locOperation operation)
@@ -78,28 +86,24 @@ EnumData<TInt> GenerateData(const char* pSource)
 {
 	EnumData<TInt> data;
 
-	DynamicArray<String> tokens = GetTokens(pSource);
+	const String source = locGetEnumSourceStr(pSource);
+
+	DynamicArray<String> tokens = source.Split(',');
 	data.names.Reserve(tokens.Count());
 
-	if (tokens.Has("Success=1<<3"))
-	{
-		JPT_LOG("");
-	}
-
 	// Parse each token to extract name and value.
-	TInt key = 0;
+	TInt value = 0;
 	for (String& token : tokens)
 	{
 		String name;
 
 		// If token Has an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
-		// Example: "Name", Name=5", "Name=(1<<2)", "Nanme=0x10", "Name=0xFF00|Foo"
 		if (const size_t equalIndex = token.Find('='); equalIndex != npos)
 		{
 			name = token.SubStr(0, equalIndex);
 
 			const String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
-			key  = Evaluate<TInt>(valueStr);
+			value  = Evaluate<TInt>(valueStr);
 		}
 		else
 		{
@@ -107,18 +111,18 @@ EnumData<TInt> GenerateData(const char* pSource)
 		}
 
 		// Update min and max values
-		if (key < data.min)
+		if (value < data.min)
 		{
-			data.min = key;
+			data.min = value;
 		}
-		else if (key > data.max)
+		if (value > data.max)
 		{
-			data.max = key;
+			data.max = value;
 		}
 
-		// This token has been processed. Store the name and increment the key.
-		data.names[key] = Move(name);
-		++key;
+		// This token has been processed. Store the name and increment the value.
+		data.names[value] = Move(name);
+		++value;
 	}
 
 	return data;
