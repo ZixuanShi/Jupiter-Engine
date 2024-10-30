@@ -20,7 +20,7 @@ struct EnumData
 {
 	TInt min = jpt::Constants<TInt>::kMax;	/**< The min value of this enum */
 	TInt max = jpt::Constants<TInt>::kMin;	/**< The max value of this enum */
-	jpt::HashMap<TInt, jpt::String> names;	/**< The names map of the enum values */
+	jpt::HashMap<TInt, jpt::String> names;	/**< Key by Enum Value, Value is the value's associated string name */
 };
 
 /** Generate the shared enum data 
