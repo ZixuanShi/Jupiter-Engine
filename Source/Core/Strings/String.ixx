@@ -160,12 +160,15 @@ export namespace jpt
 			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front */
 		template<Integral TInt = int32>
 		constexpr TInt ToInt() const;
+		constexpr bool IsInteger() const;
+		constexpr bool IsHexInteger() const;
 
 		/** @return A float associated with this string
 			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front or the percision dot
 			@note	Will ignore the 'f' is there's any */
 		template<Floating TFloat = float>
 		constexpr TFloat ToFloat() const;
+		constexpr bool IsFloat() const;
 
 		/** Converts all the characters to lowercase/uppercase */
 		constexpr void MakeLower();
@@ -941,6 +944,24 @@ export namespace jpt
 		otherString.m_pBuffer  = nullptr;
 		otherString.m_count     = 0;
 		otherString.m_capacity = 0;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::IsInteger() const
+	{
+		return jpt::IsInteger<TChar>(m_pBuffer);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::IsHexInteger() const
+	{
+		return jpt::IsHexInteger<TChar>(m_pBuffer);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::IsFloat() const
+	{
+		return jpt::IsFloat<TChar>(m_pBuffer);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

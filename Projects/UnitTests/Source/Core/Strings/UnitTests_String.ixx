@@ -662,6 +662,50 @@ bool UnitTests_String_WStringCompareCStr()
 	return true;
 }
 
+bool UnitTests_String_IsInteger()
+{
+	jpt::String str = "1456566";
+	JPT_ENSURE(str.IsInteger());
+
+	str = "1999-1456566";
+	JPT_ENSURE(!str.IsInteger());
+
+	str = "Hello World";
+	JPT_ENSURE(!str.IsInteger());
+
+	return true;
+}
+bool UnitTests_WString_IsInteger()
+{
+	jpt::WString str = L"1456566";
+	JPT_ENSURE(str.IsInteger());
+
+	str = L"1999-1456566";
+	JPT_ENSURE(!str.IsInteger());
+
+	str = L"Hello World";
+	JPT_ENSURE(!str.IsInteger());
+
+	return true;
+}
+
+bool UnitTests_String_IsHexInteger()
+{
+	jpt::String str = "0xFF0045FF";
+	JPT_ENSURE(str.IsHexInteger());
+
+	str = "0x1999-1456566";
+	JPT_ENSURE(!str.IsHexInteger());
+
+	str = "Hello World";
+	JPT_ENSURE(!str.IsHexInteger());
+
+	str = "FF0045FF";
+	JPT_ENSURE(!str.IsHexInteger());
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
@@ -730,6 +774,9 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTests_String_StringCompareWCStr());
 		JPT_ENSURE(UnitTests_String_WStringCompareCStr());
+
+		JPT_ENSURE(UnitTests_String_IsInteger());
+		JPT_ENSURE(UnitTests_WString_IsInteger());
 	}
 
 	return true;

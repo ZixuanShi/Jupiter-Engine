@@ -24,7 +24,7 @@ bool Application_Blank::PreInit()
 	{
 		JPT_LOG(*itr);
 	}
-
+	
 	return true;
 }
 

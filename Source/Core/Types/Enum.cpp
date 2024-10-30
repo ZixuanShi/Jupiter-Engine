@@ -58,13 +58,23 @@ Optional<TInt> EvaluateOperator(const String& expression, const String& operator
 }
 
 template<Integral TInt>
-TInt Evaluate(const String& valueStr)
+TInt Evaluate(const String& valueStr, const HashMap<TInt, String>&)
 {
 	// Remove parenthesis if present
 	String expression = valueStr;
 	if (expression.Front() == '(' && expression.Back() == ')')
 	{
 		expression = expression.SubStr(1, expression.Count() - 2);
+	}
+
+	// If is a pure number, return it.
+	if (valueStr.IsInteger())
+	{
+		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
+	}
+	if (valueStr.IsHexInteger())
+	{
+		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}
 
 	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
@@ -78,7 +88,8 @@ TInt Evaluate(const String& valueStr)
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}
 
-	return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
+	JPT_ASSERT(false, "Unsupported value type");
+	return 0;
 }
 
 template<Integral TInt>
@@ -103,7 +114,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 			name = token.SubStr(0, equalIndex);
 
 			const String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
-			value  = Evaluate<TInt>(valueStr);
+			value  = Evaluate<TInt>(valueStr, data.names);
 		}
 		else
 		{
