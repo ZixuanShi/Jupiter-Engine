@@ -91,8 +91,8 @@ export namespace jpt
 		constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
 		constexpr bool   Has(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count)    != npos; }
 		constexpr bool   Has(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(pStringToFind, startIndex, endIndex, count) != npos; }
-		constexpr bool BeginsWith(const TChar* pStringToFind) const { return Find(pStringToFind) == 0; }
-		constexpr bool EndsWith(const TChar* pStringToFind) const { return FindLastOf(pStringToFind) == (m_count - FindCharsCount(pStringToFind)); }
+		constexpr bool BeginsWith(const TChar* pStringToFind) const;
+		constexpr bool EndsWith(const TChar* pStringToFind) const;
 
 		/* Deallocate the memory that this string holds */
 		constexpr void Clear();
@@ -412,7 +412,7 @@ export namespace jpt
 	{
 		ClampTo(endIndex, size_t(0), m_count);
 
-		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
+		for (int64 i = endIndex; i >= static_cast<int64>(startIndex); --i)
 		{
 			if (i < static_cast<int64>(startIndex))
 			{
@@ -439,7 +439,7 @@ export namespace jpt
 		ClampTo(endIndex, size_t(0), m_count);
 
 		String_Base<TChar> current;
-		for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
+		for (int64 i = endIndex; i >= static_cast<int64>(startIndex); --i)
 		{
 			if ((i - StringToFindSize) < startIndex)
 			{
@@ -458,6 +458,21 @@ export namespace jpt
 		}
 
 		return npos;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::BeginsWith(const TChar* pStringToFind) const
+	{
+		return Find(pStringToFind) == 0;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::EndsWith(const TChar* pStringToFind) const
+	{
+		const size_t stringToFindSize = FindCharsCount(pStringToFind);
+		const size_t startIndex = m_count - stringToFindSize;
+		const size_t foundLastPos = FindLastOf(pStringToFind);
+		return foundLastPos == startIndex;
 	}
 
 	template<StringLiteral TChar, class TAllocator>

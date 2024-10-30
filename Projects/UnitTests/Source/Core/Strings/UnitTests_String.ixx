@@ -698,6 +698,9 @@ export bool RunUnitTests_String()
 		JPT_ENSURE(UnitTests_String_BeginsWith());
 		JPT_ENSURE(UnitTests_WString_BeginsWith());
 
+		JPT_ENSURE(UnitTests_String_EndsWith());
+		JPT_ENSURE(UnitTests_WString_EndsWith());
+
 		JPT_ENSURE(UnitTests_String_Split());
 		JPT_ENSURE(UnitTests_WString_Split());
 
