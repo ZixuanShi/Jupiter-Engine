@@ -501,7 +501,7 @@ export namespace jpt
 				c -= static_cast<TChar>(32);
 			}
 
-			JPT_ASSERT(IsHexDigit<TChar>(c), "Invalid character for converting to hex");
+			JPT_ASSERT(IsHexDigit<TChar>(c), "Invalid character for converting to hex %c", c);
 
 			TInt number = static_cast<TInt>(0);
 			if (c > static_cast<TChar>('9'))

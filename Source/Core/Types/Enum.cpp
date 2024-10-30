@@ -68,7 +68,7 @@ TInt Evaluate(const String& valueStr)
 	}
 
 	// Operators involved, evaluate them.
-	if (Optional<Pair<TInt, TInt>> pair = EvaluateOperator<TInt>(valueStr, "<<"); pair.HasValue())
+	if (Optional<Pair<TInt, TInt>> pair = EvaluateOperator<TInt>(expression, "<<"); pair.HasValue())
 	{
 		const Pair<TInt, TInt> p = pair.Value();
 		return p.first << p.second;
