@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreHeaders.h"
+#include "Core/Strings/StringMacros.h"
 
 export module UnitTests_StringUtils;
 

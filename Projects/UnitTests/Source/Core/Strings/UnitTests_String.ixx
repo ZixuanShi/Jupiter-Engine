@@ -330,6 +330,54 @@ bool UnitTests_WString_Has()
 	return true;
 }
 
+bool UnitTests_String_BeginsWith()
+{
+	jpt::String str = "Hello World Jupiter Engine";
+	JPT_ENSURE(str.BeginsWith("Hello"));
+	JPT_ENSURE(str.BeginsWith("Hello World"));
+	JPT_ENSURE(str.BeginsWith("Hello World Jupiter"));
+	JPT_ENSURE(!str.BeginsWith("World"));
+
+	return true;
+}
+bool UnitTests_WString_BeginsWith()
+{
+	jpt::WString str = L"Hello World Jupiter Engine";
+	JPT_ENSURE(str.BeginsWith(L"Hello"));
+	JPT_ENSURE(str.BeginsWith(L"Hello World"));
+	JPT_ENSURE(str.BeginsWith(L"Hello World Jupiter"));
+	JPT_ENSURE(!str.BeginsWith(L"World"));
+
+	return true;
+}
+
+bool UnitTests_String_EndsWith()
+{
+	jpt::String str = "Hello World Jupiter Engine";
+	JPT_ENSURE(str.EndsWith("Engine"));
+	JPT_ENSURE(str.EndsWith("Jupiter Engine"));
+	JPT_ENSURE(str.EndsWith("World Jupiter Engine"));
+	JPT_ENSURE(!str.EndsWith("World"));
+
+	str = "Test.json";
+	JPT_ENSURE(str.EndsWith(".json"));
+
+	return true;
+}
+bool UnitTests_WString_EndsWith()
+{
+	jpt::WString str = L"Hello World Jupiter Engine";
+	JPT_ENSURE(str.EndsWith(L"Engine"));
+	JPT_ENSURE(str.EndsWith(L"Jupiter Engine"));
+	JPT_ENSURE(str.EndsWith(L"World Jupiter Engine"));
+	JPT_ENSURE(!str.EndsWith(L"World"));
+
+	str = L"Test.json";
+	JPT_ENSURE(str.EndsWith(L".json"));
+
+	return true;
+}
+
 bool UnitTests_String_Split()
 {
 	jpt::String str = "Zero, One, Two, Three, Four, Five, Six";
@@ -646,6 +694,9 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTests_String_Has());
 		JPT_ENSURE(UnitTests_WString_Has());
+
+		JPT_ENSURE(UnitTests_String_BeginsWith());
+		JPT_ENSURE(UnitTests_WString_BeginsWith());
 
 		JPT_ENSURE(UnitTests_String_Split());
 		JPT_ENSURE(UnitTests_WString_Split());

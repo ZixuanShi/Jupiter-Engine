@@ -45,6 +45,7 @@ export namespace jpt::File
 
 		constexpr size_t FindLastOf(const Path& path) const;
 		constexpr bool Has(const Path& path) const;
+		constexpr bool EndsWith(const Path& path) const;
 		constexpr Path GetParent() const;
 
 		constexpr const WString& ToWString() const { return m_path; }
@@ -156,6 +157,11 @@ export namespace jpt::File
 	constexpr bool Path::Has(const Path& path) const
 	{
 		return m_path.Has(path.ToWString().ConstBuffer());
+	}
+
+	constexpr bool Path::EndsWith(const Path& path) const
+	{
+		return m_path.EndsWith(path.ToWString().ConstBuffer());
 	}
 
 	constexpr Path Path::GetParent() const
