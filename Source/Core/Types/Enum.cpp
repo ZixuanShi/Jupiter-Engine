@@ -7,12 +7,7 @@ using namespace jpt;
 import jpt.Optional;
 import jpt.StringView;
 import jpt.Utilities;
-
-enum class locOperation
-{
-	LeftShift,
-	Or
-};
+import jpt.Pair;
 
 static String locGetEnumSourceStr(const char* pSource)
 {
@@ -31,37 +26,32 @@ static String locGetEnumSourceStr(const char* pSource)
 }
 
 template<Integral TInt>
-Optional<TInt> EvaluateOperator(const String& expression, const String& operatorStr, locOperation operation)
+Optional<Pair<TInt, TInt>> EvaluateOperator(const String& expression, const String& operatorStr)
 {
-	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-	if (const size_t shiftIndex = expression.Find(operatorStr.ConstBuffer()); shiftIndex != npos)
+	const size_t operatorIndex = expression.Find(operatorStr.ConstBuffer());
+	if (operatorIndex == npos)
 	{
-		const String left  = expression.SubStr(0, shiftIndex);
-		const String right = expression.SubStr(shiftIndex + operatorStr.Count(), expression.Count() - shiftIndex - operatorStr.Count());
-		const TInt leftValue  = CStrToInteger<char, TInt>(left.ConstBuffer(),  left.Count());
-		const TInt rightValue = CStrToInteger<char, TInt>(right.ConstBuffer(), right.Count());
-
-		switch (operation)
-		{
-		case locOperation::LeftShift:
-			return (leftValue << rightValue);
-
-		case locOperation::Or:
-			return (leftValue | rightValue);
-
-		default:
-			break;
-		}
+		return Optional<Pair<TInt, TInt>>();
 	}
 
-	return Optional<TInt>();
+	const String lhsStr = expression.SubStr(0, operatorIndex);
+	const String rhsStr = expression.SubStr(operatorIndex + operatorStr.Count(), expression.Count() - operatorIndex - operatorStr.Count());
+
+	const TInt lhs = CStrToInteger<char, TInt>(lhsStr.ConstBuffer(), lhsStr.Count());
+	const TInt rhs = CStrToInteger<char, TInt>(rhsStr.ConstBuffer(), rhsStr.Count());
+
+	return Pair(lhs, rhs);
 }
 
+/** @return 	Evaluated value numeric of the expression
+	@param valueStr		An expression of value to assign. Operators may be involved. i.e. (1<<2), (1|2|4|8), (Foo|Bar|Baz) with alias, etc.
+	@param evaluated	Previously evaluated items. Used when assigning values with alias */
 template<Integral TInt>
-TInt Evaluate(const String& valueStr, const HashMap<TInt, String>&)
+TInt Evaluate(const String& valueStr)
 {
-	// Remove parenthesis if present
 	String expression = valueStr;
+
+	// Remove parenthesis if present
 	if (expression.Front() == '(' && expression.Back() == ')')
 	{
 		expression = expression.SubStr(1, expression.Count() - 2);
@@ -72,23 +62,19 @@ TInt Evaluate(const String& valueStr, const HashMap<TInt, String>&)
 	{
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
 	}
-	if (valueStr.IsHexInteger())
+	else if (valueStr.IsHexInteger())
 	{
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}
 
-	// valueStr could be either a number or a flag bitshift. Such as "Name=5", "Name=(1<<2)". We need to evaluate it. 
-	if (Optional<TInt> result = EvaluateOperator<TInt>(expression, "<<", locOperation::LeftShift); result.HasValue())
+	// Operators involved, evaluate them.
+	if (Optional<Pair<TInt, TInt>> pair = EvaluateOperator<TInt>(valueStr, "<<"); pair.HasValue())
 	{
-		return result.Value();
-	}
-	// Hex. starts with 0x
-	else if (expression.BeginsWith("0x"))
-	{
-		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
-	}
+		const Pair<TInt, TInt> p = pair.Value();
+		return p.first << p.second;
+	}	
 
-	JPT_ASSERT(false, "Unsupported value type");
+	JPT_WARNING("Can't to evaluate expression %s for enum value", valueStr.ConstBuffer());
 	return 0;
 }
 
@@ -114,7 +100,7 @@ EnumData<TInt> GenerateData(const char* pSource)
 			name = token.SubStr(0, equalIndex);
 
 			const String valueStr = token.SubStr(equalIndex + 1, token.Count() - equalIndex - 1);
-			value  = Evaluate<TInt>(valueStr, data.names);
+			value  = Evaluate<TInt>(valueStr);
 		}
 		else
 		{

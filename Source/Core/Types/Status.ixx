@@ -8,7 +8,8 @@ export module jpt.Status;
 
 export namespace jpt
 {
-	JPT_ENUM_UINT8(Status,
+	enum class Status
+	{
 		Pending  = 1 << 0,		// Not started
 		Running  = 1 << 1,		// In progress
 
@@ -16,10 +17,6 @@ export namespace jpt
 		Success = 1 << 3,		// Completed successfully
 		Warning = 1 << 4,		// Completed with warnings
 
-		Dummy = 255,
-		//Dummy2 = Dummy,
-
-		//Foo = Success,			// Alias
-		//Complete = Failure | Success | Warning
-	);
+		Complete = Failure | Success | Warning
+	};
 }
