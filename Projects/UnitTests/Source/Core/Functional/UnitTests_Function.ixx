@@ -38,6 +38,8 @@ bool UnitTests_Function_Global()
     func = &Subtract;
     JPT_ENSURE(func(2, 3) == -1);
 
+	JPT_ENSURE(func.IsMemberFunction() == false);
+
     return true;
 }
 
@@ -97,6 +99,9 @@ bool UnitTests_Function_MemberFunction()
     JPT_ENSURE(test.m_func(2) == true);
     JPT_ENSURE(test.m_func(3) == false);
     JPT_ENSURE(test.m_func(4) == true);
+
+    Test* pCaller = test.m_func.GetCaller<Test>();
+	JPT_ENSURE(pCaller == &test);
 
     return true;
 }

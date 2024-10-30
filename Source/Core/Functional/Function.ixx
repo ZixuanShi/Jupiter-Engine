@@ -25,6 +25,8 @@ export namespace jpt
 			virtual ~Function_Base() {}
 			virtual TReturn operator()(TArgs... args) const = 0;
 			virtual Function_Base* Clone() const = 0;
+			virtual void* GetCaller() { return nullptr; }
+			virtual const void* GetCaller() const { return nullptr; }
 		};
 
 		template<class TFunction>
@@ -83,6 +85,16 @@ export namespace jpt
 			{
 				return new MemberFunctionData(m_pCaller, m_pMemberFunction);
 			}
+
+			virtual void* GetCaller() override
+			{
+				return m_pCaller;
+			}
+
+			virtual const void* GetCaller() const override
+			{
+				return m_pCaller;
+			}
 		};
 
 	private:
@@ -122,6 +134,10 @@ export namespace jpt
 
 		constexpr void Disconnect();
 		constexpr bool IsConnected() const;
+
+		constexpr bool IsMemberFunction() const;
+		template<class TCaller>	constexpr TCaller* GetCaller();
+		template<class TCaller>	constexpr const TCaller* GetCaller() const;
 	};
 
 	template<class TReturn, class ...TArgs>
@@ -239,5 +255,28 @@ export namespace jpt
 	constexpr bool Function<TReturn(TArgs...)>::IsConnected() const
 	{
 		return m_pFunction != nullptr;
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr bool Function<TReturn(TArgs...)>::IsMemberFunction() const
+	{
+		JPT_ASSERT(IsConnected(), "Function is not connected");
+		return m_pFunction->GetCaller() != nullptr;
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TCaller>
+	constexpr TCaller* Function<TReturn(TArgs...)>::GetCaller()
+	{
+		JPT_ASSERT(IsMemberFunction(), "Function is not a member function");
+		return static_cast<MemberFunctionData<TCaller>*>(m_pFunction)->m_pCaller;
+	}
+
+	template<class TReturn, class ...TArgs>
+	template<class TCaller>
+	constexpr const TCaller* Function<TReturn(TArgs...)>::GetCaller() const
+	{
+		JPT_ASSERT(IsMemberFunction(), "Function is not a member function");
+		return static_cast<MemberFunctionData<TCaller>*>(m_pFunction)->m_pCaller;
 	}
 }
