@@ -14,6 +14,9 @@ namespace jpt_private
 	template<typename T> struct RemoveReference              { using Type = T;  };
 	template<typename T> struct RemoveReference<T&>          { using Type = T;  };
 	template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
+	template<typename T> struct RemovePointer                { using Type = T;  };
+	template<typename T> struct RemovePointer<T*>            { using Type = T;  };
+	template<typename T> struct RemovePointer<const T*>      { using Type = T;  };
 	template<typename T> struct RemoveConst                  { using Type = T;  };
 	template<typename T> struct RemoveConst<const T>         { using Type = T;  };
 	template<typename T> struct RValueToLValueReference      { using Type = T;  };
@@ -39,6 +42,7 @@ export namespace jpt
 {
 #pragma region Removing Qualifiers
 	template<typename T> using TRemoveReference         = typename jpt_private::RemoveReference<T>::Type;
+	template<typename T> using TRemovePointer           = typename jpt_private::RemovePointer<T>::Type;
 	template<typename T> using TRemoveConst             = typename jpt_private::RemoveConst<T>::Type;
 	template<typename T> using TRValueToLValueReference = typename jpt_private::RValueToLValueReference<T>::Type;
 	template<typename T> using TDecay                   = typename jpt_private::Decay<T>::Type;

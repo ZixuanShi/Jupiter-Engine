@@ -10,12 +10,14 @@ module;
 
 export module jpt.Event.Manager;
 
-import jpt.DynamicArray;
-import jpt.HashMap;
-import jpt.Function;
-import jpt.Pair;
+import jpt.TypeTraits;
 import jpt.TypeRegistry;
 import jpt.Utilities;
+
+import jpt.DynamicArray;
+import jpt.HashMap;
+
+import jpt.Function;
 import jpt.Event;
 
 export namespace jpt
@@ -25,7 +27,7 @@ export namespace jpt
 		JPT_SINGLETON_DECLARATION(EventManager);
 
 	private:
-		using HandlerFunc = Function<void(const Event&)>;	/**< Function to be called when an event is sent */
+		using HandlerFunc = Function<void(const Event&)>;	/**< Type of handler Function */
 
 		struct Handler
 		{
@@ -33,6 +35,7 @@ export namespace jpt
 			const void* pOwner;		/**< class instance if func is it's member function. Function address if func is global or lambda */
 		};
 
+		/** Queue item to store event and it's type Id and send later */
 		struct QueueItem
 		{
 			Event event;
@@ -44,7 +47,7 @@ export namespace jpt
 
 	private:
 		HandlersMap m_handlersMap;		/**< Map of event Ids to handlers */
-		DynamicArray<QueueItem> m_eventQueue;	/**< Queue of events to be sent */
+		DynamicArray<QueueItem> m_eventQueue;	/**< Queue of events to be sent later */
 
 	public:
 		/** Register a member function to event */
@@ -63,20 +66,24 @@ export namespace jpt
 		template<typename TEvent>
 		void UnregisterAll();
 
-		/** Send an event to all listeners */
+		/** Send an event to all listeners now */
 		template<typename TEvent>
 		void Send(const TEvent& event);
 
-		/** Queue an event to be sent */
+		/** Queue an event to be sent later */
 		template<typename TEvent>
 		void Queue(const TEvent& event);
 
 		/** Process all events in the queue */
 		void SendQueuedEvents();
 
-	private:
+		/** @return true if Listener is already listening to an event, false if not */
 		template<typename TEvent>
-		Handlers& GetHandlers();
+		bool IsListening(const void* pListener) const;
+
+	private:
+		template<typename TEvent>       Handlers& GetHandlers();
+		template<typename TEvent> const Handlers& GetHandlers() const;
 	};
 
 	template<typename TEvent, typename TListener>
@@ -101,7 +108,7 @@ export namespace jpt
 
 	   // Get the address of the function
 	   void* address = nullptr;
-	   if constexpr (std::is_function_v<std::remove_pointer_t<std::remove_reference_t<THandlerFunc>>>)
+	   if constexpr (std::is_function_v<TRemovePointer<TRemoveReference<THandlerFunc>>>)
 	   {
 		   // Global function
 		   using FuncPtr = void(*)(const TEvent&);
@@ -153,13 +160,6 @@ export namespace jpt
 		m_eventQueue.EmplaceBack(event, TypeRegistry::Id<TEvent>());
 	}
 
-	template<typename TEvent>
-	EventManager::Handlers& EventManager::GetHandlers()
-	{
-		const TypeRegistry::TypeId eventId = TypeRegistry::Id<TEvent>();
-		return m_handlersMap[eventId];
-	}
-
 	void EventManager::SendQueuedEvents()
 	{
 		for (const QueueItem& item : m_eventQueue)
@@ -172,5 +172,33 @@ export namespace jpt
 		}
 
 		m_eventQueue.Clear();
+	}
+
+	template<typename TEvent>
+	bool EventManager::IsListening(const void* pListener) const
+	{
+		for (const Handler& handler : GetHandlers<TEvent>())
+		{
+			if (handler.pOwner == pListener)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	template<typename TEvent>
+	EventManager::Handlers& EventManager::GetHandlers()
+	{
+		const TypeRegistry::TypeId eventId = TypeRegistry::Id<TEvent>();
+		return m_handlersMap[eventId];
+	}
+
+	template<typename TEvent>
+	const EventManager::Handlers& EventManager::GetHandlers() const
+	{
+		const TypeRegistry::TypeId eventId = TypeRegistry::Id<TEvent>();
+		return m_handlersMap[eventId];
 	}
 }
