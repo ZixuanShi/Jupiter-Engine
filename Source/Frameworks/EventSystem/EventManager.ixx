@@ -5,6 +5,9 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
+#include <type_traits>
+#include <memory>
+
 export module jpt.Event.Manager;
 
 import jpt.DynamicArray;
@@ -27,7 +30,7 @@ export namespace jpt
 		struct Handler
 		{
 			HandlerFunc func;	    /**< Function to be called when an event is sent. Could be global or member or local lambda */
-			const void* pOwner;		/**< valid if handler is member function of pOwner. nullptr if is global or lambda */
+			const void* pOwner;		/**< class instance if func is it's member function. Function address if func is global or lambda */
 		};
 
 		struct QueueItem
@@ -50,7 +53,7 @@ export namespace jpt
 
 		/** Register a global function or lambda to event */
 		template<typename TEvent, typename THandlerFunc>
-		void Register(THandlerFunc&& handlerFunc);
+		void Register(THandlerFunc&& func);
 
 		/** Unregister a listener from an event */
 		template<typename TEvent, typename TListener>
@@ -90,12 +93,28 @@ export namespace jpt
    template<typename TEvent, typename THandlerFunc>
    void EventManager::Register(THandlerFunc&& func)
    {
+	   // Lambda wrapper to call the function
 	   auto handlerFunc = [func](const Event& event)
 		   {
 			   func(static_cast<const TEvent&>(event));
 		   };
 
-	   GetHandlers<TEvent>().EmplaceBack(handlerFunc, nullptr);
+	   // Get the address of the function
+	   void* address = nullptr;
+	   if constexpr (std::is_function_v<std::remove_pointer_t<std::remove_reference_t<THandlerFunc>>>)
+	   {
+		   // Global function
+		   using FuncPtr = void(*)(const TEvent&);
+		   FuncPtr fptr = func;
+		   address = reinterpret_cast<void*>(fptr);
+	   }
+	   else
+	   {
+		   // Lambda or other callable
+		   address = reinterpret_cast<void*>(std::addressof(func));
+	   }
+
+	   GetHandlers<TEvent>().EmplaceBack(handlerFunc, address);
    }
 
 	template<typename TEvent, typename TListener>
