@@ -7,12 +7,13 @@
 
 import jpt.CoreModules;
 
-import jpt.Input.Manager;
-import jpt.Input.KeyCode;
-
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
+
+	m_foo.PreInit();
+	m_bar.PreInit();
+
 	return true;
 }
 
@@ -20,16 +21,8 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 {
 	Super::Update(deltaSeconds);
 
-	using namespace jpt::Input;
-
-	if (jpt::Input::Manager::GetInstance().ArePressed({ KeyCode::Keyboard_A,
-		                                                KeyCode::Keyboard_S,
-		                                                KeyCode::Keyboard_D,
-		                                                KeyCode::Keyboard_F,
-		                                                KeyCode::Keyboard_Numpad_0 }))
-	{
-		m_shouldShutdown = true;
-	}
+	m_foo.Update(deltaSeconds);
+	m_bar.Update(deltaSeconds);
 }
 
 JPT_SYNC_CLIENT(Application_Blank)

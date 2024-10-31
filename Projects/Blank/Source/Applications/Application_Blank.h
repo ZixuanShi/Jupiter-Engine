@@ -10,6 +10,9 @@
 
 import jpt.Time.TypeDefs;
 
+import Entity.Foo;
+import Entity.Bar;
+
 class Application_Blank final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
@@ -23,6 +26,9 @@ private:
 	#else
 		using Super = jpt::Application_Base;
 	#endif
+
+	Entity_Foo m_foo;
+	Entity_Bar m_bar;
 
 public:
 	virtual bool PreInit() override;

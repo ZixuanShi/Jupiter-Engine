@@ -47,6 +47,9 @@ export namespace jpt::Input
 
 		/** @return		true if the key was newly released at this frame. Last frame was Down */
 		bool IsReleased(KeyCode key) const;
+
+		uint32 FromKeyCode(KeyCode key) const;
+		KeyCode ToKeyCode(uint32 key) const;
 	};
 
 	bool Manager::PreInit()
@@ -141,5 +144,15 @@ export namespace jpt::Input
 	bool Manager::IsReleased(KeyCode key) const
 	{
 		return m_pBackend->IsReleased(key);
+	}
+
+	uint32 Manager::FromKeyCode(KeyCode key) const
+	{
+		return m_pBackend->FromKeyCode(key);
+	}
+
+	KeyCode Manager::ToKeyCode(uint32 key) const
+	{
+		return m_pBackend->ToKeyCode(key);
 	}
 }

@@ -7,17 +7,22 @@
 
 import jpt.Application_Factories;
 import jpt.CommandLine;
-import jpt.ProjectSettings;
+
+import jpt.ToString;
+
 import jpt.Framework_Base;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
+
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
 
 import jpt.System.Paths;
 import jpt.StopWatch;
+import jpt.ProjectSettings;
 
-import jpt.ToString;
+import jpt.Event.Manager;
+import jpt.Event.Window.Close;
 
 namespace jpt
 {
@@ -46,6 +51,11 @@ namespace jpt
 
 	bool Application_Base::Init()
 	{
+		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close&)
+			{
+				m_shouldShutdown = true;
+			});
+
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
 			m_shouldShutdown = true;
@@ -74,8 +84,8 @@ namespace jpt
 	{
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
-			JPT_SHUTDOWN(m_pFramework);
 			JPT_SHUTDOWN(m_pWindow);
+			JPT_SHUTDOWN(m_pFramework);
 			//JPT_SHUTDOWN(m_pRenderer);
 		}
 
@@ -94,6 +104,7 @@ namespace jpt
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
 
+			EventManager::GetInstance().SendQueuedEvents();
 			ProcessInput();
 			Update(deltaSeconds);
 			Render();

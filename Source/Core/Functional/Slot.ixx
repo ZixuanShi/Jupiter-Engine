@@ -43,6 +43,8 @@ export namespace jpt
 
 		constexpr void Reserve(size_t count);
 
+		constexpr const TFunction& operator[](size_t index) const;
+
 		constexpr void operator()(TArgs... args) const;
 		constexpr DynamicArray<TReturn> ReturnAll(TArgs... args);
 	};
@@ -121,6 +123,12 @@ export namespace jpt
 	constexpr void Slot<TReturn(TArgs...)>::Reserve(size_t count)
 	{
 		m_functions.Reserve(count);
+	}
+
+	template<class TReturn, class ...TArgs>
+	constexpr const Slot<TReturn(TArgs...)>::TFunction& Slot<TReturn(TArgs...)>::operator[](size_t index) const
+	{
+		return m_functions[index];
 	}
 
 	template<class TReturn, class ...TArgs>

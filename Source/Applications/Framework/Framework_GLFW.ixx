@@ -18,9 +18,17 @@ import jpt.TypeDefs;
 import jpt.ToString;
 import jpt.Utilities;
 
-export namespace jpt
+import jpt.Event.Manager;
+import jpt.Event.Window.Close;
+
+namespace jpt
 {
-	class Framework_GLFW final : public Framework_Base
+	namespace Callbacks
+	{
+		void OnError(int32 error, const char* description);
+	}
+
+	export class Framework_GLFW final : public Framework_Base
 	{
 		using Super = Framework_Base;
 
@@ -33,7 +41,7 @@ export namespace jpt
 		virtual void Shutdown() override;
 
 	private:
-		Window_GLFW* m_pWindow = nullptr;
+		Window_GLFW* m_pMainWindow = nullptr;
 	};
 
 	bool Framework_GLFW::Init()
@@ -41,13 +49,10 @@ export namespace jpt
 		JPT_ENSURE(Super::Init());
 		JPT_ENSURE(glfwInit());
 
-		glfwSetErrorCallback([](int32 error, const char* description)
-			{
-				JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
-			});
-
 		m_pApp = GetApplication();
-		m_pWindow = static_cast<Window_GLFW*>(m_pApp->GetWindow());
+		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetWindow());
+
+		glfwSetErrorCallback(Callbacks::OnError);
 
 		return true;
 	}
@@ -56,9 +61,10 @@ export namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		if (glfwWindowShouldClose(m_pWindow->GetGLFWwindow()))
+		if (glfwWindowShouldClose(m_pMainWindow->GetGLFWwindow()))
 		{
-			m_pApp->ShutdownApp();
+			Event_Window_Close eventWindowClose = { m_pMainWindow };
+			EventManager::GetInstance().Queue(eventWindowClose);
 		}
 
 		glfwPollEvents();
@@ -69,5 +75,13 @@ export namespace jpt
 		Super::Shutdown();
 
 		glfwTerminate();
+	}
+
+	namespace Callbacks
+	{
+		void OnError(int32 error, const char* description)
+		{
+			JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
+		}
 	}
 }

@@ -25,7 +25,8 @@ export namespace jpt
 			virtual ~Function_Base() {}
 			virtual TReturn operator()(TArgs... args) const = 0;
 			virtual Function_Base* Clone() const = 0;
-			virtual void* GetCaller() { return nullptr; }
+
+			virtual       void* GetCaller()       { return nullptr; }
 			virtual const void* GetCaller() const { return nullptr; }
 		};
 
@@ -61,11 +62,11 @@ export namespace jpt
 		struct MemberFunctionData final : public Function_Base
 		{
 			TCaller* m_pCaller;
-			TReturn(TCaller::*m_pMemberFunction)(TArgs...);
+			TReturn(TCaller::* m_pMemberFunction)(TArgs...);
 
-			MemberFunctionData(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...)) 
+			MemberFunctionData(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...))
 				: m_pCaller(pCaller)
-				, m_pMemberFunction(pMemberFunction) 
+				, m_pMemberFunction(pMemberFunction)
 			{
 			}
 
@@ -86,15 +87,8 @@ export namespace jpt
 				return new MemberFunctionData(m_pCaller, m_pMemberFunction);
 			}
 
-			virtual void* GetCaller() override
-			{
-				return m_pCaller;
-			}
-
-			virtual const void* GetCaller() const override
-			{
-				return m_pCaller;
-			}
+			virtual       void* GetCaller()       override { return m_pCaller; }
+			virtual const void* GetCaller() const override { return m_pCaller; }
 		};
 
 	private:
@@ -136,7 +130,7 @@ export namespace jpt
 		constexpr bool IsConnected() const;
 
 		constexpr bool IsMemberFunction() const;
-		template<class TCaller>	constexpr TCaller* GetCaller();
+		template<class TCaller>	constexpr       TCaller* GetCaller();
 		template<class TCaller>	constexpr const TCaller* GetCaller() const;
 	};
 
@@ -269,7 +263,11 @@ export namespace jpt
 	constexpr TCaller* Function<TReturn(TArgs...)>::GetCaller()
 	{
 		JPT_ASSERT(IsMemberFunction(), "Function is not a member function");
-		return static_cast<MemberFunctionData<TCaller>*>(m_pFunction)->m_pCaller;
+
+		MemberFunctionData<TCaller>* pMemberFunctionData = static_cast<MemberFunctionData<TCaller>*>(m_pFunction);
+		JPT_ASSERT(pMemberFunctionData, "Failed converting member function to TCaller");
+
+		return pMemberFunctionData->m_pCaller;
 	}
 
 	template<class TReturn, class ...TArgs>
@@ -277,6 +275,10 @@ export namespace jpt
 	constexpr const TCaller* Function<TReturn(TArgs...)>::GetCaller() const
 	{
 		JPT_ASSERT(IsMemberFunction(), "Function is not a member function");
-		return static_cast<MemberFunctionData<TCaller>*>(m_pFunction)->m_pCaller;
+
+		const MemberFunctionData<TCaller>* pMemberFunctionData = static_cast<const MemberFunctionData<TCaller>*>(m_pFunction);
+		JPT_ASSERT(pMemberFunctionData, "Failed converting member function to TCaller");
+
+		return pMemberFunctionData->m_pCaller;
 	}
 }
