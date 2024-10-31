@@ -122,10 +122,9 @@ export namespace jpt
 	void EventManager::Send(const TEvent& event)
 	{
 		// Send the event to all registered handlers
-		const Handlers& handlers = GetHandlers<TEvent>();
-		for (const Handler& handlerData : handlers)
+		for (const Handler& handler : GetHandlers<TEvent>())
 		{
-			handlerData.func(event);
+			handler.func(event);
 		}
 	}
 
