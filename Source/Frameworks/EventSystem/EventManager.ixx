@@ -11,7 +11,6 @@ export module jpt.Event.Manager;
 
 import jpt.DynamicArray;
 import jpt.HashMap;
-import jpt.Queue;
 import jpt.Function;
 import jpt.Pair;
 import jpt.TypeRegistry;
@@ -44,7 +43,7 @@ export namespace jpt
 
 	private:
 		HandlersMap m_handlersMap;		/**< Map of event Ids to handlers */
-		Queue<QueueItem> m_eventQueue;	/**< Queue of events to be sent */
+		DynamicArray<QueueItem> m_eventQueue;	/**< Queue of events to be sent */
 
 	public:
 		/** Register a member function to event */
@@ -134,10 +133,7 @@ export namespace jpt
 	template<typename TEvent>
 	void EventManager::Queue(const TEvent& event)
 	{
-		QueueItem item;
-		item.event = event;
-		item.eventId = TypeRegistry::Id<TEvent>();
-		m_eventQueue.Enqueue(item);
+		m_eventQueue.EmplaceBack(event, TypeRegistry::Id<TEvent>());
 	}
 
 	template<typename TEvent>
@@ -149,19 +145,16 @@ export namespace jpt
 
 	void EventManager::SendQueuedEvents()
 	{
-		while (!m_eventQueue.IsEmpty())
+		for (QueueItem& item : m_eventQueue)
 		{
-			const QueueItem& item = m_eventQueue.Front();
-			const TypeRegistry::TypeId eventId = item.eventId;
+			Handlers& handlers = m_handlersMap[item.eventId];
 
-			// Send the event to all registered handlers
-			const Handlers& handlers = m_handlersMap[eventId];
 			for (const Handler& handlerData : handlers)
 			{
 				handlerData.func(item.event);
 			}
-
-			m_eventQueue.Dequeue();
 		}
+
+		m_eventQueue.Clear();
 	}
 }
