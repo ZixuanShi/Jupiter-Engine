@@ -122,7 +122,8 @@ export namespace jpt
 	void EventManager::Send(const TEvent& event)
 	{
 		// Send the event to all registered handlers
-		for (const Handler& handlerData : GetHandlers<TEvent>())
+		const Handlers& handlers = GetHandlers<TEvent>();
+		for (const Handler& handlerData : handlers)
 		{
 			handlerData.func(event);
 		}
@@ -143,10 +144,9 @@ export namespace jpt
 
 	void EventManager::SendQueuedEvents()
 	{
-		for (QueueItem& item : m_eventQueue)
+		for (const QueueItem& item : m_eventQueue)
 		{
-			Handlers& handlers = m_handlersMap[item.eventId];
-
+			const Handlers& handlers = m_handlersMap[item.eventId];
 			for (const Handler& handlerData : handlers)
 			{
 				handlerData.func(item.event);
