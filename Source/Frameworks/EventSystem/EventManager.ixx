@@ -5,8 +5,6 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-#include <algorithm>
-
 export module jpt.Event.Manager;
 
 import jpt.DynamicArray;
