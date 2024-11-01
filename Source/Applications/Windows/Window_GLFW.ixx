@@ -126,10 +126,10 @@ namespace jpt
 
 				const Input::KeyCode keyCode = Input::Manager::GetInstance().ToKeyCode(button);
 				Event_Mouse_ButtonPress eventMouseButtonPress = { static_cast<int32>(x), 
-					                                             static_cast<int32>(y), 
-					                                             keyCode };
+					                                              static_cast<int32>(y), 
+					                                              keyCode };
 
-				EventManager::GetInstance().Send(eventMouseButtonPress);
+				EventManager::GetInstance().Queue(eventMouseButtonPress);
 			}
 		}
 	}

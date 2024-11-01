@@ -10,6 +10,7 @@ module;
 
 export module jpt.Event.Manager;
 
+import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.TypeRegistry;
 import jpt.Utilities;
@@ -31,15 +32,15 @@ export namespace jpt
 
 		struct Handler
 		{
-			HandlerFunc func;	    /**< Function to be called when an event is sent. Could be global or member or local lambda */
-			const void* pOwner;		/**< class instance if func is it's member function. Function address if func is global or lambda */
+			HandlerFunc func;	            /**< Function to be called when an event is sent. Could be global or member or local lambda */
+			const void* pOwner = nullptr;	/**< class instance if func is it's member function. Function address if func is global or lambda */
 		};
 
 		/** Queue item to store event and it's type Id and send later */
 		struct QueueItem
 		{
-			Event event;
-			TypeRegistry::TypeId eventId;
+			Event* pEvent = nullptr;
+			TypeRegistry::TypeId eventId = kInvalidValue<TypeRegistry::TypeId>;
 		};
 
 		using Handlers     = DynamicArray<Handler>;                     /**< List of functions to be called when an event is sent */
@@ -66,7 +67,7 @@ export namespace jpt
 		template<typename TEvent>
 		void UnregisterAll();
 
-		/** Send an event to all listeners now */
+		/** Send an event to all listeners now at current frame */
 		template<typename TEvent>
 		void Send(const TEvent& event);
 
@@ -157,17 +158,24 @@ export namespace jpt
 	template<typename TEvent>
 	void EventManager::Queue(const TEvent& event)
 	{
-		m_eventQueue.EmplaceBack(event, TypeRegistry::Id<TEvent>());
+		QueueItem item;
+		item.pEvent = new TEvent(event);
+		item.eventId = TypeRegistry::Id<TEvent>();
+
+		m_eventQueue.EmplaceBack(item);
 	}
 
 	void EventManager::SendQueuedEvents()
 	{
-		for (const QueueItem& item : m_eventQueue)
+		for (QueueItem& item : m_eventQueue)
 		{
-			const Handlers& handlers = m_handlersMap[item.eventId];
-			for (const Handler& handlerData : handlers)
+			Handlers& handlers = m_handlersMap[item.eventId];
+			for (Handler& handlerData : handlers)
 			{
-				handlerData.func(item.event);
+				handlerData.func(*item.pEvent);
+
+				delete item.pEvent;
+				item.pEvent = nullptr;
 			}
 		}
 

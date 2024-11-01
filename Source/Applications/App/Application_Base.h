@@ -35,6 +35,7 @@ namespace jpt
 		Window_Base*    GetWindow()    const { return m_pWindow;    }
 		Framework_Base* GetFramework() const { return m_pFramework; }
 		//Renderer_Base*  GetRenderer()  const { return m_pRenderer;  }
+		bool ShouldShutdown() const { return m_shouldShutdown; }
 
 	protected:
 		void ProcessInput();
