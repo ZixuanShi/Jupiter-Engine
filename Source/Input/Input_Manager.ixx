@@ -28,7 +28,7 @@ export namespace jpt::Input
 		Backend_Base* m_pBackend = nullptr;		/**< Input backend framework */
 
 	public:
-		JPT_SINGLETON_DECLARATION(Manager);
+		JPT_DECLARE_SINGLETON(Manager);
 
 		bool PreInit();
 		bool Init();

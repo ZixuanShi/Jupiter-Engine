@@ -31,7 +31,7 @@ namespace jpt::System
 		bool m_isInitialized = false;
 
 	public:
-		JPT_SINGLETON_DECLARATION(Paths);
+		JPT_DECLARE_SINGLETON(Paths);
 		void PreInit(const Path& clientDir, const Path& outputDir);
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }

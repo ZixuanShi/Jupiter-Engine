@@ -25,7 +25,7 @@ namespace jpt
 		HashMap<String, String> m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
 
 	public:
-		JPT_SINGLETON_DECLARATION(CommandLine);
+		JPT_DECLARE_SINGLETON(CommandLine);
 
 		/** Parse command line arguments and store them in a map
 			Expected Launch Args format: { "-key=value", "-flag", "-key_2=value", "-flag2" }

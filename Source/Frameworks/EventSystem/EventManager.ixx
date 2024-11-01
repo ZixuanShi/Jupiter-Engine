@@ -27,7 +27,7 @@ export namespace jpt
 {
 	class EventManager
 	{
-		JPT_SINGLETON_DECLARATION(EventManager);
+		JPT_DECLARE_SINGLETON(EventManager);
 
 	private:
 		struct Handler

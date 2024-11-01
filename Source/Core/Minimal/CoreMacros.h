@@ -100,7 +100,7 @@ template <typename T, unsigned int kNumber>
 char(&ArrayCountHelper(const T(&)[kNumber]))[kNumber + 1];
 #define JPT_ARRAY_COUNT(inArray) (sizeof(ArrayCountHelper(inArray)) - 1)
 
-#define JPT_SINGLETON_DECLARATION(ClassName)  \
+#define JPT_DECLARE_SINGLETON(ClassName)  \
 public:                                       \
 	static ClassName& GetInstance()           \
 	{                                         \

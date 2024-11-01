@@ -25,7 +25,7 @@ export namespace jpt
 		JsonMap m_settings;
 
 	public:
-		JPT_SINGLETON_DECLARATION(ProjectSettings);
+		JPT_DECLARE_SINGLETON(ProjectSettings);
 
 		bool Load();
 		void Save();
