@@ -74,6 +74,7 @@ namespace jpt
 
 	void Application_Base::Update(TimePrecision deltaSeconds)
 	{
+		EventManager::GetInstance().Update(deltaSeconds);
 		m_pFramework->Update(deltaSeconds);
 		m_pWindow->Update(deltaSeconds);
 		//m_pRenderer->Update(deltaSeconds);
@@ -91,6 +92,7 @@ namespace jpt
 
 		Input::Manager::GetInstance().Shutdown();
 		ProjectSettings::GetInstance().Save();
+		EventManager::GetInstance().Shutdown();
 	}
 
 	void Application_Base::Run()
@@ -104,7 +106,6 @@ namespace jpt
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
 
-			EventManager::GetInstance().SendQueuedEvents();
 			ProcessInput();
 			Update(deltaSeconds);
 			Render();

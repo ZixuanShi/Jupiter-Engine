@@ -129,7 +129,7 @@ namespace jpt
 					                                              static_cast<int32>(y), 
 					                                              keyCode };
 
-				EventManager::GetInstance().Queue(eventMouseButtonPress);
+				EventManager::GetInstance().Send(eventMouseButtonPress);
 			}
 		}
 	}

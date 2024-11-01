@@ -21,6 +21,8 @@ import jpt.HashMap;
 import jpt.Function;
 import jpt.Event;
 
+import jpt.Time.TypeDefs;
+
 export namespace jpt
 {
 	class EventManager
@@ -36,11 +38,12 @@ export namespace jpt
 			const void* pOwner = nullptr;	/**< class instance if func is it's member function. Function address if func is global or lambda */
 		};
 
-		/** Queue item to store event and it's type Id and send later */
+		/** Queued events to be sent later */
 		struct QueueItem
 		{
-			Event* pEvent = nullptr;
-			TypeRegistry::TypeId eventId = kInvalidValue<TypeRegistry::TypeId>;
+			Event* pEvent = nullptr;	                                         /**< Event to be sent */
+			TypeRegistry::TypeId eventId = kInvalidValue<TypeRegistry::TypeId>;	 /**< Id of the event when Queue() called. Used for getting the right handlers */
+			TimePrecision m_timer = 0.0;                                         /**< Timer to delay the event. 0.0 means next frame */
 		};
 
 		using Handlers     = DynamicArray<Handler>;                     /**< List of functions to be called when an event is sent */
@@ -73,14 +76,17 @@ export namespace jpt
 
 		/** Queue an event to be sent later */
 		template<typename TEvent>
-		void Queue(const TEvent& event);
-
-		/** Process all events in the queue */
-		void SendQueuedEvents();
+		void Queue(const TEvent& event, TimePrecision timer = 0.0);
 
 		/** @return true if Listener is already listening to an event, false if not */
 		template<typename TEvent>
 		bool IsListening(const void* pListener) const;
+
+		/** Process all events in the queue */
+		void Update(TimePrecision deltaSeconds);
+
+		/** Clears all remaining events */
+		void Shutdown();
 
 	private:
 		template<typename TEvent>       Handlers& GetHandlers();
@@ -148,7 +154,6 @@ export namespace jpt
 	template<typename TEvent>
 	void EventManager::Send(const TEvent& event)
 	{
-		// Send the event to all registered handlers
 		for (const Handler& handler : GetHandlers<TEvent>())
 		{
 			handler.func(event);
@@ -156,27 +161,44 @@ export namespace jpt
 	}
 
 	template<typename TEvent>
-	void EventManager::Queue(const TEvent& event)
+	void EventManager::Queue(const TEvent& event, TimePrecision timer /*= 0.0*/)
 	{
-		QueueItem item;
-		item.pEvent = new TEvent(event);
-		item.eventId = TypeRegistry::Id<TEvent>();
-
-		m_eventQueue.EmplaceBack(item);
+		m_eventQueue.EmplaceBack(new TEvent(event), TypeRegistry::Id<TEvent>(), timer);
 	}
 
-	void EventManager::SendQueuedEvents()
+	void EventManager::Update(TimePrecision deltaSeconds)
+	{
+		for (auto itr = m_eventQueue.begin(); itr != m_eventQueue.end();)
+		{
+			QueueItem& item = *itr;
+
+			if (item.m_timer <= 0.0)
+			{
+				Handlers& handlers = m_handlersMap[item.eventId];
+				for (Handler& handlerData : handlers)
+				{
+					handlerData.func(*item.pEvent);
+
+					delete item.pEvent;
+					item.pEvent = nullptr;
+				}
+
+				itr = m_eventQueue.Erase(itr);
+			}
+			else
+			{
+				item.m_timer -= deltaSeconds;
+				++itr;
+			}
+		}
+	}
+
+	void EventManager::Shutdown()
 	{
 		for (QueueItem& item : m_eventQueue)
 		{
-			Handlers& handlers = m_handlersMap[item.eventId];
-			for (Handler& handlerData : handlers)
-			{
-				handlerData.func(*item.pEvent);
-
-				delete item.pEvent;
-				item.pEvent = nullptr;
-			}
+			delete item.pEvent;
+			item.pEvent = nullptr;
 		}
 
 		m_eventQueue.Clear();

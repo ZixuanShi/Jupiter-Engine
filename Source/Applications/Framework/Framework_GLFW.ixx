@@ -61,10 +61,10 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		if (glfwWindowShouldClose(m_pMainWindow->GetGLFWwindow()) && !m_pApp->ShouldShutdown())
+		if (glfwWindowShouldClose(m_pMainWindow->GetGLFWwindow()))
 		{
 			Event_Window_Close eventWindowClose = { m_pMainWindow };
-			EventManager::GetInstance().Queue(eventWindowClose);
+			EventManager::GetInstance().Send(eventWindowClose);
 		}
 
 		glfwPollEvents();
