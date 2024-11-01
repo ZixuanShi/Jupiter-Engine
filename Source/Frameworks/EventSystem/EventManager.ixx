@@ -30,12 +30,10 @@ export namespace jpt
 		JPT_SINGLETON_DECLARATION(EventManager);
 
 	private:
-		using HandlerFunc = Function<void(const Event&)>;	/**< Type of handler Function */
-
 		struct Handler
 		{
-			HandlerFunc func;	            /**< Function to be called when an event is sent. Could be global or member or local lambda */
-			const void* pOwner = nullptr;	/**< class instance if func is it's member function. Function address if func is global or lambda */
+			Function<void(const Event&)> func; /**< Function to be called when an event is sent. Could be global or member or local lambda */
+			const void* pOwner = nullptr;	   /**< class instance if func is it's member function. Function address if func is global or lambda */
 		};
 
 		/** Queued events to be sent later */
@@ -46,11 +44,12 @@ export namespace jpt
 			TimePrecision m_timer = 0.0;                                         /**< Timer to delay the event. 0.0 means next frame */
 		};
 
+	private:
 		using Handlers     = DynamicArray<Handler>;                     /**< List of functions to be called when an event is sent */
 		using HandlersMap  = HashMap<TypeRegistry::TypeId, Handlers>;   /**< Key: Event Id. Value: The handlers that are registered to listen to this event */
 
 	private:
-		HandlersMap m_handlersMap;		/**< Map of event Ids to handlers */
+		HandlersMap m_handlersMap;		        /**< Map from event Ids to handlers */
 		DynamicArray<QueueItem> m_eventQueue;	/**< Queue of events to be sent later */
 
 	public:
@@ -174,8 +173,8 @@ export namespace jpt
 
 			if (item.m_timer <= 0.0)
 			{
-				Handlers& handlers = m_handlersMap[item.eventId];
-				for (Handler& handlerData : handlers)
+				const Handlers& handlers = m_handlersMap[item.eventId];
+				for (const Handler& handlerData : handlers)
 				{
 					handlerData.func(*item.pEvent);
 
