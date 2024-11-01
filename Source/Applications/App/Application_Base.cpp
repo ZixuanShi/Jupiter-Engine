@@ -33,20 +33,24 @@ namespace jpt
 
 		ProjectSettings::GetInstance().Load();
 
-		if (!CommandLine::GetInstance().Has("no_window"))
+		if (CommandLine::GetInstance().Has("no_window"))
 		{
-			m_pFramework = Framework_Create();
-			m_pWindow = Window_Create();
-			//m_pRenderer = Renderer_Create();
-
-			m_pFramework->PreInit();
-			m_pWindow->PreInit();
-			//m_pRenderer->PreInit();
+			m_shouldShutdown = true;
+			return true;
 		}
 
-		Input::Manager::GetInstance().PreInit();
+		// Initialize core systems
+		m_pFramework = Framework_Create();
+		m_pWindow = Window_Create();
+		//m_pRenderer = Renderer_Create();
 
-		return true;
+		bool success = true;
+		success &= m_pFramework->PreInit();
+		success &= m_pWindow->PreInit();
+		//success &= m_pRenderer->PreInit();
+		success &= Input::Manager::GetInstance().PreInit();
+
+		return success;
 	}
 
 	bool Application_Base::Init()
@@ -58,26 +62,30 @@ namespace jpt
 
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
-			m_shouldShutdown = true;
-		}
-		else
-		{
-			m_pFramework->Init();
-			m_pWindow->Init();
-			//m_pRenderer->Init();
+			return true;
 		}
 
-		Input::Manager::GetInstance().Init();
+		// Initialize systems
+		bool success = true;
+		success &= m_pFramework->Init();
+		success &= m_pWindow->Init();
+		//success &= m_pRenderer->Init();
+		success &= Input::Manager::GetInstance().Init();
 
-		return true;
+		return success;
 	}
 
 	void Application_Base::Update(TimePrecision deltaSeconds)
 	{
 		EventManager::GetInstance().Update(deltaSeconds);
-		m_pFramework->Update(deltaSeconds);
-		m_pWindow->Update(deltaSeconds);
-		//m_pRenderer->Update(deltaSeconds);
+
+		if (!CommandLine::GetInstance().Has("no_window"))
+		{
+			m_pFramework->Update(deltaSeconds);
+			m_pWindow->Update(deltaSeconds);
+			//m_pRenderer->Update(deltaSeconds);
+		}
+
 		Input::Manager::GetInstance().Update(deltaSeconds);
 	}
 
@@ -132,7 +140,7 @@ namespace jpt
 	{
 		if (Input::Manager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
 		{
-			m_shouldShutdown = true;
+			EventManager::GetInstance().Send(Event_Window_Close(nullptr));
 		}
 	}
 

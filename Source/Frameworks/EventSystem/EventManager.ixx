@@ -170,6 +170,7 @@ export namespace jpt
 		for (auto itr = m_eventQueue.begin(); itr != m_eventQueue.end();)
 		{
 			QueueItem& item = *itr;
+			item.m_timer -= deltaSeconds;
 
 			if (item.m_timer <= 0.0)
 			{
@@ -186,7 +187,6 @@ export namespace jpt
 			}
 			else
 			{
-				item.m_timer -= deltaSeconds;
 				++itr;
 			}
 		}
