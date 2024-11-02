@@ -12,7 +12,6 @@ import jpt.ToString;
 
 import jpt.Framework;
 import jpt.Window;
-import jpt.Renderer;
 
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
@@ -42,12 +41,10 @@ namespace jpt
 		// Initialize core systems
 		m_pFramework = Framework_Create();
 		m_pWindow = Window_Create();
-		//m_pRenderer = Renderer_Create();
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
 		success &= m_pWindow->PreInit();
-		//success &= m_pRenderer->PreInit();
 		success &= Input::Manager::GetInstance().PreInit();
 
 		return success;
@@ -69,7 +66,6 @@ namespace jpt
 		bool success = true;
 		success &= m_pFramework->Init();
 		success &= m_pWindow->Init();
-		//success &= m_pRenderer->Init();
 		success &= Input::Manager::GetInstance().Init();
 
 		return success;
@@ -83,7 +79,6 @@ namespace jpt
 		{
 			m_pFramework->Update(deltaSeconds);
 			m_pWindow->Update(deltaSeconds);
-			//m_pRenderer->Update(deltaSeconds);
 		}
 
 		Input::Manager::GetInstance().Update(deltaSeconds);
@@ -95,7 +90,6 @@ namespace jpt
 		{
 			JPT_SHUTDOWN(m_pWindow);
 			JPT_SHUTDOWN(m_pFramework);
-			//JPT_SHUTDOWN(m_pRenderer);
 		}
 
 		Input::Manager::GetInstance().Shutdown();
@@ -116,7 +110,6 @@ namespace jpt
 
 			ProcessInput();
 			Update(deltaSeconds);
-			Render();
 
 			previous = current;
 
@@ -142,10 +135,5 @@ namespace jpt
 		{
 			EventManager::GetInstance().Send(Event_Window_Close(nullptr));
 		}
-	}
-
-	void Application::Render()
-	{
-		//m_pRenderer->Render();
 	}
 }
