@@ -11,7 +11,7 @@ module;
 
 export module jpt.Framework_GLFW;
 
-import jpt.Framework_Base;
+import jpt.Framework;
 import jpt.Window_GLFW;
 
 import jpt.TypeDefs;
@@ -28,9 +28,9 @@ namespace jpt
 		void OnError(int32 error, const char* description);
 	}
 
-	export class Framework_GLFW final : public Framework_Base
+	export class Framework_GLFW final : public Framework
 	{
-		using Super = Framework_Base;
+		using Super = Framework;
 
 	private:
 		Application_Base* m_pApp = nullptr;

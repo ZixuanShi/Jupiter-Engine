@@ -13,7 +13,7 @@ export module jpt.Window_GLFW;
 
 import jpt.Window_Base;
 
-import jpt.Framework_Base;
+import jpt.Framework;
 
 import jpt.String;
 import jpt.TypeDefs;

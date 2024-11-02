@@ -10,7 +10,7 @@ import jpt.CommandLine;
 
 import jpt.ToString;
 
-import jpt.Framework_Base;
+import jpt.Framework;
 import jpt.Window_Base;
 import jpt.Renderer_Base;
 

@@ -23,16 +23,16 @@ import jpt.String;
 
 export namespace jpt
 {
-	class Framework_Base;
+	class Framework;
 	class Window_Base;
 	class Renderer_Base;
 
-	Framework_Base* Framework_Create()
+	Framework* Framework_Create()
 	{
-		Framework_Base* framework = nullptr;
+		Framework* framework = nullptr;
 		Framework_API api = Framework_API::Unknown;
 
-		auto pickAPI = [&framework](Framework_API api) -> Framework_Base*
+		auto pickAPI = [&framework](Framework_API api) -> Framework*
 			{
 				switch (api.Value())
 				{
