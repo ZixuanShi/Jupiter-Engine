@@ -8,7 +8,7 @@ module;
 
 export module jpt.Input.Backend_GLFW;
 
-import jpt.Input.Backend_Base;
+import jpt.Input.Backend;
 import jpt.Input.KeyCode;
 
 import jpt.TypeDefs;
@@ -18,7 +18,7 @@ import jpt.ToString;
 
 export namespace jpt::Input
 {
-	class Backend_GLFW final : public Backend_Base
+	class Backend_GLFW final : public Backend
 	{
 	private:
 		HashMap<KeyCode, uint32> m_toGLFW;

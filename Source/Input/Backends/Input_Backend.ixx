@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Input.Backend_Base;
+export module jpt.Input.Backend;
 
 import jpt.Input.KeyCode;
 import jpt.TypeDefs;
@@ -9,10 +9,10 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt::Input
 {
-	class Backend_Base
+	class Backend
 	{
 	public:
-		virtual ~Backend_Base() = default;
+		virtual ~Backend() = default;
 
 		virtual bool IsPressed(KeyCode) const { return false; }
 		virtual bool IsReleased(KeyCode) const { return false; }

@@ -7,10 +7,10 @@ module;
 
 export module jpt.Input.Manager;
 
-import jpt.Input.Device_Base;
+import jpt.Input.Device;
 import jpt.Input.KeyCode;
+import jpt.Input.Backend;
 
-import jpt.Input.Backend_Base;
 import jpt.Input.Backend_GLFW;
 
 import jpt.Framework_Enums;
@@ -24,8 +24,8 @@ export namespace jpt::Input
 	class Manager
 	{
 	private:
-		DynamicArray<Device_Base*> m_devices;	/**< Array of all connected input devices */
-		Backend_Base* m_pBackend = nullptr;		/**< Input backend framework */
+		DynamicArray<Device*> m_devices;	/**< Array of all connected input devices */
+		Backend* m_pBackend = nullptr;		/**< Input backend framework */
 
 	public:
 		JPT_DECLARE_SINGLETON(Manager);
@@ -69,7 +69,7 @@ export namespace jpt::Input
 
 		// Add connected devices
 
-		for (Device_Base* pDevice : m_devices)
+		for (Device* pDevice : m_devices)
 		{
 			if (!pDevice->PreInit())
 			{
@@ -82,7 +82,7 @@ export namespace jpt::Input
 
 	bool Manager::Init()
 	{
-		for (Device_Base* pDevice : m_devices)
+		for (Device* pDevice : m_devices)
 		{
 			if (!pDevice->Init())
 			{
@@ -95,7 +95,7 @@ export namespace jpt::Input
 
 	void Manager::Update(TimePrecision deltaSeconds)
 	{
-		for (Device_Base* pDevice : m_devices)
+		for (Device* pDevice : m_devices)
 		{
 			pDevice->Update(deltaSeconds);
 		}
@@ -105,7 +105,7 @@ export namespace jpt::Input
 	{
 		JPT_DELETE(m_pBackend);
 
-		for (Device_Base* pDevice : m_devices)
+		for (Device* pDevice : m_devices)
 		{
 			pDevice->Shutdown();
 		}

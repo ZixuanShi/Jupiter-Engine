@@ -1,15 +1,15 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Input.Device_Base;
+export module jpt.Input.Device;
 
 import jpt.Time.TypeDefs;
 
 export namespace jpt::Input
 {
-	class Device_Base
+	class Device
 	{
 	public:
-		virtual ~Device_Base() = default;
+		virtual ~Device() = default;
 
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
