@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-export module jpt.Application_Factories;
+export module jpt.Application.Factories;
 
 import jpt.Framework_GLFW;
 import jpt.Framework_Enums;

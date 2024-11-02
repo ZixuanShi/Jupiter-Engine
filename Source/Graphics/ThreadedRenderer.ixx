@@ -7,7 +7,7 @@ module;
 export module jpt.ThreadedRenderer;
 
 import jpt.Renderer;
-import jpt.Application_Factories;
+import jpt.Application.Factories;
 
 import jpt.Thread;
 import jpt.ThreadSafeQueue;

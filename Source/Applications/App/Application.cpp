@@ -5,7 +5,7 @@
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-import jpt.Application_Factories;
+import jpt.Application.Factories;
 import jpt.CommandLine;
 
 import jpt.ToString;
