@@ -6,7 +6,7 @@ module;
 
 export module jpt.ThreadedRenderer;
 
-import jpt.Renderer_Base;
+import jpt.Renderer;
 import jpt.Application_Factories;
 
 import jpt.Thread;
@@ -21,7 +21,7 @@ export namespace jpt
 	class ThreadedRenderer final : public Thread_Base
 	{
 	private:
-		UniquePtr<Renderer_Base> m_pRenderer;
+		UniquePtr<Renderer> m_pRenderer;
 		ThreadSafeQueue<Function<void()>> m_renderQueue;
 
 	public:

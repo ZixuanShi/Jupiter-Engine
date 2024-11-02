@@ -8,7 +8,7 @@ namespace jpt
 {
 	class Window;
 	class Framework;
-	class Renderer_Base;
+	class Renderer;
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
@@ -17,7 +17,7 @@ namespace jpt
 	protected:
 		Framework* m_pFramework = nullptr;
 		Window* m_pWindow = nullptr;
-		//Renderer_Base*  m_pRenderer     = nullptr;
+		//Renderer*  m_pRenderer     = nullptr;
 
 		bool m_shouldShutdown = false;
 
@@ -34,7 +34,7 @@ namespace jpt
 
 		Window* GetWindow()    const { return m_pWindow; }
 		Framework* GetFramework() const { return m_pFramework; }
-		//Renderer_Base*  GetRenderer()  const { return m_pRenderer;  }
+		//Renderer*  GetRenderer()  const { return m_pRenderer;  }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
 
 	protected:

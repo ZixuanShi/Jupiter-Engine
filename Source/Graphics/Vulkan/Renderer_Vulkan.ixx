@@ -2,11 +2,11 @@
 
 export module jpt.Renderer_Vulkan;
 
-import jpt.Renderer_Base;
+import jpt.Renderer;
 
 export namespace jpt
 {
-	class Renderer_Vulkan : public Renderer_Base
+	class Renderer_Vulkan : public Renderer
 	{
 	public:
 	};

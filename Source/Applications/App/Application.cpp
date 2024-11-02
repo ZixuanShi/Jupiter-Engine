@@ -12,7 +12,7 @@ import jpt.ToString;
 
 import jpt.Framework;
 import jpt.Window;
-import jpt.Renderer_Base;
+import jpt.Renderer;
 
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;

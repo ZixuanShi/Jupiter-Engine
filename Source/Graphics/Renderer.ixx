@@ -1,15 +1,15 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Renderer_Base;
+export module jpt.Renderer;
 
 import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	class Renderer_Base
+	class Renderer
 	{
 	public:
-		virtual ~Renderer_Base() = default;
+		virtual ~Renderer() = default;
 
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }

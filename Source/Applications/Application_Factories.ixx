@@ -25,7 +25,7 @@ export namespace jpt
 {
 	class Framework;
 	class Window;
-	class Renderer_Base;
+	class Renderer;
 
 	Framework* Framework_Create()
 	{
@@ -86,12 +86,12 @@ export namespace jpt
 #endif
 	}
 
-	Renderer_Base* Renderer_Create()
+	Renderer* Renderer_Create()
 	{
-		Renderer_Base* renderer = nullptr;
+		Renderer* renderer = nullptr;
 		Graphics::API api = Graphics::API::Unknown;
 
-		auto pickAPI = [&renderer](Graphics::API api) -> Renderer_Base*
+		auto pickAPI = [&renderer](Graphics::API api) -> Renderer*
 			{
 				switch (api.Value())
 				{
