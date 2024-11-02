@@ -27,11 +27,11 @@ jpt::Mutex rawThreadsMutex;
 
 static bool RawThreads()
 {
-    class TestThread final : public jpt::Thread_Base
+    class TestThread final : public jpt::Thread
     {
     public:
         TestThread(): 
-            jpt::Thread_Base("Test Thread ")
+            jpt::Thread("Test Thread ")
         {
         }
 
@@ -74,7 +74,7 @@ static bool RawThreads()
 
 static bool ThreadSafeQueue()
 {
-    class ProducerThread final : public jpt::Thread_Base
+    class ProducerThread final : public jpt::Thread
     {
     private:
         jpt::ThreadSafeQueue<int32>& m_queue;
@@ -99,7 +99,7 @@ static bool ThreadSafeQueue()
         }
     };
 
-    class ConsumerThread final : public jpt::Thread_Base
+    class ConsumerThread final : public jpt::Thread
     {
     private:
         jpt::ThreadSafeQueue<int32>& m_queue;

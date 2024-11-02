@@ -18,7 +18,7 @@ import jpt.Optional;
 
 export namespace jpt
 {
-	class ThreadedRenderer final : public Thread_Base
+	class ThreadedRenderer final : public Thread
 	{
 	private:
 		UniquePtr<Renderer> m_pRenderer;
@@ -29,7 +29,7 @@ export namespace jpt
 	};
 
 	ThreadedRenderer::ThreadedRenderer()
-		: Thread_Base("Threaded Renderer")
+		: Thread("Threaded Renderer")
 		, m_pRenderer(Renderer_Create())
 	{
 	}

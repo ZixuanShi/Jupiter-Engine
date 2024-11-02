@@ -20,7 +20,7 @@ export namespace jpt
 {
 	/** Base class for all threads
 		@example:
-		    class TestThread final : public jpt::Thread_Base
+		    class TestThread final : public jpt::Thread
             {
             protected:
                 void Init() override 
@@ -39,7 +39,7 @@ export namespace jpt
                     JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
                 }
             }; */
-    class Thread_Base
+    class Thread
     {
     protected:
         String m_name = "Unnamed";
@@ -50,15 +50,15 @@ export namespace jpt
         UniquePtr<std::thread> m_thread;
 
     public:
-        Thread_Base() noexcept = default;
-        Thread_Base(const char* name) noexcept;
-        virtual ~Thread_Base() noexcept;
+        Thread() noexcept = default;
+        Thread(const char* name) noexcept;
+        virtual ~Thread() noexcept;
 
-        Thread_Base(Thread_Base&& other) noexcept;
-        Thread_Base& operator=(Thread_Base&& other) noexcept;
+        Thread(Thread&& other) noexcept;
+        Thread& operator=(Thread&& other) noexcept;
 
-        Thread_Base(const Thread_Base&) = delete;
-        Thread_Base& operator=(const Thread_Base&) = delete;
+        Thread(const Thread&) = delete;
+        Thread& operator=(const Thread&) = delete;
 
         void Start();
         void Stop();
@@ -71,17 +71,17 @@ export namespace jpt
         virtual void Shutdown() {}
     };
 
-    Thread_Base::Thread_Base(const char* name) noexcept
+    Thread::Thread(const char* name) noexcept
         : m_name(name) 
     {
     }
 
-    Thread_Base::~Thread_Base() noexcept
+    Thread::~Thread() noexcept
     {
         Stop();
     }
 
-    Thread_Base::Thread_Base(Thread_Base&& other) noexcept
+    Thread::Thread(Thread&& other) noexcept
         : m_name(Move(other.m_name))
         , m_isRunning(other.m_isRunning.Load())
         , m_shouldShutdown(other.m_shouldShutdown.Load())
@@ -91,7 +91,7 @@ export namespace jpt
         other.m_shouldShutdown = true;
     }
 
-    Thread_Base& Thread_Base::operator=(Thread_Base&& other) noexcept
+    Thread& Thread::operator=(Thread&& other) noexcept
     {
         if (this != &other)
         {
@@ -109,7 +109,7 @@ export namespace jpt
         return *this;
     }
 
-    void Thread_Base::Start()
+    void Thread::Start()
     {
         if (!m_isRunning)
         {
@@ -128,7 +128,7 @@ export namespace jpt
         }
     }
 
-    void Thread_Base::Stop()
+    void Thread::Stop()
     {
         m_shouldShutdown = true;
         if (m_thread && m_thread->joinable())
@@ -138,7 +138,7 @@ export namespace jpt
         m_isRunning = false;
     }
 
-    const String& Thread_Base::GetName() const noexcept
+    const String& Thread::GetName() const noexcept
     {
         return m_name;
     }
