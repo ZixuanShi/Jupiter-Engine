@@ -4,19 +4,18 @@ module;
 
 #include "Debugging/Assert.h"
 
-export module jpt.Window_Base;
+export module jpt.Window;
 
 import jpt.Time.TypeDefs;
-import jpt.TypeDefs;
 
 export namespace jpt
 {
 	class Application_Base;
 
-	class Window_Base
+	class Window
 	{
 	public:
-		virtual ~Window_Base() = default;
+		virtual ~Window() = default;
 
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }

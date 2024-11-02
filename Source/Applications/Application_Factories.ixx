@@ -24,7 +24,7 @@ import jpt.String;
 export namespace jpt
 {
 	class Framework;
-	class Window_Base;
+	class Window;
 	class Renderer_Base;
 
 	Framework* Framework_Create()
@@ -76,7 +76,7 @@ export namespace jpt
 		return framework;
 	}
 
-	Window_Base* Window_Create()
+	Window* Window_Create()
 	{
 #if IS_PLATFORM_WIN64
 		return new Window_GLFW();

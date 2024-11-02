@@ -6,7 +6,7 @@ import jpt.Time.TypeDefs;
 
 namespace jpt
 {
-	class Window_Base;
+	class Window;
 	class Framework;
 	class Renderer_Base;
 
@@ -16,7 +16,7 @@ namespace jpt
 	{
 	protected:
 		Framework* m_pFramework = nullptr;
-		Window_Base* m_pWindow = nullptr;
+		Window* m_pWindow = nullptr;
 		//Renderer_Base*  m_pRenderer     = nullptr;
 
 		bool m_shouldShutdown = false;
@@ -32,7 +32,7 @@ namespace jpt
 		void Run();
 		void ShutdownApp() { m_shouldShutdown = true; }
 
-		Window_Base* GetWindow()    const { return m_pWindow; }
+		Window* GetWindow()    const { return m_pWindow; }
 		Framework* GetFramework() const { return m_pFramework; }
 		//Renderer_Base*  GetRenderer()  const { return m_pRenderer;  }
 		bool ShouldShutdown() const { return m_shouldShutdown; }

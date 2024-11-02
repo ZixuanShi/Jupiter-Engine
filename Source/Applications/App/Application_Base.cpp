@@ -11,7 +11,7 @@ import jpt.CommandLine;
 import jpt.ToString;
 
 import jpt.Framework;
-import jpt.Window_Base;
+import jpt.Window;
 import jpt.Renderer_Base;
 
 import jpt.Input.Manager;

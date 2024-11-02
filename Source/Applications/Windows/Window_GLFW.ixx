@@ -11,7 +11,7 @@ module;
 
 export module jpt.Window_GLFW;
 
-import jpt.Window_Base;
+import jpt.Window;
 
 import jpt.Framework;
 
@@ -46,9 +46,9 @@ namespace jpt
 		void OnMouseButton(GLFWwindow* pGLFWwindow, int32 button, int32 action, int32 mods);
 	}
 
-	export class Window_GLFW final : public Window_Base
+	export class Window_GLFW final : public Window
 	{
-		using Super = Window_Base;
+		using Super = Window;
 
 	private:
 		GLFWwindow* m_pWindow = nullptr;
@@ -113,7 +113,7 @@ namespace jpt
 		void OnWindowResize(GLFWwindow* pGLFWwindow, int32 width, int32 height)
 		{
 			void* pWindow = glfwGetWindowUserPointer(pGLFWwindow);
-			Event_Window_Resize eventWindowResize = { static_cast<Window_Base*>(pWindow), width, height };
+			Event_Window_Resize eventWindowResize = { static_cast<Window*>(pWindow), width, height };
 			EventManager::GetInstance().Send(eventWindowResize);
 		}
 
