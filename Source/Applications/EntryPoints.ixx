@@ -2,7 +2,7 @@
 
 module;
 
-#include "Applications/App/Application_Base.h"
+#include "Applications/App/Application.h"
 
 #if IS_PLATFORM_WIN64
 #include "Applications/App/Application_Win64.h"
@@ -28,7 +28,7 @@ namespace jpt
 		MemoryLeakDetector::Init();
 #endif
 
-		Application_Base* pApp = GetApplication();
+		Application* pApp = GetApplication();
 		if (pApp->PreInit() && pApp->Init())
 		{
 			pApp->Run();

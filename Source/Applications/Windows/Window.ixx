@@ -10,7 +10,7 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	class Application_Base;
+	class Application;
 
 	class Window
 	{

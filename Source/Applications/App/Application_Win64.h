@@ -4,7 +4,7 @@
 
 #if IS_PLATFORM_WIN64
 
-#include "Applications/App/Application_Base.h"
+#include "Applications/App/Application.h"
 
 using HINSTANCE = struct HINSTANCE__*; 
 
@@ -12,10 +12,10 @@ import jpt.TypeDefs;
 
 namespace jpt
 {
-	class Application_Win64 : public Application_Base
+	class Application_Win64 : public Application
 	{
 	private:
-		using Super = Application_Base;
+		using Super = Application;
 
 	protected:
 		/** The handle to an instance or handle to a module.

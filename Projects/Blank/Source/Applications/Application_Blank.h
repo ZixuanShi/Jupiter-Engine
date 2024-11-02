@@ -5,7 +5,7 @@
 #if IS_PLATFORM_WIN64
 	#include "Applications/App/Application_Win64.h"
 #else
-	#include "Applications/App/Application_Base.h"
+	#include "Applications/App/Application.h"
 #endif
 
 import jpt.Time.TypeDefs;

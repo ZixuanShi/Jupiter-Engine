@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Applications/App/Application_Base.h"
+#include "Applications/App/Application.h"
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
@@ -26,7 +26,7 @@ import jpt.Event.Window.Close;
 
 namespace jpt
 {
-	bool jpt::Application_Base::PreInit()
+	bool jpt::Application::PreInit()
 	{
 		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
@@ -53,7 +53,7 @@ namespace jpt
 		return success;
 	}
 
-	bool Application_Base::Init()
+	bool Application::Init()
 	{
 		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close&)
 			{
@@ -75,7 +75,7 @@ namespace jpt
 		return success;
 	}
 
-	void Application_Base::Update(TimePrecision deltaSeconds)
+	void Application::Update(TimePrecision deltaSeconds)
 	{
 		EventManager::GetInstance().Update(deltaSeconds);
 
@@ -89,7 +89,7 @@ namespace jpt
 		Input::Manager::GetInstance().Update(deltaSeconds);
 	}
 
-	void Application_Base::Shutdown()
+	void Application::Shutdown()
 	{
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
@@ -103,7 +103,7 @@ namespace jpt
 		EventManager::GetInstance().Shutdown();
 	}
 
-	void Application_Base::Run()
+	void Application::Run()
 	{
 		StopWatch::Point previous = StopWatch::Now();
 		TimePrecision accumulator = 0.0;
@@ -136,7 +136,7 @@ namespace jpt
 		}
 	}
 
-	void Application_Base::ProcessInput()
+	void Application::ProcessInput()
 	{
 		if (Input::Manager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
 		{
@@ -144,7 +144,7 @@ namespace jpt
 		}
 	}
 
-	void Application_Base::Render()
+	void Application::Render()
 	{
 		//m_pRenderer->Render();
 	}

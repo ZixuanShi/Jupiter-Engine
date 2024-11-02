@@ -12,7 +12,7 @@ namespace jpt
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
-	class Application_Base
+	class Application
 	{
 	protected:
 		Framework* m_pFramework = nullptr;
@@ -22,7 +22,7 @@ namespace jpt
 		bool m_shouldShutdown = false;
 
 	public:
-		virtual ~Application_Base() = default;
+		virtual ~Application() = default;
 
 		virtual bool PreInit();
 		virtual bool Init();
@@ -42,5 +42,5 @@ namespace jpt
 		void Render();
 	};
 
-	Application_Base* GetApplication();
+	Application* GetApplication();
 }

@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
-#include "Applications/App/Application_Base.h"
+#include "Applications/App/Application.h"
 
 #include <GLFW/glfw3.h>
 
@@ -33,7 +33,7 @@ namespace jpt
 		using Super = Framework;
 
 	private:
-		Application_Base* m_pApp = nullptr;
+		Application* m_pApp = nullptr;
 
 	public:
 		virtual bool Init() override;

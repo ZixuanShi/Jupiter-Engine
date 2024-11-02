@@ -4,7 +4,7 @@
 
 // Should be called in client's Application.cpp file once
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
-jpt::Application_Base* jpt::GetApplication()                                         \
+jpt::Application* jpt::GetApplication()                                              \
 {																					 \
 	static ApplicationName app;													     \
 	return &app;																	 \
