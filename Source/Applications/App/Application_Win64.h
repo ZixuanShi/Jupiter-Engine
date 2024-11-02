@@ -5,7 +5,8 @@
 #if IS_PLATFORM_WIN64
 
 #include "Applications/App/Application_Base.h"
-#include <Windows.h>
+
+using HINSTANCE = struct HINSTANCE__*; 
 
 import jpt.TypeDefs;
 

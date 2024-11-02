@@ -5,6 +5,9 @@
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
 namespace jpt
 {
 	bool Application_Win64::PreInit()
