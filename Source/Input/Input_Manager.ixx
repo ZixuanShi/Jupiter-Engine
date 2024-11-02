@@ -55,10 +55,10 @@ export namespace jpt::Input
 	bool Manager::PreInit()
 	{
 		const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-		const Framework::API frameworkAPI = projectSettings.Get<String>("framework_api");
+		const Framework_API frameworkAPI = projectSettings.Get<String>("framework_api");
 		switch (frameworkAPI.Value())
 		{
-		case Framework::API::GLFW:
+		case Framework_API::GLFW:
 			m_pBackend = new Backend_GLFW();
 			break;
 

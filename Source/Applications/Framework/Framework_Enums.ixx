@@ -7,9 +7,9 @@ module;
 
 export module jpt.Framework_Enums;
 
-export namespace jpt::Framework
+export namespace jpt
 {
-	JPT_ENUM_UINT8(API, 
+	JPT_ENUM_UINT8(Framework_API, 
 		Unknown,
 		GLFW)
 }

@@ -30,13 +30,13 @@ export namespace jpt
 	Framework_Base* Framework_Create()
 	{
 		Framework_Base* framework = nullptr;
-		Framework::API api = Framework::API::Unknown;
+		Framework_API api = Framework_API::Unknown;
 
-		auto pickAPI = [&framework](Framework::API api) -> Framework_Base*
+		auto pickAPI = [&framework](Framework_API api) -> Framework_Base*
 			{
 				switch (api.Value())
 				{
-				case Framework::API::GLFW:
+				case Framework_API::GLFW:
 					return new Framework_GLFW();
 
 				default:
@@ -59,7 +59,7 @@ export namespace jpt
 		else
 		{
 		#if IS_PLATFORM_WIN64
-			api = Framework::API::GLFW;
+			api = Framework_API::GLFW;
 		#else
 			JPT_ERROR("No Framework API specified in CommandLine or ProjectSettings.json.");
 			return nullptr;
