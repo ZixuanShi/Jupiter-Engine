@@ -9,6 +9,8 @@ export namespace jpt
 	class Renderer_Base
 	{
 	public:
+		virtual ~Renderer_Base() = default;
+
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
 		virtual void Update(TimePrecision) { }

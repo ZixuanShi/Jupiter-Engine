@@ -93,16 +93,15 @@ export namespace jpt
 
 		auto pickAPI = [&renderer](Graphics::API api) -> Renderer_Base*
 			{
-				JPT_IGNORE(api);
-				return nullptr;
+				switch (api.Value())
+				{
+					case Graphics::API::Vulkan:
 
-				// TODO: Vulkan
-				//switch (api.Value())
-				//{
-				//	default:
-				//		JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
-				//		return nullptr;
-				//}
+
+					default:
+						JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
+						return nullptr;
+				}
 			};
 
 		// Check CommandLine for graphics_api
@@ -119,7 +118,7 @@ export namespace jpt
 		else
 		{
 		#if IS_PLATFORM_WIN64
-			api = Graphics::API::DirectX12;
+			api = Graphics::API::Vulkan;
 		#else
 			JPT_ERROR("No Graphics API specified in CommandLine or ProjectSettings.json.");
 			return nullptr;

@@ -29,7 +29,7 @@ export namespace jpt
 	};
 
 	ThreadedRenderer::ThreadedRenderer()
-		: Thread_Base("ThreadedRenderer")
+		: Thread_Base("Threaded Renderer")
 		, m_pRenderer(Renderer_Create())
 	{
 	}
