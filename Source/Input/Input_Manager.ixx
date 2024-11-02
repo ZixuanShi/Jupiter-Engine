@@ -13,7 +13,7 @@ import jpt.Input.Backend;
 
 import jpt.Input.Backend_GLFW;
 
-import jpt.Framework_Enums;
+import jpt.Framework.Enums;
 import jpt.DynamicArray;
 import jpt.String;
 import jpt.ProjectSettings;

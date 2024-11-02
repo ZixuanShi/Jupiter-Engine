@@ -5,13 +5,15 @@
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-import jpt.Application.Factories;
 import jpt.CommandLine;
 
 import jpt.ToString;
 
 import jpt.Framework;
+import jpt.Framework.Create;
+
 import jpt.Window;
+import jpt.Window.Create;
 
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
