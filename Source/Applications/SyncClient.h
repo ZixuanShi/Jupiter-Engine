@@ -10,6 +10,8 @@ jpt::Application* jpt::GetApplication()                                         
 	return &app;																	 \
 }                                                                                    \
 																					 \
+const char* jpt::Application::GetName() const { return #ApplicationName; }           \
+                                                                                     \
 constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }     \
 constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }     
 

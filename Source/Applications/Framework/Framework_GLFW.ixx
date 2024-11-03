@@ -55,7 +55,7 @@ namespace jpt
 		JPT_ENSURE(Super::Init());
 
 		JPT_ENSURE(glfwInit());
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		m_pApp = GetApplication();
 		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetMainWindow());

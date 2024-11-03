@@ -33,6 +33,8 @@ namespace jpt
 		Window* GetMainWindow() const { return m_pMainWindow; }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
 
+		const char* GetName() const;
+
 	protected:
 		void ProcessInput();
 	};

@@ -8,6 +8,9 @@ export namespace jpt
 {
 	class Window
 	{
+	protected:
+		const char* m_pTitle = "Unnamed";
+
 	public:
 		virtual ~Window() = default;
 
