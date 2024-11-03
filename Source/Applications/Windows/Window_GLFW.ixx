@@ -58,6 +58,8 @@ namespace jpt
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
 
+		virtual bool ShouldClose() const override;
+
 		GLFWwindow* GetGLFWwindow() const { return m_pGLFWWindow; }
 	};
 
@@ -95,6 +97,11 @@ namespace jpt
 		Super::Shutdown();
 
 		glfwDestroyWindow(m_pGLFWWindow);
+	}
+
+	bool Window_GLFW::ShouldClose() const
+	{
+		return glfwWindowShouldClose(m_pGLFWWindow);
 	}
 
 	namespace Callbacks

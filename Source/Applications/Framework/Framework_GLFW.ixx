@@ -18,7 +18,6 @@ module;
 export module jpt.Framework_GLFW;
 
 import jpt.Framework;
-import jpt.Window_GLFW;
 
 import jpt.TypeDefs;
 import jpt.ToString;
@@ -38,16 +37,10 @@ namespace jpt
 	{
 		using Super = Framework;
 
-	private:
-		Application* m_pApp = nullptr;
-
 	public:
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
-
-	private:
-		Window_GLFW* m_pMainWindow = nullptr;
 	};
 
 	bool Framework_GLFW::Init()
@@ -57,9 +50,6 @@ namespace jpt
 		JPT_ENSURE(glfwInit());
 		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-		m_pApp = GetApplication();
-		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetMainWindow());
-
 		glfwSetErrorCallback(Callbacks::OnError);
 
 		return true;
@@ -68,12 +58,6 @@ namespace jpt
 	void Framework_GLFW::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
-
-		if (glfwWindowShouldClose(m_pMainWindow->GetGLFWwindow()))
-		{
-			Event_Window_Close eventWindowClose = { m_pMainWindow };
-			EventManager::GetInstance().Send(eventWindowClose);
-		}
 
 		glfwPollEvents();
 	}

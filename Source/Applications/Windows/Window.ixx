@@ -16,5 +16,7 @@ export namespace jpt
 		virtual bool Init(const char* /*title*/, int32 /*width*/ , int32 /*height*/) { return true; }
 		virtual void Update(TimePrecision) {}
 		virtual void Shutdown() {}
+
+		virtual bool ShouldClose() const { return false; }
 	};
 }
