@@ -24,7 +24,7 @@ namespace jpt
 		bool m_shouldShutdown = false;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
-		Graphics::API m_graphicsAPI = Graphics::API::Unknown;
+		Graphics_API m_graphicsAPI = Graphics_API::Unknown;
 
 	public:
 		virtual ~Application() = default;

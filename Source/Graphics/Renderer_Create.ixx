@@ -16,9 +16,9 @@ import jpt.ProjectSettings;
 
 export namespace jpt
 {
-	Graphics::API FindGraphicsAPI()
+	Graphics_API FindGraphicsAPI()
 	{
-		Graphics::API api = Graphics::API::Unknown;
+		Graphics_API api = Graphics_API::Unknown;
 
 		// Check CommandLine for graphics_api
 		if (CommandLine::GetInstance().Has("graphics_api"))
@@ -34,19 +34,19 @@ export namespace jpt
 		else
 		{
 #if IS_PLATFORM_WIN64
-			api = Graphics::API::Vulkan;
+			api = Graphics_API::Vulkan;
 #endif
 		}
 
-		JPT_ASSERT(api != Graphics::API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
+		JPT_ASSERT(api != Graphics_API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
 		return api;
 	}
 
-	Renderer* Renderer_Create(Graphics::API api)
+	Renderer* Renderer_Create(Graphics_API api)
 	{
 		switch (api.Value())
 		{
-		case Graphics::API::Vulkan:
+		case Graphics_API::Vulkan:
 			return new Renderer_Vulkan();
 
 		default:

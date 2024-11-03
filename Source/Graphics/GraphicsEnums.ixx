@@ -6,9 +6,9 @@ module;
 
 export module jpt.Graphics.Enums;
 
-export namespace jpt::Graphics
+export namespace jpt
 {
-	JPT_ENUM_UINT8(API, 
+	JPT_ENUM_UINT8(Graphics_API, 
 		Unknown,
 		Vulkan)
 }
