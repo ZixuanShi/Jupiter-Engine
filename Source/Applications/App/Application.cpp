@@ -15,6 +15,9 @@ import jpt.Framework.Create;
 import jpt.Window;
 import jpt.Window.Create;
 
+import jpt.Renderer;
+import jpt.Renderer.Create;
+
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
 
@@ -40,8 +43,12 @@ namespace jpt
 			return true;
 		}
 
+		// Pick APIs
+		m_frameworkAPI = FindFrameworkAPI();
+		m_graphicsAPI = FindGraphicsAPI();
+
 		// Initialize core systems
-		m_pFramework = Framework_Create();
+		m_pFramework = Framework_Create(m_frameworkAPI);
 		m_pMainWindow = Window_Create();
 
 		bool success = true;

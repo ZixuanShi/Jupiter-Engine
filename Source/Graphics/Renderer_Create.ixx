@@ -2,11 +2,13 @@
 
 module;
 
+#include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
 export module jpt.Renderer.Create;
 
 import jpt.Renderer;
+import jpt.Renderer_Vulkan;
 import jpt.Graphics.Enums;
 
 import jpt.CommandLine;
@@ -14,23 +16,9 @@ import jpt.ProjectSettings;
 
 export namespace jpt
 {
-	Renderer* Renderer_Create()
+	Graphics::API FindGraphicsAPI()
 	{
-		Renderer* renderer = nullptr;
 		Graphics::API api = Graphics::API::Unknown;
-
-		auto pickAPI = [&renderer](Graphics::API api) -> Renderer*
-			{
-				switch (api.Value())
-				{
-				case Graphics::API::Vulkan:
-
-
-				default:
-					JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
-					return nullptr;
-				}
-			};
 
 		// Check CommandLine for graphics_api
 		if (CommandLine::GetInstance().Has("graphics_api"))
@@ -47,19 +35,23 @@ export namespace jpt
 		{
 #if IS_PLATFORM_WIN64
 			api = Graphics::API::Vulkan;
-#else
-			JPT_ERROR("No Graphics API specified in CommandLine or ProjectSettings.json.");
-			return nullptr;
 #endif
 		}
 
-		renderer = pickAPI(api);
-		if (renderer == nullptr)
-		{
-			JPT_ERROR("Failed to create Renderer.");
-		}
+		JPT_ASSERT(api != Graphics::API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
+		return api;
+	}
 
-		ProjectSettings::GetInstance().Set("graphics_api", api.ToString());
-		return renderer;
+	Renderer* Renderer_Create(Graphics::API api)
+	{
+		switch (api.Value())
+		{
+		case Graphics::API::Vulkan:
+			return new Renderer_Vulkan();
+
+		default:
+			JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
+			return nullptr;
+		}
 	}
 }

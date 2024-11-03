@@ -4,6 +4,9 @@
 
 import jpt.Time.TypeDefs;
 
+import jpt.Framework.Enums;
+import jpt.Graphics.Enums;
+
 namespace jpt
 {
 	class Window;
@@ -17,6 +20,9 @@ namespace jpt
 		Framework* m_pFramework = nullptr;
 		Window* m_pMainWindow = nullptr;
 		bool m_shouldShutdown = false;
+
+		Framework_API m_frameworkAPI = Framework_API::Unknown;
+		Graphics::API m_graphicsAPI = Graphics::API::Unknown;
 
 	public:
 		virtual ~Application() = default;
@@ -32,7 +38,6 @@ namespace jpt
 		Framework* GetFramework() const { return m_pFramework; }
 		Window* GetMainWindow() const { return m_pMainWindow; }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
-
 		const char* GetName() const;
 
 	protected:
