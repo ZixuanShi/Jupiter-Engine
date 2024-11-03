@@ -9,7 +9,7 @@ module;
 
 //#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-//
+
 //#define GLM_FORCE_RADIANS
 //#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 //#include <glm/vec4.hpp>
@@ -40,6 +40,9 @@ namespace jpt
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
+
+	private:
+		void InitVulkan();
 	};
 
 	bool Framework_GLFW::Init()
@@ -66,6 +69,10 @@ namespace jpt
 		Super::Shutdown();
 
 		glfwTerminate();
+	}
+
+	void Framework_GLFW::InitVulkan()
+	{
 	}
 
 	namespace Callbacks
