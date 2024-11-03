@@ -15,8 +15,7 @@ namespace jpt
 	{
 	protected:
 		Framework* m_pFramework = nullptr;
-		Window* m_pWindow = nullptr;
-
+		Window* m_pMainWindow = nullptr;
 		bool m_shouldShutdown = false;
 
 	public:
@@ -30,8 +29,8 @@ namespace jpt
 		void Run();
 		void ShutdownApp() { m_shouldShutdown = true; }
 
-		Window* GetWindow()    const { return m_pWindow; }
 		Framework* GetFramework() const { return m_pFramework; }
+		Window* GetMainWindow() const { return m_pMainWindow; }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
 
 	protected:

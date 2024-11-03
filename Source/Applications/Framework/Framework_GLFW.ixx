@@ -58,7 +58,7 @@ namespace jpt
 		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		m_pApp = GetApplication();
-		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetWindow());
+		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetMainWindow());
 
 		glfwSetErrorCallback(Callbacks::OnError);
 

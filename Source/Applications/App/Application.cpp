@@ -42,11 +42,11 @@ namespace jpt
 
 		// Initialize core systems
 		m_pFramework = Framework_Create();
-		m_pWindow = Window_Create();
+		m_pMainWindow = Window_Create();
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
-		success &= m_pWindow->PreInit();
+		success &= m_pMainWindow->PreInit();
 		success &= Input::Manager::GetInstance().PreInit();
 
 		return success;
@@ -67,7 +67,7 @@ namespace jpt
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pWindow->Init();
+		success &= m_pMainWindow->Init();
 		success &= Input::Manager::GetInstance().Init();
 
 		return success;
@@ -80,7 +80,7 @@ namespace jpt
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
 			m_pFramework->Update(deltaSeconds);
-			m_pWindow->Update(deltaSeconds);
+			m_pMainWindow->Update(deltaSeconds);
 		}
 
 		Input::Manager::GetInstance().Update(deltaSeconds);
@@ -90,7 +90,7 @@ namespace jpt
 	{
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
-			JPT_SHUTDOWN(m_pWindow);
+			JPT_SHUTDOWN(m_pMainWindow);
 			JPT_SHUTDOWN(m_pFramework);
 		}
 
