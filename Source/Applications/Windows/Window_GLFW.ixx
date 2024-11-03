@@ -33,8 +33,8 @@ namespace jpt
 {
 	namespace Callbacks
 	{
-		void OnWindowResize(GLFWwindow* pGLFWwindow, int32 width, int32 height);
-		void OnMouseButton(GLFWwindow* pGLFWwindow, int32 button, int32 action, int32 mods);
+		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
+		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
 	}
 
 	export class Window_GLFW final : public Window
@@ -102,19 +102,21 @@ namespace jpt
 
 	namespace Callbacks
 	{
-		void OnWindowResize(GLFWwindow* pGLFWwindow, int32 width, int32 height)
+		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height)
 		{
-			void* pWindow = glfwGetWindowUserPointer(pGLFWwindow);
-			Event_Window_Resize eventWindowResize = { static_cast<Window*>(pWindow), width, height };
+			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+			JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
+
+			Event_Window_Resize eventWindowResize = { pWindow, width, height };
 			EventManager::GetInstance().Send(eventWindowResize);
 		}
 
-		void OnMouseButton(GLFWwindow* pGLFWwindow, int32 button, int32 action, int32)
+		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32)
 		{
 			if (action == GLFW_PRESS)
 			{
 				double x, y;
-				glfwGetCursorPos(pGLFWwindow, &x, &y);
+				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
 				const Input::KeyCode keyCode = Input::Manager::GetInstance().ToKeyCode(button);
 				Event_Mouse_ButtonPress eventMouseButtonPress = { static_cast<int32>(x), 
