@@ -50,8 +50,6 @@ namespace jpt
 		virtual void Shutdown() override;
 
 		virtual bool ShouldClose() const override;
-
-		GLFWwindow* GetGLFWwindow() const { return m_pGLFWWindow; }
 	};
 
 	bool Window_GLFW::Init(const char* title, int32 width, int32 height)
