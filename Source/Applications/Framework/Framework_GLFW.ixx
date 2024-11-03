@@ -19,12 +19,11 @@ export module jpt.Framework_GLFW;
 
 import jpt.Framework;
 
-import jpt.TypeDefs;
+import jpt.String;
 import jpt.ToString;
-import jpt.Utilities;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Close;
+import jpt.TypeDefs;
+import jpt.Time.TypeDefs;
 
 namespace jpt
 {
