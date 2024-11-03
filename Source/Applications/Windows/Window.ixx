@@ -1,17 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Debugging/Assert.h"
-
 export module jpt.Window;
 
 import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	class Application;
-
 	class Window
 	{
 	public:
