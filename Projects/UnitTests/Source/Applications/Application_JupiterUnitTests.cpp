@@ -19,8 +19,6 @@ import UnitTests_Scratch;
 
 bool Application_JupiterUnitTests::PreInit()
 {
-	//jpt::CommandLine::GetInstance().Set("no_window");
-
 	JPT_ENSURE(Super::PreInit());
 
 	return true;
@@ -41,4 +39,4 @@ bool Application_JupiterUnitTests::Init()
 	return true;
 }
 
-JPT_SYNC_CLIENT(Application_JupiterUnitTests)
+JPT_SYNC_CLIENT(JupiterUnitTests)

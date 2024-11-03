@@ -35,4 +35,4 @@ bool Application_Benchmarks::Init()
 	return true;
 }
 
-JPT_SYNC_CLIENT(Application_Benchmarks)
+JPT_SYNC_CLIENT(Benchmarks)

@@ -54,23 +54,18 @@ namespace jpt
 
 	bool Application::Init()
 	{
-		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close& eventWindowClose)
-			{
-				if (eventWindowClose.GetWindow() == m_pMainWindow)
-				{
-					m_shouldShutdown = true;
-				}
-			});
-
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
 			return true;
 		}
 
+		static constexpr int32 kDefaultWindowWidth = 800;
+		static constexpr int32 kDefaultWindowHeight = 600;
+
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pMainWindow->Init(GetName(), 800, 600);
+		success &= m_pMainWindow->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
 		success &= Input::Manager::GetInstance().Init();
 
 		return success;

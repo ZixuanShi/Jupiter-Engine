@@ -35,10 +35,6 @@ import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
 
-static constexpr int32   kDefaultWidth  = 800;
-static constexpr int32   kDefaultHeight = 600;
-static const jpt::String kDefaultTitle  = "Unnamed";
-
 namespace jpt
 {
 	namespace Callbacks
