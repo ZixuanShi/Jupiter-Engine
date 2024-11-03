@@ -125,7 +125,7 @@ static bool Engine_Write()
 
     engineJson.Set("engine_version", 0);
 
-    jpt::Graphics::API graphicsAPI = jpt::Graphics::API::Vulkan;
+    jpt::Graphics_API graphicsAPI = jpt::Graphics_API::Vulkan;
     engineJson.Set("graphics_API", graphicsAPI.ToString());
 
     jpt::WriteJsonFile(engineJsonPath, engineJson);
@@ -142,8 +142,8 @@ static bool Engine_Read()
     const jpt::String& graphicsAPIStr = engineJson["graphics_API"];
     JPT_ENSURE(graphicsAPIStr == "Vulkan");
 
-    jpt::Graphics::API graphicsAPI(graphicsAPIStr);
-    JPT_ENSURE(graphicsAPI == jpt::Graphics::API::Vulkan);
+    jpt::Graphics_API graphicsAPI(graphicsAPIStr);
+    JPT_ENSURE(graphicsAPI == jpt::Graphics_API::Vulkan);
 
     return true;
 }

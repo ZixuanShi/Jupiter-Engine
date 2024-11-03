@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
@@ -10,13 +11,13 @@ export module jpt.Input.Manager;
 import jpt.Input.Device;
 import jpt.Input.KeyCode;
 import jpt.Input.Backend;
-
 import jpt.Input.Backend_GLFW;
 
 import jpt.Framework.Enums;
+
 import jpt.DynamicArray;
 import jpt.String;
-import jpt.ProjectSettings;
+
 import jpt.Time.TypeDefs;
 
 export namespace jpt::Input
@@ -54,8 +55,7 @@ export namespace jpt::Input
 
 	bool Manager::PreInit()
 	{
-		const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-		const Framework_API frameworkAPI = projectSettings.Get<String>("framework_api");
+		const Framework_API frameworkAPI = GetApplication()->GetFrameworkAPI();
 		switch (frameworkAPI.Value())
 		{
 		case Framework_API::GLFW:

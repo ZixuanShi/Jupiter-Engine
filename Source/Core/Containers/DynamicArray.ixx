@@ -41,6 +41,8 @@ export namespace jpt
 		constexpr DynamicArray(DynamicArray&& other) noexcept;
 		DynamicArray& operator=(const DynamicArray& other) noexcept;
 		DynamicArray& operator=(DynamicArray&& other) noexcept;
+		constexpr DynamicArray(size_t count, const TData& data = TData());
+		constexpr DynamicArray(Iterator begin, Iterator end);
 		constexpr ~DynamicArray();
 
 		// Element Access
@@ -175,6 +177,18 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::DynamicArray(size_t count, const TData& data /* = TData()*/)
+	{
+		Resize(count, data);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::DynamicArray(Iterator begin, Iterator end)
+	{
+		CopyData(begin, end - begin);
+	}
+
+	template<typename TData, typename TAllocator>
 	constexpr DynamicArray<TData, TAllocator>::~DynamicArray()
 	{
 		Clear();
@@ -289,7 +303,6 @@ export namespace jpt
 	constexpr DynamicArray<TData, TAllocator>& DynamicArray<TData, TAllocator>::operator+=(const DynamicArray& other)
 	{
 		Reserve(m_count + other.Count());
-
 		for (size_t i = 0; i < other.Count(); ++i)
 		{
 			EmplaceBack(other[i]);

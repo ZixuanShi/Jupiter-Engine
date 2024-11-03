@@ -40,6 +40,8 @@ namespace jpt
 		Framework* GetFramework() const { return m_pFramework; }
 		Window* GetMainWindow() const { return m_pMainWindow; }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
+		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
+		Graphics_API GetGraphicsAPI() const { return m_graphicsAPI; }
 		const char* GetName() const;
 
 	protected:
