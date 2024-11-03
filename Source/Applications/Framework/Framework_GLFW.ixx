@@ -7,7 +7,13 @@ module;
 #include "Debugging/Logger.h"
 #include "Applications/App/Application.h"
 
+//#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+//#define GLM_FORCE_RADIANS
+//#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+//#include <glm/vec4.hpp>
+//#include <glm/mat4x4.hpp>
 
 export module jpt.Framework_GLFW;
 
@@ -47,7 +53,9 @@ namespace jpt
 	bool Framework_GLFW::Init()
 	{
 		JPT_ENSURE(Super::Init());
+
 		JPT_ENSURE(glfwInit());
+		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		m_pApp = GetApplication();
 		m_pMainWindow = static_cast<Window_GLFW*>(m_pApp->GetWindow());

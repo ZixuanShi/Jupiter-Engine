@@ -65,11 +65,6 @@ namespace jpt
 	{
 		JPT_ENSURE(Super::Init());
 
-		// Initialize GLFW
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 		// Load window settings from project settings
 		ProjectSettings& projectSettings = ProjectSettings::GetInstance();
 		int32 width  = projectSettings.Get("window_width",  kDefaultWidth);
