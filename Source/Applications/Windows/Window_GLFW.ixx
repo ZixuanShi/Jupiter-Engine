@@ -61,10 +61,9 @@ namespace jpt
 		if (!m_pGLFWWindow)
 		{
 			JPT_ERROR("Failed to create GLFW window");
-			GetApplication()->GetFramework()->Shutdown();
+			EventManager::GetInstance().Send(Event_Window_Close{ this });
 			return false;
 		}
-		glfwMakeContextCurrent(m_pGLFWWindow);
 
 		// Set current window callbacks
 		glfwSetWindowUserPointer(m_pGLFWWindow, this);
@@ -78,7 +77,7 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		glfwSwapBuffers(m_pGLFWWindow);
+		//glfwSwapBuffers(m_pGLFWWindow);
 	}
 
 	void Window_GLFW::Shutdown()

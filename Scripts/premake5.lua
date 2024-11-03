@@ -142,11 +142,13 @@ function CreateClientProject()
         links
         {
             "glfw3_Debug",
+            "vulkan-1",
         }
     filter "configurations:not Debug"
         links
         {
             "glfw3_Release",
+            "vulkan-1",
         }
     filter "configurations:Release"
         postbuildcommands

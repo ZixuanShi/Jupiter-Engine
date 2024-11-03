@@ -50,7 +50,7 @@ export namespace jpt
 			return new Framework_GLFW();
 
 		default:
-			JPT_ERROR("Un-implemented Framework API: " + api.ToString());
+			JPT_ASSERT(false, "Un-implemented Framework API: %s", api.ToString().ConstBuffer());
 			return nullptr;
 		}
 	}

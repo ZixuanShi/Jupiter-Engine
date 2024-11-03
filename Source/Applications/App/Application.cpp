@@ -49,11 +49,13 @@ namespace jpt
 
 		// Initialize core systems
 		m_pFramework = Framework_Create(m_frameworkAPI);
-		m_pMainWindow = Window_Create();
+		m_pMainWindow = Window_Create(m_frameworkAPI);
+		m_pRenderer = Renderer_Create(m_graphicsAPI);
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
 		success &= m_pMainWindow->PreInit();
+		success &= m_pRenderer->PreInit();
 		success &= Input::Manager::GetInstance().PreInit();
 
 		return success;
@@ -73,6 +75,7 @@ namespace jpt
 		bool success = true;
 		success &= m_pFramework->Init();
 		success &= m_pMainWindow->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
+		success &= m_pRenderer->Init();
 		success &= Input::Manager::GetInstance().Init();
 
 		return success;
@@ -86,6 +89,7 @@ namespace jpt
 		{
 			m_pFramework->Update(deltaSeconds);
 			m_pMainWindow->Update(deltaSeconds);
+			m_pRenderer->Update(deltaSeconds);
 		}
 
 		Input::Manager::GetInstance().Update(deltaSeconds);
@@ -97,6 +101,7 @@ namespace jpt
 		{
 			JPT_SHUTDOWN(m_pMainWindow);
 			JPT_SHUTDOWN(m_pFramework);
+			JPT_SHUTDOWN(m_pRenderer);
 		}
 
 		Input::Manager::GetInstance().Shutdown();

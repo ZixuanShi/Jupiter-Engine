@@ -169,23 +169,37 @@ export namespace jpt::Input
 	bool Backend_GLFW::IsPressed(KeyCode key) const
 	{
 		const uint32 glfwKey = FromKeyCode(key);
-		if (glfwKey != kInvalidValue<uint32>)
+		if (glfwKey == kInvalidValue<uint32>)
 		{
-			return glfwGetKey(glfwGetCurrentContext(), glfwKey) == GLFW_PRESS;
+			JPT_ERROR("Unknown key code: " + key.ToString());
+			return false;
 		}
 
-		return false;
+		GLFWwindow* pGLFWWindow = glfwGetCurrentContext();
+		if (!pGLFWWindow)
+		{
+			return false;
+		}
+
+		return glfwGetKey(pGLFWWindow, glfwKey) == GLFW_PRESS;
 	}
 
 	bool Backend_GLFW::IsReleased(KeyCode key) const
 	{
 		const uint32 glfwKey = FromKeyCode(key);
-		if (glfwKey != kInvalidValue<uint32>)
+		if (glfwKey == kInvalidValue<uint32>)
 		{
-			return glfwGetKey(glfwGetCurrentContext(), glfwKey) == GLFW_RELEASE;
+			JPT_ERROR("Unknown key code: " + key.ToString());
+			return false;
 		}
 
-		return false;
+		GLFWwindow* pGLFWWindow = glfwGetCurrentContext();
+		if (!pGLFWWindow)
+		{
+			return false;
+		}
+
+		return glfwGetKey(pGLFWWindow, glfwKey) == GLFW_RELEASE;
 	}
 
 	uint32 Backend_GLFW::FromKeyCode(KeyCode key) const

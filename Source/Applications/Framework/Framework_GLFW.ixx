@@ -7,13 +7,8 @@ module;
 #include "Debugging/Logger.h"
 #include "Applications/App/Application.h"
 
-//#define GLFW_INCLUDE_VULKAN
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-
-//#define GLM_FORCE_RADIANS
-//#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-//#include <glm/vec4.hpp>
-//#include <glm/mat4x4.hpp>
 
 export module jpt.Framework_GLFW;
 
@@ -40,9 +35,6 @@ namespace jpt
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
-
-	private:
-		void InitVulkan();
 	};
 
 	bool Framework_GLFW::Init()
@@ -50,7 +42,8 @@ namespace jpt
 		JPT_ENSURE(Super::Init());
 
 		JPT_ENSURE(glfwInit());
-		//glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		glfwSetErrorCallback(Callbacks::OnError);
 
@@ -69,10 +62,6 @@ namespace jpt
 		Super::Shutdown();
 
 		glfwTerminate();
-	}
-
-	void Framework_GLFW::InitVulkan()
-	{
 	}
 
 	namespace Callbacks

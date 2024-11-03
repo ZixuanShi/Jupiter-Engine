@@ -11,6 +11,7 @@ namespace jpt
 {
 	class Window;
 	class Framework;
+	class Renderer;
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
@@ -19,6 +20,7 @@ namespace jpt
 	protected:
 		Framework* m_pFramework = nullptr;
 		Window* m_pMainWindow = nullptr;
+		Renderer* m_pRenderer = nullptr;
 		bool m_shouldShutdown = false;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
