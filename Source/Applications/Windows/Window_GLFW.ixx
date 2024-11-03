@@ -51,14 +51,14 @@ namespace jpt
 		using Super = Window;
 
 	private:
-		GLFWwindow* m_pWindow = nullptr;
+		GLFWwindow* m_pGLFWWindow = nullptr;
 
 	public:
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
 
-		GLFWwindow* GetGLFWwindow() const { return m_pWindow; }
+		GLFWwindow* GetGLFWwindow() const { return m_pGLFWWindow; }
 	};
 
 	bool Window_GLFW::Init()
@@ -72,19 +72,19 @@ namespace jpt
 		String title = projectSettings.Get("window_title",  kDefaultTitle);
 
 		// Create GLFW window
-		m_pWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
-		if (!m_pWindow)
+		m_pGLFWWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
+		if (!m_pGLFWWindow)
 		{
 			JPT_ERROR("Failed to create GLFW window");
 			GetApplication()->GetFramework()->Shutdown();
 			return false;
 		}
-		glfwMakeContextCurrent(m_pWindow);
+		glfwMakeContextCurrent(m_pGLFWWindow);
 
 		// Set current window callbacks
-		glfwSetWindowUserPointer(m_pWindow, this);
-		glfwSetFramebufferSizeCallback(m_pWindow, Callbacks::OnWindowResize);
-		glfwSetMouseButtonCallback(m_pWindow, Callbacks::OnMouseButton);
+		glfwSetWindowUserPointer(m_pGLFWWindow, this);
+		glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
+		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
 
 		return true;
 	}
@@ -93,14 +93,14 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		glfwSwapBuffers(m_pWindow);
+		glfwSwapBuffers(m_pGLFWWindow);
 	}
 
 	void Window_GLFW::Shutdown()
 	{
 		Super::Shutdown();
 
-		glfwDestroyWindow(m_pWindow);
+		glfwDestroyWindow(m_pGLFWWindow);
 	}
 
 	namespace Callbacks
