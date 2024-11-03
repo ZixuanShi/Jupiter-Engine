@@ -67,7 +67,7 @@ namespace jpt
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pMainWindow->Init();
+		success &= m_pMainWindow->Init(GetName(), 800, 600);
 		success &= Input::Manager::GetInstance().Init();
 
 		return success;

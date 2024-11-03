@@ -54,25 +54,19 @@ namespace jpt
 		GLFWwindow* m_pGLFWWindow = nullptr;
 
 	public:
-		virtual bool Init() override;
+		virtual bool Init(const char* title, int32 width, int32 height) override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
 
 		GLFWwindow* GetGLFWwindow() const { return m_pGLFWWindow; }
 	};
 
-	bool Window_GLFW::Init()
+	bool Window_GLFW::Init(const char* title, int32 width, int32 height)
 	{
-		JPT_ENSURE(Super::Init());
-
-		// Load window settings from project settings
-		ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-		int32 width  = projectSettings.Get("window_width",  kDefaultWidth);
-		int32 height = projectSettings.Get("window_height", kDefaultHeight);
-		String title = projectSettings.Get("window_title",  kDefaultTitle);
+		JPT_ENSURE(Super::Init(title, width, height));
 
 		// Create GLFW window
-		m_pGLFWWindow = glfwCreateWindow(width, height, title.ConstBuffer(), nullptr, nullptr);
+		m_pGLFWWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
 		if (!m_pGLFWWindow)
 		{
 			JPT_ERROR("Failed to create GLFW window");
