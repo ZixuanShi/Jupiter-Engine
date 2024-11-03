@@ -54,9 +54,12 @@ namespace jpt
 
 	bool Application::Init()
 	{
-		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close&)
+		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close& eventWindowClose)
 			{
-				m_shouldShutdown = true;
+				if (eventWindowClose.GetWindow() == m_pMainWindow)
+				{
+					m_shouldShutdown = true;
+				}
 			});
 
 		if (CommandLine::GetInstance().Has("no_window"))
@@ -105,7 +108,7 @@ namespace jpt
 		TimePrecision accumulator = 0.0;
 		uint32 frameCount = 0;
 
-		while (!m_shouldShutdown)
+		while (!m_shouldShutdown && !m_pMainWindow->ShouldClose())
 		{
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);

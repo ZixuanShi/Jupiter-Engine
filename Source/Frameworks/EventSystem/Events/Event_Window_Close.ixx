@@ -10,14 +10,14 @@ export namespace jpt
 	class Event_Window_Close : public Event
 	{
 	private:
-		Window* m_pWindow;
+		const Window* m_pWindow;
 
 	public:
-		Event_Window_Close(Window* pWindow)
+		Event_Window_Close(const Window* pWindow)
 			: m_pWindow(pWindow)
 		{
 		}
 
-		Window* GetWindow() const { return m_pWindow; }
+		const Window* GetWindow() const { return m_pWindow; }
 	};
 }

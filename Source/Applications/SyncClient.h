@@ -6,7 +6,7 @@
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
 jpt::Application* jpt::GetApplication()                                              \
 {																					 \
-	static ApplicationName app;													     \
+	static Application_##ApplicationName app;									     \
 	return &app;																	 \
 }                                                                                    \
 																					 \

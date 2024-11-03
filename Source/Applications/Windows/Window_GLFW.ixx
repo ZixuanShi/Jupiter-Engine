@@ -32,6 +32,7 @@ import jpt.ProjectSettings;
 
 import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
+import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
 
 static constexpr int32   kDefaultWidth  = 800;
@@ -101,7 +102,14 @@ namespace jpt
 
 	bool Window_GLFW::ShouldClose() const
 	{
-		return glfwWindowShouldClose(m_pGLFWWindow);
+		const bool shouldClose = glfwWindowShouldClose(m_pGLFWWindow);
+		if (shouldClose)
+		{
+			Event_Window_Close eventWindowClose = { this };
+			EventManager::GetInstance().Send(eventWindowClose);
+		}
+
+		return shouldClose;
 	}
 
 	namespace Callbacks
