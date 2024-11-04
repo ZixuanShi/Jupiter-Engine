@@ -127,29 +127,48 @@ bool UnitTests_SortedMap_Erase()
 bool UnitTests_SortedMap_Walk()
 {
 	jpt::SortedMap<int32, char> sortedMap;
-	sortedMap.Add(4, '4');
-	sortedMap.Add(2, '2');
-	sortedMap.Add(6, '6');
-	sortedMap.Add(1, '1');
-	sortedMap.Add(3, '3');
-	sortedMap.Add(5, '5');
-	sortedMap.Add(7, '7');
+    /** Traverse
+               A
+            /    \
+          /        \
+         B          C
+       /  \       /  \
+      D    E     F    G
+     / \  / \   / \  / \
+    H  I  J  K  L  M N  O 			*/
 
-    auto printer = [](int32 key, char value)
-	{
-        jpt::Pair<int32, char> pair(key, value);
-		JPT_LOG(pair);
-	};
+    sortedMap.Add(8, 'A');
+    sortedMap.Add(4, 'B');
+    sortedMap.Add(12, 'C');
+    sortedMap.Add(2, 'D');
+    sortedMap.Add(6, 'E');
+    sortedMap.Add(10, 'F');
+    sortedMap.Add(14, 'G');
+    sortedMap.Add(1, 'H');
+    sortedMap.Add(3, 'I');
+    sortedMap.Add(5, 'J');
+    sortedMap.Add(7, 'K');
+    sortedMap.Add(9, 'L');
+    sortedMap.Add(11, 'M');
+    sortedMap.Add(13, 'N');
+    sortedMap.Add(15, 'O');
 
-	sortedMap.PreOrderWalk(printer);
+    JPT_LOG("-------------------------------------------------\nPre Order");
+    sortedMap.PreOrderWalk([](int32 key, char value)
+        {
+			JPT_LOG("Key: %i, Value: %c", key, value);
+        });
+    JPT_LOG("-------------------------------------------------");
+	sortedMap.InOrderWalk([](int32 key, char value)
+		{
+			JPT_LOG("Key: %i, Value: %c", key, value);
+		});
+    JPT_LOG("-------------------------------------------------\nPost Order");
+    sortedMap.PostOrderWalk([](int32 key, char value)
+		{
+			JPT_LOG("Key: %i, Value: %c", key, value);
+		});
 
-    JPT_LOG("--------------------------------------");
-
-    sortedMap.InOrderWalk(printer);
-
-    JPT_LOG("--------------------------------------");
-
-    sortedMap.PostOrderWalk(printer);
 
 	return true;
 }

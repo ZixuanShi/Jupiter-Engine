@@ -71,18 +71,24 @@ export namespace jpt
 		constexpr const TValue& Max() const;
 
 		/** Traverse
-			    A
-			   / \
-			  B   C
-			 / \
-			D   E       		*/
-		/** Root-Left-Right. A, B, D, E, C. Used for copying or serializing the tree */
+			           A
+				    /    \
+			      /        \
+			     B          C
+			   /  \       /  \
+			  D    E     F    G   		
+			 / \  / \   / \  / \
+			H  I  J  K  L  M N  O 			*/
+		/** Root-Left-Right. A, B, D, H, I, E, J, K, C, F, L, M, G, N, O. 
+			Used for copying or serializing the tree */
 		constexpr void PreOrderWalk(const WalkerFunc& function);
 
-		/** Left - Root - Right. D, B, E, A, C.Used for sorting and finding the successor / predecessor of a node */
+		/** Left - Root - Right. H, D, I, B, J, E, K, A, L, F, M, C, N, G, O. 
+			Used for sorting and finding the successor / predecessor of a node */
 		constexpr void InOrderWalk(const WalkerFunc& function);
 
-		/** Left - Right - Root. D, E, B, C, A.Used for deleting the tree */
+		/** Left - Right - Root. H, I, D, J, K, E, B, L, M, F, N, O, G, C, A. 
+			Used for deleting the tree */
 		constexpr void PostOrderWalk(const WalkerFunc& function);
 
 		// Iterators
