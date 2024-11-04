@@ -136,19 +136,18 @@ function CreateClientProject()
         -- Engine's functions, classes, and modules
         "Engine.lib",
         "Engine",
+        "vulkan-1",
     }
 
     filter "configurations:Debug"
         links
         {
             "glfw3_Debug",
-            "vulkan-1",
         }
     filter "configurations:not Debug"
         links
         {
             "glfw3_Release",
-            "vulkan-1",
         }
     filter "configurations:Release"
         postbuildcommands
