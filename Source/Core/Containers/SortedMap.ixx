@@ -59,6 +59,7 @@ export namespace jpt
 
 		// Searching
 		constexpr size_t Count() const;
+		constexpr bool IsEmpty() const;
 		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Has(const TKey& key);
@@ -289,6 +290,12 @@ export namespace jpt
 	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const
 	{
 		return m_count;
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr bool SortedMap<TKey, TValue, TComparator, TAllocator>::IsEmpty() const
+	{
+		return m_count == 0;
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>

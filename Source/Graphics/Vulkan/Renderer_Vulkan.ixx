@@ -39,8 +39,11 @@ export namespace jpt
 			                                                void* pUserData);
 
 	private:
+		// Initialization
 		bool CreateInstance();
+		bool PickPhysicalDevice();
 
+		// Debugging
 #if !IS_RELEASE
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 		bool SetupDebugMessenger();
@@ -49,7 +52,10 @@ export namespace jpt
 			                                  const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
 			                                  const VkAllocationCallbacks* pAllocator,
 			                                  VkDebugUtilsMessengerEXT* pCallback);
-		void DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator);
+
+		void DestroyDebugMessenger(VkInstance instance, 
+			                       VkDebugUtilsMessengerEXT callback, 
+			                       const VkAllocationCallbacks* pAllocator);
 #endif
 	};
 
@@ -61,16 +67,11 @@ export namespace jpt
 		vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
 		JPT_INFO("GLFW extensions count: %i", glfwExtensionCount);
 
-		if (!CreateInstance())
-		{
-			return false;
-		}
+		JPT_ENSURE(CreateInstance());
+		JPT_ENSURE(PickPhysicalDevice());
 
 #if !IS_RELEASE
-		if (!SetupDebugMessenger())
-		{
-			return false;
-		}
+		JPT_ENSURE(SetupDebugMessenger());
 #endif
 
 		return true;
@@ -160,6 +161,25 @@ export namespace jpt
 		}
 
 		JPT_INFO("Vulkan instance created successfully");
+		return true;
+	}
+
+	bool Renderer_Vulkan::PickPhysicalDevice()
+	{
+		//VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
+		uint32 deviceCount = 0;
+		vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
+
+		if (deviceCount == 0)
+		{
+			JPT_ERROR("Failed to find GPUs with Vulkan support");
+			return false;
+		}
+
+		DynamicArray<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.Buffer());
+
 		return true;
 	}
 

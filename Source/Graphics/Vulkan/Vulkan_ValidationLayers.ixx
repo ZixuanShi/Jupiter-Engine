@@ -65,4 +65,26 @@ export namespace jpt
 #endif
 		return extensions;
 	}
+
+	/** @return		How suitable the device fit Jupiter's vulkan renderer as score. 0 means not eligible at all */
+	uint32 GetDeviceScore(VkPhysicalDevice device)
+	{
+		uint32 score = 0;
+
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+		if (!deviceFeatures.geometryShader)
+		{
+			return 0;
+		}
+
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(device, &deviceProperties);
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+		{
+			score += 1000;
+		}
+
+		return score;
+	}
 }
