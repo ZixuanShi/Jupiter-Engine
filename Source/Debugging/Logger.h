@@ -21,7 +21,7 @@ namespace jpt
 		{
 			Log,			// From Client project
 			Info,		    // From Engine
-			Warning,
+			Warn,
 			Error
 		};
 
@@ -79,10 +79,10 @@ namespace jpt
 	};
 }
 
-#define JPT_LOG(message, ...)          { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,        __LINE__, __FILE__, message, __VA_ARGS__); }
-#define JPT_INFO(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Info,       __LINE__, __FILE__, message, __VA_ARGS__); }
-#define JPT_WARNING(message, ...)      { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warning,    __LINE__, __FILE__, message, __VA_ARGS__); }
-#define JPT_ERROR(message, ...)        { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,      __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_LOG(message, ...)          { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,   __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_INFO(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Info,  __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_WARN(message, ...)         { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warn,  __LINE__, __FILE__, message, __VA_ARGS__); }
+#define JPT_ERROR(message, ...)        { jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error, __LINE__, __FILE__, message, __VA_ARGS__); }
 
 /** Log only once,
 	if the message is the same as the last time, it will not log again
@@ -104,7 +104,7 @@ namespace jpt
 
 #define JPT_LOG_ONCE(message)     JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Log, message)
 #define JPT_INFO_ONCE(message)    JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Info, message)
-#define JPT_WARNING_ONCE(message) JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Warning, message)
+#define JPT_WARNING_ONCE(message) JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Warn, message)
 #define JPT_ERROR_ONCE(message)   JPT_LOG_ONCE_IMPL(jpt::Logger::ELogType::Error, message)
 
 #else 

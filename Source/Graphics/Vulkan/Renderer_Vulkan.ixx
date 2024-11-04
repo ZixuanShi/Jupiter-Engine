@@ -102,7 +102,7 @@ export namespace jpt
 			break;
 
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-			JPT_WARNING("Validation layer: %s", pCallbackData->pMessage);
+			JPT_WARN("Validation layer: %s", pCallbackData->pMessage);
 			break;
 
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:

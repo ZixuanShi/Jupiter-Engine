@@ -74,7 +74,7 @@ TInt Evaluate(const String& valueStr)
 		return p.first << p.second;
 	}	
 
-	JPT_WARNING("Can't to evaluate expression %s for enum value", valueStr.ConstBuffer());
+	JPT_WARN("Can't to evaluate expression %s for enum value", valueStr.ConstBuffer());
 	return 0;
 }
 

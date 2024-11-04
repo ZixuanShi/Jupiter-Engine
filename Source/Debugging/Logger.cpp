@@ -36,7 +36,7 @@ namespace jpt
 		{
 			case Logger::ELogType::Log:			return "Log";
 			case Logger::ELogType::Info:		return "Info";
-			case Logger::ELogType::Warning:		return "Warning";
+			case Logger::ELogType::Warn:		return "Warn";
 			case Logger::ELogType::Error:		return "Error";
 			default:  JPT_ASSERT(false, "Unrecognized Log category"); return nullptr;
 		}
