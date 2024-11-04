@@ -23,12 +23,6 @@ export namespace jpt
 		"VK_LAYER_KHRONOS_validation"
 	};
 
-#if IS_DEBUG
-	constexpr bool kEnableValidationLayers = true;
-#else
-	constexpr bool kEnableValidationLayers = false;
-#endif
-
 	bool CheckValidationLayerSupport()
 	{
 		uint32 layerCount = 0;
@@ -66,11 +60,9 @@ export namespace jpt
 
 		DynamicArray<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-		if constexpr (kEnableValidationLayers)
-		{
-			extensions.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-		}
-
+#if !IS_RELEASE
+		extensions.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
 		return extensions;
 	}
 }

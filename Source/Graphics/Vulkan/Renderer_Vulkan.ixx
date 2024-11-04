@@ -5,8 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 export module jpt.Renderer_Vulkan;
 
@@ -25,7 +24,10 @@ export namespace jpt
 
 	private:
 		VkInstance m_instance;
+
+#if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
+#endif
 
 	public:
 		virtual bool Init() override;
@@ -39,6 +41,7 @@ export namespace jpt
 	private:
 		bool CreateInstance();
 
+#if !IS_RELEASE
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 		bool SetupDebugMessenger();
 
@@ -47,6 +50,7 @@ export namespace jpt
 			                                  const VkAllocationCallbacks* pAllocator,
 			                                  VkDebugUtilsMessengerEXT* pCallback);
 		void DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator);
+#endif
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -62,10 +66,12 @@ export namespace jpt
 			return false;
 		}
 
+#if !IS_RELEASE
 		if (!SetupDebugMessenger())
 		{
 			return false;
 		}
+#endif
 
 		return true;
 	}
@@ -74,10 +80,10 @@ export namespace jpt
 	{
 		Super::Shutdown();
 
-		if constexpr (kEnableValidationLayers)
-		{
-			DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
-		}
+#if !IS_RELEASE
+		DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
+#endif
+
 		vkDestroyInstance(m_instance, nullptr);
 	}
 
@@ -111,14 +117,13 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateInstance()
 	{
-		if constexpr (kEnableValidationLayers)
+#if !IS_RELEASE
+		if (!CheckValidationLayerSupport())
 		{
-			if (!CheckValidationLayerSupport())
-			{
-				JPT_ERROR("Validation layers requested, but not available");
-				return false;
-			}
+			JPT_ERROR("Validation layers requested, but not available");
+			return false;
 		}
+#endif
 
 		VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -135,20 +140,17 @@ export namespace jpt
 		createInfo.enabledExtensionCount = static_cast<uint32>(extensions.Count());
 		createInfo.ppEnabledExtensionNames = extensions.ConstBuffer();
 
+#if !IS_RELEASE
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-		if constexpr (kEnableValidationLayers)
-		{
-			createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
-			createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
+		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
+		createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
 
-			PopulateDebugMessengerCreateInfo(debugCreateInfo);
-			createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
-		}
-		else
-		{
-			createInfo.enabledLayerCount = 0;
-			createInfo.pNext = nullptr;
-		}
+		PopulateDebugMessengerCreateInfo(debugCreateInfo);
+		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+#else
+		createInfo.enabledLayerCount = 0;
+		createInfo.pNext = nullptr;
+#endif
 
 		VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance);
 		if (result != VK_SUCCESS)
@@ -161,18 +163,19 @@ export namespace jpt
 		return true;
 	}
 
+#if !IS_RELEASE
 	void Renderer_Vulkan::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
 	{
 		createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 
 		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-			                         VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-			                         VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 
-		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT    |
-			                     VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-			                     VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 
 		createInfo.pfnUserCallback = DebugCallback;
 		createInfo.pUserData = nullptr; // Optional
@@ -180,11 +183,6 @@ export namespace jpt
 
 	bool Renderer_Vulkan::SetupDebugMessenger()
 	{
-		if constexpr (!kEnableValidationLayers)
-		{
-			return true;
-		}
-
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
 		PopulateDebugMessengerCreateInfo(createInfo);
 
@@ -219,4 +217,5 @@ export namespace jpt
 			func(instance, callback, pAllocator);
 		}
 	}
+#endif
 }

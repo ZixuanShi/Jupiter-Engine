@@ -7,7 +7,6 @@ module;
 #include "Debugging/Logger.h"
 #include "Applications/App/Application.h"
 
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 export module jpt.Framework_GLFW;
