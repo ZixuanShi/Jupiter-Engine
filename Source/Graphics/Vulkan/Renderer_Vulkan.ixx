@@ -53,6 +53,10 @@ export namespace jpt
 	{
 		JPT_ENSURE(Super::Init());
 
+		uint32 glfwExtensionCount = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
+		JPT_INFO("GLFW extensions count: %i", glfwExtensionCount);
+
 		if (!CreateInstance())
 		{
 			return false;
