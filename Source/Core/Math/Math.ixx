@@ -218,4 +218,16 @@ export namespace jpt
 	{
 		return (value & (value - 1)) == 0;
 	}
+
+	template<Integral TInt = int32, Floating TFloat = float32>
+	constexpr TInt Round(TFloat value)
+	{
+		return static_cast<TInt>(std::round(value));
+	}
+
+	template<Integral TInt = int32, Floating TFloat = float32>
+	constexpr TInt Floor(TFloat value)
+	{
+		return static_cast<TInt>(std::floor(value));
+	}
 }

@@ -6,6 +6,7 @@ module;
 #include "Debugging/Logger.h"
 
 #include <queue>
+#include <time.h>
 
 export module UnitTests_Heap;
 
@@ -14,6 +15,8 @@ import jpt.TypeDefs;
 import jpt.String;
 import jpt.ToString;
 import jpt.Comparators;
+import jpt.DynamicArray;
+import jpt.Rand;
 
 class Foo
 {
@@ -38,18 +41,70 @@ constexpr bool operator>(const Foo& lhs, const Foo& rhs)
 	return lhs.GetData() > rhs.GetData();
 }
 
-static bool Constructing()
+jpt::DynamicArray<int32> GetRandArray()
 {
-	jpt::Heap<Foo, jpt::Comparator_Greater<Foo>> heap;
+	jpt::DynamicArray<int32> arr;
+	arr.Reserve(10);
 
-	heap.Add(1);
+	for (int32 i = 0; i < 10; ++i)
+	{
+		arr.EmplaceBack(i);
+	}
+
+	// Shuffle the array
+	for (int32 i = 0; i < 10; ++i)
+	{
+		const size_t randIndex = jpt::RNG::Global().MaxInt(9);
+		jpt::Swap(arr[i], arr[randIndex]);
+	}
+
+	return arr;
+}
+
+static bool MaxHeap()
+{
+	jpt::DynamicArray<int32> arr = GetRandArray();
+	jpt::MaxHeap<Foo> heap;
+
+	for (int32 i = 0; i < 10; ++i)
+	{
+		heap.Emplace(arr[i]);
+	}
+
+	for (int32 i = 9; i >= 0; --i)
+	{
+		const Foo& top = heap.Top();
+		JPT_ENSURE(top.GetData() == i);
+		heap.Pop();
+	}
+
+	return true;
+}
+
+static bool MinHeap()
+{
+	jpt::DynamicArray<int32> arr = GetRandArray();
+	jpt::MinHeap<Foo> heap;
+
+	for (int32 i = 0; i < 10; ++i)
+	{
+		heap.Emplace(arr[i]);
+	}
+
+	for (int32 i = 0; i < 10; ++i)
+	{
+		const Foo& top = heap.Top();
+		JPT_ENSURE(top.GetData() == i);
+		heap.Pop();
+	}
 
 	return true;
 }
 
 export bool RunUnitTests_Heap()
 {
-	JPT_ENSURE(Constructing());
+	JPT_ENSURE(MaxHeap());
+	JPT_ENSURE(MinHeap());
 
 	return true;
 }
