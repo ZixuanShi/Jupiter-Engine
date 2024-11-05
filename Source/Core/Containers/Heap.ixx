@@ -28,37 +28,40 @@ export namespace jpt
 	public:
 		static constexpr TComparator kComparator = TComparator();
 
-	//private:
-		/** Dynamic Array storing the heap data
+	private:
+		/** Dynamic Array storing the heap elements
+			Index 0 is not used for better calculation.
 			m_buffer[1] is the root of the heap
-			Parent(i) = floor(i / 2)
-			Left(i)   = 2 * i
-			Right(i)  = 2 * i + 1		*/
+
+			Parent(i) = i / 2
+			Left(i)   = i * 2
+			Right(i)  = i * 2 + 1	 */
 		DynamicArray<TData, _TAllocator> m_buffer;	
 
 	public:
 		constexpr Heap();
 
+		// Adding
 		template<typename ...TArgs>
 		constexpr void Emplace(TArgs&&... args);
 		constexpr void Add(const TData& data);
 		constexpr void Add(TData&& data);
 
+		// Accessing
 		constexpr const TData& Top() const;
-
-		constexpr void Pop();
-		constexpr void Clear();
-
 		constexpr size_t Count() const;
 		constexpr bool IsEmpty() const;
 
+		// Erasing
+		constexpr void Pop();
+		constexpr void Clear();
+
 	private:
-		/** Fix the heap after adding an element
-			@param index	Index of the element to fix	*/
-		constexpr void FixAdd(size_t index);
+		// Called after modifying the heap to keep the heap property
+		constexpr void FixAdd();
+		constexpr void FixPop();
 
-		constexpr void FixPop(size_t index);
-
+		// Helper functions for calculating the parent, left, and right index
 		constexpr size_t Parent(size_t index) const;
 		constexpr size_t Left(size_t index) const;
 		constexpr size_t Right(size_t index) const;
@@ -76,21 +79,21 @@ export namespace jpt
 	constexpr void Heap<TData, TComparator, TAllocator>::Emplace(TArgs&& ...args)
 	{
 		m_buffer.EmplaceBack(Forward<TArgs>(args)...);
-		FixAdd(Count());
+		FixAdd();
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Add(const TData& data)
 	{
 		m_buffer.Add(data);
-		FixAdd(Count());
+		FixAdd();
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Add(TData&& data)
 	{
 		m_buffer.Add(Move(data));
-		FixAdd(Count());
+		FixAdd();
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
@@ -105,13 +108,13 @@ export namespace jpt
 	{
 		JPT_ASSERT(!IsEmpty());
 		
-		// Swap the root with the last element
+		// Swap the root with the last element then pop. Better performance
 		Swap(m_buffer[1], m_buffer[Count()]);
 		m_buffer.Pop();
 
 		if (!IsEmpty())
 		{
-			FixPop(1);
+			FixPop();
 		}
 	}
 
@@ -135,43 +138,60 @@ export namespace jpt
 	}
 
 	template<typename _TData, typename _TComparator, typename _TAllocator>
-	constexpr void Heap<_TData, _TComparator, _TAllocator>::FixAdd(size_t index)
+	constexpr void Heap<_TData, _TComparator, _TAllocator>::FixAdd()
 	{
-		size_t parentIndex = Parent(index);
+		// Last added element will be at index Count()
+		size_t currentIndex = Count();
+		size_t parentIndex  = Parent(currentIndex);
 
-		while (index > 1 && kComparator(m_buffer[index], m_buffer[parentIndex]))
+		// Stop at the root
+		while (currentIndex > 1)
 		{
-			Swap(m_buffer[index], m_buffer[parentIndex]);
-			index = parentIndex;
-			parentIndex = Parent(index);
+			// If the compare result is false, then the heap property is satisfied. Exit
+			if (!kComparator(m_buffer[currentIndex], m_buffer[parentIndex]))
+			{
+				return;
+			}
+
+			// Swap the current element with the parent regarding heap's property
+			Swap(m_buffer[currentIndex], m_buffer[parentIndex]);
+
+			// Update the indices, keep swapping
+			currentIndex = parentIndex;
+			parentIndex  = Parent(currentIndex);
 		}
 	}
 
 	template<typename _TData, typename _TComparator, typename _TAllocator>
-	constexpr void Heap<_TData, _TComparator, _TAllocator>::FixPop(size_t index)
+	constexpr void Heap<_TData, _TComparator, _TAllocator>::FixPop()
 	{
-		size_t leftIndex = Left(index);
-		size_t rightIndex = Right(index);
+		// Last element is now at the root
+		size_t currentIndex = 1;
+		size_t leftIndex    = Left(currentIndex);
+		size_t rightIndex   = Right(currentIndex);
 
+		// Stops when there is no child to compare
 		while (leftIndex <= Count())
 		{
-			size_t smallerIndex = leftIndex;
+			// Find a better target child to swap
+			size_t targetIndex = leftIndex;
 			if (rightIndex <= Count() && kComparator(m_buffer[rightIndex], m_buffer[leftIndex]))
 			{
-				smallerIndex = rightIndex;
+				targetIndex = rightIndex;
 			}
 
-			if (kComparator(m_buffer[smallerIndex], m_buffer[index]))
+			// If the compare result is false, then the heap property is satisfied. Exit
+			if (!kComparator(m_buffer[targetIndex], m_buffer[currentIndex]))
 			{
-				Swap(m_buffer[smallerIndex], m_buffer[index]);
-				index = smallerIndex;
-				leftIndex = Left(index);
-				rightIndex = Right(index);
+				return;
 			}
-			else
-			{
-				break;
-			}
+
+			// Heap property is not satisfied, swap the current element with the target
+			Swap(m_buffer[targetIndex], m_buffer[currentIndex]);
+
+			currentIndex = targetIndex;
+			leftIndex    = Left(currentIndex);
+			rightIndex   = Right(currentIndex);
 		}
 	}
 
@@ -202,4 +222,7 @@ export namespace jpt
 
 	template<typename TData, typename TAllocator = Allocator<TData>>
 	using MaxHeap = Heap<TData, Comparator_Greater<TData>, TAllocator>;
+
+	template<typename TData, typename TComparator = Comparator_Less<TData>, typename TAllocator = Allocator<TData>>
+	using PriorityQueue = Heap<TData, TComparator, TAllocator>;
 }
