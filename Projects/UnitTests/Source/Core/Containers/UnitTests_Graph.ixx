@@ -45,7 +45,7 @@ jpt::Graph<Foo> GetGraph()
 	Index handleE = graph.AddNode(E);
 	Index handleF = graph.AddNode(F);
 	Index handleG = graph.AddNode(G);
-	graph.AddNode(H);
+	Index handleH = graph.AddNode(H);
 	Index handleI = graph.AddNode(I);
 	Index handleJ = graph.AddNode(J);
 
@@ -71,59 +71,20 @@ jpt::Graph<Foo> GetGraph()
 	graph.AddEdge(handleG, handleA, 15.0f);
 	graph.AddEdge(handleG, handleD, 2.0f);
 
+	// Erase node
+	graph.AddEdge(handleH, handleG, 1.0f);	// Dummy for not using handleH warning
+	//graph.AddEdge(handleH, handleI, 1.0f);
+	//graph.AddEdge(handleJ, handleH, 1.0f);
+	//graph.AddEdge(handleA, handleH, 1.0f);
+	//graph.AddEdge(handleC, handleH, 1.0f);
+	//graph.EraseNode(handleH);
+
 	return graph;
 }
-
-struct Test
-{
-	Index m_id = 0;
-	char m_data;
-};
-
-struct Bar
-{
-	struct Handle
-	{
-		Index* m_pId = nullptr;
-	};
-
-	jpt::DynamicArray<Test> m_array;
-
-	Handle Add(char data)
-	{
-		Test test;
-		test.m_data = data;
-		test.m_id = m_array.Count();
-		m_array.EmplaceBack(test);
-
-		Handle handle;
-		handle.m_pId = &m_array[test.m_id].m_id;
-		return handle;
-	}
-
-	void Erase(Handle handle)
-	{
-		m_array.Erase(*handle.m_pId);
-
-		for (Index i = *handle.m_pId; i < m_array.Count(); ++i)
-		{
-			m_array[i].m_id = i;
-		}
-	}
-};
 
 export bool RunUnitTests_Graph()
 {
 	GetGraph();
-
-	Bar bar;
-	Bar::Handle handleA = bar.Add('A');
-	Bar::Handle handleB = bar.Add('B');
-	Bar::Handle handleB2 = bar.Add('B');
-	Bar::Handle handleC = bar.Add('C');
-	Bar::Handle handleD = bar.Add('D');
-
-	bar.Erase(handleB);
 
 	return true;
 }

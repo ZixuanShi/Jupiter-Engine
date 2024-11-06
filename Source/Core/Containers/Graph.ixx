@@ -51,6 +51,7 @@ export namespace jpt
 		constexpr void AddEdgeBoth(Index from, Index to, Weight weight = 0.0f);
 
 		// Erasing
+		constexpr void EraseNode(Index index);
 
 		// Accessing
 		constexpr bool Count() const;
@@ -96,6 +97,22 @@ export namespace jpt
 	{
 		AddEdge(from, to, weight);
 		AddEdge(to, from, weight);
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::EraseNode(Index index)
+	{
+		JPT_ASSERT(index < m_nodes.Count(), "Invalid node index");
+
+		for (Node& node : m_nodes)
+		{
+			if (node != m_nodes[index])
+			{
+				node.OnEraseEdge(index);
+			}
+		}
+
+		m_nodes.Erase(index);
 	}
 
 	template<typename _TData, bool kAllowDuplicates>

@@ -21,6 +21,7 @@ export namespace jpt
 		constexpr GraphNode(const TData& data);
 
 		constexpr void AddEdge(Index destination, Weight weight);
+		constexpr void OnEraseEdge(Index destination);
 
 		const TData& GetData() const;
 		constexpr bool operator==(const GraphNode& other) const;
@@ -36,6 +37,24 @@ export namespace jpt
 	constexpr void GraphNode<TData>::AddEdge(Index destination, Weight weight)
 	{
 		m_edges.EmplaceBack(destination, weight);
+	}
+
+	template<typename TData>
+	constexpr void GraphNode<TData>::OnEraseEdge(Index destination)
+	{
+		for (int64 i = static_cast<int64>(m_edges.Count()) - 1; i >= 0; --i)
+		{
+			// 1. Erase edges that point to this destination
+			if (m_edges[i].m_destination == destination)
+			{
+				m_edges.Erase(i);
+			}
+			// 2. Update indices after the erased index
+			else if (m_edges[i].m_destination > destination)
+			{
+				--m_edges[i].m_destination;
+			}
+		}
 	}
 
 	template<typename TData>
