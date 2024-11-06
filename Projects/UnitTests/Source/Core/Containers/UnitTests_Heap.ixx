@@ -103,7 +103,7 @@ static bool MinHeap()
 
 static bool PriorityQueue()
 {
-	// Dijkstra's algorithm
+	// Dijkstra's algorithm todo
 
 	return true;
 }

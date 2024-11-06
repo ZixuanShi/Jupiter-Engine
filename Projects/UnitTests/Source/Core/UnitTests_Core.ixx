@@ -28,6 +28,7 @@ import UnitTests_LinkedList;
 import UnitTests_DynamicArray;
 import UnitTests_StaticArray;
 import UnitTests_Heap;
+import UnitTests_Graph;
 
 // Functional
 import UnitTests_Slot;
@@ -104,6 +105,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_HashMap());
 	JPT_ENSURE(RunUnitTests_HashSet());
 	JPT_ENSURE(RunUnitTests_Heap());
+	JPT_ENSURE(RunUnitTests_Graph());
 
 	// Functional
 	JPT_ENSURE(RunUnitTests_Slot());
