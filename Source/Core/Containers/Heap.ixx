@@ -38,7 +38,7 @@ export namespace jpt
 
 	public:
 		constexpr Heap();
-		constexpr Heap(TComparator comparator);
+		constexpr Heap(const TComparator& comparator);
 
 		// Adding
 		template<typename ...TArgs>
@@ -74,7 +74,7 @@ export namespace jpt
 	}
 
 	template<typename _TData, typename _TComparator, typename _TAllocator>
-	constexpr Heap<_TData, _TComparator, _TAllocator>::Heap(TComparator comparator)
+	constexpr Heap<_TData, _TComparator, _TAllocator>::Heap(const TComparator& comparator)
 		: m_comparator(comparator)
 	{
 		m_buffer.EmplaceBack();
