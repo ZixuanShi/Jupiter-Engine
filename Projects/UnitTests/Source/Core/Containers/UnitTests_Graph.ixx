@@ -51,12 +51,24 @@ jpt::Graph<Foo> GetGraph()
 	// Add edges
 	graph.AddEdge(handleA, handleD, 1.0f);
 
+	graph.AddEdge(B, A, 2.0f);
+
 	graph.AddEdge(D, E, 4.0f);
 	graph.AddEdge(D, F, 3.0f);
+	graph.AddEdge(D, B, 2.0f);
 
-	graph.AddEdge(E, F, 2.0f);
+	graph.AddEdgeBoth(E, F, 2.0f);
 	graph.AddEdge(E, J, 3.0f);
-	graph.AddEdge(handleE, handleB, 2.0f);
+	graph.AddEdgeBoth(handleE, handleB, 2.0f);
+
+	graph.AddEdgeBoth(F, I, 10.0f);
+	graph.AddEdgeBoth(F, C, 5.0f);
+	graph.AddEdge(F, G, 3.0f);
+
+	graph.AddEdge(G, A, 15.0f);
+	graph.AddEdge(G, D, 2.0f);
+
+	graph.AddEdgeBoth(I, C, 8.0f);
 
 	return graph;
 }
