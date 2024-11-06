@@ -51,13 +51,7 @@ export namespace jpt
 		constexpr void AddEdge(Index from, Index to, Weight weight = 0.0f);
 		constexpr void AddEdgeBoth(Index from, Index to, Weight weight = 0.0f);
 
-		/** @note This version of AddEdge() can't have duplicated node data */
-		constexpr void AddEdge(const TData& from, const TData& to, Weight weight = 0.0f);
-		constexpr void AddEdgeBoth(const TData& from, const TData& to, Weight weight = 0.0f);
-
 		// Erasing
-		constexpr void EraseNode(Index index);
-		constexpr void Clear();
 
 		// Accessing
 		constexpr bool Count() const;
@@ -72,7 +66,8 @@ export namespace jpt
 	{
 		if constexpr (!kAllowDuplicates)
 		{
-			JPT_ASSERT(!m_nodes.Has(Node(data)), "Can't have duplicates in this graph");
+			const Index index = FindIndex(data);
+			JPT_ASSERT(index == kInvalidValue<Index>, "Can't have duplicates in this graph. Found same data at index %lu", index);
 		}
 
 		m_nodes.EmplaceBack(data);
@@ -82,6 +77,7 @@ export namespace jpt
 	template<typename _TData, bool kAllowDuplicates>
 	constexpr void Graph<_TData, kAllowDuplicates>::AddEdge(Index from, Index to, Weight weight)
 	{
+		JPT_ASSERT(from != to, "Can't have self edges");
 		JPT_ASSERT(from < m_nodes.Count(), "Invalid from node");
 		JPT_ASSERT(to < m_nodes.Count(), "Invalid to node");
 
@@ -94,53 +90,6 @@ export namespace jpt
 	{
 		AddEdge(from, to, weight);
 		AddEdge(to, from, weight);
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr void Graph<_TData, kAllowDuplicates>::AddEdge(const TData& from, const TData& to, Weight weight)
-	{
-		if constexpr (!kAllowDuplicates)
-		{
-			JPT_ASSERT(false, "Cannot use data for accessing nodes in duplicates allowed graphs");
-		}
-
-		const Index fromIndex = FindIndex(from);
-		const Index toIndex = FindIndex(to);
-		AddEdge(fromIndex, toIndex, weight);
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr void Graph<_TData, kAllowDuplicates>::AddEdgeBoth(const TData& from, const TData& to, Weight weight)
-	{
-		if constexpr (!kAllowDuplicates)
-		{
-			JPT_ASSERT(false, "Cannot use data for accessing nodes in duplicates allowed graphs");
-		}
-
-		const Index fromIndex = FindIndex(from);
-		const Index toIndex = FindIndex(to);
-		AddEdgeBoth(fromIndex, toIndex, weight);
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr void Graph<_TData, kAllowDuplicates>::EraseNode(Index index)
-	{
-		JPT_ASSERT(index < m_nodes.Count(), "Invalid node index");
-
-		// Remove from other nodes' edges
-		for (Node& node : m_nodes)
-		{
-			Edges& edges = node.EraseEdge(index);
-		}
-
-		// Remove from nodes
-		m_nodes.Erase(index);
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr void Graph<_TData, kAllowDuplicates>::Clear()
-	{
-		m_nodes.Clear();
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
