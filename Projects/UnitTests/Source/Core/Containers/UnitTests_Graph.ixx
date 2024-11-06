@@ -28,8 +28,8 @@ constexpr bool operator==(const Foo& lhs, const Foo& rhs)
 	return lhs.m_data == rhs.m_data;
 }
 
-// Projects/UnitTests/Assets/UnitTests_Graph.png
-jpt::Graph<Foo> GetGraph()
+// Projects/UnitTests/Assets/UnitTests_Graph_0.jpg
+jpt::Graph<Foo> GetGraph0()
 {
 	jpt::Graph<Foo> graph;
 
@@ -90,9 +90,50 @@ jpt::Graph<Foo> GetGraph()
 	return graph;
 }
 
+// Projects/UnitTests/Assets/UnitTests_Graph_1.jpg
+jpt::Graph<Foo> GetGraph1()
+{
+	jpt::Graph<Foo> graph;
+
+	Foo A('A');
+	Foo B('B');
+	Foo C('C');
+	Foo D('D');
+	Foo E('E');
+	Foo F('F');
+	Foo G('G');
+	Foo H('H');
+	Foo I('I');
+
+	// Add nodes
+	Index handleA = graph.AddNode(A);
+	Index handleB = graph.AddNode(B);
+	Index handleC = graph.AddNode(C);
+	Index handleD = graph.AddNode(D);
+	Index handleE = graph.AddNode(E);
+	Index handleF = graph.AddNode(F);
+	Index handleG = graph.AddNode(G);
+	Index handleH = graph.AddNode(H);
+	Index handleI = graph.AddNode(I);
+
+	// Add edges
+	graph.AddEdge(handleA, handleB);
+	graph.AddEdge(handleA, handleC);
+	graph.AddEdge(handleA, handleD);
+	graph.AddEdge(handleA, handleE);
+	graph.AddEdge(handleA, handleF);
+
+	graph.AddEdge(handleE, handleG);
+	graph.AddEdge(handleG, handleH);
+
+	graph.AddEdge(handleC, handleI);
+
+	return graph;
+}
+
 static bool DFS(const jpt::Graph<Foo>& graph)
 {
-	Index i = graph.FindIndex('F');
+	Index i = graph.FindIndex('A');
 
 	graph.DFS(i, [](const Foo& foo)
 		{
@@ -104,7 +145,7 @@ static bool DFS(const jpt::Graph<Foo>& graph)
 
 static bool BFS(const jpt::Graph<Foo>& graph)
 {
-	Index i = graph.FindIndex('F');
+	Index i = graph.FindIndex('A');
 
 	graph.BFS(i, [](const Foo& foo)
 		{
@@ -116,7 +157,7 @@ static bool BFS(const jpt::Graph<Foo>& graph)
 
 export bool RunUnitTests_Graph()
 {
-	jpt::Graph<Foo> graph = GetGraph();
+	jpt::Graph<Foo> graph = GetGraph1();
 
 	DFS(graph);
 	JPT_LOG("---------------------------");
