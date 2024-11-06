@@ -13,7 +13,10 @@ import jpt.Allocator;
 import jpt.Constants;
 import jpt.Concepts;
 import jpt.TypeDefs;
+import jpt.Function;
+
 import jpt.DynamicArray;
+import jpt.Queue;
 
 export namespace jpt
 {
@@ -36,10 +39,12 @@ export namespace jpt
 	class Graph
 	{
 	public:
-		using TData      = _TData;
-		using Weight     = float32;
-		using Edge       = GraphEdge;
-		using Node       = GraphNode<TData>;
+		using TData  = _TData;
+		using Weight = float32;
+		using Edge   = GraphEdge;
+		using Node   = GraphNode<TData>;
+		using Path   = DynamicArray<Index>;
+		using WalkerFunc = Function<void(const TData&)>;
 
 	private:
 		DynamicArray<Node> m_nodes;
@@ -56,10 +61,19 @@ export namespace jpt
 		// Accessing
 		constexpr bool Count() const;
 		constexpr bool IsEmpty() const;
+		constexpr TData& operator[](Index index);
+		constexpr const TData& operator[](Index index) const;
 
 		// Searching
 		constexpr DynamicArray<Index> FindIndices(const TData& data) const;
 		constexpr Index FindIndex(const TData& data) const;
+		
+		// Graph algorithms
+		constexpr void DFS(Index start, const WalkerFunc& walker) const;
+		constexpr void BFS(Index start, const WalkerFunc& walker) const;
+
+	private:
+		constexpr void Recur_DFS(Index index, DynamicArray<bool>& visited, const WalkerFunc& walker) const;
 	};
 
 	template<typename TData, bool kAllowDuplicates>
@@ -128,6 +142,18 @@ export namespace jpt
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
+	constexpr Graph<_TData, kAllowDuplicates>::TData& Graph<_TData, kAllowDuplicates>::operator[](Index index)
+	{
+		return m_nodes[index].GetData();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr const Graph<_TData, kAllowDuplicates>::TData& Graph<_TData, kAllowDuplicates>::operator[](Index index) const
+	{
+		return m_nodes[index].GetData();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
 	constexpr DynamicArray<Index> Graph<_TData, kAllowDuplicates>::FindIndices(const TData& data) const
 	{
 		DynamicArray<Index> indices;
@@ -160,5 +186,53 @@ export namespace jpt
 		}
 
 		return kInvalidValue<Index>;
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::DFS(Index start, const WalkerFunc& walker) const
+	{
+		DynamicArray<bool> visited(m_nodes.Count(), false);
+		Recur_DFS(start, visited, walker);
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::Recur_DFS(Index index, DynamicArray<bool>& visited, const WalkerFunc& walker) const
+	{
+		visited[index] = true;
+		walker(m_nodes[index].GetData());
+
+		for (const Edge& edge : m_nodes[index].GetEdges())
+		{
+			if (!visited[edge.m_destination])
+			{
+				Recur_DFS(edge.m_destination, visited, walker);
+			}
+		}
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::BFS(Index start, const WalkerFunc& walker) const
+	{
+		DynamicArray<bool> visited(m_nodes.Count(), false);
+		Queue<Index> queue;
+
+		queue.Enqueue(start);
+		visited[start] = true;
+
+		while (!queue.IsEmpty())
+		{
+			const Index index = queue.Front();
+			queue.Dequeue();
+			walker(m_nodes[index].GetData());
+
+			for (const Edge& edge : m_nodes[index].GetEdges())
+			{
+				if (!visited[edge.m_destination])
+				{
+					queue.Enqueue(edge.m_destination);
+					visited[edge.m_destination] = true;
+				}
+			}
+		}
 	}
 }

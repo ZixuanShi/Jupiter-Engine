@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Logger.h"
 
 export module UnitTests_Graph;
 
@@ -14,6 +15,12 @@ class Foo
 {
 public:
 	char m_data = '0';
+
+	Foo() = default;
+	Foo(char data)
+		: m_data(data)
+	{
+	}
 };
 
 constexpr bool operator==(const Foo& lhs, const Foo& rhs)
@@ -45,7 +52,8 @@ jpt::Graph<Foo> GetGraph()
 	Index handleE = graph.AddNode(E);
 	Index handleF = graph.AddNode(F);
 	Index handleG = graph.AddNode(G);
-	Index handleH = graph.AddNode(H);
+	//Index handleH = graph.AddNode(H);
+	graph.AddNode(H);
 	Index handleI = graph.AddNode(I);
 	Index handleJ = graph.AddNode(J);
 
@@ -72,7 +80,7 @@ jpt::Graph<Foo> GetGraph()
 	graph.AddEdge(handleG, handleD, 2.0f);
 
 	// Erase node
-	graph.AddEdge(handleH, handleG, 1.0f);	// Dummy for not using handleH warning
+	//graph.AddEdge(handleH, handleG, 1.0f);	// Dummy for not using handleH warning
 	//graph.AddEdge(handleH, handleI, 1.0f);
 	//graph.AddEdge(handleJ, handleH, 1.0f);
 	//graph.AddEdge(handleA, handleH, 1.0f);
@@ -82,9 +90,37 @@ jpt::Graph<Foo> GetGraph()
 	return graph;
 }
 
+static bool DFS(const jpt::Graph<Foo>& graph)
+{
+	Index i = graph.FindIndex('F');
+
+	graph.DFS(i, [](const Foo& foo)
+		{
+			JPT_LOG(foo.m_data);
+		});
+
+	return true;
+}
+
+static bool BFS(const jpt::Graph<Foo>& graph)
+{
+	Index i = graph.FindIndex('F');
+
+	graph.BFS(i, [](const Foo& foo)
+		{
+			JPT_LOG(foo.m_data);
+		});
+
+	return true;
+}
+
 export bool RunUnitTests_Graph()
 {
-	GetGraph();
+	jpt::Graph<Foo> graph = GetGraph();
+
+	DFS(graph);
+	JPT_LOG("---------------------------");
+	BFS(graph);
 
 	return true;
 }

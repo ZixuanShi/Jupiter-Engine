@@ -23,7 +23,12 @@ export namespace jpt
 		constexpr void AddEdge(Index destination, Weight weight);
 		constexpr void OnEraseEdge(Index destination);
 
+		TData& GetData();
 		const TData& GetData() const;
+
+		Edges& GetEdges();
+		const Edges& GetEdges() const;
+
 		constexpr bool operator==(const GraphNode& other) const;
 	};
 
@@ -58,9 +63,27 @@ export namespace jpt
 	}
 
 	template<typename TData>
+	TData& GraphNode<TData>::GetData()
+	{
+		return m_data;
+	}
+
+	template<typename TData>
 	const TData& GraphNode<TData>::GetData() const
 	{
 		return m_data;
+	}
+
+	template<typename TData>
+	Edges& GraphNode<TData>::GetEdges()
+	{
+		return m_edges;
+	}
+
+	template<typename TData>
+	const Edges& GraphNode<TData>::GetEdges() const
+	{
+		return m_edges;
 	}
 
 	template<typename TData>
