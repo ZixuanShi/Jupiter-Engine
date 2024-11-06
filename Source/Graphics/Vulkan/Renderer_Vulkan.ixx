@@ -29,6 +29,8 @@ export namespace jpt
 	private:
 		VkInstance m_instance;
 		VkPhysicalDevice m_physicalDevice;
+		VkDevice m_logicalDevice;
+		VkQueue m_graphicsQueue;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -47,6 +49,7 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool PickPhysicalDevice();
+		bool CreateLogicalDevice();
 
 		// Debugging
 #if !IS_RELEASE
@@ -74,6 +77,7 @@ export namespace jpt
 
 		JPT_ENSURE(CreateInstance());
 		JPT_ENSURE(PickPhysicalDevice());
+		JPT_ENSURE(CreateLogicalDevice());
 
 #if !IS_RELEASE
 		JPT_ENSURE(SetupDebugMessenger());
@@ -90,6 +94,7 @@ export namespace jpt
 		DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
 #endif
 
+		vkDestroyDevice(m_logicalDevice, nullptr);
 		vkDestroyInstance(m_instance, nullptr);
 	}
 
@@ -200,7 +205,47 @@ export namespace jpt
 			return false;
 		}
 
-		JPT_INFO("Physical device picked successfully %lu", m_physicalDevice);
+		JPT_INFO("Physical device picked successfully");
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateLogicalDevice()
+	{
+		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
+
+		VkDeviceQueueCreateInfo queueCreateInfo = {};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.Value();
+		queueCreateInfo.queueCount = 1;
+
+		float queuePriority = 1.0f;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		VkPhysicalDeviceFeatures deviceFeatures = {};
+
+		VkDeviceCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.pQueueCreateInfos = &queueCreateInfo;
+		createInfo.queueCreateInfoCount = 1;
+		createInfo.pEnabledFeatures = &deviceFeatures;
+		createInfo.enabledExtensionCount = 0;
+
+#if !IS_RELEASE
+		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
+		createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
+#else
+		createInfo.enabledLayerCount = 0;
+#endif
+
+		const VkResult result = vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_logicalDevice);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create logical device! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
+		JPT_INFO("Logical device created successfully");
 		return true;
 	}
 
