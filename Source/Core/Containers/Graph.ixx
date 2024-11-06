@@ -45,6 +45,7 @@ export namespace jpt
 		DynamicArray<Node> m_nodes;
 
 	public:
+		// Adding
 		constexpr Index AddNode(const TData& data);
 
 		constexpr void AddEdge(Index from, Index to, Weight weight = 0.0f);
@@ -54,6 +55,15 @@ export namespace jpt
 		constexpr void AddEdge(const TData& from, const TData& to, Weight weight = 0.0f);
 		constexpr void AddEdgeBoth(const TData& from, const TData& to, Weight weight = 0.0f);
 
+		// Erasing
+		constexpr void EraseNode(Index index);
+		constexpr void Clear();
+
+		// Accessing
+		constexpr bool Count() const;
+		constexpr bool IsEmpty() const;
+
+		// Searching
 		constexpr Index FindIndex(const TData& data) const;
 	};
 
@@ -94,9 +104,9 @@ export namespace jpt
 			JPT_ASSERT(false, "Cannot use data for accessing nodes in duplicates allowed graphs");
 		}
 
-		const Index fromHandle = FindIndex(from);
-		const Index toHandle   = FindIndex(to);
-		AddEdge(fromHandle, toHandle, weight);
+		const Index fromIndex = FindIndex(from);
+		const Index toIndex = FindIndex(to);
+		AddEdge(fromIndex, toIndex, weight);
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
@@ -107,9 +117,42 @@ export namespace jpt
 			JPT_ASSERT(false, "Cannot use data for accessing nodes in duplicates allowed graphs");
 		}
 
-		const Index fromHandle = FindIndex(from);
-		const Index toHandle   = FindIndex(to);
-		AddEdgeBoth(fromHandle, toHandle, weight);
+		const Index fromIndex = FindIndex(from);
+		const Index toIndex = FindIndex(to);
+		AddEdgeBoth(fromIndex, toIndex, weight);
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::EraseNode(Index index)
+	{
+		JPT_ASSERT(index < m_nodes.Count(), "Invalid node index");
+
+		// Remove from other nodes' edges
+		for (Node& node : m_nodes)
+		{
+			Edges& edges = node.EraseEdge(index);
+		}
+
+		// Remove from nodes
+		m_nodes.Erase(index);
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr void Graph<_TData, kAllowDuplicates>::Clear()
+	{
+		m_nodes.Clear();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr bool Graph<_TData, kAllowDuplicates>::Count() const
+	{
+		return m_nodes.Count();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr bool Graph<_TData, kAllowDuplicates>::IsEmpty() const
+	{
+		return m_nodes.IsEmpty();
 	}
 
 	template<typename _TData, bool kAllowDuplicates>

@@ -18,7 +18,8 @@ export namespace jpt
 		constexpr GraphNode() = default;
 		constexpr GraphNode(const TData& data);
 
-		constexpr void AddEdge(size_t destination, Weight weight);
+		constexpr void AddEdge(Index destination, Weight weight);
+		constexpr void EraseEdge(Index destination);
 
 		const TData& GetData() const;
 		constexpr bool operator==(const GraphNode& other) const;
@@ -31,9 +32,22 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	constexpr void GraphNode<TData>::AddEdge(size_t destination, Weight weight)
+	constexpr void GraphNode<TData>::AddEdge(Index destination, Weight weight)
 	{
 		m_edges.EmplaceBack(destination, weight);
+	}
+
+	template<typename TData>
+	constexpr void GraphNode<TData>::EraseEdge(Index destination)
+	{
+		for (size_t i = 0; i < m_edges.Count(); ++i)
+		{
+			if (m_edges[i].GetDestination() == destination)
+			{
+				m_edges.Erase(i);
+				break;
+			}
+		}
 	}
 
 	template<typename TData>

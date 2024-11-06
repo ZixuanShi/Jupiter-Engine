@@ -10,26 +10,26 @@ export namespace jpt
 {
 	class GraphEdge
 	{
-		size_t m_destination = kInvalidValue<size_t>;	/**< The destination node index */
+		Index m_destination = kInvalidValue<Index>;	/**< The destination node index */
 		Weight m_weight = static_cast<Weight>(0);		/**< 0 means no weight */
 
 	public:
 		constexpr GraphEdge() = default;
-		constexpr GraphEdge(size_t destination, Weight weight);
+		constexpr GraphEdge(Index destination, Weight weight);
 
-		constexpr size_t GetDestination() const;
+		constexpr Index GetDestination() const;
 		constexpr Weight GetWeight() const;
 	};
 
 	using Edges = DynamicArray<GraphEdge>;
 
-	constexpr GraphEdge::GraphEdge(size_t destination, Weight weight)
+	constexpr GraphEdge::GraphEdge(Index destination, Weight weight)
 		: m_destination(destination)
 		, m_weight(weight)
 	{
 	}
 
-	constexpr size_t GraphEdge::GetDestination() const
+	constexpr Index GraphEdge::GetDestination() const
 	{
 		return m_destination;
 	}
