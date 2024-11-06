@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
+#include "Debugging/Assert.h"
 
 #include <vulkan/vulkan.h>
 
@@ -27,6 +28,7 @@ export namespace jpt
 
 	private:
 		VkInstance m_instance;
+		VkPhysicalDevice m_physicalDevice;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -169,8 +171,6 @@ export namespace jpt
 
 	bool Renderer_Vulkan::PickPhysicalDevice()
 	{
-		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-
 		uint32 deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
 
@@ -193,8 +193,14 @@ export namespace jpt
 			heap.Emplace(device);
 		}
 
-		physicalDevice = heap.Top();
+		m_physicalDevice = heap.Top();
+		if (m_physicalDevice == VK_NULL_HANDLE)
+		{
+			JPT_ERROR("Failed to find a suitable GPU");
+			return false;
+		}
 
+		JPT_INFO("Physical device picked successfully %lu", m_physicalDevice);
 		return true;
 	}
 
