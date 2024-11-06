@@ -44,8 +44,7 @@ export namespace jpt
 	private:
 		DynamicArray<Node> m_nodes;
 
-	public:
-		// Adding
+	public:		
 		constexpr Index AddNode(const TData& data);
 
 		constexpr void AddEdge(Index from, Index to, Weight weight = 0.0f);
@@ -58,16 +57,22 @@ export namespace jpt
 		constexpr bool IsEmpty() const;
 
 		// Searching
-		constexpr Index FindIndex(const TData& data) const;
+		constexpr DynamicArray<Index> FindIndices(const TData& data) const;
 	};
 
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr Index Graph<_TData, kAllowDuplicates>::AddNode(const TData& data)
+	template<typename TData, bool kAllowDuplicates>
+	constexpr Index Graph<TData, kAllowDuplicates>::AddNode(const TData& data)
 	{
 		if constexpr (!kAllowDuplicates)
 		{
-			const Index index = FindIndex(data);
-			JPT_ASSERT(index == kInvalidValue<Index>, "Can't have duplicates in this graph. Found same data at index %lu", index);
+			for (size_t i = 0; i < m_nodes.Count(); ++i)
+			{
+				if (m_nodes[i].GetData() == data)
+				{
+					JPT_ASSERT(false, "Duplicate data not allowed");
+					return i;
+				}
+			}
 		}
 
 		m_nodes.EmplaceBack(data);
@@ -105,16 +110,18 @@ export namespace jpt
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
-	constexpr Index Graph<_TData, kAllowDuplicates>::FindIndex(const TData& data) const
+	constexpr DynamicArray<Index> Graph<_TData, kAllowDuplicates>::FindIndices(const TData& data) const
 	{
+		DynamicArray<Index> indices;
+
 		for (size_t i = 0; i < m_nodes.Count(); ++i)
 		{
 			if (m_nodes[i].GetData() == data)
 			{
-				return i;
+				indices.EmplaceBack(i);
 			}
 		}
 
-		return kInvalidValue<Index>;
+		return indices;
 	}
 }
