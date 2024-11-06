@@ -15,40 +15,55 @@ public:
 	char m_data = '0';
 };
 
+constexpr bool operator==(const Foo& lhs, const Foo& rhs)
+{
+	return lhs.m_data == rhs.m_data;
+}
+
+// Projects/UnitTests/Assets/UnitTests_Graph.png
 jpt::Graph<Foo> GetGraph()
 {
 	jpt::Graph<Foo> graph;
 
-	Foo foo0('A');
-	Foo foo1('B');
-	Foo foo2('C');
-	Foo foo3('D');
-	Foo foo4('E');
-	Foo foo5('F');
-	Foo foo6('G');
-	Foo foo7('H');
-	Foo foo8('I');
-	Foo foo9('J');
+	Foo A('A');
+	Foo B('B');
+	Foo C('C');
+	Foo D('D');
+	Foo E('E');
+	Foo F('F');
+	Foo G('G');
+	Foo H('H');
+	Foo I('I');
+	Foo J('J');
 
-	graph.AddNode(foo0);
-	graph.AddNode(foo1);
-	graph.AddNode(foo2);
-	graph.AddNode(foo3);
-	graph.AddNode(foo4);
-	graph.AddNode(foo5);
-	graph.AddNode(foo6);
-	graph.AddNode(foo7);
-	graph.AddNode(foo8);
-	graph.AddNode(foo9);
+	// Add nodes
+	Index handleA = graph.AddNode(A);
+	Index handleB = graph.AddNode(B);
+	graph.AddNode(C);
+	Index handleD = graph.AddNode(D);
+	Index handleE = graph.AddNode(E);
+	graph.AddNode(F);
+	graph.AddNode(G);
+	graph.AddNode(H);
+	graph.AddNode(I);
+	graph.AddNode(J);
 
-	graph.AddEdge(foo0, foo1, 1.0f);
+	// Add edges
+	graph.AddEdge(handleA, handleD, 1.0f);
+
+	graph.AddEdge(D, E, 4.0f);
+	graph.AddEdge(D, F, 3.0f);
+
+	graph.AddEdge(E, F, 2.0f);
+	graph.AddEdge(E, J, 3.0f);
+	graph.AddEdge(handleE, handleB, 2.0f);
 
 	return graph;
 }
 
 export bool RunUnitTests_Graph()
 {
-
+	GetGraph();
 
 	return true;
 }

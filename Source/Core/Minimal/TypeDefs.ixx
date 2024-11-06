@@ -18,6 +18,7 @@ export using int64    = int64_t;
 
 export using float32  = float;
 export using float64  = double;
+export using Weight   = float32;
 
 export using Index    = size_t;
 export using Distance = float64;
