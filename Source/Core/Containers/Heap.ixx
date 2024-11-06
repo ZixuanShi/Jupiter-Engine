@@ -27,7 +27,7 @@ export namespace jpt
 
 	private:
 		/** Dynamic Array storing the heap elements
-			Index 0 is not used for better calculation.
+			Index 0 is not used for better calculation performance
 			m_buffer[1] is the root of the heap
 
 			Parent(i) = i / 2
@@ -38,7 +38,7 @@ export namespace jpt
 
 	public:
 		constexpr Heap();
-		constexpr Heap(TComparator&& comparator);
+		constexpr Heap(TComparator comparator);
 
 		// Adding
 		template<typename ...TArgs>
@@ -74,8 +74,8 @@ export namespace jpt
 	}
 
 	template<typename _TData, typename _TComparator, typename _TAllocator>
-	constexpr Heap<_TData, _TComparator, _TAllocator>::Heap(TComparator&& comparator)
-		: m_comparator(Move(comparator))
+	constexpr Heap<_TData, _TComparator, _TAllocator>::Heap(TComparator comparator)
+		: m_comparator(comparator)
 	{
 		m_buffer.EmplaceBack();
 	}

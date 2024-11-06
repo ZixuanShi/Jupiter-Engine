@@ -131,7 +131,7 @@ jpt::Graph<Foo> GetGraph1()
 	return graph;
 }
 
-static bool DFS(const jpt::Graph<Foo>& graph)
+bool DFS(const jpt::Graph<Foo>& graph)
 {
 	Index i = graph.FindIndex('A');
 
@@ -143,7 +143,7 @@ static bool DFS(const jpt::Graph<Foo>& graph)
 	return true;
 }
 
-static bool BFS(const jpt::Graph<Foo>& graph)
+bool BFS(const jpt::Graph<Foo>& graph)
 {
 	Index i = graph.FindIndex('A');
 
@@ -155,7 +155,7 @@ static bool BFS(const jpt::Graph<Foo>& graph)
 	return true;
 }
 
-static bool Dijkstra(const jpt::Graph<Foo>& graph)
+bool Dijkstra(const jpt::Graph<Foo>& graph)
 {
 	Index start = graph.FindIndex('G');
 	Index end = graph.FindIndex('A');
@@ -179,7 +179,7 @@ export bool RunUnitTests_Graph()
 	//JPT_LOG("---------------------------");
 	//BFS(graph);
 	//JPT_LOG("---------------------------");
-	Dijkstra(graph);
+	//Dijkstra(graph);
 
 	return true;
 }

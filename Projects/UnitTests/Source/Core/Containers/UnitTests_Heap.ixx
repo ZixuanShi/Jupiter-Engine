@@ -17,6 +17,7 @@ import jpt.ToString;
 import jpt.Comparators;
 import jpt.DynamicArray;
 import jpt.Rand;
+import jpt.Math;
 
 class Foo
 {
@@ -101,10 +102,46 @@ static bool MinHeap()
 	return true;
 }
 
+static bool CustomComparator()
+{
+	jpt::DynamicArray<int32> arr = GetRandArray();
+
+	auto comparator = [](const Foo& lhs, const Foo&)
+		{
+			return jpt::IsEven(lhs.GetData());
+		};
+
+	jpt::PriorityQueue<Foo, decltype(comparator)> heap(comparator);
+
+	for (int32 i = 0; i < 10; ++i)
+	{
+		heap.Emplace(arr[i]);
+	}
+
+	for (int32 i = 0; i < 10; ++i)
+	{
+		const Foo& top = heap.Top();
+
+		if (i < 5)
+		{
+			JPT_ENSURE(jpt::IsEven(top.GetData()));
+		}
+		else
+		{
+			JPT_ENSURE(!jpt::IsEven(top.GetData()));
+		}
+
+		heap.Pop();
+	}
+
+	return true;
+}
+
 export bool RunUnitTests_Heap()
 {
 	JPT_ENSURE(MaxHeap());
 	JPT_ENSURE(MinHeap());
+	JPT_ENSURE(CustomComparator());
 
 	return true;
 }

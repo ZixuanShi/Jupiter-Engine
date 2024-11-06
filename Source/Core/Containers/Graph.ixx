@@ -239,7 +239,7 @@ export namespace jpt
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
-	constexpr Graph<_TData, kAllowDuplicates>::Path Graph<_TData, kAllowDuplicates>::Dijkstra(Index start, Index end) const
+	constexpr Graph<_TData, kAllowDuplicates>::Path Graph<_TData, kAllowDuplicates>::Dijkstra(Index, Index) const
 	{
 		struct SearchData
 		{
@@ -251,7 +251,7 @@ export namespace jpt
 		DynamicArray<SearchData> searchData(m_nodes.Count());
 
 		Path path;
-		bool found = false;
+		//bool found = false;
 
 		auto comparator = [&searchData](Index lhs, Index rhs) -> bool
 			{

@@ -219,6 +219,12 @@ export namespace jpt
 		return (value & (value - 1)) == 0;
 	}
 
+	template<Integral TInt>
+	constexpr bool IsEven(TInt value)
+	{
+		return (value & 1) == 0;
+	}
+
 	template<Integral TInt = int32, Floating TFloat = float32>
 	constexpr TInt Round(TFloat value)
 	{
