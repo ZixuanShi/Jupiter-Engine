@@ -17,6 +17,7 @@ import jpt.Function;
 
 import jpt.DynamicArray;
 import jpt.Queue;
+import jpt.Heap;
 
 export namespace jpt
 {
@@ -71,6 +72,7 @@ export namespace jpt
 		// Graph algorithms
 		constexpr void DFS(Index start, const WalkerFunc& walker) const;
 		constexpr void BFS(Index start, const WalkerFunc& walker) const;
+		constexpr Path Dijkstra(Index start, Index end) const;
 
 	private:
 		constexpr void Recur_DFS(Index index, DynamicArray<bool>& visited, const WalkerFunc& walker) const;
@@ -234,5 +236,31 @@ export namespace jpt
 				}
 			}
 		}
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr Graph<_TData, kAllowDuplicates>::Path Graph<_TData, kAllowDuplicates>::Dijkstra(Index start, Index end) const
+	{
+		struct SearchData
+		{
+			Weight distance = Constants<Weight>::kMax;
+			Index previous = kInvalidValue<Index>;
+			bool visited = false;
+		};
+
+		DynamicArray<SearchData> searchData(m_nodes.Count());
+
+		Path path;
+		bool found = false;
+
+		auto comparator = [&searchData](Index lhs, Index rhs) -> bool
+			{
+				return searchData[lhs].distance < searchData[rhs].distance;
+			};
+		
+		using OpenSet = PriorityQueue<Index>;
+		//OpenSet openSet(comparator);
+
+		return path;
 	}
 }

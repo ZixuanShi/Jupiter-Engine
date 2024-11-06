@@ -155,13 +155,31 @@ static bool BFS(const jpt::Graph<Foo>& graph)
 	return true;
 }
 
+static bool Dijkstra(const jpt::Graph<Foo>& graph)
+{
+	Index start = graph.FindIndex('G');
+	Index end = graph.FindIndex('A');
+
+	auto path = graph.Dijkstra(start, end);
+
+	for (Index i : path)
+	{
+		const Foo& foo = graph[i];
+		JPT_LOG(foo.m_data);
+	}
+
+	return true;
+}
+
 export bool RunUnitTests_Graph()
 {
-	jpt::Graph<Foo> graph = GetGraph1();
+	jpt::Graph<Foo> graph = GetGraph0();
 
-	DFS(graph);
-	JPT_LOG("---------------------------");
-	BFS(graph);
+	//DFS(graph);
+	//JPT_LOG("---------------------------");
+	//BFS(graph);
+	//JPT_LOG("---------------------------");
+	Dijkstra(graph);
 
 	return true;
 }

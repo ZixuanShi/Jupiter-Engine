@@ -101,18 +101,10 @@ static bool MinHeap()
 	return true;
 }
 
-static bool PriorityQueue()
-{
-	// Dijkstra's algorithm todo
-
-	return true;
-}
-
 export bool RunUnitTests_Heap()
 {
 	JPT_ENSURE(MaxHeap());
 	JPT_ENSURE(MinHeap());
-	JPT_ENSURE(PriorityQueue());
 
 	return true;
 }

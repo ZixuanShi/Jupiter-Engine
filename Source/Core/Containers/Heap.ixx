@@ -25,9 +25,6 @@ export namespace jpt
 		using TData       = _TData;
 		using TComparator = _TComparator;
 
-	public:
-		static constexpr TComparator kComparator = TComparator();
-
 	private:
 		/** Dynamic Array storing the heap elements
 			Index 0 is not used for better calculation.
@@ -37,9 +34,11 @@ export namespace jpt
 			Left(i)   = i * 2
 			Right(i)  = i * 2 + 1	 */
 		DynamicArray<TData, _TAllocator> m_buffer;	
+		TComparator m_comparator = TComparator();
 
 	public:
 		constexpr Heap();
+		constexpr Heap(TComparator&& comparator);
 
 		// Adding
 		template<typename ...TArgs>
@@ -71,6 +70,13 @@ export namespace jpt
 	constexpr Heap<TData, TComparator, TAllocator>::Heap()
 	{
 		// Reserve the first element as a dummy element
+		m_buffer.EmplaceBack();
+	}
+
+	template<typename _TData, typename _TComparator, typename _TAllocator>
+	constexpr Heap<_TData, _TComparator, _TAllocator>::Heap(TComparator&& comparator)
+		: m_comparator(Move(comparator))
+	{
 		m_buffer.EmplaceBack();
 	}
 
@@ -148,7 +154,7 @@ export namespace jpt
 		while (currentIndex > 1)
 		{
 			// If the compare result is false, then the heap property is satisfied. Exit
-			if (!kComparator(m_buffer[currentIndex], m_buffer[parentIndex]))
+			if (!m_comparator(m_buffer[currentIndex], m_buffer[parentIndex]))
 			{
 				return;
 			}
@@ -175,13 +181,13 @@ export namespace jpt
 		{
 			// Find a better target child to swap
 			size_t targetIndex = leftIndex;
-			if (rightIndex <= Count() && kComparator(m_buffer[rightIndex], m_buffer[leftIndex]))
+			if (rightIndex <= Count() && m_comparator(m_buffer[rightIndex], m_buffer[leftIndex]))
 			{
 				targetIndex = rightIndex;
 			}
 
 			// If the compare result is false, then the heap property is satisfied. Exit
-			if (!kComparator(m_buffer[targetIndex], m_buffer[currentIndex]))
+			if (!m_comparator(m_buffer[targetIndex], m_buffer[currentIndex]))
 			{
 				return;
 			}
