@@ -14,6 +14,8 @@ import jpt.Constants;
 import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.Function;
+import jpt.Utilities;
+import jpt.Optional;
 
 import jpt.DynamicArray;
 import jpt.Queue;
@@ -72,7 +74,7 @@ export namespace jpt
 		// Graph algorithms
 		constexpr void DFS(Index start, const WalkerFunc& walker) const;
 		constexpr void BFS(Index start, const WalkerFunc& walker) const;
-		constexpr Path Dijkstra(Index start, Index end) const;
+		constexpr Optional<Path> Dijkstra(Index start, Index end) const;
 
 	private:
 		constexpr void Recur_DFS(Index index, DynamicArray<bool>& visited, const WalkerFunc& walker) const;
@@ -239,7 +241,7 @@ export namespace jpt
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
-	constexpr Graph<_TData, kAllowDuplicates>::Path Graph<_TData, kAllowDuplicates>::Dijkstra(Index, Index) const
+	constexpr Optional<typename Graph<_TData, kAllowDuplicates>::Path> Graph<_TData, kAllowDuplicates>::Dijkstra(Index start, Index end) const
 	{
 		struct SearchData
 		{
@@ -249,18 +251,56 @@ export namespace jpt
 		};
 
 		DynamicArray<SearchData> searchData(m_nodes.Count());
-
-		Path path;
-		//bool found = false;
-
 		auto comparator = [&searchData](Index lhs, Index rhs) -> bool
 			{
 				return searchData[lhs].distance < searchData[rhs].distance;
 			};
 		
-		using OpenSet = PriorityQueue<Index>;
-		//OpenSet openSet(comparator);
+		using OpenSet = PriorityQueue<Index, decltype(comparator)>;
+		OpenSet openSet(comparator);
 
-		return path;
+		searchData[start].distance = 0.0f;
+		openSet.Emplace(start);
+
+		while (!openSet.IsEmpty())
+		{
+			const Index current = openSet.Top();
+			openSet.Pop();
+
+			// Found the destination. Reconstruct the path
+			if (current == end)
+			{
+				Path path;
+				Index i = end;
+
+				while (i != kInvalidValue<Index>)
+				{
+					path.EmplaceBack(i);
+					i = searchData[i].previous;
+				}
+
+				path.Reverse();
+				return path;
+			}
+
+			searchData[current].visited = true;
+
+			for (const Edge& edge : m_nodes[current].GetEdges())
+			{
+				if (!searchData[edge.m_destination].visited)
+				{
+					const Weight newDistance = searchData[current].distance + edge.m_weight;
+
+					if (newDistance < searchData[edge.m_destination].distance)
+					{
+						searchData[edge.m_destination].distance = newDistance;
+						searchData[edge.m_destination].previous = current;
+						openSet.Emplace(edge.m_destination);
+					}
+				}
+			}
+		}
+
+		return {};
 	}
 }

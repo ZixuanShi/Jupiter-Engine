@@ -77,6 +77,7 @@ export namespace jpt
 		// Modifiers
 		constexpr void Clear();
 		constexpr void Resize(size_t size, const TData& data = TData());
+		constexpr void Reverse();
 
 		// Inserting
 		constexpr void Add(size_t index, const TData& data);
@@ -255,6 +256,15 @@ export namespace jpt
 		}
 
 		m_count = size;
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr void DynamicArray<_TData, TAllocator>::Reverse()
+	{
+		for (size_t i = 0; i < Count() / 2; ++i)
+		{
+			Swap(m_pBuffer[i], m_pBuffer[Count() - i - 1]);
+		}
 	}
 
 	template<typename TData, typename TAllocator>

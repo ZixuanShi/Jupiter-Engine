@@ -10,6 +10,7 @@ export module UnitTests_Graph;
 import jpt.Graph;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
+import jpt.Optional;
 
 class Foo
 {
@@ -158,14 +159,17 @@ bool BFS(const jpt::Graph<Foo>& graph)
 bool Dijkstra(const jpt::Graph<Foo>& graph)
 {
 	Index start = graph.FindIndex('G');
-	Index end = graph.FindIndex('A');
+	Index end = graph.FindIndex('B');
 
 	auto path = graph.Dijkstra(start, end);
-
-	for (Index i : path)
+	if (path)
 	{
-		const Foo& foo = graph[i];
-		JPT_LOG(foo.m_data);
+		auto result = path.Value();
+		for (Index i : result)
+		{
+			const Foo& foo = graph[i];
+			JPT_LOG(foo.m_data);
+		}
 	}
 
 	return true;
@@ -173,7 +177,7 @@ bool Dijkstra(const jpt::Graph<Foo>& graph)
 
 export bool RunUnitTests_Graph()
 {
-	jpt::Graph<Foo> graph = GetGraph0();
+	//jpt::Graph<Foo> graph = GetGraph0();
 
 	//DFS(graph);
 	//JPT_LOG("---------------------------");
