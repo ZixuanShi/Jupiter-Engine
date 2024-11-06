@@ -46,6 +46,9 @@ export namespace jpt
 		constexpr void Add(const TData& data);
 		constexpr void Add(TData&& data);
 
+		// Capacity
+		constexpr void Reserve(size_t capacity);
+
 		// Accessing
 		constexpr const TData& Top() const;
 		constexpr size_t Count() const;
@@ -100,6 +103,12 @@ export namespace jpt
 	{
 		m_buffer.Add(Move(data));
 		FixAdd();
+	}
+
+	template<typename _TData, typename _TComparator, typename _TAllocator>
+	constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(size_t capacity)
+	{
+		m_buffer.Reserve(capacity);
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>

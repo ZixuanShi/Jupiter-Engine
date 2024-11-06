@@ -2,10 +2,7 @@
 
 module;
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
-#include <vector>
+#include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.ValidationLayers;
 
@@ -51,40 +48,5 @@ export namespace jpt
 		}
 
 		return true;
-	}
-
-	DynamicArray<const char*> GetRequiredExtensions()
-	{
-		uint32 glfwExtensionCount = 0;
-		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-		DynamicArray<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-
-#if !IS_RELEASE
-		extensions.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-#endif
-		return extensions;
-	}
-
-	/** @return		How suitable the device fit Jupiter's vulkan renderer as score. 0 means not eligible at all */
-	uint32 GetDeviceScore(VkPhysicalDevice device)
-	{
-		uint32 score = 0;
-
-		VkPhysicalDeviceFeatures deviceFeatures;
-		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-		if (!deviceFeatures.geometryShader)
-		{
-			return 0;
-		}
-
-		VkPhysicalDeviceProperties deviceProperties;
-		vkGetPhysicalDeviceProperties(device, &deviceProperties);
-		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-		{
-			score += 1000;
-		}
-
-		return score;
 	}
 }

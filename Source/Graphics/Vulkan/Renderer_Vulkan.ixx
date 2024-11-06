@@ -12,9 +12,12 @@ export module jpt.Renderer_Vulkan;
 import jpt.Renderer;
 
 import jpt.Vulkan.ValidationLayers;
+import jpt.Vulkan.Utils;
+
+import jpt.TypeDefs;
 
 import jpt.DynamicArray;
-import jpt.TypeDefs;
+import jpt.Heap;
 
 export namespace jpt
 {
@@ -166,7 +169,7 @@ export namespace jpt
 
 	bool Renderer_Vulkan::PickPhysicalDevice()
 	{
-		//VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
 		uint32 deviceCount = 0;
 		vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
@@ -179,6 +182,18 @@ export namespace jpt
 
 		DynamicArray<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.Buffer());
+
+		auto picker = [](VkPhysicalDevice lhs, VkPhysicalDevice rhs)
+			{
+				return GetDeviceScore(lhs) > GetDeviceScore(rhs);
+			};
+		Heap<VkPhysicalDevice, decltype(picker)> heap(picker);
+		for (const VkPhysicalDevice& device : devices)
+		{
+			heap.Emplace(device);
+		}
+
+		physicalDevice = heap.Top();
 
 		return true;
 	}
