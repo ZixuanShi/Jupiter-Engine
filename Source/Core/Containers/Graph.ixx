@@ -123,6 +123,11 @@ export namespace jpt
 			}
 		}
 
+		if constexpr (!kAllowDuplicates)
+		{
+			JPT_ASSERT(indices.Count() <= 1, "Duplicate data not allowed");
+		}
+
 		return indices;
 	}
 
