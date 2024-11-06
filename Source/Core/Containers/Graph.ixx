@@ -58,6 +58,7 @@ export namespace jpt
 
 		// Searching
 		constexpr DynamicArray<Index> FindIndices(const TData& data) const;
+		constexpr Index FindIndex(const TData& data) const;
 	};
 
 	template<typename TData, bool kAllowDuplicates>
@@ -123,5 +124,19 @@ export namespace jpt
 		}
 
 		return indices;
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr Index Graph<_TData, kAllowDuplicates>::FindIndex(const TData& data) const
+	{
+		for (size_t i = 0; i < m_nodes.Count(); ++i)
+		{
+			if (m_nodes[i].GetData() == data)
+			{
+				return i;
+			}
+		}
+
+		return kInvalidValue<Index>;
 	}
 }
