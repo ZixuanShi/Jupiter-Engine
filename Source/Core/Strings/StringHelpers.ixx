@@ -205,48 +205,17 @@ export namespace jpt
 		return (c == '-' || c == '.' || c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '^' || c == '&' || c == '*' || c == '(' || c == ')' || c == '+' || c == '=' || c == '{' || c == '}' || c == '[' || c == ']' || c == ':' || c == ';' || c == '"' || c == '\'' || c == '<' || c == '>' || c == ',' || c == '.' || c == '?' || c == '/' || c == '\\' || c == '|' || c == '`' || c == '~');
 	}
 
-	template<StringLiteral TChar = char>
-	constexpr bool IsEmpty(TChar c)
+	template<typename TChar = char>
+	constexpr bool IsSpace(TChar c)
 	{
-		return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0';
-	}
-
-	/** @return		true if input CString Has acceptable text data
-		@param pString				The string to perform check on every char 
-		@param treatSpecialAsValid	[Optional] false if treat special characters as failure of validness. default to true */
-	template<StringLiteral TChar = char>
-	constexpr bool IsValidDataCStr(const TChar* pString, bool treatSpecialAsValid = true)
-	{
-		// Check if the pointer is valid and not empty
-		if (pString == nullptr)
-		{
-			return false;
-		}
-
-		// Check each char validness
-		size_t i = 0;
-		while (true)
-		{
-			const TChar c = pString[i];
-			if (c == '\0')
-			{
-				break;
-			}
-
-			++i;
-
-			if (treatSpecialAsValid && IsSensitiveSpecialChar<TChar>(c))
-			{
-				continue;
-			}
-
-			if (!IsDigit<TChar>(c) && !IsAlpha<TChar>(c) && !IsSafeSpecialChar<TChar>(c))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		return c == ' ' || 
+			c == '\t' || 
+			c == '\n' || 
+			c == '\r' || 
+			c == '\0' || 
+			c == '\v' || 
+			c == '\f' ||
+			static_cast<unsigned char>(c) == 0xA0;
 	}
 
 	/** @return true if only contains char [0 - 9] */

@@ -69,38 +69,6 @@ bool UnitTests_StrCpy()
 	return true;
 }
 
-bool RunUnitTests_IsValidDataCStr()
-{
-	// Empty
-	JPT_ENSURE(jpt::IsValidDataCStr(""));
-
-	// number
-	JPT_ENSURE(jpt::IsValidDataCStr("1"));
-	JPT_ENSURE(jpt::IsValidDataCStr("1010"));
-	JPT_ENSURE(jpt::IsValidDataCStr("9876543210"));
-
-	// text
-	JPT_ENSURE(jpt::IsValidDataCStr("JupiterEngine"));
-
-	// underscore
-	JPT_ENSURE(jpt::IsValidDataCStr("_"));
-
-	// special
-	JPT_ENSURE(jpt::IsValidDataCStr("!"));
-	JPT_ENSURE(jpt::IsValidDataCStr("!Jupiter"));
-	JPT_ENSURE(!jpt::IsValidDataCStr("!", false));
-	JPT_ENSURE(jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?"));
-	JPT_ENSURE(!jpt::IsValidDataCStr("!@#$%^&*()_+-=[]\\{}|;':\",./<>?", false));
-
-	// Combination
-	JPT_ENSURE(jpt::IsValidDataCStr("Jupiter-Engine!@#$%^&*()_+-=[]\\{}|;':\",./<>?"));
-	JPT_ENSURE(!jpt::IsValidDataCStr("Jupiter_Engine!@#$%^&*()_+-=[]\\{}|;':\",./<>?", false));
-	JPT_ENSURE(jpt::IsValidDataCStr("Jupiter_Engine"));
-	JPT_ENSURE(jpt::IsValidDataCStr("_Jupiter_Engine", false));
-
-	return true;
-}
-
 bool RunUnitTests_StringUtils_IntegerToCStr()
 {
 	const char* result = jpt::IntegerToCStr(123456);
@@ -167,6 +135,15 @@ bool RunUnitTests_StringUtils_WStrToCStr()
 	return true;
 }
 
+bool UnitTests_IsSpace()
+{
+	JPT_ENSURE(' ');
+	JPT_ENSURE('\u00A0');
+	JPT_ENSURE(' ');
+
+	return true;
+}
+
 export bool RunUnitTests_StringUtils()
 {
 	JPT_ENSURE(UnitTests_StringLen<jpt::String>());
@@ -178,12 +155,13 @@ export bool RunUnitTests_StringUtils()
 	JPT_ENSURE(UnitTests_StrCpy<jpt::String>());
 	JPT_ENSURE(UnitTests_StrCpy<jpt::WString>());
 
-	JPT_ENSURE(RunUnitTests_IsValidDataCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_IntegerToCStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_CStrToInteger());
 
 	JPT_ENSURE(RunUnitTests_StringUtils_CStrToWStr());
 	JPT_ENSURE(RunUnitTests_StringUtils_WStrToCStr());
+
+	JPT_ENSURE(UnitTests_IsSpace());
 
 	return true;
 }
