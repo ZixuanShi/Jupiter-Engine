@@ -12,7 +12,7 @@ bool Application_Blank::PreInit()
 	JPT_ENSURE(Super::PreInit());
 
 	m_foo.PreInit();
-	m_bar.PreInit();	
+	m_bar.PreInit();
 
 	return true;
 }

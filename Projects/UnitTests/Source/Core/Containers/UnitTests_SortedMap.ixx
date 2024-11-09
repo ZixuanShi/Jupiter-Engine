@@ -195,6 +195,28 @@ bool UnitTests_SortedMap_Iterators()
     return true;
 }
 
+bool UnitTests_SortedMap_Unique()
+{
+	jpt::SortedMap<int32, jpt::String> sortedMap;
+    sortedMap[1] = "one";
+	sortedMap[2] = "two";
+	sortedMap[3] = "three";
+
+	JPT_ENSURE(sortedMap.Count() == 3);
+	JPT_ENSURE(sortedMap[1] == "one");
+	JPT_ENSURE(sortedMap[2] == "two");
+	JPT_ENSURE(sortedMap[3] == "three");
+
+	sortedMap[1] = "four";
+
+	JPT_ENSURE(sortedMap.Count() == 3);
+	JPT_ENSURE(sortedMap[1] == "four");
+	JPT_ENSURE(sortedMap[2] == "two");
+	JPT_ENSURE(sortedMap[3] == "three");
+
+	return true;
+}
+
 export bool RunUnitTests_SortedMap()
 {
     JPT_ENSURE(UnitTests_SortedMap_Copy());
@@ -204,6 +226,7 @@ export bool RunUnitTests_SortedMap()
     JPT_ENSURE(UnitTests_SortedMap_Erase());
     //JPT_ENSURE(UnitTests_SortedMap_Walk());
     JPT_ENSURE(UnitTests_SortedMap_Iterators());
+    JPT_ENSURE(UnitTests_SortedMap_Unique());
 
     return true;
 }

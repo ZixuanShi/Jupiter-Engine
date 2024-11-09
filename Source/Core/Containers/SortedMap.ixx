@@ -174,6 +174,12 @@ export namespace jpt
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Add(const TKey& key, const TValue& value)
 	{
+		if (TNode* pNode = FindNode(key); pNode != nullptr)
+		{
+			pNode->data.second = value;
+			return;
+		}
+
 		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
