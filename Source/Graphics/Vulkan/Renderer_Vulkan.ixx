@@ -2,15 +2,23 @@
 
 module;
 
+#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 #include "Debugging/Assert.h"
 
-#include <vulkan/vulkan.h>
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 
 export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
+
+import jpt.Window;
+import jpt.Window_GLFW;
 
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.Utils;
@@ -18,6 +26,7 @@ import jpt.Vulkan.Utils;
 import jpt.TypeDefs;
 
 import jpt.DynamicArray;
+import jpt.HashSet;
 import jpt.Heap;
 
 export namespace jpt
@@ -31,6 +40,8 @@ export namespace jpt
 		VkPhysicalDevice m_physicalDevice;
 		VkDevice m_logicalDevice;
 		VkQueue m_graphicsQueue;
+		VkSurfaceKHR m_surface;
+		VkQueue m_presentQueue;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -48,6 +59,7 @@ export namespace jpt
 	private:
 		// Initialization
 		bool CreateInstance();
+		bool CreateSurface();
 		bool PickPhysicalDevice();
 		bool CreateLogicalDevice();
 
@@ -76,12 +88,14 @@ export namespace jpt
 		JPT_INFO("GLFW extensions count: %i", glfwExtensionCount);
 
 		JPT_ENSURE(CreateInstance());
-		JPT_ENSURE(PickPhysicalDevice());
-		JPT_ENSURE(CreateLogicalDevice());
 
 #if !IS_RELEASE
 		JPT_ENSURE(SetupDebugMessenger());
 #endif
+
+		JPT_ENSURE(CreateSurface());
+		JPT_ENSURE(PickPhysicalDevice());
+		JPT_ENSURE(CreateLogicalDevice());
 
 		return true;
 	}
@@ -90,11 +104,13 @@ export namespace jpt
 	{
 		Super::Shutdown();
 
+		vkDestroyDevice(m_logicalDevice, nullptr);
+
 #if !IS_RELEASE
 		DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
 #endif
 
-		vkDestroyDevice(m_logicalDevice, nullptr);
+		vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
 		vkDestroyInstance(m_instance, nullptr);
 	}
 
@@ -174,6 +190,27 @@ export namespace jpt
 		return true;
 	}
 
+	bool Renderer_Vulkan::CreateSurface()
+	{
+		Application* pApp = GetApplication();
+
+		jpt::Window_GLFW* pJPTGLFWWindow = dynamic_cast<jpt::Window_GLFW*>(pApp->GetMainWindow());
+		JPT_ASSERT(pJPTGLFWWindow, "Main window is not of type jpt::Window_GLFW");
+
+		GLFWwindow* pGLFWWindow = pJPTGLFWWindow->GetGLFWWindow();
+		JPT_ASSERT(pGLFWWindow, "GLFW window is nullptr");
+
+		VkResult result = glfwCreateWindowSurface(m_instance, pGLFWWindow, nullptr, &m_surface);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		JPT_INFO("Window surface created successfully");
+		return true;
+	}
+
 	bool Renderer_Vulkan::PickPhysicalDevice()
 	{
 		uint32 deviceCount = 0;
@@ -188,9 +225,9 @@ export namespace jpt
 		DynamicArray<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.Buffer());
 
-		auto picker = [](VkPhysicalDevice lhs, VkPhysicalDevice rhs)
+		auto picker = [this](VkPhysicalDevice lhs, VkPhysicalDevice rhs)
 			{
-				return GetDeviceScore(lhs) > GetDeviceScore(rhs);
+				return GetDeviceScore(lhs, m_surface) > GetDeviceScore(rhs, m_surface);
 			};
 		Heap<VkPhysicalDevice, decltype(picker)> heap(picker);
 		for (const VkPhysicalDevice& device : devices)
@@ -211,22 +248,29 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateLogicalDevice()
 	{
-		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
+		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice, m_surface);
 
-		VkDeviceQueueCreateInfo queueCreateInfo = {};
-		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.Value();
-		queueCreateInfo.queueCount = 1;
+		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
+		HashSet<uint32> uniqueQueueFamilies = { indices.graphicsFamily.Value(), indices.presentFamily.Value() };
 
 		float queuePriority = 1.0f;
-		queueCreateInfo.pQueuePriorities = &queuePriority;
+		for (uint32 queueFamily : uniqueQueueFamilies)
+		{
+			VkDeviceQueueCreateInfo queueCreateInfo = {};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+
+			queueCreateInfos.Add(queueCreateInfo);
+		}
 
 		VkPhysicalDeviceFeatures deviceFeatures = {};
 
 		VkDeviceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-		createInfo.pQueueCreateInfos = &queueCreateInfo;
-		createInfo.queueCreateInfoCount = 1;
+		createInfo.queueCreateInfoCount = static_cast<uint32>(queueCreateInfos.Count());
+		createInfo.pQueueCreateInfos = queueCreateInfos.ConstBuffer();
 		createInfo.pEnabledFeatures = &deviceFeatures;
 		createInfo.enabledExtensionCount = 0;
 
@@ -245,6 +289,7 @@ export namespace jpt
 		}
 
 		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
+		vkGetDeviceQueue(m_logicalDevice, indices.presentFamily.Value(), 0, &m_presentQueue);
 		JPT_INFO("Logical device created successfully");
 		return true;
 	}

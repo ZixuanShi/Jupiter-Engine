@@ -4,7 +4,11 @@ module;
 
 #include "Applications/App/Application.h"
 
-#include <vulkan/vulkan.h>
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 
 export module jpt.Vulkan.Utils;
 
@@ -33,9 +37,15 @@ export namespace jpt
 	struct QueueFamilyIndices
 	{
 		Optional<uint32> graphicsFamily;
+		Optional<uint32> presentFamily;
+
+		bool IsComplete() const
+		{
+			return graphicsFamily.HasValue() && presentFamily.HasValue();
+		}
 	};
 
-	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device)
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		QueueFamilyIndices indices;
 
@@ -53,7 +63,14 @@ export namespace jpt
 				indices.graphicsFamily = i;
 			}
 
-			if (indices.graphicsFamily)
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+			if (presentSupport)
+			{
+				indices.presentFamily = i;
+			}
+
+			if (indices.IsComplete())
 			{
 				break;
 			}
@@ -65,10 +82,10 @@ export namespace jpt
 	}
 
 	/** @return		How suitable the device fit Jupiter's vulkan renderer as score. 0 means not eligible at all */
-	uint32 GetDeviceScore(VkPhysicalDevice device)
+	uint32 GetDeviceScore(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
-		QueueFamilyIndices indices = FindQueueFamilies(device);
-		if (!indices.graphicsFamily)
+		QueueFamilyIndices indices = FindQueueFamilies(device, surface);
+		if (!indices.IsComplete())
 		{
 			return 0;
 		}
