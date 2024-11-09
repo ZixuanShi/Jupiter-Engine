@@ -483,11 +483,8 @@ export namespace jpt
 
 		for (const TData& element : container)
 		{
-			TBucket& bucket = GetBucket(element.first);
-			bucket.EmplaceBack(element);
+			Add(element);
 		}
-
-		m_count += size;
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
