@@ -331,11 +331,8 @@ export namespace jpt
 
 		for (const TData& data : container)
 		{
-			TBucket& bucket = GetBucket(data);
-			bucket.EmplaceBack(data);
+			Add(data);
 		}
-
-		m_count += size;
 	}
 
 	template<typename TValue, typename TComparator>
