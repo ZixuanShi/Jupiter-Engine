@@ -34,7 +34,7 @@ export namespace jpt
 
 			for (const VkLayerProperties& layerProperties : availableLayers)
 			{
-				if (StrCmp(layerName, layerProperties.layerName) == npos)
+				if (AreStringsSame(layerName, layerProperties.layerName))
 				{
 					layerFound = true;
 					break;
