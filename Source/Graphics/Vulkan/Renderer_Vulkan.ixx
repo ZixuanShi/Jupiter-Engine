@@ -17,10 +17,9 @@ import jpt.Renderer;
 	import jpt.Framework_GLFW;
 #endif
 
-import jpt.QueueFamilyIndices;
-import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.Helpers;
-import jpt.Vulkan.Device;
+import jpt.Vulkan.ValidationLayers;
+import jpt.Vulkan.QueueFamilyIndices;
 
 import jpt.TypeDefs;
 

@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.QueueFamilyIndices;
+export module jpt.Vulkan.QueueFamilyIndices;
 
 import jpt.TypeDefs;
 import jpt.Optional;

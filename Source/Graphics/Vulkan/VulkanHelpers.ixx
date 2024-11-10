@@ -8,7 +8,7 @@ module;
 
 export module jpt.Vulkan.Helpers;
 
-import jpt.QueueFamilyIndices;
+import jpt.Vulkan.QueueFamilyIndices;
 
 import jpt.DynamicArray;
 
