@@ -87,17 +87,21 @@ export namespace jpt
 		vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
 		JPT_INFO("GLFW extensions count: %i", glfwExtensionCount);
 
-		JPT_ENSURE(CreateInstance());
-
+		bool success = true;
+		success &= CreateInstance();
 #if !IS_RELEASE
-		JPT_ENSURE(SetupDebugMessenger());
+		success &= SetupDebugMessenger();
 #endif
+		success &= CreateSurface();
+		success &= PickPhysicalDevice();
+		success &= CreateLogicalDevice();
 
-		JPT_ENSURE(CreateSurface());
-		JPT_ENSURE(PickPhysicalDevice());
-		JPT_ENSURE(CreateLogicalDevice());
+		if (success)
+		{
+			JPT_INFO("Vulkan renderer initialized successfully");
+		}
 
-		return true;
+		return success;
 	}
 
 	void Renderer_Vulkan::Shutdown()
@@ -186,7 +190,6 @@ export namespace jpt
 			return false;
 		}
 
-		JPT_INFO("Vulkan instance created successfully");
 		return true;
 	}
 
@@ -207,7 +210,6 @@ export namespace jpt
 			return false;
 		}
 
-		JPT_INFO("Window surface created successfully");
 		return true;
 	}
 
@@ -242,7 +244,6 @@ export namespace jpt
 			return false;
 		}
 
-		JPT_INFO("Physical device picked successfully");
 		return true;
 	}
 
@@ -290,7 +291,6 @@ export namespace jpt
 
 		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
 		vkGetDeviceQueue(m_logicalDevice, indices.presentFamily.Value(), 0, &m_presentQueue);
-		JPT_INFO("Logical device created successfully");
 		return true;
 	}
 
@@ -323,7 +323,6 @@ export namespace jpt
 			return false;
 		}
 
-		JPT_INFO("Debug messenger set up successfully");
 		return true;
 	}
 
