@@ -20,16 +20,18 @@ import jpt.String;
 
 import jpt.Time.TypeDefs;
 
-export namespace jpt::Input
+using namespace jpt::Input;
+
+export namespace jpt
 {
-	class Manager
+	class InputManager
 	{
 	private:
 		DynamicArray<Device*> m_devices;	/**< Array of all connected input devices */
 		Backend* m_pBackend = nullptr;		/**< Input backend framework */
 
 	public:
-		JPT_DECLARE_SINGLETON(Manager);
+		JPT_DECLARE_SINGLETON(InputManager);
 
 		bool PreInit();
 		bool Init();
@@ -53,7 +55,7 @@ export namespace jpt::Input
 		KeyCode ToKeyCode(uint32 key) const;
 	};
 
-	bool Manager::PreInit()
+	bool InputManager::PreInit()
 	{
 		const Framework_API frameworkAPI = GetApplication()->GetFrameworkAPI();
 		switch (frameworkAPI.Value())
@@ -80,7 +82,7 @@ export namespace jpt::Input
 		return true;
 	}
 
-	bool Manager::Init()
+	bool InputManager::Init()
 	{
 		for (Device* pDevice : m_devices)
 		{
@@ -93,7 +95,7 @@ export namespace jpt::Input
 		return true;
 	}
 
-	void Manager::Update(TimePrecision deltaSeconds)
+	void InputManager::Update(TimePrecision deltaSeconds)
 	{
 		for (Device* pDevice : m_devices)
 		{
@@ -101,7 +103,7 @@ export namespace jpt::Input
 		}
 	}
 
-	void Manager::Shutdown()
+	void InputManager::Shutdown()
 	{
 		JPT_DELETE(m_pBackend);
 
@@ -111,24 +113,24 @@ export namespace jpt::Input
 		}
 	}
 
-	bool Manager::IsDown(KeyCode key) const
+	bool InputManager::IsDown(KeyCode key) const
 	{
 		JPT_IGNORE(key);
 		return false;
 	}
 
-	bool Manager::IsUp(KeyCode key) const
+	bool InputManager::IsUp(KeyCode key) const
 	{
 		JPT_IGNORE(key);
 		return false;
 	}
 
-	bool Manager::IsPressed(KeyCode key) const
+	bool InputManager::IsPressed(KeyCode key) const
 	{
 		return m_pBackend->IsPressed(key);
 	}
 
-	bool Manager::ArePressed(const DynamicArray<KeyCode>& keys) const
+	bool InputManager::ArePressed(const DynamicArray<KeyCode>& keys) const
 	{
 		for (KeyCode key : keys)
 		{
@@ -141,17 +143,17 @@ export namespace jpt::Input
 		return true;
 	}
 
-	bool Manager::IsReleased(KeyCode key) const
+	bool InputManager::IsReleased(KeyCode key) const
 	{
 		return m_pBackend->IsReleased(key);
 	}
 
-	uint32 Manager::FromKeyCode(KeyCode key) const
+	uint32 InputManager::FromKeyCode(KeyCode key) const
 	{
 		return m_pBackend->FromKeyCode(key);
 	}
 
-	KeyCode Manager::ToKeyCode(uint32 key) const
+	KeyCode InputManager::ToKeyCode(uint32 key) const
 	{
 		return m_pBackend->ToKeyCode(key);
 	}

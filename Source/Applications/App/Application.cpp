@@ -56,7 +56,7 @@ namespace jpt
 		success &= m_pFramework->PreInit();
 		success &= m_pMainWindow->PreInit();
 		success &= m_pRenderer->PreInit();
-		success &= Input::Manager::GetInstance().PreInit();
+		success &= InputManager::GetInstance().PreInit();
 
 		return success;
 	}
@@ -76,7 +76,7 @@ namespace jpt
 		success &= m_pFramework->Init();
 		success &= m_pMainWindow->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
 		success &= m_pRenderer->Init();
-		success &= Input::Manager::GetInstance().Init();
+		success &= InputManager::GetInstance().Init();
 
 		return success;
 	}
@@ -92,7 +92,7 @@ namespace jpt
 			m_pRenderer->Update(deltaSeconds);
 		}
 
-		Input::Manager::GetInstance().Update(deltaSeconds);
+		InputManager::GetInstance().Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
@@ -104,7 +104,7 @@ namespace jpt
 			JPT_SHUTDOWN(m_pRenderer);
 		}
 
-		Input::Manager::GetInstance().Shutdown();
+		InputManager::GetInstance().Shutdown();
 		ProjectSettings::GetInstance().Save();
 		EventManager::GetInstance().Shutdown();
 	}
@@ -143,7 +143,7 @@ namespace jpt
 
 	void Application::ProcessInput()
 	{
-		if (Input::Manager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
+		if (InputManager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
 		{
 			EventManager::GetInstance().Send(Event_Window_Close(nullptr));
 		}

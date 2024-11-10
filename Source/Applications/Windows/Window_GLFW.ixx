@@ -119,7 +119,7 @@ namespace jpt
 				double x, y;
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-				const Input::KeyCode keyCode = Input::Manager::GetInstance().ToKeyCode(button);
+				const Input::KeyCode keyCode = InputManager::GetInstance().ToKeyCode(button);
 				Event_Mouse_ButtonPress eventMouseButtonPress = { static_cast<int32>(x), 
 					                                              static_cast<int32>(y), 
 					                                              keyCode };
