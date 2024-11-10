@@ -8,6 +8,8 @@ module;
 
 export module jpt.Vulkan.Helpers;
 
+import jpt.QueueFamilyIndices;
+
 import jpt.DynamicArray;
 
 import jpt.TypeDefs;
@@ -29,17 +31,6 @@ export namespace jpt
 #endif
 		return extensions;
 	}
-
-	struct QueueFamilyIndices
-	{
-		Optional<uint32> graphicsFamily;
-		Optional<uint32> presentFamily;
-
-		bool IsComplete() const
-		{
-			return graphicsFamily.HasValue() && presentFamily.HasValue();
-		}
-	};
 
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
