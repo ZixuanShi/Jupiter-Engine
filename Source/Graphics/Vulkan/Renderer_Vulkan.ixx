@@ -20,6 +20,7 @@ import jpt.Renderer;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.QueueFamilyIndices;
+import jpt.Vulkan.SwapChainSupportDetails;
 
 import jpt.TypeDefs;
 
@@ -35,11 +36,18 @@ export namespace jpt
 		using Super = Renderer;
 
 	private:
+		DynamicArray<VkImage> m_swapChainImages;
+		VkSwapchainKHR m_swapChain;
+		VkFormat m_swapChainImageFormat;
+		VkExtent2D m_swapChainExtent;
+
 		VkInstance m_instance;
-		VkPhysicalDevice m_physicalDevice;
-		VkDevice m_logicalDevice;
-		VkQueue m_graphicsQueue;
 		VkSurfaceKHR m_surface;
+		
+		VkDevice m_logicalDevice;
+		VkPhysicalDevice m_physicalDevice;
+		
+		VkQueue m_graphicsQueue;
 		VkQueue m_presentQueue;
 
 #if !IS_RELEASE
@@ -61,10 +69,12 @@ export namespace jpt
 		bool CreateSurface();
 		bool PickPhysicalDevice();
 		bool CreateLogicalDevice();
+		bool CreateSwapChain();
 
 		// Vulkan helpers
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 		bool IsDeviceSuitable(VkPhysicalDevice device);
+		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 
 		// Debugging
 #if !IS_RELEASE
@@ -98,6 +108,7 @@ export namespace jpt
 		success &= CreateSurface();
 		success &= PickPhysicalDevice();
 		success &= CreateLogicalDevice();
+		success &= CreateSwapChain();
 
 		if (success)
 		{
@@ -111,6 +122,7 @@ export namespace jpt
 	{
 		Super::Shutdown();
 
+		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
 		vkDestroyDevice(m_logicalDevice, nullptr);
 
 #if !IS_RELEASE
@@ -265,7 +277,8 @@ export namespace jpt
 		createInfo.queueCreateInfoCount = static_cast<uint32>(queueCreateInfos.Count());
 		createInfo.pQueueCreateInfos = queueCreateInfos.ConstBuffer();
 		createInfo.pEnabledFeatures = &deviceFeatures;
-		createInfo.enabledExtensionCount = 0;
+		createInfo.enabledExtensionCount = static_cast<uint32>(deviceExtensions.Count());
+		createInfo.ppEnabledExtensionNames = deviceExtensions.ConstBuffer();
 
 #if !IS_RELEASE
 		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
@@ -283,6 +296,65 @@ export namespace jpt
 
 		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
 		vkGetDeviceQueue(m_logicalDevice, indices.presentFamily.Value(), 0, &m_presentQueue);
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateSwapChain()
+	{
+		SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_physicalDevice);
+
+		const VkSurfaceFormatKHR surfaceFormat = swapChainSupport.ChooseSwapSurfaceFormat();
+		const VkPresentModeKHR presentMode = swapChainSupport.ChooseSwapPresentMode();
+		const VkExtent2D extent = swapChainSupport.ChooseSwapExtent();
+
+		uint32 imageCount = swapChainSupport.GetImageCount();
+
+		VkSwapchainCreateInfoKHR createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		createInfo.surface = m_surface;
+		createInfo.minImageCount = imageCount;
+		createInfo.imageFormat = surfaceFormat.format;
+		createInfo.imageColorSpace = surfaceFormat.colorSpace;
+		createInfo.imageExtent = extent;
+		createInfo.imageArrayLayers = 1;
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
+		uint32 queueFamilyIndices[] = { indices.graphicsFamily.Value(), indices.presentFamily.Value() };
+
+		if (indices.graphicsFamily != indices.presentFamily)
+		{
+			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+			createInfo.queueFamilyIndexCount = 2;
+			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+		}
+		else
+		{
+			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			createInfo.queueFamilyIndexCount = 0;
+			createInfo.pQueueFamilyIndices = nullptr;
+		}
+
+		createInfo.preTransform = swapChainSupport.GetTransform();
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		createInfo.presentMode = presentMode;
+		createInfo.clipped = VK_TRUE;
+		createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+		const VkResult result = vkCreateSwapchainKHR(m_logicalDevice, &createInfo, nullptr, &m_swapChain);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create swap chain! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		vkGetSwapchainImagesKHR(m_logicalDevice, m_swapChain, &imageCount, nullptr);
+		m_swapChainImages.Resize(imageCount);
+		vkGetSwapchainImagesKHR(m_logicalDevice, m_swapChain, &imageCount, m_swapChainImages.Buffer());
+
+		m_swapChainImageFormat = surfaceFormat.format;
+		m_swapChainExtent = extent;
+
 		return true;
 	}
 
@@ -326,7 +398,17 @@ export namespace jpt
 	{
 		QueueFamilyIndices indices = FindQueueFamilies(device);
 
-		return indices.IsComplete();
+		bool extensionsSupported = CheckDeviceExtensionSupport(device);
+		SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device);
+
+		return indices.IsComplete() && extensionsSupported && swapChainSupport.IsValid();
+	}
+
+	SwapChainSupportDetails Renderer_Vulkan::QuerySwapChainSupport(VkPhysicalDevice device)
+	{
+		SwapChainSupportDetails details;
+		details.Init(device, m_surface);
+		return details;
 	}
 
 #if !IS_RELEASE
