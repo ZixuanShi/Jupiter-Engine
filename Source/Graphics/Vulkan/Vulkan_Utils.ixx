@@ -81,9 +81,25 @@ export namespace jpt
 		return indices;
 	}
 
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device)
+	{
+		uint32 extensionCount;
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+		DynamicArray<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.Buffer());
+
+		return true;
+	}
+
 	/** @return		How suitable the device fit Jupiter's vulkan renderer as score. 0 means not eligible at all */
 	uint32 GetDeviceScore(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
+		if (!CheckDeviceExtensionSupport(device))
+		{
+			return 0;
+		}
+
 		QueueFamilyIndices indices = FindQueueFamilies(device, surface);
 		if (!indices.IsComplete())
 		{

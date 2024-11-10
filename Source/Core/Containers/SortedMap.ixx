@@ -5,6 +5,8 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
+#include <initializer_list>
+
 export module jpt.SortedMap;
 
 import jpt.Allocator;
@@ -44,10 +46,11 @@ export namespace jpt
 
 	public:
 		constexpr SortedMap() = default;
+		constexpr SortedMap(const std::initializer_list<TData>& list);
 		constexpr SortedMap(const SortedMap& other);
-		constexpr SortedMap(SortedMap&& other);
+		constexpr SortedMap(SortedMap&& other) noexcept;
 		constexpr SortedMap& operator=(const SortedMap& other);
-		constexpr SortedMap& operator=(SortedMap&& other);
+		constexpr SortedMap& operator=(SortedMap&& other) noexcept;
 		constexpr ~SortedMap();
 
 		// Modifying
@@ -129,6 +132,15 @@ export namespace jpt
 		constexpr void MoveMap(SortedMap&& other);
 	};
 
+	template<Comparable _TKey, typename _TValue, typename _TComparator, typename _TAllocator>
+	constexpr SortedMap<_TKey, _TValue, _TComparator, _TAllocator>::SortedMap(const std::initializer_list<TData>& list)
+	{
+		for (const TData& data : list)
+		{
+			Add(data);
+		}
+	}
+
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::SortedMap(const SortedMap& other)
 	{
@@ -136,7 +148,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::SortedMap(SortedMap&& other)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::SortedMap(SortedMap&& other) noexcept
 	{
 		MoveMap(Move(other));
 	}
@@ -154,7 +166,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>& SortedMap<TKey, TValue, TComparator, TAllocator>::operator=(SortedMap&& other)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>& SortedMap<TKey, TValue, TComparator, TAllocator>::operator=(SortedMap&& other) noexcept
 	{
 		if (this != &other)
 		{
@@ -174,16 +186,17 @@ export namespace jpt
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Add(const TKey& key, const TValue& value)
 	{
+		// Overwrite value if key already exists
 		if (TNode* pNode = FindNode(key); pNode != nullptr)
 		{
 			pNode->data.second = value;
 			return;
 		}
 
+		// Find the parent node
 		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
-
 		while (pCurrent != nullptr)
 		{
 			pParent = pCurrent;
@@ -197,7 +210,6 @@ export namespace jpt
 				pCurrent = pCurrent->pRightChild;
 			}
 		}
-
 		pNewNode->pParent = pParent;
 
 		// Tree is empty
@@ -205,10 +217,12 @@ export namespace jpt
 		{
 			m_pRoot = pNewNode;
 		}
+		// Insert as left child
 		else if (kComparator(key, pParent->data.first))
 		{
 			pParent->pLeftChild = pNewNode;
 		}
+		// Insert as right child
 		else
 		{
 			pParent->pRightChild = pNewNode;
@@ -276,6 +290,7 @@ export namespace jpt
 		}
 
 		TAllocator::Deallocate(pNode);
+		pNode = nullptr;
 		--m_count;
 	}
 

@@ -5,11 +5,14 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
+#include <initializer_list>
+
 export module jpt.SortedSet;
 
 import jpt.Allocator;
 import jpt.Comparators;
 import jpt.Concepts;
+import jpt.Function;
 import jpt.Utilities;
 
 import jpt_private.RedBlackTreeIterator;
@@ -29,6 +32,7 @@ export namespace jpt
 		using ConstIterator = jpt_private::ConstRedBlackTreeIterator<TData>;
 
 		using Color = typename TNode::EColor;
+		using WalkerFunc = Function<void(const TData&)>;
 
 	public:
 		static constexpr TComparator kComparator = TComparator();
@@ -38,10 +42,18 @@ export namespace jpt
 		size_t m_count = 0;
 
 	public:
+		constexpr SortedSet() = default;
+		constexpr SortedSet(const std::initializer_list<TData>& list);
+		constexpr SortedSet(const SortedSet& other);
+		constexpr SortedSet(SortedSet&& other) noexcept;
+		constexpr SortedSet& operator=(const SortedSet& other);
+		constexpr SortedSet& operator=(SortedSet&& other) noexcept;
 		constexpr ~SortedSet();
 
 		// Modifying
 		constexpr void Add(const TData& data);
+		constexpr void Erase(const TData& data);
+		constexpr void Erase(Iterator iterator);
 		constexpr void Clear();
 
 		// Searching
@@ -56,15 +68,25 @@ export namespace jpt
 		constexpr ConstIterator cbegin() const;
 		constexpr ConstIterator cend()   const;
 
+		// Traverse
+		constexpr void PreOrderWalk(const WalkerFunc& func);
+		constexpr void InOrderWalk(const WalkerFunc& func);
+		constexpr void PostOrderWalk(const WalkerFunc& func);
+
 	private:
 		// Traverse
-		constexpr void PostOrderWalkNode(TNode* pNode, void(*pFunction)(TNode* pNode));
+		constexpr void PreOrderWalk(TNode* pNode, const WalkerFunc& func);
+		constexpr void InOrderWalk(TNode* pNode, const WalkerFunc& func);
+		constexpr void PostOrderWalk(TNode* pNode, const WalkerFunc& func);
+		constexpr void PostOrderWalkNode(TNode* pNode, const Function<void(TNode*)>& func);
 
 		// Searching
 		constexpr       TNode* FindNode(const TData& data);
 		constexpr const TNode* FindNode(const TData& data) const;
 		constexpr       TNode* FindMinNode(TNode* pNode);
 		constexpr const TNode* FindMinNode(TNode* pNode) const;
+		constexpr       TNode* FindMaxNode(TNode* pNode);
+		constexpr const TNode* FindMaxNode(TNode* pNode) const;
 
 		// Red Black Tree Utils
 		constexpr void FixAdd(TNode* pNode);
@@ -72,27 +94,74 @@ export namespace jpt
 		constexpr void RotateLeft(TNode* pNode);
 		constexpr void RotateRight(TNode* pNode);
 		constexpr void Transplant(TNode* pOldNode, TNode* pNewNode);
+
+		// Copy Move
+		constexpr void CopySet(const SortedSet& other);
+		constexpr void MoveSet(SortedSet&& other);
 	};
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::~SortedSet()
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::SortedSet(const std::initializer_list<TData>& list)
+	{
+		for (const TData& data : list)
+		{
+			Add(data);
+		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::SortedSet(const SortedSet& other)
+	{
+		CopySet(other);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::SortedSet(SortedSet&& other) noexcept
+	{
+		MoveSet(Move(other));
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>& SortedSet<TData, Comparator, TAllocator>::operator=(const SortedSet& other)
+	{
+		if (this != &other)
+		{
+			Clear();
+			CopySet(other);
+		}
+
+		return *this;
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>& SortedSet<TData, Comparator, TAllocator>::operator=(SortedSet&& other) noexcept
+	{
+		if (this != &other)
+		{
+			Clear();
+			MoveSet(Move(other));
+		}
+
+		return *this;
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::~SortedSet()
 	{
 		Clear();
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::Add(const TData& data)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::Add(const TData& data)
 	{
-		if (TNode* pNode = FindNode(data); pNode != nullptr)
-		{
-			pNode->data = data;
-			return;
-		}
+		// Ensure data is unique
+		TNode* pNode = FindNode(data);
+		JPT_ASSERT(pNode == nullptr, "Data already exists");
 
+		// Find the parent node
 		TNode* pNewNode = TAllocator::AllocateWithValue(data);
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
-
 		while (pCurrent != nullptr)
 		{
 			pParent = pCurrent;
@@ -128,8 +197,71 @@ export namespace jpt
 		++m_count;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::Clear()
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::Erase(const TData& data)
+	{
+		TNode* pNode = FindNode(data);
+		JPT_ASSERT(pNode != nullptr, "Data not found");
+
+		Color originalColor = pNode->color;
+		TNode* pChild = nullptr;
+
+		// Node has no children
+		if (pNode->pLeftChild == nullptr)
+		{
+			pChild = pNode->pRightChild;
+			Transplant(pNode, pNode->pRightChild);
+		}
+		else if (pNode->pRightChild == nullptr)
+		{
+			pChild = pNode->pLeftChild;
+			Transplant(pNode, pNode->pLeftChild);
+		}
+		// Node has two children
+		else
+		{
+			TNode* pMinNode = FindMinNode(pNode->pRightChild);
+			originalColor = pMinNode->color;
+			pChild = pMinNode->pRightChild;
+
+			if (pMinNode->pParent == pNode)
+			{
+				if (pChild != nullptr)
+				{
+					pChild->pParent = pMinNode;
+				}
+			}
+			else
+			{
+				Transplant(pMinNode, pMinNode->pRightChild);
+				pMinNode->pRightChild = pNode->pRightChild;
+				pMinNode->pRightChild->pParent = pMinNode;
+			}
+
+			Transplant(pNode, pMinNode);
+			pMinNode->pLeftChild = pNode->pLeftChild;
+			pMinNode->pLeftChild->pParent = pMinNode;
+			pMinNode->color = pNode->color;
+		}
+
+		if (originalColor == Color::Black)
+		{
+			FixErase(pChild);
+		}
+
+		TAllocator::Deallocate(pNode);
+		pNode = nullptr;
+		--m_count;
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::Erase(Iterator iterator)
+	{
+		Erase(*iterator);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::Clear()
 	{
 		PostOrderWalkNode(m_pRoot, [](TNode* pNode) 
 			{
@@ -140,67 +272,118 @@ export namespace jpt
 		m_count = 0;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr size_t SortedSet<_TData, _Comparator, _TAllocator>::Count() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr size_t SortedSet<TData, Comparator, TAllocator>::Count() const
 	{
 		return m_count;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr bool SortedSet<_TData, _Comparator, _TAllocator>::IsEmpty() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr bool SortedSet<TData, Comparator, TAllocator>::IsEmpty() const
 	{
 		return m_count == 0;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::Iterator SortedSet<_TData, _Comparator, _TAllocator>::begin()
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::Iterator SortedSet<TData, Comparator, TAllocator>::begin()
 	{
 		return Iterator(FindMinNode(m_pRoot));
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::Iterator SortedSet<_TData, _Comparator, _TAllocator>::end()
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::Iterator SortedSet<TData, Comparator, TAllocator>::end()
 	{
 		return Iterator(nullptr);
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::ConstIterator SortedSet<_TData, _Comparator, _TAllocator>::begin() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::ConstIterator SortedSet<TData, Comparator, TAllocator>::begin() const
 	{
 		return ConstIterator(FindMinNode(m_pRoot));
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::ConstIterator SortedSet<_TData, _Comparator, _TAllocator>::end() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::ConstIterator SortedSet<TData, Comparator, TAllocator>::end() const
 	{
 		return ConstIterator(nullptr);
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::ConstIterator SortedSet<_TData, _Comparator, _TAllocator>::cbegin() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::ConstIterator SortedSet<TData, Comparator, TAllocator>::cbegin() const
 	{
 		return ConstIterator(FindMinNode(m_pRoot));
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::ConstIterator SortedSet<_TData, _Comparator, _TAllocator>::cend() const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::ConstIterator SortedSet<TData, Comparator, TAllocator>::cend() const
 	{
 		return ConstIterator(nullptr);
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::PostOrderWalkNode(TNode* pNode, void(*pFunction)(TNode* pNode))
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::PreOrderWalk(const WalkerFunc& func)
+	{
+		PreOrderWalk(m_pRoot, func);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::InOrderWalk(const WalkerFunc& func)
+	{
+		InOrderWalk(m_pRoot, func);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::PostOrderWalk(const WalkerFunc& func)
+	{
+		PostOrderWalk(m_pRoot, func);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::PreOrderWalk(TNode* pNode, const WalkerFunc& func)
 	{
 		if (pNode)
 		{
-			PostOrderWalkNode(pNode->pLeftChild, pFunction);
-			PostOrderWalkNode(pNode->pRightChild, pFunction);
-			pFunction(pNode);
+			func(pNode->data);
+			PreOrderWalk(pNode->pLeftChild, func);
+			PreOrderWalk(pNode->pRightChild, func);
 		}
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::TNode* SortedSet<_TData, _Comparator, _TAllocator>::FindNode(const TData& data)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::InOrderWalk(TNode* pNode, const WalkerFunc& func)
+	{
+		if (pNode)
+		{
+			InOrderWalk(pNode->pLeftChild, func);
+			func(pNode->data);
+			InOrderWalk(pNode->pRightChild, func);
+		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::PostOrderWalk(TNode* pNode, const WalkerFunc& func)
+	{
+		if (pNode)
+		{
+			InOrderWalk(pNode->pLeftChild, func);
+			InOrderWalk(pNode->pRightChild, func);
+			func(pNode->data);
+		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::PostOrderWalkNode(TNode* pNode, const Function<void(TNode*)>& func)
+	{
+		if (pNode)
+		{
+			PostOrderWalkNode(pNode->pLeftChild, func);
+			PostOrderWalkNode(pNode->pRightChild, func);
+			func(pNode);
+		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindNode(const TData& data)
 	{
 		TNode* pCurrent = m_pRoot;
 
@@ -223,14 +406,14 @@ export namespace jpt
 		return nullptr;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr const SortedSet<_TData, _Comparator, _TAllocator>::TNode* SortedSet<_TData, _Comparator, _TAllocator>::FindNode(const TData& data) const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr const SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindNode(const TData& data) const
 	{
 		return const_cast<SortedSet*>(this)->FindNode(data);
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr SortedSet<_TData, _Comparator, _TAllocator>::TNode* SortedSet<_TData, _Comparator, _TAllocator>::FindMinNode(TNode* pNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindMinNode(TNode* pNode)
 	{
 		if (!pNode)
 		{
@@ -245,14 +428,36 @@ export namespace jpt
 		return pNode;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr const SortedSet<_TData, _Comparator, _TAllocator>::TNode* SortedSet<_TData, _Comparator, _TAllocator>::FindMinNode(TNode* pNode) const
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr const SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindMinNode(TNode* pNode) const
 	{
 		return const_cast<SortedSet*>(this)->FindMinNode(pNode);
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::FixAdd(TNode* pNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindMaxNode(TNode* pNode)
+	{
+		if (!pNode)
+		{
+			return nullptr;
+		}
+
+		while (pNode->pRightChild)
+		{
+			pNode = pNode->pRightChild;
+		}
+
+		return pNode;
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr const SortedSet<TData, Comparator, TAllocator>::TNode* SortedSet<TData, Comparator, TAllocator>::FindMaxNode(TNode* pNode) const
+	{
+		return const_cast<SortedSet*>(this)->FindMaxNode(pNode);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::FixAdd(TNode* pNode)
 	{
 		while (pNode->pParent != nullptr && pNode->pParent->color == Color::Red)
 		{
@@ -312,8 +517,8 @@ export namespace jpt
 		m_pRoot->color = Color::Black;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::FixErase(TNode* pNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::FixErase(TNode* pNode)
 	{
 		while (pNode != m_pRoot && pNode->color == Color::Black)
 		{
@@ -394,8 +599,8 @@ export namespace jpt
 		pNode->color = Color::Black;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::RotateLeft(TNode* pNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::RotateLeft(TNode* pNode)
 	{
 		TNode* pRightChild = pNode->pRightChild;
 		pNode->pRightChild = pRightChild->pLeftChild;
@@ -424,8 +629,8 @@ export namespace jpt
 		pNode->pParent = pRightChild;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::RotateRight(TNode* pNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::RotateRight(TNode* pNode)
 	{
 		TNode* pLeftChild = pNode->pLeftChild;
 		pNode->pLeftChild = pLeftChild->pRightChild;
@@ -454,8 +659,8 @@ export namespace jpt
 		pNode->pParent = pLeftChild;
 	}
 
-	template<Comparable _TData, typename _Comparator, typename _TAllocator>
-	constexpr void SortedSet<_TData, _Comparator, _TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
 	{
 		if (pOldNode->pParent == nullptr)
 		{
@@ -474,5 +679,24 @@ export namespace jpt
 		{
 			pNewNode->pParent = pOldNode->pParent;
 		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::CopySet(const SortedSet& other)
+	{
+		for (const TData& data : other)
+		{
+			Add(data);
+		}
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr void SortedSet<TData, Comparator, TAllocator>::MoveSet(SortedSet&& other)
+	{
+		m_pRoot = other.m_pRoot;
+		m_count = other.m_count;
+
+		other.m_pRoot = nullptr;
+		other.m_count = 0;
 	}
 }
