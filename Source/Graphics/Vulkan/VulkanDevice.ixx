@@ -1,6 +1,6 @@
 export module jpt.Vulkan.Device;
 
-export namespace jpt
+export namespace jpt::Vulkan
 {
 
 }

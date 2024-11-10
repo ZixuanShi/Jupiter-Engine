@@ -17,7 +17,7 @@ import jpt.Optional;
 
 import jpt.Framework;
 
-export namespace jpt
+export namespace jpt::Vulkan
 {
 	DynamicArray<const char*> GetRequiredExtensions()
 	{

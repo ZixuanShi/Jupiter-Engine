@@ -5,7 +5,7 @@ export module jpt.QueueFamilyIndices;
 import jpt.TypeDefs;
 import jpt.Optional;
 
-export namespace jpt
+export namespace jpt::Vulkan
 {
 	struct QueueFamilyIndices
 	{

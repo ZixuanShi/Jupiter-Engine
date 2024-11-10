@@ -13,7 +13,7 @@ import jpt.DynamicArray;
 
 import jpt.String.Helpers;
 
-export namespace jpt
+export namespace jpt::Vulkan
 {
 	const DynamicArray<const char*> validationLayers = 
 	{

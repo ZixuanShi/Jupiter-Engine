@@ -20,11 +20,14 @@ import jpt.Renderer;
 import jpt.QueueFamilyIndices;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.Helpers;
+import jpt.Vulkan.Device;
 
 import jpt.TypeDefs;
 
 import jpt.DynamicArray;
 import jpt.HashSet;
+
+using namespace jpt::Vulkan;
 
 export namespace jpt
 {
