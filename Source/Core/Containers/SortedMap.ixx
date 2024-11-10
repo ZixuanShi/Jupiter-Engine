@@ -186,20 +186,19 @@ export namespace jpt
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Add(const TKey& key, const TValue& value)
 	{
-		// Overwrite value if key already exists
-		if (TNode* pNode = FindNode(key); pNode != nullptr)
-		{
-			pNode->data.second = value;
-			return;
-		}
-
 		// Find the parent node
-		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
 		while (pCurrent != nullptr)
 		{
 			pParent = pCurrent;
+
+			// Overwrite value if key already exists
+			if (key == pCurrent->data.first)
+			{
+				pCurrent->data.second = value;
+				return;
+			}
 
 			if (kComparator(key, pCurrent->data.first))
 			{
@@ -210,6 +209,7 @@ export namespace jpt
 				pCurrent = pCurrent->pRightChild;
 			}
 		}
+		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 		pNewNode->pParent = pParent;
 
 		// Tree is empty

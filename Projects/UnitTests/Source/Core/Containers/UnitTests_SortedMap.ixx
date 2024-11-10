@@ -207,11 +207,12 @@ bool UnitTests_SortedMap_Unique()
 	JPT_ENSURE(sortedMap[2] == "two");
 	JPT_ENSURE(sortedMap[3] == "three");
 
-	sortedMap[1] = "four";
+	sortedMap.Add(1, "four");
+	sortedMap[2] = "five";
 
 	JPT_ENSURE(sortedMap.Count() == 3);
 	JPT_ENSURE(sortedMap[1] == "four");
-	JPT_ENSURE(sortedMap[2] == "two");
+	JPT_ENSURE(sortedMap[2] == "five");
 	JPT_ENSURE(sortedMap[3] == "three");
 
 	return true;

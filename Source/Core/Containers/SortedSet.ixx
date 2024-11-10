@@ -154,17 +154,18 @@ export namespace jpt
 	template<Comparable TData, typename Comparator, typename TAllocator>
 	constexpr void SortedSet<TData, Comparator, TAllocator>::Add(const TData& data)
 	{
-		// Ensure data is unique
-		TNode* pNode = FindNode(data);
-		JPT_ASSERT(pNode == nullptr, "Data already exists");
-
 		// Find the parent node
-		TNode* pNewNode = TAllocator::AllocateWithValue(data);
 		TNode* pParent = nullptr;
 		TNode* pCurrent = m_pRoot;
 		while (pCurrent != nullptr)
 		{
 			pParent = pCurrent;
+
+			// Ensure data is unique
+			if (data == pCurrent->data)
+			{
+				return;
+			}
 
 			if (kComparator(data, pCurrent->data))
 			{
@@ -175,7 +176,7 @@ export namespace jpt
 				pCurrent = pCurrent->pRightChild;
 			}
 		}
-
+		TNode* pNewNode = TAllocator::AllocateWithValue(data);
 		pNewNode->pParent = pParent;
 
 		// Tree is empty
