@@ -76,7 +76,7 @@ export namespace jpt
 
 		// Modifiers
 		constexpr void Clear();
-		constexpr void Resize(size_t size, const TData& data = TData());
+		constexpr void Resize(size_t count, const TData& data = TData());
 		constexpr void Reverse();
 
 		// Inserting
@@ -235,27 +235,27 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TAllocator>
-	constexpr void DynamicArray<TData, TAllocator>::Resize(size_t size, const TData& data /*= TData()*/)
+	constexpr void DynamicArray<TData, TAllocator>::Resize(size_t count, const TData& data /*= TData()*/)
 	{
 		// If size if less than m_count, shrink
-		if (size < m_count)
+		if (count < m_count)
 		{
-			for (size_t i = size; i < m_count; ++i)
+			for (size_t i = count; i < m_count; ++i)
 			{
 				Pop();
 			}
 		}
 		// If size if greater than m_count, grow
-		else if (size > m_count)
+		else if (count > m_count)
 		{
-			Reserve(size);
-			for (size_t i = m_count; i < size; ++i)
+			Reserve(count);
+			for (size_t i = m_count; i < count; ++i)
 			{
 				EmplaceBack(data);
 			}
 		}
 
-		m_count = size;
+		m_count = count;
 	}
 
 	template<typename _TData, typename TAllocator>
