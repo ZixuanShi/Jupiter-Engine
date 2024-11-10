@@ -7,18 +7,15 @@ module;
 #include "Debugging/Logger.h"
 #include "Debugging/Assert.h"
 
-#define VK_USE_PLATFORM_WIN32_KHR
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
+#include <vulkan/vulkan.h>
 
 export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
 
-import jpt.Window;
-import jpt.Window_GLFW;
+#if IS_PLATFORM_WIN64
+	import jpt.Framework_GLFW;
+#endif
 
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.Helpers;
@@ -183,7 +180,7 @@ export namespace jpt
 		createInfo.pNext = nullptr;
 #endif
 
-		VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance);
+		const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance);
 		if (result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create Vulkan instance! VkResult: %i", static_cast<uint32>(result));
@@ -195,15 +192,7 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateSurface()
 	{
-		Application* pApp = GetApplication();
-
-		jpt::Window_GLFW* pJPTGLFWWindow = dynamic_cast<jpt::Window_GLFW*>(pApp->GetMainWindow());
-		JPT_ASSERT(pJPTGLFWWindow, "Main window is not of type jpt::Window_GLFW");
-
-		GLFWwindow* pGLFWWindow = pJPTGLFWWindow->GetGLFWWindow();
-		JPT_ASSERT(pGLFWWindow, "GLFW window is nullptr");
-
-		VkResult result = glfwCreateWindowSurface(m_instance, pGLFWWindow, nullptr, &m_surface);
+		const VkResult result = Framework_GLFW::CreateWindowSurface(m_instance, &m_surface);
 		if (result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
@@ -317,7 +306,8 @@ export namespace jpt
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
 		PopulateDebugMessengerCreateInfo(createInfo);
 
-		if (CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger) != VK_SUCCESS)
+		const VkResult result = CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger);
+		if (result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to set up debug messenger");
 			return false;
