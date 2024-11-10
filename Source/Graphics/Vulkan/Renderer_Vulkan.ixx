@@ -21,7 +21,7 @@ import jpt.Window;
 import jpt.Window_GLFW;
 
 import jpt.Vulkan.ValidationLayers;
-import jpt.Vulkan.Utils;
+import jpt.Vulkan.Helpers;
 
 import jpt.TypeDefs;
 
