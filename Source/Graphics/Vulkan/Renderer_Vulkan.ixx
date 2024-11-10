@@ -25,7 +25,6 @@ import jpt.TypeDefs;
 
 import jpt.DynamicArray;
 import jpt.HashSet;
-import jpt.Heap;
 
 export namespace jpt
 {
@@ -60,6 +59,10 @@ export namespace jpt
 		bool CreateSurface();
 		bool PickPhysicalDevice();
 		bool CreateLogicalDevice();
+
+		// Vulkan helpers
+		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+		bool IsDeviceSuitable(VkPhysicalDevice device);
 
 		// Debugging
 #if !IS_RELEASE
@@ -216,18 +219,15 @@ export namespace jpt
 
 		DynamicArray<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.Buffer());
-
-		auto picker = [this](VkPhysicalDevice lhs, VkPhysicalDevice rhs)
-			{
-				return GetDeviceScore(lhs, m_surface) > GetDeviceScore(rhs, m_surface);
-			};
-		Heap<VkPhysicalDevice, decltype(picker)> heap(picker);
 		for (const VkPhysicalDevice& device : devices)
 		{
-			heap.Emplace(device);
+			if (IsDeviceSuitable(device))
+			{
+				m_physicalDevice = device;
+				break;
+			}
 		}
 
-		m_physicalDevice = heap.Top();
 		if (m_physicalDevice == VK_NULL_HANDLE)
 		{
 			JPT_ERROR("Failed to find a suitable GPU");
@@ -239,7 +239,7 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateLogicalDevice()
 	{
-		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice, m_surface);
+		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
 
 		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
 		HashSet<uint32> uniqueQueueFamilies = { indices.graphicsFamily.Value(), indices.presentFamily.Value() };
@@ -282,6 +282,49 @@ export namespace jpt
 		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
 		vkGetDeviceQueue(m_logicalDevice, indices.presentFamily.Value(), 0, &m_presentQueue);
 		return true;
+	}
+
+	QueueFamilyIndices Renderer_Vulkan::FindQueueFamilies(VkPhysicalDevice device)
+	{
+		QueueFamilyIndices indices;
+
+		uint32 queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		DynamicArray<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.Buffer());
+
+		uint32 i = 0;
+		for (const VkQueueFamilyProperties& queueFamily : queueFamilies)
+		{
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			{
+				indices.graphicsFamily = i;
+			}
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_surface, &presentSupport);
+			if (presentSupport)
+			{
+				indices.presentFamily = i;
+			}
+
+			if (indices.IsComplete())
+			{
+				break;
+			}
+
+			++i;
+		}
+
+		return indices;
+	}
+
+	bool Renderer_Vulkan::IsDeviceSuitable(VkPhysicalDevice device)
+	{
+		QueueFamilyIndices indices = FindQueueFamilies(device);
+
+		return indices.IsComplete();
 	}
 
 #if !IS_RELEASE
