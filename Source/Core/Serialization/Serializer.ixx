@@ -18,11 +18,14 @@ export namespace jpt
 		Append   = std::ios_base::app,
 		Binary   = std::ios_base::binary,
 		Truncate = std::ios_base::trunc,
+		AtTheEnd = std::ios_base::ate,
 
 		ReadBinary  = Read  | Binary,
 		WriteBinary = Write | Binary,
 		ReadAll     = Read  | Binary | Truncate,
 		WriteAll    = Write | Binary | Truncate,
+		ReadWrite   = Read | Write,
+		ATEBinary   = AtTheEnd | Binary,
 
 		All = Read | Write | Binary | Truncate,
 	};
