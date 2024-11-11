@@ -29,7 +29,7 @@ export namespace jpt
 
 	public:
 		/** Allocates plain heap memory for <Type>*/
-		static constexpr T* Allocate();
+		static constexpr T* Allocate(size_t alignment = alignof(T));
 		static constexpr T* AllocateArray(size_t count);
 
 		/** Allocates heap memory for <Type>, with initializing value */
@@ -53,14 +53,35 @@ export namespace jpt
 	};
 
 	template<typename T>
-	constexpr T* Allocator<T>::Allocate()
+	constexpr T* Allocator<T>::Allocate(size_t alignment /*= alignof(T)*/)
 	{
-		return new T;
+		// alignof(T) gets the alignment requirement of type T
+		if constexpr (alignof(T) > __STDCPP_DEFAULT_NEW_ALIGNMENT__)
+		{
+			// Use aligned allocation for types requiring stricter alignment
+			return static_cast<T*>(::operator new(sizeof(T), std::align_val_t{ alignment }));
+		}
+		else
+		{
+			// Use normal allocation for types with standard alignment
+			return static_cast<T*>(::operator new(sizeof(T)));
+		}
 	}
 
 	template<typename T>
 	constexpr T* Allocator<T>::AllocateArray(size_t count)
 	{
+		if (count == 0) 
+		{
+			return nullptr;
+		}
+
+		// Check for overflow
+		if (count > std::numeric_limits<size_t>::max() / sizeof(T)) 
+		{
+			throw std::bad_array_new_length();
+		}
+
 		return new T[count];
 	}
 
