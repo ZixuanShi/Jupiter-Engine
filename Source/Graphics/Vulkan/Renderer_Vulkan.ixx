@@ -36,10 +36,14 @@ export namespace jpt
 		using Super = Renderer;
 
 	private:
+		QueueFamilyIndices m_queueFamilyIndices;
+
 		DynamicArray<VkImage> m_swapChainImages;
 		VkSwapchainKHR m_swapChain;
 		VkFormat m_swapChainImageFormat;
 		VkExtent2D m_swapChainExtent;
+
+		DynamicArray<VkImageView> m_swapChainImageViews;
 
 		VkInstance m_instance;
 		VkSurfaceKHR m_surface;
@@ -70,6 +74,7 @@ export namespace jpt
 		bool PickPhysicalDevice();
 		bool CreateLogicalDevice();
 		bool CreateSwapChain();
+		bool CreateImageViews();
 
 		// Vulkan helpers
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
@@ -107,8 +112,10 @@ export namespace jpt
 #endif
 		success &= CreateSurface();
 		success &= PickPhysicalDevice();
+		m_queueFamilyIndices = FindQueueFamilies(m_physicalDevice);
 		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
+		success &= CreateImageViews();
 
 		if (success)
 		{
@@ -121,6 +128,11 @@ export namespace jpt
 	void Renderer_Vulkan::Shutdown()
 	{
 		Super::Shutdown();
+
+		for (VkImageView imageView : m_swapChainImageViews)
+		{
+			vkDestroyImageView(m_logicalDevice, imageView, nullptr);
+		}
 
 		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
 		vkDestroyDevice(m_logicalDevice, nullptr);
@@ -253,10 +265,8 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateLogicalDevice()
 	{
-		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
-
 		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
-		HashSet<uint32> uniqueQueueFamilies = { indices.graphicsFamily.Value(), indices.presentFamily.Value() };
+		HashSet<uint32> uniqueQueueFamilies = { m_queueFamilyIndices.graphicsFamily.Value(), m_queueFamilyIndices.presentFamily.Value() };
 
 		float queuePriority = 1.0f;
 		for (uint32 queueFamily : uniqueQueueFamilies)
@@ -294,8 +304,8 @@ export namespace jpt
 			return false;
 		}
 
-		vkGetDeviceQueue(m_logicalDevice, indices.graphicsFamily.Value(), 0, &m_graphicsQueue);
-		vkGetDeviceQueue(m_logicalDevice, indices.presentFamily.Value(), 0, &m_presentQueue);
+		vkGetDeviceQueue(m_logicalDevice, m_queueFamilyIndices.graphicsFamily.Value(), 0, &m_graphicsQueue);
+		vkGetDeviceQueue(m_logicalDevice, m_queueFamilyIndices.presentFamily.Value(), 0, &m_presentQueue);
 		return true;
 	}
 
@@ -319,10 +329,9 @@ export namespace jpt
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-		QueueFamilyIndices indices = FindQueueFamilies(m_physicalDevice);
-		uint32 queueFamilyIndices[] = { indices.graphicsFamily.Value(), indices.presentFamily.Value() };
+		uint32 queueFamilyIndices[] = { m_queueFamilyIndices.graphicsFamily.Value(), m_queueFamilyIndices.presentFamily.Value() };
 
-		if (indices.graphicsFamily != indices.presentFamily)
+		if (m_queueFamilyIndices.graphicsFamily != m_queueFamilyIndices.presentFamily)
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
@@ -354,6 +363,38 @@ export namespace jpt
 
 		m_swapChainImageFormat = surfaceFormat.format;
 		m_swapChainExtent = extent;
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateImageViews()
+	{
+		m_swapChainImageViews.Resize(m_swapChainImages.Count());
+
+		for (uint32 i = 0; i < m_swapChainImages.Count(); ++i)
+		{
+			VkImageViewCreateInfo createInfo = {};
+			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			createInfo.image = m_swapChainImages[i];
+			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			createInfo.format = m_swapChainImageFormat;
+			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			createInfo.subresourceRange.baseMipLevel = 0;
+			createInfo.subresourceRange.levelCount = 1;
+			createInfo.subresourceRange.baseArrayLayer = 0;
+			createInfo.subresourceRange.layerCount = 1;
+
+			const VkResult result = vkCreateImageView(m_logicalDevice, &createInfo, nullptr, &m_swapChainImageViews[i]);
+			if (result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create image views! VkResult: %i", static_cast<uint32>(result));
+				return false;
+			}
+		}
 
 		return true;
 	}
