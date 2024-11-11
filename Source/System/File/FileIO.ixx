@@ -69,13 +69,13 @@ export namespace jpt::File
 	}
 
 	/** @return		String data of a text file */
-	Optional<String> ReadTextFile(const Path& path)
+	Optional<String> ReadTextFile(const Path& path, SerializerMode mode = SerializerMode::Read)
 	{
-		Serializer serializer(path.ConstBuffer(), SerializerMode::Read);
+		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
 		{
-			JPT_ERROR("Failed to open file for reading with SerializerMode::Read: %ls", path.ConstBuffer());
+			JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
 			return Optional<String>();
 		}
 
@@ -87,62 +87,62 @@ export namespace jpt::File
 	}
 
 	/** Saves text data to a file */
-	bool WriteTextFile(const Path& path, const char* data, size_t sizeInBytes)
+	bool WriteTextFile(const Path& path, const char* data, size_t sizeInBytes, SerializerMode mode = SerializerMode::WriteAll)
 	{
 		EnsureParentDirExists(path);
-		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
+		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
 		{
-			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
+			JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
 			return false;
 		}
 
 		serializer.Write(data, sizeInBytes);
 		return true;
 	}
-	bool WriteTextFile(const Path& path, const char* data)
+	bool WriteTextFile(const Path& path, const char* data, SerializerMode mode = SerializerMode::WriteAll)
 	{
-		return WriteTextFile(path, data, FindCharsCount(data) * sizeof(char));
+		return WriteTextFile(path, data, FindCharsCount(data) * sizeof(char), mode);
 	}
-	bool WriteTextFile(const Path& path, const String& data)
+	bool WriteTextFile(const Path& path, const String& data, SerializerMode mode = SerializerMode::WriteAll)
 	{
-		return WriteTextFile(path, data.ConstBuffer(), data.Size());
+		return WriteTextFile(path, data.ConstBuffer(), data.Size(), mode);
 	}
 
 	/** Appends content to file on disk. Write if not present */
-	bool AppendTextFile(const Path& path, const char* data, size_t sizeInBytes)
+	bool AppendTextFile(const Path& path, const char* data, size_t sizeInBytes, SerializerMode mode = SerializerMode::Append)
 	{
 		EnsureParentDirExists(path);
-		Serializer serializer(path.ConstBuffer(), SerializerMode::Append);
+		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
 		{
-			JPT_ERROR("Failed to open file for writing with SerializerMode::Append: %ls", path.ConstBuffer());
+			JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
 			return false;
 		}
 
 		serializer.Write(data, sizeInBytes);
 		return true;
 	}
-	bool AppendTextFile(const Path& path, const char* data)
+	bool AppendTextFile(const Path& path, const char* data, SerializerMode mode = SerializerMode::Append)
 	{
-		return AppendTextFile(path, data, FindCharsCount(data) * sizeof(char));
+		return AppendTextFile(path, data, FindCharsCount(data) * sizeof(char), mode);
 	}
-	bool AppendTextFile(const Path& path, const String& data)
+	bool AppendTextFile(const Path& path, const String& data, SerializerMode mode = SerializerMode::Append)
 	{
-		return AppendTextFile(path, data.ConstBuffer(), data.Size());
+		return AppendTextFile(path, data.ConstBuffer(), data.Size(), mode);
 	}
 
 	/** Loads binary data from a file */
 	template<typename T>
-	Optional<T> ReadBinaryFile(const Path& path)
+	Optional<T> ReadBinaryFile(const Path& path, SerializerMode mode = SerializerMode::ReadBinary)
 	{
-		Serializer serializer(path.ConstBuffer(), SerializerMode::ReadBinary);
+		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
 		{
-			JPT_ERROR("Failed to open file for reading with SerializerMode::ReadBinary: %ls", path.ConstBuffer());
+			JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
 			return Optional<T>();
 		}
 
@@ -153,13 +153,13 @@ export namespace jpt::File
 
 	/** Saves binary data to a file */
 	template<typename T>
-	bool WriteBinaryFile(const Path& path, const T& obj)
+	bool WriteBinaryFile(const Path& path, const T& obj, SerializerMode mode = SerializerMode::WriteAll)
 	{
-		Serializer serializer(path.ConstBuffer(), SerializerMode::WriteAll);
+		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
 		{
-			JPT_ERROR("Failed to open file for writing with SerializerMode::WriteAll: %ls", path.ConstBuffer());
+			JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
 			return false;
 		}
 
