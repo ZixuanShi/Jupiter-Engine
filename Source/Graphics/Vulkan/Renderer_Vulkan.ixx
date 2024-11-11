@@ -27,6 +27,9 @@ import jpt.TypeDefs;
 import jpt.DynamicArray;
 import jpt.HashSet;
 
+import jpt.File.IO;
+import jpt.File.Path.Utils;
+
 using namespace jpt::Vulkan;
 
 export namespace jpt
@@ -81,6 +84,7 @@ export namespace jpt
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 		bool IsDeviceSuitable(VkPhysicalDevice device);
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 
 		// Debugging
 #if !IS_RELEASE
@@ -403,6 +407,31 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateGraphicsPipeline()
 	{
+		DynamicArray<char> vertexShaderCode = ReadBinaryFileArray(File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.vs.spv"));
+		DynamicArray<char> pixelShaderCode = ReadBinaryFileArray(File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.ps.spv"));
+
+		VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);
+		VkShaderModule pixelShaderModule = CreateShaderModule(pixelShaderCode);
+
+		VkPipelineShaderStageCreateInfo vertexShaderStageInfo = {};
+		vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		vertexShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+		vertexShaderStageInfo.module = vertexShaderModule;
+		vertexShaderStageInfo.pName = "main";
+		vertexShaderStageInfo.pSpecializationInfo = nullptr;	// Constants optimization
+
+		VkPipelineShaderStageCreateInfo pixelShaderStageInfo = {};
+		pixelShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		pixelShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+		pixelShaderStageInfo.module = pixelShaderModule;
+		pixelShaderStageInfo.pName = "main";
+		pixelShaderStageInfo.pSpecializationInfo = nullptr;
+
+		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
+
+		vkDestroyShaderModule(m_logicalDevice, vertexShaderModule, nullptr);
+		vkDestroyShaderModule(m_logicalDevice, pixelShaderModule, nullptr);
+
 		return true;
 	}
 
@@ -457,6 +486,23 @@ export namespace jpt
 		SwapChainSupportDetails details;
 		details.Init(device, m_surface);
 		return details;
+	}
+
+	VkShaderModule Renderer_Vulkan::CreateShaderModule(const DynamicArray<char>& code)
+	{
+		VkShaderModuleCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+		createInfo.codeSize = code.Count();
+		createInfo.pCode = reinterpret_cast<const uint32*>(code.ConstBuffer());
+
+		VkShaderModule shaderModule;
+		const VkResult result = vkCreateShaderModule(m_logicalDevice, &createInfo, nullptr, &shaderModule);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create shader module! VkResult: %i", static_cast<uint32>(result));
+		}
+
+		return shaderModule;
 	}
 
 #if !IS_RELEASE

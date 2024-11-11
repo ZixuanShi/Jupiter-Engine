@@ -43,6 +43,8 @@ export namespace jpt::File
 		constexpr Path& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
 		constexpr Path GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
+		constexpr void Reserve(size_t size);
+
 		constexpr size_t FindLastOf(const Path& path) const;
 		constexpr bool Has(const Path& path) const;
 		constexpr bool EndsWith(const Path& path) const;
@@ -147,6 +149,11 @@ export namespace jpt::File
 	constexpr Path Path::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
 	{
 		return m_path.GetReplaced(StringToFind, StringToReplace, startIndex, endIndex);
+	}
+
+	constexpr void Path::Reserve(size_t size)
+	{
+		m_path.Reserve(size);
 	}
 
 	constexpr size_t Path::FindLastOf(const Path& path) const

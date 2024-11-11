@@ -26,6 +26,7 @@ namespace jpt::System
 		Path m_clientDir;
 		Path m_outputDir;
 		Path m_savedDir;
+		Path m_bakedDir;
 
 		Path m_executablePath;
 
@@ -39,6 +40,7 @@ namespace jpt::System
 		const Path& GetClientDir()      const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
 		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
+		const Path& GetBakedDir()       const { JPT_ASSERT(m_isInitialized); return m_bakedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
 
 		bool IsInitialized() const { return m_isInitialized; }

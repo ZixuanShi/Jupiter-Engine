@@ -18,14 +18,17 @@ export namespace jpt
 		Append   = std::ios_base::app,
 		Binary   = std::ios_base::binary,
 		Truncate = std::ios_base::trunc,
-		AtTheEnd = std::ios_base::ate,
+		AtEnd    = std::ios_base::ate,
+
+		Begin    = std::ios_base::beg,
+		End      = std::ios_base::end,
+		Current  = std::ios_base::cur,
 
 		ReadBinary  = Read  | Binary,
 		WriteBinary = Write | Binary,
 		ReadAll     = Read  | Binary | Truncate,
 		WriteAll    = Write | Binary | Truncate,
-		ReadWrite   = Read | Write,
-		ATEBinary   = AtTheEnd | Binary,
+		ReadWrite   = Read  | Write,
 
 		All = Read | Write | Binary | Truncate,
 	};
@@ -81,6 +84,12 @@ export namespace jpt
 		void Read(T& obj);
 
 		char* ReadText();
+
+		/** Seeks to a specific position in the file */
+		void Seek(size_t position, SerializerMode mode = SerializerMode::Current);
+
+		/** Returns the size of the file in bytes */
+		size_t GetSize();
 	};
 
 	Serializer::Serializer(const wchar_t* path, SerializerMode mode)
@@ -162,5 +171,21 @@ export namespace jpt
 		char* buffer = new char[content.size() + 1];
 		strcpy_s(buffer, content.size() + 1, content.c_str());
 		return buffer;
+	}
+
+	void Serializer::Seek(size_t position, SerializerMode mode /*= SerializerMode::Current*/)
+	{
+		m_stream.seekg(position, static_cast<std::ios_base::seekdir>(mode));
+	}
+
+	size_t Serializer::GetSize()
+	{
+		size_t current = m_stream.tellg();
+
+		m_stream.seekg(0, std::ios_base::end);
+		size_t size = m_stream.tellg();
+
+		m_stream.seekg(current);
+		return size;
 	}
 }

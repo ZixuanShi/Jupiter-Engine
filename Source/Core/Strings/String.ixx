@@ -24,9 +24,6 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Serializer;
 
-/** Resizing multiplier for capacity */
-static constexpr size_t kLocCapacityMultiplier = 2;
-
 export namespace jpt
 {
 	template<StringLiteral _TChar, class _TAllocator = Allocator<_TChar>>
@@ -42,7 +39,7 @@ export namespace jpt
 	private:
 		TChar m_smallBuffer[kSmallDataSize] = { 0 };	/**< Small buffer to store small data */
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
-		size_t m_count = 0;           /**< How many characters in this string currently */
+		size_t m_count = 0;          /**< How many characters in this string currently */
 		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing */
 
 	public:

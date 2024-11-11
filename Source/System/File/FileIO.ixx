@@ -19,6 +19,8 @@ import jpt.Serializer;
 import jpt.File.Enums;
 import jpt.File.Path;
 
+import jpt.DynamicArray;
+
 export namespace jpt::File
 {
 	/** @return		true if path exists in system. Could be either file or directory */
@@ -149,6 +151,25 @@ export namespace jpt::File
 		T obj;
 		serializer.Read(obj);
 		return obj;
+	}
+
+	DynamicArray<char> ReadBinaryFileArray(const Path& path, SerializerMode mode = SerializerMode::ReadBinary)
+	{
+		Serializer serializer(path.ConstBuffer(), mode);
+
+		if (!serializer.IsOpen()) [[unlikely]]
+		{
+			JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
+			return {};
+		}
+
+		const size_t fileSize = serializer.GetSize();
+		DynamicArray<char> buffer(fileSize);
+
+		serializer.Read(buffer.Buffer(), fileSize);
+
+		serializer.Close();
+		return buffer;
 	}
 
 	/** Saves binary data to a file */

@@ -18,19 +18,4 @@ export namespace jpt::File
 		Output,		// Build output folder
 		Saved,		
 	};
-
-	/** Supported file types */
-	JPT_ENUM_UINT8(EExtension,
-		Unknown,
-		txt,
-		json,
-		bin,
-	);
-
-	enum class EType : uint8
-	{
-		Unknown,
-		Text,
-		Binary,
-	};
 }
