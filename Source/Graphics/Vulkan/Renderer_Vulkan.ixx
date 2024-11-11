@@ -36,6 +36,15 @@ export namespace jpt
 		using Super = Renderer;
 
 	private:
+		VkInstance m_instance;
+		VkSurfaceKHR m_surface;
+
+		VkDevice m_logicalDevice;
+		VkPhysicalDevice m_physicalDevice;
+
+		VkQueue m_graphicsQueue;
+		VkQueue m_presentQueue;
+
 		QueueFamilyIndices m_queueFamilyIndices;
 
 		DynamicArray<VkImage> m_swapChainImages;
@@ -44,15 +53,6 @@ export namespace jpt
 		VkExtent2D m_swapChainExtent;
 
 		DynamicArray<VkImageView> m_swapChainImageViews;
-
-		VkInstance m_instance;
-		VkSurfaceKHR m_surface;
-		
-		VkDevice m_logicalDevice;
-		VkPhysicalDevice m_physicalDevice;
-		
-		VkQueue m_graphicsQueue;
-		VkQueue m_presentQueue;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -75,6 +75,7 @@ export namespace jpt
 		bool CreateLogicalDevice();
 		bool CreateSwapChain();
 		bool CreateImageViews();
+		bool CreateGraphicsPipeline();
 
 		// Vulkan helpers
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
@@ -116,6 +117,7 @@ export namespace jpt
 		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
 		success &= CreateImageViews();
+		success &= CreateGraphicsPipeline();
 
 		if (success)
 		{
@@ -396,6 +398,11 @@ export namespace jpt
 			}
 		}
 
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateGraphicsPipeline()
+	{
 		return true;
 	}
 

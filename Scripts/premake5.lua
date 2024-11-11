@@ -40,8 +40,8 @@ function CreateEngineWorkspace()
 
         -- Path
         location  (context.project_dir .. "_ProjectFiles")
-        targetdir (context.project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
-        objdir    (context.project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
+        targetdir (context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output")
+        objdir    (context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Intermediate")
 
         -- Programming
         language   "C++"
@@ -84,8 +84,8 @@ function CreateEngineWorkspace()
     -- Jupiter Engine
     project "Engine"
         location  (jupiter_dir .. "_ProjectFiles")
-        targetdir (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output")
-        objdir    (jupiter_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Intermediate")
+        targetdir (jupiter_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output")
+        objdir    (jupiter_dir .. "_Output/%{prj.name}_" .. output_path .. "_Intermediate")
         kind "StaticLib"
 
         includedirs
@@ -110,7 +110,7 @@ function CreateClientProject()
     defines
     {
         ("JPT_CLIENT_DIR_W=L\"" .. context.project_dir .."\""),
-        ("JPT_OUTPUT_DIR_W=L\"" .. context.project_dir .. "_Bin/%{prj.name}_" .. output_path .. "_Output/\""),
+        ("JPT_OUTPUT_DIR_W=L\"" .. context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output/\""),
     }
 
     includedirs
@@ -128,7 +128,7 @@ function CreateClientProject()
 
     libdirs
     {
-        (jupiter_dir .. "_Bin/Engine_" .. output_path .. "_Output"),
+        (jupiter_dir .. "_Output/Engine_" .. output_path .. "_Output"),
         (jupiter_dir .. "Dependencies/*/Libs"),
     }
     links

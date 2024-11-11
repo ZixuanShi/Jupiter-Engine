@@ -3,7 +3,7 @@
 import os
 import shutil
 
-to_remove = ["_Bin", "_ProjectFiles", "_Saved"]
+to_remove = ["_Output", "_ProjectFiles", "_Saved", "_Baked"]
 
 def Clean(root):
     print("Cleaning " + root)
