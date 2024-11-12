@@ -63,6 +63,9 @@ export namespace jpt
 
 		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
 
+		VkCommandPool m_commandPool;
+		VkCommandBuffer m_commandBuffer;
+
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
 #endif
@@ -87,12 +90,15 @@ export namespace jpt
 		bool CreateRenderPass();
 		bool CreateGraphicsPipeline();
 		bool CreateFramebuffers();
+		bool CreateCommandPool();
+		bool CreateCommandBuffer();
 
 		// Vulkan helpers
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 		bool IsDeviceSuitable(VkPhysicalDevice device);
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
+		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
 
 		// Debugging
 #if !IS_RELEASE
@@ -125,13 +131,14 @@ export namespace jpt
 #endif
 		success &= CreateSurface();
 		success &= PickPhysicalDevice();
-		m_queueFamilyIndices = FindQueueFamilies(m_physicalDevice);
 		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
 		success &= CreateImageViews();
 		success &= CreateRenderPass();
 		success &= CreateGraphicsPipeline();
 		success &= CreateFramebuffers();
+		success &= CreateCommandPool();
+		success &= CreateCommandBuffer();
 
 		if (success)
 		{
@@ -144,6 +151,8 @@ export namespace jpt
 	void Renderer_Vulkan::Shutdown()
 	{
 		Super::Shutdown();
+
+		vkDestroyCommandPool(m_logicalDevice, m_commandPool, nullptr);
 
 		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
 		{
@@ -285,6 +294,7 @@ export namespace jpt
 			return false;
 		}
 
+		m_queueFamilyIndices = FindQueueFamilies(m_physicalDevice);
 		return true;
 	}
 
@@ -629,6 +639,41 @@ export namespace jpt
 		return true;
 	}
 
+	bool Renderer_Vulkan::CreateCommandPool()
+	{
+		VkCommandPoolCreateInfo poolInfo = {};
+		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+		poolInfo.queueFamilyIndex = m_queueFamilyIndices.graphicsFamily.Value();
+
+		const VkResult result = vkCreateCommandPool(m_logicalDevice, &poolInfo, nullptr, &m_commandPool);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create command pool! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateCommandBuffer()
+	{
+		VkCommandBufferAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.commandPool = m_commandPool;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandBufferCount = 1;
+
+		const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, &m_commandBuffer);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		return true;
+	}
+
 	QueueFamilyIndices Renderer_Vulkan::FindQueueFamilies(VkPhysicalDevice device)
 	{
 		QueueFamilyIndices indices;
@@ -697,6 +742,55 @@ export namespace jpt
 		}
 
 		return shaderModule;
+	}
+
+	void Renderer_Vulkan::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex)
+	{
+		VkCommandBufferBeginInfo beginInfo = {};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+		VkResult result = vkBeginCommandBuffer(commandBuffer, &beginInfo);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to begin recording command buffer! VkResult: %i", static_cast<uint32>(result));
+			return;
+		}
+
+		VkRenderPassBeginInfo renderPassInfo = {};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = m_renderPass;
+		renderPassInfo.framebuffer = m_swapChainFramebuffers[imageIndex];
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = m_swapChainExtent;
+
+		VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
+		renderPassInfo.clearValueCount = 1;
+		renderPassInfo.pClearValues = &clearColor;
+
+		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
+
+		VkViewport viewport = {};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<float>(m_swapChainExtent.width);
+		viewport.height = static_cast<float>(m_swapChainExtent.height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+		VkRect2D scissor = {};	
+		scissor.offset = { 0, 0 };
+		scissor.extent = m_swapChainExtent;
+		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+
+		vkCmdEndRenderPass(commandBuffer);
+		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to record command buffer!");
+		}
 	}
 
 #if !IS_RELEASE
