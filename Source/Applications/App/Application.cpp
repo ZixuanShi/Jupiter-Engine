@@ -84,14 +84,9 @@ namespace jpt
 	void Application::Update(TimePrecision deltaSeconds)
 	{
 		EventManager::GetInstance().Update(deltaSeconds);
-
-		if (!CommandLine::GetInstance().Has("no_window"))
-		{
-			m_pFramework->Update(deltaSeconds);
-			m_pMainWindow->Update(deltaSeconds);
-			m_pRenderer->Update(deltaSeconds);
-		}
-
+		m_pFramework->Update(deltaSeconds);
+		m_pMainWindow->Update(deltaSeconds);
+		m_pRenderer->Update(deltaSeconds);
 		InputManager::GetInstance().Update(deltaSeconds);
 	}
 
@@ -122,6 +117,7 @@ namespace jpt
 
 			ProcessInput();
 			Update(deltaSeconds);
+			m_pRenderer->DrawFrame();
 
 			previous = current;
 

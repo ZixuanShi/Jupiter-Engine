@@ -16,5 +16,7 @@ export namespace jpt
 		virtual void Update(TimePrecision) { }
 		virtual void Render() { }
 		virtual void Shutdown() { }
+
+		virtual void DrawFrame() { }
 	};
 }

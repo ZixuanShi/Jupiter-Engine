@@ -74,6 +74,8 @@ export namespace jpt
 		virtual bool Init() override;
 		virtual void Shutdown() override;
 
+		virtual void DrawFrame() override;
+
 		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
 			                                                VkDebugUtilsMessageTypeFlagsEXT messageType, 
 			                                                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
@@ -177,6 +179,20 @@ export namespace jpt
 
 		vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
 		vkDestroyInstance(m_instance, nullptr);
+	}
+
+	void Renderer_Vulkan::DrawFrame()
+	{
+		Super::DrawFrame();
+
+		/**	At a high level, rendering a frame in Vulkan consists of a common set of steps:
+			- Wait for the previous frame to finish
+			- Acquire an image from the swap chain
+			- Record a command buffer which draws the scene onto that image
+			- Submit the recorded command buffer
+			- Present the swap chain image	*/
+
+
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL Renderer_Vulkan::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
