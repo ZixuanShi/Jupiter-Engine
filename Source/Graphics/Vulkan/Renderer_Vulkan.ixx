@@ -25,6 +25,7 @@ import jpt.Vulkan.SwapChainSupportDetails;
 import jpt.TypeDefs;
 
 import jpt.DynamicArray;
+import jpt.StaticArray;
 import jpt.HashSet;
 
 import jpt.File.IO;
@@ -66,11 +67,11 @@ export namespace jpt
 		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
 
 		VkCommandPool m_commandPool;
-		DynamicArray<VkCommandBuffer> m_commandBuffers;
+		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 
-		DynamicArray<VkSemaphore> m_imageAvailableSemaphores;
-		DynamicArray<VkSemaphore> m_renderFinishedSemaphores;
-		DynamicArray<VkFence> m_inFlightFences;
+		StaticArray<VkSemaphore, kMaxFramesInFlight> m_imageAvailableSemaphores;
+		StaticArray<VkSemaphore, kMaxFramesInFlight> m_renderFinishedSemaphores;
+		StaticArray<VkFence, kMaxFramesInFlight> m_inFlightFences;
 
 		size_t m_currentFrame = 0;
 
@@ -736,8 +737,6 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateCommandBuffers()
 	{
-		m_commandBuffers.Resize(kMaxFramesInFlight);
-
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_commandPool;
@@ -755,10 +754,6 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateSyncObjects()
 	{
-		m_imageAvailableSemaphores.Resize(kMaxFramesInFlight);
-		m_renderFinishedSemaphores.Resize(kMaxFramesInFlight);
-		m_inFlightFences.Resize(kMaxFramesInFlight);
-
 		VkSemaphoreCreateInfo semaphoreInfo = {};
 		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
