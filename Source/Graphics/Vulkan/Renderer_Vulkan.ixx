@@ -244,8 +244,7 @@ export namespace jpt
 		createInfo.pNext = nullptr;
 #endif
 
-		const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create Vulkan instance! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -256,8 +255,7 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateSurface()
 	{
-		const VkResult result = Framework_GLFW::CreateWindowSurface(m_instance, &m_surface);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = Framework_GLFW::CreateWindowSurface(m_instance, &m_surface); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -332,8 +330,7 @@ export namespace jpt
 		createInfo.enabledLayerCount = 0;
 #endif
 
-		const VkResult result = vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_logicalDevice);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_logicalDevice); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create logical device! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -385,8 +382,7 @@ export namespace jpt
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-		const VkResult result = vkCreateSwapchainKHR(m_logicalDevice, &createInfo, nullptr, &m_swapChain);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateSwapchainKHR(m_logicalDevice, &createInfo, nullptr, &m_swapChain); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create swap chain! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -423,8 +419,7 @@ export namespace jpt
 			createInfo.subresourceRange.baseArrayLayer = 0;
 			createInfo.subresourceRange.layerCount = 1;
 
-			const VkResult result = vkCreateImageView(m_logicalDevice, &createInfo, nullptr, &m_swapChainImageViews[i]);
-			if (result != VK_SUCCESS)
+			if (const VkResult result = vkCreateImageView(m_logicalDevice, &createInfo, nullptr, &m_swapChainImageViews[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create image views! VkResult: %i", static_cast<uint32>(result));
 				return false;
@@ -462,8 +457,7 @@ export namespace jpt
 		renderPassInfo.subpassCount = 1;
 		renderPassInfo.pSubpasses = &subpass;
 
-		const VkResult result = vkCreateRenderPass(m_logicalDevice, &renderPassInfo, nullptr, &m_renderPass);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateRenderPass(m_logicalDevice, &renderPassInfo, nullptr, &m_renderPass); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create render pass! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -575,8 +569,7 @@ export namespace jpt
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		
-		VkResult result = vkCreatePipelineLayout(m_logicalDevice, &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreatePipelineLayout(m_logicalDevice, &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create pipeline layout! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -598,8 +591,7 @@ export namespace jpt
 		pipelineInfo.renderPass = m_renderPass;
 		pipelineInfo.subpass = 0;
 
-		result = vkCreateGraphicsPipelines(m_logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateGraphicsPipelines(m_logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create graphics pipeline! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -628,8 +620,7 @@ export namespace jpt
 			framebufferInfo.height = m_swapChainExtent.height;
 			framebufferInfo.layers = 1;
 
-			const VkResult result = vkCreateFramebuffer(m_logicalDevice, &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]);
-			if (result != VK_SUCCESS)
+			if (const VkResult result = vkCreateFramebuffer(m_logicalDevice, &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create framebuffer! VkResult: %i", static_cast<uint32>(result));
 				return false;
@@ -646,8 +637,7 @@ export namespace jpt
 		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 		poolInfo.queueFamilyIndex = m_queueFamilyIndices.graphicsFamily.Value();
 
-		const VkResult result = vkCreateCommandPool(m_logicalDevice, &poolInfo, nullptr, &m_commandPool);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateCommandPool(m_logicalDevice, &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create command pool! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -664,8 +654,7 @@ export namespace jpt
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = 1;
 
-		const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, &m_commandBuffer);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, &m_commandBuffer); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -735,8 +724,7 @@ export namespace jpt
 		createInfo.pCode = reinterpret_cast<const uint32*>(code.ConstBuffer());
 
 		VkShaderModule shaderModule;
-		const VkResult result = vkCreateShaderModule(m_logicalDevice, &createInfo, nullptr, &shaderModule);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkCreateShaderModule(m_logicalDevice, &createInfo, nullptr, &shaderModule); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create shader module! VkResult: %i", static_cast<uint32>(result));
 		}
@@ -748,9 +736,7 @@ export namespace jpt
 	{
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-		VkResult result = vkBeginCommandBuffer(commandBuffer, &beginInfo);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = vkBeginCommandBuffer(commandBuffer, &beginInfo); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to begin recording command buffer! VkResult: %i", static_cast<uint32>(result));
 			return;
@@ -787,9 +773,9 @@ export namespace jpt
 		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffer);
-		if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
+		if (const VkResult result = vkEndCommandBuffer(commandBuffer); result != VK_SUCCESS)
 		{
-			JPT_ERROR("Failed to record command buffer!");
+			JPT_ERROR("Failed to record command buffer! VkResult: %i", static_cast<uint32>(result));
 		}
 	}
 
@@ -816,10 +802,9 @@ export namespace jpt
 		VkDebugUtilsMessengerCreateInfoEXT createInfo;
 		PopulateDebugMessengerCreateInfo(createInfo);
 
-		const VkResult result = CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger);
-		if (result != VK_SUCCESS)
+		if (const VkResult result = CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger); result != VK_SUCCESS)
 		{
-			JPT_ERROR("Failed to set up debug messenger");
+			JPT_ERROR("Failed to set up debug messenger! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
