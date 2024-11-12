@@ -57,7 +57,9 @@ export namespace jpt
 
 		DynamicArray<VkImageView> m_swapChainImageViews;
 
+		VkRenderPass m_renderPass;
 		VkPipelineLayout m_pipelineLayout;
+		VkPipeline m_graphicsPipeline;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -80,6 +82,7 @@ export namespace jpt
 		bool CreateLogicalDevice();
 		bool CreateSwapChain();
 		bool CreateImageViews();
+		bool CreateRenderPass();
 		bool CreateGraphicsPipeline();
 
 		// Vulkan helpers
@@ -123,6 +126,7 @@ export namespace jpt
 		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
 		success &= CreateImageViews();
+		success &= CreateRenderPass();
 		success &= CreateGraphicsPipeline();
 
 		if (success)
@@ -137,7 +141,9 @@ export namespace jpt
 	{
 		Super::Shutdown();
 
+		vkDestroyPipeline(m_logicalDevice, m_graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(m_logicalDevice, m_pipelineLayout, nullptr);
+		vkDestroyRenderPass(m_logicalDevice, m_renderPass, nullptr);
 
 		for (VkImageView imageView : m_swapChainImageViews)
 		{
@@ -409,6 +415,44 @@ export namespace jpt
 		return true;
 	}
 
+	bool Renderer_Vulkan::CreateRenderPass()
+	{
+		VkAttachmentDescription colorAttachment = {};
+		colorAttachment.format = m_swapChainImageFormat;
+		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+		VkAttachmentReference colorAttachmentRef = {};
+		colorAttachmentRef.attachment = 0;
+		colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+		VkSubpassDescription subpass = {};
+		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+		subpass.colorAttachmentCount = 1;
+		subpass.pColorAttachments = &colorAttachmentRef;
+
+		VkRenderPassCreateInfo renderPassInfo = {};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+		renderPassInfo.attachmentCount = 1;
+		renderPassInfo.pAttachments = &colorAttachment;
+		renderPassInfo.subpassCount = 1;
+		renderPassInfo.pSubpasses = &subpass;
+
+		const VkResult result = vkCreateRenderPass(m_logicalDevice, &renderPassInfo, nullptr, &m_renderPass);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create render pass! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		return true;
+	}
+
 	bool Renderer_Vulkan::CreateGraphicsPipeline()
 	{
 		DynamicArray<char> vertexShaderCode = ReadBinaryFileArray(File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.vs.spv"));
@@ -512,10 +556,33 @@ export namespace jpt
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		
-		const VkResult result = vkCreatePipelineLayout(m_logicalDevice, &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
+		VkResult result = vkCreatePipelineLayout(m_logicalDevice, &pipelineLayoutInfo, nullptr, &m_pipelineLayout);
 		if (result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create pipeline layout! VkResult: %i", static_cast<uint32>(result));
+			return false;
+		}
+
+		// Create pipeline
+		VkGraphicsPipelineCreateInfo pipelineInfo = {};
+		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+		pipelineInfo.stageCount = 2;
+		pipelineInfo.pStages = shaderStages;
+		pipelineInfo.pVertexInputState = &vertexInputInfo;
+		pipelineInfo.pInputAssemblyState = &inputAssembly;
+		pipelineInfo.pViewportState = &viewportState;
+		pipelineInfo.pRasterizationState = &rasterizer;
+		pipelineInfo.pMultisampleState = &multisampling;
+		pipelineInfo.pColorBlendState = &colorBlending;
+		pipelineInfo.pDynamicState = &dynamicState;
+		pipelineInfo.layout = m_pipelineLayout;
+		pipelineInfo.renderPass = m_renderPass;
+		pipelineInfo.subpass = 0;
+
+		result = vkCreateGraphicsPipelines(m_logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline);
+		if (result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create graphics pipeline! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
