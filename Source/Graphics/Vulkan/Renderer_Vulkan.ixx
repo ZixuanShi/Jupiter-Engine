@@ -34,6 +34,8 @@ using namespace jpt::Vulkan;
 
 export namespace jpt
 {
+	constexpr size_t kMaxFramesInFlight = 2;
+
 	class Renderer_Vulkan final : public Renderer
 	{
 		using Super = Renderer;
@@ -64,11 +66,13 @@ export namespace jpt
 		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
 
 		VkCommandPool m_commandPool;
-		VkCommandBuffer m_commandBuffer;
+		DynamicArray<VkCommandBuffer> m_commandBuffers;
 
-		VkSemaphore m_imageAvailableSemaphore;
-		VkSemaphore m_renderFinishedSemaphore;
-		VkFence m_inFlightFence;
+		DynamicArray<VkSemaphore> m_imageAvailableSemaphores;
+		DynamicArray<VkSemaphore> m_renderFinishedSemaphores;
+		DynamicArray<VkFence> m_inFlightFences;
+
+		size_t m_currentFrame = 0;
 
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -97,7 +101,7 @@ export namespace jpt
 		bool CreateGraphicsPipeline();
 		bool CreateFramebuffers();
 		bool CreateCommandPool();
-		bool CreateCommandBuffer();
+		bool CreateCommandBuffers();
 		bool CreateSyncObjects();
 
 		// Vulkan helpers
@@ -145,7 +149,7 @@ export namespace jpt
 		success &= CreateGraphicsPipeline();
 		success &= CreateFramebuffers();
 		success &= CreateCommandPool();
-		success &= CreateCommandBuffer();
+		success &= CreateCommandBuffers();
 		success &= CreateSyncObjects();
 
 		if (success)
@@ -161,9 +165,13 @@ export namespace jpt
 		Super::Shutdown();
 
 		vkDeviceWaitIdle(m_logicalDevice);
-		vkDestroySemaphore(m_logicalDevice, m_renderFinishedSemaphore, nullptr);
-		vkDestroySemaphore(m_logicalDevice, m_imageAvailableSemaphore, nullptr);
-		vkDestroyFence(m_logicalDevice, m_inFlightFence, nullptr);
+
+		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
+		{
+			vkDestroySemaphore(m_logicalDevice, m_imageAvailableSemaphores[i], nullptr);
+			vkDestroySemaphore(m_logicalDevice, m_renderFinishedSemaphores[i], nullptr);
+			vkDestroyFence(m_logicalDevice, m_inFlightFences[i], nullptr);
+		}
 
 		vkDestroyCommandPool(m_logicalDevice, m_commandPool, nullptr);
 
@@ -203,31 +211,31 @@ export namespace jpt
 			- Submit the recorded command buffer
 			- Present the swap chain image	*/
 
-		vkWaitForFences(m_logicalDevice, 1, &m_inFlightFence, VK_TRUE, UINT64_MAX);
-		vkResetFences(m_logicalDevice, 1, &m_inFlightFence);
+		vkWaitForFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+		vkResetFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame]);
 
 		uint32 imageIndex;
-		vkAcquireNextImageKHR(m_logicalDevice, m_swapChain, UINT64_MAX, m_imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+		vkAcquireNextImageKHR(m_logicalDevice, m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
 
-		vkResetCommandBuffer(m_commandBuffer, 0);
-		RecordCommandBuffer(m_commandBuffer, imageIndex);
+		vkResetCommandBuffer(m_commandBuffers[m_currentFrame], 0);
+		RecordCommandBuffer(m_commandBuffers[m_currentFrame], imageIndex);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-		VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphore };
+		VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &m_commandBuffer;
+		submitInfo.pCommandBuffers = &m_commandBuffers[m_currentFrame];
 
-		VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphore };
+		VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[m_currentFrame] };
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (const VkResult result = vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, m_inFlightFence); result != VK_SUCCESS)
+		if (const VkResult result = vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, m_inFlightFences[m_currentFrame]); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to submit draw command buffer! VkResult: %i", static_cast<uint32>(result));
 			return;
@@ -244,6 +252,8 @@ export namespace jpt
 		presentInfo.pImageIndices = &imageIndex;
 
 		vkQueuePresentKHR(m_presentQueue, &presentInfo);
+
+		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL Renderer_Vulkan::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -724,15 +734,17 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::CreateCommandBuffer()
+	bool Renderer_Vulkan::CreateCommandBuffers()
 	{
+		m_commandBuffers.Resize(kMaxFramesInFlight);
+
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_commandPool;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = 1;
+		allocInfo.commandBufferCount = static_cast<uint32>(m_commandBuffers.Count());
 
-		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, &m_commandBuffer); result != VK_SUCCESS)
+		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -743,6 +755,10 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateSyncObjects()
 	{
+		m_imageAvailableSemaphores.Resize(kMaxFramesInFlight);
+		m_renderFinishedSemaphores.Resize(kMaxFramesInFlight);
+		m_inFlightFences.Resize(kMaxFramesInFlight);
+
 		VkSemaphoreCreateInfo semaphoreInfo = {};
 		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -750,20 +766,23 @@ export namespace jpt
 		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-		if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_imageAvailableSemaphore); result != VK_SUCCESS)
+		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			JPT_ERROR("Failed to create image available semaphore! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-		if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_renderFinishedSemaphore); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create render finished semaphore! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-		if (const VkResult result = vkCreateFence(m_logicalDevice, &fenceInfo, nullptr, &m_inFlightFence); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create in flight fence! VkResult: %i", static_cast<uint32>(result));
-			return false;
+			if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_imageAvailableSemaphores[i]); result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create image available semaphore! VkResult: %i", static_cast<uint32>(result));
+				return false;
+			}
+			if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_renderFinishedSemaphores[i]); result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create render finished semaphore! VkResult: %i", static_cast<uint32>(result));
+				return false;
+			}
+			if (const VkResult result = vkCreateFence(m_logicalDevice, &fenceInfo, nullptr, &m_inFlightFences[i]); result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create in flight fence! VkResult: %i", static_cast<uint32>(result));
+				return false;
+			}
 		}
 
 		return true;
