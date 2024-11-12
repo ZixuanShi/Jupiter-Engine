@@ -61,6 +61,8 @@ export namespace jpt
 		VkPipelineLayout m_pipelineLayout;
 		VkPipeline m_graphicsPipeline;
 
+		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
+
 #if !IS_RELEASE
 		VkDebugUtilsMessengerEXT m_debugMessenger;
 #endif
@@ -84,6 +86,7 @@ export namespace jpt
 		bool CreateImageViews();
 		bool CreateRenderPass();
 		bool CreateGraphicsPipeline();
+		bool CreateFramebuffers();
 
 		// Vulkan helpers
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
@@ -128,6 +131,7 @@ export namespace jpt
 		success &= CreateImageViews();
 		success &= CreateRenderPass();
 		success &= CreateGraphicsPipeline();
+		success &= CreateFramebuffers();
 
 		if (success)
 		{
@@ -140,6 +144,11 @@ export namespace jpt
 	void Renderer_Vulkan::Shutdown()
 	{
 		Super::Shutdown();
+
+		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
+		{
+			vkDestroyFramebuffer(m_logicalDevice, framebuffer, nullptr);
+		}
 
 		vkDestroyPipeline(m_logicalDevice, m_graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(m_logicalDevice, m_pipelineLayout, nullptr);
@@ -588,6 +597,34 @@ export namespace jpt
 
 		vkDestroyShaderModule(m_logicalDevice, vertexShaderModule, nullptr);
 		vkDestroyShaderModule(m_logicalDevice, pixelShaderModule, nullptr);
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateFramebuffers()
+	{
+		m_swapChainFramebuffers.Resize(m_swapChainImageViews.Count());
+
+		for (size_t i = 0; i < m_swapChainImageViews.Count(); ++i)
+		{
+			VkImageView attachments[] = { m_swapChainImageViews[i] };
+
+			VkFramebufferCreateInfo framebufferInfo = {};
+			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			framebufferInfo.renderPass = m_renderPass;
+			framebufferInfo.attachmentCount = 1;
+			framebufferInfo.pAttachments = attachments;
+			framebufferInfo.width = m_swapChainExtent.width;
+			framebufferInfo.height = m_swapChainExtent.height;
+			framebufferInfo.layers = 1;
+
+			const VkResult result = vkCreateFramebuffer(m_logicalDevice, &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]);
+			if (result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create framebuffer! VkResult: %i", static_cast<uint32>(result));
+				return false;
+			}
+		}
 
 		return true;
 	}
