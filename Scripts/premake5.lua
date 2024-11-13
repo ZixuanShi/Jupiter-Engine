@@ -153,12 +153,12 @@ function CreateClientProject()
             "vulkan-1",
         }
 
-        filter "configurations:Debug"
+        filter "configurations:Debug or Debug Editor"
             links
             {
                 "glfw3_Debug",
             }
-        filter "configurations:not Debug"
+        filter "configurations:not Debug or Debug Editor"
             links
             {
                 "glfw3_Release",

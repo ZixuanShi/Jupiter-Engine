@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
+#include "System/File/ClientPaths.h"
 
 export module jpt.File.Path;
 
@@ -107,16 +108,16 @@ export namespace jpt::File
 			Append(JPT_ENGINE_DIR_W);
 			break;
 		case Source::Client:
-			Append(GetClientDirW());
+			Append(ClientPaths::GetClientDirW());
 			break;
 		case Source::Output:
-			Append(GetOutputDirW());
+			Append(ClientPaths::GetOutputDirW());
 			break;
 		case Source::Saved:
 #if IS_RELEASE
 			Append(GetOutputDirW());
 #else
-			Append(GetClientDirW());
+			Append(ClientPaths::GetClientDirW());
 #endif
 			Append(L"_Saved/");
 		case Source::Baked:

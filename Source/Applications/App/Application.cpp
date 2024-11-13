@@ -21,7 +21,6 @@ import jpt.Renderer.Create;
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
 
-import jpt.File.Path.Helpers;
 import jpt.System.Paths;
 import jpt.StopWatch;
 import jpt.ProjectSettings;
@@ -33,7 +32,7 @@ namespace jpt
 {
 	bool jpt::Application::PreInit()
 	{
-		System::Paths::GetInstance().PreInit(File::GetClientDirW(), File::GetOutputDirW());
+		System::Paths::GetInstance().PreInit();
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		ProjectSettings::GetInstance().Load();

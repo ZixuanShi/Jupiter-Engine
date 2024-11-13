@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
+#include "System/File/ClientPaths.h"
 
 #if IS_PLATFORM_WIN64
 	#define WIN32_LEAN_AND_MEAN
@@ -34,7 +35,7 @@ namespace jpt::System
 
 	public:
 		JPT_DECLARE_SINGLETON(Paths);
-		void PreInit(const Path& clientDir, const Path& outputDir);
+		void PreInit();
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
 		const Path& GetClientDir()      const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
@@ -46,16 +47,16 @@ namespace jpt::System
 		bool IsInitialized() const { return m_isInitialized; }
 	};
 
-	void Paths::PreInit(const Path& clientDir, const Path& outputDir)
+	void Paths::PreInit()
 	{
 		m_engineDir = JPT_ENGINE_DIR_W;
-		m_clientDir = clientDir;
-		m_outputDir = outputDir;
+		m_clientDir = ClientPaths::GetClientDirW();
+		m_outputDir = ClientPaths::GetOutputDirW();
 
 #if IS_RELEASE
-		m_savedDir = outputDir + L"_Saved/";
+		m_savedDir = m_outputDir + L"_Saved/";
 #else
-		m_savedDir = clientDir + L"_Saved/";
+		m_savedDir = m_clientDir + L"_Saved/";
 #endif
 
 #if IS_PLATFORM_WIN64

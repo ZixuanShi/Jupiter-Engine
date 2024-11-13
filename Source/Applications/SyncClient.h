@@ -2,16 +2,20 @@
 
 #pragma once
 
+#include "System/File/ClientPaths.h"
+
 // Should be called in client's Application.cpp file once
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
-jpt::Application* jpt::GetApplication()                                              \
-{																					 \
-	static Application_##ApplicationName app;									     \
-	return &app;																	 \
-}                                                                                    \
+namespace jpt                                                                        \
+{                                                                                    \
+	Application* GetApplication()                                                    \
+	{																				 \
+		static Application_##ApplicationName app;									 \
+		return &app;																 \
+	}                                                                                \
 																					 \
-const char* jpt::Application::GetName() const { return #ApplicationName; }           \
-                                                                                     \
-constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }     \
-constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }     
+	const char* Application::GetName() const { return #ApplicationName; }            \
+	const wchar_t* ClientPaths::GetClientDirW() { return JPT_CLIENT_DIR_W; }         \
+    const wchar_t* ClientPaths::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }		 \
+}
 
