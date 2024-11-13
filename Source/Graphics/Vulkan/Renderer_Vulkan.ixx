@@ -29,6 +29,7 @@ import jpt.StaticArray;
 import jpt.HashSet;
 
 import jpt.File.IO;
+import jpt.File.Path;
 import jpt.File.Path.Utils;
 
 using namespace jpt::Vulkan;
@@ -556,8 +557,14 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateGraphicsPipeline()
 	{
-		DynamicArray<char> vertexShaderCode = ReadBinaryFileArray(File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.vs.spv"));
-		DynamicArray<char> pixelShaderCode = ReadBinaryFileArray(File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.ps.spv"));
+		const File::Path vertexShaderPath = File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.vs.spv");
+		const File::Path pixelShaderPath = File::GetAbsoluteFullPath(File::Source::Engine, "_Baked/Shaders/triangle.ps.spv");
+
+		JPT_ASSERT(File::Exists(vertexShaderPath), "Failed finding vertex shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", vertexShaderPath.ConstBuffer());
+		JPT_ASSERT(File::Exists(pixelShaderPath), "Failed finding pixel shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", pixelShaderPath.ConstBuffer());
+
+		DynamicArray<char> vertexShaderCode = ReadBinaryFileArray(vertexShaderPath);
+		DynamicArray<char> pixelShaderCode = ReadBinaryFileArray(pixelShaderPath);
 
 		VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);
 		VkShaderModule pixelShaderModule = CreateShaderModule(pixelShaderCode);

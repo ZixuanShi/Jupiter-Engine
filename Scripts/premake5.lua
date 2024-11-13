@@ -104,58 +104,58 @@ end
 
 function CreateClientProject()
     project (context.project_name)
-    filter "platforms:Win64"
-        kind "WindowedApp"
+        filter "platforms:Win64"
+            kind "WindowedApp"
 
-    defines
-    {
-        ("JPT_CLIENT_DIR_W=L\"" .. context.project_dir .."\""),
-        ("JPT_OUTPUT_DIR_W=L\"" .. context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output/\""),
-    }
+        defines
+        {
+            ("JPT_CLIENT_DIR_W=L\"" .. context.project_dir .."\""),
+            ("JPT_OUTPUT_DIR_W=L\"" .. context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output/\""),
+        }
 
-    includedirs
-    {
-        (jupiter_dir .. "Source"),
-        (jupiter_dir .. "Dependencies/*/Include"),
-        (context.project_dir .. "Source"),
-    }    
-    files
-    {
-        (context.project_dir .. "Source/**.h"),
-        (context.project_dir .. "Source/**.cpp"),
-        (context.project_dir .. "Source/**.ixx"),
-    }
+        includedirs
+        {
+            (jupiter_dir .. "Source"),
+            (jupiter_dir .. "Dependencies/*/Include"),
+            (context.project_dir .. "Source"),
+        }
+        files
+        {
+            (context.project_dir .. "Source/**.h"),
+            (context.project_dir .. "Source/**.cpp"),
+            (context.project_dir .. "Source/**.ixx"),
+        }
 
-    libdirs
-    {
-        (jupiter_dir .. "_Output/Engine_" .. output_path .. "_Output"),
-        (jupiter_dir .. "Dependencies/*/Libs"),
-    }
-    links
-    {
-        -- Engine's functions, classes, and modules
-        "Engine.lib",
-        "Engine",
-        "vulkan-1",
-    }
-
-    filter "configurations:Debug"
+        libdirs
+        {
+            (jupiter_dir .. "_Output/Engine_" .. output_path .. "_Output"),
+            (jupiter_dir .. "Dependencies/*/Libs"),
+        }
         links
         {
-            "glfw3_Debug",
+            -- Engine's functions, classes, and modules
+            "Engine.lib",
+            "Engine",
+            "vulkan-1",
         }
-    filter "configurations:not Debug"
-        links
-        {
-            "glfw3_Release",
-        }
-    filter "configurations:Release"
-        postbuildcommands
-        {
-            -- Assets
-            "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-            "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
-        }
+
+        filter "configurations:Debug"
+            links
+            {
+                "glfw3_Debug",
+            }
+        filter "configurations:not Debug"
+            links
+            {
+                "glfw3_Release",
+            }
+        filter "configurations:Release"
+            postbuildcommands
+            {
+                -- Assets
+                "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
+                "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
+            }
 end
 
 function ParseContext()
