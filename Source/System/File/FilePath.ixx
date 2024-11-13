@@ -11,7 +11,7 @@ import jpt.String;
 import jpt.ToString;
 import jpt.Utilities;
 import jpt.File.Enums;
-export import jpt.File.Path.Helpers;
+import jpt.File.Path.Helpers;
 
 export namespace jpt::File
 {
@@ -119,6 +119,8 @@ export namespace jpt::File
 			Append(GetClientDirW());
 #endif
 			Append(L"_Saved/");
+		case Source::Baked:
+			Append(L"_Baked/");
 			break;
 
 		default:

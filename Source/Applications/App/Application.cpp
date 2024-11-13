@@ -21,6 +21,7 @@ import jpt.Renderer.Create;
 import jpt.Input.Manager;
 import jpt.Input.KeyCode;
 
+import jpt.File.Path.Helpers;
 import jpt.System.Paths;
 import jpt.StopWatch;
 import jpt.ProjectSettings;
