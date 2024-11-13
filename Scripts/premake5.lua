@@ -20,9 +20,16 @@ output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 context = {}
 context.configurations =
 {
-    "Debug",        -- Debugging. No optimization will be performed
-    "Development",  -- Develop the project. Use Engine's editors and tools 
-    "Release",      -- Relese/Shipping
+    -- Debugging. No optimization will be performed
+    "Debug",
+    "Debug Editor",
+
+    -- Develop the project. Use Engine's editors and tools 
+    "Development",
+    "Development Editor",
+
+    -- Relese/Shipping
+    "Release",
 }
 context.platforms =
 {
@@ -62,12 +69,12 @@ function CreateEngineWorkspace()
         filter "configurations:Release"
             flags{ "FatalCompileWarnings" }
 
-        filter "configurations:Debug"
+        filter "configurations:Debug or Debug Editor"
             defines { "IS_DEBUG" }
             optimize "Off"
             symbols "On"
 
-        filter "configurations:Development"
+        filter "configurations:Development or Development Editor"
             defines { "IS_DEVELOPMENT" }
             optimize "Speed"
             symbols "On"
@@ -77,9 +84,16 @@ function CreateEngineWorkspace()
             optimize "Speed"
             symbols "off"
 
+        filter "configurations:Debug Editor or Development Editor"
+            defines { "IS_EDITOR" }
+
         -- Global filters for platforms
         filter "platforms:Win64"
             defines { "IS_PLATFORM_WIN64" }
+
+        -- Only windows platform supports editor
+        filter "platforms:not Win64"
+            removedefines { "IS_EDITOR" }
 
     -- Jupiter Engine
     project "Engine"
