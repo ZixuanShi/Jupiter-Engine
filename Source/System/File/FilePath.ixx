@@ -16,9 +16,6 @@ import jpt.File.Path.Helpers;
 
 export namespace jpt::File
 {
-	class Path;
-	constexpr Path GetAbsoluteFullPath(Source source, const Path& relativePath);
-
 	/** Identifies address of a file */
 	class Path
 	{
@@ -115,7 +112,7 @@ export namespace jpt::File
 			break;
 		case Source::Saved:
 #if IS_RELEASE
-			Append(GetOutputDirW());
+			Append(ClientPaths::GetOutputDirW());
 #else
 			Append(ClientPaths::GetClientDirW());
 #endif

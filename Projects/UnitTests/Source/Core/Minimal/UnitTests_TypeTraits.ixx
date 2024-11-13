@@ -28,24 +28,24 @@ bool UnitTests_TRemoveTraits()
 	value = jpt::AreSameType<jpt::TRValueToLValueReference<T&&>, T&>;
 	JPT_ENSURE(value);
 
-	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T>), T>;
+	value = jpt::AreSameType<jpt::TRemoveReference<T>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T&>), T>;
+	value = jpt::AreSameType<jpt::TRemoveReference<T&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::AreSameType<decltype(jpt::TRemoveReference<T&&>), T>;
+	value = jpt::AreSameType<jpt::TRemoveReference<T&&>, T>;
 	JPT_ENSURE(value);
 
-	value = jpt::AreSameType<decltype(jpt::TRemoveReference<const T&>), const T>;
+	value = jpt::AreSameType<jpt::TRemoveReference<const T&>, const T>;
 	JPT_ENSURE(value);
 
-	value = jpt::AreSameType<decltype(jpt::TRemoveConst<const T>), T>;
+	value = jpt::AreSameType<jpt::TRemoveConst<const T>, T>;
 	JPT_ENSURE(value);
 
 	// https://stackoverflow.com/questions/15887144/stdremove-const-with-const-references
 	{
-		value = !jpt::AreSameType<decltype(jpt::TRemoveConst<const T&>), T&>;
+		value = !jpt::AreSameType<jpt::TRemoveConst<const T&>, T&>;
 		JPT_ENSURE(value);
 
 		T t = T();

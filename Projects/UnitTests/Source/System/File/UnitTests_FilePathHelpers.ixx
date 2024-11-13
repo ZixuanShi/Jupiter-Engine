@@ -11,6 +11,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 
 import jpt.File.Path;
+import jpt.File.Path.Helpers;
 
 bool UnitTests_FilePathHelpers_Getters()
 {
