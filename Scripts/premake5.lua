@@ -158,7 +158,7 @@ function CreateClientProject()
             {
                 "glfw3_Debug",
             }
-        filter "configurations:not Debug or Debug Editor"
+        filter "configurations:Development or Development Editor or Release"
             links
             {
                 "glfw3_Release",
