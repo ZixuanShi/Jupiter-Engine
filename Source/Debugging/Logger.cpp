@@ -19,16 +19,21 @@
 
 import jpt.Clock;
 import jpt.DateTime;
+
+import jpt.File.Enums;
 import jpt.File.IO;
 import jpt.File.Path;
 import jpt.System.Paths;
+import jpt.File.Path.Utils;
+
 import jpt.Environment;
+
 import jpt.String.Helpers;
 
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 1024;
-	static const File::Path kLogFilePath = { File::Source::Saved, "Log.txt" };
+	static const File::Path kLogFilePath = Combine(File::Source::Saved, "Log.txt");
 
 	static const char* locGetLogStr(Logger::ELogType type)
 	{

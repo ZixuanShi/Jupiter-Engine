@@ -18,16 +18,15 @@ import jpt.File.IO;
 
 using namespace jpt::File;
 
-namespace jpt::System
+export namespace jpt::System
 {
-	export class Paths
+	class Paths
 	{
 	private:
 		Path m_engineDir;
 		Path m_clientDir;
 		Path m_outputDir;
 		Path m_savedDir;
-
 		Path m_executablePath;
 
 		bool m_isInitialized = false;
@@ -37,19 +36,23 @@ namespace jpt::System
 		void PreInit();
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
-		const Path& GetClientDir()      const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
-		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
+		const Path& GetClientDir();
+		const Path& GetOutputDir();
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
 
 		bool IsInitialized() const { return m_isInitialized; }
+
+	private:
+		const wchar_t* GetClientDirW() const;
+		const wchar_t* GetOutputDirW() const;
 	};
 
 	void Paths::PreInit()
 	{
 		m_engineDir = JPT_ENGINE_DIR_W;
-		m_clientDir = ClientPaths::GetClientDirW();
-		m_outputDir = ClientPaths::GetOutputDirW();
+		m_clientDir = GetClientDirW();
+		m_outputDir = GetOutputDirW();
 
 #if IS_RELEASE
 		m_savedDir = m_outputDir + L"_Saved/";
@@ -69,5 +72,23 @@ namespace jpt::System
 		JPT_ASSERT(!m_savedDir.IsEmpty());
 		JPT_ASSERT(!m_executablePath.IsEmpty());
 		m_isInitialized = true;
+	}
+
+	const Path& Paths::GetClientDir()
+	{
+		if (!m_isInitialized)
+		{
+			m_clientDir = GetClientDirW();
+		}
+		return m_clientDir;
+	}
+
+	const Path& Paths::GetOutputDir()
+	{
+		if (!m_isInitialized)
+		{
+			m_outputDir = GetOutputDirW();
+		}
+		return m_outputDir;
 	}
 }

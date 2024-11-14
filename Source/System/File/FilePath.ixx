@@ -18,18 +18,6 @@ export namespace jpt
 {
 	namespace File
 	{
-		class Path;
-	}
-
-	class ClientPaths
-	{
-	public:
-		static File::Path GetClientDirW();
-		static File::Path GetOutputDirW();
-	};
-
-	namespace File
-	{
 		/** Identifies address of a file */
 		class Path
 		{
@@ -47,7 +35,6 @@ export namespace jpt
 			constexpr Path(const char* path);
 			constexpr Path(const wchar_t* path);
 			constexpr Path(const TString& path);
-			Path(Source source, const Path& relativePath);
 
 			constexpr void Append(const Path& path);
 			constexpr void operator+=(const WString& path);
@@ -109,35 +96,6 @@ export namespace jpt
 			: m_path(path)
 		{
 			FixSeparators(m_path);
-		}
-
-		Path::Path(Source source, const Path& relativePath)
-		{
-			switch (source)
-			{
-			case Source::Engine:
-				Append(JPT_ENGINE_DIR_W);
-				break;
-			case Source::Client:
-				Append(ClientPaths::GetClientDirW());
-				break;
-			case Source::Output:
-				Append(ClientPaths::GetOutputDirW());
-				break;
-			case Source::Saved:
-#if IS_RELEASE
-				Append(ClientPaths::GetOutputDirW());
-#else
-				Append(ClientPaths::GetClientDirW());
-#endif
-				Append(L"_Saved/");
-				break;
-
-			default:
-				JPT_ASSERT(false, "Unknown source");
-			}
-
-			Append(relativePath);
 		}
 
 		constexpr void Path::Append(const Path& path)

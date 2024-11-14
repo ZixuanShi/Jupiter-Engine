@@ -78,3 +78,4 @@ export import jpt.TypeRegistry;
 export import jpt.File.Path;
 export import jpt.File.Path.Helpers;
 export import jpt.File.Path.Utils;
+export import jpt.System.Paths;

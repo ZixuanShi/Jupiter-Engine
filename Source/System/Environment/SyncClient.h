@@ -14,16 +14,14 @@ namespace jpt                                                                   
                                                                                      \
 	const char* Application::GetName() const { return #ApplicationName; }            \
                                                                                      \
-	File::Path ClientPaths::GetClientDirW()                                          \
+	const wchar_t* System::Paths::GetClientDirW() const                              \
     { 																				 \
-	    static File::Path path = JPT_CLIENT_DIR_W;                                   \
-	    return path;                                                                 \
+	    return JPT_CLIENT_DIR_W;                                                     \
     }                                                                                \
                                                                                      \
-    File::Path ClientPaths::GetOutputDirW()                                          \
+    const wchar_t* System::Paths::GetOutputDirW() const                              \
     { 																				 \
-	    static File::Path path = JPT_OUTPUT_DIR_W;                                   \
-	    return path;                                                                 \
+	    return JPT_OUTPUT_DIR_W;                                                     \
 	}                                                                                \
 }
 
