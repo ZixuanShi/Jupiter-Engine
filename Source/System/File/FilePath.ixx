@@ -119,10 +119,6 @@ export namespace jpt::File
 			Append(L"_Saved/");
 			break;
 
-		case Source::Baked:
-			Append(L"_Baked/");
-			break;
-
 		default:
 			JPT_ASSERT(false, "Unknown source");
 		}
