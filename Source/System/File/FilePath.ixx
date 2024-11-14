@@ -117,6 +117,8 @@ export namespace jpt::File
 			Append(ClientPaths::GetClientDirW());
 #endif
 			Append(L"_Saved/");
+			break;
+
 		case Source::Baked:
 			Append(L"_Baked/");
 			break;
