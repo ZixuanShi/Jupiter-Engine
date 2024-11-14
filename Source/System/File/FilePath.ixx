@@ -4,7 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
-#include "System/File/ClientPaths.h"
+#include "System/Environment/SyncClient.h"
 
 export module jpt.File.Path;
 

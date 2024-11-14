@@ -2,7 +2,7 @@
 
 #include "Application_Benchmarks.h"
 
-#include "Applications/SyncClient.h"
+#include "System/Environment/SyncClient.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 

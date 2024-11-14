@@ -3,7 +3,7 @@
 #include "Applications/Application_Blank.h"
 
 #include "Core/Minimal/CoreHeaders.h"
-#include "Applications/SyncClient.h"
+#include "System/Environment/SyncClient.h"
 
 import jpt.CoreModules;
 

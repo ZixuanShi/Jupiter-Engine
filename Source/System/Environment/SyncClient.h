@@ -2,7 +2,15 @@
 
 #pragma once
 
-#include "System/File/ClientPaths.h"
+namespace jpt
+{
+	class ClientPaths
+	{
+	public:
+		static const wchar_t* GetClientDirW();
+		static const wchar_t* GetOutputDirW();
+	};
+}
 
 // Should be called in client's Application.cpp file once
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \

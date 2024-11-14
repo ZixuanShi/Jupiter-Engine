@@ -3,7 +3,7 @@
 #include "Application_JupiterUnitTests.h"
 
 #include "Core/Minimal/CoreHeaders.h"
-#include "Applications/SyncClient.h"
+#include "System/Environment/SyncClient.h"
 
 import jpt.CommandLine;
 import jpt.Utilities;
