@@ -8,13 +8,17 @@ export module UnitTests_CSV;
 
 import jpt.CSV;
 import jpt.CSV.Data;
-import jpt.TypeDefs;
-import jpt.Utilities;
-import jpt.File.Path;
-import jpt.File.IO;
-import jpt.Optional;
 
-const jpt::File::Path kCSVPath = { jpt::File::Source::Client, "Assets/Test.csv" };
+import jpt.TypeDefs;
+import jpt.Optional;
+import jpt.Utilities;
+
+import jpt.File.Path;
+import jpt.File.Path.Utils;
+import jpt.File.IO;
+import jpt.File.Enums;
+
+const jpt::File::Path kCSVPath = jpt::File::Combine(jpt::File::Source::Client, "Assets/Test.csv");
 
 static bool Write()
 {

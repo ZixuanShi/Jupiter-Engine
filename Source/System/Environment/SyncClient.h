@@ -2,6 +2,8 @@
 
 #pragma once
 
+import jpt.System.Paths;
+
 // Should be called in client's Application.cpp file once
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
 namespace jpt                                                                        \

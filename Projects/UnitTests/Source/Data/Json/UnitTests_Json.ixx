@@ -14,12 +14,14 @@ import jpt.Json;
 import jpt.Json.Data;
 
 import jpt.File.Path;
+import jpt.File.Path.Utils;
 import jpt.File.IO;
+import jpt.File.Enums;
 
 import jpt.Graphics.Enums;
 
-static const jpt::File::Path path = { jpt::File::Source::Client, "Assets/TestJson_UnitTest.json" };
-static const jpt::File::Path engineJsonPath = { jpt::File::Source::Engine, "Assets/TestJson_UnitTest.json" };
+static const jpt::File::Path path = jpt::File::Combine(jpt::File::Source::Client, "Assets/TestJson_UnitTest.json");
+static const jpt::File::Path engineJsonPath = jpt::File::Combine(jpt::File::Source::Engine, "Assets/TestJson_UnitTest.json");
 
 bool UnitTests_Json_Write()
 {

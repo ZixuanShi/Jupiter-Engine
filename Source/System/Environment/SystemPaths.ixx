@@ -4,7 +4,6 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
-#include "System/Environment/SyncClient.h"
 
 #if IS_PLATFORM_WIN64
 	#define WIN32_LEAN_AND_MEAN
