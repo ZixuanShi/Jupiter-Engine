@@ -138,6 +138,39 @@ namespace jpt
 			return arr;
 		}
 
+		// Map
+		else if (valueStr.Front() == '{' && valueStr.Back() == '}')
+		{
+			JsonMap map;
+			String copy = valueStr.SubStr(1, valueStr.Count() - 2);
+			copy.Replace(" ","");
+
+			while (true)
+			{
+				const size_t keyStart = copy.Find("\"") + 1;
+				const size_t keyEnd = copy.Find("\"", keyStart);
+				const String keyStr = copy.SubStr(keyStart, keyEnd - keyStart);
+
+				const size_t valueStart = copy.Find(":", keyEnd) + 1;
+				size_t valueEnd = copy.Find(",", valueStart);
+				if (valueEnd == npos)
+				{
+					valueEnd = copy.Count();
+				}
+
+				const String value = copy.SubStr(valueStart, valueEnd - valueStart);
+				map.Set(keyStr, ParseValueData(value));
+
+				if (valueEnd == copy.Count())
+				{
+					break;
+				}
+				copy = copy.SubStr(valueEnd + 1);
+			}
+
+			return map;
+		}
+
 		// Number
 		else
 		{

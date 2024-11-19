@@ -23,7 +23,7 @@ export namespace jpt
 		// Check CommandLine for framework_api
 		if (CommandLine::GetInstance().Has("framework_api"))
 		{
-			api = CommandLine::GetInstance().Get("framework_api");
+			api = CommandLine::GetInstance().Get<String>("framework_api");
 		}
 		// Check Assets/Config/ProjectSettings.json project settings
 		else if (String frameworkApi; ProjectSettings::GetInstance().TryGet("framework_api", frameworkApi))

@@ -16,13 +16,16 @@ import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
+import jpt.Json;
+import jpt.Json.Data;
+
 namespace jpt
 {
 	/** Launch Arguments parser and access */
 	export class CommandLine
 	{
 	private:
-		HashMap<String, String> m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
+		JsonMap m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
 
 	public:
 		JPT_DECLARE_SINGLETON(CommandLine);
@@ -38,7 +41,11 @@ namespace jpt
 		void Parse(const char* argumentStr);
 
 		/** Set a key-value pair to the arguments map. Could be empty if key is a flag. Will update value if key already exists */
-		void Set(const String& key, const String& value = String());
+		void Set(const String& key, const JsonData& value);
+
+		/** @return Value associated with the key */
+		template<ValidJsonType T>
+		const T& Get(const String& key) const;
 
 		/**	@return		True if a key exists. Either has value or flag */
 		bool Has(const String& key) const;
@@ -46,14 +53,11 @@ namespace jpt
 		/** Removes a key from the arguments map */
 		void Erase(const String& key);
 
-		/** @return		Value of the key */
-		const String& Get(const String& key) const;
-
 		/** @return		All arguments in a string format */
 		const String ToString() const;
 
 		/** @return		All arguments in a map format */
-		const HashMap<String, String>& GetArgs() const { return m_arguments; }
+		const JsonMap& GetArgs() const { return m_arguments; }
 
 	private:
 		/** Parse a single argument "-key=value" and store into arguments map */
@@ -103,10 +107,9 @@ namespace jpt
 		}
 	}
 
-	void CommandLine::Set(const String& key, const String& value /*" = String()"*/)
+	void CommandLine::Set(const String& key, const JsonData& value)
 	{
-		JPT_ASSERT(!key.IsEmpty());
-		m_arguments[key] = value; // If value is empty, it will be [key = ""
+		m_arguments.Set(key, value);
 	}
 
 	bool CommandLine::Has(const String& key) const
@@ -116,14 +119,8 @@ namespace jpt
 
 	void CommandLine::Erase(const String& key)
 	{
-		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
+		JPT_ASSERT(m_arguments.Has(key), "CommandLine doesn't exist \"%s\"", key.ConstBuffer());
 		m_arguments.Erase(key);
-	}
-
-	const String& CommandLine::Get(const String& key) const
-	{
-		JPT_ASSERT(m_arguments.Has(key), "Launch Argument doesn't exist \"%s\"", key.ConstBuffer());
-		return m_arguments[key];
 	}
 
 	const String CommandLine::ToString() const
@@ -141,7 +138,7 @@ namespace jpt
 		argument.TrimRight();
 
 		String key;
-		String value;
+		JsonData value;
 
 		const size_t equalPos = argument.Find('=');
 
@@ -154,9 +151,18 @@ namespace jpt
 		else
 		{
 			key = argument.SubStr(0, equalPos);
-			value = argument.SubStr(equalPos + 1);
+			const String valueStr = argument.SubStr(equalPos + 1);
+			value = ParseValueData(valueStr);
 		}
 
 		Set(key, value);
+	}
+
+	template<ValidJsonType T>
+	const T& CommandLine::Get(const String& key) const
+	{
+		JPT_ASSERT(Has(key), "CommandLine doesn't exist \"%s\"", key.ConstBuffer());
+		JPT_ASSERT(m_arguments[key].Is<T>(), "CommandLine \"%s\" is not of type %s", key.ConstBuffer());
+		return m_arguments[key].As<T>();
 	}
 }

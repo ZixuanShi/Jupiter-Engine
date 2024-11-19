@@ -22,8 +22,8 @@ namespace jpt
 	export using JsonArray = DynamicArray<JsonData>;
 	export using JsonMap = HashMap<String, JsonData>;
 
-	template<typename T>
-	concept ValidType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
+	export template<typename T>
+	concept ValidJsonType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
 
 	/** Represents a single data in Json file */
 	export class JsonData
@@ -39,21 +39,21 @@ namespace jpt
 		TData m_data;
 
 	public:
-		constexpr JsonData() = default;
+		constexpr JsonData();
 
-		template<ValidType T>
+		template<ValidJsonType T>
 		constexpr JsonData(const T& value);
 
-		template<ValidType T>
+		template<ValidJsonType T>
 		constexpr JsonData& operator=(const T& value);
 
-		template<ValidType T> constexpr              bool Is() const { return m_data.Is<T>(); }
-		template<ValidType T> constexpr                T& As() 	     { return m_data.As<T>(); }
-		template<ValidType T> constexpr          const T& As() const { return m_data.As<T>(); }
-		template<ValidType T> constexpr operator       T& ()         { return m_data.As<T>(); }
-		template<ValidType T> constexpr operator const T& ()   const { return m_data.As<T>(); }
+		template<ValidJsonType T> constexpr              bool Is() const { return m_data.Is<T>(); }
+		template<ValidJsonType T> constexpr                T& As() 	     { return m_data.As<T>(); }
+		template<ValidJsonType T> constexpr          const T& As() const { return m_data.As<T>(); }
+		template<ValidJsonType T> constexpr operator       T& ()         { return m_data.As<T>(); }
+		template<ValidJsonType T> constexpr operator const T& ()   const { return m_data.As<T>(); }
 
-		template<ValidType T>
+		template<ValidJsonType T>
 		constexpr bool operator==(const T& other) const;
 
 		constexpr bool operator==(const JsonData& other) const;
@@ -61,20 +61,25 @@ namespace jpt
 		constexpr String ToString() const;
 	};
 
-	template<ValidType T>
+	constexpr JsonData::JsonData()
+		: m_data(String("null"))
+	{
+	}
+
+	template<ValidJsonType T>
 	constexpr JsonData::JsonData(const T& value)
 		: m_data(value)
 	{
 	}
 
-	template<ValidType T>
+	template<ValidJsonType T>
 	constexpr JsonData& JsonData::operator=(const T& value)
 	{
 		m_data = value;
 		return *this;
 	}
 
-	template<ValidType T>
+	template<ValidJsonType T>
 	constexpr bool JsonData::operator==(const T& data) const
 	{
 		JPT_ASSERT(Is<T>());

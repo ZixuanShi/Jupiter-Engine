@@ -23,7 +23,7 @@ export namespace jpt
 		// Check CommandLine for graphics_api
 		if (CommandLine::GetInstance().Has("graphics_api"))
 		{
-			api = CommandLine::GetInstance().Get("graphics_api");
+			api = CommandLine::GetInstance().Get<String>("graphics_api");
 		}
 		// Check Assets/Config/ProjectSettings.json project settings
 		else if (String graphicsApi; ProjectSettings::GetInstance().TryGet("graphics_api", graphicsApi))

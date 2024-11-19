@@ -12,7 +12,7 @@ import jpt.Utilities;
 /** Unit Test Modules */
 
 // Applications
-import UnitTests_LaunchArgs;
+import UnitTests_CommandLine;
 
 
 export bool RunUnitTests_Applications()
@@ -20,7 +20,7 @@ export bool RunUnitTests_Applications()
 	/** Unit Test Functions */
 
 	// Applications
-	JPT_ENSURE(RunUnitTests_LaunchArgs());
+	JPT_ENSURE(RunUnitTests_CommandLine());
     
 
 	return true;
