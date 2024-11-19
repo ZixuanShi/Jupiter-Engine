@@ -558,8 +558,8 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateGraphicsPipeline()
 	{
-		const File::Path vertexShaderPath = File::Combine(File::Source::Engine, "_Baked/Jupiter_Common/Shaders/triangle.vs.spv");
-		const File::Path pixelShaderPath = File::Combine(File::Source::Engine, "_Baked/Jupiter_Common/Shaders/triangle.ps.spv");
+		const File::Path vertexShaderPath = File::FixDependencies("_Baked/Jupiter_Common/Shaders/triangle.vs.spv");
+		const File::Path pixelShaderPath = File::FixDependencies("_Baked/Jupiter_Common/Shaders/triangle.ps.spv");
 
 		JPT_ASSERT(File::Exists(vertexShaderPath), "Failed finding vertex shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", vertexShaderPath.ConstBuffer());
 		JPT_ASSERT(File::Exists(pixelShaderPath), "Failed finding pixel shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", pixelShaderPath.ConstBuffer());

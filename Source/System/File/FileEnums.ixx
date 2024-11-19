@@ -17,5 +17,7 @@ export namespace jpt::File
 		Client,		// Client development folder
 		Output,		// Build output folder
 		Saved,		
+
+		Baked
 	};
 }

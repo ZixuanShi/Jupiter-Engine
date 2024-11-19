@@ -38,6 +38,23 @@ export namespace jpt::File
 			path.Append(L"_Saved/");
 			break;
 
+		case Source::Baked:
+#if IS_RELEASE
+			path.Append(paths.GetOutputDir());
+#else
+			if (relativePath.Has("Jupiter_Common"))
+			{
+				path.Append(paths.GetEngineDir());
+			}
+			else
+			{
+				path.Append(paths.GetClientDir());
+			}
+#endif
+			path.Append(L"_Baked/");
+
+			break;
+
 		default:
 			JPT_ASSERT(false, "Unknown source");
 		}
