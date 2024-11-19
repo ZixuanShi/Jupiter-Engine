@@ -169,6 +169,10 @@ function CreateClientProject()
                 -- Assets
                 "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
                 "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
+
+                -- _Baked
+                "xcopy \"$(SolutionDir)..\\_Baked\"" .. " \"$(OutDir)_Baked\"  /e /s /h /i /y",
+                "xcopy \"" .. jupiter_dir .."_Baked\\Jupiter_Common\"" .. " \"$(OutDir)_Baked\\Jupiter_Common\"  /e /s /h /i /y",
             }
 end
 
