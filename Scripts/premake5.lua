@@ -113,6 +113,7 @@ function CreateEngineWorkspace()
             (jupiter_dir .. "Source/**.cpp"),
             (jupiter_dir .. "Source/**.c"),
             (jupiter_dir .. "Source/**.ixx"),
+            (jupiter_dir .. "Source/**.natvis"),
         }
 end
 

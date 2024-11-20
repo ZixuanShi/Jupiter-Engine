@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<!--DynamicArray-->
+	<Type Name="jpt::DynamicArray&lt;*&gt;">
+		<DisplayString>{{ { m_count } items, { m_capacity } capacity }}</DisplayString>
+		<Expand>
+			<ArrayItems>
+				<Size>m_count</Size>
+				<ValuePointer>m_pBuffer</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+</AutoVisualizer>
