@@ -221,6 +221,6 @@ export namespace jpt::Input
 		}
 
 		JPT_ERROR("Unknown key code: " + ToString(key));
-		return KeyCode::Unknown;
+		return KeyCode::Invalid;
 	}
 }

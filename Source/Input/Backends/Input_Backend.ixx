@@ -19,6 +19,6 @@ export namespace jpt::Input
 		virtual bool IsHeld(KeyCode, TimePrecision) const { return false; }
 
 		virtual uint32 FromKeyCode(KeyCode) const { return kInvalidValue<uint32>; }
-		virtual KeyCode ToKeyCode(uint32) const { return KeyCode::Unknown; }
+		virtual KeyCode ToKeyCode(uint32) const { return KeyCode::Invalid; }
 	};
 }

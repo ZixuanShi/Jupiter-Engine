@@ -10,6 +10,8 @@ export module jpt.Input.KeyCode;
 export namespace jpt::Input
 {
 	JPT_ENUM_UINT8(KeyCode,
+		Invalid,
+
 		// Mouse
 		Mouse_Left,
 		Mouse_Right,
@@ -129,9 +131,5 @@ export namespace jpt::Input
 		Keyboard_Numpad_Divide,
 		Keyboard_Numpad_Decimal,
 		Keyboard_Numpad_Enter,
-
-		// Utils
-		ItemCount,
-		Unknown,
 	);
 }
