@@ -18,6 +18,11 @@ bool Application_Benchmarks::PreInit()
 
 	JPT_ENSURE(Super::PreInit());
 
+	jpt::String str = "Hello Jupiter World";
+	JPT_LOG(str);
+	str.Reserve(128);
+	JPT_LOG(str);
+
 	return true;
 }
 

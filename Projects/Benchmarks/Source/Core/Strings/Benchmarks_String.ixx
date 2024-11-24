@@ -35,7 +35,7 @@ void Find(jpt::BenchmarksReporter& reporter)
 		jptResult = jpt::StopWatch::GetMsFrom(now);
 	}
 
-	jpt::BenchmarkUnit unit{ "String", "Replace 1'000'000 elements", jptResult, 0.0 };
+	jpt::BenchmarkUnit unit{ "String", "Find 1'000'000 elements", jptResult, 0.0 };
 	reporter.Add(unit);
 }
 
@@ -51,8 +51,12 @@ void Replace(jpt::BenchmarksReporter& reporter)
 		for (int32 i = 0; i < kCount; ++i)
 		{
 			jpt::String str = "Hello World o";
+
 			str.Replace("o", "Jupiter");
 			JPT_ASSERT(str == "HellJupiter WJupiterrld Jupiter");
+
+			str.Replace("Jupiter", "o");
+			JPT_ASSERT(str == "Hello World o");
 		}
 
 		jptResult = jpt::StopWatch::GetMsFrom(now);
@@ -64,6 +68,6 @@ void Replace(jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
-	Find(reporter);
-	Replace(reporter);
+	//Find(reporter);
+	//Replace(reporter);
 }

@@ -810,27 +810,28 @@ export namespace jpt
 	{
 		capacity += sizeof(TChar); // Null terminator
 
-		if (capacity >= kSmallDataSize &&
-			capacity > m_capacity)
+		if (capacity > m_capacity)
 		{
-			TChar* pNewBuffer = TAllocator::AllocateArray(capacity);
-
-			// Copy the old buffer to the new one
-			if (m_pBuffer)
+			if (capacity >= kSmallDataSize)
 			{
-				StrCpy(pNewBuffer, m_count + sizeof(TChar), m_pBuffer);
-				DeallocateBuffer();
+				TChar* pNewBuffer = TAllocator::AllocateArray(capacity);
+
+				// Copy the old buffer to the new one
+				if (m_pBuffer)
+				{
+					StrCpy(pNewBuffer, m_count + sizeof(TChar), m_pBuffer);
+					DeallocateBuffer();
+				}
+
+				m_pBuffer = pNewBuffer;
+				m_capacity = capacity;
 			}
-
-			m_pBuffer = pNewBuffer;
-			m_capacity = capacity;
-		}
-
-		if (capacity < kSmallDataSize)
-		{
-			DeallocateBuffer();
-			m_pBuffer = m_smallBuffer;
-			m_capacity = kSmallDataSize;
+			else
+			{
+				DeallocateBuffer();
+				m_pBuffer = m_smallBuffer;
+				m_capacity = kSmallDataSize;
+			}
 		}
 	}
 
