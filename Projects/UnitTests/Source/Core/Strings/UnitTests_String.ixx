@@ -314,6 +314,10 @@ bool UnitTests_String_Has()
 	JPT_ENSURE(str.Has("Jupiter Engine"));
 	JPT_ENSURE(str.Has("Hello World Jupiter Engine"));
 
+	JPT_ENSURE(str.Count() == 26);
+	JPT_ENSURE(str.Count('l') == 3);
+	JPT_ENSURE(str.Count('L') == 0);
+
 	return true;
 }
 bool UnitTests_WString_Has()
@@ -326,6 +330,10 @@ bool UnitTests_WString_Has()
 
 	JPT_ENSURE(str.Has(L"Jupiter Engine"));
 	JPT_ENSURE(str.Has(L"Hello World Jupiter Engine"));
+
+	JPT_ENSURE(str.Count() == 26);
+	JPT_ENSURE(str.Count(L'l') == 3);
+	JPT_ENSURE(str.Count(L'L') == 0);
 
 	return true;
 }

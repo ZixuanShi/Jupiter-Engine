@@ -74,10 +74,11 @@ export namespace jpt
 		constexpr ConstIterator cend()   const { return ConstIterator(m_pBuffer + m_count); }
 
 		// Capacity
-		constexpr size_t Count()    const { return m_count;      }
-		constexpr size_t Size()     const { return m_count * sizeof(TChar); }	/**< How many size in bytes this string in memory */
-		constexpr size_t Capacity() const { return m_capacity;   }
-		constexpr bool   IsEmpty()  const { return m_count == 0; }
+		constexpr size_t Count()        const; /**< How many characters in this string */
+		constexpr size_t Count(TChar c) const; /**< How many times the character c appears in this string */
+		constexpr size_t Size()         const; /**< How many size in bytes this string in memory */
+		constexpr size_t Capacity()     const;
+		constexpr bool   IsEmpty()      const;
 
 		/** Searching. Returns npos if not found */
 		constexpr size_t Find(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
@@ -342,6 +343,44 @@ export namespace jpt
 	constexpr String_Base<TChar, TAllocator>::~String_Base()
 	{
 		Clear();
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr size_t String_Base<_TChar, _TAllocator>::Count() const
+	{
+		return m_count;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr size_t String_Base<_TChar, _TAllocator>::Count(TChar c) const
+	{
+		size_t count = 0;
+		for (TChar ch : *this)
+		{
+			if (ch == c)
+			{
+				++count;
+			}
+		}
+		return count;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr size_t String_Base<_TChar, _TAllocator>::Size() const
+	{
+		return m_count * sizeof(TChar);
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr size_t String_Base<_TChar, _TAllocator>::Capacity() const
+	{
+		return m_capacity;
+	}
+
+	template<StringLiteral _TChar, class _TAllocator>
+	constexpr bool String_Base<_TChar, _TAllocator>::IsEmpty() const
+	{
+		return m_count == 0;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
