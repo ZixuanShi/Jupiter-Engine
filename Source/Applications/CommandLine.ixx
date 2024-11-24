@@ -109,7 +109,7 @@ namespace jpt
 
 	void CommandLine::Set(const String& key, const JsonData& value)
 	{
-		m_arguments.Set(key, value);
+		m_arguments.Add(key, value);
 	}
 
 	bool CommandLine::Has(const String& key) const

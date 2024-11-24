@@ -27,26 +27,26 @@ bool UnitTests_Json_Write()
 {
     jpt::JsonMap jsonRoot;
 
-    jsonRoot.Set("source", jpt::String("Client"));
-    jsonRoot.Set("data_int", 12);
-    jsonRoot.Set("data_float", 1.55f);
-    jsonRoot.Set("data_string", jpt::String("Hello from Jupiter Engine!"));
-    jsonRoot.Set("data_null", jpt::String("null"));
+    jsonRoot.Add("source", jpt::String("Client"));
+    jsonRoot.Add("data_int", 12);
+    jsonRoot.Add("data_float", 1.55f);
+    jsonRoot.Add("data_string", jpt::String("Hello from Jupiter Engine!"));
+    jsonRoot.Add("data_null", jpt::String("null"));
 
-    jsonRoot.Set("data_array", jpt::JsonArray{111, jpt::String("Hello World"), 33, 4.77f, false});
+    jsonRoot.Add("data_array", jpt::JsonArray{111, jpt::String("Hello World"), 33, 4.77f, false});
 
     jpt::JsonMap subMap2;
-    subMap2.Set("key1", 1);
-    subMap2.Set("key2", 2);
-    subMap2.Set("key3", 3);
+    subMap2.Add("key1", 1);
+    subMap2.Add("key2", 2);
+    subMap2.Add("key3", 3);
 
     jpt::JsonMap subMap;
-    subMap.Set("year", 2024);
-    subMap.Set("month", 6);
-    subMap.Set("day", 20);
-    subMap.Set("Subset", subMap2);
+    subMap.Add("year", 2024);
+    subMap.Add("month", 6);
+    subMap.Add("day", 20);
+    subMap.Add("Subset", subMap2);
 
-    jsonRoot.Set("data_map", subMap);
+    jsonRoot.Add("data_map", subMap);
 
     jpt::WriteJsonFile(path, jsonRoot);
 
@@ -89,15 +89,15 @@ bool UnitTests_Json_Update()
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
     // Update the data
-    jsonRoot.Set("source", jpt::String("Jupiter Client"));
+    jsonRoot.Add("source", jpt::String("Jupiter Client"));
 
     // subset
     jpt::JsonMap& subSet = jsonRoot["data_map"];
-    subSet.Set("year", 1999);
-    subSet.Set("Brand", jpt::String("MSI"));
+    subSet.Add("year", 1999);
+    subSet.Add("Brand", jpt::String("MSI"));
 
     // Add new data
-    jsonRoot.Set("new_data", jpt::String("New Data"));
+    jsonRoot.Add("new_data", jpt::String("New Data"));
 
     jpt::WriteJsonFile(path, jsonRoot);
 
@@ -125,10 +125,10 @@ static bool Engine_Write()
 {
     jpt::JsonMap engineJson;
 
-    engineJson.Set("engine_version", 0);
+    engineJson.Add("engine_version", 0);
 
     jpt::Graphics_API graphicsAPI = jpt::Graphics_API::Vulkan;
-    engineJson.Set("graphics_API", graphicsAPI.ToString());
+    engineJson.Add("graphics_API", graphicsAPI.ToString());
 
     jpt::WriteJsonFile(engineJsonPath, engineJson);
 

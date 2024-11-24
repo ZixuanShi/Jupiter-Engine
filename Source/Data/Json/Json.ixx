@@ -159,7 +159,7 @@ namespace jpt
 				}
 
 				const String value = copy.SubStr(valueStart, valueEnd - valueStart);
-				map.Set(keyStr, ParseValueData(value));
+				map.Add(keyStr, ParseValueData(value));
 
 				if (valueEnd == copy.Count())
 				{
@@ -213,7 +213,7 @@ namespace jpt
 				if (!valueStr.IsEmpty())
 				{
 					JsonData valueData = ParseValueData(valueStr);
-					jsonMaps.Peek().Set(keyStr, valueData);
+					jsonMaps.Peek().Add(keyStr, valueData);
 				}
 				// Start of map next line
 				else
@@ -240,7 +240,7 @@ namespace jpt
 				jsonMaps.Pop();
 
 				String mapName = mapNames.Peek();
-				jsonMaps.Peek().Set(mapName, map);
+				jsonMaps.Peek().Add(mapName, map);
 				mapNames.Pop();
 			}
 		}

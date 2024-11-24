@@ -80,9 +80,8 @@ export namespace jpt
 		// Modifiers
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
-		constexpr void Set(const TKey& key, const TValue& value);
-		constexpr TValue& Emplace(TKey&& key, TValue&& value);
-		constexpr TValue& Emplace(TData&& element);
+		constexpr TValue& Add(TKey&& key, TValue&& value);
+		constexpr TValue& Add(TData&& element);
 		constexpr Iterator Erase(const TKey& key);
 		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
@@ -287,14 +286,8 @@ export namespace jpt
 		return Add(element.first, element.second);
 	}
 
-	template<typename _TKey, typename _TValue, typename _Comparator>
-	constexpr void HashMap<_TKey, _TValue, _Comparator>::Set(const TKey& key, const TValue& value)
-	{
-		Add(key, value);
-	}
-
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr HashMap<TKey, TValue, TComparator>::TValue& HashMap<TKey, TValue, TComparator>::Emplace(TKey&& key, TValue&& value)
+	constexpr HashMap<TKey, TValue, TComparator>::TValue& HashMap<TKey, TValue, TComparator>::Add(TKey&& key, TValue&& value)
 	{
 		// Grow if needed. Grow when the count is 75% of the bucket size
 		if (m_count >= (m_buckets.Count() * 3) / 4)
@@ -321,7 +314,7 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(TData&& element)
+	constexpr TValue& HashMap<TKey, TValue, TComparator>::Add(TData&& element)
 	{
 		return Emplace(Move(element.first), Move(element.second));
 	}

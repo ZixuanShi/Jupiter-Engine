@@ -58,9 +58,9 @@ export namespace jpt
 		{
 			if (m_settings.Has(key))
 			{
-				//JPT_LOG("Overriding ProjectSettings key: %s with value: %s", key.ConstBuffer(), value.ConstBuffer());
+				JPT_LOG("Overriding ProjectSettings key: %s with value: %s", key.ConstBuffer(), ToString(value).ConstBuffer());
 
-				m_settings.Set(key, value);
+				m_settings.Add(key, value);
 			}
 		}
 
@@ -75,7 +75,7 @@ export namespace jpt
 
 	void ProjectSettings::Set(const String& key, const JsonData& value)
 	{
-		m_settings.Set(key, value);
+		m_settings.Add(key, value);
 	}
 
 	template<typename T>
