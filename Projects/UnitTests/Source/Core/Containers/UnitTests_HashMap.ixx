@@ -565,6 +565,23 @@ bool UnitTests_HashMap_CStrKey()
 	return true;
 }
 
+bool UnitTests_HashMap_Emplace()
+{
+    struct Foo
+    {
+        jpt::String name;
+		float64 height;
+		int32 age;
+		jpt::DynamicArray<Foo*> neighbors;
+    };
+
+	//jpt::HashMap<jpt::String, Foo> hashMap;
+
+	//hashMap.Emplace("Alice", "Alice", 5.5f, 25, jpt::DynamicArray<Foo*>{});
+
+    return true;
+}
+
 export bool RunUnitTests_HashMap()
 {
     JPT_ENSURE(UnitTests_HashMap_Trivial());
@@ -588,6 +605,8 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTests_HashMap_Tuple());
     JPT_ENSURE(UnitTests_HashMap_Any());
     JPT_ENSURE(UnitTests_HashMap_CStrKey());
+
+	JPT_ENSURE(UnitTests_HashMap_Emplace());
 
     return true;
 }

@@ -89,15 +89,15 @@ bool UnitTests_Json_Update()
     jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
 
     // Update the data
-    jsonRoot.Add("source", jpt::String("Jupiter Client"));
+    jsonRoot["source"] = jpt::String("Jupiter Client");
 
     // subset
     jpt::JsonMap& subSet = jsonRoot["data_map"];
-    subSet.Add("year", 1999);
-    subSet.Add("Brand", jpt::String("MSI"));
+    subSet["year"] = 1999;
+    subSet["Brand"] = jpt::String("MSI");
 
     // Add new data
-    jsonRoot.Add("new_data", jpt::String("New Data"));
+    jsonRoot["new_data"] = jpt::String("New Data");
 
     jpt::WriteJsonFile(path, jsonRoot);
 

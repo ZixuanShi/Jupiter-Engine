@@ -77,11 +77,14 @@ export namespace jpt
 		constexpr bool IsEmpty() const;
 		constexpr void Reserve(size_t capacity);
 
-		// Modifiers
+		// Adding
 		constexpr TValue& Add(const TKey& key, const TValue& value);
 		constexpr TValue& Add(const TData& element);
 		constexpr TValue& Add(TKey&& key, TValue&& value);
 		constexpr TValue& Add(TData&& element);
+		//template<typename ...TArgs> constexpr TValue& Emplace(TArgs&&... args);
+
+		// Erasing
 		constexpr Iterator Erase(const TKey& key);
 		constexpr Iterator Erase(const Iterator& iterator);
 		constexpr void Clear();
@@ -269,7 +272,6 @@ export namespace jpt
 		{
 			if (kComparator(element.first, key))
 			{
-				element.second = value;
 				return element.second;
 			}
 		}
@@ -302,7 +304,6 @@ export namespace jpt
 		{
 			if (kComparator(element.first, key))
 			{
-				element.second = Move(value);
 				return element.second;
 			}
 		}
@@ -318,6 +319,13 @@ export namespace jpt
 	{
 		return Emplace(Move(element.first), Move(element.second));
 	}
+
+	//template<typename TKey, typename TValue, typename TComparator>
+	//template<typename ...TArgs>
+	//constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(TArgs&& ...args)
+	//{
+	//	// TODO: insert return statement here
+	//}
 
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr HashMap<TKey, TValue, TComparator>::Iterator HashMap<TKey, TValue, TComparator>::Erase(const TKey& key)
