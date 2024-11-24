@@ -78,8 +78,8 @@ export namespace jpt
 		constexpr size_t Capacity()     const;
 		constexpr bool   IsEmpty()      const;
 		constexpr size_t Count()        const; /**< How many characters in this string */
-		constexpr size_t Count(TChar c) const; /**< How many times the character c appears in this string */
-		constexpr size_t Count(const TChar* pString) const;
+		constexpr size_t Count(TChar c, size_t startIndex = 0, size_t endIndex = npos) const; /**< How many times the character c appears in this string */
+		constexpr size_t Count(const TChar* pString, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		/** Searching. Returns npos if not found */
 		constexpr size_t Find(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos) const;
@@ -351,10 +351,12 @@ export namespace jpt
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
-	constexpr size_t String_Base<_TChar, _TAllocator>::Count(TChar c) const
+	constexpr size_t String_Base<_TChar, _TAllocator>::Count(TChar c, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
+		ClampTo(endIndex, size_t(0), m_count);
 		size_t count = 0;
-		for (size_t i = 0; i < m_count; ++i)
+
+		for (size_t i = startIndex; i < endIndex; ++i)
 		{
 			const TChar ch = m_pBuffer[i];
 			if (ch == c)
@@ -362,17 +364,24 @@ export namespace jpt
 				++count;
 			}
 		}
+
 		return count;
 	}
 
 	template<StringLiteral _TChar, class _TAllocator>
-	constexpr size_t String_Base<_TChar, _TAllocator>::Count(const TChar* pString) const
+	constexpr size_t String_Base<_TChar, _TAllocator>::Count(const TChar* pString, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/) const
 	{
+		ClampTo(endIndex, size_t(0), m_count);
 		size_t count = 0;
 		const size_t stringToFindSize = FindCharsCount(pString);
 
-		for (size_t i = 0; i < m_count;)
+		for (size_t i = startIndex; i < endIndex;)
 		{
+			if ((i + stringToFindSize) > endIndex)
+			{
+				break;
+			}
+
 			if (AreStringsSame(m_pBuffer + i, pString, stringToFindSize))
 			{
 				++count;
@@ -412,11 +421,6 @@ export namespace jpt
 
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
-			if ((i + 1) > endIndex)
-			{
-				return npos;
-			}
-
 			if (m_pBuffer[i] == charToFind)
 			{
 				return i;
