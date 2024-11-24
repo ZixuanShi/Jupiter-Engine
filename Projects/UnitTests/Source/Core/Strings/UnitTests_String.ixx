@@ -315,8 +315,6 @@ bool UnitTests_String_Has()
 	JPT_ENSURE(str.Has("Hello World Jupiter Engine"));
 
 	JPT_ENSURE(str.Count() == 26);
-	JPT_ENSURE(str.Count('l') == 3);
-	JPT_ENSURE(str.Count('L') == 0);
 
 	return true;
 }
@@ -332,8 +330,6 @@ bool UnitTests_WString_Has()
 	JPT_ENSURE(str.Has(L"Hello World Jupiter Engine"));
 
 	JPT_ENSURE(str.Count() == 26);
-	JPT_ENSURE(str.Count(L'l') == 3);
-	JPT_ENSURE(str.Count(L'L') == 0);
 
 	return true;
 }
@@ -763,6 +759,31 @@ bool UnitTests_WString_IsFloat()
 	return true;
 }
 
+bool UnitTests_String_Count()
+{
+	jpt::String str = "Hello World Jupiter Engine Jupiter";
+	JPT_ENSURE(str.Count() == 34);
+	JPT_ENSURE(str.Count('o') == 2);
+	JPT_ENSURE(str.Count('l') == 3);
+	JPT_ENSURE(str.Count('L') == 0);
+	JPT_ENSURE(str.Count("Jupiter") == 2);
+	JPT_ENSURE(str.Count("Jupiter Engine") == 1);
+
+	return true;
+}
+bool UnitTests_WString_Count()
+{
+	jpt::WString str = L"Hello World Jupiter Engine Jupiter";
+	JPT_ENSURE(str.Count() == 34);
+	JPT_ENSURE(str.Count('o') == 2);
+	JPT_ENSURE(str.Count('l') == 3);
+	JPT_ENSURE(str.Count('L') == 0);
+	JPT_ENSURE(str.Count(L"Jupiter") == 2);
+	JPT_ENSURE(str.Count(L"Jupiter Engine") == 1);
+
+	return true;
+}
+
 export bool RunUnitTests_String()
 {
 	//JPT_SCOPED_TIMING_PROFILER("String");
@@ -840,6 +861,9 @@ export bool RunUnitTests_String()
 
 		JPT_ENSURE(UnitTests_String_IsFloat());
 		JPT_ENSURE(UnitTests_WString_IsFloat());
+
+		JPT_ENSURE(UnitTests_String_Count());
+		JPT_ENSURE(UnitTests_WString_Count());
 	}
 
 	return true;

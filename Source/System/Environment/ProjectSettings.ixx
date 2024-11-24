@@ -39,7 +39,7 @@ export namespace jpt
 		template<typename T>
 		const T& Get(const String& key, const T& defaultValue) const;
 
-		void Set(const String& key, const JsonData& value);
+		void Set(const String& key, const JsonData& value = JsonData());
 	};
 
 	bool ProjectSettings::Load()
@@ -73,9 +73,9 @@ export namespace jpt
 		WriteJsonFile(projectSettingsJson, m_settings);
 	}
 
-	void ProjectSettings::Set(const String& key, const JsonData& value)
+	void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
 	{
-		m_settings.Add(key, value);
+		m_settings[key] = value;
 	}
 
 	template<typename T>

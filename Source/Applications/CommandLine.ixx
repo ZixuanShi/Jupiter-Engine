@@ -41,7 +41,7 @@ namespace jpt
 		void Parse(const char* argumentStr);
 
 		/** Set a key-value pair to the arguments map. Could be empty if key is a flag. Will update value if key already exists */
-		void Set(const String& key, const JsonData& value);
+		void Set(const String& key, const JsonData& value = JsonData());
 
 		/** @return Value associated with the key */
 		template<ValidJsonType T>
@@ -107,9 +107,9 @@ namespace jpt
 		}
 	}
 
-	void CommandLine::Set(const String& key, const JsonData& value)
+	void CommandLine::Set(const String& key, const JsonData& value /* = JsonData()*/)
 	{
-		m_arguments.Add(key, value);
+		m_arguments[key] = value;
 	}
 
 	bool CommandLine::Has(const String& key) const
