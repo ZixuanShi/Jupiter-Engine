@@ -73,8 +73,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
-		constexpr size_t Count() const { return m_count; }
-		constexpr bool IsEmpty() const { return m_count == 0; }
+		constexpr size_t Count() const;
+		constexpr bool IsEmpty() const;
 		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
@@ -429,6 +429,18 @@ export namespace jpt
 
 			Add(key, value);
 		}
+	}
+
+	template<typename TKey, typename TValue, typename TComparator>
+	constexpr size_t HashMap<TKey, TValue, TComparator>::Count() const
+	{
+		return m_count;
+	}
+
+	template<typename TKey, typename TValue, typename TComparator>
+	constexpr bool HashMap<TKey, TValue, TComparator>::IsEmpty() const
+	{
+		return m_count == 0;
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
