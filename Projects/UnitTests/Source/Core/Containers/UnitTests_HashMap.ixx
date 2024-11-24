@@ -572,12 +572,42 @@ bool UnitTests_HashMap_Emplace()
         jpt::String name;
 		float64 height;
 		int32 age;
-		jpt::DynamicArray<Foo*> neighbors;
+		jpt::DynamicArray<jpt::String> neighbors;
+        jpt::String info;
+
+		Foo() = default;
+        Foo(const jpt::String& _name, float64 _height, int32 _age, const jpt::DynamicArray<jpt::String>& _neighbors)
+			: name(_name)
+            , height(_height)
+            , age(_age)
+            , neighbors(_neighbors)
+        {
+            const jpt::String heightStr = jpt::ToString(height);
+			const jpt::String ageStr = jpt::ToString(age);
+			const jpt::String neighborsStr = jpt::ToString(neighbors);
+
+            info.Append({ name, heightStr , ageStr, neighborsStr }, "-|");
+        }
+
+		jpt::String ToString() const
+		{
+			return info;
+		}
     };
 
-	//jpt::HashMap<jpt::String, Foo> hashMap;
+	jpt::HashMap<jpt::String, Foo> hashMap;
 
-	//hashMap.Emplace("Alice", "Alice", 5.5f, 25, jpt::DynamicArray<Foo*>{});
+	hashMap.Emplace("Alice", "Alice", 5.5f, 25, jpt::DynamicArray<jpt::String>{});
+    hashMap.Emplace("Bob", "Bob", 6.0f, 30, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name });
+	hashMap.Emplace("Charlie", "Charlie", 5.8f, 28, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name });
+	hashMap.Emplace("David", "David", 5.9f, 27, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name, hashMap["Charlie"].name });
+
+	JPT_ENSURE(hashMap.Count() == 4);
+
+	JPT_ENSURE(hashMap["Alice"].ToString() == "Alice-|5.500-|25-|[]");
+	JPT_ENSURE(hashMap["Bob"].ToString() == "Bob-|6.000-|30-|[Alice]");
+	JPT_ENSURE(hashMap["Charlie"].ToString() == "Charlie-|5.800-|28-|[Alice, Bob]");
+	JPT_ENSURE(hashMap["David"].ToString() == "David-|5.900-|27-|[Alice, Bob, Charlie]");
 
     return true;
 }

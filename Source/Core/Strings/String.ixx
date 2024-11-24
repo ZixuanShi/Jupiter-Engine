@@ -129,6 +129,7 @@ export namespace jpt
 		constexpr void Append(const TChar* CString, size_t newStringSize);
 		constexpr void Append(const TChar* CString);
 		constexpr void Append(const String_Base<TChar>& otherString);
+		constexpr void Append(const DynamicArray<String_Base<TChar>>& strings, const TChar* separator = nullptr);
 		constexpr void Append(TChar c);
 		constexpr String_Base& operator+=(const TChar* CString);
 		constexpr String_Base& operator+=(const String_Base<TChar>& otherString);
@@ -721,6 +722,33 @@ export namespace jpt
 	{
 		JPT_EXIT_IF(otherString.IsEmpty());
 		AppendImpl(otherString.ConstBuffer(), otherString.m_count);
+	}
+
+	template<StringLiteral TChar, class TAllocator>
+	constexpr void String_Base<TChar, TAllocator>::Append(const DynamicArray<String_Base<TChar>>& strings, const TChar* separator)
+	{
+		size_t newCount = m_count;
+		const size_t separatorCount = FindCharsCount(separator);
+
+		for (size_t i = 0; i < strings.Count(); ++i)
+		{
+			newCount += strings[i].Count();
+			if (i != strings.Count() - 1 && separator)
+			{
+				newCount += separatorCount;
+			}
+		}
+
+		Reserve(newCount);
+
+		for (size_t i = 0; i < strings.Count(); ++i)
+		{
+			Append(strings[i]);
+			if (i != strings.Count() - 1 && separator)
+			{
+				Append(separator, separatorCount);
+			}
+		}
 	}
 
 	template<StringLiteral TChar, class TAllocator>

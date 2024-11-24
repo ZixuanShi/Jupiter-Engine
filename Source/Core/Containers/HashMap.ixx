@@ -26,13 +26,13 @@ import jpt_private.HashTableIterator;
 export namespace jpt
 {
 	/** Unordered map implementation with Chainning hash collision-handling  */
-	template <typename _TKey, typename _TValue, typename _Comparator = Comparator_Equal<_TKey>>
+	template <typename _TKey, typename _TValue, typename _TComparator = Comparator_Equal<_TKey>>
 	class HashMap
 	{
 	public:
 		using TKey          = _TKey;
 		using TValue        = _TValue;
-		using TComparator   = _Comparator;
+		using TComparator   = _TComparator;
 		using TData         = Pair<TKey, TValue>;
 		using TBucket       = LinkedList<TData>;
 		using TBuckets 	    = DynamicArray<TBucket>;
@@ -82,7 +82,7 @@ export namespace jpt
 		constexpr TValue& Add(const TData& element);
 		constexpr TValue& Add(TKey&& key, TValue&& value);
 		constexpr TValue& Add(TData&& element);
-		//template<typename ...TArgs> constexpr TValue& Emplace(TArgs&&... args);
+		template<typename ...TArgs> constexpr TValue& Emplace(const TKey& key, TArgs&&... args);
 
 		// Erasing
 		constexpr Iterator Erase(const TKey& key);
@@ -319,13 +319,33 @@ export namespace jpt
 	{
 		return Emplace(Move(element.first), Move(element.second));
 	}
+	
+	template<typename TKey, typename TValue, typename TComparator>
+	template<typename ...TArgs>
+	constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(const TKey& key, TArgs && ...args)
+	{
+		// Grow if needed. Grow when the count is 75% of the bucket size
+		if (m_count >= (m_buckets.Count() * 3) / 4)
+		{
+			Reserve(m_buckets.Count() * kGrowMultiplier);
+		}
 
-	//template<typename TKey, typename TValue, typename TComparator>
-	//template<typename ...TArgs>
-	//constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(TArgs&& ...args)
-	//{
-	//	// TODO: insert return statement here
-	//}
+		TBucket& bucket = GetBucket(key);
+
+		// Check if the key already exists. If it does, update the value and return it
+		for (TData& element : bucket)
+		{
+			if (kComparator(element.first, key))
+			{
+				return element.second;
+			}
+		}
+
+		// If the key does not exist, add and return it
+		++m_count;
+		TData& inserted = bucket.EmplaceBack(Pair{ key, TValue(Forward<TArgs>(args)...) });
+		return inserted.second;
+	}
 
 	template<typename TKey, typename TValue, typename TComparator>
 	constexpr HashMap<TKey, TValue, TComparator>::Iterator HashMap<TKey, TValue, TComparator>::Erase(const TKey& key)
