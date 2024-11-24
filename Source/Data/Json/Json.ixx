@@ -177,12 +177,14 @@ namespace jpt
 			// Integer
 			if (valueStr.Find('.') == npos)
 			{
-				return valueStr.ToInt<int32>();
+				const int32 integer = CStrToInteger(valueStr.ConstBuffer(), valueStr.Count());
+				return integer;
 			}
 			// Float
 			else
 			{
-				return valueStr.ToFloat<float32>();
+				const float32 floating = CStrToFloat(valueStr.ConstBuffer(), valueStr.Count());
+				return floating;
 			}
 		}
 	}

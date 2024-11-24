@@ -58,11 +58,11 @@ TInt Evaluate(const String& valueStr)
 	}
 
 	// If is a pure number, return it.
-	if (valueStr.IsInteger())
+	if (IsInteger(valueStr.ConstBuffer()))
 	{
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count());
 	}
-	else if (valueStr.IsHexInteger())
+	else if (IsHexInteger(valueStr.ConstBuffer()))
 	{
 		return CStrToInteger<char, TInt>(expression.ConstBuffer(), expression.Count(), EIntBase::Hex);
 	}

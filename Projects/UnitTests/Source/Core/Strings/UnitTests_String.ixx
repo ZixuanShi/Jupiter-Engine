@@ -257,15 +257,15 @@ bool UnitTests_WString_Replace()
 bool UnitTests_String_ConvertToNumber()
 {
 	jpt::String str = "42";
-	int32 number = str.ToInt();
+	int32 number = jpt::CStrToInteger(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(number == 42);
 
 	str = "3.14159";
-	float32 fNumber = str.ToFloat();
+	float32 fNumber = jpt::CStrToFloat(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(jpt::AreValuesClose(fNumber, 3.14159f));
 
 	str = "3.14159";
-	float64 dNumber = str.ToFloat();
+	float64 dNumber = jpt::CStrToFloat<char, float64>(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(jpt::AreValuesClose(dNumber, 3.14159));
 
 	return true;
@@ -273,15 +273,15 @@ bool UnitTests_String_ConvertToNumber()
 bool UnitTests_WString_ConvertToNumber()
 {
 	jpt::WString str = L"42";
-	int32 number = str.ToInt();
+	int32 number = jpt::CStrToInteger(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(number == 42);
 
 	str = L"3.14159";
-	float32 fNumber = str.ToFloat();
+	float32 fNumber = jpt::CStrToFloat(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(jpt::AreValuesClose(fNumber, 3.14159f));
 
 	str = L"3.14159";
-	float64 dNumber = str.ToFloat();
+	float64 dNumber = jpt::CStrToFloat<wchar_t, float64>(str.ConstBuffer(), str.Count());
 	JPT_ENSURE(jpt::AreValuesClose(dNumber, 3.14159));
 
 	return true;
@@ -571,22 +571,24 @@ bool UnitTests_WString_Format()
 bool UnitTests_String_MakeUpper()
 {
 	jpt::String str = "Hello World Jupiter Engine";
-	str.MakeUpper();
+	for (char& c : str)
+	{
+		c = jpt::GetUpper(c);
+	}
 
 	JPT_ENSURE(str == "HELLO WORLD JUPITER ENGINE");
-
-	JPT_ENSURE(jpt::String::GetUpper("Hello World Jupiter Engine") == "HELLO WORLD JUPITER ENGINE");
 
 	return true;
 }
 bool UnitTests_WString_MakeUpper()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
-	str.MakeUpper();
+	for (wchar_t& c : str)
+	{
+		c = jpt::GetUpper(c);
+	}
 
 	JPT_ENSURE(str == L"HELLO WORLD JUPITER ENGINE");
-
-	JPT_ENSURE(jpt::WString::GetUpper(L"Hello World Jupiter Engine") == L"HELLO WORLD JUPITER ENGINE");
 
 	return true;
 }
@@ -594,22 +596,24 @@ bool UnitTests_WString_MakeUpper()
 bool UnitTests_String_MakeLower()
 {
 	jpt::String str = "Hello World Jupiter Engine";
-	str.MakeLower();
+	for (char& c : str)
+	{
+		c = jpt::GetLower(c);
+	}
 
 	JPT_ENSURE(str == "hello world jupiter engine");
-
-	JPT_ENSURE(jpt::String::GetLower("Hello World Jupiter Engine") == "hello world jupiter engine");
 
 	return true;
 }
 bool UnitTests_WString_MakeLower()
 {
 	jpt::WString str = L"Hello World Jupiter Engine";
-	str.MakeLower();
+	for (wchar_t& c : str)
+	{
+		c = jpt::GetLower(c);
+	}
 
 	JPT_ENSURE(str == L"hello world jupiter engine");
-
-	JPT_ENSURE(jpt::WString::GetLower(L"Hello World Jupiter Engine") == L"hello world jupiter engine");
 
 	return true;
 }
@@ -653,32 +657,32 @@ bool UnitTests_String_WStringCompareCStr()
 bool UnitTests_String_IsInteger()
 {
 	jpt::String str = "1456566";
-	JPT_ENSURE(str.IsInteger());
+	JPT_ENSURE(jpt::IsInteger(str.ConstBuffer()));
 
 	str = "-1456566";
-	JPT_ENSURE(str.IsInteger());
+	JPT_ENSURE(jpt::IsInteger(str.ConstBuffer()));
 
 	str = "1999-1456566";
-	JPT_ENSURE(!str.IsInteger());
+	JPT_ENSURE(!jpt::IsInteger(str.ConstBuffer()));
 
 	str = "Hello World";
-	JPT_ENSURE(!str.IsInteger());
+	JPT_ENSURE(!jpt::IsInteger(str.ConstBuffer()));
 
 	return true;
 }
 bool UnitTests_WString_IsInteger()
 {
 	jpt::WString str = L"1456566";
-	JPT_ENSURE(str.IsInteger());
+	JPT_ENSURE(jpt::IsInteger(str.ConstBuffer()));
 
 	str = L"-1456566";
-	JPT_ENSURE(str.IsInteger());
+	JPT_ENSURE(jpt::IsInteger(str.ConstBuffer()));
 
 	str = L"1999-1456566";
-	JPT_ENSURE(!str.IsInteger());
+	JPT_ENSURE(!jpt::IsInteger(str.ConstBuffer()));
 
 	str = L"Hello World";
-	JPT_ENSURE(!str.IsInteger());
+	JPT_ENSURE(!jpt::IsInteger(str.ConstBuffer()));
 
 	return true;
 }
@@ -686,32 +690,32 @@ bool UnitTests_WString_IsInteger()
 bool UnitTests_String_IsHexInteger()
 {
 	jpt::String str = "0xFF0045FF";
-	JPT_ENSURE(str.IsHexInteger());
+	JPT_ENSURE(jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = "FF0045FF";
-	JPT_ENSURE(str.IsHexInteger());
+	JPT_ENSURE(jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = "0x1999-1456566";
-	JPT_ENSURE(!str.IsHexInteger());
+	JPT_ENSURE(!jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = "Hello World";
-	JPT_ENSURE(!str.IsHexInteger());
+	JPT_ENSURE(!jpt::IsHexInteger(str.ConstBuffer()));
 
 	return true;
 }
 bool UnitTests_WString_IsHexInteger()
 {
 	jpt::WString str = L"0xFF0045FF";
-	JPT_ENSURE(str.IsHexInteger());
+	JPT_ENSURE(jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = L"FF0045FF";
-	JPT_ENSURE(str.IsHexInteger());
+	JPT_ENSURE(jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = L"0x1999-1456566";
-	JPT_ENSURE(!str.IsHexInteger());
+	JPT_ENSURE(!jpt::IsHexInteger(str.ConstBuffer()));
 
 	str = L"Hello World";
-	JPT_ENSURE(!str.IsHexInteger());
+	JPT_ENSURE(!jpt::IsHexInteger(str.ConstBuffer()));
 
 	return true;
 }
@@ -719,26 +723,26 @@ bool UnitTests_WString_IsHexInteger()
 bool UnitTests_String_IsFloat()
 {
 	jpt::String str = "3.14159";
-	JPT_ENSURE(str.IsFloat());
+	JPT_ENSURE(jpt::IsFloat(str.ConstBuffer()));
 
 	str = "3.14159.0";
-	JPT_ENSURE(!str.IsFloat());
+	JPT_ENSURE(!jpt::IsFloat(str.ConstBuffer()));
 
 	str = "Hello World";
-	JPT_ENSURE(!str.IsFloat());
+	JPT_ENSURE(!jpt::IsFloat(str.ConstBuffer()));
 
 	return true;
 }
 bool UnitTests_WString_IsFloat()
 {
 	jpt::WString str = L"3.14159";
-	JPT_ENSURE(str.IsFloat());
+	JPT_ENSURE(jpt::IsFloat(str.ConstBuffer()));
 
 	str = L"3.14159.0";
-	JPT_ENSURE(!str.IsFloat());
+	JPT_ENSURE(!jpt::IsFloat(str.ConstBuffer()));
 
 	str = L"Hello World";
-	JPT_ENSURE(!str.IsFloat());
+	JPT_ENSURE(!jpt::IsFloat(str.ConstBuffer()));
 
 	return true;
 }
@@ -852,6 +856,7 @@ export bool RunUnitTests_String()
 		JPT_ENSURE(UnitTests_WString_Count());
 	}
 
+	// TODO: these are allocating, it's incorrect
 	jpt::String str = "Hello World Jupiter Engine";
 	str.Reserve(26);
 	str.Reserve(26);

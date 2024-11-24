@@ -535,7 +535,7 @@ export namespace jpt
 	}
 
 	/** @note	Will ignore the 'f' is there's any */
-	template<StringLiteral TChar = char, Floating TFloat = float>
+	template<StringLiteral TChar = char, Floating TFloat = float32>
 	constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count)
 	{
 		// Parse two integral parts of the precision dot, then combine them

@@ -40,7 +40,7 @@ export namespace jpt
 		TChar m_smallBuffer[kSmallDataSize] = { 0 };	/**< Small buffer to store small data */
 		TChar* m_pBuffer = nullptr;  /**< The pointer to the buffer representing this string's value */
 		size_t m_count = 0;          /**< How many characters in this string currently */
-		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing */
+		size_t m_capacity = 0;       /**< How many characters this string can hold before resizing. Excluded the null terminator */
 
 	public:
 		constexpr String_Base() = default;
@@ -153,26 +153,6 @@ export namespace jpt
 		constexpr void MoveString(TChar* inCString, size_t size);
 		constexpr void MoveString(TChar* inCString);
 		constexpr void MoveString(String_Base<TChar>&& otherString);
-
-		/** @return An integer associated with this string
-			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front */
-		template<Integral TInt = int32>
-		constexpr TInt ToInt() const;
-		constexpr bool IsInteger() const;
-		constexpr bool IsHexInteger() const;
-
-		/** @return A float associated with this string
-			@note   Will assert fail if Has non-numeric literals besides the negative sign at the front or the percision dot
-			@note	Will ignore the 'f' is there's any */
-		template<Floating TFloat = float>
-		constexpr TFloat ToFloat() const;
-		constexpr bool IsFloat() const;
-
-		/** Converts all the characters to lowercase/uppercase */
-		constexpr void MakeLower();
-		constexpr void MakeUpper();
-		static constexpr String_Base GetLower(const String_Base& string);
-		static constexpr String_Base GetUpper(const String_Base& string);
 
 		/** @return A hash value of this string */
 		constexpr uint64 Hash() const;
@@ -876,20 +856,6 @@ export namespace jpt
 	}
 
 	template<StringLiteral TChar, class TAllocator>
-	template<Integral TInt>
-	constexpr TInt String_Base<TChar, TAllocator>::ToInt() const
-	{
-		return CStrToInteger<TChar, TInt>(m_pBuffer, m_count);
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	template<Floating TFloat>
-	constexpr TFloat String_Base<TChar, TAllocator>::ToFloat() const
-	{
-		return CStrToFloat<TChar, TFloat>(m_pBuffer, m_count);
-	}
-
-	template<StringLiteral TChar, class TAllocator>
 	constexpr void String_Base<TChar, TAllocator>::CopyString(const TChar* inCString, size_t size)
 	{
 		if (AreStringsSame(m_pBuffer, inCString, m_count, size))
@@ -996,58 +962,6 @@ export namespace jpt
 		otherString.m_pBuffer  = nullptr;
 		otherString.m_count     = 0;
 		otherString.m_capacity = 0;
-	}
-
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr bool String_Base<_TChar, _TAllocator>::IsInteger() const
-	{
-		return jpt::IsInteger<TChar>(m_pBuffer);
-	}
-
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr bool String_Base<_TChar, _TAllocator>::IsHexInteger() const
-	{
-		return jpt::IsHexInteger<TChar>(m_pBuffer);
-	}
-
-	template<StringLiteral _TChar, class _TAllocator>
-	constexpr bool String_Base<_TChar, _TAllocator>::IsFloat() const
-	{
-		return jpt::IsFloat<TChar>(m_pBuffer);
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr void String_Base<TChar, TAllocator>::MakeLower()
-	{
-		for (size_t i = 0; i < m_count; ++i)
-		{
-			m_pBuffer[i] = jpt::GetLower(m_pBuffer[i]);
-		}
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr void String_Base<TChar, TAllocator>::MakeUpper()
-	{
-		for (size_t i = 0; i < m_count; ++i)
-		{
-			m_pBuffer[i] = jpt::GetUpper(m_pBuffer[i]);
-		}
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetLower(const String_Base& string)
-	{
-		String_Base str = string;
-		str.MakeLower();
-		return str;
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetUpper(const String_Base& string)
-	{
-		String_Base str = string;
-		str.MakeUpper();
-		return str;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
