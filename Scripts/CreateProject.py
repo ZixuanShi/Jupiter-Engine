@@ -99,7 +99,7 @@ def create_application_header():
 	#include "Applications/App/Application_Base.h"
 #endif
 
-class <ProjectName> final : 
+class Application_<ProjectName> final : 
 #if IS_PLATFORM_WIN64
 	public jpt::Application_Win64
 #else
@@ -118,57 +118,28 @@ public:
 };"""
 
 	content = content.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Source/Applications/" + project_name + ".h", "w") as file:
+	with open(project_directory + "/Source/Applications/Application_" + project_name + ".h", "w") as file:
 	    file.write(content)
 
 def create_application_cpp():
-	content = """#include "Applications/<ProjectName>.h"
+	content = """#include "Applications/Application_<ProjectName>.h"
 
 #include "Core/Minimal/CoreHeaders.h"
+#include "System/Environment/SyncClient.h"
 
 import jpt.CoreModules;
 
-bool <ProjectName>::PreInit()
+bool Application_<ProjectName>::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
 	return true;
 }
 
-#pragma region Engine-Client Communications
-constexpr const wchar_t* jpt::File::GetClientDirW() { return JPT_CLIENT_DIR_W; }
-constexpr const wchar_t* jpt::File::GetOutputDirW() { return JPT_OUTPUT_DIR_W; }
-#pragma endregion"""
+JPT_SYNC_CLIENT(<ProjectName>)"""
 
 	content = content.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Source/Applications/" + project_name + ".cpp", "w") as file:
-	    file.write(content)
-
-
-def create_main_cpp():
-	content = """#include "Applications/<ProjectName>.h"
-
-import jpt.EntryPoints;
-
-#if IS_PLATFORM_WIN64
-
-_Use_decl_annotations_
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
-{
-	<ProjectName> app;
-	return jpt::MainImpl_Win64(&app, hInstance, launchArgs, nCmdShow);
-}
-#else
-
-int main(int argc, char* argv[])
-{
-	<ProjectName> app;
-	return jpt::MainImpl(&app);
-}
-#endif"""
-
-	content = content.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Source/Main.cpp", "w") as file:
+	with open(project_directory + "/Source/Applications/Application_" + project_name + ".cpp", "w") as file:
 	    file.write(content)
 
 
@@ -177,7 +148,6 @@ def create_source():
 
 	create_application_header()
 	create_application_cpp()
-	create_main_cpp()
 
 
 if __name__ == "__main__":
