@@ -433,19 +433,17 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr size_t String_Base<TChar, TAllocator>::Find(const TChar* pStringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/) const
 	{
-		const size_t StringToFindSize = FindCharsCount(pStringToFind);
+		const size_t stringToFindSize = FindCharsCount(pStringToFind);
 		ClampTo(endIndex, static_cast<size_t>(0), m_count);
 
-		String_Base<TChar> current;
 		for (size_t i = startIndex; i < endIndex; ++i)
 		{
-			if ((i + StringToFindSize) > endIndex)
+			if ((i + stringToFindSize) > endIndex)
 			{
 				return npos;
 			}
 
-			current = SubStr(i, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), pStringToFind, current.Count(), StringToFindSize))
+			if (AreStringsSame(m_pBuffer + i, pStringToFind, stringToFindSize))
 			{
 				return i;
 			}
@@ -493,7 +491,6 @@ export namespace jpt
 		const size_t StringToFindSize = FindCharsCount(pStringToFind);
 		ClampTo(endIndex, size_t(0), m_count);
 
-		String_Base<TChar> current;
 		for (int64 i = endIndex; i >= static_cast<int64>(startIndex); --i)
 		{
 			if ((i - StringToFindSize) < startIndex)
@@ -501,8 +498,7 @@ export namespace jpt
 				return npos;
 			}
 
-			current = SubStr(i - StringToFindSize, StringToFindSize);
-			if (AreStringsSame(current.ConstBuffer(), pStringToFind, current.Count(), StringToFindSize))
+			if (AreStringsSame(m_pBuffer + i - StringToFindSize, pStringToFind, StringToFindSize))
 			{
 				return i - StringToFindSize;
 			}

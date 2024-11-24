@@ -17,7 +17,29 @@ import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Rand;
 
-static void Replace(jpt::BenchmarksReporter& reporter)
+void Find(jpt::BenchmarksReporter& reporter)
+{
+	static constexpr size_t kCount = 1'000'000;
+	jpt::StopWatch::Point now;
+	jpt::TimePrecision jptResult = 0.0;
+
+	{
+		now = jpt::StopWatch::Now();
+
+		for (int32 i = 0; i < kCount; ++i)
+		{
+			jpt::String str = "Hello Jupiter World";
+			JPT_ASSERT(str.Find("Jupiter") == 6);
+		}
+
+		jptResult = jpt::StopWatch::GetMsFrom(now);
+	}
+
+	jpt::BenchmarkUnit unit{ "String", "Replace 1'000'000 elements", jptResult, 0.0 };
+	reporter.Add(unit);
+}
+
+void Replace(jpt::BenchmarksReporter& reporter)
 {
 	static constexpr size_t kCount = 1'000'000;
 	jpt::StopWatch::Point now;
@@ -42,5 +64,6 @@ static void Replace(jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
+	Find(reporter);
 	Replace(reporter);
 }
