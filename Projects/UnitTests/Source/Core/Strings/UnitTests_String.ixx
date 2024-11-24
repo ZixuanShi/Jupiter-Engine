@@ -752,6 +752,7 @@ bool UnitTests_String_Count()
 	JPT_ENSURE(str.Count('L') == 0);
 	JPT_ENSURE(str.Count("Jupiter") == 2);
 	JPT_ENSURE(str.Count("Jupiter Engine") == 1);
+	JPT_ENSURE(str.Count("JupiterJ") == 0);
 
 	return true;
 }
@@ -764,6 +765,7 @@ bool UnitTests_WString_Count()
 	JPT_ENSURE(str.Count('L') == 0);
 	JPT_ENSURE(str.Count(L"Jupiter") == 2);
 	JPT_ENSURE(str.Count(L"Jupiter Engine") == 1);
+	JPT_ENSURE(str.Count(L"JupiterJ") == 0);
 
 	return true;
 }
