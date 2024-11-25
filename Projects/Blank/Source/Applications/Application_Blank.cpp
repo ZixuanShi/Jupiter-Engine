@@ -14,10 +14,9 @@ bool Application_Blank::PreInit()
 	m_foo.PreInit();
 	m_bar.PreInit();
 
-	jpt::String str = "Hello World AAA";
+	// TODO: these are allocating, it's incorrect
+	jpt::WString str = L"Hello World AAA";
 	JPT_LOG(str);
-
-	str.Reserve(26);
 	str.Reserve(26);
 	str.Reserve(26);
 	str.Reserve(26);

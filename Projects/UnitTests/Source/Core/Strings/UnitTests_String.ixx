@@ -856,12 +856,5 @@ export bool RunUnitTests_String()
 		JPT_ENSURE(UnitTests_WString_Count());
 	}
 
-	// TODO: these are allocating, it's incorrect
-	jpt::String str = "Hello World Jupiter Engine";
-	str.Reserve(26);
-	str.Reserve(26);
-	str.Reserve(26);
-	str.Reserve(26);
-
 	return true;
 }
