@@ -17,26 +17,34 @@ import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Rand;
 
-void Find(jpt::BenchmarksReporter& reporter)
+template<typename TFunc>
+void Profile(jpt::BenchmarksReporter& reporter, const char* topic, const char* context, size_t testCount, TFunc&& func)
 {
-	static constexpr size_t kCount = 1'000'000;
 	jpt::StopWatch::Point now;
 	jpt::TimePrecision jptResult = 0.0;
 
 	{
 		now = jpt::StopWatch::Now();
 
-		for (int32 i = 0; i < kCount; ++i)
+		for (int32 i = 0; i < testCount; ++i)
 		{
-			jpt::String str = "Hello Jupiter World";
-			JPT_ASSERT(str.Find("Jupiter") == 6);
+			func();
 		}
 
 		jptResult = jpt::StopWatch::GetMsFrom(now);
 	}
 
-	jpt::BenchmarkUnit unit{ "String", "Find 1'000'000 elements", jptResult, 0.0 };
+	jpt::BenchmarkUnit unit{ topic, context, jptResult };
 	reporter.Add(unit);
+}
+
+void Find(jpt::BenchmarksReporter& reporter)
+{
+	Profile(reporter, "String", "Find 1'000'000 elements", 1'000'000, []()
+		{
+			jpt::String str = "Hello Jupiter World";
+			JPT_ASSERT(str.Find("Jupiter") == 6);
+		});
 }
 
 void Replace(jpt::BenchmarksReporter& reporter)
@@ -62,12 +70,22 @@ void Replace(jpt::BenchmarksReporter& reporter)
 		jptResult = jpt::StopWatch::GetMsFrom(now);
 	}
 
-	jpt::BenchmarkUnit unit{ "String", "Replace 1'000'000 elements", jptResult, 0.0 };
+	jpt::BenchmarkUnit unit{ "String", "Replace 1'000'000 elements", jptResult };
 	reporter.Add(unit);
+}
+
+void SubStr(jpt::BenchmarksReporter& reporter)
+{
+
+}
+
+void Split(jpt::BenchmarksReporter& reporter)
+{
+
 }
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
-	//Find(reporter);
-	//Replace(reporter);
+	Find(reporter);
+	Replace(reporter);
 }

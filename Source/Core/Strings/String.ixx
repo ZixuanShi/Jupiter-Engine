@@ -794,7 +794,7 @@ export namespace jpt
 		{
 			if (capacity >= kSmallDataSize)
 			{
-				TChar* pNewBuffer = TAllocator::AllocateArray(capacity);
+				TChar* pNewBuffer = TAllocator::AllocateArray(capacity); // Should add 1 for null terminator
 
 				// Copy the old buffer to the new one
 				if (m_pBuffer)

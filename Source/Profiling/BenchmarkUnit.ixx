@@ -13,11 +13,10 @@ export namespace jpt
 		String topic;
 		String context;
 		TimePrecision resultMS;
-		TimePrecision stdComparison;	// Optional
 
 		String ToString() const
 		{
-			return String::Format<256>("%s,%s,%f,%f", topic.ConstBuffer(), context.ConstBuffer(), resultMS, stdComparison);			
+			return String::Format<256>("%s,%s,%f", topic.ConstBuffer(), context.ConstBuffer(), resultMS);			
 		}
 	};
 }

@@ -58,7 +58,7 @@ export namespace jpt
 	{
 		// Add Platform, CPU, GPU, Memory
 
-		CSVData::Row header{ "Topic", "Context", "Result (MS)", "[Optional] std comparison" };
+		CSVData::Row header{ "Topic", "Context", "Result (MS)" };
 		m_results.AddRow(header);
 	}
 
