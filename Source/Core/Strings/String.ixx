@@ -11,7 +11,6 @@ module;
 #include <stdarg.h>
 #include <fstream>
 
-
 export module jpt.String;
 
 import jpt.Allocator;
@@ -633,10 +632,12 @@ export namespace jpt
 		}
 		else
 		{
-			TChar* pBuffer = TAllocator::AllocateArray(count + 1);
-			StrNCpy(pBuffer, count + 1, &m_pBuffer[index], count);
+			result.m_pBuffer = TAllocator::AllocateArray(count + 1);
+			StrNCpy(result.m_pBuffer, count + 1, &m_pBuffer[index], count);
 
-			result.MoveString(pBuffer, count);
+			result.m_pBuffer[count] = '\0';
+			result.m_count = count;
+			result.m_capacity = count;
 		}
 
 		return result;
@@ -712,14 +713,14 @@ export namespace jpt
 		Reserve(m_count + size);
 
 		// Move the suffix to the new position
-		void* pDestinationToMove = m_pBuffer + index + size;
+		void* pDestinationToMove  = m_pBuffer + index + size;
 		const void* pSourceToMove = m_pBuffer + index;
-		const size_t sizeToMove = (m_count - index + 1) * sizeof(TChar);
+		const size_t sizeToMove   = (m_count - index + 1) * sizeof(TChar);
 		memmove(pDestinationToMove, pSourceToMove, sizeToMove);
 
 		// Insert the new string
 		void* pDestinationToInsert = m_pBuffer + index;
-		const size_t sizeToInsert = size * sizeof(TChar);
+		const size_t sizeToInsert  = size * sizeof(TChar);
 		memcpy(pDestinationToInsert, CString, sizeToInsert);
 
 		m_count += size;
