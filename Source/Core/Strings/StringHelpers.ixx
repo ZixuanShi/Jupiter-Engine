@@ -92,29 +92,29 @@ export namespace jpt
 
 	/**	Copies data from destination to source with the given size */
 	template<StringLiteral TChar>
-	constexpr void StrCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource)
+	constexpr void StrCpy(TChar* pDestination, size_t size, const TChar* pSource)
 	{
 		if constexpr (AreSameType<TChar, char>)
 		{
-			strcpy_s(pDestination, sizeInBytes, pSource);
+			strcpy_s(pDestination, size, pSource);
 		}
 		else if (AreSameType<TChar, wchar_t>)
 		{
-			wcscpy_s(pDestination, sizeInBytes, pSource);
+			wcscpy_s(pDestination, size, pSource);
 		}
 	}
 
 	/**	Copies data from destination to source with the given size and max count */
 	template<StringLiteral TChar>
-	constexpr void StrNCpy(TChar* pDestination, size_t sizeInBytes, const TChar* pSource, size_t maxCount)
+	constexpr void StrNCpy(TChar* pDestination, size_t size, const TChar* pSource, size_t maxCount)
 	{
 		if constexpr (AreSameType<TChar, char>)
 		{
-			strncpy_s(pDestination, sizeInBytes, pSource, maxCount);
+			strncpy_s(pDestination, size, pSource, maxCount);
 		}
 		else if (AreSameType<TChar, wchar_t>)
 		{
-			wcsncpy_s(pDestination, sizeInBytes, pSource, maxCount);
+			wcsncpy_s(pDestination, size, pSource, maxCount);
 		}
 	}
 
