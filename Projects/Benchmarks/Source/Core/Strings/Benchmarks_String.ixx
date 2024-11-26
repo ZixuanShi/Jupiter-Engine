@@ -60,10 +60,21 @@ void Split(jpt::BenchmarksReporter& reporter)
 		});
 }
 
+void Insert(jpt::BenchmarksReporter& reporter)
+{
+	reporter.Profile("String", "Insert 1'000'000 elements", 1'000'000, []()
+		{
+			jpt::String str = "Hello World";
+			str.Insert(" Jupiter", 5);
+			JPT_ASSERT(str == "Hello Jupiter World");
+		});
+}
+
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
 	Find(reporter);
 	Replace(reporter);
 	SubStr(reporter);
 	Split(reporter);
+	Insert(reporter);
 }

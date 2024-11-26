@@ -709,12 +709,20 @@ export namespace jpt
 		JPT_ASSERT(index <= m_count, "Index out of bound");
 		JPT_EXIT_IF(size == 0);
 
-		String_Base suff = SubStr(index);
+		Reserve(m_count + size);
 
-		TrimRight(index);
+		// Move the suffix to the new position
+		void* pDestinationToMove = m_pBuffer + index + size;
+		const void* pSourceToMove = m_pBuffer + index;
+		const size_t sizeToMove = (m_count - index + 1) * sizeof(TChar);
+		memmove(pDestinationToMove, pSourceToMove, sizeToMove);
 
-		Append(CString, size);
-		Append(suff);
+		// Insert the new string
+		void* pDestinationToInsert = m_pBuffer + index;
+		const size_t sizeToInsert = size * sizeof(TChar);
+		memcpy(pDestinationToInsert, CString, sizeToInsert);
+
+		m_count += size;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
