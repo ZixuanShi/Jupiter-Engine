@@ -11,6 +11,7 @@ module;
 #include <stdarg.h>
 #include <fstream>
 
+
 export module jpt.String;
 
 import jpt.Allocator;
@@ -519,25 +520,39 @@ export namespace jpt
 			endIndex = m_count;
 		}
 
-		const String_Base<TChar> replaced(pStringToReplace);
+		const size_t stringToReplaceSize = FindCharsCount(pStringToReplace);
 		const size_t stringToFindSize = FindCharsCount(pStringToFind);
 
-		size_t foundPos = startIndex;
+		// If the replaced string is larger than the string to find, we need to reserve more space
+		if (stringToReplaceSize > stringToFindSize)
+		{
+			const size_t count = Count(pStringToFind, startIndex, endIndex);
+			Reserve(m_count + (stringToReplaceSize - stringToFindSize) * count);
+		}
+
 		while (true)
 		{
-			foundPos = Find(pStringToFind, startIndex, endIndex);
+			const size_t foundPos = Find(pStringToFind, startIndex, endIndex);
 			if (foundPos == npos)
 			{
 				break;
 			}
 
-			String_Base<TChar> pre = SubStr(0, foundPos);
-			String_Base<TChar> suff = SubStr(foundPos + stringToFindSize);
+			// Move the suffix to the new position
+			void* pDestinationToMove  = m_pBuffer + foundPos + stringToReplaceSize;
+			const void* pSourceToMove = m_pBuffer + foundPos + stringToFindSize;
+			const size_t sizeToMove   = (m_count - foundPos - stringToFindSize + 1) * sizeof(TChar);
+			memmove(pDestinationToMove, pSourceToMove, sizeToMove);
 
-			*this = Move(pre) + replaced + Move(suff);
+			// Insert the new string
+			void* pDestinationToInsert = m_pBuffer + foundPos;
+			const size_t sizeToInsert  = stringToReplaceSize * sizeof(TChar);
+			memcpy(pDestinationToInsert, pStringToReplace, sizeToInsert);
 
-			startIndex = foundPos + replaced.Count();	// In case 'StringToReplace' Has 'StringToFind', like replacing 'x' with 'yx'		
-			endIndex += replaced.Count() - stringToFindSize;
+			// Update count and index for the next search
+			startIndex = foundPos + stringToReplaceSize;	// In case 'StringToReplace' Has 'StringToFind', like replacing 'x' with 'yx'		
+			endIndex += stringToReplaceSize - stringToFindSize;
+			m_count  += stringToReplaceSize - stringToFindSize;
 		}
 
 		return *this;

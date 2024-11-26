@@ -62,8 +62,8 @@ void Split(jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
-	//Find(reporter);
-	//Replace(reporter);
+	Find(reporter);
+	Replace(reporter);
 	SubStr(reporter);
-	//Split(reporter);
+	Split(reporter);
 }
