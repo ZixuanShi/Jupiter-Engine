@@ -33,6 +33,8 @@ import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 
+import jpt.Event.Window.Resize;
+
 using namespace jpt::Vulkan;
 
 export namespace jpt
@@ -86,8 +88,7 @@ export namespace jpt
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
-
-		void RecreateSwapChain();
+		virtual void OnWindowResized(const Event_Window_Resize& eventWindowResize) override;
 
 		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
 			                                                VkDebugUtilsMessageTypeFlagsEXT messageType, 
@@ -115,6 +116,7 @@ export namespace jpt
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
+		void RecreateSwapChain();
 
 		// Shutdown
 		void CleanupSwapChain();
@@ -267,9 +269,8 @@ export namespace jpt
 		presentInfo.pImageIndices = &imageIndex;
 
 		const VkResult resultQueuePresent = vkQueuePresentKHR(m_presentQueue, &presentInfo);
-		if (resultQueuePresent == VK_ERROR_OUT_OF_DATE_KHR || resultQueuePresent == VK_SUBOPTIMAL_KHR || m_framebufferResized)
+		if (resultQueuePresent == VK_ERROR_OUT_OF_DATE_KHR || resultQueuePresent == VK_SUBOPTIMAL_KHR)
 		{
-			m_framebufferResized = false;
 			RecreateSwapChain();
 		}
 		else if (resultQueuePresent != VK_SUCCESS)
@@ -278,6 +279,15 @@ export namespace jpt
 		}
 
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+	}
+
+	void Renderer_Vulkan::OnWindowResized(const Event_Window_Resize& eventWindowResize)
+	{
+		if (eventWindowResize.GetWidth() == 0 || eventWindowResize.GetHeight() == 0)
+		{
+			return;
+		}
+		RecreateSwapChain();
 	}
 
 	void Renderer_Vulkan::RecreateSwapChain()
