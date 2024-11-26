@@ -15,31 +15,10 @@ import jpt.Clock;
 import jpt.DateTime;
 import jpt.File.Path;
 import jpt.System.Paths;
+import jpt.Function;
 
 export namespace jpt
 {
-	/** @example
-		void ProfileSomething()
-		{
-			jpt::BenchmarksReporter reporter;
-			jpt::StopWatch stopWatch;
-
-			{
-				stopWatch.Start();
-
-				// Do some work here
-				jpt::SleepMs(1000);
-
-				reporter.Add({ "Test", "Test", stopWatch.GetDurationMs() });
-			}
-			// Other tests...
-			{				
-			}
-
-			reporter.Finalize();	// Outputs to CSV file
-			reporter.LogResults();	// Outputs to log
-		}
-	*/
 	class BenchmarksReporter
 	{
 	private:
@@ -48,7 +27,7 @@ export namespace jpt
 	public:
 		BenchmarksReporter();
 
-		void Add(const BenchmarkUnit& unit);
+		void Profile(const char* topic, const char* context, size_t count, const Function<void()>& func);
 
 		void Finalize();
 		void LogResults();
@@ -62,8 +41,19 @@ export namespace jpt
 		m_results.AddRow(header);
 	}
 
-	void BenchmarksReporter::Add(const BenchmarkUnit& unit)
+	void BenchmarksReporter::Profile(const char* topic, const char* context, size_t count, const Function<void()>& func)
 	{
+		StopWatch::Point now;
+		TimePrecision result = 0.0;
+		{
+			now = StopWatch::Now();
+			for (size_t i = 0; i < count; ++i)
+			{
+				func();
+			}
+			result = StopWatch::GetMsFrom(now);
+		}
+		BenchmarkUnit unit{ topic, context, result };
 		m_results.AddRow(unit.ToString());
 	}
 

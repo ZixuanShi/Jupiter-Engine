@@ -17,30 +17,9 @@ import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Rand;
 
-template<typename TFunc>
-void Profile(jpt::BenchmarksReporter& reporter, const char* topic, const char* context, size_t testCount, TFunc&& func)
-{
-	jpt::StopWatch::Point now;
-	jpt::TimePrecision jptResult = 0.0;
-
-	{
-		now = jpt::StopWatch::Now();
-
-		for (int32 i = 0; i < testCount; ++i)
-		{
-			func();
-		}
-
-		jptResult = jpt::StopWatch::GetMsFrom(now);
-	}
-
-	jpt::BenchmarkUnit unit{ topic, context, jptResult };
-	reporter.Add(unit);
-}
-
 void Find(jpt::BenchmarksReporter& reporter)
 {
-	Profile(reporter, "String", "Find 1'000'000 elements", 1'000'000, []()
+	reporter.Profile("String", "Find 1'000'000 elements", 1'000'000, []()
 		{
 			jpt::String str = "Hello Jupiter World";
 			JPT_ASSERT(str.Find("Jupiter") == 6);
@@ -49,43 +28,42 @@ void Find(jpt::BenchmarksReporter& reporter)
 
 void Replace(jpt::BenchmarksReporter& reporter)
 {
-	static constexpr size_t kCount = 1'000'000;
-	jpt::StopWatch::Point now;
-	jpt::TimePrecision jptResult = 0.0;
-
-	{
-		now = jpt::StopWatch::Now();
-
-		for (int32 i = 0; i < kCount; ++i)
+	reporter.Profile("String", "Replace 1'000'000 elements", 1'000'000, []()
 		{
 			jpt::String str = "Hello World o";
-
 			str.Replace("o", "Jupiter");
 			JPT_ASSERT(str == "HellJupiter WJupiterrld Jupiter");
-
 			str.Replace("Jupiter", "o");
 			JPT_ASSERT(str == "Hello World o");
-		}
-
-		jptResult = jpt::StopWatch::GetMsFrom(now);
-	}
-
-	jpt::BenchmarkUnit unit{ "String", "Replace 1'000'000 elements", jptResult };
-	reporter.Add(unit);
+		});
 }
 
 void SubStr(jpt::BenchmarksReporter& reporter)
 {
-
+	reporter.Profile("String", "SubStr 1'000'000 elements", 1'000'000, []()
+		{
+			jpt::String str = "Hello Jupiter World";
+			JPT_ASSERT(str.SubStr(6, 7) == "Jupiter");
+		});
 }
 
 void Split(jpt::BenchmarksReporter& reporter)
 {
-
+	reporter.Profile("String", "Split 1'000'000 elements", 1'000'000, []()
+		{
+			jpt::String str = "Hello Jupiter World";
+			auto split = str.Split(" ");
+			JPT_ASSERT(split.Count() == 3);
+			JPT_ASSERT(split[0] == "Hello");
+			JPT_ASSERT(split[1] == "Jupiter");
+			JPT_ASSERT(split[2] == "World");
+		});
 }
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
 	Find(reporter);
 	Replace(reporter);
+	SubStr(reporter);
+	Split(reporter);
 }
