@@ -39,7 +39,6 @@ export namespace jpt
 			constexpr void operator+=(const WString& path);
 
 			constexpr Path& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
-			constexpr Path GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 			constexpr void Reserve(size_t size);
 
@@ -113,11 +112,6 @@ export namespace jpt
 		{
 			m_path.Replace(StringToFind, StringToReplace, startIndex, endIndex);
 			return *this;
-		}
-
-		constexpr Path Path::GetReplaced(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex, size_t endIndex) const
-		{
-			return m_path.GetReplaced(StringToFind, StringToReplace, startIndex, endIndex);
 		}
 
 		constexpr void Path::Reserve(size_t size)

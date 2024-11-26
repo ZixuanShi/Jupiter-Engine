@@ -103,7 +103,6 @@ export namespace jpt
 			@param startIndex:		[optional] The start index to start searching. Default to 0
 			@param endIndex:		[optional] The end index to stop operation. Default to Count() */
 		constexpr String_Base& Replace(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos);
-		constexpr String_Base GetReplaced(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex = 0, size_t endIndex = npos) const;
 
 		/** Splits this string to substrings by a keyword */
 		constexpr DynamicArray<String_Base> Split(const TChar* pKeyword) const;
@@ -556,14 +555,6 @@ export namespace jpt
 		}
 
 		return *this;
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::GetReplaced(const TChar* pStringToFind, const TChar* pStringToReplace, size_t startIndex, size_t endIndex) const
-	{
-		String_Base copy = *this;
-		copy.Replace(pStringToFind, pStringToReplace, startIndex, endIndex);
-		return copy;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
