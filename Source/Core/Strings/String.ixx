@@ -865,8 +865,7 @@ export namespace jpt
 
 		if (size == m_count)
 		{
-			StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
-			m_capacity = m_count;
+			StrNCpy(m_pBuffer, size + 1, inCString, size);
 			return;
 		}
 
@@ -880,18 +879,19 @@ export namespace jpt
 		{
 			if (size < kSmallDataSize)
 			{
-				StrNCpy(m_smallBuffer, size + sizeof(TChar), inCString, size);
+				StrNCpy(m_smallBuffer, size + 1, inCString, size);
 				m_pBuffer = m_smallBuffer;
+				m_capacity = kSmallDataSize - 1;
 			}
 			else 
 			{
-				m_pBuffer = TAllocator::AllocateArray(size + sizeof(TChar));
-				StrNCpy(m_pBuffer, size + sizeof(TChar), inCString, size);
+				m_pBuffer = TAllocator::AllocateArray(size + 1);
+				StrNCpy(m_pBuffer, size + 1, inCString, size);
+				m_capacity = size;
 			}
 		}
 
-		m_count    = size;
-		m_capacity = m_count;
+		m_count = size;
 	}
 
 	template<StringLiteral TChar, class TAllocator>

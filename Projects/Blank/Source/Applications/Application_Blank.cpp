@@ -14,13 +14,20 @@ bool Application_Blank::PreInit()
 	m_foo.PreInit();
 	m_bar.PreInit();
 
-	// TODO: these are allocating, it's incorrect
-	jpt::WString str = L"Hello World AAA";
-	JPT_LOG(str);
-	str.Reserve(26);
-	str.Reserve(26);
-	str.Reserve(26);
-	str.Reserve(26);
+	// 1. String, small
+	// 2. WString, small
+	// 3. String, large
+	// 4. WString, large
+
+	jpt::String smallStr = "Hello World AAA";
+	jpt::WString smallWStr = L"Hello World AAA";
+	jpt::String largeStr = "Hello World Jupiter Engine";
+	jpt::WString largeWStr = L"Hello World Jupiter Engine";
+
+	JPT_LOG(smallStr);
+	JPT_LOG(smallWStr);
+	JPT_LOG(largeStr);
+	JPT_LOG(largeWStr);
 
 	return true;
 }
