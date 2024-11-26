@@ -25,4 +25,11 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 	m_bar.Update(deltaSeconds);
 }
 
+void Application_Blank::ProcessInput()
+{
+	Super::ProcessInput();
+
+
+}
+
 JPT_SYNC_CLIENT(Blank)

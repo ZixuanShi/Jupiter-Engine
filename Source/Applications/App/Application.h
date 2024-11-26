@@ -46,7 +46,7 @@ namespace jpt
 		const char* GetName() const;
 
 	protected:
-		void ProcessInput();
+		virtual void ProcessInput();
 	};
 
 	Application* GetApplication();

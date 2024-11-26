@@ -20,6 +20,8 @@ export namespace jpt::Input
 
 	enum class KeyState
 	{
+		Invalid,
+
 		Pressed,    // Newly pressed in last frame
 		Released,   // Newly released in last frame
 
@@ -29,7 +31,6 @@ export namespace jpt::Input
 		Held,       // Pressed for more than one frame
 		Smashed,    // Repeatedly pressed within a short time
 
-		Unknown,
 		ItemCount,
 	};
 }
