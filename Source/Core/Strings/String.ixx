@@ -626,8 +626,8 @@ export namespace jpt
 		}
 		else
 		{
-			TChar* pBuffer = TAllocator::AllocateArray(count + sizeof(TChar));
-			StrNCpy(pBuffer, count + sizeof(TChar), &m_pBuffer[index], count);
+			TChar* pBuffer = TAllocator::AllocateArray(count + 1);
+			StrNCpy(pBuffer, count + 1, &m_pBuffer[index], count);
 
 			result.MoveString(pBuffer, count);
 		}
@@ -788,30 +788,30 @@ export namespace jpt
 	template<StringLiteral TChar, class TAllocator>
 	constexpr void String_Base<TChar, TAllocator>::Reserve(size_t capacity)
 	{
-		capacity += sizeof(TChar); // Null terminator
-
-		if (capacity > m_capacity)
+		if (capacity <= m_capacity)
 		{
-			if (capacity >= kSmallDataSize)
-			{
-				TChar* pNewBuffer = TAllocator::AllocateArray(capacity); // Should add 1 for null terminator
+			return;	
+		}
 
-				// Copy the old buffer to the new one
-				if (m_pBuffer)
-				{
-					StrCpy(pNewBuffer, m_count + sizeof(TChar), m_pBuffer);
-					DeallocateBuffer();
-				}
+		if (capacity < kSmallDataSize)
+		{
+			DeallocateBuffer();
+			m_pBuffer = m_smallBuffer;
+			m_capacity = kSmallDataSize - 1;
+		}
+		else
+		{
+			TChar* pNewBuffer = TAllocator::AllocateArray(capacity + 1);
 
-				m_pBuffer = pNewBuffer;
-				m_capacity = capacity;
-			}
-			else
+			// Copy the old buffer to the new one
+			if (m_pBuffer)
 			{
+				StrCpy(pNewBuffer, m_count + 1, m_pBuffer);
 				DeallocateBuffer();
-				m_pBuffer = m_smallBuffer;
-				m_capacity = kSmallDataSize;
 			}
+
+			m_pBuffer = pNewBuffer;
+			m_capacity = capacity;
 		}
 	}
 
@@ -917,17 +917,18 @@ export namespace jpt
 		}
 		else if (size < kSmallDataSize)
 		{
-			StrNCpy(m_smallBuffer, size + sizeof(TChar), inCString, size);
+			StrNCpy(m_smallBuffer, size + 1, inCString, size);
 			m_pBuffer = m_smallBuffer;
 			TAllocator::DeallocateArray(inCString);
+			m_capacity = kSmallDataSize - 1;
 		}
 		else
 		{
 			m_pBuffer = inCString;
+			m_capacity = size;
 		}
 
 		m_count     = size;
-		m_capacity = m_count;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
@@ -947,17 +948,18 @@ export namespace jpt
 		}
 		else if (otherString.Count() < kSmallDataSize)
 		{
-			StrCpy(m_smallBuffer, otherString.m_count + sizeof(TChar), otherString.m_pBuffer);
+			StrCpy(m_smallBuffer, otherString.m_count + 1, otherString.m_pBuffer);
 			m_pBuffer = m_smallBuffer;
 			otherString.DeallocateBuffer();
+			m_capacity = kSmallDataSize - 1;
 		}
 		else
 		{
 			m_pBuffer = otherString.m_pBuffer;
+			m_capacity = otherString.m_capacity;
 		}
 
 		m_count    = otherString.m_count;
-		m_capacity = otherString.m_capacity;
 
 		otherString.m_pBuffer  = nullptr;
 		otherString.m_count     = 0;
@@ -1013,7 +1015,7 @@ export namespace jpt
 		const size_t newSize = m_count + size;
 
 		Reserve(newSize);
-		StrCpy(m_pBuffer + m_count, size + sizeof(TChar), CString);
+		StrCpy(m_pBuffer + m_count, size + 1, CString);
 
 		m_count = newSize;
 	}
