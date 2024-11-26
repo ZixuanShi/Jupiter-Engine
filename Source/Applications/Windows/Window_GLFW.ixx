@@ -18,6 +18,7 @@ import jpt.Framework;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.Vector2;
 
 import jpt.Input.KeyCode;
 import jpt.Input.Manager;
@@ -28,6 +29,8 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
+
+import jpt.Renderer;
 
 namespace jpt
 {
@@ -50,6 +53,7 @@ namespace jpt
 		virtual void Shutdown() override;
 
 		virtual bool ShouldClose() const override;
+		virtual Vec2i GetSize() const override;
 
 		GLFWwindow* GetGLFWWindow() const { return m_pGLFWWindow; }
 	};
@@ -79,14 +83,20 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
-		//glfwSwapBuffers(m_pGLFWWindow);
+		// HACK: This shouldn't be here in Window class. I need to properly design Vulkan + GLFW for multiple windows
+		// Currently this means, if one of the windows is minimized, the whole application will be paused
+		while (IsMinimized())
+		{
+			glfwWaitEvents();
+		}
 	}
 
 	void Window_GLFW::Shutdown()
 	{
-		Super::Shutdown();
-
 		glfwDestroyWindow(m_pGLFWWindow);
+		m_pGLFWWindow = nullptr;
+
+		Super::Shutdown();
 	}
 
 	bool Window_GLFW::ShouldClose() const
@@ -101,6 +111,14 @@ namespace jpt
 		return shouldClose;
 	}
 
+	Vec2i Window_GLFW::GetSize() const
+	{
+		int32 width = 0;
+		int32 height = 0;
+		glfwGetFramebufferSize(m_pGLFWWindow, &width, &height);
+		return Vec2i(width, height);
+	}
+
 	namespace Callbacks
 	{
 		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height)
@@ -112,7 +130,7 @@ namespace jpt
 			EventManager::GetInstance().Send(eventWindowResize);
 		}
 
-		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32)
+		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, [[maybe_unused]] int32 mods)
 		{
 			if (action == GLFW_PRESS)
 			{

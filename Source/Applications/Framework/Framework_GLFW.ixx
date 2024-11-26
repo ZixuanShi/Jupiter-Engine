@@ -69,9 +69,9 @@ namespace jpt
 
 	void Framework_GLFW::Shutdown()
 	{
-		Super::Shutdown();
-
 		glfwTerminate();
+
+		Super::Shutdown();
 	}
 
 	const char** Framework_GLFW::GetRequiredExtensions(uint32& extensionCount)
@@ -81,6 +81,7 @@ namespace jpt
 
 	VkResult Framework_GLFW::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* pSurface)
 	{
+		// TODO: refactor to properly handle multiple windows
 		Application* pApp = GetApplication();
 		Window* pMainWindow = pApp->GetMainWindow();
 		Window_GLFW* pGLFWWindow = static_cast<Window_GLFW*>(pMainWindow);

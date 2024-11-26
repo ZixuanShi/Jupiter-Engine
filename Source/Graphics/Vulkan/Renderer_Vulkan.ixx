@@ -87,6 +87,8 @@ export namespace jpt
 
 		virtual void DrawFrame() override;
 
+		void RecreateSwapChain();
+
 		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
 			                                                VkDebugUtilsMessageTypeFlagsEXT messageType, 
 			                                                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
@@ -113,6 +115,9 @@ export namespace jpt
 		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
+
+		// Shutdown
+		void CleanupSwapChain();
 
 		// Debugging
 #if !IS_RELEASE
@@ -165,10 +170,9 @@ export namespace jpt
 
 	void Renderer_Vulkan::Shutdown()
 	{
-		Super::Shutdown();
-
 		vkDeviceWaitIdle(m_logicalDevice);
 
+		// Synchronization objects
 		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
 			vkDestroySemaphore(m_logicalDevice, m_imageAvailableSemaphores[i], nullptr);
@@ -176,31 +180,32 @@ export namespace jpt
 			vkDestroyFence(m_logicalDevice, m_inFlightFences[i], nullptr);
 		}
 
+		// Command buffers and pool
+		vkFreeCommandBuffers(m_logicalDevice, m_commandPool,
+			static_cast<uint32>(m_commandBuffers.Count()),
+			m_commandBuffers.Buffer());
 		vkDestroyCommandPool(m_logicalDevice, m_commandPool, nullptr);
 
-		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
-		{
-			vkDestroyFramebuffer(m_logicalDevice, framebuffer, nullptr);
-		}
+		// Swap chain resources
+		CleanupSwapChain();
 
+		// Pipeline resources
 		vkDestroyPipeline(m_logicalDevice, m_graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(m_logicalDevice, m_pipelineLayout, nullptr);
-		vkDestroyRenderPass(m_logicalDevice, m_renderPass, nullptr);
 
-		for (VkImageView imageView : m_swapChainImageViews)
-		{
-			vkDestroyImageView(m_logicalDevice, imageView, nullptr);
-		}
-
-		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
+		// Device
 		vkDestroyDevice(m_logicalDevice, nullptr);
 
+		// Debugger
 #if !IS_RELEASE
 		DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
 #endif
 
+		// Instance-level resources
 		vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
 		vkDestroyInstance(m_instance, nullptr);
+
+		Super::Shutdown();
 	}
 
 	void Renderer_Vulkan::DrawFrame()
@@ -215,10 +220,17 @@ export namespace jpt
 			- Present the swap chain image	*/
 
 		vkWaitForFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
-		vkResetFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame]);
 
-		uint32 imageIndex;
-		vkAcquireNextImageKHR(m_logicalDevice, m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		uint32 imageIndex = 0;
+		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice, m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		if (resultAcquireNextImage == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			RecreateSwapChain();
+			return;
+		}
+		JPT_ASSERT(resultAcquireNextImage == VK_SUCCESS || resultAcquireNextImage == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image %u", static_cast<uint32>(resultAcquireNextImage));
+		
+		vkResetFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame]);
 
 		vkResetCommandBuffer(m_commandBuffers[m_currentFrame], 0);
 		RecordCommandBuffer(m_commandBuffers[m_currentFrame], imageIndex);
@@ -254,9 +266,30 @@ export namespace jpt
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
 
-		vkQueuePresentKHR(m_presentQueue, &presentInfo);
+		const VkResult resultQueuePresent = vkQueuePresentKHR(m_presentQueue, &presentInfo);
+		if (resultQueuePresent == VK_ERROR_OUT_OF_DATE_KHR || resultQueuePresent == VK_SUBOPTIMAL_KHR || m_framebufferResized)
+		{
+			m_framebufferResized = false;
+			RecreateSwapChain();
+		}
+		else if (resultQueuePresent != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to present swap chain image! VkResult: %i", static_cast<uint32>(resultQueuePresent));
+		}
 
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+	}
+
+	void Renderer_Vulkan::RecreateSwapChain()
+	{
+		vkDeviceWaitIdle(m_logicalDevice);
+
+		CleanupSwapChain();
+
+		CreateSwapChain();
+		CreateImageViews();
+		CreateRenderPass();
+		CreateFramebuffers();
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL Renderer_Vulkan::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -905,6 +938,30 @@ export namespace jpt
 		{
 			JPT_ERROR("Failed to record command buffer! VkResult: %i", static_cast<uint32>(result));
 		}
+	}
+
+	void Renderer_Vulkan::CleanupSwapChain()
+	{
+		// Wait for device to finish operations
+		vkDeviceWaitIdle(m_logicalDevice);
+
+		// Destroy framebuffers
+		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
+		{
+			vkDestroyFramebuffer(m_logicalDevice, framebuffer, nullptr);
+		}
+		m_swapChainFramebuffers.Clear();
+
+		// Destroy image views
+		for (VkImageView imageView : m_swapChainImageViews)
+		{
+			vkDestroyImageView(m_logicalDevice, imageView, nullptr);
+		}
+		m_swapChainImageViews.Clear();
+
+		// Destroy render pass and swap chain
+		vkDestroyRenderPass(m_logicalDevice, m_renderPass, nullptr);
+		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
 	}
 
 #if !IS_RELEASE

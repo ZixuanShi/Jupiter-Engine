@@ -39,6 +39,7 @@ namespace jpt
 
 		Framework* GetFramework() const { return m_pFramework; }
 		Window* GetMainWindow() const { return m_pMainWindow; }
+		Renderer* GetRenderer() const { return m_pRenderer; }
 		bool ShouldShutdown() const { return m_shouldShutdown; }
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API GetGraphicsAPI() const { return m_graphicsAPI; }
