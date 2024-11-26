@@ -560,7 +560,6 @@ export namespace jpt
 	constexpr DynamicArray<String_Base<TChar, TAllocator>> String_Base<TChar, TAllocator>::Split(const TChar* pKeyword) const
 	{
 		DynamicArray<String_Base> substrs;
-		String_Base current;
 		String_Base copy = *this;
 		const size_t pKeywordSize = FindCharsCount(pKeyword);
 
@@ -573,8 +572,7 @@ export namespace jpt
 				break;
 			}
 
-			current = copy.SubStr(0, keywordIndex);
-			substrs.EmplaceBack(current);
+			substrs.EmplaceBack(copy.SubStr(0, keywordIndex));
 			copy = copy.SubStr(keywordIndex + pKeywordSize);
 		}
 
@@ -585,7 +583,6 @@ export namespace jpt
 	constexpr DynamicArray<String_Base<TChar, TAllocator>> String_Base<TChar, TAllocator>::Split(TChar keyword) const
 	{
 		DynamicArray<String_Base> substrs;
-		String_Base current;
 		String_Base copy = *this;
 
 		while (true)
@@ -597,8 +594,7 @@ export namespace jpt
 				break;
 			}
 
-			current = copy.SubStr(0, keywordIndex);
-			substrs.EmplaceBack(current);
+			substrs.EmplaceBack(copy.SubStr(0, keywordIndex));
 			copy = copy.SubStr(keywordIndex + 1);
 		}
 
@@ -661,8 +657,7 @@ export namespace jpt
 				++i;
 			}
 
-			*this = SubStr(i);
-			return;
+			index = i;
 		}
 
 		// Trim from the left to the index
@@ -682,13 +677,13 @@ export namespace jpt
 				--i;
 			}
 
-			*this = SubStr(0, i + 1);
-			return;
+			index = i + 1;
 		}
 
 		// Trim from right to the index
 		JPT_ASSERT(index <= m_count, "Index out of bound");
-		*this = SubStr(0, index);
+		m_pBuffer[index] = '\0';
+		m_count = index;
 	}
 
 	template<StringLiteral TChar, class TAllocator>
