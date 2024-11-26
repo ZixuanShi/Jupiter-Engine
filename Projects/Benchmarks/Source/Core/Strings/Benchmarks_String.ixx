@@ -15,7 +15,6 @@ import jpt.BenchmarksReporter;
 import jpt.String;
 import jpt.ToString;
 import jpt.TypeDefs;
-import jpt.Rand;
 
 void Find(jpt::BenchmarksReporter& reporter)
 {
@@ -23,6 +22,7 @@ void Find(jpt::BenchmarksReporter& reporter)
 		{
 			jpt::String str = "Hello Jupiter World";
 			JPT_ASSERT(str.Find("Jupiter") == 6);
+			JPT_ASSERT(str.Find("NonExist") == jpt::npos);
 		});
 }
 
@@ -62,8 +62,8 @@ void Split(jpt::BenchmarksReporter& reporter)
 
 export void RunBenchmarks_String(jpt::BenchmarksReporter& reporter)
 {
-	Find(reporter);
-	Replace(reporter);
+	//Find(reporter);
+	//Replace(reporter);
 	SubStr(reporter);
-	Split(reporter);
+	//Split(reporter);
 }

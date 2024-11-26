@@ -619,10 +619,11 @@ export namespace jpt
 
 		if (count < kSmallDataSize)
 		{
-			TChar subStrBuffer[kSmallDataSize] = { 0 };
-			StrNCpy(subStrBuffer, kSmallDataSize, &m_pBuffer[index], count);
-
-			result.CopyString(subStrBuffer, count);
+			StrNCpy(result.m_smallBuffer, kSmallDataSize, &m_pBuffer[index], count);
+			result.m_smallBuffer[count] = '\0';
+			result.m_pBuffer = result.m_smallBuffer;
+			result.m_count = count;
+			result.m_capacity = kSmallDataSize - 1;
 		}
 		else
 		{
