@@ -15,11 +15,8 @@ export namespace jpt::Input
 		virtual ~Backend() = default;
 
 		virtual bool PreInit() { return true; }
+		virtual void Update(TimePrecision) {}
 		virtual bool Init() { return true; }
-
-		virtual bool IsPressed(KeyCode) const { return false; }
-		virtual bool IsReleased(KeyCode) const { return false; }
-		virtual bool IsHeld(KeyCode, TimePrecision) const { return false; }
 
 		virtual uint32 FromKeyCode(KeyCode) const { return kInvalidValue<uint32>; }
 		virtual KeyCode ToKeyCode(uint32) const { return KeyCode::Invalid; }

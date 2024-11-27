@@ -32,12 +32,7 @@ export namespace jpt::Input
 	public:
 		Backend_GLFW();
 
-		virtual bool PreInit() override;
-
 	public:
-		virtual bool IsPressed(KeyCode key) const override;
-		virtual bool IsReleased(KeyCode key) const override;
-
 		virtual uint32 FromKeyCode(KeyCode key) const override;
 		virtual KeyCode ToKeyCode(uint32 key) const override;
 	};
@@ -171,49 +166,6 @@ export namespace jpt::Input
 		{
 			m_fromGLFW[pair.second] = pair.first;
 		}
-	}
-
-	bool Backend_GLFW::PreInit()
-	{
-		JPT_ENSURE(Super::PreInit());
-
-		return true;
-	}
-
-	bool Backend_GLFW::IsPressed(KeyCode key) const
-	{
-		const uint32 glfwKey = FromKeyCode(key);
-		if (glfwKey == kInvalidValue<uint32>)
-		{
-			JPT_ERROR("Unknown key code: " + key.ToString());
-			return false;
-		}
-
-		GLFWwindow* pGLFWWindow = glfwGetCurrentContext();
-		if (!pGLFWWindow)
-		{
-			return false;
-		}
-
-		return glfwGetKey(pGLFWWindow, glfwKey) == GLFW_PRESS;
-	}
-
-	bool Backend_GLFW::IsReleased(KeyCode key) const
-	{
-		const uint32 glfwKey = FromKeyCode(key);
-		if (glfwKey == kInvalidValue<uint32>)
-		{
-			JPT_ERROR("Unknown key code: " + key.ToString());
-			return false;
-		}
-
-		GLFWwindow* pGLFWWindow = glfwGetCurrentContext();
-		if (!pGLFWWindow)
-		{
-			return false;
-		}
-
-		return glfwGetKey(pGLFWWindow, glfwKey) == GLFW_RELEASE;
 	}
 
 	uint32 Backend_GLFW::FromKeyCode(KeyCode key) const
