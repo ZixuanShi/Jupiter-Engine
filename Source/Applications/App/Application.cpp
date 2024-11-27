@@ -69,13 +69,10 @@ namespace jpt
 			return true;
 		}
 
-		static constexpr int32 kDefaultWindowWidth = 800;
-		static constexpr int32 kDefaultWindowHeight = 600;
-
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pWindowManager->GetMainWindow()->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
+		success &= m_pWindowManager->Init();
 		success &= m_pRenderer->Init();
 		success &= m_pInputManager->Init();
 

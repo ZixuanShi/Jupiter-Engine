@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
@@ -16,6 +17,9 @@ import jpt.DynamicArray;
 
 import jpt.Time.TypeDefs;
 
+static constexpr int32 kDefaultWindowWidth = 800;
+static constexpr int32 kDefaultWindowHeight = 600;
+
 export namespace jpt
 {
 	class WindowManager
@@ -26,6 +30,7 @@ export namespace jpt
 
 	public:
 		bool PreInit(Framework_API frameworkAPI);
+		bool Init();
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
@@ -36,8 +41,14 @@ export namespace jpt
 	bool WindowManager::PreInit(Framework_API frameworkAPI)
 	{
 		m_frameworkAPI = frameworkAPI;
+		return true;
+	}
 
-		Create(); // Create main window
+	bool WindowManager::Init()
+	{
+		// Create main window
+		Window* pMainWindow = Create();
+		pMainWindow->Init(GetApplication()->GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
 
 		return true;
 	}
