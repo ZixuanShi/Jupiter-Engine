@@ -38,7 +38,7 @@ export namespace jpt
 		void Shutdown();
 
 		Window* Create(const char* title);
-		void OnWindowClose(const Event_Window_Close& eventWindowClose);
+		void Destroy(const Window* pWindowToDestroy);
 
 		Window* GetMainWindow();
 	};
@@ -46,7 +46,10 @@ export namespace jpt
 	bool WindowManager::PreInit(Framework_API frameworkAPI)
 	{
 		m_frameworkAPI = frameworkAPI;
-		EventManager::GetInstance().Register<Event_Window_Close>(this, &WindowManager::OnWindowClose);
+		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close& eventWindowClose)
+			{
+				Destroy(eventWindowClose.GetWindow());
+			});
 
 		return true;
 	}
@@ -93,12 +96,12 @@ export namespace jpt
 		return m_windows.Back();
 	}
 
-	void WindowManager::OnWindowClose(const Event_Window_Close& eventWindowClose)
+	void WindowManager::Destroy(const Window* pWindowToDestroy)
 	{
 		for (auto itr = m_windows.begin(); itr != m_windows.end(); ++itr)
 		{
 			Window* pWindow = *itr;
-			if (pWindow == eventWindowClose.GetWindow())
+			if (pWindow == pWindowToDestroy)
 			{
 				JPT_SHUTDOWN(pWindow);
 				m_windows.Erase(itr);
