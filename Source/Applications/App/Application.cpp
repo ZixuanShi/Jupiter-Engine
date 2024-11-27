@@ -91,6 +91,8 @@ namespace jpt
 
 	void Application::Shutdown()
 	{
+		ProjectSettings::GetInstance().Save();
+
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
 			JPT_SHUTDOWN(m_pMainWindow);
@@ -99,7 +101,6 @@ namespace jpt
 		}
 
 		InputManager::GetInstance().Shutdown();
-		ProjectSettings::GetInstance().Save();
 		EventManager::GetInstance().Shutdown();
 	}
 
