@@ -6,7 +6,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-export module jpt.Input.Manager;
+export module jpt.InputManager;
 
 import jpt.Input.KeyCode;
 import jpt.Input.Backend;
@@ -29,8 +29,6 @@ export namespace jpt
 		Backend* m_pBackend = nullptr;		/**< Input backend framework */
 
 	public:
-		JPT_DECLARE_SINGLETON(InputManager);
-
 		bool PreInit();
 		bool Init();
 		void Update(TimePrecision deltaSeconds);

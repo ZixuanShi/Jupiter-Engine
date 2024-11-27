@@ -12,19 +12,22 @@ namespace jpt
 	class Window;
 	class Framework;
 	class Renderer;
+	class InputManager;
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
 	class Application
 	{
 	protected:
-		Framework* m_pFramework = nullptr;
-		Window* m_pMainWindow = nullptr;
-		Renderer* m_pRenderer = nullptr;
-		bool m_shouldShutdown = false;
+		Framework*    m_pFramework    = nullptr;
+		Window*       m_pMainWindow   = nullptr;
+		Renderer*     m_pRenderer     = nullptr;
+		InputManager* m_pInputManager = nullptr;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
-		Graphics_API m_graphicsAPI = Graphics_API::Unknown;
+		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
+
+		bool m_shouldShutdown = false;
 
 	public:
 		virtual ~Application() = default;
@@ -34,15 +37,20 @@ namespace jpt
 		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Shutdown();
 
+	public:
 		void Run();
-		void ShutdownApp() { m_shouldShutdown = true; }
 
-		Framework* GetFramework() const { return m_pFramework; }
-		Window* GetMainWindow() const { return m_pMainWindow; }
-		Renderer* GetRenderer() const { return m_pRenderer; }
-		bool ShouldShutdown() const { return m_shouldShutdown; }
+	public:
+		Framework*    GetFramework()    const { return m_pFramework;    }
+		Window*       GetMainWindow()   const { return m_pMainWindow;   }
+		Renderer*     GetRenderer()     const { return m_pRenderer;     }
+		InputManager* GetInputManager() const { return m_pInputManager; }
+
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
-		Graphics_API GetGraphicsAPI() const { return m_graphicsAPI; }
+		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }
+
+		void ShutdownApp() { m_shouldShutdown = true; }
+		bool ShouldShutdown() const { return m_shouldShutdown; }
 		const char* GetName() const;
 	};
 

@@ -18,7 +18,8 @@ import jpt.Window.Create;
 import jpt.Renderer;
 import jpt.Renderer.Create;
 
-import jpt.Input.Manager;
+import jpt.InputManager;
+import jpt.InputManager.Create;
 import jpt.Input.KeyCode;
 
 import jpt.System.Paths;
@@ -44,18 +45,19 @@ namespace jpt
 
 		// Pick APIs
 		m_frameworkAPI = FindFrameworkAPI();
-		m_graphicsAPI = FindGraphicsAPI();
+		m_graphicsAPI  = FindGraphicsAPI();
 
 		// Initialize core systems
-		m_pFramework = Framework_Create(m_frameworkAPI);
-		m_pMainWindow = Window_Create(m_frameworkAPI);
-		m_pRenderer = Renderer_Create(m_graphicsAPI);
+		m_pFramework    = Framework_Create(m_frameworkAPI);
+		m_pMainWindow   = Window_Create(m_frameworkAPI);
+		m_pRenderer     = Renderer_Create(m_graphicsAPI);
+		m_pInputManager = InputManager_Create(m_frameworkAPI);
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
 		success &= m_pMainWindow->PreInit();
 		success &= m_pRenderer->PreInit();
-		success &= InputManager::GetInstance().PreInit();
+		success &= m_pInputManager->PreInit();
 
 		return success;
 	}
@@ -75,7 +77,7 @@ namespace jpt
 		success &= m_pFramework->Init();
 		success &= m_pMainWindow->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
 		success &= m_pRenderer->Init();
-		success &= InputManager::GetInstance().Init();
+		success &= m_pInputManager->Init();
 
 		return success;
 	}
@@ -86,7 +88,7 @@ namespace jpt
 		m_pFramework->Update(deltaSeconds);
 		m_pMainWindow->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
-		InputManager::GetInstance().Update(deltaSeconds);
+		m_pInputManager->Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
@@ -100,7 +102,7 @@ namespace jpt
 			JPT_SHUTDOWN(m_pRenderer);
 		}
 
-		InputManager::GetInstance().Shutdown();
+		JPT_SHUTDOWN(m_pInputManager);
 		EventManager::GetInstance().Shutdown();
 	}
 
