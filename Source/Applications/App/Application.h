@@ -49,8 +49,6 @@ namespace jpt
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }
 
-		void ShutdownApp() { m_shouldShutdown = true; }
-		bool ShouldShutdown() const { return m_shouldShutdown; }
 		const char* GetName() const;
 	};
 
