@@ -72,7 +72,7 @@ namespace jpt
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pWindowManager->Init();
+		success &= m_pWindowManager->Init(GetName());
 		success &= m_pRenderer->Init();
 		success &= m_pInputManager->Init();
 

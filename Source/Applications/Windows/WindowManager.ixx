@@ -30,11 +30,11 @@ export namespace jpt
 
 	public:
 		bool PreInit(Framework_API frameworkAPI);
-		bool Init();
+		bool Init(const char* mainWindowTitle);
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
-		Window* Create();
+		Window* Create(const char* title);
 		Window* GetMainWindow();
 	};
 
@@ -44,11 +44,10 @@ export namespace jpt
 		return true;
 	}
 
-	bool WindowManager::Init()
+	bool WindowManager::Init(const char* mainWindowTitle)
 	{
 		// Create main window
-		Window* pMainWindow = Create();
-		pMainWindow->Init(GetApplication()->GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
+		Create(mainWindowTitle);
 
 		return true;
 	}
@@ -70,18 +69,21 @@ export namespace jpt
 		m_windows.Clear();
 	}
 
-	Window* WindowManager::Create()
+	Window* WindowManager::Create(const char* title)
 	{
 		switch (m_frameworkAPI.Value())
 		{
 		case Framework_API::GLFW:
 			m_windows.EmplaceBack(new Window_GLFW());
-			return m_windows.Back();
+			break;
 
 		default:
 			JPT_ASSERT(false, "Un-implemented Framework API: %s", m_frameworkAPI.ToString().ConstBuffer());
 			return nullptr;
 		}
+
+		m_windows.Back()->Init(title, kDefaultWindowWidth, kDefaultWindowHeight);
+		return m_windows.Back();
 	}
 
 	Window* WindowManager::GetMainWindow()
