@@ -10,6 +10,8 @@ import jpt.CoreModules;
 import jpt.InputManager;
 import jpt.Input.KeyCode;
 
+import jpt.Window.Manager;
+
 import jpt.Event.Manager;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
@@ -26,6 +28,10 @@ bool Application_Blank::PreInit()
 			if (eventKeyboardKeyPress.GetKey() == jpt::Input::KeyCode::Keyboard_Escape)
 			{
 				m_shouldShutdown = true;
+			}
+			if (eventKeyboardKeyPress.GetKey() == jpt::Input::KeyCode::Keyboard_N)
+			{
+				m_pWindowManager->Create("New Window");
 			}
 		});
 

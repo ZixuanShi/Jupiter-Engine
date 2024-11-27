@@ -46,7 +46,7 @@ void Entity_Foo::Update(jpt::TimePrecision deltaSeconds)
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)
 {
-	JPT_LOG("Entity_Foo::OnMouseButtonPress. x: %i, y: %i, KeyCode: %s", eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), eventMouseButtonPress.GetButton().ToString().ConstBuffer());
+	JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, KeyCode: %s", eventMouseButtonPress.GetWindow(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), eventMouseButtonPress.GetButton().ToString().ConstBuffer());
 }
 
 void Entity_Foo::OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize)

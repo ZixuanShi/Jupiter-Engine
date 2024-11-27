@@ -17,6 +17,9 @@ import jpt.DynamicArray;
 
 import jpt.Time.TypeDefs;
 
+import jpt.Event.Manager;
+import jpt.Event.Window.Close;
+
 static constexpr int32 kDefaultWindowWidth = 800;
 static constexpr int32 kDefaultWindowHeight = 600;
 
@@ -35,12 +38,16 @@ export namespace jpt
 		void Shutdown();
 
 		Window* Create(const char* title);
+		void OnWindowClose(const Event_Window_Close& eventWindowClose);
+
 		Window* GetMainWindow();
 	};
 
 	bool WindowManager::PreInit(Framework_API frameworkAPI)
 	{
 		m_frameworkAPI = frameworkAPI;
+		EventManager::GetInstance().Register<Event_Window_Close>(this, &WindowManager::OnWindowClose);
+
 		return true;
 	}
 
@@ -84,6 +91,20 @@ export namespace jpt
 
 		m_windows.Back()->Init(title, kDefaultWindowWidth, kDefaultWindowHeight);
 		return m_windows.Back();
+	}
+
+	void WindowManager::OnWindowClose(const Event_Window_Close& eventWindowClose)
+	{
+		for (auto itr = m_windows.begin(); itr != m_windows.end(); ++itr)
+		{
+			Window* pWindow = *itr;
+			if (pWindow == eventWindowClose.GetWindow())
+			{
+				JPT_SHUTDOWN(pWindow);
+				m_windows.Erase(itr);
+				break;
+			}
+		}
 	}
 
 	Window* WindowManager::GetMainWindow()

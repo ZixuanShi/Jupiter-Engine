@@ -86,6 +86,12 @@ namespace jpt
 	{
 		Super::Update(deltaSeconds);
 
+		if (glfwWindowShouldClose(m_pGLFWWindow))
+		{
+			Event_Window_Close eventWindowClose = { this };
+			EventManager::GetInstance().Queue(eventWindowClose);
+		}
+
 		// HACK: This shouldn't be here in Window class. I need to properly design Vulkan + GLFW for multiple windows
 		// Currently this means, if one of the windows is minimized, the whole application will be paused
 		while (IsMinimized())
@@ -104,14 +110,7 @@ namespace jpt
 
 	bool Window_GLFW::ShouldClose() const
 	{
-		const bool shouldClose = glfwWindowShouldClose(m_pGLFWWindow);
-		if (shouldClose)
-		{
-			Event_Window_Close eventWindowClose = { this };
-			EventManager::GetInstance().Send(eventWindowClose);
-		}
-
-		return shouldClose;
+		return glfwWindowShouldClose(m_pGLFWWindow);
 	}
 
 	Vec2i Window_GLFW::GetSize() const
