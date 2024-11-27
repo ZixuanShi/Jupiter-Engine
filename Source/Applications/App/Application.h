@@ -10,6 +10,7 @@ import jpt.Graphics.Enums;
 namespace jpt
 {
 	class Framework;
+	class Window;
 	class WindowManager;
 	class Renderer;
 	class InputManager;
@@ -49,6 +50,7 @@ namespace jpt
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }
 
+		Window* GetMainWindow() const;
 		const char* GetName() const;
 	};
 

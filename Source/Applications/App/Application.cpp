@@ -109,7 +109,7 @@ namespace jpt
 		TimePrecision accumulator = 0.0;
 		uint32 frameCount = 0;
 
-		while (!m_shouldShutdown && !m_pWindowManager->GetMainWindow()->ShouldClose())
+		while (!m_shouldShutdown && !GetMainWindow()->ShouldClose())
 		{
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
@@ -133,5 +133,10 @@ namespace jpt
 				accumulator = 0.0;
 			}
 		}
+	}
+
+	Window* Application::GetMainWindow() const
+	{
+		return m_pWindowManager->GetMainWindow();
 	}
 }
