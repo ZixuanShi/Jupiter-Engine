@@ -13,7 +13,7 @@ import jpt.Framework;
 import jpt.Framework.Create;
 
 import jpt.Window;
-import jpt.Window.Create;
+import jpt.Window.Manager;
 
 import jpt.Renderer;
 import jpt.Renderer.Create;
@@ -48,14 +48,14 @@ namespace jpt
 		m_graphicsAPI  = FindGraphicsAPI();
 
 		// Initialize core systems
-		m_pFramework    = Framework_Create(m_frameworkAPI);
-		m_pMainWindow   = Window_Create(m_frameworkAPI);
-		m_pRenderer     = Renderer_Create(m_graphicsAPI);
-		m_pInputManager = InputManager_Create(m_frameworkAPI);
+		m_pFramework     = Framework_Create(m_frameworkAPI);
+		m_pWindowManager = new WindowManager();
+		m_pRenderer      = Renderer_Create(m_graphicsAPI);
+		m_pInputManager  = InputManager_Create(m_frameworkAPI);
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
-		success &= m_pMainWindow->PreInit();
+		success &= m_pWindowManager->PreInit(m_frameworkAPI);
 		success &= m_pRenderer->PreInit();
 		success &= m_pInputManager->PreInit();
 
@@ -75,7 +75,7 @@ namespace jpt
 		// Initialize systems
 		bool success = true;
 		success &= m_pFramework->Init();
-		success &= m_pMainWindow->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
+		success &= m_pWindowManager->GetMainWindow()->Init(GetName(), kDefaultWindowWidth, kDefaultWindowHeight);
 		success &= m_pRenderer->Init();
 		success &= m_pInputManager->Init();
 
@@ -86,7 +86,7 @@ namespace jpt
 	{
 		EventManager::GetInstance().Update(deltaSeconds);
 		m_pFramework->Update(deltaSeconds);
-		m_pMainWindow->Update(deltaSeconds);
+		m_pWindowManager->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
 		m_pInputManager->Update(deltaSeconds);
 	}
@@ -97,7 +97,7 @@ namespace jpt
 
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
-			JPT_SHUTDOWN(m_pMainWindow);
+			JPT_SHUTDOWN(m_pWindowManager);
 			JPT_SHUTDOWN(m_pFramework);
 			JPT_SHUTDOWN(m_pRenderer);
 		}
@@ -112,7 +112,7 @@ namespace jpt
 		TimePrecision accumulator = 0.0;
 		uint32 frameCount = 0;
 
-		while (!m_shouldShutdown && !m_pMainWindow->ShouldClose())
+		while (!m_shouldShutdown && !m_pWindowManager->GetMainWindow()->ShouldClose())
 		{
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);

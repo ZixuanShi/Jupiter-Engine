@@ -17,7 +17,9 @@ export module jpt.Framework_GLFW;
 
 import jpt.Framework;
 
+import jpt.Window;
 import jpt.Window_GLFW;
+import jpt.Window.Manager;
 
 import jpt.String;
 import jpt.ToString;
@@ -83,7 +85,7 @@ namespace jpt
 	{
 		// TODO: refactor to properly handle multiple windows
 		Application* pApp = GetApplication();
-		Window* pMainWindow = pApp->GetMainWindow();
+		Window* pMainWindow = pApp->GetWindowManager()->GetMainWindow();
 		Window_GLFW* pGLFWWindow = static_cast<Window_GLFW*>(pMainWindow);
 		JPT_ASSERT(pGLFWWindow);
 

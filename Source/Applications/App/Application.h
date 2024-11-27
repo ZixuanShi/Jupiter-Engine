@@ -9,8 +9,8 @@ import jpt.Graphics.Enums;
 
 namespace jpt
 {
-	class Window;
 	class Framework;
+	class WindowManager;
 	class Renderer;
 	class InputManager;
 
@@ -19,10 +19,10 @@ namespace jpt
 	class Application
 	{
 	protected:
-		Framework*    m_pFramework    = nullptr;
-		Window*       m_pMainWindow   = nullptr;
-		Renderer*     m_pRenderer     = nullptr;
-		InputManager* m_pInputManager = nullptr;
+		Framework*     m_pFramework     = nullptr;
+		WindowManager* m_pWindowManager = nullptr;
+		Renderer*      m_pRenderer      = nullptr;
+		InputManager*  m_pInputManager  = nullptr;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
 		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
@@ -41,10 +41,10 @@ namespace jpt
 		void Run();
 
 	public:
-		Framework*    GetFramework()    const { return m_pFramework;    }
-		Window*       GetMainWindow()   const { return m_pMainWindow;   }
-		Renderer*     GetRenderer()     const { return m_pRenderer;     }
-		InputManager* GetInputManager() const { return m_pInputManager; }
+		Framework*     GetFramework()     const { return m_pFramework;     }
+		WindowManager* GetWindowManager() const { return m_pWindowManager; }
+		Renderer*      GetRenderer()      const { return m_pRenderer;      }
+		InputManager*  GetInputManager()  const { return m_pInputManager;  }
 
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }
