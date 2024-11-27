@@ -44,7 +44,8 @@ export namespace jpt
 
 	private:
 		TBuckets m_buckets; 
-		size_t m_count = 0;		/**< Count of actual elements in the map */
+		size_t m_count = 0;		  /**< Count of actual elements in the map */
+		bool m_shouldGrow = true; /**< If the map should grow when it reaches 75% of the bucket size. Set to false to save memory */
 
 	public:
 		constexpr HashMap() = default;
@@ -75,7 +76,8 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Count() const;
 		constexpr bool IsEmpty() const;
-		constexpr void Reserve(size_t capacity);
+		constexpr void ResizeBuckets(size_t capacity);
+		constexpr void SetShouldGrow(bool shouldGrow);
 
 		// Adding
 		constexpr TValue& Add(const TKey& key, const TValue& value);
@@ -260,9 +262,9 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue, TComparator>::Add(const TKey& key, const TValue& value)
 	{
 		// Grow if needed. Grow when the count is 75% of the bucket size
-		if (m_count >= (m_buckets.Count() * 3) / 4)
+		if (m_shouldGrow && m_count >= (m_buckets.Count() * 3) / 4)
 		{
-			Reserve(m_buckets.Count() * kGrowMultiplier);
+			ResizeBuckets(m_buckets.Count() * 2);
 		}
 
 		TBucket& bucket = GetBucket(key);
@@ -292,9 +294,9 @@ export namespace jpt
 	constexpr HashMap<TKey, TValue, TComparator>::TValue& HashMap<TKey, TValue, TComparator>::Add(TKey&& key, TValue&& value)
 	{
 		// Grow if needed. Grow when the count is 75% of the bucket size
-		if (m_count >= (m_buckets.Count() * 3) / 4)
+		if (m_shouldGrow && m_count >= (m_buckets.Count() * 3) / 4)
 		{
-			Reserve(m_buckets.Count() * kGrowMultiplier);
+			ResizeBuckets(m_buckets.Count() * 2);
 		}
 
 		TBucket& bucket = GetBucket(key);
@@ -325,9 +327,9 @@ export namespace jpt
 	constexpr TValue& HashMap<TKey, TValue, TComparator>::Emplace(const TKey& key, TArgs && ...args)
 	{
 		// Grow if needed. Grow when the count is 75% of the bucket size
-		if (m_count >= (m_buckets.Count() * 3) / 4)
+		if (m_shouldGrow && m_count >= (m_buckets.Count() * 3) / 4)
 		{
-			Reserve(m_buckets.Count() * kGrowMultiplier);
+			ResizeBuckets(m_buckets.Count() * 2);
 		}
 
 		TBucket& bucket = GetBucket(key);
@@ -465,7 +467,7 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr void HashMap<TKey, TValue, TComparator>::Reserve(size_t capacity)
+	constexpr void HashMap<TKey, TValue, TComparator>::ResizeBuckets(size_t capacity)
 	{
 		static constexpr size_t kMinCapacity = 16;
 
@@ -482,6 +484,12 @@ export namespace jpt
 		}
 
 		m_buckets = Move(newBuckets);
+	}
+
+	template<typename _TKey, typename _TValue, typename _TComparator>
+	constexpr void HashMap<_TKey, _TValue, _TComparator>::SetShouldGrow(bool shouldGrow)
+	{
+		m_shouldGrow = shouldGrow;
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
@@ -512,7 +520,7 @@ export namespace jpt
 	template<Iterable TContainer>
 	constexpr void HashMap<TKey, TValue, TComparator>::CopyData(const TContainer& container, size_t size)
 	{
-		Reserve(m_count + size);
+		ResizeBuckets(m_count + size);
 
 		for (const TData& element : container)
 		{

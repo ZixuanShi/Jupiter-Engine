@@ -1,22 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Applications/App/Application.h"
-#include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Logger.h"
-
 export module jpt.InputManager;
 
 import jpt.Input.KeyCode;
-import jpt.Input.Backend;
-import jpt.Input.Backend_GLFW;
 
-import jpt.Framework.Enums;
-
-import jpt.DynamicArray;
-import jpt.String;
-
+import jpt.Constants;
+import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
 
 using namespace jpt::Input;
@@ -25,62 +14,16 @@ export namespace jpt
 {
 	class InputManager
 	{
-	private:
-		Backend* m_pBackend = nullptr;		/**< Input backend framework */
+	public:
+		virtual ~InputManager() = default;
+
+		virtual bool PreInit() { return true; }
+		virtual bool Init() { return true; }
+		virtual void Update([[maybe_unused]] TimePrecision deltaSeconds) {}
+		virtual void Shutdown() {}
 
 	public:
-		bool PreInit();
-		bool Init();
-		void Update(TimePrecision deltaSeconds);
-		void Shutdown();
-
-		uint32 FromKeyCode(KeyCode key) const;
-		KeyCode ToKeyCode(uint32 key) const;
+		virtual uint32 FromKeyCode([[maybe_unused]] KeyCode key) const { return kInvalidValue<uint32>; }
+		virtual KeyCode ToKeyCode([[maybe_unused]] uint32 key) const { return KeyCode::Invalid; }
 	};
-
-	bool InputManager::PreInit()
-	{
-		const Framework_API frameworkAPI = GetApplication()->GetFrameworkAPI();
-		switch (frameworkAPI.Value())
-		{
-		case Framework_API::GLFW:
-			m_pBackend = new Backend_GLFW();
-			break;
-
-		default:
-			JPT_ERROR("Unsupported framework API: " + frameworkAPI.ToString());
-			return false;
-		}
-
-		m_pBackend->PreInit();
-		
-		return true;
-	}
-
-	bool InputManager::Init()
-	{
-		m_pBackend->Init();
-
-		return true;
-	}
-
-	void InputManager::Update(TimePrecision deltaSeconds)
-	{
-		m_pBackend->Update(deltaSeconds);
-	}
-
-	void InputManager::Shutdown()
-	{
-		JPT_DELETE(m_pBackend);
-	}
-
-	uint32 InputManager::FromKeyCode(KeyCode key) const
-	{
-		return m_pBackend->FromKeyCode(key);
-	}
-
-	KeyCode InputManager::ToKeyCode(uint32 key) const
-	{
-		return m_pBackend->ToKeyCode(key);
-	}
 }

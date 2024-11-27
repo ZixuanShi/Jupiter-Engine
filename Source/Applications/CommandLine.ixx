@@ -66,7 +66,7 @@ namespace jpt
 
 	void CommandLine::Parse(int32 argsCount, char* arguments[])
 	{
-		m_arguments.Reserve(argsCount - 1);
+		m_arguments.ResizeBuckets(argsCount - 1);
 
 		// Skip the first argument which is the executable path. It will be added by Engine/System/Environment/SystemPaths.ixx
 

@@ -19,7 +19,8 @@ export namespace jpt
 		switch (frameworkAPI.Value())
 		{
 		case Framework_API::GLFW:
-			return new InputManager_GLFW();
+			return new Input::InputManager_GLFW();
+
 		default:
 			JPT_ERROR("Unsupported framework API: " + frameworkAPI.ToString());
 			return nullptr;
