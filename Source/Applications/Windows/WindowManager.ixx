@@ -28,12 +28,16 @@ export namespace jpt
 	class WindowManager
 	{
 	private:
-		DynamicArray<Window*> m_windows;	/**< index at 0 will always be the main window */
+		DynamicArray<Window*> m_windows;	/**< All the windows managed by Jupiter. index at 0 is the main window */
 		Framework_API m_frameworkAPI;
 
 	public:
+		/** Assign framework API and register events */
 		bool PreInit(Framework_API frameworkAPI);
+
+		/** Create main window */
 		bool Init(const char* mainWindowTitle);
+
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
