@@ -29,6 +29,7 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
+import jpt.Event.Keyboard.KeyPress;
 
 import jpt.Renderer;
 
@@ -38,6 +39,7 @@ namespace jpt
 	{
 		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
 		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
+		void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
 	}
 
 	export class Window_GLFW final : public Window
@@ -75,6 +77,7 @@ namespace jpt
 		glfwSetWindowUserPointer(m_pGLFWWindow, this);
 		glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
 		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
+		glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
 
 		return true;
 	}
@@ -134,15 +137,30 @@ namespace jpt
 		{
 			if (action == GLFW_PRESS)
 			{
+				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+
 				double x, y;
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
 				const Input::KeyCode keyCode = InputManager::GetInstance().ToKeyCode(button);
-				Event_Mouse_ButtonPress eventMouseButtonPress = { static_cast<int32>(x), 
+				Event_Mouse_ButtonPress eventMouseButtonPress = { pWindow,
+					                                              static_cast<int32>(x),
 					                                              static_cast<int32>(y), 
 					                                              keyCode };
 
 				EventManager::GetInstance().Send(eventMouseButtonPress);
+			}
+		}
+
+		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, [[maybe_unused]] int32 mods)
+		{
+			if (action == GLFW_PRESS)
+			{
+				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+				const Input::KeyCode keyCode = InputManager::GetInstance().ToKeyCode(key);
+
+				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode };
+				EventManager::GetInstance().Send(eventKeyboardKeyPress);
 			}
 		}
 	}

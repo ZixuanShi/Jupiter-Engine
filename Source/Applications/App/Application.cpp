@@ -26,7 +26,6 @@ import jpt.StopWatch;
 import jpt.ProjectSettings;
 
 import jpt.Event.Manager;
-import jpt.Event.Window.Close;
 
 namespace jpt
 {
@@ -115,7 +114,6 @@ namespace jpt
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
 
-			ProcessInput();
 			Update(deltaSeconds);
 			m_pRenderer->DrawFrame();
 
@@ -134,14 +132,6 @@ namespace jpt
 				frameCount = 0;
 				accumulator = 0.0;
 			}
-		}
-	}
-
-	void Application::ProcessInput()
-	{
-		if (InputManager::GetInstance().IsPressed(Input::KeyCode::Keyboard_Escape))
-		{
-			EventManager::GetInstance().Send(Event_Window_Close(nullptr));
 		}
 	}
 }

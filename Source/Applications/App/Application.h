@@ -44,9 +44,6 @@ namespace jpt
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API GetGraphicsAPI() const { return m_graphicsAPI; }
 		const char* GetName() const;
-
-	protected:
-		virtual void ProcessInput();
 	};
 
 	Application* GetApplication();

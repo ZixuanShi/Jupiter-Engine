@@ -69,6 +69,8 @@ export namespace jpt
 			return false;
 		}
 
+		m_pBackend->PreInit();
+
 		// Add connected devices
 
 		for (Device* pDevice : m_devices)
@@ -84,6 +86,8 @@ export namespace jpt
 
 	bool InputManager::Init()
 	{
+		m_pBackend->Init();
+
 		for (Device* pDevice : m_devices)
 		{
 			if (!pDevice->Init())

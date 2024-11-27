@@ -14,7 +14,7 @@ export namespace jpt
 	public:
 		virtual ~Renderer() = default;
 
-		virtual bool PreInit() { return true; }
+		virtual bool PreInit();
 		virtual bool Init();
 		virtual void Update(TimePrecision) { }
 		virtual void Render() { }
@@ -24,6 +24,11 @@ export namespace jpt
 
 		virtual void OnWindowResized([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
 	};
+
+	bool Renderer::PreInit()
+	{
+		return true;
+	}
 
 	bool Renderer::Init()
 	{

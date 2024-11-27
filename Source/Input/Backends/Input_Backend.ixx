@@ -14,6 +14,9 @@ export namespace jpt::Input
 	public:
 		virtual ~Backend() = default;
 
+		virtual bool PreInit() { return true; }
+		virtual bool Init() { return true; }
+
 		virtual bool IsPressed(KeyCode) const { return false; }
 		virtual bool IsReleased(KeyCode) const { return false; }
 		virtual bool IsHeld(KeyCode, TimePrecision) const { return false; }

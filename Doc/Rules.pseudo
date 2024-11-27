@@ -8,10 +8,13 @@ Object Life Cycle:
     - PreUpdate
     - Update
     - FixedUpdate
-    - Terminate
+    - Shutdown
 
 External Dependencies/Tools Folder:
     - Bin
     - Include
     - Libs
     - Source
+
+Philosophies:
+    - One job, one class, one method. Don't have multiple ways to do the same task

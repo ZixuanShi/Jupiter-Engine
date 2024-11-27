@@ -2,7 +2,10 @@
 
 module;
 
+#include "Applications/App/Application.h"
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
+#include "Debugging/Assert.h"
 
 #include <GLFW/glfw3.h>
 
@@ -20,12 +23,16 @@ export namespace jpt::Input
 {
 	class Backend_GLFW final : public Backend
 	{
+		using Super = Backend;
+
 	private:
 		HashMap<KeyCode, uint32> m_toGLFW;
 		HashMap<uint32, KeyCode> m_fromGLFW;
 
 	public:
 		Backend_GLFW();
+
+		virtual bool PreInit() override;
 
 	public:
 		virtual bool IsPressed(KeyCode key) const override;
@@ -164,6 +171,13 @@ export namespace jpt::Input
 		{
 			m_fromGLFW[pair.second] = pair.first;
 		}
+	}
+
+	bool Backend_GLFW::PreInit()
+	{
+		JPT_ENSURE(Super::PreInit());
+
+		return true;
 	}
 
 	bool Backend_GLFW::IsPressed(KeyCode key) const

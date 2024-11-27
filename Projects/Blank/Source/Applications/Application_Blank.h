@@ -33,7 +33,4 @@ private:
 public:
 	virtual bool PreInit() override;
 	virtual void Update(jpt::TimePrecision deltaSeconds) override;
-
-private:
-	virtual void ProcessInput() override;
 };
