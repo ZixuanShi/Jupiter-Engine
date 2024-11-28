@@ -14,7 +14,7 @@ import jpt.TypeDefs;
 export namespace jpt::Vulkan
 {
 	/** Vulkan Debug messenger */
-	class VulkanDebugMessenger
+	class DebugMessenger
 	{
 	private:
 		VkDebugUtilsMessengerEXT m_debugMessenger;
@@ -41,7 +41,7 @@ export namespace jpt::Vulkan
 			const VkAllocationCallbacks* pAllocator);
 	};
 
-	bool VulkanDebugMessenger::Init(VkInstance instance)
+	bool DebugMessenger::Init(VkInstance instance)
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = GetCreateInfo();
 
@@ -54,12 +54,12 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	void VulkanDebugMessenger::Shutdown(VkInstance instance)
+	void DebugMessenger::Shutdown(VkInstance instance)
 	{
 		DestroyDebugMessenger(instance, m_debugMessenger, nullptr);
 	}
 
-	VkDebugUtilsMessengerCreateInfoEXT VulkanDebugMessenger::GetCreateInfo() const
+	VkDebugUtilsMessengerCreateInfoEXT DebugMessenger::GetCreateInfo() const
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -78,7 +78,7 @@ export namespace jpt::Vulkan
 		return createInfo;
 	}
 
-	VkResult VulkanDebugMessenger::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
+	VkResult DebugMessenger::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
 	{
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 		if (func != nullptr)
@@ -91,7 +91,7 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	void VulkanDebugMessenger::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
+	void DebugMessenger::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
 	{
 		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 		if (func != nullptr)
@@ -100,7 +100,7 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugMessenger::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+	VKAPI_ATTR VkBool32 VKAPI_CALL DebugMessenger::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		                                                          [[maybe_unused]] VkDebugUtilsMessageTypeFlagsEXT messageType,
 		                                                          const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
 		                                                          [[maybe_unused]] void* pUserData)

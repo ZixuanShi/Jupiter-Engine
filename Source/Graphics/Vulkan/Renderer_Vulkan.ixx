@@ -51,7 +51,7 @@ export namespace jpt
 		VkInstance m_instance;
 
 #if !IS_RELEASE
-		VulkanDebugMessenger m_debugger;
+		DebugMessenger m_debugMessenger;
 #endif
 
 		VkSurfaceKHR m_surface;
@@ -128,7 +128,7 @@ export namespace jpt
 		bool success = true;
 		success &= CreateInstance();
 #if !IS_RELEASE
-		success &= m_debugger.Init(m_instance);
+		success &= m_debugMessenger.Init(m_instance);
 #endif
 		success &= CreateSurface();
 		success &= PickPhysicalDevice();
@@ -180,7 +180,7 @@ export namespace jpt
 
 		// Debugger
 #if !IS_RELEASE
-		m_debugger.Shutdown(m_instance);
+		m_debugMessenger.Shutdown(m_instance);
 #endif
 
 		// Instance-level resources
@@ -311,7 +311,7 @@ export namespace jpt
 		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
 		createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
 
-		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = m_debugger.GetCreateInfo();
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = m_debugMessenger.GetCreateInfo();
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 #else
 		createInfo.enabledLayerCount = 0;
