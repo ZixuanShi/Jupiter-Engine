@@ -108,6 +108,7 @@ export namespace jpt
 		if (pWindowToDestroy == GetMainWindow())
 		{
 			GetApplication()->SetShouldShutdown();
+			return;
 		}
 
 		for (auto itr = m_windows.begin(); itr != m_windows.end(); ++itr)

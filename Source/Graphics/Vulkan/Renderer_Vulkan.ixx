@@ -88,7 +88,9 @@ export namespace jpt
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
-		virtual void OnWindowResized(const Event_Window_Resize& eventWindowResize) override;
+
+		virtual void OnWindowCreate(const Event_Window_Create& eventWindowCreate) override;
+		virtual void OnWindowResize(const Event_Window_Resize& eventWindowResize) override;
 
 	private:
 		// Initialization
@@ -261,12 +263,18 @@ export namespace jpt
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
 	}
 
-	void Renderer_Vulkan::OnWindowResized(const Event_Window_Resize& eventWindowResize)
+	void Renderer_Vulkan::OnWindowCreate(const Event_Window_Create& eventWindowCreate)
+	{
+		JPT_IGNORE(eventWindowCreate);
+	}
+
+	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& eventWindowResize)
 	{
 		if (eventWindowResize.GetWidth() == 0 || eventWindowResize.GetHeight() == 0)
 		{
 			return;
 		}
+
 		RecreateSwapChain();
 	}
 

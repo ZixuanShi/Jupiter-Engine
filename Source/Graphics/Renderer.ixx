@@ -5,6 +5,7 @@ export module jpt.Renderer;
 import jpt.Time.TypeDefs;
 
 import jpt.Event.Manager;
+import jpt.Event.Window.Create;
 import jpt.Event.Window.Resize;
 
 export namespace jpt
@@ -15,24 +16,21 @@ export namespace jpt
 		virtual ~Renderer() = default;
 
 		virtual bool PreInit();
-		virtual bool Init();
+		virtual bool Init() { return true; }
 		virtual void Update(TimePrecision) { }
 		virtual void Render() { }
 		virtual void Shutdown() { }
 
 		virtual void DrawFrame() { }
 
-		virtual void OnWindowResized([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
+		virtual void OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate) {}
+		virtual void OnWindowResize([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
 	};
 
 	bool Renderer::PreInit()
 	{
-		return true;
-	}
-
-	bool Renderer::Init()
-	{
-		EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResized);
+		EventManager::GetInstance().Register<Event_Window_Create>(this, &Renderer::OnWindowCreate);
+		EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResize);
 		return true;
 	}
 }
