@@ -103,42 +103,28 @@ namespace jpt
 		EventManager::GetInstance().Shutdown();
 	}
 
+	static TimePrecision GetDeltaSeconds()
+	{
+		static StopWatch::Point previous = StopWatch::Now();
+		const StopWatch::Point current = StopWatch::Now();
+		const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
+		previous = current;
+		return deltaSeconds;
+	}
+
 	void Application::Run()
 	{
-		StopWatch::Point previous = StopWatch::Now();
-		TimePrecision accumulator = 0.0;
-		uint32 frameCount = 0;
-
 		while (!m_shouldShutdown)
 		{
-			const StopWatch::Point current = StopWatch::Now();
-			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
+			const TimePrecision deltaSeconds = GetDeltaSeconds();
 
 			Update(deltaSeconds);
-
-			// It's possible that Update() set m_shouldShutdown to true
 			if (m_shouldShutdown)
 			{
 				break;
 			}
 
 			m_pRenderer->DrawFrame();
-
-			previous = current;
-
-			++frameCount;
-			accumulator += deltaSeconds;
-			if (accumulator >= 1.0)
-			{
-				const bool showFPS = ProjectSettings::GetInstance().Get("show_fps", false);
-				if (showFPS)
-				{
-					JPT_LOG("FPS: " + ToString(frameCount));
-				}
-
-				frameCount = 0;
-				accumulator = 0.0;
-			}
 		}
 	}
 

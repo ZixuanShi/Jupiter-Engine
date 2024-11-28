@@ -19,12 +19,15 @@ export namespace jpt
 		static constexpr int32 kDefaultWidth = 800;
 		static constexpr int32 kDefaultHeight = 600;
 
+	protected:
+		uint32 m_fps = 0;
+
 	public:
 		virtual ~Window() = default;
 
 		virtual bool PreInit() { return true; }
 		virtual bool Init(const char* /*title*/, int32 /*width*/ , int32 /*height*/) { return true; }
-		virtual void Update(TimePrecision) {}
+		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Shutdown() {}
 
 		virtual bool ShouldClose() const { return false; }
@@ -33,4 +36,20 @@ export namespace jpt
 		virtual Vec2i GetSize() const { JPT_ASSERT(false); return Vec2i(0, 0); }
 		bool IsMinimized() const { return GetSize() == Vec2i(0, 0); }
 	};
+
+	void Window::Update(TimePrecision deltaSeconds)
+	{
+		static uint32 frameCount = 0;
+		static TimePrecision accumulator = 0.0;
+
+		++frameCount;
+		accumulator += deltaSeconds;
+
+		if (accumulator >= 1.0)
+		{
+			m_fps = frameCount;
+			frameCount = 0;
+			accumulator = 0.0;
+		}
+	}
 }
