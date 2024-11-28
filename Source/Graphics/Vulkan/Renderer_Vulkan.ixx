@@ -17,6 +17,8 @@ import jpt.Renderer;
 	import jpt.Framework_GLFW;
 #endif
 
+import jpt.Vulkan.DebugMessenger;
+
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.QueueFamilyIndices;
@@ -47,28 +49,30 @@ export namespace jpt
 
 	private:
 		VkInstance m_instance;
+
+#if !IS_RELEASE
+		VulkanDebugMessenger m_debugger;
+#endif
+
 		VkSurfaceKHR m_surface;
 
-		VkDevice m_logicalDevice;
 		VkPhysicalDevice m_physicalDevice;
+		QueueFamilyIndices m_queueFamilyIndices;
+		VkDevice m_logicalDevice;
 
 		VkQueue m_graphicsQueue;
 		VkQueue m_presentQueue;
 
-		QueueFamilyIndices m_queueFamilyIndices;
-
-		DynamicArray<VkImage> m_swapChainImages;
 		VkSwapchainKHR m_swapChain;
+		DynamicArray<VkImage> m_swapChainImages;
 		VkFormat m_swapChainImageFormat;
 		VkExtent2D m_swapChainExtent;
-
 		DynamicArray<VkImageView> m_swapChainImageViews;
+		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
 
 		VkRenderPass m_renderPass;
 		VkPipelineLayout m_pipelineLayout;
 		VkPipeline m_graphicsPipeline;
-
-		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
 
 		VkCommandPool m_commandPool;
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
@@ -79,21 +83,12 @@ export namespace jpt
 
 		size_t m_currentFrame = 0;
 
-#if !IS_RELEASE
-		VkDebugUtilsMessengerEXT m_debugMessenger;
-#endif
-
 	public:
 		virtual bool Init() override;
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
 		virtual void OnWindowResized(const Event_Window_Resize& eventWindowResize) override;
-
-		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
-			                                                VkDebugUtilsMessageTypeFlagsEXT messageType, 
-			                                                const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
-			                                                void* pUserData);
 
 	private:
 		// Initialization
@@ -120,21 +115,6 @@ export namespace jpt
 
 		// Shutdown
 		void CleanupSwapChain();
-
-		// Debugging
-#if !IS_RELEASE
-		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-		bool SetupDebugMessenger();
-
-		VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
-			                                  const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-			                                  const VkAllocationCallbacks* pAllocator,
-			                                  VkDebugUtilsMessengerEXT* pCallback);
-
-		void DestroyDebugMessenger(VkInstance instance, 
-			                       VkDebugUtilsMessengerEXT callback, 
-			                       const VkAllocationCallbacks* pAllocator);
-#endif
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -148,7 +128,7 @@ export namespace jpt
 		bool success = true;
 		success &= CreateInstance();
 #if !IS_RELEASE
-		success &= SetupDebugMessenger();
+		success &= m_debugger.Init(m_instance);
 #endif
 		success &= CreateSurface();
 		success &= PickPhysicalDevice();
@@ -200,7 +180,7 @@ export namespace jpt
 
 		// Debugger
 #if !IS_RELEASE
-		DestroyDebugMessenger(m_instance, m_debugMessenger, nullptr);
+		m_debugger.Shutdown(m_instance);
 #endif
 
 		// Instance-level resources
@@ -302,34 +282,6 @@ export namespace jpt
 		CreateFramebuffers();
 	}
 
-	VKAPI_ATTR VkBool32 VKAPI_CALL Renderer_Vulkan::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		                                                          [[maybe_unused]] VkDebugUtilsMessageTypeFlagsEXT messageType,
-		                                                          const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
-		                                                          [[maybe_unused]] void* pUserData)
-	{
-		switch (messageSeverity)
-		{
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: 
-			[[fallthrough]];
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-			JPT_INFO("Validation layer: %s", pCallbackData->pMessage);
-			break;
-
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-			JPT_WARN("Validation layer: %s", pCallbackData->pMessage);
-			break;
-
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-			JPT_ERROR("Validation layer: %s", pCallbackData->pMessage);
-			break;
-
-		default:
-			break;
-		}
-
-		return VK_FALSE;
-	}
-
 	bool Renderer_Vulkan::CreateInstance()
 	{
 #if !IS_RELEASE
@@ -356,11 +308,10 @@ export namespace jpt
 		createInfo.ppEnabledExtensionNames = extensions.ConstBuffer();
 
 #if !IS_RELEASE
-		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
 		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
 		createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
 
-		PopulateDebugMessengerCreateInfo(debugCreateInfo);
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = m_debugger.GetCreateInfo();
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 #else
 		createInfo.enabledLayerCount = 0;
@@ -973,59 +924,4 @@ export namespace jpt
 		vkDestroyRenderPass(m_logicalDevice, m_renderPass, nullptr);
 		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
 	}
-
-#if !IS_RELEASE
-	void Renderer_Vulkan::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
-	{
-		createInfo = {};
-		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-
-		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
-			VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-
-		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-
-		createInfo.pfnUserCallback = DebugCallback;
-		createInfo.pUserData = nullptr; // Optional
-	}
-
-	bool Renderer_Vulkan::SetupDebugMessenger()
-	{
-		VkDebugUtilsMessengerCreateInfoEXT createInfo;
-		PopulateDebugMessengerCreateInfo(createInfo);
-
-		if (const VkResult result = CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debugMessenger); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to set up debug messenger! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		return true;
-	}
-
-	VkResult Renderer_Vulkan::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
-	{
-		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(m_instance, "vkCreateDebugUtilsMessengerEXT");
-		if (func != nullptr)
-		{
-			return func(instance, pCreateInfo, pAllocator, pCallback);
-		}
-		else
-		{
-			return VK_ERROR_EXTENSION_NOT_PRESENT;
-		}
-	}
-
-	void Renderer_Vulkan::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
-	{
-		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
-		if (func != nullptr)
-		{
-			func(instance, callback, pAllocator);
-		}
-	}
-#endif
 }
