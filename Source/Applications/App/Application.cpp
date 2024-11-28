@@ -109,12 +109,19 @@ namespace jpt
 		TimePrecision accumulator = 0.0;
 		uint32 frameCount = 0;
 
-		while (!m_shouldShutdown && !GetMainWindow()->ShouldClose())
+		while (!m_shouldShutdown)
 		{
 			const StopWatch::Point current = StopWatch::Now();
 			const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
 
 			Update(deltaSeconds);
+
+			// It's possible that Update() set m_shouldShutdown to true
+			if (m_shouldShutdown)
+			{
+				break;
+			}
+
 			m_pRenderer->DrawFrame();
 
 			previous = current;
@@ -138,5 +145,10 @@ namespace jpt
 	Window* Application::GetMainWindow() const
 	{
 		return m_pWindowManager->GetMainWindow();
+	}
+
+	void Application::SetShouldShutdown()
+	{
+		m_shouldShutdown = true;
 	}
 }

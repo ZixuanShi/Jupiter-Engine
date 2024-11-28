@@ -105,6 +105,11 @@ export namespace jpt
 
 	void WindowManager::Destroy(const Window* pWindowToDestroy)
 	{
+		if (pWindowToDestroy == GetMainWindow())
+		{
+			GetApplication()->SetShouldShutdown();
+		}
+
 		for (auto itr = m_windows.begin(); itr != m_windows.end(); ++itr)
 		{
 			Window* pWindow = *itr;

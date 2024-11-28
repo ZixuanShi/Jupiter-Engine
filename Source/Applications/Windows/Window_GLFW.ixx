@@ -37,6 +37,7 @@ namespace jpt
 {
 	namespace Callbacks
 	{
+		void OnWindowClose(GLFWwindow* pGLFWWindow);
 		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
 		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
@@ -75,7 +76,10 @@ namespace jpt
 
 		// Set current window callbacks
 		glfwSetWindowUserPointer(m_pGLFWWindow, this);
+
+		glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
 		glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
+
 		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
 		glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
 
@@ -85,12 +89,6 @@ namespace jpt
 	void Window_GLFW::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
-
-		if (glfwWindowShouldClose(m_pGLFWWindow))
-		{
-			Event_Window_Close eventWindowClose = { this };
-			EventManager::GetInstance().Queue(eventWindowClose);
-		}
 
 		// HACK: This shouldn't be here in Window class. I need to properly design Vulkan + GLFW for multiple windows
 		// Currently this means, if one of the windows is minimized, the whole application will be paused
@@ -123,6 +121,15 @@ namespace jpt
 
 	namespace Callbacks
 	{
+		void OnWindowClose(GLFWwindow* pGLFWWindow)
+		{
+			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+			JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
+
+			Event_Window_Close eventWindowClose = { pWindow };
+			EventManager::GetInstance().Send(eventWindowClose);
+		}
+
 		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height)
 		{
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));

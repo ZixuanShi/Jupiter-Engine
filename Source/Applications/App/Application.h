@@ -52,6 +52,7 @@ namespace jpt
 
 		Window* GetMainWindow() const;
 		const char* GetName() const;
+		void SetShouldShutdown();
 	};
 
 	Application* GetApplication();

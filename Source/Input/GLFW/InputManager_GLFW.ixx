@@ -28,7 +28,6 @@ export namespace jpt::Input
 		HashMap<KeyCode, uint32> m_toGLFW;
 		HashMap<uint32, KeyCode> m_fromGLFW;
 
-
 	public:
 		virtual bool PreInit() override;
 
