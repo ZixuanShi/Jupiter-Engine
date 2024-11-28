@@ -18,10 +18,8 @@ import jpt.DynamicArray;
 import jpt.Time.TypeDefs;
 
 import jpt.Event.Manager;
+import jpt.Event.Window.Create;
 import jpt.Event.Window.Close;
-
-static constexpr int32 kDefaultWindowWidth = 800;
-static constexpr int32 kDefaultWindowHeight = 600;
 
 export namespace jpt
 {
@@ -41,7 +39,7 @@ export namespace jpt
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
-		Window* Create(const char* title);
+		Window* Create(const char* title = "New Window", int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
 		void Destroy(const Window* pWindowToDestroy);
 
 		Window* GetMainWindow();
@@ -50,6 +48,11 @@ export namespace jpt
 	bool WindowManager::PreInit(Framework_API frameworkAPI)
 	{
 		m_frameworkAPI = frameworkAPI;
+
+		EventManager::GetInstance().Register<Event_Window_Create>([this](const Event_Window_Create& eventWindowCreate)
+			{
+				Create(eventWindowCreate.GetTitle(), eventWindowCreate.GetWidth(), eventWindowCreate.GetHeight());
+			});
 		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close& eventWindowClose)
 			{
 				Destroy(eventWindowClose.GetWindow());
@@ -83,7 +86,7 @@ export namespace jpt
 		m_windows.Clear();
 	}
 
-	Window* WindowManager::Create(const char* title)
+	Window* WindowManager::Create(const char* title /* = "New Window"*/, int32 width /*= Window::kDefaultWidth*/, int32 height /*= Window::kDefaultHeight*/)
 	{
 		switch (m_frameworkAPI.Value())
 		{
@@ -96,7 +99,7 @@ export namespace jpt
 			return nullptr;
 		}
 
-		m_windows.Back()->Init(title, kDefaultWindowWidth, kDefaultWindowHeight);
+		m_windows.Back()->Init(title, width, height);
 		return m_windows.Back();
 	}
 

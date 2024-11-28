@@ -13,6 +13,7 @@ import jpt.Input.KeyCode;
 import jpt.Window.Manager;
 
 import jpt.Event.Manager;
+import jpt.Event.Window.Create;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
 
@@ -31,7 +32,7 @@ bool Application_Blank::PreInit()
 			}
 			if (eventKeyboardKeyPress.GetKey() == jpt::Input::KeyCode::Keyboard_N)
 			{
-				m_pWindowManager->Create("New Window");
+				jpt::EventManager::GetInstance().Queue(jpt::Event_Window_Create());
 			}
 		});
 

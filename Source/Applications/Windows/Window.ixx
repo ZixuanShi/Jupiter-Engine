@@ -16,6 +16,10 @@ export namespace jpt
 	class Window
 	{
 	public:
+		static constexpr int32 kDefaultWidth = 800;
+		static constexpr int32 kDefaultHeight = 600;
+
+	public:
 		virtual ~Window() = default;
 
 		virtual bool PreInit() { return true; }
