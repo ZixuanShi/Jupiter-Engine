@@ -17,7 +17,6 @@ export class Entity_Foo final : public jpt::Entity
 {
 public:
 	virtual bool PreInit() override;
-	virtual void Update(jpt::TimePrecision deltaSeconds) override;
 
 	void OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress);
 	void OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize);
@@ -29,19 +28,6 @@ bool Entity_Foo::PreInit()
 	jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
 
 	return true;
-}
-
-void Entity_Foo::Update(jpt::TimePrecision deltaSeconds)
-{
-	static bool s_processed = false;
-	static jpt::TimePrecision s_time = 0.0;
-	s_time += deltaSeconds;
-
-	if (s_time >= 5.0 && !s_processed)
-	{
-		jpt::EventManager::GetInstance().Unregister<jpt::Event_Window_Resize>(this);
-		s_processed = true;
-	}
 }
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)

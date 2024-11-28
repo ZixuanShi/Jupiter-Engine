@@ -13,14 +13,16 @@ export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
 
+import jpt.Window;
+
 #if IS_PLATFORM_WIN64
 	import jpt.Framework_GLFW;
 #endif
 
-import jpt.Vulkan.DebugMessenger;
-
-import jpt.Vulkan.Helpers;
 import jpt.Vulkan.ValidationLayers;
+import jpt.Vulkan.DebugMessenger;
+import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
 
@@ -29,6 +31,7 @@ import jpt.TypeDefs;
 import jpt.DynamicArray;
 import jpt.StaticArray;
 import jpt.HashSet;
+import jpt.HashMap;
 
 import jpt.File.IO;
 import jpt.File.Enums;
@@ -56,8 +59,7 @@ export namespace jpt
 
 		VkSurfaceKHR m_surface;
 
-		VkPhysicalDevice m_physicalDevice;
-		QueueFamilyIndices m_queueFamilyIndices;
+		PhysicalDevice m_physicalDevice;
 		VkDevice m_logicalDevice;
 
 		VkQueue m_graphicsQueue;
@@ -96,7 +98,6 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface();
-		bool PickPhysicalDevice();
 		bool CreateLogicalDevice();
 		bool CreateSwapChain();
 		bool CreateImageViews();
@@ -108,9 +109,6 @@ export namespace jpt
 		bool CreateSyncObjects();
 
 		// Vulkan helpers
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
-		bool IsDeviceSuitable(VkPhysicalDevice device);
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
 		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
 		void RecreateSwapChain();
@@ -133,7 +131,9 @@ export namespace jpt
 		success &= m_debugMessenger.Init(m_instance);
 #endif
 		success &= CreateSurface();
-		success &= PickPhysicalDevice();
+
+		success &= m_physicalDevice.Init(m_instance, m_surface);
+
 		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
 		success &= CreateImageViews();
@@ -346,42 +346,11 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::PickPhysicalDevice()
-	{
-		uint32 deviceCount = 0;
-		vkEnumeratePhysicalDevices(m_instance, &deviceCount, nullptr);
-
-		if (deviceCount == 0)
-		{
-			JPT_ERROR("Failed to find GPUs with Vulkan support");
-			return false;
-		}
-
-		DynamicArray<VkPhysicalDevice> devices(deviceCount);
-		vkEnumeratePhysicalDevices(m_instance, &deviceCount, devices.Buffer());
-		for (const VkPhysicalDevice& device : devices)
-		{
-			if (IsDeviceSuitable(device))
-			{
-				m_physicalDevice = device;
-				break;
-			}
-		}
-
-		if (m_physicalDevice == VK_NULL_HANDLE)
-		{
-			JPT_ERROR("Failed to find a suitable GPU");
-			return false;
-		}
-
-		m_queueFamilyIndices = FindQueueFamilies(m_physicalDevice);
-		return true;
-	}
-
 	bool Renderer_Vulkan::CreateLogicalDevice()
 	{
 		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
-		HashSet<uint32> uniqueQueueFamilies = { m_queueFamilyIndices.graphicsFamily.Value(), m_queueFamilyIndices.presentFamily.Value() };
+		const QueueFamilyIndices& queueFamilyIndices = m_physicalDevice.GetQueueFamilyIndices();
+		HashSet<uint32> uniqueQueueFamilies = { queueFamilyIndices.graphicsFamily.Value(), queueFamilyIndices.presentFamily.Value()};
 
 		float queuePriority = 1.0f;
 		for (uint32 queueFamily : uniqueQueueFamilies)
@@ -412,20 +381,20 @@ export namespace jpt
 		createInfo.enabledLayerCount = 0;
 #endif
 
-		if (const VkResult result = vkCreateDevice(m_physicalDevice, &createInfo, nullptr, &m_logicalDevice); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateDevice(m_physicalDevice.Get(), &createInfo, nullptr, &m_logicalDevice); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create logical device! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
-		vkGetDeviceQueue(m_logicalDevice, m_queueFamilyIndices.graphicsFamily.Value(), 0, &m_graphicsQueue);
-		vkGetDeviceQueue(m_logicalDevice, m_queueFamilyIndices.presentFamily.Value(), 0, &m_presentQueue);
+		vkGetDeviceQueue(m_logicalDevice, queueFamilyIndices.graphicsFamily.Value(), 0, &m_graphicsQueue);
+		vkGetDeviceQueue(m_logicalDevice, queueFamilyIndices.presentFamily.Value(), 0, &m_presentQueue);
 		return true;
 	}
 
 	bool Renderer_Vulkan::CreateSwapChain()
 	{
-		SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(m_physicalDevice);
+		SwapChainSupportDetails swapChainSupport = m_physicalDevice.QuerySwapChainSupport(m_physicalDevice.Get(), m_surface);
 
 		const VkSurfaceFormatKHR surfaceFormat = swapChainSupport.ChooseSwapSurfaceFormat();
 		const VkPresentModeKHR presentMode = swapChainSupport.ChooseSwapPresentMode();
@@ -443,13 +412,14 @@ export namespace jpt
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-		uint32 queueFamilyIndices[] = { m_queueFamilyIndices.graphicsFamily.Value(), m_queueFamilyIndices.presentFamily.Value() };
+		const QueueFamilyIndices& queueFaimilyIndices = m_physicalDevice.GetQueueFamilyIndices();
+		uint32 indices[] = { queueFaimilyIndices.graphicsFamily.Value(), queueFaimilyIndices.presentFamily.Value() };
 
-		if (m_queueFamilyIndices.graphicsFamily != m_queueFamilyIndices.presentFamily)
+		if (queueFaimilyIndices.graphicsFamily != queueFaimilyIndices.presentFamily)
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
-			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+			createInfo.pQueueFamilyIndices = indices;
 		}
 		else
 		{
@@ -731,10 +701,12 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateCommandPool()
 	{
+		const QueueFamilyIndices& queueFamilyIndices = m_physicalDevice.GetQueueFamilyIndices();
+
 		VkCommandPoolCreateInfo poolInfo = {};
 		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-		poolInfo.queueFamilyIndex = m_queueFamilyIndices.graphicsFamily.Value();
+		poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.Value();
 
 		if (const VkResult result = vkCreateCommandPool(m_logicalDevice, &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
 		{
@@ -791,59 +763,6 @@ export namespace jpt
 		}
 
 		return true;
-	}
-
-	QueueFamilyIndices Renderer_Vulkan::FindQueueFamilies(VkPhysicalDevice device)
-	{
-		QueueFamilyIndices indices;
-
-		uint32 queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-		DynamicArray<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.Buffer());
-
-		uint32 i = 0;
-		for (const VkQueueFamilyProperties& queueFamily : queueFamilies)
-		{
-			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-			{
-				indices.graphicsFamily = i;
-			}
-
-			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_surface, &presentSupport);
-			if (presentSupport)
-			{
-				indices.presentFamily = i;
-			}
-
-			if (indices.IsComplete())
-			{
-				break;
-			}
-
-			++i;
-		}
-
-		return indices;
-	}
-
-	bool Renderer_Vulkan::IsDeviceSuitable(VkPhysicalDevice device)
-	{
-		QueueFamilyIndices indices = FindQueueFamilies(device);
-
-		bool extensionsSupported = CheckDeviceExtensionSupport(device);
-		SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device);
-
-		return indices.IsComplete() && extensionsSupported && swapChainSupport.IsValid();
-	}
-
-	SwapChainSupportDetails Renderer_Vulkan::QuerySwapChainSupport(VkPhysicalDevice device)
-	{
-		SwapChainSupportDetails details;
-		details.Init(device, m_surface);
-		return details;
 	}
 
 	VkShaderModule Renderer_Vulkan::CreateShaderModule(const DynamicArray<char>& code)
