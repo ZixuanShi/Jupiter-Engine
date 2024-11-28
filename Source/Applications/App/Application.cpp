@@ -55,7 +55,7 @@ namespace jpt
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
-		success &= m_pWindowManager->PreInit(m_frameworkAPI);
+		success &= m_pWindowManager->PreInit();
 		success &= m_pRenderer->PreInit();
 		success &= m_pInputManager->PreInit();
 

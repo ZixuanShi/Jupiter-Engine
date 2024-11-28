@@ -27,11 +27,9 @@ export namespace jpt
 	{
 	private:
 		DynamicArray<Window*> m_windows;	/**< All the windows managed by Jupiter. index at 0 is the main window */
-		Framework_API m_frameworkAPI;
 
 	public:
-		/** Assign framework API and register events */
-		bool PreInit(Framework_API frameworkAPI);
+		bool PreInit();
 
 		/** Create main window */
 		bool Init(const char* mainWindowTitle);
@@ -45,10 +43,8 @@ export namespace jpt
 		Window* GetMainWindow();
 	};
 
-	bool WindowManager::PreInit(Framework_API frameworkAPI)
+	bool WindowManager::PreInit()
 	{
-		m_frameworkAPI = frameworkAPI;
-
 		EventManager::GetInstance().Register<Event_Window_Create>([this](const Event_Window_Create& eventWindowCreate)
 			{
 				Create(eventWindowCreate.GetTitle(), eventWindowCreate.GetWidth(), eventWindowCreate.GetHeight());
@@ -88,14 +84,15 @@ export namespace jpt
 
 	Window* WindowManager::Create(const char* title /* = "New Window"*/, int32 width /*= Window::kDefaultWidth*/, int32 height /*= Window::kDefaultHeight*/)
 	{
-		switch (m_frameworkAPI.Value())
+		const Framework_API api = GetApplication()->GetFrameworkAPI();
+		switch (api.Value())
 		{
 		case Framework_API::GLFW:
 			m_windows.EmplaceBack(new Window_GLFW());
 			break;
 
 		default:
-			JPT_ASSERT(false, "Un-implemented Framework API: %s", m_frameworkAPI.ToString().ConstBuffer());
+			JPT_ASSERT(false, "Un-implemented Framework API: %s", api.ToString().ConstBuffer());
 			return nullptr;
 		}
 
