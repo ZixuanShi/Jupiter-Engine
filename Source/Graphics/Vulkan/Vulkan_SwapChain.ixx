@@ -13,6 +13,7 @@ export module jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChainSupportDetails;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.RenderPass;
 
 import jpt.DynamicArray;
 
@@ -33,7 +34,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice, VkSurfaceKHR surface);
 		bool CreateImageViews(const LogicalDevice& logicalDevice);
-		bool CreateFramebuffers(const LogicalDevice& logicalDevice, VkRenderPass renderPass);
+		bool CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
 		void Shutdown(const LogicalDevice& logicalDevice);
 
@@ -159,7 +160,7 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, VkRenderPass renderPass)
+	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass)
 	{
 		m_framebuffers.Resize(m_imageViews.Count());
 
@@ -169,7 +170,7 @@ export namespace jpt::Vulkan
 
 			VkFramebufferCreateInfo framebufferInfo = {};
 			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-			framebufferInfo.renderPass = renderPass;
+			framebufferInfo.renderPass = renderPass.Get();
 			framebufferInfo.attachmentCount = 1;
 			framebufferInfo.pAttachments = attachments;
 			framebufferInfo.width = m_extent.width;

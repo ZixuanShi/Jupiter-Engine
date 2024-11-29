@@ -12,6 +12,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Shader;
 import jpt.Vulkan.PipelineLayout;
+import jpt.Vulkan.RenderPass;
 
 export namespace jpt::Vulkan
 {
@@ -21,14 +22,14 @@ export namespace jpt::Vulkan
 		VkPipeline m_graphicsPipeline;
 
 	public:
-		bool Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, VkRenderPass renderPass);
+		bool Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, const RenderPass& renderPass);
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkPipeline Get() const { return m_graphicsPipeline; }
 	};
 
-	bool Pipeline::Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, VkRenderPass renderPass)
+	bool Pipeline::Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
 	{
 		// Shaders
 		Shader vertexShader;
@@ -129,7 +130,7 @@ export namespace jpt::Vulkan
 		pipelineInfo.pColorBlendState = &colorBlending;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = pipelineLayout.Get();
-		pipelineInfo.renderPass = renderPass;
+		pipelineInfo.renderPass = renderPass.Get();
 		pipelineInfo.subpass = 0;
 
 		if (const VkResult result = vkCreateGraphicsPipelines(logicalDevice.Get(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline); result != VK_SUCCESS)

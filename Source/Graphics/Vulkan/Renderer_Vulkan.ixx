@@ -23,6 +23,7 @@ import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.SwapChain;
+import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.Helpers;
@@ -66,7 +67,8 @@ export namespace jpt
 
 		SwapChain m_swapChain;
 
-		VkRenderPass m_renderPass;
+		RenderPass m_renderPass;
+
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
 
@@ -92,7 +94,6 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
-		bool CreateRenderPass();
 		bool CreateCommandPool();
 		bool CreateCommandBuffers();
 		bool CreateSyncObjects();
@@ -124,7 +125,7 @@ export namespace jpt
 		success &= m_swapChain.Init(m_logicalDevice, m_physicalDevice, m_surface);
 		success &= m_swapChain.CreateImageViews(m_logicalDevice);
 
-		success &= CreateRenderPass();
+		success &= m_renderPass.Init(m_logicalDevice, m_swapChain.GetImageFormat());
 		success &= m_pipelineLayout.Init(m_logicalDevice);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, m_swapChain, m_pipelineLayout, m_renderPass);
 		success &= m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
@@ -162,7 +163,7 @@ export namespace jpt
 		m_swapChain.Shutdown(m_logicalDevice);
 
 		// Render Pass
-		vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
+		m_renderPass.Shutdown(m_logicalDevice);
 
 		// Pipeline resources
 		m_graphicsPipeline.Shutdown(m_logicalDevice);
@@ -293,8 +294,8 @@ export namespace jpt
 
 		if (m_swapChain.GetImageFormat() != previousFormat)
 		{
-			vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
-			CreateRenderPass();
+			m_renderPass.Shutdown(m_logicalDevice);
+			m_renderPass.Init(m_logicalDevice, m_swapChain.GetImageFormat());
 
 			m_graphicsPipeline.Shutdown(m_logicalDevice);
 			m_pipelineLayout.Shutdown(m_logicalDevice);
@@ -357,53 +358,6 @@ export namespace jpt
 		if (const VkResult result = pWindowManager->CreateSurface(pWindow, m_instance, &m_surface); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateRenderPass()
-	{
-		VkAttachmentDescription colorAttachment = {};
-		colorAttachment.format = m_swapChain.GetImageFormat();
-		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-		colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-		colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-		colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-		VkAttachmentReference colorAttachmentRef = {};
-		colorAttachmentRef.attachment = 0;
-		colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-		VkSubpassDescription subpass = {};
-		subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-		subpass.colorAttachmentCount = 1;
-		subpass.pColorAttachments = &colorAttachmentRef;
-
-		VkSubpassDependency dependency{};
-		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-		dependency.dstSubpass = 0;
-		dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependency.srcAccessMask = 0;
-		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-		VkRenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-		renderPassInfo.attachmentCount = 1;
-		renderPassInfo.pAttachments = &colorAttachment;
-		renderPassInfo.subpassCount = 1;
-		renderPassInfo.pSubpasses = &subpass;
-		renderPassInfo.dependencyCount = 1;
-		renderPassInfo.pDependencies = &dependency;
-
-		if (const VkResult result = vkCreateRenderPass(m_logicalDevice.Get(), &renderPassInfo, nullptr, &m_renderPass); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create render pass! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
@@ -488,7 +442,7 @@ export namespace jpt
 
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_renderPass;
+		renderPassInfo.renderPass = m_renderPass.Get();
 		renderPassInfo.framebuffer = m_swapChain.GetFramebuffers()[imageIndex];
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_swapChain.GetExtent();
