@@ -117,9 +117,9 @@ export namespace jpt
 	{
 		JPT_ENSURE(Super::Init());
 
-		uint32 glfwExtensionCount = 0;
-		vkEnumerateInstanceExtensionProperties(nullptr, &glfwExtensionCount, nullptr);
-		JPT_INFO("GLFW extensions count: %i", glfwExtensionCount);
+		uint32 extensionCount = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+		JPT_INFO("Extensions count: %i", extensionCount);
 
 		bool success = true;
 		success &= CreateInstance();
