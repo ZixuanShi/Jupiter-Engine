@@ -14,10 +14,7 @@ export module jpt.Renderer_Vulkan;
 import jpt.Renderer;
 
 import jpt.Window;
-
-#if IS_PLATFORM_WIN64
-	import jpt.Framework_GLFW;
-#endif
+import jpt.Window.Manager;
 
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
@@ -38,6 +35,7 @@ import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 
+import jpt.Event.Window.Create;
 import jpt.Event.Window.Resize;
 
 using namespace jpt::Vulkan;
@@ -94,7 +92,7 @@ export namespace jpt
 	private:
 		// Initialization
 		bool CreateInstance();
-		bool CreateSurface();
+		bool CreateSurface(Window* pWindow);
 		bool CreateSwapChain();
 		bool CreateImageViews();
 		bool CreateRenderPass();
@@ -126,7 +124,8 @@ export namespace jpt
 #if !IS_RELEASE
 		success &= m_debugMessenger.Init(m_instance);
 #endif
-		success &= CreateSurface();
+
+		success &= CreateSurface(GetApplication()->GetMainWindow());	// Main window
 
 		success &= m_physicalDevice.Init(m_instance, m_surface);
 		success &= m_logicalDevice.Init(m_physicalDevice);
@@ -261,9 +260,18 @@ export namespace jpt
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
 	}
 
-	void Renderer_Vulkan::OnWindowCreate(const Event_Window_Create& eventWindowCreate)
+	void Renderer_Vulkan::OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate)
 	{
-		JPT_IGNORE(eventWindowCreate);
+		// The window is initialized with WindowManager. Create vulkan's per-window specific rendering resources here
+
+		// Surface
+
+		// Swap chain
+
+		// Command buffers
+
+		// Framebuffers
+
 	}
 
 	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& eventWindowResize)
@@ -333,9 +341,12 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::CreateSurface()
+	bool Renderer_Vulkan::CreateSurface(Window* pWindow)
 	{
-		if (const VkResult result = Framework_GLFW::CreateWindowSurface(m_instance, &m_surface); result != VK_SUCCESS)
+		WindowManager* pWindowManager = GetApplication()->GetWindowManager();
+		JPT_ASSERT(pWindowManager);
+
+		if (const VkResult result = pWindowManager->CreateSurface(pWindow, m_instance, &m_surface); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
 			return false;

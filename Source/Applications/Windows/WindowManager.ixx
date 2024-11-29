@@ -6,6 +6,12 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Assert.h"
 
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
 export module jpt.Window.Manager;
 
 import jpt.Window;
@@ -39,6 +45,8 @@ export namespace jpt
 		Window* Create(const char* title = "New Window", int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
 		void Destroy(const Window* pWindowToDestroy);
 
+		// GLFW and Vulkan
+		VkResult CreateSurface(Window* pWindow, VkInstance instance, VkSurfaceKHR* pSurface);
 
 	public:
 		Window* GetMainWindow();
@@ -121,6 +129,17 @@ export namespace jpt
 				break;
 			}
 		}
+	}
+
+	VkResult WindowManager::CreateSurface(Window* pWindow, VkInstance instance, VkSurfaceKHR* pSurface)
+	{
+		Window_GLFW* pGLFWWindow = static_cast<Window_GLFW*>(pWindow);
+		JPT_ASSERT(pGLFWWindow);
+
+		GLFWwindow* pGLFWWindowHandle = pGLFWWindow->GetGLFWWindow();
+		JPT_ASSERT(pGLFWWindowHandle);
+
+		return glfwCreateWindowSurface(instance, pGLFWWindowHandle, nullptr, pSurface);
 	}
 
 	Window* WindowManager::GetMainWindow()

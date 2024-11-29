@@ -7,11 +7,7 @@ module;
 #include "Debugging/Logger.h"
 #include "Applications/App/Application.h"
 
-#define VK_USE_PLATFORM_WIN32_KHR
-#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
 
 export module jpt.Framework_GLFW;
 
@@ -44,9 +40,6 @@ namespace jpt
 		virtual void Shutdown() override;
 
 		virtual const char** GetRequiredExtensions(uint32& extensionCount) override;
-
-		// Vulkan
-		static VkResult CreateWindowSurface(VkInstance instance, VkSurfaceKHR* pSurface);
 	};
 
 	bool Framework_GLFW::Init()
@@ -79,17 +72,6 @@ namespace jpt
 	const char** Framework_GLFW::GetRequiredExtensions(uint32& extensionCount)
 	{
 		return glfwGetRequiredInstanceExtensions(&extensionCount);
-	}
-
-	VkResult Framework_GLFW::CreateWindowSurface(VkInstance instance, VkSurfaceKHR* pSurface)
-	{
-		// TODO: refactor to properly handle multiple windows
-		Application* pApp = GetApplication();
-		Window* pMainWindow = pApp->GetMainWindow();
-		Window_GLFW* pGLFWWindow = static_cast<Window_GLFW*>(pMainWindow);
-		JPT_ASSERT(pGLFWWindow);
-
-		return glfwCreateWindowSurface(instance, pGLFWWindow->GetGLFWWindow(), nullptr, pSurface);
 	}
 
 	namespace Callbacks

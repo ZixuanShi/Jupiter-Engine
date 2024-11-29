@@ -9,6 +9,7 @@ export module Entity.Foo;
 import jpt.Entity;
 import jpt.Event.Manager;
 
+import jpt.Event.Keyboard.KeyPress;
 import jpt.Event.Mouse.ButtonPress;
 import jpt.Event.Window.Close;
 import jpt.Event.Window.Resize;
@@ -18,16 +19,23 @@ export class Entity_Foo final : public jpt::Entity
 public:
 	virtual bool PreInit() override;
 
+	void OnKeyPress(const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress);
 	void OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress);
 	void OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize);
 };
 
 bool Entity_Foo::PreInit()
 {
+	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>(this, &Entity_Foo::OnKeyPress);
 	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_ButtonPress>(this, &Entity_Foo::OnMouseButtonPress);
 	jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
 
 	return true;
+}
+
+void Entity_Foo::OnKeyPress(const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
+{
+	JPT_LOG("Entity_Foo::OnKeyPress. %lu KeyCode: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer());
 }
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)
