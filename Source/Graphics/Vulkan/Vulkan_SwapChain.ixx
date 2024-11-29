@@ -30,11 +30,11 @@ export namespace jpt::Vulkan
 		VkFormat m_imageFormat;
 
 	public:
-		bool Init(LogicalDevice logicalDevice, PhysicalDevice physicalDevice, VkSurfaceKHR surface);
-		bool CreateImageViews(LogicalDevice logicalDevice);
-		bool CreateFramebuffers(LogicalDevice logicalDevice, VkRenderPass renderPass);
+		bool Init(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice, VkSurfaceKHR surface);
+		bool CreateImageViews(const LogicalDevice& logicalDevice);
+		bool CreateFramebuffers(const LogicalDevice& logicalDevice, VkRenderPass renderPass);
 
-		void Shutdown(LogicalDevice logicalDevice);
+		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		const DynamicArray<VkImage>&       GetImages()       const { return m_images;       }
@@ -45,7 +45,7 @@ export namespace jpt::Vulkan
 		VkExtent2D GetExtent() const { return m_extent; }
 	};
 
-	bool SwapChain::Init(LogicalDevice logicalDevice, PhysicalDevice physicalDevice, VkSurfaceKHR surface)
+	bool SwapChain::Init(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice, VkSurfaceKHR surface)
 	{
 		SwapChainSupportDetails swapChainSupport = physicalDevice.QuerySwapChainSupport(physicalDevice.Get(), surface);
 
@@ -103,7 +103,7 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	void SwapChain::Shutdown(LogicalDevice logicalDevice)
+	void SwapChain::Shutdown(const LogicalDevice& logicalDevice)
 	{
 		// Wait for device to finish operations
 		logicalDevice.WaitIdle();
@@ -126,7 +126,7 @@ export namespace jpt::Vulkan
 		vkDestroySwapchainKHR(logicalDevice.Get(), m_swapChain, nullptr);
 	}
 
-	bool SwapChain::CreateImageViews(LogicalDevice logicalDevice)
+	bool SwapChain::CreateImageViews(const LogicalDevice& logicalDevice)
 	{
 		m_imageViews.Resize(m_images.Count());
 
@@ -157,7 +157,7 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	bool SwapChain::CreateFramebuffers(LogicalDevice logicalDevice, VkRenderPass renderPass)
+	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, VkRenderPass renderPass)
 	{
 		m_framebuffers.Resize(m_imageViews.Count());
 

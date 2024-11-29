@@ -20,14 +20,14 @@ export namespace jpt::Vulkan
 		VkPipelineLayout m_pipelineLayout;
 
 	public:
-		bool Init(LogicalDevice logicalDevice);
-		void Shutdown(LogicalDevice logicalDevice);
+		bool Init(const LogicalDevice& logicalDevice);
+		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkPipelineLayout Get() const { return m_pipelineLayout; }
 	};
 
-	bool PipelineLayout::Init(LogicalDevice logicalDevice)
+	bool PipelineLayout::Init(const LogicalDevice& logicalDevice)
 	{
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -41,7 +41,7 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	void PipelineLayout::Shutdown(LogicalDevice logicalDevice)
+	void PipelineLayout::Shutdown(const LogicalDevice& logicalDevice)
 	{
 		vkDestroyPipelineLayout(logicalDevice.Get(), m_pipelineLayout, nullptr);
 	}

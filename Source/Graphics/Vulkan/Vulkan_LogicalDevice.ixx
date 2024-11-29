@@ -31,7 +31,7 @@ export namespace jpt::Vulkan
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 
 	public:
-		bool Init(PhysicalDevice physicalDevice);
+		bool Init(const PhysicalDevice& physicalDevice);
 		void Shutdown();
 
 	public:
@@ -43,7 +43,7 @@ export namespace jpt::Vulkan
 		VkQueue GetPresentQueue() const;
 	};
 
-	bool LogicalDevice::Init(PhysicalDevice physicalDevice)
+	bool LogicalDevice::Init(const PhysicalDevice& physicalDevice)
 	{
 		const QueueFamilyIndices& queueFamilyIndices = physicalDevice.GetQueueFamilyIndices();
 		HashSet<uint32> uniqueQueueFamilies = { queueFamilyIndices.graphicsFamily.Value(), queueFamilyIndices.presentFamily.Value() };

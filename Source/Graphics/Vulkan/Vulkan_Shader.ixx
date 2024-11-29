@@ -27,14 +27,14 @@ export namespace jpt::Vulkan
 		VkShaderModule m_shaderModule;
 
 	public:
-		VkPipelineShaderStageCreateInfo GetStageInfo(VkShaderStageFlagBits shaderStage, const File::Path& path, LogicalDevice logicalDevice);
-		void Shutdown(LogicalDevice logicalDevice);
+		VkPipelineShaderStageCreateInfo GetStageInfo(VkShaderStageFlagBits shaderStage, const File::Path& path, const LogicalDevice& logicalDevice);
+		void Shutdown(const LogicalDevice& logicalDevice);
 
 	private:
-		VkShaderModule Create(LogicalDevice logicalDevice, const DynamicArray<char>& code);
+		VkShaderModule Create(const LogicalDevice& logicalDevice, const DynamicArray<char>& code);
 	};
 
-	VkPipelineShaderStageCreateInfo Shader::GetStageInfo(VkShaderStageFlagBits shaderStage, const File::Path& path, LogicalDevice logicalDevice)
+	VkPipelineShaderStageCreateInfo Shader::GetStageInfo(VkShaderStageFlagBits shaderStage, const File::Path& path, const LogicalDevice& logicalDevice)
 	{
 		const File::Path shaderPath = File::FixDependencies(path);
 		JPT_ASSERT(File::Exists(shaderPath), "Failed finding shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", shaderPath.ConstBuffer());
@@ -51,12 +51,12 @@ export namespace jpt::Vulkan
 		return shaderStageInfo;
 	}
 
-	void Shader::Shutdown(LogicalDevice logicalDevice)
+	void Shader::Shutdown(const LogicalDevice& logicalDevice)
 	{
 		vkDestroyShaderModule(logicalDevice.Get(), m_shaderModule, nullptr);
 	}
 
-	VkShaderModule Shader::Create(LogicalDevice logicalDevice, const DynamicArray<char>& code)
+	VkShaderModule Shader::Create(const LogicalDevice& logicalDevice, const DynamicArray<char>& code)
 	{
 		VkShaderModuleCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
