@@ -24,6 +24,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Shader;
+import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -66,7 +67,7 @@ export namespace jpt
 		SwapChain m_swapChain;
 
 		VkRenderPass m_renderPass;
-		VkPipelineLayout m_pipelineLayout;
+		PipelineLayout m_pipelineLayout;
 		VkPipeline m_graphicsPipeline;
 
 		VkCommandPool m_commandPool;
@@ -125,6 +126,7 @@ export namespace jpt
 		success &= m_swapChain.CreateImageViews(m_logicalDevice);
 
 		success &= CreateRenderPass();
+		success &= m_pipelineLayout.Init(m_logicalDevice);
 		success &= CreateGraphicsPipeline();
 		success &= m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
 		success &= CreateCommandPool();
@@ -165,7 +167,7 @@ export namespace jpt
 
 		// Pipeline resources
 		vkDestroyPipeline(m_logicalDevice.Get(), m_graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(m_logicalDevice.Get(), m_pipelineLayout, nullptr);
+		m_pipelineLayout.Shutdown(m_logicalDevice);
 
 		// Device
 		m_logicalDevice.Shutdown();
@@ -296,7 +298,7 @@ export namespace jpt
 			CreateRenderPass();
 
 			vkDestroyPipeline(m_logicalDevice.Get(), m_graphicsPipeline, nullptr);
-			vkDestroyPipelineLayout(m_logicalDevice.Get(), m_pipelineLayout, nullptr);
+			m_pipelineLayout.Shutdown(m_logicalDevice);
 			CreateGraphicsPipeline();
 		}
 
@@ -497,16 +499,6 @@ export namespace jpt
 		colorBlending.attachmentCount = 1;
 		colorBlending.pAttachments = &colorBlendAttachment;
 
-		// Pipeline layout
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		
-		if (const VkResult result = vkCreatePipelineLayout(m_logicalDevice.Get(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create pipeline layout! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
 		// Create pipeline
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -519,7 +511,7 @@ export namespace jpt
 		pipelineInfo.pMultisampleState = &multisampling;
 		pipelineInfo.pColorBlendState = &colorBlending;
 		pipelineInfo.pDynamicState = &dynamicState;
-		pipelineInfo.layout = m_pipelineLayout;
+		pipelineInfo.layout = m_pipelineLayout.Get();
 		pipelineInfo.renderPass = m_renderPass;
 		pipelineInfo.subpass = 0;
 
