@@ -22,6 +22,7 @@ export namespace jpt::Vulkan
 
 	public:
 		bool Init(VkPhysicalDevice device, VkSurfaceKHR surface);
+		void Recreate(VkPhysicalDevice device, VkSurfaceKHR surface);
 
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat();
 		VkPresentModeKHR ChooseSwapPresentMode();
@@ -56,6 +57,15 @@ export namespace jpt::Vulkan
 		}
 
 		return IsValid();
+	}
+
+	void SwapChainSupportDetails::Recreate(VkPhysicalDevice device, VkSurfaceKHR surface)
+	{
+		m_formats.Clear();
+		m_presentModes.Clear();
+		m_capabilities = {};
+
+		Init(device, surface);
 	}
 
 	VkSurfaceFormatKHR SwapChainSupportDetails::ChooseSwapSurfaceFormat()

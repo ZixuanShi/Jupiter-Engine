@@ -7,6 +7,7 @@ module;
 export module jpt.Vulkan.WindowResources;
 
 import jpt.Vulkan.Constants;
+import jpt.Vulkan.SwapChain;
 
 import jpt.DynamicArray;
 import jpt.StaticArray;
@@ -20,13 +21,7 @@ export namespace jpt::Vulkan
 		// Surface
 		VkSurfaceKHR m_surface;
 
-		// Swap chain
-		DynamicArray<VkImage> m_swapChainImages;
-		DynamicArray<VkImageView> m_swapChainImageViews;
-		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
-		VkSwapchainKHR m_swapChain;
-		VkExtent2D m_swapChainExtent;
-		VkFormat m_swapChainImageFormat;
+		SwapChain m_swapChain;
 
 		// Command buffers
 		VkCommandPool m_commandPool;

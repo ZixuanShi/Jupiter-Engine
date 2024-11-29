@@ -22,6 +22,7 @@ import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.WindowResources;
+import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -61,12 +62,7 @@ export namespace jpt
 		PhysicalDevice m_physicalDevice;
 		LogicalDevice m_logicalDevice;
 
-		VkSwapchainKHR m_swapChain;
-		DynamicArray<VkImage> m_swapChainImages;
-		VkFormat m_swapChainImageFormat;
-		VkExtent2D m_swapChainExtent;
-		DynamicArray<VkImageView> m_swapChainImageViews;
-		DynamicArray<VkFramebuffer> m_swapChainFramebuffers;
+		SwapChain m_swapChain;
 
 		VkRenderPass m_renderPass;
 		VkPipelineLayout m_pipelineLayout;
@@ -94,11 +90,8 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
-		bool CreateSwapChain();
-		bool CreateImageViews();
 		bool CreateRenderPass();
 		bool CreateGraphicsPipeline();
-		bool CreateFramebuffers();
 		bool CreateCommandPool();
 		bool CreateCommandBuffers();
 		bool CreateSyncObjects();
@@ -107,9 +100,6 @@ export namespace jpt
 		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
 		void RecreateSwapChain();
-
-		// Shutdown
-		void CleanupSwapChain();
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -131,11 +121,12 @@ export namespace jpt
 		success &= m_physicalDevice.Init(m_instance, m_surface);
 		success &= m_logicalDevice.Init(m_physicalDevice);
 
-		success &= CreateSwapChain();
-		success &= CreateImageViews();
+		success &= m_swapChain.Init(m_logicalDevice, m_physicalDevice, m_surface);
+		success &= m_swapChain.CreateImageViews(m_logicalDevice);
+
 		success &= CreateRenderPass();
 		success &= CreateGraphicsPipeline();
-		success &= CreateFramebuffers();
+		success &= m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
 		success &= CreateCommandPool();
 		success &= CreateCommandBuffers();
 		success &= CreateSyncObjects();
@@ -167,7 +158,7 @@ export namespace jpt
 		vkDestroyCommandPool(m_logicalDevice.Get(), m_commandPool, nullptr);
 
 		// Swap chain resources
-		CleanupSwapChain();
+		m_swapChain.Shutdown(m_logicalDevice);
 
 		// Render Pass
 		vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
@@ -207,7 +198,7 @@ export namespace jpt
 		vkWaitForFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
 
 		uint32 imageIndex = 0;
-		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain.Get(), UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
 		if (resultAcquireNextImage == VK_ERROR_OUT_OF_DATE_KHR)
 		{
 			RecreateSwapChain();
@@ -246,7 +237,7 @@ export namespace jpt
 		presentInfo.waitSemaphoreCount = 1;
 		presentInfo.pWaitSemaphores = signalSemaphores;
 
-		VkSwapchainKHR swapChains[] = { m_swapChain };
+		VkSwapchainKHR swapChains[] = { m_swapChain.Get() };
 		presentInfo.swapchainCount = 1;
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
@@ -292,14 +283,14 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
-		VkFormat previousFormat = m_swapChainImageFormat;
+		VkFormat previousFormat = m_swapChain.GetImageFormat();
 
-		CleanupSwapChain();
+		m_swapChain.Shutdown(m_logicalDevice);
+		m_swapChain.Init(m_logicalDevice, m_physicalDevice, m_surface);
 
-		CreateSwapChain();
-		CreateImageViews();
+		m_swapChain.CreateImageViews(m_logicalDevice);
 
-		if (m_swapChainImageFormat != previousFormat)
+		if (m_swapChain.GetImageFormat() != previousFormat)
 		{
 			vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
 			CreateRenderPass();
@@ -309,7 +300,7 @@ export namespace jpt
 			CreateGraphicsPipeline();
 		}
 
-		CreateFramebuffers();
+		m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
 	}
 
 	bool Renderer_Vulkan::CreateInstance()
@@ -371,99 +362,10 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::CreateSwapChain()
-	{
-		SwapChainSupportDetails swapChainSupport = m_physicalDevice.QuerySwapChainSupport(m_physicalDevice.Get(), m_surface);
-
-		const VkSurfaceFormatKHR surfaceFormat = swapChainSupport.ChooseSwapSurfaceFormat();
-		const VkPresentModeKHR presentMode = swapChainSupport.ChooseSwapPresentMode();
-		const VkExtent2D extent = swapChainSupport.ChooseSwapExtent();
-
-		uint32 imageCount = swapChainSupport.GetImageCount();
-
-		VkSwapchainCreateInfoKHR createInfo = {};
-		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		createInfo.surface = m_surface;
-		createInfo.minImageCount = imageCount;
-		createInfo.imageFormat = surfaceFormat.format;
-		createInfo.imageColorSpace = surfaceFormat.colorSpace;
-		createInfo.imageExtent = extent;
-		createInfo.imageArrayLayers = 1;
-		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-
-		const QueueFamilyIndices& queueFaimilyIndices = m_physicalDevice.GetQueueFamilyIndices();
-		uint32 indices[] = { queueFaimilyIndices.graphicsFamily.Value(), queueFaimilyIndices.presentFamily.Value() };
-
-		if (queueFaimilyIndices.graphicsFamily != queueFaimilyIndices.presentFamily)
-		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-			createInfo.queueFamilyIndexCount = 2;
-			createInfo.pQueueFamilyIndices = indices;
-		}
-		else
-		{
-			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			createInfo.queueFamilyIndexCount = 0;
-			createInfo.pQueueFamilyIndices = nullptr;
-		}
-
-		createInfo.preTransform = swapChainSupport.GetTransform();
-		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-		createInfo.presentMode = presentMode;
-		createInfo.clipped = VK_TRUE;
-		createInfo.oldSwapchain = VK_NULL_HANDLE;
-
-		if (const VkResult result = vkCreateSwapchainKHR(m_logicalDevice.Get(), &createInfo, nullptr, &m_swapChain); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create swap chain! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		vkGetSwapchainImagesKHR(m_logicalDevice.Get(), m_swapChain, &imageCount, nullptr);
-		m_swapChainImages.Resize(imageCount);
-		vkGetSwapchainImagesKHR(m_logicalDevice.Get(), m_swapChain, &imageCount, m_swapChainImages.Buffer());
-
-		m_swapChainImageFormat = surfaceFormat.format;
-		m_swapChainExtent = extent;
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateImageViews()
-	{
-		m_swapChainImageViews.Resize(m_swapChainImages.Count());
-
-		for (uint32 i = 0; i < m_swapChainImages.Count(); ++i)
-		{
-			VkImageViewCreateInfo createInfo = {};
-			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			createInfo.image = m_swapChainImages[i];
-			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			createInfo.format = m_swapChainImageFormat;
-			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			createInfo.subresourceRange.baseMipLevel = 0;
-			createInfo.subresourceRange.levelCount = 1;
-			createInfo.subresourceRange.baseArrayLayer = 0;
-			createInfo.subresourceRange.layerCount = 1;
-
-			if (const VkResult result = vkCreateImageView(m_logicalDevice.Get(), &createInfo, nullptr, &m_swapChainImageViews[i]); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create image views! VkResult: %i", static_cast<uint32>(result));
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	bool Renderer_Vulkan::CreateRenderPass()
 	{
 		VkAttachmentDescription colorAttachment = {};
-		colorAttachment.format = m_swapChainImageFormat;
+		colorAttachment.format = m_swapChain.GetImageFormat();
 		colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 		colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 		colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -552,15 +454,15 @@ export namespace jpt
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_swapChainExtent.width);
-		viewport.height = static_cast<float>(m_swapChainExtent.height);
+		viewport.width  = static_cast<float>(m_swapChain.GetExtent().width);
+		viewport.height = static_cast<float>(m_swapChain.GetExtent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
 		// Scissor
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
-		scissor.extent = m_swapChainExtent;
+		scissor.extent = m_swapChain.GetExtent();
 
 		// Dynamic states
 		DynamicArray<VkDynamicState> dynamicStates = 
@@ -647,33 +549,6 @@ export namespace jpt
 
 		vkDestroyShaderModule(m_logicalDevice.Get(), vertexShaderModule, nullptr);
 		vkDestroyShaderModule(m_logicalDevice.Get(), pixelShaderModule, nullptr);
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateFramebuffers()
-	{
-		m_swapChainFramebuffers.Resize(m_swapChainImageViews.Count());
-
-		for (size_t i = 0; i < m_swapChainImageViews.Count(); ++i)
-		{
-			VkImageView attachments[] = { m_swapChainImageViews[i] };
-
-			VkFramebufferCreateInfo framebufferInfo = {};
-			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-			framebufferInfo.renderPass = m_renderPass;
-			framebufferInfo.attachmentCount = 1;
-			framebufferInfo.pAttachments = attachments;
-			framebufferInfo.width = m_swapChainExtent.width;
-			framebufferInfo.height = m_swapChainExtent.height;
-			framebufferInfo.layers = 1;
-
-			if (const VkResult result = vkCreateFramebuffer(m_logicalDevice.Get(), &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create framebuffer! VkResult: %i", static_cast<uint32>(result));
-				return false;
-			}
-		}
 
 		return true;
 	}
@@ -773,9 +648,9 @@ export namespace jpt
 		VkRenderPassBeginInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = m_renderPass;
-		renderPassInfo.framebuffer = m_swapChainFramebuffers[imageIndex];
+		renderPassInfo.framebuffer = m_swapChain.GetFramebuffers()[imageIndex];
 		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = m_swapChainExtent;
+		renderPassInfo.renderArea.extent = m_swapChain.GetExtent();
 
 		VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		renderPassInfo.clearValueCount = 1;
@@ -787,15 +662,15 @@ export namespace jpt
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(m_swapChainExtent.width);
-		viewport.height = static_cast<float>(m_swapChainExtent.height);
+		viewport.width  = static_cast<float>(m_swapChain.GetExtent().width);
+		viewport.height = static_cast<float>(m_swapChain.GetExtent().height);
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 		VkRect2D scissor = {};	
 		scissor.offset = { 0, 0 };
-		scissor.extent = m_swapChainExtent;
+		scissor.extent = m_swapChain.GetExtent();
 		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
@@ -805,28 +680,5 @@ export namespace jpt
 		{
 			JPT_ERROR("Failed to record command buffer! VkResult: %i", static_cast<uint32>(result));
 		}
-	}
-
-	void Renderer_Vulkan::CleanupSwapChain()
-	{
-		// Wait for device to finish operations
-		m_logicalDevice.WaitIdle();
-
-		// Destroy framebuffers
-		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
-		{
-			vkDestroyFramebuffer(m_logicalDevice.Get(), framebuffer, nullptr);
-		}
-		m_swapChainFramebuffers.Clear();
-
-		// Destroy image views
-		for (VkImageView imageView : m_swapChainImageViews)
-		{
-			vkDestroyImageView(m_logicalDevice.Get(), imageView, nullptr);
-		}
-		m_swapChainImageViews.Clear();
-
-		// Destroy render pass and swap chain
-		vkDestroySwapchainKHR(m_logicalDevice.Get(), m_swapChain, nullptr);
 	}
 }
