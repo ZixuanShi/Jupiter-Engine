@@ -22,6 +22,7 @@ import jpt.Window;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -30,7 +31,6 @@ import jpt.TypeDefs;
 
 import jpt.DynamicArray;
 import jpt.StaticArray;
-import jpt.HashSet;
 import jpt.HashMap;
 
 import jpt.File.IO;
@@ -60,10 +60,7 @@ export namespace jpt
 		VkSurfaceKHR m_surface;
 
 		PhysicalDevice m_physicalDevice;
-		VkDevice m_logicalDevice;
-
-		VkQueue m_graphicsQueue;
-		VkQueue m_presentQueue;
+		LogicalDevice m_logicalDevice;
 
 		VkSwapchainKHR m_swapChain;
 		DynamicArray<VkImage> m_swapChainImages;
@@ -98,7 +95,6 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface();
-		bool CreateLogicalDevice();
 		bool CreateSwapChain();
 		bool CreateImageViews();
 		bool CreateRenderPass();
@@ -133,8 +129,8 @@ export namespace jpt
 		success &= CreateSurface();
 
 		success &= m_physicalDevice.Init(m_instance, m_surface);
+		success &= m_logicalDevice.Init(m_physicalDevice);
 
-		success &= CreateLogicalDevice();
 		success &= CreateSwapChain();
 		success &= CreateImageViews();
 		success &= CreateRenderPass();
@@ -154,31 +150,31 @@ export namespace jpt
 
 	void Renderer_Vulkan::Shutdown()
 	{
-		vkDeviceWaitIdle(m_logicalDevice);
+		m_logicalDevice.WaitIdle();
 
 		// Synchronization objects
 		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			vkDestroySemaphore(m_logicalDevice, m_imageAvailableSemaphores[i], nullptr);
-			vkDestroySemaphore(m_logicalDevice, m_renderFinishedSemaphores[i], nullptr);
-			vkDestroyFence(m_logicalDevice, m_inFlightFences[i], nullptr);
+			vkDestroySemaphore(m_logicalDevice.Get(), m_imageAvailableSemaphores[i], nullptr);
+			vkDestroySemaphore(m_logicalDevice.Get(), m_renderFinishedSemaphores[i], nullptr);
+			vkDestroyFence(m_logicalDevice.Get(), m_inFlightFences[i], nullptr);
 		}
 
 		// Command buffers and pool
-		vkFreeCommandBuffers(m_logicalDevice, m_commandPool,
+		vkFreeCommandBuffers(m_logicalDevice.Get(), m_commandPool,
 			static_cast<uint32>(m_commandBuffers.Count()),
 			m_commandBuffers.Buffer());
-		vkDestroyCommandPool(m_logicalDevice, m_commandPool, nullptr);
+		vkDestroyCommandPool(m_logicalDevice.Get(), m_commandPool, nullptr);
 
 		// Swap chain resources
 		CleanupSwapChain();
 
 		// Pipeline resources
-		vkDestroyPipeline(m_logicalDevice, m_graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(m_logicalDevice, m_pipelineLayout, nullptr);
+		vkDestroyPipeline(m_logicalDevice.Get(), m_graphicsPipeline, nullptr);
+		vkDestroyPipelineLayout(m_logicalDevice.Get(), m_pipelineLayout, nullptr);
 
 		// Device
-		vkDestroyDevice(m_logicalDevice, nullptr);
+		m_logicalDevice.Shutdown();
 
 		// Debugger
 #if !IS_RELEASE
@@ -203,10 +199,10 @@ export namespace jpt
 			- Submit the recorded command buffer
 			- Present the swap chain image	*/
 
-		vkWaitForFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+		vkWaitForFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
 
 		uint32 imageIndex = 0;
-		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice, m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain, UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
 		if (resultAcquireNextImage == VK_ERROR_OUT_OF_DATE_KHR)
 		{
 			RecreateSwapChain();
@@ -214,7 +210,7 @@ export namespace jpt
 		}
 		JPT_ASSERT(resultAcquireNextImage == VK_SUCCESS || resultAcquireNextImage == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image %u", static_cast<uint32>(resultAcquireNextImage));
 		
-		vkResetFences(m_logicalDevice, 1, &m_inFlightFences[m_currentFrame]);
+		vkResetFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame]);
 
 		vkResetCommandBuffer(m_commandBuffers[m_currentFrame], 0);
 		RecordCommandBuffer(m_commandBuffers[m_currentFrame], imageIndex);
@@ -234,7 +230,7 @@ export namespace jpt
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (const VkResult result = vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, m_inFlightFences[m_currentFrame]); result != VK_SUCCESS)
+		if (const VkResult result = vkQueueSubmit(m_logicalDevice.GetGraphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to submit draw command buffer! VkResult: %i", static_cast<uint32>(result));
 			return;
@@ -250,7 +246,7 @@ export namespace jpt
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
 
-		const VkResult resultQueuePresent = vkQueuePresentKHR(m_presentQueue, &presentInfo);
+		const VkResult resultQueuePresent = vkQueuePresentKHR(m_logicalDevice.GetPresentQueue(), &presentInfo);
 		if (resultQueuePresent == VK_ERROR_OUT_OF_DATE_KHR || resultQueuePresent == VK_SUBOPTIMAL_KHR)
 		{
 			RecreateSwapChain();
@@ -280,7 +276,7 @@ export namespace jpt
 
 	void Renderer_Vulkan::RecreateSwapChain()
 	{
-		vkDeviceWaitIdle(m_logicalDevice);
+		m_logicalDevice.WaitIdle();
 
 		CleanupSwapChain();
 
@@ -346,52 +342,6 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::CreateLogicalDevice()
-	{
-		DynamicArray<VkDeviceQueueCreateInfo> queueCreateInfos;
-		const QueueFamilyIndices& queueFamilyIndices = m_physicalDevice.GetQueueFamilyIndices();
-		HashSet<uint32> uniqueQueueFamilies = { queueFamilyIndices.graphicsFamily.Value(), queueFamilyIndices.presentFamily.Value()};
-
-		float queuePriority = 1.0f;
-		for (uint32 queueFamily : uniqueQueueFamilies)
-		{
-			VkDeviceQueueCreateInfo queueCreateInfo = {};
-			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			queueCreateInfo.queueFamilyIndex = queueFamily;
-			queueCreateInfo.queueCount = 1;
-			queueCreateInfo.pQueuePriorities = &queuePriority;
-
-			queueCreateInfos.Add(queueCreateInfo);
-		}
-
-		VkPhysicalDeviceFeatures deviceFeatures = {};
-
-		VkDeviceCreateInfo createInfo = {};
-		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-		createInfo.queueCreateInfoCount = static_cast<uint32>(queueCreateInfos.Count());
-		createInfo.pQueueCreateInfos = queueCreateInfos.ConstBuffer();
-		createInfo.pEnabledFeatures = &deviceFeatures;
-		createInfo.enabledExtensionCount = static_cast<uint32>(deviceExtensions.Count());
-		createInfo.ppEnabledExtensionNames = deviceExtensions.ConstBuffer();
-
-#if !IS_RELEASE
-		createInfo.enabledLayerCount = static_cast<uint32>(validationLayers.Count());
-		createInfo.ppEnabledLayerNames = validationLayers.ConstBuffer();
-#else
-		createInfo.enabledLayerCount = 0;
-#endif
-
-		if (const VkResult result = vkCreateDevice(m_physicalDevice.Get(), &createInfo, nullptr, &m_logicalDevice); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create logical device! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		vkGetDeviceQueue(m_logicalDevice, queueFamilyIndices.graphicsFamily.Value(), 0, &m_graphicsQueue);
-		vkGetDeviceQueue(m_logicalDevice, queueFamilyIndices.presentFamily.Value(), 0, &m_presentQueue);
-		return true;
-	}
-
 	bool Renderer_Vulkan::CreateSwapChain()
 	{
 		SwapChainSupportDetails swapChainSupport = m_physicalDevice.QuerySwapChainSupport(m_physicalDevice.Get(), m_surface);
@@ -434,15 +384,15 @@ export namespace jpt
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-		if (const VkResult result = vkCreateSwapchainKHR(m_logicalDevice, &createInfo, nullptr, &m_swapChain); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateSwapchainKHR(m_logicalDevice.Get(), &createInfo, nullptr, &m_swapChain); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create swap chain! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
-		vkGetSwapchainImagesKHR(m_logicalDevice, m_swapChain, &imageCount, nullptr);
+		vkGetSwapchainImagesKHR(m_logicalDevice.Get(), m_swapChain, &imageCount, nullptr);
 		m_swapChainImages.Resize(imageCount);
-		vkGetSwapchainImagesKHR(m_logicalDevice, m_swapChain, &imageCount, m_swapChainImages.Buffer());
+		vkGetSwapchainImagesKHR(m_logicalDevice.Get(), m_swapChain, &imageCount, m_swapChainImages.Buffer());
 
 		m_swapChainImageFormat = surfaceFormat.format;
 		m_swapChainExtent = extent;
@@ -471,7 +421,7 @@ export namespace jpt
 			createInfo.subresourceRange.baseArrayLayer = 0;
 			createInfo.subresourceRange.layerCount = 1;
 
-			if (const VkResult result = vkCreateImageView(m_logicalDevice, &createInfo, nullptr, &m_swapChainImageViews[i]); result != VK_SUCCESS)
+			if (const VkResult result = vkCreateImageView(m_logicalDevice.Get(), &createInfo, nullptr, &m_swapChainImageViews[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create image views! VkResult: %i", static_cast<uint32>(result));
 				return false;
@@ -519,7 +469,7 @@ export namespace jpt
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		if (const VkResult result = vkCreateRenderPass(m_logicalDevice, &renderPassInfo, nullptr, &m_renderPass); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateRenderPass(m_logicalDevice.Get(), &renderPassInfo, nullptr, &m_renderPass); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create render pass! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -638,7 +588,7 @@ export namespace jpt
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		
-		if (const VkResult result = vkCreatePipelineLayout(m_logicalDevice, &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
+		if (const VkResult result = vkCreatePipelineLayout(m_logicalDevice.Get(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create pipeline layout! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -660,14 +610,14 @@ export namespace jpt
 		pipelineInfo.renderPass = m_renderPass;
 		pipelineInfo.subpass = 0;
 
-		if (const VkResult result = vkCreateGraphicsPipelines(m_logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateGraphicsPipelines(m_logicalDevice.Get(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create graphics pipeline! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
 
-		vkDestroyShaderModule(m_logicalDevice, vertexShaderModule, nullptr);
-		vkDestroyShaderModule(m_logicalDevice, pixelShaderModule, nullptr);
+		vkDestroyShaderModule(m_logicalDevice.Get(), vertexShaderModule, nullptr);
+		vkDestroyShaderModule(m_logicalDevice.Get(), pixelShaderModule, nullptr);
 
 		return true;
 	}
@@ -689,7 +639,7 @@ export namespace jpt
 			framebufferInfo.height = m_swapChainExtent.height;
 			framebufferInfo.layers = 1;
 
-			if (const VkResult result = vkCreateFramebuffer(m_logicalDevice, &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]); result != VK_SUCCESS)
+			if (const VkResult result = vkCreateFramebuffer(m_logicalDevice.Get(), &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create framebuffer! VkResult: %i", static_cast<uint32>(result));
 				return false;
@@ -708,7 +658,7 @@ export namespace jpt
 		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 		poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.Value();
 
-		if (const VkResult result = vkCreateCommandPool(m_logicalDevice, &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateCommandPool(m_logicalDevice.Get(), &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create command pool! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -725,7 +675,7 @@ export namespace jpt
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = static_cast<uint32>(m_commandBuffers.Count());
 
-		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice, &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
+		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice.Get(), &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
 			return false;
@@ -745,17 +695,17 @@ export namespace jpt
 
 		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_imageAvailableSemaphores[i]); result != VK_SUCCESS)
+			if (const VkResult result = vkCreateSemaphore(m_logicalDevice.Get(), &semaphoreInfo, nullptr, &m_imageAvailableSemaphores[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create image available semaphore! VkResult: %i", static_cast<uint32>(result));
 				return false;
 			}
-			if (const VkResult result = vkCreateSemaphore(m_logicalDevice, &semaphoreInfo, nullptr, &m_renderFinishedSemaphores[i]); result != VK_SUCCESS)
+			if (const VkResult result = vkCreateSemaphore(m_logicalDevice.Get(), &semaphoreInfo, nullptr, &m_renderFinishedSemaphores[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create render finished semaphore! VkResult: %i", static_cast<uint32>(result));
 				return false;
 			}
-			if (const VkResult result = vkCreateFence(m_logicalDevice, &fenceInfo, nullptr, &m_inFlightFences[i]); result != VK_SUCCESS)
+			if (const VkResult result = vkCreateFence(m_logicalDevice.Get(), &fenceInfo, nullptr, &m_inFlightFences[i]); result != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create in flight fence! VkResult: %i", static_cast<uint32>(result));
 				return false;
@@ -773,7 +723,7 @@ export namespace jpt
 		createInfo.pCode = reinterpret_cast<const uint32*>(code.ConstBuffer());
 
 		VkShaderModule shaderModule;
-		if (const VkResult result = vkCreateShaderModule(m_logicalDevice, &createInfo, nullptr, &shaderModule); result != VK_SUCCESS)
+		if (const VkResult result = vkCreateShaderModule(m_logicalDevice.Get(), &createInfo, nullptr, &shaderModule); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create shader module! VkResult: %i", static_cast<uint32>(result));
 		}
@@ -831,24 +781,24 @@ export namespace jpt
 	void Renderer_Vulkan::CleanupSwapChain()
 	{
 		// Wait for device to finish operations
-		vkDeviceWaitIdle(m_logicalDevice);
+		m_logicalDevice.WaitIdle();
 
 		// Destroy framebuffers
 		for (VkFramebuffer framebuffer : m_swapChainFramebuffers)
 		{
-			vkDestroyFramebuffer(m_logicalDevice, framebuffer, nullptr);
+			vkDestroyFramebuffer(m_logicalDevice.Get(), framebuffer, nullptr);
 		}
 		m_swapChainFramebuffers.Clear();
 
 		// Destroy image views
 		for (VkImageView imageView : m_swapChainImageViews)
 		{
-			vkDestroyImageView(m_logicalDevice, imageView, nullptr);
+			vkDestroyImageView(m_logicalDevice.Get(), imageView, nullptr);
 		}
 		m_swapChainImageViews.Clear();
 
 		// Destroy render pass and swap chain
-		vkDestroyRenderPass(m_logicalDevice, m_renderPass, nullptr);
-		vkDestroySwapchainKHR(m_logicalDevice, m_swapChain, nullptr);
+		vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
+		vkDestroySwapchainKHR(m_logicalDevice.Get(), m_swapChain, nullptr);
 	}
 }

@@ -19,7 +19,9 @@ import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
-	/** Encapsulates Vulkan's physical device */
+	/** Encapsulates Vulkan's physical device (GPU)
+	    - Has queue families (just describes what's available)
+		- Only tells you what queue families exist and their properties */
 	class PhysicalDevice
 	{
 	private:
