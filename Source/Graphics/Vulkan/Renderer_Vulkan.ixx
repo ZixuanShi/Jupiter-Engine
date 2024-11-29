@@ -195,8 +195,10 @@ export namespace jpt
 		/**	At a high level, rendering a frame in Vulkan consists of a common set of steps:
 			- Wait for the previous frame to finish
 			- Acquire an image from the swap chain
+			- Begin render pass (clear screen)
 			- Record a command buffer which draws the scene onto that image
 			- Submit the recorded command buffer
+			- End render pass
 			- Present the swap chain image	*/
 
 		vkWaitForFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);

@@ -13,8 +13,6 @@ export module jpt.Window_GLFW;
 
 import jpt.Window;
 
-import jpt.Framework;
-
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
@@ -30,8 +28,6 @@ import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
 import jpt.Event.Keyboard.KeyPress;
-
-import jpt.Renderer;
 
 namespace jpt
 {

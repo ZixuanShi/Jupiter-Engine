@@ -31,6 +31,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(VkInstance instance, VkSurfaceKHR surface);
 
+	public:
 		VkPhysicalDevice Get() const;
 		const QueueFamilyIndices& GetQueueFamilyIndices() const;
 

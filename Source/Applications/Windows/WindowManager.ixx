@@ -30,16 +30,17 @@ export namespace jpt
 
 	public:
 		bool PreInit();
-
-		/** Create main window */
 		bool Init(const char* mainWindowTitle);
 
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
+	public:
 		Window* Create(const char* title = "New Window", int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
 		void Destroy(const Window* pWindowToDestroy);
 
+
+	public:
 		Window* GetMainWindow();
 	};
 
@@ -59,6 +60,8 @@ export namespace jpt
 
 	bool WindowManager::Init(const char* mainWindowTitle)
 	{
+		JPT_ASSERT(m_windows.IsEmpty(), "WindowManager already initialized");
+
 		// Create main window
 		Create(mainWindowTitle);
 
