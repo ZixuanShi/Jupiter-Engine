@@ -21,8 +21,7 @@ export namespace jpt::Vulkan
 		DynamicArray<VkPresentModeKHR> m_presentModes;  /**< Available presentation modes */
 
 	public:
-		bool Init(VkPhysicalDevice device, VkSurfaceKHR surface);
-		void Recreate(VkPhysicalDevice device, VkSurfaceKHR surface);
+		SwapChainSupportDetails(VkPhysicalDevice device, VkSurfaceKHR surface);
 
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat();
 		VkPresentModeKHR ChooseSwapPresentMode();
@@ -33,7 +32,7 @@ export namespace jpt::Vulkan
 		bool IsValid() const;
 	};
 
-	bool SwapChainSupportDetails::Init(VkPhysicalDevice device, VkSurfaceKHR surface)
+	SwapChainSupportDetails::SwapChainSupportDetails(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		// capabilities
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &m_capabilities);
@@ -55,17 +54,6 @@ export namespace jpt::Vulkan
 			m_presentModes.Resize(presentModeCount);
 			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, m_presentModes.Buffer());
 		}
-
-		return IsValid();
-	}
-
-	void SwapChainSupportDetails::Recreate(VkPhysicalDevice device, VkSurfaceKHR surface)
-	{
-		m_formats.Clear();
-		m_presentModes.Clear();
-		m_capabilities = {};
-
-		Init(device, surface);
 	}
 
 	VkSurfaceFormatKHR SwapChainSupportDetails::ChooseSwapSurfaceFormat()

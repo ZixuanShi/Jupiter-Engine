@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
@@ -47,7 +48,8 @@ export namespace jpt::Vulkan
 
 	bool SwapChain::Init(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice, VkSurfaceKHR surface)
 	{
-		SwapChainSupportDetails swapChainSupport = physicalDevice.QuerySwapChainSupport(physicalDevice.Get(), surface);
+		SwapChainSupportDetails swapChainSupport(physicalDevice.Get(), surface);
+		JPT_ASSERT(swapChainSupport.IsValid());
 
 		const VkSurfaceFormatKHR surfaceFormat = swapChainSupport.ChooseSwapSurfaceFormat();
 		const VkPresentModeKHR presentMode = swapChainSupport.ChooseSwapPresentMode();

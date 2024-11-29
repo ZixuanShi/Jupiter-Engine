@@ -35,9 +35,6 @@ export namespace jpt::Vulkan
 		VkPhysicalDevice Get() const;
 		const QueueFamilyIndices& GetQueueFamilyIndices() const;
 
-		// TODO: Move to swapchain abstraction class when implemented
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) const;
-
 	private:
 		bool IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) const;
 		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) const;
@@ -86,19 +83,13 @@ export namespace jpt::Vulkan
 		return m_queueFamilyIndices;
 	}
 
-	SwapChainSupportDetails PhysicalDevice::QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) const
-	{
-		SwapChainSupportDetails details;
-		details.Init(device, surface);
-		return details;
-	}
-
 	bool PhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) const
 	{
 		QueueFamilyIndices indices = FindQueueFamilies(device, surface);
 
 		bool extensionsSupported = CheckDeviceExtensionSupport(device);
-		SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device, surface);
+
+		SwapChainSupportDetails swapChainSupport(device, surface);
 
 		return indices.IsComplete() && extensionsSupported && swapChainSupport.IsValid();
 	}
