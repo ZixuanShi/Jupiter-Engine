@@ -16,15 +16,18 @@ import jpt.Renderer;
 import jpt.Window;
 import jpt.Window.Manager;
 
+import jpt.Vulkan.Constants;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
 
 import jpt.TypeDefs;
+import jpt.Time.TypeDefs;
 
 import jpt.DynamicArray;
 import jpt.StaticArray;
@@ -42,8 +45,6 @@ using namespace jpt::Vulkan;
 
 export namespace jpt
 {
-	constexpr size_t kMaxFramesInFlight = 2;
-
 	class Renderer_Vulkan final : public Renderer
 	{
 		using Super = Renderer;
@@ -168,6 +169,9 @@ export namespace jpt
 		// Swap chain resources
 		CleanupSwapChain();
 
+		// Render Pass
+		vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
+
 		// Pipeline resources
 		vkDestroyPipeline(m_logicalDevice.Get(), m_graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(m_logicalDevice.Get(), m_pipelineLayout, nullptr);
@@ -288,11 +292,23 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
+		VkFormat previousFormat = m_swapChainImageFormat;
+
 		CleanupSwapChain();
 
 		CreateSwapChain();
 		CreateImageViews();
-		CreateRenderPass();
+
+		if (m_swapChainImageFormat != previousFormat)
+		{
+			vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
+			CreateRenderPass();
+
+			vkDestroyPipeline(m_logicalDevice.Get(), m_graphicsPipeline, nullptr);
+			vkDestroyPipelineLayout(m_logicalDevice.Get(), m_pipelineLayout, nullptr);
+			CreateGraphicsPipeline();
+		}
+
 		CreateFramebuffers();
 	}
 
@@ -811,7 +827,6 @@ export namespace jpt
 		m_swapChainImageViews.Clear();
 
 		// Destroy render pass and swap chain
-		vkDestroyRenderPass(m_logicalDevice.Get(), m_renderPass, nullptr);
 		vkDestroySwapchainKHR(m_logicalDevice.Get(), m_swapChain, nullptr);
 	}
 }
