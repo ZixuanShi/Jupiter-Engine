@@ -23,6 +23,7 @@ import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.SwapChain;
+import jpt.Vulkan.Shader;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -97,7 +98,6 @@ export namespace jpt
 		bool CreateSyncObjects();
 
 		// Vulkan helpers
-		VkShaderModule CreateShaderModule(const DynamicArray<char>& code);
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
 		void RecreateSwapChain();
 	};
@@ -411,32 +411,14 @@ export namespace jpt
 
 	bool Renderer_Vulkan::CreateGraphicsPipeline()
 	{
-		const File::Path vertexShaderPath = File::FixDependencies("_Baked/Jupiter_Common/Shaders/triangle.vs.spv");
-		const File::Path pixelShaderPath = File::FixDependencies("_Baked/Jupiter_Common/Shaders/triangle.ps.spv");
+		// Shaders
+		Shader vertexShader;
+		VkPipelineShaderStageCreateInfo vertexShaderInfo = vertexShader.GetStageInfo(VK_SHADER_STAGE_VERTEX_BIT, "_Baked/Jupiter_Common/Shaders/triangle.vs.spv", m_logicalDevice);
 
-		JPT_ASSERT(File::Exists(vertexShaderPath), "Failed finding vertex shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", vertexShaderPath.ConstBuffer());
-		JPT_ASSERT(File::Exists(pixelShaderPath), "Failed finding pixel shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", pixelShaderPath.ConstBuffer());
+		Shader pixelShader;
+		VkPipelineShaderStageCreateInfo pixelShaderInfo = pixelShader.GetStageInfo(VK_SHADER_STAGE_FRAGMENT_BIT, "_Baked/Jupiter_Common/Shaders/triangle.ps.spv", m_logicalDevice);
 
-		DynamicArray<char> vertexShaderCode = ReadBinaryFileArray(vertexShaderPath);
-		DynamicArray<char> pixelShaderCode = ReadBinaryFileArray(pixelShaderPath);
-
-		VkShaderModule vertexShaderModule = CreateShaderModule(vertexShaderCode);
-		VkShaderModule pixelShaderModule = CreateShaderModule(pixelShaderCode);
-
-		VkPipelineShaderStageCreateInfo vertexShaderStageInfo = {};
-		vertexShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		vertexShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-		vertexShaderStageInfo.module = vertexShaderModule;
-		vertexShaderStageInfo.pName = "main";
-		vertexShaderStageInfo.pSpecializationInfo = nullptr;	// Constants optimization
-
-		VkPipelineShaderStageCreateInfo pixelShaderStageInfo = {};
-		pixelShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		pixelShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		pixelShaderStageInfo.module = pixelShaderModule;
-		pixelShaderStageInfo.pName = "main";
-
-		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
+		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderInfo, pixelShaderInfo };
 
 		// Vertex input
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
@@ -547,8 +529,8 @@ export namespace jpt
 			return false;
 		}
 
-		vkDestroyShaderModule(m_logicalDevice.Get(), vertexShaderModule, nullptr);
-		vkDestroyShaderModule(m_logicalDevice.Get(), pixelShaderModule, nullptr);
+		vertexShader.Shutdown(m_logicalDevice);
+		pixelShader.Shutdown(m_logicalDevice);
 
 		return true;
 	}
@@ -617,22 +599,6 @@ export namespace jpt
 		}
 
 		return true;
-	}
-
-	VkShaderModule Renderer_Vulkan::CreateShaderModule(const DynamicArray<char>& code)
-	{
-		VkShaderModuleCreateInfo createInfo = {};
-		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		createInfo.codeSize = code.Count();
-		createInfo.pCode = reinterpret_cast<const uint32*>(code.ConstBuffer());
-
-		VkShaderModule shaderModule;
-		if (const VkResult result = vkCreateShaderModule(m_logicalDevice.Get(), &createInfo, nullptr, &shaderModule); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create shader module! VkResult: %i", static_cast<uint32>(result));
-		}
-
-		return shaderModule;
 	}
 
 	void Renderer_Vulkan::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex)
