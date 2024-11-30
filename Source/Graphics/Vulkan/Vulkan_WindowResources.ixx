@@ -53,7 +53,7 @@ export namespace jpt::Vulkan
 		bool m_shouldRecreateSwapChain = false;
 
 	public:
-		bool CreateSwapChain(const PhysicalDevice& physicalDevice, VkSurfaceKHR surface);
+		bool CreateSwapChain(const PhysicalDevice& physicalDevice);
 		bool CreateImageViews();
 		bool CreateFramebuffers(const RenderPass& renderPass);
 		bool CreateCommandPool(uint32 queueFamilyIndex);
@@ -81,9 +81,9 @@ export namespace jpt::Vulkan
 		VkFormat GetImageFormat() const { return m_swapChain.GetImageFormat(); }
 	};
 
-	bool WindowResources::CreateSwapChain(const PhysicalDevice& physicalDevice, VkSurfaceKHR surface)
+	bool WindowResources::CreateSwapChain(const PhysicalDevice& physicalDevice)
 	{
-		return m_swapChain.Init(*m_pLogicalDevice, physicalDevice, surface);
+		return m_swapChain.Init(*m_pLogicalDevice, physicalDevice, m_surface);
 	}
 
 	bool WindowResources::CreateImageViews()

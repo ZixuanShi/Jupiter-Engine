@@ -10,10 +10,12 @@ import jpt.CoreModules;
 import jpt.InputManager;
 import jpt.Input.KeyCode;
 
+import jpt.Window;
 import jpt.Window.Manager;
 
+import jpt.Renderer;
+
 import jpt.Event.Manager;
-import jpt.Event.Window.Create;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
 
@@ -32,7 +34,8 @@ bool Application_Blank::PreInit()
 			}
 			if (eventKeyboardKeyPress.GetKey() == jpt::Input::KeyCode::Keyboard_N)
 			{
-				jpt::EventManager::GetInstance().Queue(jpt::Event_Window_Create());
+				jpt::Window* pWindow = m_pWindowManager->Create();
+				GetRenderer()->RegisterWindow(pWindow);
 			}
 		});
 

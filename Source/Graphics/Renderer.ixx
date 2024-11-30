@@ -2,11 +2,13 @@
 
 export module jpt.Renderer;
 
+import jpt.Window;
+
 import jpt.Time.TypeDefs;
 
 import jpt.Event.Manager;
-import jpt.Event.Window.Create;
 import jpt.Event.Window.Resize;
+import jpt.Event.Window.Close;
 
 export namespace jpt
 {
@@ -23,14 +25,15 @@ export namespace jpt
 
 		virtual void DrawFrame() { }
 
-		virtual void OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate) {}
+		virtual void RegisterWindow([[maybe_unused]] Window* pWindow) {}
 		virtual void OnWindowResize([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
+		virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
 	};
 
 	bool Renderer::PreInit()
 	{
-		EventManager::GetInstance().Register<Event_Window_Create>(this, &Renderer::OnWindowCreate);
 		EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResize);
+		EventManager::GetInstance().Register<Event_Window_Close>(this, &Renderer::OnWindowClose);
 		return true;
 	}
 }

@@ -11,6 +11,8 @@ export module jpt.Window.Manager;
 import jpt.Window;
 import jpt.Window_GLFW;
 
+import jpt.Renderer;
+
 import jpt.Framework.Enums;
 
 import jpt.DynamicArray;
@@ -18,7 +20,6 @@ import jpt.DynamicArray;
 import jpt.Time.TypeDefs;
 
 import jpt.Event.Manager;
-import jpt.Event.Window.Create;
 import jpt.Event.Window.Close;
 
 export namespace jpt
@@ -45,10 +46,6 @@ export namespace jpt
 
 	bool WindowManager::PreInit()
 	{
-		EventManager::GetInstance().Register<Event_Window_Create>([this](const Event_Window_Create& eventWindowCreate)
-			{
-				Create(eventWindowCreate.GetTitle(), eventWindowCreate.GetWidth(), eventWindowCreate.GetHeight());
-			});
 		EventManager::GetInstance().Register<Event_Window_Close>([this](const Event_Window_Close& eventWindowClose)
 			{
 				Destroy(eventWindowClose.GetWindow());
@@ -98,8 +95,9 @@ export namespace jpt
 			return nullptr;
 		}
 
-		m_windows.Back()->Init(title, width, height);
-		return m_windows.Back();
+		Window* pWindow = m_windows.Back();
+		pWindow->Init(title, width, height);
+		return pWindow;
 	}
 
 	void WindowManager::Destroy(const Window* pWindowToDestroy)

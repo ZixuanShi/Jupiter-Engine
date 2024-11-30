@@ -44,8 +44,8 @@ import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 
-import jpt.Event.Window.Create;
 import jpt.Event.Window.Resize;
+import jpt.Event.Window.Close;
 
 using namespace jpt::Vulkan;
 
@@ -79,8 +79,9 @@ export namespace jpt
 
 		virtual void DrawFrame() override;
 
-		virtual void OnWindowCreate(const Event_Window_Create& eventWindowCreate) override;
+		virtual void RegisterWindow(Window* pWindow) override;
 		virtual void OnWindowResize(const Event_Window_Resize& eventWindowResize) override;
+		virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
 
 	private:
 		bool CreateInstance();
@@ -109,15 +110,14 @@ export namespace jpt
 
 		// Surface
 		success &= pMainWindow->CreateSurface({ m_instance, resources.GetSurfacePtr() });
-		VkSurfaceKHR surface = resources.GetSurface();
 
 		// Physical and logical devices
-		success &= m_physicalDevice.Init(m_instance, surface);
+		success &= m_physicalDevice.Init(m_instance, resources.GetSurface());
 		success &= m_logicalDevice.Init(m_physicalDevice);
 		resources.SetLogicalDevice(&m_logicalDevice);
 
 		// Swap chain
-		success &= resources.CreateSwapChain(m_physicalDevice, surface);
+		success &= resources.CreateSwapChain(m_physicalDevice);
 		success &= resources.CreateImageViews();
 
 		// Render pass
@@ -204,8 +204,31 @@ export namespace jpt
 		}
 	}
 
-	void Renderer_Vulkan::OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate)
+	void Renderer_Vulkan::RegisterWindow(Window* pWindow)
 	{
+		WindowResources& resources = m_windowResources.EmplaceBack();
+		resources.SetOwner(pWindow);
+		resources.SetLogicalDevice(&m_logicalDevice);
+
+		// Surface
+		pWindow->CreateSurface({ m_instance, resources.GetSurfacePtr()});
+
+		// Swap chain
+		resources.CreateSwapChain(m_physicalDevice);
+		resources.CreateImageViews();
+
+		// Framebuffers
+		resources.CreateFramebuffers(m_renderPass);
+
+		// Command pool and buffers
+		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
+		resources.CreateCommandPool(queueFamilyIndex);
+		resources.CreateCommandBuffers();
+
+		// Synchronization objects
+		resources.CreateSynchronizationObjects();
+
+		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
 
 	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& eventWindowResize)
@@ -220,6 +243,19 @@ export namespace jpt
 			if (resources.GetOwner() == eventWindowResize.GetWindow())
 			{
 				resources.RecreateSwapChain(m_physicalDevice, m_renderPass, m_graphicsPipeline, m_pipelineLayout);
+				break;
+			}
+		}
+	}
+
+	void Renderer_Vulkan::OnWindowClose(const Event_Window_Close& eventWindowClose)
+	{
+		for (auto itr = m_windowResources.begin(); itr != m_windowResources.end(); ++itr)
+		{
+			if (itr->GetOwner() == eventWindowClose.GetWindow())
+			{
+				itr->Shutdown(m_instance);
+				m_windowResources.Erase(itr);
 				break;
 			}
 		}
