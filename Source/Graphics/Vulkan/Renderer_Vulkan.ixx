@@ -27,6 +27,7 @@ import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
+import jpt.Vulkan.SynchronizationObjects;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -76,9 +77,7 @@ export namespace jpt
 		CommandPool m_commandPool;
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 
-		StaticArray<VkSemaphore, kMaxFramesInFlight> m_imageAvailableSemaphores;
-		StaticArray<VkSemaphore, kMaxFramesInFlight> m_renderFinishedSemaphores;
-		StaticArray<VkFence, kMaxFramesInFlight> m_inFlightFences;
+		StaticArray<SynchronizationObjects, kMaxFramesInFlight> m_syncObjects;
 
 		size_t m_currentFrame = 0;
 
@@ -96,7 +95,6 @@ export namespace jpt
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
 		bool CreateCommandBuffers();
-		bool CreateSyncObjects();
 
 		// Vulkan helpers
 		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
@@ -138,7 +136,10 @@ export namespace jpt
 		success &= m_commandPool.Init(m_logicalDevice, queueFamilyIndex);
 		success &= CreateCommandBuffers();
 
-		success &= CreateSyncObjects();
+		for (SynchronizationObjects& syncObjects : m_syncObjects)
+		{
+			success &= syncObjects.Init(m_logicalDevice);
+		}
 
 		if (success)
 		{
@@ -153,11 +154,9 @@ export namespace jpt
 		m_logicalDevice.WaitIdle();
 
 		// Synchronization objects
-		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
+		for (SynchronizationObjects& syncObjects : m_syncObjects)
 		{
-			vkDestroySemaphore(m_logicalDevice.Get(), m_imageAvailableSemaphores[i], nullptr);
-			vkDestroySemaphore(m_logicalDevice.Get(), m_renderFinishedSemaphores[i], nullptr);
-			vkDestroyFence(m_logicalDevice.Get(), m_inFlightFences[i], nullptr);
+			syncObjects.Shutdown(m_logicalDevice);
 		}
 
 		// Command buffers and pool
@@ -204,10 +203,12 @@ export namespace jpt
 			- End render pass
 			- Present the swap chain image	*/
 
-		vkWaitForFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
+		SynchronizationObjects& currentSyncObjects = m_syncObjects[m_currentFrame];
+
+		vkWaitForFences(m_logicalDevice.Get(), 1, currentSyncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
 
 		uint32 imageIndex = 0;
-		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain.Get(), UINT64_MAX, m_imageAvailableSemaphores[m_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain.Get(), UINT64_MAX, currentSyncObjects.GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
 		if (resultAcquireNextImage == VK_ERROR_OUT_OF_DATE_KHR)
 		{
 			RecreateSwapChain();
@@ -215,7 +216,7 @@ export namespace jpt
 		}
 		JPT_ASSERT(resultAcquireNextImage == VK_SUCCESS || resultAcquireNextImage == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image %u", static_cast<uint32>(resultAcquireNextImage));
 		
-		vkResetFences(m_logicalDevice.Get(), 1, &m_inFlightFences[m_currentFrame]);
+		vkResetFences(m_logicalDevice.Get(), 1, currentSyncObjects.GetInFlightFencePtr());
 
 		vkResetCommandBuffer(m_commandBuffers[m_currentFrame], 0);
 		RecordCommandBuffer(m_commandBuffers[m_currentFrame], imageIndex);
@@ -223,7 +224,7 @@ export namespace jpt
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-		VkSemaphore waitSemaphores[] = { m_imageAvailableSemaphores[m_currentFrame] };
+		VkSemaphore waitSemaphores[] = { currentSyncObjects.GetImageAvailableSemaphore() };
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores = waitSemaphores;
@@ -231,11 +232,11 @@ export namespace jpt
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_commandBuffers[m_currentFrame];
 
-		VkSemaphore signalSemaphores[] = { m_renderFinishedSemaphores[m_currentFrame] };
+		VkSemaphore signalSemaphores[] = { currentSyncObjects.GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (const VkResult result = vkQueueSubmit(m_logicalDevice.GetGraphicsQueue(), 1, &submitInfo, m_inFlightFences[m_currentFrame]); result != VK_SUCCESS)
+		if (const VkResult result = vkQueueSubmit(m_logicalDevice.GetGraphicsQueue(), 1, &submitInfo, currentSyncObjects.GetInFlightFence()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to submit draw command buffer! VkResult: %i", static_cast<uint32>(result));
 			return;
@@ -383,37 +384,6 @@ export namespace jpt
 		{
 			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
 			return false;
-		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateSyncObjects()
-	{
-		VkSemaphoreCreateInfo semaphoreInfo = {};
-		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-		VkFenceCreateInfo fenceInfo = {};
-		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
-		{
-			if (const VkResult result = vkCreateSemaphore(m_logicalDevice.Get(), &semaphoreInfo, nullptr, &m_imageAvailableSemaphores[i]); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create image available semaphore! VkResult: %i", static_cast<uint32>(result));
-				return false;
-			}
-			if (const VkResult result = vkCreateSemaphore(m_logicalDevice.Get(), &semaphoreInfo, nullptr, &m_renderFinishedSemaphores[i]); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create render finished semaphore! VkResult: %i", static_cast<uint32>(result));
-				return false;
-			}
-			if (const VkResult result = vkCreateFence(m_logicalDevice.Get(), &fenceInfo, nullptr, &m_inFlightFences[i]); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create in flight fence! VkResult: %i", static_cast<uint32>(result));
-				return false;
-			}
 		}
 
 		return true;
