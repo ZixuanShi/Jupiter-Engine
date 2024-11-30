@@ -34,7 +34,7 @@ export namespace jpt
 
 		/** @return Vector2, xy are window's screen lengths in pixels */
 		virtual Vec2i GetSize() const { JPT_ASSERT(false); return Vec2i(0, 0); }
-		bool IsMinimized() const { return GetSize() == Vec2i(0, 0); }
+		bool IsMinimized() const { return GetSize().x == 0 || GetSize().y == 0; }
 	};
 
 	void Window::Update(TimePrecision deltaSeconds)

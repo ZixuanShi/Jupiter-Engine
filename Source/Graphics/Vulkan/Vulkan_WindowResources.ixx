@@ -120,6 +120,8 @@ export namespace jpt::Vulkan
 	{
 		m_pLogicalDevice->WaitIdle();
 
+		JPT_ASSERT(!m_pOwner->IsMinimized());
+
 		VkFormat previousFormat = m_swapChain.GetImageFormat();
 
 		m_swapChain.Shutdown(*m_pLogicalDevice);

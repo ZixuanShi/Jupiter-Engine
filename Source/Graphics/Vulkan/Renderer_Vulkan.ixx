@@ -187,8 +187,13 @@ export namespace jpt
 	{
 		Super::DrawFrame();
 
-		WindowResources& resources = m_windowResources[0];
-		resources.DrawFrame(m_renderPass, m_graphicsPipeline);
+		for (WindowResources& resources : m_windowResources)
+		{
+			if (!resources.GetOwner()->IsMinimized())
+			{
+				resources.DrawFrame(m_renderPass, m_graphicsPipeline);
+			}
+		}
 	}
 
 	void Renderer_Vulkan::OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate)
@@ -197,7 +202,7 @@ export namespace jpt
 
 	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& eventWindowResize)
 	{
-		if (eventWindowResize.GetWidth() == 0 || eventWindowResize.GetHeight() == 0)
+		if (eventWindowResize.IsMinimized())
 		{
 			return;
 		}

@@ -26,5 +26,7 @@ export namespace jpt
 		Window* GetWindow() const { return m_pWindow; }
 		int32 GetWidth() const { return m_width; }
 		int32 GetHeight() const { return m_height; }
+
+		bool IsMinimized() const { return m_width == 0 || m_height == 0; }
 	};
 }

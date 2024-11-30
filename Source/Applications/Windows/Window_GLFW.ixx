@@ -85,14 +85,6 @@ namespace jpt
 	void Window_GLFW::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
-
-		// HACK: This shouldn't be here in Window class. I need to properly design Vulkan + GLFW for multiple windows
-		// Currently this means, if one of the windows is minimized, the whole application will be paused
-		// TODO: Move render logic like for each Window, if !Minimized(), Renderer->DrawFrame(Window)
-		while (IsMinimized())
-		{
-			glfwWaitEvents();
-		}
 	}
 
 	void Window_GLFW::Shutdown()
