@@ -14,7 +14,6 @@ export module jpt.Renderer_Vulkan;
 import jpt.Renderer;
 
 import jpt.Window;
-import jpt.Window.Manager;
 
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.ValidationLayers;
@@ -84,9 +83,7 @@ export namespace jpt
 		virtual void OnWindowResize(const Event_Window_Resize& eventWindowResize) override;
 
 	private:
-		// Initialization
 		bool CreateInstance();
-		bool CreateSurface(Window* pWindow);
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -105,30 +102,40 @@ export namespace jpt
 		success &= m_debugMessenger.Init(m_instance);
 #endif
 
+		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
-		success &= CreateSurface(pMainWindow);
+		WindowResources& resources = m_windowResources.EmplaceBack();
+		resources.SetOwner(pMainWindow);
 
-		WindowResources& resources = m_windowResources[0];
+		// Surface
+		success &= pMainWindow->CreateSurface({ m_instance, resources.GetSurfacePtr() });
 		VkSurfaceKHR surface = resources.GetSurface();
 
+		// Physical and logical devices
 		success &= m_physicalDevice.Init(m_instance, surface);
 		success &= m_logicalDevice.Init(m_physicalDevice);
 		resources.SetLogicalDevice(&m_logicalDevice);
 
+		// Swap chain
 		success &= resources.CreateSwapChain(m_physicalDevice, surface);
 		success &= resources.CreateImageViews();
 
+		// Render pass
 		success &= m_renderPass.Init(m_logicalDevice, resources.GetImageFormat());
 
+		// Pipeline resources
 		success &= m_pipelineLayout.Init(m_logicalDevice);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, resources.GetSwapChain(), m_pipelineLayout, m_renderPass);
 
+		// Framebuffers
 		success &= resources.CreateFramebuffers(m_renderPass);
 
+		// Command pool and buffers
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
 		success &= resources.CreateCommandPool(queueFamilyIndex);
 		success &= resources.CreateCommandBuffers();
 
+		// Synchronization objects
 		success &= resources.CreateSynchronizationObjects();
 
 		if (success)
@@ -156,6 +163,7 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
+		// Window resources
 		for (WindowResources& resources : m_windowResources)
 		{
 			resources.Shutdown(m_instance);
@@ -258,24 +266,6 @@ export namespace jpt
 			JPT_ERROR("Failed to create Vulkan instance! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateSurface(Window* pWindow)
-	{
-		WindowManager* pWindowManager = GetApplication()->GetWindowManager();
-		JPT_ASSERT(pWindowManager);
-
-		WindowResources& resources = m_windowResources.EmplaceBack();
-
-		// Surface
-		if (const VkResult result = pWindowManager->CreateSurface(pWindow, m_instance, resources.GetSurfacePtr()); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-		resources.SetOwner(pWindow);
 
 		return true;
 	}

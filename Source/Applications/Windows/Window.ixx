@@ -7,9 +7,12 @@ module;
 export module jpt.Window;
 
 import jpt.Vector2;
+import jpt.Any;
+import jpt.DynamicArray;
 
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
+
 
 export namespace jpt
 {
@@ -29,6 +32,8 @@ export namespace jpt
 		virtual bool Init(const char* /*title*/, int32 /*width*/ , int32 /*height*/) { return true; }
 		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Shutdown() {}
+
+		virtual bool CreateSurface([[maybe_unused]] const DynamicArray<Any>& context) { return true; }
 
 		virtual bool ShouldClose() const { return false; }
 

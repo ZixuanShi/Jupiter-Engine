@@ -7,7 +7,11 @@ module;
 #include "Debugging/Assert.h"
 #include "Debugging/Logger.h"
 
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 
 export module jpt.Window_GLFW;
 
@@ -17,11 +21,15 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Vector2;
+import jpt.Any;
+import jpt.DynamicArray;
 
 import jpt.InputManager;
 import jpt.Input.KeyCode;
 
 import jpt.Time.TypeDefs;
+
+import jpt.Graphics.Enums;
 
 import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
@@ -50,6 +58,8 @@ namespace jpt
 		virtual bool Init(const char* title, int32 width, int32 height) override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
+
+		virtual bool CreateSurface(const DynamicArray<Any>& context) override;
 
 		virtual bool ShouldClose() const override;
 		virtual Vec2i GetSize() const override;
@@ -93,6 +103,24 @@ namespace jpt
 		m_pGLFWWindow = nullptr;
 
 		Super::Shutdown();
+	}
+
+	bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)
+	{
+		const Graphics_API api = GetApplication()->GetGraphicsAPI();
+
+		switch (api.Value())
+		{
+		case Graphics_API::Vulkan:
+		{
+			VkInstance instance = context[0].As<VkInstance>();
+			VkSurfaceKHR* pSurface = context[1].As<VkSurfaceKHR*>();
+			return glfwCreateWindowSurface(instance, m_pGLFWWindow, nullptr, pSurface) == VK_SUCCESS;
+		}
+		default:
+			JPT_ASSERT(false, "Un-implemented Graphics API: %s", api.ToString().ConstBuffer());
+			return false;
+		};
 	}
 
 	bool Window_GLFW::ShouldClose() const
