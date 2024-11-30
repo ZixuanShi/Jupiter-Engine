@@ -63,27 +63,19 @@ export namespace jpt
 		DebugMessenger m_debugMessenger;
 #endif
 
-		VkSurfaceKHR m_surface;
-
 		PhysicalDevice m_physicalDevice;
 		LogicalDevice m_logicalDevice;
-
-		SwapChain m_swapChain;
 
 		RenderPass m_renderPass;
 
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
 
-		CommandPool m_commandPool;
-		CommandBuffers m_commandBuffers;
-
-		StaticArray<SynchronizationObjects, kMaxFramesInFlight> m_syncObjects;
-
-		size_t m_currentFrame = 0;
+		DynamicArray<WindowResources> m_windowResources;
 
 	public:
 		virtual bool Init() override;
+		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
@@ -95,9 +87,6 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
-
-		// Vulkan helpers
-		void RecreateSwapChain();
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -116,29 +105,31 @@ export namespace jpt
 		success &= m_debugMessenger.Init(m_instance);
 #endif
 
-		success &= CreateSurface(GetApplication()->GetMainWindow());	// Main window
+		Window* pMainWindow = GetApplication()->GetMainWindow();
+		success &= CreateSurface(pMainWindow);
 
-		success &= m_physicalDevice.Init(m_instance, m_surface);
+		WindowResources& resources = m_windowResources[0];
+		VkSurfaceKHR surface = resources.GetSurface();
+
+		success &= m_physicalDevice.Init(m_instance, surface);
 		success &= m_logicalDevice.Init(m_physicalDevice);
+		resources.SetLogicalDevice(&m_logicalDevice);
 
-		success &= m_swapChain.Init(m_logicalDevice, m_physicalDevice, m_surface);
-		success &= m_swapChain.CreateImageViews(m_logicalDevice);
+		success &= resources.CreateSwapChain(m_physicalDevice, surface);
+		success &= resources.CreateImageViews();
 
-		success &= m_renderPass.Init(m_logicalDevice, m_swapChain.GetImageFormat());
+		success &= m_renderPass.Init(m_logicalDevice, resources.GetImageFormat());
 
 		success &= m_pipelineLayout.Init(m_logicalDevice);
-		success &= m_graphicsPipeline.Init(m_logicalDevice, m_swapChain, m_pipelineLayout, m_renderPass);
+		success &= m_graphicsPipeline.Init(m_logicalDevice, resources.GetSwapChain(), m_pipelineLayout, m_renderPass);
 
-		success &= m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
+		success &= resources.CreateFramebuffers(m_renderPass);
 
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
-		success &= m_commandPool.Init(m_logicalDevice, queueFamilyIndex);
-		success &= m_commandBuffers.Init(m_logicalDevice, m_commandPool);
+		success &= resources.CreateCommandPool(queueFamilyIndex);
+		success &= resources.CreateCommandBuffers();
 
-		for (SynchronizationObjects& syncObjects : m_syncObjects)
-		{
-			success &= syncObjects.Init(m_logicalDevice);
-		}
+		success &= resources.CreateSynchronizationObjects();
 
 		if (success)
 		{
@@ -148,22 +139,28 @@ export namespace jpt
 		return success;
 	}
 
+	void Renderer_Vulkan::Update(TimePrecision deltaSeconds)
+	{
+		Super::Update(deltaSeconds);
+
+		for (WindowResources& resources : m_windowResources)
+		{
+			if (resources.ShouldRecreateSwapChain())
+			{
+				resources.RecreateSwapChain(m_physicalDevice, m_renderPass, m_graphicsPipeline, m_pipelineLayout);
+			}
+		}
+	}
+
 	void Renderer_Vulkan::Shutdown()
 	{
 		m_logicalDevice.WaitIdle();
 
-		// Synchronization objects
-		for (SynchronizationObjects& syncObjects : m_syncObjects)
+		for (WindowResources& resources : m_windowResources)
 		{
-			syncObjects.Shutdown(m_logicalDevice);
+			resources.Shutdown(m_instance);
 		}
-
-		// Command buffers and pool
-		m_commandBuffers.Shutdown(m_logicalDevice, m_commandPool);
-		m_commandPool.Shutdown(m_logicalDevice);
-
-		// Swap chain resources
-		m_swapChain.Shutdown(m_logicalDevice);
+		m_windowResources.Clear();
 
 		// Render Pass
 		m_renderPass.Shutdown(m_logicalDevice);
@@ -181,7 +178,6 @@ export namespace jpt
 #endif
 
 		// Instance-level resources
-		vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
 		vkDestroyInstance(m_instance, nullptr);
 
 		Super::Shutdown();
@@ -191,89 +187,12 @@ export namespace jpt
 	{
 		Super::DrawFrame();
 
-		/**	At a high level, rendering a frame in Vulkan consists of a common set of steps:
-			- Wait for the previous frame to finish
-			- Acquire an image from the swap chain
-			- Begin render pass (clear screen)
-			- Record a command buffer which draws the scene onto that image
-			- Submit the recorded command buffer
-			- End render pass
-			- Present the swap chain image	*/
-
-		SynchronizationObjects& currentSyncObjects = m_syncObjects[m_currentFrame];
-
-		vkWaitForFences(m_logicalDevice.Get(), 1, currentSyncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
-
-		uint32 imageIndex = 0;
-		const VkResult resultAcquireNextImage = vkAcquireNextImageKHR(m_logicalDevice.Get(), m_swapChain.Get(), UINT64_MAX, currentSyncObjects.GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
-		if (resultAcquireNextImage == VK_ERROR_OUT_OF_DATE_KHR)
-		{
-			RecreateSwapChain();
-			return;
-		}
-		JPT_ASSERT(resultAcquireNextImage == VK_SUCCESS || resultAcquireNextImage == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image %u", static_cast<uint32>(resultAcquireNextImage));
-		
-		vkResetFences(m_logicalDevice.Get(), 1, currentSyncObjects.GetInFlightFencePtr());
-
-		m_commandBuffers.Reset(m_currentFrame);
-		m_commandBuffers.Record(m_currentFrame, imageIndex, m_renderPass, m_swapChain, m_graphicsPipeline);
-
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-		VkSemaphore waitSemaphores[] = { currentSyncObjects.GetImageAvailableSemaphore() };
-		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = waitSemaphores;
-		submitInfo.pWaitDstStageMask = waitStages;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = m_commandBuffers.GetBufferPtr(m_currentFrame);
-
-		VkSemaphore signalSemaphores[] = { currentSyncObjects.GetRenderFinishedSemaphore() };
-		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = signalSemaphores;
-
-		if (const VkResult result = vkQueueSubmit(m_logicalDevice.GetGraphicsQueue(), 1, &submitInfo, currentSyncObjects.GetInFlightFence()); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to submit draw command buffer! VkResult: %i", static_cast<uint32>(result));
-			return;
-		}
-
-		VkPresentInfoKHR presentInfo{};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = signalSemaphores;
-
-		VkSwapchainKHR swapChains[] = { m_swapChain.Get() };
-		presentInfo.swapchainCount = 1;
-		presentInfo.pSwapchains = swapChains;
-		presentInfo.pImageIndices = &imageIndex;
-
-		const VkResult resultQueuePresent = vkQueuePresentKHR(m_logicalDevice.GetPresentQueue(), &presentInfo);
-		if (resultQueuePresent == VK_ERROR_OUT_OF_DATE_KHR || resultQueuePresent == VK_SUBOPTIMAL_KHR)
-		{
-			RecreateSwapChain();
-		}
-		else if (resultQueuePresent != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to present swap chain image! VkResult: %i", static_cast<uint32>(resultQueuePresent));
-		}
-
-		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+		WindowResources& resources = m_windowResources[0];
+		resources.DrawFrame(m_renderPass, m_graphicsPipeline);
 	}
 
 	void Renderer_Vulkan::OnWindowCreate([[maybe_unused]] const Event_Window_Create& eventWindowCreate)
 	{
-		// The window is initialized with WindowManager. Create vulkan's per-window specific rendering resources here
-
-		// Surface
-
-		// Swap chain
-
-		// Command buffers
-
-		// Framebuffers
-
 	}
 
 	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& eventWindowResize)
@@ -283,31 +202,14 @@ export namespace jpt
 			return;
 		}
 
-		RecreateSwapChain();
-	}
-
-	void Renderer_Vulkan::RecreateSwapChain()
-	{
-		m_logicalDevice.WaitIdle();
-
-		VkFormat previousFormat = m_swapChain.GetImageFormat();
-
-		m_swapChain.Shutdown(m_logicalDevice);
-		m_swapChain.Init(m_logicalDevice, m_physicalDevice, m_surface);
-
-		m_swapChain.CreateImageViews(m_logicalDevice);
-
-		if (m_swapChain.GetImageFormat() != previousFormat)
+		for (WindowResources& resources : m_windowResources)
 		{
-			m_renderPass.Shutdown(m_logicalDevice);
-			m_renderPass.Init(m_logicalDevice, m_swapChain.GetImageFormat());
-
-			m_graphicsPipeline.Shutdown(m_logicalDevice);
-			m_pipelineLayout.Shutdown(m_logicalDevice);
-			m_graphicsPipeline.Init(m_logicalDevice, m_swapChain, m_pipelineLayout, m_renderPass);
+			if (resources.GetOwner() == eventWindowResize.GetWindow())
+			{
+				resources.RecreateSwapChain(m_physicalDevice, m_renderPass, m_graphicsPipeline, m_pipelineLayout);
+				break;
+			}
 		}
-
-		m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
 	}
 
 	bool Renderer_Vulkan::CreateInstance()
@@ -360,11 +262,15 @@ export namespace jpt
 		WindowManager* pWindowManager = GetApplication()->GetWindowManager();
 		JPT_ASSERT(pWindowManager);
 
-		if (const VkResult result = pWindowManager->CreateSurface(pWindow, m_instance, &m_surface); result != VK_SUCCESS)
+		WindowResources& resources = m_windowResources.EmplaceBack();
+
+		// Surface
+		if (const VkResult result = pWindowManager->CreateSurface(pWindow, m_instance, resources.GetSurfacePtr()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create window surface! VkResult: %i", static_cast<uint32>(result));
 			return false;
 		}
+		resources.SetOwner(pWindow);
 
 		return true;
 	}
