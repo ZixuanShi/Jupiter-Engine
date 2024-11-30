@@ -26,6 +26,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
+import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
@@ -72,7 +73,7 @@ export namespace jpt
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
 
-		VkCommandPool m_commandPool;
+		CommandPool m_commandPool;
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 
 		StaticArray<VkSemaphore, kMaxFramesInFlight> m_imageAvailableSemaphores;
@@ -94,7 +95,6 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
-		bool CreateCommandPool();
 		bool CreateCommandBuffers();
 		bool CreateSyncObjects();
 
@@ -112,7 +112,9 @@ export namespace jpt
 		JPT_INFO("Extensions count: %i", extensionCount);
 
 		bool success = true;
+
 		success &= CreateInstance();
+
 #if !IS_RELEASE
 		success &= m_debugMessenger.Init(m_instance);
 #endif
@@ -126,11 +128,16 @@ export namespace jpt
 		success &= m_swapChain.CreateImageViews(m_logicalDevice);
 
 		success &= m_renderPass.Init(m_logicalDevice, m_swapChain.GetImageFormat());
+
 		success &= m_pipelineLayout.Init(m_logicalDevice);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, m_swapChain, m_pipelineLayout, m_renderPass);
+
 		success &= m_swapChain.CreateFramebuffers(m_logicalDevice, m_renderPass);
-		success &= CreateCommandPool();
+
+		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
+		success &= m_commandPool.Init(m_logicalDevice, queueFamilyIndex);
 		success &= CreateCommandBuffers();
+
 		success &= CreateSyncObjects();
 
 		if (success)
@@ -154,10 +161,10 @@ export namespace jpt
 		}
 
 		// Command buffers and pool
-		vkFreeCommandBuffers(m_logicalDevice.Get(), m_commandPool,
+		vkFreeCommandBuffers(m_logicalDevice.Get(), m_commandPool.Get(),
 			static_cast<uint32>(m_commandBuffers.Count()),
 			m_commandBuffers.Buffer());
-		vkDestroyCommandPool(m_logicalDevice.Get(), m_commandPool, nullptr);
+		m_commandPool.Shutdown(m_logicalDevice);
 
 		// Swap chain resources
 		m_swapChain.Shutdown(m_logicalDevice);
@@ -364,29 +371,11 @@ export namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::CreateCommandPool()
-	{
-		const QueueFamilyIndices& queueFamilyIndices = m_physicalDevice.GetQueueFamilyIndices();
-
-		VkCommandPoolCreateInfo poolInfo = {};
-		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-		poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.Value();
-
-		if (const VkResult result = vkCreateCommandPool(m_logicalDevice.Get(), &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create command pool! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		return true;
-	}
-
 	bool Renderer_Vulkan::CreateCommandBuffers()
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = m_commandPool;
+		allocInfo.commandPool = m_commandPool.Get();
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = static_cast<uint32>(m_commandBuffers.Count());
 
