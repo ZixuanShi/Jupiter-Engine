@@ -27,6 +27,7 @@ import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
+import jpt.Vulkan.CommandBuffers;
 import jpt.Vulkan.SynchronizationObjects;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
@@ -75,7 +76,7 @@ export namespace jpt
 		Pipeline m_graphicsPipeline;
 
 		CommandPool m_commandPool;
-		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
+		CommandBuffers m_commandBuffers;
 
 		StaticArray<SynchronizationObjects, kMaxFramesInFlight> m_syncObjects;
 
@@ -94,10 +95,8 @@ export namespace jpt
 		// Initialization
 		bool CreateInstance();
 		bool CreateSurface(Window* pWindow);
-		bool CreateCommandBuffers();
 
 		// Vulkan helpers
-		void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex);
 		void RecreateSwapChain();
 	};
 
@@ -134,7 +133,7 @@ export namespace jpt
 
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
 		success &= m_commandPool.Init(m_logicalDevice, queueFamilyIndex);
-		success &= CreateCommandBuffers();
+		success &= m_commandBuffers.Init(m_logicalDevice, m_commandPool);
 
 		for (SynchronizationObjects& syncObjects : m_syncObjects)
 		{
@@ -160,9 +159,7 @@ export namespace jpt
 		}
 
 		// Command buffers and pool
-		vkFreeCommandBuffers(m_logicalDevice.Get(), m_commandPool.Get(),
-			static_cast<uint32>(m_commandBuffers.Count()),
-			m_commandBuffers.Buffer());
+		m_commandBuffers.Shutdown(m_logicalDevice, m_commandPool);
 		m_commandPool.Shutdown(m_logicalDevice);
 
 		// Swap chain resources
@@ -218,8 +215,8 @@ export namespace jpt
 		
 		vkResetFences(m_logicalDevice.Get(), 1, currentSyncObjects.GetInFlightFencePtr());
 
-		vkResetCommandBuffer(m_commandBuffers[m_currentFrame], 0);
-		RecordCommandBuffer(m_commandBuffers[m_currentFrame], imageIndex);
+		m_commandBuffers.Reset(m_currentFrame);
+		m_commandBuffers.Record(m_currentFrame, imageIndex, m_renderPass, m_swapChain, m_graphicsPipeline);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -230,7 +227,7 @@ export namespace jpt
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &m_commandBuffers[m_currentFrame];
+		submitInfo.pCommandBuffers = m_commandBuffers.GetBufferPtr(m_currentFrame);
 
 		VkSemaphore signalSemaphores[] = { currentSyncObjects.GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;
@@ -370,69 +367,5 @@ export namespace jpt
 		}
 
 		return true;
-	}
-
-	bool Renderer_Vulkan::CreateCommandBuffers()
-	{
-		VkCommandBufferAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = m_commandPool.Get();
-		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = static_cast<uint32>(m_commandBuffers.Count());
-
-		if (const VkResult result = vkAllocateCommandBuffers(m_logicalDevice.Get(), &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to allocate command buffers! VkResult: %i", static_cast<uint32>(result));
-			return false;
-		}
-
-		return true;
-	}
-
-	void Renderer_Vulkan::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32 imageIndex)
-	{
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		if (const VkResult result = vkBeginCommandBuffer(commandBuffer, &beginInfo); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to begin recording command buffer! VkResult: %i", static_cast<uint32>(result));
-			return;
-		}
-
-		VkRenderPassBeginInfo renderPassInfo = {};
-		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassInfo.renderPass = m_renderPass.Get();
-		renderPassInfo.framebuffer = m_swapChain.GetFramebuffers()[imageIndex];
-		renderPassInfo.renderArea.offset = { 0, 0 };
-		renderPassInfo.renderArea.extent = m_swapChain.GetExtent();
-
-		VkClearValue clearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
-
-		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline.Get());
-
-		VkViewport viewport = {};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width  = static_cast<float>(m_swapChain.GetExtent().width);
-		viewport.height = static_cast<float>(m_swapChain.GetExtent().height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
-
-		VkRect2D scissor = {};	
-		scissor.offset = { 0, 0 };
-		scissor.extent = m_swapChain.GetExtent();
-		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
-
-		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
-
-		vkCmdEndRenderPass(commandBuffer);
-		if (const VkResult result = vkEndCommandBuffer(commandBuffer); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to record command buffer! VkResult: %i", static_cast<uint32>(result));
-		}
 	}
 }
