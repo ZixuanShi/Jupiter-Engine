@@ -32,6 +32,7 @@ namespace jpt
 {
 	bool jpt::Application::PreInit()
 	{
+		Logger::GetInstance().PreInit();
 		System::Paths::GetInstance().PreInit();
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 

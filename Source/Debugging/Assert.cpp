@@ -1,12 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#if IS_DEBUG || IS_DEVELOPMENT
-
 #include "Assert.h"
 
-#include "Core/Strings/StringMacros.h"
-#include "Logger.h"
+#if ASSERT_ENABLED
 
+#include "Core/Strings/StringMacros.h"
+
+#include <assert.h>
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -16,6 +16,12 @@ namespace jpt
 {
 	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...)
 	{
+		if (!g_AssertCallback)
+		{
+			assert(false);
+			return;
+		}
+
 		jpt::String message = "Assertion Failed: ";
 		message.Append(expression);
 
@@ -29,7 +35,7 @@ namespace jpt
 			message.Append(messageBuffer);
 		}
 
-		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error, line, file, message.ConstBuffer());
+		g_AssertCallback(line, file, message.ConstBuffer());
 	}
 
 	void OnAssertionFailed(int line, const char* file, const char* expression)
@@ -37,4 +43,4 @@ namespace jpt
 		OnAssertionFailed(line, file, expression, nullptr);
 	}
 }
-#endif // IS_DEBUG || IS_DEVELOPMENT
+#endif // ASSERT_ENABLED

@@ -47,6 +47,13 @@ namespace jpt
 		}
 	}
 
+#if ASSERT_ENABLED
+	void locAssertCallback(int line, const char* file, const char* message)
+	{
+		Logger::GetInstance().Log(Logger::ELogType::Error, line, file, message);
+	}
+#endif
+
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		char messageBuffer[kMaxMessageSize];
@@ -59,6 +66,14 @@ namespace jpt
 		wchar_t messageBuffer[kMaxMessageSize];
 		JPT_FORMAT_WSTRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
+	}
+
+	bool Logger::PreInit()
+	{
+#if ASSERT_ENABLED
+		g_AssertCallback = locAssertCallback;
+#endif
+		return true;
 	}
 
 	String Logger::GetInfoStamp(ELogType type, int32 line, const char* file)

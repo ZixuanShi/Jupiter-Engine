@@ -2,10 +2,15 @@
 
 #pragma once
 
-#if IS_DEBUG || IS_DEVELOPMENT
+#define ASSERT_ENABLED (IS_DEBUG || IS_DEVELOPMENT)
+
+#if ASSERT_ENABLED
 
 namespace jpt
 {
+	using AssertCallback = void(*)(int line, const char* file, const char* message);
+	inline AssertCallback g_AssertCallback;
+
 	/** Implementation when an assertion has failed
 		@param line:	   Line of the file caused assertion fail
 		@param file:       The file where assertion failed
@@ -20,8 +25,7 @@ namespace jpt
 	#define JPT_DEBUG_BREAK() __debugbreak()
 #else
 	#error "DebugBreak not implemented for this platform"
-#endif
-		
+#endif		
 
 	/** Assert with error message logging if Debug mode, do nothing if not Debugging
 		@param expression: A boolean expression to assert true
@@ -46,4 +50,4 @@ namespace jpt
 #else
 	#define JPT_ASSERT(expression, ...) 
 
-#endif // IS_DEBUG || IS_DEVELOPMENT
+#endif // ASSERT_ENABLED
