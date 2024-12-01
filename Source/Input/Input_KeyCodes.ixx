@@ -9,19 +9,17 @@ export module jpt.Input.KeyCode;
 
 export namespace jpt::Input
 {
-	JPT_ENUM_UINT8(KeyCode,
-		Invalid,
+	JPT_ENUM_UINT8(MouseButton,
+		Left, 
+		Right, 
+		Wheel,
+		Button4,
+		Button5,
+		Button6,
+		Button7,
+		);
 
-		// Mouse
-		Mouse_Left,
-		Mouse_Right,
-		Mouse_Wheel,
-		Mouse_Button4,
-		Mouse_Button5,
-		Mouse_Button6,
-		Mouse_Button7,
-
-		// Keyboard
+	JPT_ENUM_UINT8(Key,
 		Keyboard_A,
 		Keyboard_B,
 		Keyboard_C,
@@ -114,22 +112,22 @@ export namespace jpt::Input
 		Keyboard_Arrow_Down,
 
 		// Numpad
-		Keyboard_Numpad_Lock,
-		Keyboard_Numpad_0,
-		Keyboard_Numpad_1,
-		Keyboard_Numpad_2,
-		Keyboard_Numpad_3,
-		Keyboard_Numpad_4,
-		Keyboard_Numpad_5,
-		Keyboard_Numpad_6,
-		Keyboard_Numpad_7,
-		Keyboard_Numpad_8,
-		Keyboard_Numpad_9,
-		Keyboard_Numpad_Add,
-		Keyboard_Numpad_Subtract,
-		Keyboard_Numpad_Multiply,
-		Keyboard_Numpad_Divide,
-		Keyboard_Numpad_Decimal,
-		Keyboard_Numpad_Enter,
+		Numpad_Lock,
+		Numpad_0,
+		Numpad_1,
+		Numpad_2,
+		Numpad_3,
+		Numpad_4,
+		Numpad_5,
+		Numpad_6,
+		Numpad_7,
+		Numpad_8,
+		Numpad_9,
+		Numpad_Add,
+		Numpad_Subtract,
+		Numpad_Multiply,
+		Numpad_Divide,
+		Numpad_Decimal,
+		Numpad_Enter,
 	);
 }

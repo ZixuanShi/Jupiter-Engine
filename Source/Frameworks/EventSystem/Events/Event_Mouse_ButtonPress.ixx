@@ -15,10 +15,10 @@ export namespace jpt
 		Window* m_pWindow = nullptr;	/**< Window that the event occurred */
 		int32 m_x = 0;
 		int32 m_y = 0;
-		Input::KeyCode m_button = Input::KeyCode::Invalid;
+		Input::MouseButton m_button = Input::MouseButton::Left;
 
 	public:
-		Event_Mouse_ButtonPress(Window* pWindow, int32 x, int32 y, Input::KeyCode button)
+		Event_Mouse_ButtonPress(Window* pWindow, int32 x, int32 y, Input::MouseButton button)
 			: m_pWindow(pWindow)
 			, m_x(x)
 			, m_y(y)
@@ -29,6 +29,6 @@ export namespace jpt
 		Window* GetWindow() const { return m_pWindow; }
 		int32 GetX() const { return m_x; }
 		int32 GetY() const { return m_y; }
-		Input::KeyCode GetButton() const { return m_button; }
+		Input::MouseButton GetButton() const { return m_button; }
 	};
 }

@@ -13,16 +13,16 @@ export namespace jpt
 	{
 	private:
 		Window* m_pWindow = nullptr;	/**< Window that the event occurred */
-		Input::KeyCode m_key; /**< Key that was pressed */
+		Input::Key m_key; /**< Key that was pressed */
 
 	public:
-		Event_Keyboard_KeyPress(Window* pWindow, Input::KeyCode button)
+		Event_Keyboard_KeyPress(Window* pWindow, Input::Key key)
 			: m_pWindow(pWindow)
-			, m_key(button)
+			, m_key(key)
 		{
 		}
 
 		Window* GetWindow() const { return m_pWindow; }
-		Input::KeyCode GetKey() const { return m_key; }
+		Input::Key GetKey() const { return m_key; }
 	};
 }

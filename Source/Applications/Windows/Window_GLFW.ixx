@@ -169,12 +169,12 @@ namespace jpt
 				double x, y;
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-				const Input::KeyCode keyCode = InputManager::GetInstance().GetRawInput()->ToKeyCode(button);
+				const Input::MouseButton mouseButton = InputManager::GetInstance().GetRawInput()->ToMouseButton(button);
 
 				Event_Mouse_ButtonPress eventMouseButtonPress = { pWindow,
 					                                              static_cast<int32>(x),
 					                                              static_cast<int32>(y), 
-					                                              keyCode };
+					                                              mouseButton };
 
 				EventManager::GetInstance().Send(eventMouseButtonPress);
 			}
@@ -185,7 +185,7 @@ namespace jpt
 			if (action == GLFW_PRESS)
 			{
 				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-				const Input::KeyCode keyCode = InputManager::GetInstance().GetRawInput()->ToKeyCode(key);
+				const Input::Key keyCode = InputManager::GetInstance().GetRawInput()->ToKey(key);
 
 				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode };
 				EventManager::GetInstance().Send(eventKeyboardKeyPress);

@@ -13,9 +13,6 @@ export namespace jpt::Input
 		Keyboard,
 		Mouse,
 		Gamepad,
-
-		ItemCount,
-		Unknown,
 	);
 
 	enum class KeyState

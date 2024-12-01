@@ -8,6 +8,8 @@ import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
 
+import jpt.StaticArray;
+
 using namespace jpt::Input;
 
 export namespace jpt
@@ -26,7 +28,10 @@ export namespace jpt
 		virtual void Shutdown() {}
 
 	public:
-		virtual uint32 FromKeyCode([[maybe_unused]] KeyCode key) const { return kInvalidValue<uint32>; }
-		virtual KeyCode ToKeyCode([[maybe_unused]] uint32 key) const { return KeyCode::Invalid; }
+		virtual uint32 FromKey([[maybe_unused]] Key key) const { return kInvalidValue<uint32>; }
+		virtual Key ToKey([[maybe_unused]] uint32 key) const { return Key::Keyboard_0; }
+
+		virtual uint32 FromMouseButton([[maybe_unused]] MouseButton button) const { return kInvalidValue<uint32>; }
+		virtual MouseButton ToMouseButton([[maybe_unused]] uint32 button) const { return MouseButton::Left; }
 	};
 }
