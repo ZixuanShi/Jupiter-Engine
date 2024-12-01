@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Debugging/Assert.h"
-#include "Debugging/Logger.h"
 
 import jpt.TypeDefs;
 import jpt.Concepts;
