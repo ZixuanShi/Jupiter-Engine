@@ -7,9 +7,6 @@
 
 export module jpt.CoreModules;
 
-// Applications
-export import jpt.CommandLine;
-
 // Algorithms
 export import jpt.LinearFind;
 export import jpt.Sort;
@@ -73,9 +70,3 @@ export import jpt.Pair;
 export import jpt.Tuple;
 export import jpt.Variant;
 export import jpt.TypeRegistry;
-
-// System
-export import jpt.File.Path;
-export import jpt.File.Path.Helpers;
-export import jpt.File.Path.Utils;
-export import jpt.System.Paths;
