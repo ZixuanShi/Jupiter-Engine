@@ -28,11 +28,11 @@ bool Application_Blank::PreInit()
 
 	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
 		{
-			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Keyboard_Escape)
+			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
 			{
 				m_shouldShutdown = true;
 			}
-			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Keyboard_N)
+			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N)
 			{
 				jpt::Window* pWindow = m_pWindowManager->Create();
 				GetRenderer()->RegisterWindow(pWindow);

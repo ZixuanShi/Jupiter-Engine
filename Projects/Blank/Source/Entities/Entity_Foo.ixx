@@ -35,7 +35,7 @@ bool Entity_Foo::PreInit()
 
 void Entity_Foo::OnKeyPress(const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
 {
-	JPT_LOG("Entity_Foo::OnKeyPress. %lu KeyCode: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer());
+	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer());
 }
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)

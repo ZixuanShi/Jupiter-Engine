@@ -220,7 +220,7 @@ public:                                                                         
     constexpr TSize operator~() const { return ~m_value; }                                                                   \
                                                                                                                              \
     constexpr bool Has(Values value) const { return (m_value & value) != 0; }                                                \
-    constexpr void Insert(Values value) { m_value |= value; }                                                                \
+    constexpr void Or(Values value) { m_value |= value; }                                                                    \
     constexpr void Toggle(Values value) { m_value ^= value; }                                                                \
                                                                                                                              \
     /** Iteration */                                                                                                         \
