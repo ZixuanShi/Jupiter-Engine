@@ -24,8 +24,9 @@ import jpt.Vector2;
 import jpt.Any;
 import jpt.DynamicArray;
 
-import jpt.RawInput;
 import jpt.Input.KeyCode;
+import jpt.Input.Manager;
+import jpt.RawInput;
 
 import jpt.Time.TypeDefs;
 
@@ -43,6 +44,7 @@ namespace jpt
 	{
 		void OnWindowClose(GLFWwindow* pGLFWWindow);
 		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
+
 		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
 	}
@@ -83,9 +85,11 @@ namespace jpt
 		// Set current window callbacks
 		glfwSetWindowUserPointer(m_pGLFWWindow, this);
 
+		// Window
 		glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
 		glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
 
+		// Input
 		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
 		glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
 
@@ -165,7 +169,7 @@ namespace jpt
 				double x, y;
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-				const Input::KeyCode keyCode = GetApplication()->GetRawInput()->ToKeyCode(button);
+				const Input::KeyCode keyCode = InputManager::GetInstance().GetRawInput()->ToKeyCode(button);
 
 				Event_Mouse_ButtonPress eventMouseButtonPress = { pWindow,
 					                                              static_cast<int32>(x),
@@ -181,7 +185,7 @@ namespace jpt
 			if (action == GLFW_PRESS)
 			{
 				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-				const Input::KeyCode keyCode = GetApplication()->GetRawInput()->ToKeyCode(key);
+				const Input::KeyCode keyCode = InputManager::GetInstance().GetRawInput()->ToKeyCode(key);
 
 				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode };
 				EventManager::GetInstance().Send(eventKeyboardKeyPress);

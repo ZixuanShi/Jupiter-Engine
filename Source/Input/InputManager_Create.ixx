@@ -5,7 +5,7 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.RawInput.Create;
+export module jpt.Input.Create;
 
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
