@@ -6,7 +6,7 @@ module;
 
 export module jpt.File.Path.Utils;
 
-import jpt.Environment;
+import jpt.Debug.Utils;
 import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.System.Paths;
