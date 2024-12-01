@@ -24,7 +24,7 @@ import jpt.Vector2;
 import jpt.Any;
 import jpt.DynamicArray;
 
-import jpt.InputManager;
+import jpt.RawInput;
 import jpt.Input.KeyCode;
 
 import jpt.Time.TypeDefs;
@@ -165,7 +165,7 @@ namespace jpt
 				double x, y;
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-				const Input::KeyCode keyCode = GetApplication()->GetInputManager()->ToKeyCode(button);
+				const Input::KeyCode keyCode = GetApplication()->GetRawInput()->ToKeyCode(button);
 
 				Event_Mouse_ButtonPress eventMouseButtonPress = { pWindow,
 					                                              static_cast<int32>(x),
@@ -181,7 +181,7 @@ namespace jpt
 			if (action == GLFW_PRESS)
 			{
 				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-				const Input::KeyCode keyCode = GetApplication()->GetInputManager()->ToKeyCode(key);
+				const Input::KeyCode keyCode = GetApplication()->GetRawInput()->ToKeyCode(key);
 
 				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode };
 				EventManager::GetInstance().Send(eventKeyboardKeyPress);

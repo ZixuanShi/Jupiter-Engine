@@ -5,21 +5,21 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.InputManager.Create;
+export module jpt.RawInput.Create;
 
-import jpt.InputManager;
-import jpt.InputManager_GLFW;
+import jpt.RawInput;
+import jpt.RawInput_GLFW;
 
 import jpt.Framework.Enums;
 
 export namespace jpt
 {
-	InputManager* InputManager_Create(Framework_API frameworkAPI)
+	RawInput* RawInput_Create(Framework_API frameworkAPI)
 	{
 		switch (frameworkAPI.Value())
 		{
 		case Framework_API::GLFW:
-			return new Input::InputManager_GLFW();
+			return new Input::RawInput_GLFW();
 
 		default:
 			JPT_ERROR("Unsupported framework API: " + frameworkAPI.ToString());

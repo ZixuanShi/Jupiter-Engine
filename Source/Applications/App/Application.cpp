@@ -18,8 +18,8 @@ import jpt.Window.Manager;
 import jpt.Renderer;
 import jpt.Renderer.Create;
 
-import jpt.InputManager;
-import jpt.InputManager.Create;
+import jpt.RawInput;
+import jpt.RawInput.Create;
 import jpt.Input.KeyCode;
 
 import jpt.System.Paths;
@@ -52,13 +52,13 @@ namespace jpt
 		m_pFramework     = Framework_Create(m_frameworkAPI);
 		m_pWindowManager = new WindowManager();
 		m_pRenderer      = Renderer_Create(m_graphicsAPI);
-		m_pInputManager  = InputManager_Create(m_frameworkAPI);
+		m_pRawInput  = RawInput_Create(m_frameworkAPI);
 
 		bool success = true;
 		success &= m_pFramework->PreInit();
 		success &= m_pWindowManager->PreInit();
 		success &= m_pRenderer->PreInit();
-		success &= m_pInputManager->PreInit();
+		success &= m_pRawInput->PreInit();
 
 		return success;
 	}
@@ -75,7 +75,7 @@ namespace jpt
 		success &= m_pFramework->Init();
 		success &= m_pWindowManager->Init(GetName());
 		success &= m_pRenderer->Init();
-		success &= m_pInputManager->Init();
+		success &= m_pRawInput->Init();
 
 		return success;
 	}
@@ -86,7 +86,7 @@ namespace jpt
 		m_pFramework->Update(deltaSeconds);
 		m_pWindowManager->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
-		m_pInputManager->Update(deltaSeconds);
+		m_pRawInput->Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
@@ -100,7 +100,7 @@ namespace jpt
 			JPT_SHUTDOWN(m_pRenderer);
 		}
 
-		JPT_SHUTDOWN(m_pInputManager);
+		JPT_SHUTDOWN(m_pRawInput);
 		EventManager::GetInstance().Shutdown();
 	}
 

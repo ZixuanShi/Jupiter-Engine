@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.InputManager;
+export module jpt.RawInput;
 
 import jpt.Input.KeyCode;
 
@@ -12,10 +12,13 @@ using namespace jpt::Input;
 
 export namespace jpt
 {
-	class InputManager
+	/** Responsible for low-level input query.
+		- Input State per input device, per window
+		- Converts Jupiter Engine's Key Code to/from framework Key Code */
+	class RawInput
 	{
 	public:
-		virtual ~InputManager() = default;
+		virtual ~RawInput() = default;
 
 		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }

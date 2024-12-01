@@ -7,7 +7,7 @@
 
 import jpt.CoreModules;
 
-import jpt.InputManager;
+import jpt.RawInput;
 import jpt.Input.KeyCode;
 
 import jpt.Window;

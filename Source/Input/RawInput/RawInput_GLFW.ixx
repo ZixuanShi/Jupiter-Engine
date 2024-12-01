@@ -8,9 +8,9 @@ module;
 
 #include <GLFW/glfw3.h>
 
-export module jpt.InputManager_GLFW;
+export module jpt.RawInput_GLFW;
 
-import jpt.InputManager;
+import jpt.RawInput;
 import jpt.Input.KeyCode;
 
 import jpt.Constants;
@@ -20,9 +20,9 @@ import jpt.TypeDefs;
 
 export namespace jpt::Input
 {
-	class InputManager_GLFW : public InputManager
+	class RawInput_GLFW : public RawInput
 	{
-		using Super = InputManager;
+		using Super = RawInput;
 
 	private:
 		HashMap<KeyCode, uint32> m_toGLFW;
@@ -36,7 +36,7 @@ export namespace jpt::Input
 		virtual KeyCode ToKeyCode(uint32) const override;
 	};
 
-	bool InputManager_GLFW::PreInit()
+	bool RawInput_GLFW::PreInit()
 	{
 		m_toGLFW.SetShouldGrow(false);
 		m_toGLFW.ResizeBuckets(KeyCode::Count() - 1);
@@ -171,7 +171,7 @@ export namespace jpt::Input
 		return true;
 	}
 
-	uint32 InputManager_GLFW::FromKeyCode(KeyCode key) const
+	uint32 RawInput_GLFW::FromKeyCode(KeyCode key) const
 	{
 		if (m_toGLFW.Has(key))
 		{
@@ -182,7 +182,7 @@ export namespace jpt::Input
 		return kInvalidValue<uint32>;
 	}
 
-	KeyCode InputManager_GLFW::ToKeyCode(uint32 key) const
+	KeyCode RawInput_GLFW::ToKeyCode(uint32 key) const
 	{
 		if (m_fromGLFW.Has(key))
 		{
