@@ -3,7 +3,7 @@
 module;
 
 #include "Debugging/Logger.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 export module jpt.CSV;
 

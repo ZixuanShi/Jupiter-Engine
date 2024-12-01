@@ -3,7 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 #if IS_PLATFORM_WIN64
 	#define WIN32_LEAN_AND_MEAN

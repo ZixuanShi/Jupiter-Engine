@@ -9,7 +9,7 @@
 #include "Core/Types/Enum.h"
 
 // Debugging
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 // Profiling

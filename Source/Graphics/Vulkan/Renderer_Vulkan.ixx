@@ -5,7 +5,7 @@ module;
 #include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 #include <vulkan/vulkan.h>
 

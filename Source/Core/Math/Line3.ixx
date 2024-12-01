@@ -2,7 +2,7 @@
 
 module;
 
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 #include <cmath>
 

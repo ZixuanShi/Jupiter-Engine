@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 import jpt.TypeDefs;
 import jpt.Concepts;

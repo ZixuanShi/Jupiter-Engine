@@ -4,7 +4,7 @@ module;
 
 #include "Core/Strings/StringMacros.h"
 #include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 #include <stdio.h>
 #include <vadefs.h>

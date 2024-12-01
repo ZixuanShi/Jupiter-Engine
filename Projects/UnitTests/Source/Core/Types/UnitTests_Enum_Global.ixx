@@ -2,7 +2,7 @@
 
 module;
 
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 #include "Core/Types/Enum.h"
 
 export module UnitTests_Enum_Global;

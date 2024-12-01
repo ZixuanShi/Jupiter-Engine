@@ -4,7 +4,7 @@ module;
 
 #include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 #define VK_USE_PLATFORM_WIN32_KHR

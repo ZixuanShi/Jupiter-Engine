@@ -3,7 +3,7 @@
 module;
 
 #include "Core/Types/Enum.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 export module jpt.Input.Enums;
 

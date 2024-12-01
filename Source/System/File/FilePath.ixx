@@ -3,7 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Assert.h"
+#include "Core/Validation/Assert.h"
 
 export module jpt.File.Path;
 
