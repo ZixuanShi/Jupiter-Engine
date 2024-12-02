@@ -207,7 +207,7 @@ export namespace jpt::Input
 		}
 
 		JPT_ERROR("Unknown key code: " + ToString(key));
-		return Key::Num_0;
+		return Key::Invalid;
 	}
 
 	uint32 RawInput_GLFW::FromMouseButton(MouseButton mouseButton) const
@@ -229,6 +229,6 @@ export namespace jpt::Input
 		}
 
 		JPT_ERROR("Unknown mouse button: " + ToString(mouseButton));
-		return MouseButton::Left;
+		return MouseButton::Invalid;
 	}
 }

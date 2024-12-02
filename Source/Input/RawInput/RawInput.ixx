@@ -29,9 +29,9 @@ export namespace jpt
 
 	public:
 		virtual uint32 FromKey([[maybe_unused]] Key key) const { return kInvalidValue<uint32>; }
-		virtual Key ToKey([[maybe_unused]] uint32 key) const { return Key::Num_0; }
+		virtual Key ToKey([[maybe_unused]] uint32 key) const { return Key::Invalid; }
 
 		virtual uint32 FromMouseButton([[maybe_unused]] MouseButton button) const { return kInvalidValue<uint32>; }
-		virtual MouseButton ToMouseButton([[maybe_unused]] uint32 button) const { return MouseButton::Left; }
+		virtual MouseButton ToMouseButton([[maybe_unused]] uint32 button) const { return MouseButton::Invalid; }
 	};
 }

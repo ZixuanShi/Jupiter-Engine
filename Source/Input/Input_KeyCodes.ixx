@@ -17,6 +17,8 @@ export namespace jpt::Input
 		Button5,
 		Button6,
 		Button7,
+
+		Invalid,
 		);
 
 	JPT_ENUM_UINT8(Key,
@@ -129,5 +131,7 @@ export namespace jpt::Input
 		Numpad_Divide,
 		Numpad_Decimal,
 		Numpad_Enter,
+
+		Invalid,
 	);
 }
