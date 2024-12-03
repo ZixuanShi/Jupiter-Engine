@@ -66,6 +66,8 @@ export namespace jpt::Vulkan
 
 		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline);
 
+		bool CanDraw() const;
+
 	public:
 		Window* GetOwner() const { return m_pOwner; }
 		void SetOwner(Window* pOwner) { m_pOwner = pOwner; }
@@ -229,5 +231,16 @@ export namespace jpt::Vulkan
 		}
 
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+	}
+
+	bool WindowResources::CanDraw() const
+	{
+		if (m_pOwner->IsMinimized() ||
+			m_shouldRecreateSwapChain)
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

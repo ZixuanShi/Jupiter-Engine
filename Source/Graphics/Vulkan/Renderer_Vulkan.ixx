@@ -197,7 +197,7 @@ export namespace jpt
 
 		for (WindowResources& resources : m_windowResources)
 		{
-			if (!resources.GetOwner()->IsMinimized())
+			if (resources.CanDraw())
 			{
 				resources.DrawFrame(m_renderPass, m_graphicsPipeline);
 			}
