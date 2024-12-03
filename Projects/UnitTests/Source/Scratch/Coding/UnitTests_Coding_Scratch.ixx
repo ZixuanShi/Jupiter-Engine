@@ -12,7 +12,6 @@ module;
 export module UnitTests_Coding_Scratch;
 
 import jpt.CoreModules;
-import jpt.CPUInfo;
 
 std::mutex g_mutex;
 

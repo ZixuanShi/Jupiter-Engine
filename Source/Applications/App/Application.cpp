@@ -10,6 +10,8 @@ import jpt.CommandLine;
 
 import jpt.ToString;
 
+import jpt.Hardware.Manager;
+
 import jpt.Platform;
 
 import jpt.Framework;
@@ -37,6 +39,8 @@ namespace jpt
 		Logger::GetInstance().PreInit();
 		System::Paths::GetInstance().PreInit();
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
+
+		HardwareManager::GetInstance().PreInit();
 
 		ProjectSettings::GetInstance().Load();
 

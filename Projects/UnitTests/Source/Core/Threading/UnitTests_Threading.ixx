@@ -15,7 +15,7 @@ import jpt.ThreadSafeQueue;
 import jpt.Mutex;
 import jpt.LockGuard;
 
-import jpt.CPUInfo;
+import jpt.Hardware.Manager;
 
 import jpt.TypeDefs;
 import jpt.String;
@@ -53,10 +53,11 @@ static bool RawThreads()
         }
     };
 
+	const uint32 numLogicalProcessors = jpt::GetLogicalProcessorsCount();
     jpt::DynamicArray<TestThread> threads;
-    threads.Reserve(jpt::GetNumCores());
+    threads.Reserve(numLogicalProcessors);
 
-    for (uint32 i = 0; i < jpt::GetNumCores(); ++i)
+    for (uint32 i = 0; i < numLogicalProcessors; ++i)
 	{
 		threads.EmplaceBack();
 		threads.Back().Start();
@@ -64,7 +65,7 @@ static bool RawThreads()
 
     jpt::Sleep(2);
 
-    for (uint32 i = 0; i < jpt::GetNumCores(); ++i)
+    for (uint32 i = 0; i < numLogicalProcessors; ++i)
     {
         threads[i].Stop();
     }
