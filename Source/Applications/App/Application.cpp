@@ -3,11 +3,14 @@
 #include "Applications/App/Application.h"
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 import jpt.CommandLine;
 
 import jpt.ToString;
+
+import jpt.Platform;
 
 import jpt.Framework;
 import jpt.Framework.Create;
@@ -48,11 +51,13 @@ namespace jpt
 		m_graphicsAPI  = FindGraphicsAPI();
 
 		// Initialize core systems
+		JPT_ASSERT(m_pPlatform, "Platform is not set");
 		m_pFramework     = Framework_Create(m_frameworkAPI);
 		m_pWindowManager = new WindowManager();
 		m_pRenderer      = Renderer_Create(m_graphicsAPI);
 
 		bool success = true;
+		success &= m_pPlatform->PreInit();
 		success &= m_pFramework->PreInit();
 		success &= m_pWindowManager->PreInit();
 		success &= m_pRenderer->PreInit();
@@ -70,6 +75,7 @@ namespace jpt
 
 		// Initialize systems
 		bool success = true;
+		success &= m_pPlatform->Init();
 		success &= m_pFramework->Init();
 		success &= m_pWindowManager->Init(GetName());
 		success &= m_pRenderer->Init();
@@ -81,6 +87,7 @@ namespace jpt
 	void Application::Update(TimePrecision deltaSeconds)
 	{
 		EventManager::GetInstance().Update(deltaSeconds);
+		m_pPlatform->Update(deltaSeconds);
 		m_pFramework->Update(deltaSeconds);
 		m_pWindowManager->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
@@ -98,6 +105,7 @@ namespace jpt
 			JPT_SHUTDOWN(m_pRenderer);
 		}
 
+		JPT_SHUTDOWN(m_pPlatform);
 		InputManager::GetInstance().Shutdown();
 		EventManager::GetInstance().Shutdown();
 	}

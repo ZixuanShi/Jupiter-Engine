@@ -9,6 +9,7 @@
 import jpt.CoreModules;
 import jpt.BenchmarksReporter;
 import jpt.File.Path.Helpers;
+import jpt.CommandLine;
 
 import Benchmarks_Core;
 

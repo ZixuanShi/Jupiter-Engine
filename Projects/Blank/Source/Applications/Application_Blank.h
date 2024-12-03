@@ -2,31 +2,18 @@
 
 #pragma once
 
-#if IS_PLATFORM_WIN64
-	#include "Applications/App/Application_Win64.h"
-#else
-	#include "Applications/App/Application.h"
-#endif
+#include "Applications/App/Application.h"
 
 import jpt.Time.TypeDefs;
 
 import Entity.Foo;
 import Entity.Bar;
 
-class Application_Blank final : 
-#if IS_PLATFORM_WIN64
-	public jpt::Application_Win64
-#else
-	public jpt::Application_Base
-#endif
+class Application_Blank final : public jpt::Application
 {
-private:
-	#if IS_PLATFORM_WIN64
-		using Super = jpt::Application_Win64;
-	#else
-		using Super = jpt::Application_Base;
-	#endif
+	using Super = jpt::Application;
 
+private:
 	Entity_Foo m_foo;
 	Entity_Bar m_bar;
 

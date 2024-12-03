@@ -5,10 +5,8 @@ module;
 #include "Applications/App/Application.h"
 
 #if IS_PLATFORM_WIN64
-#include "Applications/App/Application_Win64.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
 #endif
 
 export module jpt.EntryPoints;
@@ -16,7 +14,11 @@ export module jpt.EntryPoints;
 import jpt.CommandLine;
 
 #if IS_DEBUG
-import jpt.MemoryLeakDetector;
+	import jpt.MemoryLeakDetector;
+#endif
+
+#if IS_PLATFORM_WIN64
+	import jpt.Platform.Win64;
 #endif
 
 namespace jpt
@@ -51,9 +53,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
 	CommandLine::GetInstance().Parse(launchArgs);
 
-	Application_Win64* pApp = GetWin64Application();
-	pApp->SetHINSTANCE(hInstance);
-	pApp->SetnCmdShow(nCmdShow);
+	Platform_Win64* pWin64 = new Platform_Win64();
+	pWin64->SetHINSTANCE(hInstance);
+	pWin64->SetnCmdShow(nCmdShow);
+
+	GetApplication()->SetPlatform(pWin64);
 
 	return MainImpl();
 }

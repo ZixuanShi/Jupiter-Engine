@@ -93,25 +93,12 @@ def create_scripts():
 def create_application_header():
 	content = """#pragma once
 
-#if IS_PLATFORM_WIN64
-	#include "Applications/App/Application_Win64.h"
-#else
-	#include "Applications/App/Application_Base.h"
-#endif
+#include "Applications/App/Application.h"
 
-class Application_<ProjectName> final : 
-#if IS_PLATFORM_WIN64
-	public jpt::Application_Win64
-#else
-	public jpt::Application_Base
-#endif
+class Application_<ProjectName> final : public jpt::Application
 {
 private:
-	#if IS_PLATFORM_WIN64
-		using Super = jpt::Application_Win64;
-	#else
-		using Super = jpt::Application_Base;
-	#endif
+	using Super = jpt::Application;
 
 public:
 	virtual bool PreInit() override;

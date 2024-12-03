@@ -13,12 +13,14 @@ namespace jpt
 	class Window;
 	class WindowManager;
 	class Renderer;
+	class Platform;
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
 	class Application
 	{
 	protected:
+		Platform*      m_pPlatform      = nullptr;
 		Framework*     m_pFramework     = nullptr;
 		WindowManager* m_pWindowManager = nullptr;
 		Renderer*      m_pRenderer      = nullptr;
@@ -40,6 +42,7 @@ namespace jpt
 		void Run();
 
 	public:
+		Platform*      GetPlatform()      const { return m_pPlatform;      }
 		Framework*     GetFramework()     const { return m_pFramework;     }
 		WindowManager* GetWindowManager() const { return m_pWindowManager; }
 		Renderer*      GetRenderer()      const { return m_pRenderer;      }
@@ -49,6 +52,8 @@ namespace jpt
 
 		Window* GetMainWindow() const;
 		const char* GetName() const;
+
+		void SetPlatform(Platform* pPlatform) { m_pPlatform = pPlatform; }
 		void SetShouldShutdown();
 	};
 
