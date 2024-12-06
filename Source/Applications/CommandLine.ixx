@@ -44,8 +44,8 @@ namespace jpt
 		void Set(const String& key, const JsonData& value = JsonData());
 
 		/** @return Value associated with the key */
-		template<ValidJsonType T>
-		const T& Get(const String& key) const;
+		template<ValidJsonType T> const T& Get(const String& key) const;
+		template<ValidJsonType T> const T& Get(const String& key, const T& defaultValue) const;
 
 		/**	@return		True if a key exists. Either has value or flag */
 		bool Has(const String& key) const;
@@ -164,5 +164,16 @@ namespace jpt
 		JPT_ASSERT(Has(key), "CommandLine doesn't exist \"%s\"", key.ConstBuffer());
 		JPT_ASSERT(m_arguments[key].Is<T>(), "CommandLine \"%s\" is not of type %s", key.ConstBuffer());
 		return m_arguments[key].As<T>();
+	}
+
+	template<ValidJsonType T>
+	const T& CommandLine::Get(const String& key, const T& defaultValue) const
+	{
+		if (Has(key))
+		{
+			return Get<T>(key);
+		}
+
+		return defaultValue;
 	}
 }

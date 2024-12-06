@@ -23,8 +23,12 @@ export module jpt.Renderer_DX12;
 
 import jpt.Renderer;
 import jpt.Graphics.Constants;
+import jpt.Vertex;
+
+import jpt.CommandLine;
 
 import jpt.DX12.DebugLayer;
+import jpt.DX12.Device;
 
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
@@ -48,7 +52,7 @@ export namespace jpt
 		D3D12_VIEWPORT m_viewport;
 		D3D12_RECT m_scissorRect;
 		ComPtr<IDXGISwapChain3> m_swapChain;
-		ComPtr<ID3D12Device> m_device;
+		Device m_device;
 		ComPtr<ID3D12Resource> m_renderTargets[kMaxFramesInFlight];
 		ComPtr<ID3D12CommandAllocator> m_commandAllocator;
 		ComPtr<ID3D12CommandQueue> m_commandQueue;
@@ -68,6 +72,8 @@ export namespace jpt
 		ComPtr<ID3D12Fence> m_fence;
 		UINT64 m_fenceValue;
 
+		bool m_useWarpDevice = false;
+
 	public:
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
@@ -76,8 +82,8 @@ export namespace jpt
 		virtual void DrawFrame() override;
 
 	private:
-		void LoadPipeline();
-		void LoadAssets();
+		bool LoadPipeline();
+		bool LoadAssets();
 		void PopulateCommandList();
 		void WaitForPreviousFrame();
 	};
@@ -86,10 +92,18 @@ export namespace jpt
 	{
 		JPT_ENSURE(Super::Init());
 
-		LoadPipeline();
-		LoadAssets();
+		m_useWarpDevice = CommandLine::GetInstance().Get("warp", false);
 
-		return true;
+		bool success = true;
+		success &= LoadPipeline();
+		success &= LoadAssets();
+
+		if (success)
+		{
+			JPT_INFO("DX12 renderer initialized successfully");
+		}
+
+		return success;
 	}
 
 	void Renderer_DX12::Update(TimePrecision deltaSeconds)
@@ -110,16 +124,27 @@ export namespace jpt
 
 	}
 
-	void Renderer_DX12::LoadPipeline()
+	bool Renderer_DX12::LoadPipeline()
 	{
+		bool success = true;
 		UINT dxgiFactoryFlags = 0;
 
 #if IS_DEBUG
-		EnableDebugLayer(dxgiFactoryFlags);
+		success &= InitDebugLayer(dxgiFactoryFlags);
 #endif
+		success &= m_device.Init(dxgiFactoryFlags, m_useWarpDevice);
+
+
+		if (success)
+		{
+			JPT_INFO("DX12 renderer Loaded Pipeline successfully");
+		}
+		return success;
 	}
-	void Renderer_DX12::LoadAssets()
+
+	bool Renderer_DX12::LoadAssets()
 	{
+		return true;
 	}
 
 	void Renderer_DX12::PopulateCommandList()

@@ -14,20 +14,22 @@ using Microsoft::WRL::ComPtr;
 
 export namespace jpt::DX12
 {
-    void EnableDebugLayer(UINT dxgiFactoryFlags)
+    bool InitDebugLayer(UINT& dxgiFactoryFlags)
     {
         // Enable the debug layer (requires the Graphics Tools "optional feature").
         // NOTE: Enabling the debug layer after device creation will invalidate the active device.
+        ComPtr<ID3D12Debug> debugController;
+        if (FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
         {
-            ComPtr<ID3D12Debug> debugController;
-            if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-            {
-                debugController->EnableDebugLayer();
-
-                // Enable additional debug layers.
-                dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-            }
+            return false;
         }
+
+        debugController->EnableDebugLayer();
+
+        // Enable additional debug layers.
+        dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+
+        return true;
     }
 }
 
