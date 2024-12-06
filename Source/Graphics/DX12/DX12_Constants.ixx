@@ -1,7 +1,7 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Vulkan.Constants;
+export module jpt.DX12.Constants;
 
-export namespace jpt::Vulkan
+export namespace jpt::DX12
 {
 }

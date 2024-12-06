@@ -63,6 +63,7 @@ namespace jpt
 
 		virtual bool CreateSurface(const DynamicArray<Any>& context) override;
 
+	public:
 		virtual bool ShouldClose() const override;
 		virtual Vec2i GetSize() const override;
 

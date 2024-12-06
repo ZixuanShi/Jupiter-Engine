@@ -15,6 +15,7 @@ export module jpt.Framework_Win32;
 import jpt.Framework;
 
 import jpt.Window;
+import jpt.Window.Manager;
 import jpt.Window_Win32;
 
 import jpt.Platform.Win64;
@@ -99,10 +100,11 @@ namespace jpt
 			}
 			case WM_DESTROY:
 			{
-				PostQuitMessage(0);
+				pApp->GetWindowManager()->Destroy(pWindow);
+
 				if (pApp->GetMainWindow() == pWindow)
 				{
-					pApp->SetShouldShutdown();
+					PostQuitMessage(0);
 				}
 
 				return 0;

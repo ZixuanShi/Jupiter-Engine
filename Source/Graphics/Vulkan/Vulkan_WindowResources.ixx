@@ -11,6 +11,8 @@ export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
 
+import jpt.Graphics.Constants;
+
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.RenderPass;

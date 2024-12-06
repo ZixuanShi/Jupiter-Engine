@@ -8,6 +8,8 @@ module;
 
 export module jpt.Vulkan.CommandBuffers;
 
+import jpt.Graphics.Constants;
+
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;

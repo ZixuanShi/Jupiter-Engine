@@ -13,8 +13,6 @@ export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
 
-import jpt.Window;
-
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
@@ -34,16 +32,9 @@ import jpt.Vulkan.SwapChainSupportDetails;
 
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
-
 import jpt.DynamicArray;
-import jpt.StaticArray;
-import jpt.HashMap;
 
-import jpt.File.IO;
-import jpt.File.Enums;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
-
+import jpt.Window;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 
