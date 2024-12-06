@@ -12,8 +12,8 @@ module;
 export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
+import jpt.Graphics.Constants;
 
-import jpt.Vulkan.Constants;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
