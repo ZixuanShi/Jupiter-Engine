@@ -20,6 +20,8 @@ export namespace jpt::DX12
 	public:
 		bool Init(UINT dxgiFactoryFlags, bool useWarpDevice);
 
+		bool CreateCommandQueue(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
+
 	private:
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory,
 			_Outptr_result_maybenull_ IDXGIAdapter1** ppAdapter,
@@ -45,6 +47,15 @@ export namespace jpt::DX12
 		}
 
 		return true;
+	}
+
+	bool Device::CreateCommandQueue(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
+	{
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+		return m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)) == S_OK;
 	}
 
 	_Use_decl_annotations_

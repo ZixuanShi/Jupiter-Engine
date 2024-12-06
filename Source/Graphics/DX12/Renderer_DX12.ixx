@@ -133,7 +133,7 @@ export namespace jpt
 		success &= InitDebugLayer(dxgiFactoryFlags);
 #endif
 		success &= m_device.Init(dxgiFactoryFlags, m_useWarpDevice);
-
+		success &= m_device.CreateCommandQueue(m_commandQueue);
 
 		if (success)
 		{
