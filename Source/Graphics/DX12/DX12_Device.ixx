@@ -10,7 +10,10 @@ module;
 
 export module jpt.DX12.Device;
 
+import jpt.Graphics.Constants;
+
 import jpt.DX12.CommandQueue;
+import jpt.DX12.RTVHeap;
 
 export namespace jpt::DX12
 {
@@ -18,11 +21,15 @@ export namespace jpt::DX12
 	{
 	private:
 		Microsoft::WRL::ComPtr<ID3D12Device> m_device;
+		UINT m_rtvDescriptorSize = 0;
 
 	public:
 		bool Init(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, bool useWarpDevice);
 
-		CommandQueue CreateCommandQueue();
+		CommandQueue CreateCommandQueue() const;
+		RTVHeap CreateRTVHeap() const;
+
+		UINT GetRTVDescriptorSize() const;
 
 	private:
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory,
@@ -45,10 +52,11 @@ export namespace jpt::DX12
 			JPT_ASSERT(D3D12CreateDevice(hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) == S_OK);
 		}
 
+		m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		return true;
 	}
 
-	CommandQueue Device::CreateCommandQueue()
+	CommandQueue Device::CreateCommandQueue() const
 	{
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -59,6 +67,25 @@ export namespace jpt::DX12
 		JPT_ASSERT(hr == S_OK);
 
 		return CommandQueue(commandQueue);
+	}
+
+	RTVHeap Device::CreateRTVHeap() const
+	{
+		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap;
+
+		// Describe and create a render target view (RTV) descriptor heap.
+		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+		rtvHeapDesc.NumDescriptors = kMaxFramesInFlight;
+		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		JPT_ASSERT(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)) == S_OK);
+
+		return RTVHeap(rtvHeap);
+	}
+
+	UINT Device::GetRTVDescriptorSize() const
+	{
+		return m_rtvDescriptorSize;
 	}
 
 	_Use_decl_annotations_

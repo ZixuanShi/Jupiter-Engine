@@ -7,14 +7,19 @@ module;
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
+//#include <d3dx12_root_signature.h>
 
 export module jpt.DX12.WindowResources;
 
 import jpt.Window;
 import jpt.Window_Win32;
 
-import jpt.DX12.SwapChain;
+import jpt.Graphics.Constants;
 
+import jpt.DX12.SwapChain;
+import jpt.DX12.RTVHeap;
+
+import jpt.DX12.Device;
 import jpt.DX12.CommandQueue;
 
 export namespace jpt::DX12
@@ -27,10 +32,12 @@ export namespace jpt::DX12
 
 	private:
 		SwapChain m_swapChain;
+		RTVHeap m_rtvHeap;
+
+		Microsoft::WRL::ComPtr<ID3D12Resource> m_renderTargets[kMaxFramesInFlight];
 
 		// Viewport and Scissor Rectangles
 		// Render targets
-		// rtvHeap
 		// Synchronization objects
 
 		size_t m_currentFrame = 0;
@@ -39,6 +46,8 @@ export namespace jpt::DX12
 
 	public:
 		bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue);
+		bool CreateRTVHeap(const Device& device);
+		bool CreateFrameResources();
 
 	public:
 		void SetOwner(Window* pOwner) { m_pOwner = pOwner; }
@@ -54,6 +63,27 @@ export namespace jpt::DX12
 		JPT_ASSERT(m_swapChain.Init(m_pOwner->GetSize(), hwnd, factory, commandQueue));
 
 		m_currentFrame = m_swapChain.GetCurrentFrameIndex();
+
+		return true;
+	}
+
+	bool WindowResources::CreateRTVHeap(const Device& device)
+	{
+		m_rtvHeap = device.CreateRTVHeap();
+		return true;
+	}
+
+	bool WindowResources::CreateFrameResources()
+	{
+		//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+
+		//// Create a RTV for each frame.
+		//for (UINT n = 0; n < FrameCount; n++)
+		//{
+		//	ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
+		//	m_device->CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
+		//	rtvHandle.Offset(1, m_rtvDescriptorSize);
+		//}
 
 		return true;
 	}

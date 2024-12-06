@@ -49,9 +49,15 @@ export namespace jpt
 		using Super = Renderer;
 
 	private:
-		// Pipeline objects.
+		// Shared Pipeline objects aross windows
 		Device m_device;
 		CommandQueue m_commandQueue;
+
+		// Command Allocator
+		// Command List
+		// Root Signature
+		// Pipeline State Object
+		// Resource buffers like Vertex, Index, Constant, etc.
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -100,6 +106,9 @@ export namespace jpt
 
 	void Renderer_DX12::Shutdown()
 	{
+		WaitForPreviousFrame();
+
+		//CloseHandle(m_fenceEvent);
 
 		Super::Shutdown();
 	}
@@ -130,6 +139,8 @@ export namespace jpt
 
 		// Per-Window specific DX12 resource. Each Window should have its own data
 		resources.CreateSwapChain(factory, m_commandQueue);
+		resources.CreateRTVHeap(m_device);
+		resources.CreateFrameResources();
 
 		if (success)
 		{
