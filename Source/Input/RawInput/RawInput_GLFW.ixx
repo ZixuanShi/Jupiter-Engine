@@ -44,6 +44,8 @@ export namespace jpt::Input
 
 	bool RawInput_GLFW::PreInit()
 	{
+		JPT_ENSURE(Super::PreInit());
+
 		m_toGLFWKeys.SetShouldGrow(false);
 		m_toGLFWKeys.ResizeBuckets(Key::Count());
 

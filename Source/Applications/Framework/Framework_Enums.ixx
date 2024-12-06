@@ -10,5 +10,6 @@ export namespace jpt
 {
 	JPT_ENUM_UINT8(Framework_API, 
 		Unknown,
-		GLFW)
+		GLFW,
+		Win32)
 }

@@ -10,6 +10,7 @@ export module jpt.Window.Manager;
 
 import jpt.Window;
 import jpt.Window_GLFW;
+import jpt.Window_Win32;
 
 import jpt.Renderer;
 
@@ -88,6 +89,10 @@ export namespace jpt
 		{
 		case Framework_API::GLFW:
 			m_windows.EmplaceBack(new Window_GLFW());
+			break;
+
+		case Framework_API::Win32:
+			m_windows.EmplaceBack(new Window_Win32());
 			break;
 
 		default:

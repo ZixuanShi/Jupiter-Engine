@@ -151,7 +151,12 @@ function CreateClientProject()
             -- Engine's functions, classes, and modules
             "Engine.lib",
             "Engine",
+
+            -- Rendering
             "vulkan-1",
+            "d3d12",
+            "dxgi",
+            "d3dcompiler",
         }
 
         filter "configurations:Debug or Debug Editor"

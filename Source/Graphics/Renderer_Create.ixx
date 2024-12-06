@@ -8,8 +8,9 @@ module;
 export module jpt.Renderer.Create;
 
 import jpt.Renderer;
-import jpt.Renderer_Vulkan;
 import jpt.Graphics.Enums;
+import jpt.Renderer_Vulkan;
+import jpt.Renderer_DX12;
 
 import jpt.CommandLine;
 import jpt.ProjectSettings;
@@ -48,6 +49,9 @@ export namespace jpt
 		{
 		case Graphics_API::Vulkan:
 			return new Renderer_Vulkan();
+
+		case Graphics_API::DX12:
+			return new Renderer_DX12();
 
 		default:
 			JPT_ERROR("Un-implemented Graphics API: " + api.ToString());

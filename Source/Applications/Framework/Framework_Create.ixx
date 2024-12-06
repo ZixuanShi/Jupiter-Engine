@@ -8,8 +8,9 @@ module;
 export module jpt.Framework.Create;
 
 import jpt.Framework;
-import jpt.Framework_GLFW;
 import jpt.Framework.Enums;
+import jpt.Framework_GLFW;
+import jpt.Framework_Win32;
 
 import jpt.CommandLine;
 import jpt.ProjectSettings;
@@ -48,6 +49,9 @@ export namespace jpt
 		{
 		case Framework_API::GLFW:
 			return new Framework_GLFW();
+
+		case Framework_API::Win32:
+			return new Framework_Win32();
 
 		default:
 			JPT_ASSERT(false, "Un-implemented Framework API: %s", api.ToString().ConstBuffer());

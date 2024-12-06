@@ -10,5 +10,6 @@ export namespace jpt
 {
 	JPT_ENUM_UINT8(Graphics_API, 
 		Unknown,
-		Vulkan)
+		Vulkan,
+		DX12)
 }

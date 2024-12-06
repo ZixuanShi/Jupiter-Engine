@@ -1,3 +1,4 @@
 {
-	"framework_api": "GLFW"
+	"framework_api": "Win32",
+	"graphics_api": "DX12"
 }
