@@ -29,7 +29,10 @@ import jpt.CommandLine;
 
 import jpt.DX12.DebugLayer;
 import jpt.DX12.Device;
+import jpt.DX12.CommandQueue;
+import jpt.DX12.WindowResources;
 
+import jpt.DynamicArray;
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
 
@@ -49,28 +52,10 @@ export namespace jpt
 
 	private:
 		// Pipeline objects.
-		D3D12_VIEWPORT m_viewport;
-		D3D12_RECT m_scissorRect;
-		ComPtr<IDXGISwapChain3> m_swapChain;
 		Device m_device;
-		ComPtr<ID3D12Resource> m_renderTargets[kMaxFramesInFlight];
-		ComPtr<ID3D12CommandAllocator> m_commandAllocator;
-		ComPtr<ID3D12CommandQueue> m_commandQueue;
-		ComPtr<ID3D12RootSignature> m_rootSignature;
-		ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
-		ComPtr<ID3D12PipelineState> m_pipelineState;
-		ComPtr<ID3D12GraphicsCommandList> m_commandList;
-		UINT m_rtvDescriptorSize;
+		CommandQueue m_commandQueue;
 
-		// App resources.
-		ComPtr<ID3D12Resource> m_vertexBuffer;
-		D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
-
-		// Synchronization objects.
-		UINT m_frameIndex;
-		HANDLE m_fenceEvent;
-		ComPtr<ID3D12Fence> m_fence;
-		UINT64 m_fenceValue;
+		DynamicArray<WindowResources> m_windowResources;
 
 		bool m_useWarpDevice = false;
 
@@ -129,11 +114,11 @@ export namespace jpt
 		bool success = true;
 		UINT dxgiFactoryFlags = 0;
 
-#if IS_DEBUG
+#if !IS_RELEASE
 		success &= InitDebugLayer(dxgiFactoryFlags);
 #endif
 		success &= m_device.Init(dxgiFactoryFlags, m_useWarpDevice);
-		success &= m_device.CreateCommandQueue(m_commandQueue);
+		m_commandQueue = m_device.CreateCommandQueue();
 
 		if (success)
 		{

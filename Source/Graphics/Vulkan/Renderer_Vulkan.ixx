@@ -30,9 +30,9 @@ import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
 
+import jpt.DynamicArray;
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
-import jpt.DynamicArray;
 
 import jpt.Window;
 import jpt.Event.Window.Resize;

@@ -8,7 +8,7 @@ module;
 
 export module jpt.DX12.DebugLayer;
 
-#if IS_DEBUG
+#if !IS_RELEASE
 
 using Microsoft::WRL::ComPtr;
 

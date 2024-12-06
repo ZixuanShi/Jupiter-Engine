@@ -10,6 +10,8 @@ module;
 
 export module jpt.DX12.Device;
 
+import jpt.DX12.CommandQueue;
+
 export namespace jpt::DX12
 {
 	class Device
@@ -20,7 +22,7 @@ export namespace jpt::DX12
 	public:
 		bool Init(UINT dxgiFactoryFlags, bool useWarpDevice);
 
-		bool CreateCommandQueue(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
+		CommandQueue CreateCommandQueue();
 
 	private:
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory,
@@ -49,13 +51,17 @@ export namespace jpt::DX12
 		return true;
 	}
 
-	bool Device::CreateCommandQueue(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
+	CommandQueue Device::CreateCommandQueue()
 	{
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-		return m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)) == S_OK;
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
+		HRESULT hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
+		JPT_ASSERT(hr == S_OK);
+
+		return CommandQueue(commandQueue);
 	}
 
 	_Use_decl_annotations_
