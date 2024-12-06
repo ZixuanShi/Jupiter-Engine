@@ -7,7 +7,7 @@ module;
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
-//#include <d3dx12_root_signature.h>
+#include <d3dx12/d3dx12_root_signature.h>
 
 export module jpt.DX12.WindowResources;
 
@@ -47,7 +47,7 @@ export namespace jpt::DX12
 	public:
 		bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue);
 		bool CreateRTVHeap(const Device& device);
-		bool CreateFrameResources();
+		bool CreateFrameResources(const Device& device);
 
 	public:
 		void SetOwner(Window* pOwner) { m_pOwner = pOwner; }
@@ -73,17 +73,17 @@ export namespace jpt::DX12
 		return true;
 	}
 
-	bool WindowResources::CreateFrameResources()
+	bool WindowResources::CreateFrameResources(const Device& device)
 	{
-		//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap->GetCPUDescriptorHandleForHeapStart());
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvHeap.Get()->GetCPUDescriptorHandleForHeapStart());
 
-		//// Create a RTV for each frame.
-		//for (UINT n = 0; n < FrameCount; n++)
-		//{
-		//	ThrowIfFailed(m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])));
-		//	m_device->CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
-		//	rtvHandle.Offset(1, m_rtvDescriptorSize);
-		//}
+		// Create a RTV for each frame.
+		for (UINT n = 0; n < kMaxFramesInFlight; n++)
+		{
+			JPT_ASSERT(m_swapChain.GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])) == S_OK);
+			device.CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
+			rtvHandle.Offset(1, device.GetRTVDescriptorSize());
+		}
 
 		return true;
 	}

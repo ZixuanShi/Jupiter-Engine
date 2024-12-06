@@ -140,7 +140,7 @@ export namespace jpt
 		// Per-Window specific DX12 resource. Each Window should have its own data
 		resources.CreateSwapChain(factory, m_commandQueue);
 		resources.CreateRTVHeap(m_device);
-		resources.CreateFrameResources();
+		resources.CreateFrameResources(m_device);
 
 		if (success)
 		{

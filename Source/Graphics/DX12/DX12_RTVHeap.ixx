@@ -19,10 +19,18 @@ export namespace jpt::DX12
 	public:
 		RTVHeap() = default;
 		RTVHeap(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap);
+
+	public:
+		ID3D12DescriptorHeap* Get() const;
 	};
 
 	RTVHeap::RTVHeap(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvHeap)
 		: m_rtvHeap(rtvHeap)
 	{
+	}
+
+	ID3D12DescriptorHeap* RTVHeap::Get() const
+	{
+		return m_rtvHeap.Get();
 	}
 }

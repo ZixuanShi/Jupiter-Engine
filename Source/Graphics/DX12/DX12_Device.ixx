@@ -28,6 +28,7 @@ export namespace jpt::DX12
 
 		CommandQueue CreateCommandQueue() const;
 		RTVHeap CreateRTVHeap() const;
+		void CreateRenderTargetView(_In_opt_  ID3D12Resource* pResource, _In_opt_  const D3D12_RENDER_TARGET_VIEW_DESC* pDesc, _In_  D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) const;
 
 		UINT GetRTVDescriptorSize() const;
 
@@ -81,6 +82,11 @@ export namespace jpt::DX12
 		JPT_ASSERT(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)) == S_OK);
 
 		return RTVHeap(rtvHeap);
+	}
+
+	void Device::CreateRenderTargetView(ID3D12Resource* pResource, const D3D12_RENDER_TARGET_VIEW_DESC* pDesc, D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) const
+	{
+		m_device->CreateRenderTargetView(pResource, pDesc, DestDescriptor);
 	}
 
 	UINT Device::GetRTVDescriptorSize() const

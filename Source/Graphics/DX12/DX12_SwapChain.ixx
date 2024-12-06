@@ -26,7 +26,10 @@ export namespace jpt::DX12
 
 	public:
 		bool Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue);
+
+	public:
 		uint32 GetCurrentFrameIndex() const;
+		HRESULT GetBuffer(uint32 bufferIndex, REFIID riid, void** ppSurface) const;
 	};
 
 	bool SwapChain::Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue)
@@ -59,5 +62,10 @@ export namespace jpt::DX12
 	uint32 SwapChain::GetCurrentFrameIndex() const
 	{
 		return m_swapChain->GetCurrentBackBufferIndex();
+	}
+
+	HRESULT SwapChain::GetBuffer(uint32 bufferIndex, REFIID riid, void** ppSurface) const
+	{
+		return m_swapChain->GetBuffer(bufferIndex, riid, ppSurface);
 	}
 }
