@@ -50,11 +50,11 @@ export namespace jpt
 	private:
 		// Shared Pipeline objects aross windows
 		Device m_device;
-		Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue>     m_commandQueue;
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+		Microsoft::WRL::ComPtr<ID3D12RootSignature>    m_rootSignature;
 
-		// Command Allocator
 		// Command List
-		// Root Signature
 		// Pipeline State Object
 		// Resource buffers like Vertex, Index, Constant, etc.
 
@@ -127,6 +127,7 @@ export namespace jpt
 #endif
 		success &= m_device.Init(factory, m_useWarpDevice);
 		m_commandQueue = m_device.CreateCommandQueue();
+		m_commandAllocator = m_device.CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 		// Main Window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -136,7 +137,7 @@ export namespace jpt
 		// Per-Window specific DX12 resource. Each Window should have its own data
 		resources.CreateSwapChain(factory, m_commandQueue);
 		resources.CreateRTVHeap(m_device);
-		resources.CreateFrameResources(m_device);
+		resources.CreateFrameResources(m_device);		
 
 		if (success)
 		{
@@ -147,6 +148,8 @@ export namespace jpt
 
 	bool Renderer_DX12::LoadAssets()
 	{
+		m_rootSignature = m_device.CreateRootSignature();
+
 		return true;
 	}
 

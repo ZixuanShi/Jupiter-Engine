@@ -8,6 +8,8 @@ module;
 #include <dxgi1_6.h>
 #include <wrl.h>
 
+#include <d3dx12/d3dx12_root_signature.h>
+
 export module jpt.DX12.Device;
 
 import jpt.Graphics.Constants;
@@ -25,10 +27,13 @@ export namespace jpt::DX12
 	public:
 		bool Init(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, bool useWarpDevice);
 
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE type) const;
 		Microsoft::WRL::ComPtr<ID3D12CommandQueue> CreateCommandQueue() const;
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> CreateRootSignature() const;
 		RTVHeap CreateRTVHeap() const;
 		void CreateRenderTargetView(_In_opt_  ID3D12Resource* pResource, _In_opt_  const D3D12_RENDER_TARGET_VIEW_DESC* pDesc, _In_  D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) const;
 
+	public:
 		UINT GetRTVDescriptorSize() const;
 
 	private:
@@ -56,6 +61,14 @@ export namespace jpt::DX12
 		return true;
 	}
 
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> Device::CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE type) const
+	{
+		Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
+		HRESULT hr = m_device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator));
+		JPT_ASSERT(hr == S_OK);
+		return commandAllocator;
+	}
+
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> Device::CreateCommandQueue() const
 	{
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
@@ -67,6 +80,20 @@ export namespace jpt::DX12
 		JPT_ASSERT(hr == S_OK);
 
 		return commandQueue;
+	}
+
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> Device::CreateRootSignature() const
+	{
+		Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		Microsoft::WRL::ComPtr<ID3DBlob> signature;
+		Microsoft::WRL::ComPtr<ID3DBlob> error;
+		JPT_ASSERT(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error) == S_OK);
+		JPT_ASSERT(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)) == S_OK);
+
+		return rootSignature;
 	}
 
 	RTVHeap Device::CreateRTVHeap() const
