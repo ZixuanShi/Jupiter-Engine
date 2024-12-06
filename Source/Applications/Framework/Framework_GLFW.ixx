@@ -35,6 +35,7 @@ namespace jpt
 		using Super = Framework;
 
 	public:
+		virtual bool PreInit() override;
 		virtual bool Init() override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
@@ -42,15 +43,22 @@ namespace jpt
 		virtual const char** GetRequiredExtensions(uint32& extensionCount) override;
 	};
 
-	bool Framework_GLFW::Init()
+	bool Framework_GLFW::PreInit()
 	{
-		JPT_ENSURE(Super::Init());
+		JPT_ENSURE(Super::PreInit());
 
 		JPT_ENSURE(glfwInit());
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		glfwSetErrorCallback(Callbacks::OnError);
+
+		return true;
+	}
+
+	bool Framework_GLFW::Init()
+	{
+		JPT_ENSURE(Super::Init());
 
 		return true;
 	}
