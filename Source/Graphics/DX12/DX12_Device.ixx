@@ -36,6 +36,8 @@ export namespace jpt::DX12
 	public:
 		UINT GetRTVDescriptorSize() const;
 
+		Microsoft::WRL::ComPtr<ID3D12Device> Get() const;
+
 	private:
 		void GetHardwareAdapter(_In_ IDXGIFactory1* pFactory,
 			_Outptr_result_maybenull_ IDXGIAdapter1** ppAdapter,
@@ -118,6 +120,11 @@ export namespace jpt::DX12
 	UINT Device::GetRTVDescriptorSize() const
 	{
 		return m_rtvDescriptorSize;
+	}
+
+	Microsoft::WRL::ComPtr<ID3D12Device> Device::Get() const
+	{
+		return m_device;
 	}
 
 	_Use_decl_annotations_

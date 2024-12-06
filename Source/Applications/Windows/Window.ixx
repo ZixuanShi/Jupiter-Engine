@@ -39,6 +39,8 @@ export namespace jpt
 
 		/** @return Vector2, xy are window's screen lengths in pixels */
 		virtual Vec2i GetSize() const { JPT_ASSERT(false); return Vec2i(0, 0); }
+		
+		float GetAspectRatio() const;
 		bool IsMinimized() const { return GetSize().x == 0 || GetSize().y == 0; }
 	};
 
@@ -56,5 +58,11 @@ export namespace jpt
 			frameCount = 0;
 			accumulator = 0.0;
 		}
+	}
+
+	float Window::GetAspectRatio() const
+	{
+		const Vec2i size = GetSize(); 
+		return static_cast<float>(size.x) / static_cast<float>(size.y);
 	}
 }
