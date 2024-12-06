@@ -34,6 +34,10 @@ namespace jpt
 		virtual bool Init(const char* title, int32 width, int32 height) override;
 		virtual void Update(TimePrecision deltaSeconds) override;
 		virtual void Shutdown() override;
+
+	public:
+		virtual Vec2i GetSize() const override;
+		HWND GetHWND() const { return m_hwnd; }
 	};
 
 	bool Window_Win32::Init(const char* title, int32 width, int32 height)
@@ -79,5 +83,16 @@ namespace jpt
 		DestroyWindow(m_hwnd);
 
 		Super::Shutdown();
+	}
+
+	Vec2i Window_Win32::GetSize() const
+	{
+		RECT rect;
+		JPT_ASSERT(GetWindowRect(m_hwnd, &rect));
+
+		const int32 width  = rect.right  - rect.left;
+		const int32 height = rect.bottom - rect.top;
+
+		return Vec2i(width, height);
 	}
 }

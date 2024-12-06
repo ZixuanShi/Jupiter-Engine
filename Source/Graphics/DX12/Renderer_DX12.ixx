@@ -41,8 +41,6 @@ import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 
 using namespace jpt::DX12;
-using namespace DirectX;
-using Microsoft::WRL::ComPtr;
 
 export namespace jpt
 {
@@ -65,6 +63,9 @@ export namespace jpt
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
+
+	public:
+		const CommandQueue& GetCommandQueue() const { return m_commandQueue; }
 
 	private:
 		bool LoadPipeline();
@@ -113,12 +114,22 @@ export namespace jpt
 	{
 		bool success = true;
 		UINT dxgiFactoryFlags = 0;
+		Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
+		CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory));
 
 #if !IS_RELEASE
 		success &= InitDebugLayer(dxgiFactoryFlags);
 #endif
-		success &= m_device.Init(dxgiFactoryFlags, m_useWarpDevice);
+		success &= m_device.Init(factory, m_useWarpDevice);
 		m_commandQueue = m_device.CreateCommandQueue();
+
+		// Main Window
+		Window* pMainWindow = GetApplication()->GetMainWindow();
+		WindowResources& resources = m_windowResources.EmplaceBack();
+		resources.SetOwner(pMainWindow);
+
+		// Per-Window specific DX12 resource. Each Window should have its own data
+		resources.CreateSwapChain(factory, m_commandQueue);
 
 		if (success)
 		{

@@ -20,7 +20,7 @@ export namespace jpt::DX12
 		Microsoft::WRL::ComPtr<ID3D12Device> m_device;
 
 	public:
-		bool Init(UINT dxgiFactoryFlags, bool useWarpDevice);
+		bool Init(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, bool useWarpDevice);
 
 		CommandQueue CreateCommandQueue();
 
@@ -30,11 +30,8 @@ export namespace jpt::DX12
 			bool requestHighPerformanceAdapter = false);
 	};
 
-	bool Device::Init(UINT dxgiFactoryFlags, bool useWarpDevice)
+	bool Device::Init(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, bool useWarpDevice)
 	{
-		Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
-		JPT_ASSERT(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)) == S_OK);
-
 		if (useWarpDevice)
 		{
 			Microsoft::WRL::ComPtr<IDXGIAdapter> warpAdapter;
