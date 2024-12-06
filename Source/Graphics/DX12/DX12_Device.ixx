@@ -12,7 +12,6 @@ export module jpt.DX12.Device;
 
 import jpt.Graphics.Constants;
 
-import jpt.DX12.CommandQueue;
 import jpt.DX12.RTVHeap;
 
 export namespace jpt::DX12
@@ -26,7 +25,7 @@ export namespace jpt::DX12
 	public:
 		bool Init(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, bool useWarpDevice);
 
-		CommandQueue CreateCommandQueue() const;
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue> CreateCommandQueue() const;
 		RTVHeap CreateRTVHeap() const;
 		void CreateRenderTargetView(_In_opt_  ID3D12Resource* pResource, _In_opt_  const D3D12_RENDER_TARGET_VIEW_DESC* pDesc, _In_  D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) const;
 
@@ -57,7 +56,7 @@ export namespace jpt::DX12
 		return true;
 	}
 
-	CommandQueue Device::CreateCommandQueue() const
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> Device::CreateCommandQueue() const
 	{
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -67,7 +66,7 @@ export namespace jpt::DX12
 		HRESULT hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
 		JPT_ASSERT(hr == S_OK);
 
-		return CommandQueue(commandQueue);
+		return commandQueue;
 	}
 
 	RTVHeap Device::CreateRTVHeap() const

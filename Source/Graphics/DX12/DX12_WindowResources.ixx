@@ -20,7 +20,6 @@ import jpt.DX12.SwapChain;
 import jpt.DX12.RTVHeap;
 
 import jpt.DX12.Device;
-import jpt.DX12.CommandQueue;
 
 export namespace jpt::DX12
 {
@@ -45,7 +44,7 @@ export namespace jpt::DX12
 		bool m_shouldRecreateSwapChain = false;
 
 	public:
-		bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue);
+		bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 		bool CreateRTVHeap(const Device& device);
 		bool CreateFrameResources(const Device& device);
 
@@ -54,7 +53,7 @@ export namespace jpt::DX12
 		Window* GetOwner() const { return m_pOwner; }
 	};
 
-	bool WindowResources::CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue)
+	bool WindowResources::CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
 	{
 		Window_Win32* win32Window = static_cast<Window_Win32*>(m_pOwner);
 		JPT_ASSERT(win32Window, "Window is not of type Window_Win32");

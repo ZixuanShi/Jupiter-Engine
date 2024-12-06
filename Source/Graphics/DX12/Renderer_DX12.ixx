@@ -29,7 +29,6 @@ import jpt.CommandLine;
 
 import jpt.DX12.DebugLayer;
 import jpt.DX12.Device;
-import jpt.DX12.CommandQueue;
 import jpt.DX12.WindowResources;
 
 import jpt.DynamicArray;
@@ -51,7 +50,7 @@ export namespace jpt
 	private:
 		// Shared Pipeline objects aross windows
 		Device m_device;
-		CommandQueue m_commandQueue;
+		Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue;
 
 		// Command Allocator
 		// Command List
@@ -69,9 +68,6 @@ export namespace jpt
 		virtual void Shutdown() override;
 
 		virtual void DrawFrame() override;
-
-	public:
-		const CommandQueue& GetCommandQueue() const { return m_commandQueue; }
 
 	private:
 		bool LoadPipeline();

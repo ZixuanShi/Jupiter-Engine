@@ -12,8 +12,6 @@ export module jpt.DX12.SwapChain;
 
 import jpt.Graphics.Constants;
 
-import jpt.DX12.CommandQueue;
-
 import jpt.Vector2;
 import jpt.TypeDefs;
 
@@ -25,14 +23,14 @@ export namespace jpt::DX12
 		Microsoft::WRL::ComPtr<IDXGISwapChain3> m_swapChain;
 
 	public:
-		bool Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue);
+		bool Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 
 	public:
 		uint32 GetCurrentFrameIndex() const;
 		HRESULT GetBuffer(uint32 bufferIndex, REFIID riid, void** ppSurface) const;
 	};
 
-	bool SwapChain::Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, const CommandQueue& commandQueue)
+	bool SwapChain::Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
 	{
 		// Describe and create the swap chain.
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
