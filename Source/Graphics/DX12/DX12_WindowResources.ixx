@@ -7,7 +7,9 @@ module;
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <wrl.h>
+
 #include <d3dx12/d3dx12_root_signature.h>
+#include <d3dx12/d3dx12_core.h>
 
 export module jpt.DX12.WindowResources;
 
@@ -21,6 +23,8 @@ import jpt.DX12.RTVHeap;
 import jpt.DX12.SyncObjects;
 
 import jpt.DX12.Device;
+
+import jpt.Vector2;
 
 export namespace jpt::DX12
 {
@@ -37,7 +41,8 @@ export namespace jpt::DX12
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_renderTargets[kMaxFramesInFlight];
 		SyncObjects m_syncObjects;
 
-		// Viewport and Scissor Rectangles
+		CD3DX12_VIEWPORT m_viewport;
+		CD3DX12_RECT m_scissorRect;
 
 		size_t m_currentFrame = 0;
 
@@ -45,6 +50,7 @@ export namespace jpt::DX12
 
 	public:
 		void Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
+		void WaitForPreviousFrame(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 
 		bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 		bool CreateRTVHeap(const Device& device);
@@ -52,13 +58,27 @@ export namespace jpt::DX12
 		bool CreateSyncObjects(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 
 	public:
-		void SetOwner(Window* pOwner) { m_pOwner = pOwner; }
+		void SetOwner(Window* pOwner);
 		Window* GetOwner() const { return m_pOwner; }
+
+		const SwapChain& GetSwapChain() const { return m_swapChain; }
+		const RTVHeap& GetRTVHeap() const { return m_rtvHeap; }
+		const SyncObjects& GetSyncObjects() const { return m_syncObjects; }
+		Microsoft::WRL::ComPtr<ID3D12Resource> GetRenderTarget(size_t index) const { return m_renderTargets[index]; }
+
+		const CD3DX12_VIEWPORT& GetViewport() const { return m_viewport; }
+		const CD3DX12_RECT& GetScissorRect() const { return m_scissorRect; }
+		size_t GetCurrentFrame() const { return m_currentFrame; }
 	};
 
 	void WindowResources::Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
 	{
 		m_syncObjects.Shutdown(commandQueue, m_swapChain, m_currentFrame);
+	}
+
+	void WindowResources::WaitForPreviousFrame(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
+	{
+		m_syncObjects.WaitForPreviousFrame(commandQueue, m_swapChain, m_currentFrame);
 	}
 
 	bool WindowResources::CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
@@ -100,5 +120,15 @@ export namespace jpt::DX12
 		m_syncObjects.Init(device, commandQueue, m_swapChain, m_currentFrame);
 
 		return true;
+	}
+
+	void WindowResources::SetOwner(Window* pOwner)
+	{
+		m_pOwner = pOwner;
+
+		const Vec2i size = pOwner->GetSize();
+
+		m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y));
+		m_scissorRect = CD3DX12_RECT(0, 0, size.x, size.y);
 	}
 }

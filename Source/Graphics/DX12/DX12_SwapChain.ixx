@@ -28,6 +28,8 @@ export namespace jpt::DX12
 	public:
 		uint32 GetCurrentBackBufferIndex() const;
 		HRESULT GetBuffer(uint32 bufferIndex, REFIID riid, void** ppSurface) const;
+
+		HRESULT Present(uint32 syncInterval, uint32 flags) const { return m_swapChain->Present(syncInterval, flags); }
 	};
 
 	bool SwapChain::Init(Vec2i size, HWND hwnd, Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)

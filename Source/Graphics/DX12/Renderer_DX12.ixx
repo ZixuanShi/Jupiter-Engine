@@ -18,7 +18,10 @@ module;
 #if IS_DEBUG
 	#include <dxgidebug.h>
 #endif
+
 #include <d3dx12/d3dx12_core.h>
+#include <d3dx12/d3dx12_root_signature.h>
+#include <d3dx12/d3dx12_barriers.h>
 
 export module jpt.Renderer_DX12;
 
@@ -77,7 +80,6 @@ export namespace jpt
 
 	private:
 		void PopulateCommandList();
-		void WaitForPreviousFrame();
 
 		void CompileShaders();
 		void CreateVertexBuffer(float aspectRatio);
@@ -151,14 +153,60 @@ export namespace jpt
 	{
 		Super::DrawFrame();
 
+		WindowResources& resources = m_windowResources[0];
+
+		// Record all the commands we need to render the scene into the command list.
+		PopulateCommandList();
+
+		// Execute the command list.
+		ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
+		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+		// Present the frame.
+		JPT_ASSERT(resources.GetSwapChain().Present(1, 0) == S_OK);
+
+		resources.WaitForPreviousFrame(m_commandQueue);
 	}
 
 	void Renderer_DX12::PopulateCommandList()
 	{
-	}
+		WindowResources& resources = m_windowResources[0];
+		Microsoft::WRL::ComPtr<ID3D12Resource> renderTarget = resources.GetRenderTarget(resources.GetCurrentFrame());
 
-	void Renderer_DX12::WaitForPreviousFrame()
-	{
+		// Command list allocators can only be reset when the associated 
+		// command lists have finished execution on the GPU; apps should use 
+		// fences to determine GPU execution progress.
+		JPT_ASSERT(m_commandAllocator->Reset() == S_OK);
+
+		// However, when ExecuteCommandList() is called on a particular command 
+		// list, that command list can then be reset at any time and must be before 
+		// re-recording.
+		JPT_ASSERT(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) == S_OK);
+
+		// Set necessary state.
+		m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
+		m_commandList->RSSetViewports(1, &resources.GetViewport());
+		m_commandList->RSSetScissorRects(1, &resources.GetScissorRect());
+
+		// Indicate that the back buffer will be used as a render target.
+		auto barrier1 = CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		m_commandList->ResourceBarrier(1, &barrier1);
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(resources.GetRTVHeap().Get()->GetCPUDescriptorHandleForHeapStart(), (INT)resources.GetCurrentFrame(), m_device.GetRTVDescriptorSize());
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+		// Record commands.
+		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		m_commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
+		m_commandList->DrawInstanced(3, 1, 0, 0);
+
+		// Indicate that the back buffer will now be used to present.
+		auto barrier2 = CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+		m_commandList->ResourceBarrier(1, &barrier2);
+
+		JPT_ASSERT(m_commandList->Close() == S_OK);
 	}
 
 	void Renderer_DX12::CompileShaders()
