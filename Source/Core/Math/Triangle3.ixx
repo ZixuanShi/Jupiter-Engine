@@ -72,7 +72,7 @@ namespace jpt
 		const Vector3 normal = Normal();
 
 		// Compute the vector from the point to the triangle
-		const Vector3 pointToTriangle = a - point;
+		const Vector3 pointToTriangle = point - a;
 		const T distance = Abs(pointToTriangle.Dot(normal));
 
 		return distance;

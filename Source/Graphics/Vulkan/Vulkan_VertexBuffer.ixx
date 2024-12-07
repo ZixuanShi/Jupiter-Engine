@@ -45,7 +45,6 @@ export namespace jpt::Vulkan
 	bool VertexBuffer::Init(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice, const CommandPool& commandPool)
 	{
 		VkDeviceSize bufferSize = vertices.Size();
-		CreateBuffer(logicalDevice, physicalDevice, bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_vertexBuffer, m_vertexBufferMemory);
 
 		VkBuffer stagingBuffer;
 		VkDeviceMemory stagingBufferMemory;
