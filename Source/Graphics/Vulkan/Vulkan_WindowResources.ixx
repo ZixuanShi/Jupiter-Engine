@@ -84,6 +84,8 @@ export namespace jpt::Vulkan
 
 		const SwapChain& GetSwapChain() const { return m_swapChain; }
 		VkFormat GetImageFormat() const { return m_swapChain.GetImageFormat(); }
+
+		const CommandPool& GetCommandPool() const { return m_commandPool; }
 	};
 
 	bool WindowResources::CreateSwapChain(const PhysicalDevice& physicalDevice)

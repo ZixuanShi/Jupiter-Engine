@@ -130,7 +130,7 @@ export namespace jpt
 		success &= resources.CreateCommandPool(queueFamilyIndex);
 
 		// Vertex Buffer
-		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice);
+		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 
 		// Command buffers
 		success &= resources.CreateCommandBuffers();
