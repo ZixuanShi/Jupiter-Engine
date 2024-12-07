@@ -24,6 +24,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.CommandBuffers;
 import jpt.Vulkan.SynchronizationObjects;
+import jpt.Vulkan.VertexBuffer;
 
 import jpt.DynamicArray;
 import jpt.StaticArray;
@@ -66,7 +67,7 @@ export namespace jpt::Vulkan
 
 		void Shutdown(VkInstance instance);
 
-		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline);
+		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer);
 
 		bool CanDraw() const;
 
@@ -171,7 +172,7 @@ export namespace jpt::Vulkan
 		m_pLogicalDevice = nullptr;
 	}
 
-	void WindowResources::DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline)
+	void WindowResources::DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer)
 	{
 		SynchronizationObjects& currentSyncObjects = m_syncObjects[m_currentFrame];
 
@@ -189,7 +190,7 @@ export namespace jpt::Vulkan
 		vkResetFences(m_pLogicalDevice->Get(), 1, currentSyncObjects.GetInFlightFencePtr());
 
 		m_commandBuffers.Reset(m_currentFrame);
-		m_commandBuffers.Record(m_currentFrame, imageIndex, renderPass, m_swapChain, graphicsPipeline);
+		m_commandBuffers.Record(m_currentFrame, imageIndex, renderPass, m_swapChain, graphicsPipeline, vertexBuffer);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

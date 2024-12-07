@@ -16,6 +16,8 @@ import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Pipeline;
+import jpt.Vulkan.Vertex;
+import jpt.Vulkan.VertexBuffer;
 
 import jpt.StaticArray;
 
@@ -33,7 +35,7 @@ export namespace jpt::Vulkan
 
 	public:
 		void Reset(size_t index, VkCommandBufferResetFlags flags = 0) const;
-		void Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline) const;
+		void Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer) const;
 
 	public:
 		const VkCommandBuffer* GetBufferPtr(size_t index) const { return &m_commandBuffers[index]; }
@@ -74,7 +76,7 @@ export namespace jpt::Vulkan
 		vkResetCommandBuffer(m_commandBuffers[index], flags);
 	}
 
-	void CommandBuffers::Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline) const
+	void CommandBuffers::Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer) const
 	{
 		VkCommandBuffer commandBuffer = m_commandBuffers[index];
 
@@ -98,25 +100,35 @@ export namespace jpt::Vulkan
 		renderPassInfo.pClearValues = &clearColor;
 
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline.Get());
+		{
+			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline.Get());
 
-		VkViewport viewport = {};
-		viewport.x = 0.0f;
-		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(swapChain.GetExtent().width);
-		viewport.height = static_cast<float>(swapChain.GetExtent().height);
-		viewport.minDepth = 0.0f;
-		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+			// Set dynamic viewport
+			VkViewport viewport = {};
+			viewport.x = 0.0f;
+			viewport.y = 0.0f;
+			viewport.width = static_cast<float>(swapChain.GetExtent().width);
+			viewport.height = static_cast<float>(swapChain.GetExtent().height);
+			viewport.minDepth = 0.0f;
+			viewport.maxDepth = 1.0f;
+			vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
-		VkRect2D scissor = {};
-		scissor.offset = { 0, 0 };
-		scissor.extent = swapChain.GetExtent();
-		vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+			// Set dynamic scissor
+			VkRect2D scissor = {};
+			scissor.offset = { 0, 0 };
+			scissor.extent = swapChain.GetExtent();
+			vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-		vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+			// Bind vertex buffer
+			VkBuffer vertexBuffers[] = { vertexBuffer.Get() };
+			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
+			// Draw
+			vkCmdDraw(commandBuffer, static_cast<uint32>(vertices.Count()), 1, 0, 0);
+		}
 		vkCmdEndRenderPass(commandBuffer);
+
 		if (const VkResult result = vkEndCommandBuffer(commandBuffer); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to record command buffer! VkResult: %i", static_cast<uint32>(result));

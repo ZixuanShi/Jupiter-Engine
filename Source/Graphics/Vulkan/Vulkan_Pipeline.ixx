@@ -13,6 +13,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Shader;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.RenderPass;
+import jpt.Vulkan.Vertex;
 
 export namespace jpt::Vulkan
 {
@@ -43,8 +44,14 @@ export namespace jpt::Vulkan
 		// Vertex input
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-		vertexInputInfo.vertexBindingDescriptionCount = 0;
-		vertexInputInfo.vertexAttributeDescriptionCount = 0;
+
+		auto bindingDescription = Vertex2::GetBindingDescription();
+		auto attributeDescriptions = Vertex2::GetAttributeDescriptions();
+
+		vertexInputInfo.vertexBindingDescriptionCount = 1;
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescriptions.Count());
+		vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.ConstBuffer();
 
 		// Input assembly
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
