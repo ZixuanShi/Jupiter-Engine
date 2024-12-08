@@ -20,6 +20,10 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(const LogicalDevice& logicalDevice);
 		void Shutdown(const LogicalDevice& logicalDevice);
+
+	public:
+		VkDescriptorSetLayout Get() const { return m_descriptorSetLayout; }
+		VkDescriptorSetLayout* GetPtr() { return &m_descriptorSetLayout; }
 	};
 
 	bool DescriptorSetLayout::Init(const LogicalDevice& logicalDevice)

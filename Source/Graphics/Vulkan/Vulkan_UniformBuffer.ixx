@@ -31,6 +31,7 @@ export namespace jpt::Vulkan
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
+		VkBuffer Get() const { return m_uniformBuffer; }
 		void* GetMappedMemory() const { return m_pMappedMemory; }
 	};
 
