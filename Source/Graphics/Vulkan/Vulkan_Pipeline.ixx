@@ -13,7 +13,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Shader;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.RenderPass;
-import jpt.Vulkan.Vertex;
+import jpt.Vulkan.Data;
 
 export namespace jpt::Vulkan
 {

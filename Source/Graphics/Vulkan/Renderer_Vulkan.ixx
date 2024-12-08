@@ -25,6 +25,7 @@ import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.VertexBuffer;
+import jpt.Vulkan.IndexBuffer;
 import jpt.Vulkan.CommandBuffers;
 import jpt.Vulkan.SynchronizationObjects;
 import jpt.Vulkan.Helpers;
@@ -64,6 +65,7 @@ export namespace jpt
 		Pipeline m_graphicsPipeline;
 		
 		VertexBuffer m_vertexBuffer;
+		IndexBuffer m_indexBuffer;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -129,8 +131,9 @@ export namespace jpt
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
 		success &= resources.CreateCommandPool(queueFamilyIndex);
 
-		// Vertex Buffer
+		// Vertex Index Buffers
 		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
+		success &= m_indexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 
 		// Command buffers
 		success &= resources.CreateCommandBuffers();
@@ -164,6 +167,7 @@ export namespace jpt
 		m_logicalDevice.WaitIdle();
 
 		m_vertexBuffer.Shutdown(m_logicalDevice);
+		m_indexBuffer.Shutdown(m_logicalDevice);
 
 		// Window resources
 		for (WindowResources& resources : m_windowResources)
@@ -201,7 +205,7 @@ export namespace jpt
 		{
 			if (resources.CanDraw())
 			{
-				resources.DrawFrame(m_renderPass, m_graphicsPipeline, m_vertexBuffer);
+				resources.DrawFrame(m_renderPass, m_graphicsPipeline, m_vertexBuffer, m_indexBuffer);
 			}
 		}
 	}

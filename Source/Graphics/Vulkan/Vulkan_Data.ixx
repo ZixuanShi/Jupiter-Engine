@@ -4,13 +4,15 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Vertex;
+export module jpt.Vulkan.Data;
 
 import jpt.Vector2;
 import jpt.Vector3;
 
 import jpt.StaticArray;
 import jpt.DynamicArray;
+
+import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
@@ -50,8 +52,14 @@ export namespace jpt::Vulkan
 
 	const DynamicArray<Vertex2> vertices =
 	{
-		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f,  0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		{ { -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
+		{ {  0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f } },
+		{ {  0.5f,  0.5f }, { 0.0f, 0.0f, 1.0f } },
+		{ { -0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f } }
+	};
+
+	const DynamicArray<uint32> indices =
+	{
+		0, 1, 2, 2, 3, 0
 	};
 }
