@@ -128,7 +128,7 @@ export namespace jpt
 
 		// Pipeline resources
 		success &= m_pipelineLayout.Init(m_logicalDevice, m_descriptorSetLayout);
-		success &= m_graphicsPipeline.Init(m_logicalDevice, resources.GetSwapChain(), m_pipelineLayout, m_renderPass);
+		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
 
 		// Framebuffers
 		success &= resources.CreateFramebuffers(m_renderPass);
