@@ -21,6 +21,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.RenderPass;
+import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
@@ -60,6 +61,8 @@ export namespace jpt
 		LogicalDevice m_logicalDevice;
 
 		RenderPass m_renderPass;
+
+		DescriptorSetLayout m_descriptorSetLayout;
 
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
@@ -120,8 +123,11 @@ export namespace jpt
 		// Render pass
 		success &= m_renderPass.Init(m_logicalDevice, resources.GetImageFormat());
 
+		// Descriptor set layout
+		success &= m_descriptorSetLayout.Init(m_logicalDevice);
+
 		// Pipeline resources
-		success &= m_pipelineLayout.Init(m_logicalDevice);
+		success &= m_pipelineLayout.Init(m_logicalDevice, m_descriptorSetLayout);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, resources.GetSwapChain(), m_pipelineLayout, m_renderPass);
 
 		// Framebuffers
@@ -134,6 +140,8 @@ export namespace jpt
 		// Vertex Index Buffers
 		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 		success &= m_indexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
+
+		success &= resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
 
 		// Command buffers
 		success &= resources.CreateCommandBuffers();
@@ -165,6 +173,8 @@ export namespace jpt
 	void Renderer_Vulkan::Shutdown()
 	{
 		m_logicalDevice.WaitIdle();
+
+		m_descriptorSetLayout.Shutdown(m_logicalDevice);
 
 		m_vertexBuffer.Shutdown(m_logicalDevice);
 		m_indexBuffer.Shutdown(m_logicalDevice);

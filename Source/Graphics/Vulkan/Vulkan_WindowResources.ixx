@@ -7,6 +7,12 @@ module;
 
 #include <vulkan/vulkan.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <chrono>
+
 export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
@@ -26,12 +32,15 @@ import jpt.Vulkan.CommandBuffers;
 import jpt.Vulkan.SynchronizationObjects;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
+import jpt.Vulkan.UniformBufferObject;
+import jpt.Vulkan.UniformBuffer;
 
 import jpt.DynamicArray;
 import jpt.StaticArray;
 
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
+import jpt.StopWatch;
 
 export namespace jpt::Vulkan
 {
@@ -51,6 +60,7 @@ export namespace jpt::Vulkan
 		CommandBuffers m_commandBuffers;
 
 		StaticArray<SynchronizationObjects, kMaxFramesInFlight> m_syncObjects;
+		StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
 
 		size_t m_currentFrame = 0;
 
@@ -63,6 +73,7 @@ export namespace jpt::Vulkan
 		bool CreateCommandPool(uint32 queueFamilyIndex);
 		bool CreateCommandBuffers();
 		bool CreateSynchronizationObjects();
+		bool CreateUniformBuffers(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice);
 
 		void RecreateSwapChain(const PhysicalDevice& physicalDevice, RenderPass& renderPass, Pipeline& graphicsPipeline, PipelineLayout& pipelineLayout);
 
@@ -87,6 +98,9 @@ export namespace jpt::Vulkan
 		VkFormat GetImageFormat() const { return m_swapChain.GetImageFormat(); }
 
 		const CommandPool& GetCommandPool() const { return m_commandPool; }
+
+	private:
+		void UpdateUniformBuffer(size_t currentFrame);
 	};
 
 	bool WindowResources::CreateSwapChain(const PhysicalDevice& physicalDevice)
@@ -124,6 +138,16 @@ export namespace jpt::Vulkan
 		return success;
 	}
 
+	bool WindowResources::CreateUniformBuffers(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice)
+	{
+		bool success = true;
+		for (UniformBuffer& uniformBuffer : m_uniformBuffers)
+		{
+			success &= uniformBuffer.Init(logicalDevice, physicalDevice);
+		}
+		return success;
+	}
+
 	void WindowResources::RecreateSwapChain(const PhysicalDevice& physicalDevice, RenderPass& renderPass, Pipeline& graphicsPipeline, PipelineLayout& pipelineLayout)
 	{
 		m_pLogicalDevice->WaitIdle();
@@ -155,6 +179,12 @@ export namespace jpt::Vulkan
 	void WindowResources::Shutdown(VkInstance instance)
 	{
 		m_pLogicalDevice->WaitIdle();
+
+		// Uniform buffers
+		for (UniformBuffer& uniformBuffer : m_uniformBuffers)
+		{
+			uniformBuffer.Shutdown(*m_pLogicalDevice);
+		}
 
 		// Synchronization objects
 		for (SynchronizationObjects& syncObjects : m_syncObjects)
@@ -189,6 +219,8 @@ export namespace jpt::Vulkan
 			return;
 		}
 		JPT_ASSERT(resultAcquireNextImage == VK_SUCCESS || resultAcquireNextImage == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image %u", static_cast<uint32>(resultAcquireNextImage));
+
+		UpdateUniformBuffer(m_currentFrame);
 
 		vkResetFences(m_pLogicalDevice->Get(), 1, currentSyncObjects.GetInFlightFencePtr());
 
@@ -248,5 +280,21 @@ export namespace jpt::Vulkan
 		}
 
 		return true;
+	}
+
+	void WindowResources::UpdateUniformBuffer(size_t currentFrame)
+	{
+		static auto startTime = std::chrono::high_resolution_clock::now();
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+		UniformBufferObject ubo{};
+		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.proj = glm::perspective(glm::radians(45.0f), m_swapChain.GetExtent().width / (float)m_swapChain.GetExtent().height, 0.1f, 10.0f);
+		ubo.proj[1][1] *= -1;
+
+		memcpy(m_uniformBuffers[currentFrame].GetMappedMemory(), &ubo, sizeof(ubo));
 	}
 }
