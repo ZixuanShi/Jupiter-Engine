@@ -9,7 +9,6 @@ module;
 export module jpt.Vulkan.Pipeline;
 
 import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.Shader;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.RenderPass;
@@ -23,14 +22,14 @@ export namespace jpt::Vulkan
 		VkPipeline m_graphicsPipeline;
 
 	public:
-		bool Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, const RenderPass& renderPass);
+		bool Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass);
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkPipeline Get() const { return m_graphicsPipeline; }
 	};
 
-	bool Pipeline::Init(const LogicalDevice& logicalDevice, const SwapChain& swapChain, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
+	bool Pipeline::Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
 	{
 		// Shaders
 		Shader vertexShader;
@@ -63,15 +62,15 @@ export namespace jpt::Vulkan
 		VkViewport viewport = {};
 		viewport.x = 0.0f;
 		viewport.y = 0.0f;
-		viewport.width = static_cast<float>(swapChain.GetExtent().width);
-		viewport.height = static_cast<float>(swapChain.GetExtent().height);
+		viewport.width = 0.0f;
+		viewport.height = 0.0f;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
 
 		// Scissor
 		VkRect2D scissor = {};
 		scissor.offset = { 0, 0 };
-		scissor.extent = swapChain.GetExtent();
+		scissor.extent = { 0, 0 };
 
 		// Dynamic states
 		DynamicArray<VkDynamicState> dynamicStates =

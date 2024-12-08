@@ -144,7 +144,7 @@ export namespace jpt::Vulkan
 
 			graphicsPipeline.Shutdown(*m_pLogicalDevice);
 			pipelineLayout.Shutdown(*m_pLogicalDevice);
-			graphicsPipeline.Init(*m_pLogicalDevice, m_swapChain, pipelineLayout,renderPass);
+			graphicsPipeline.Init(*m_pLogicalDevice, pipelineLayout,renderPass);
 		}
 
 		m_swapChain.CreateFramebuffers(*m_pLogicalDevice, renderPass);

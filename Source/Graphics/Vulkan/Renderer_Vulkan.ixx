@@ -67,6 +67,8 @@ export namespace jpt
 		VertexBuffer m_vertexBuffer;
 		IndexBuffer m_indexBuffer;
 
+		//DescriptorSetLayout m_descriptorSetLayout;
+
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:
@@ -122,7 +124,7 @@ export namespace jpt
 
 		// Pipeline resources
 		success &= m_pipelineLayout.Init(m_logicalDevice);
-		success &= m_graphicsPipeline.Init(m_logicalDevice, resources.GetSwapChain(), m_pipelineLayout, m_renderPass);
+		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
 
 		// Framebuffers
 		success &= resources.CreateFramebuffers(m_renderPass);
@@ -165,6 +167,8 @@ export namespace jpt
 	void Renderer_Vulkan::Shutdown()
 	{
 		m_logicalDevice.WaitIdle();
+
+
 
 		m_vertexBuffer.Shutdown(m_logicalDevice);
 		m_indexBuffer.Shutdown(m_logicalDevice);
