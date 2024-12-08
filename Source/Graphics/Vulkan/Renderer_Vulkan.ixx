@@ -239,6 +239,7 @@ export namespace jpt
 		// Command pool and buffers
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
 		resources.CreateCommandPool(queueFamilyIndex);
+		resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
 		resources.CreateCommandBuffers();
 
 		// Synchronization objects
