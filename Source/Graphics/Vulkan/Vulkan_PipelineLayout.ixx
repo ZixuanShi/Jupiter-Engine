@@ -9,6 +9,7 @@ module;
 export module jpt.Vulkan.PipelineLayout;
 
 import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.DescriptorSetLayout;
 
 import jpt.TypeDefs;
 
@@ -20,17 +21,19 @@ export namespace jpt::Vulkan
 		VkPipelineLayout m_pipelineLayout;
 
 	public:
-		bool Init(const LogicalDevice& logicalDevice);
+		bool Init(const LogicalDevice& logicalDevice, DescriptorSetLayout& descriptorSetLayout);
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkPipelineLayout Get() const { return m_pipelineLayout; }
 	};
 
-	bool PipelineLayout::Init(const LogicalDevice& logicalDevice)
+	bool PipelineLayout::Init(const LogicalDevice& logicalDevice, DescriptorSetLayout& descriptorSetLayout)
 	{
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = 1;
+		pipelineLayoutInfo.pSetLayouts = descriptorSetLayout.GetPtr();
 
 		if (const VkResult result = vkCreatePipelineLayout(logicalDevice.Get(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
 		{
