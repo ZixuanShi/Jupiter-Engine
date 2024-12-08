@@ -141,9 +141,8 @@ export namespace jpt
 		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 		success &= m_indexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 
+		// Uniform and Command buffers
 		success &= resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
-
-		// Command buffers
 		success &= resources.CreateCommandBuffers();
 
 		// Synchronization objects
@@ -239,6 +238,7 @@ export namespace jpt
 		// Command pool and buffers
 		const uint32 queueFamilyIndex = m_physicalDevice.GetQueueFamilyIndices().graphicsFamily.Value();
 		resources.CreateCommandPool(queueFamilyIndex);
+		resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
 		resources.CreateCommandBuffers();
 
 		// Synchronization objects
