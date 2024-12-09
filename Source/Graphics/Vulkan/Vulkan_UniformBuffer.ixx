@@ -47,7 +47,6 @@ export namespace jpt::Vulkan
 
 	void UniformBuffer::Shutdown(const LogicalDevice& logicalDevice)
 	{
-		vkUnmapMemory(logicalDevice.Get(), m_uniformBufferMemory);
 		vkDestroyBuffer(logicalDevice.Get(), m_uniformBuffer, nullptr);
 		vkFreeMemory(logicalDevice.Get(), m_uniformBufferMemory, nullptr);
 	}

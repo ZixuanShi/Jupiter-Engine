@@ -22,6 +22,7 @@ import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.DescriptorSetLayout;
+import jpt.Vulkan.DescriptorPool;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
@@ -32,6 +33,8 @@ import jpt.Vulkan.SynchronizationObjects;
 import jpt.Vulkan.Helpers;
 import jpt.Vulkan.QueueFamilyIndices;
 import jpt.Vulkan.SwapChainSupportDetails;
+
+import jpt.Vulkan.UniformBufferObject;
 
 import jpt.StaticArray;
 import jpt.DynamicArray;
@@ -63,6 +66,8 @@ export namespace jpt
 		RenderPass m_renderPass;
 
 		DescriptorSetLayout m_descriptorSetLayout;
+		DescriptorPool m_descriptorPool;
+		StaticArray<VkDescriptorSet, kMaxFramesInFlight> m_descriptorSets;
 
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
@@ -142,6 +147,44 @@ export namespace jpt
 		success &= m_indexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 
 		success &= resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
+		success &= m_descriptorPool.Init(m_logicalDevice);
+
+		// Descriptor Sets
+		StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> descriptorSetLayouts;
+		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
+		{
+			descriptorSetLayouts[i] = m_descriptorSetLayout.Get();
+		}
+		VkDescriptorSetAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorPool = m_descriptorPool.Get();
+		allocInfo.descriptorSetCount = kMaxFramesInFlight;
+		allocInfo.pSetLayouts = descriptorSetLayouts.Buffer();
+
+		if (const VkResult result = vkAllocateDescriptorSets(m_logicalDevice.Get(), &allocInfo, m_descriptorSets.Buffer()); result != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to allocate descriptor sets! VkResult: %i", static_cast<uint32>(result));
+			success = false;
+		}
+
+		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
+		{
+			VkDescriptorBufferInfo bufferInfo{};
+			bufferInfo.buffer = resources.GetUniformBuffers()[i].Get();
+			bufferInfo.offset = 0;
+			bufferInfo.range = sizeof(UniformBufferObject);
+
+			VkWriteDescriptorSet descriptorWrite{};
+			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrite.dstSet = m_descriptorSets[i];
+			descriptorWrite.dstBinding = 0;
+			descriptorWrite.dstArrayElement = 0;
+			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrite.descriptorCount = 1;
+			descriptorWrite.pBufferInfo = &bufferInfo;
+
+			vkUpdateDescriptorSets(m_logicalDevice.Get(), 1, &descriptorWrite, 0, nullptr);
+		}
 
 		// Command buffers
 		success &= resources.CreateCommandBuffers();
@@ -174,6 +217,7 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
+		m_descriptorPool.Shutdown(m_logicalDevice);
 		m_descriptorSetLayout.Shutdown(m_logicalDevice);
 
 		m_vertexBuffer.Shutdown(m_logicalDevice);
@@ -215,7 +259,7 @@ export namespace jpt
 		{
 			if (resources.CanDraw())
 			{
-				resources.DrawFrame(m_renderPass, m_graphicsPipeline, m_vertexBuffer, m_indexBuffer);
+				resources.DrawFrame(m_renderPass, m_graphicsPipeline, m_vertexBuffer, m_indexBuffer, m_pipelineLayout, m_descriptorSets);
 			}
 		}
 	}

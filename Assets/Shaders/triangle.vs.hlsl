@@ -1,19 +1,31 @@
-struct VSInput
+cbuffer UniformBufferObject : register(b0)
 {
-    float2 position : POSITION0;
-    float3 color : COLOR0;
+    matrix model;
+    matrix view;
+    matrix proj;
 };
 
-struct VSOutput 
+struct VertexInput
+{
+    float2 position : POSITION;
+    float3 color : COLOR;
+};
+
+struct VertexOutput
 {
     float4 position : SV_POSITION;
-    float3 color : COLOR0;
+    float3 color : COLOR;
 };
 
-VSOutput main(VSInput input) 
+VertexOutput main(VertexInput input)
 {
-    VSOutput output;
-    output.position = float4(input.position, 0.0, 1.0);
+    VertexOutput output;
+    
+    float4 positionWorld = mul(float4(input.position, 0.0f, 1.0f), model);
+    float4 positionView = mul(positionWorld, view);
+    output.position = mul(positionView, proj);
+    
     output.color = input.color;
+    
     return output;
 }

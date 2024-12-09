@@ -79,7 +79,8 @@ export namespace jpt::Vulkan
 
 		void Shutdown(VkInstance instance);
 
-		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer);
+		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer,
+			const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets);
 
 		bool CanDraw() const;
 
@@ -98,6 +99,8 @@ export namespace jpt::Vulkan
 		VkFormat GetImageFormat() const { return m_swapChain.GetImageFormat(); }
 
 		const CommandPool& GetCommandPool() const { return m_commandPool; }
+
+		const StaticArray<UniformBuffer, kMaxFramesInFlight>& GetUniformBuffers() const { return m_uniformBuffers; }
 
 	private:
 		void UpdateUniformBuffer(size_t currentFrame);
@@ -205,7 +208,8 @@ export namespace jpt::Vulkan
 		m_pLogicalDevice = nullptr;
 	}
 
-	void WindowResources::DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer)
+	void WindowResources::DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer,
+		const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets)
 	{
 		SynchronizationObjects& currentSyncObjects = m_syncObjects[m_currentFrame];
 
@@ -225,7 +229,7 @@ export namespace jpt::Vulkan
 		vkResetFences(m_pLogicalDevice->Get(), 1, currentSyncObjects.GetInFlightFencePtr());
 
 		m_commandBuffers.Reset(m_currentFrame);
-		m_commandBuffers.Record(m_currentFrame, imageIndex, renderPass, m_swapChain, graphicsPipeline, vertexBuffer, indexBuffer);
+		m_commandBuffers.Record(m_currentFrame, imageIndex, renderPass, m_swapChain, graphicsPipeline, vertexBuffer, indexBuffer, pipelineLayout, descriptorSets);
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

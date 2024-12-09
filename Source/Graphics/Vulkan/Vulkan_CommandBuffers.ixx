@@ -15,6 +15,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.SwapChain;
+import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.Data;
 import jpt.Vulkan.VertexBuffer;
@@ -36,7 +37,9 @@ export namespace jpt::Vulkan
 
 	public:
 		void Reset(size_t index, VkCommandBufferResetFlags flags = 0) const;
-		void Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const;
+		void Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, 
+			const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, 
+			const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets) const;
 
 	public:
 		const VkCommandBuffer* GetBufferPtr(size_t index) const { return &m_commandBuffers[index]; }
@@ -77,9 +80,11 @@ export namespace jpt::Vulkan
 		vkResetCommandBuffer(m_commandBuffers[index], flags);
 	}
 
-	void CommandBuffers::Record(size_t index, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer) const
+	void CommandBuffers::Record(size_t currentFrame, uint32 imageIndex, const RenderPass& renderPass, const SwapChain& swapChain, const Pipeline& graphicsPipeline, 
+		const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, 
+		const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets) const
 	{
-		VkCommandBuffer commandBuffer = m_commandBuffers[index];
+		VkCommandBuffer commandBuffer = m_commandBuffers[currentFrame];
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -127,6 +132,7 @@ export namespace jpt::Vulkan
 			vkCmdBindIndexBuffer(commandBuffer, indexBuffer.Get(), 0, VK_INDEX_TYPE_UINT32);
 
 			// Draw
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.Get(), 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
