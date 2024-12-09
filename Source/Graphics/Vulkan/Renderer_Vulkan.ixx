@@ -146,11 +146,10 @@ export namespace jpt
 		// Vertex Index Buffers
 		success &= m_vertexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
 		success &= m_indexBuffer.Init(m_logicalDevice, m_physicalDevice, resources.GetCommandPool());
-
 		success &= resources.CreateUniformBuffers(m_logicalDevice, m_physicalDevice);
-		success &= m_descriptorPool.Init(m_logicalDevice);
 
 		// Descriptor Sets
+		success &= m_descriptorPool.Init(m_logicalDevice);
 		success &= m_descriptorSets.Init(m_logicalDevice, m_descriptorSetLayout, m_descriptorPool, resources.GetUniformBuffers());
 
 		// Command buffers
