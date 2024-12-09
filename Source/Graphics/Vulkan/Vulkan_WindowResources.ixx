@@ -11,8 +11,6 @@ module;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <chrono>
-
 export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
@@ -42,6 +40,8 @@ import jpt.StaticArray;
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
 import jpt.StopWatch;
+import jpt.Math;
+import jpt.Matrix44;
 
 export namespace jpt::Vulkan
 {
@@ -289,10 +289,10 @@ export namespace jpt::Vulkan
 
 	void WindowResources::UpdateUniformBuffer(size_t currentFrame)
 	{
-		static auto startTime = std::chrono::high_resolution_clock::now();
+		static StopWatch::Point startTime = StopWatch::Now();
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+		const StopWatch::Point currentTime = StopWatch::Now();
+		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
 
 		UniformBufferObject ubo{};
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
