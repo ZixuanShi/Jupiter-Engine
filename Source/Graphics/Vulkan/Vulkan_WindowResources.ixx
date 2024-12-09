@@ -24,6 +24,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.PipelineLayout;
+import jpt.Vulkan.DescriptorSets;
 
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.SwapChain;
@@ -80,7 +81,7 @@ export namespace jpt::Vulkan
 		void Shutdown(VkInstance instance);
 
 		void DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer,
-			const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets);
+			const PipelineLayout& pipelineLayout, DescriptorSets& descriptorSets);
 
 		bool CanDraw() const;
 
@@ -209,7 +210,7 @@ export namespace jpt::Vulkan
 	}
 
 	void WindowResources::DrawFrame(RenderPass& renderPass, Pipeline& graphicsPipeline, const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer,
-		const PipelineLayout& pipelineLayout, const StaticArray<VkDescriptorSet, kMaxFramesInFlight>& descriptorSets)
+		const PipelineLayout& pipelineLayout, DescriptorSets& descriptorSets)
 	{
 		SynchronizationObjects& currentSyncObjects = m_syncObjects[m_currentFrame];
 

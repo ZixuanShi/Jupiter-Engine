@@ -23,6 +23,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
+import jpt.Vulkan.DescriptorSets;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.Pipeline;
 import jpt.Vulkan.CommandPool;
@@ -67,7 +68,7 @@ export namespace jpt
 
 		DescriptorSetLayout m_descriptorSetLayout;
 		DescriptorPool m_descriptorPool;
-		StaticArray<VkDescriptorSet, kMaxFramesInFlight> m_descriptorSets;
+		DescriptorSets m_descriptorSets;
 
 		PipelineLayout m_pipelineLayout;
 		Pipeline m_graphicsPipeline;
@@ -150,41 +151,7 @@ export namespace jpt
 		success &= m_descriptorPool.Init(m_logicalDevice);
 
 		// Descriptor Sets
-		StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> descriptorSetLayouts;
-		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
-		{
-			descriptorSetLayouts[i] = m_descriptorSetLayout.Get();
-		}
-		VkDescriptorSetAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = m_descriptorPool.Get();
-		allocInfo.descriptorSetCount = kMaxFramesInFlight;
-		allocInfo.pSetLayouts = descriptorSetLayouts.Buffer();
-
-		if (const VkResult result = vkAllocateDescriptorSets(m_logicalDevice.Get(), &allocInfo, m_descriptorSets.Buffer()); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to allocate descriptor sets! VkResult: %i", static_cast<uint32>(result));
-			success = false;
-		}
-
-		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
-		{
-			VkDescriptorBufferInfo bufferInfo{};
-			bufferInfo.buffer = resources.GetUniformBuffers()[i].Get();
-			bufferInfo.offset = 0;
-			bufferInfo.range = sizeof(UniformBufferObject);
-
-			VkWriteDescriptorSet descriptorWrite{};
-			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = m_descriptorSets[i];
-			descriptorWrite.dstBinding = 0;
-			descriptorWrite.dstArrayElement = 0;
-			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			descriptorWrite.descriptorCount = 1;
-			descriptorWrite.pBufferInfo = &bufferInfo;
-
-			vkUpdateDescriptorSets(m_logicalDevice.Get(), 1, &descriptorWrite, 0, nullptr);
-		}
+		success &= m_descriptorSets.Init(m_logicalDevice, m_descriptorSetLayout, m_descriptorPool, resources.GetUniformBuffers());
 
 		// Command buffers
 		success &= resources.CreateCommandBuffers();
