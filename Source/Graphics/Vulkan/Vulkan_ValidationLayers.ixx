@@ -1,21 +1,22 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
+module; 
+
+#include "Applications/App/Application.h"
 
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.ValidationLayers;
 
-import jpt.Constants;
+import jpt.String.Helpers;
+import jpt.DynamicArray;
 import jpt.TypeDefs;
 
-import jpt.DynamicArray;
-
-import jpt.String.Helpers;
+import jpt.Framework;
 
 export namespace jpt::Vulkan
 {
-	const DynamicArray<const char*> validationLayers = 
+	const DynamicArray<const char*> g_validationLayers = 
 	{
 		"VK_LAYER_KHRONOS_validation"
 	};
@@ -28,10 +29,9 @@ export namespace jpt::Vulkan
 		DynamicArray<VkLayerProperties> availableLayers(layerCount);
 		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.Buffer());
 
-		for (const char* layerName : validationLayers)
+		for (const char* layerName : g_validationLayers)
 		{
 			bool layerFound = false;
-
 			for (const VkLayerProperties& layerProperties : availableLayers)
 			{
 				if (AreStringsSame(layerName, layerProperties.layerName))

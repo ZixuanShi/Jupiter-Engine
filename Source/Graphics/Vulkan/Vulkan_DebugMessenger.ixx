@@ -2,102 +2,77 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Applications/App/Application.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.DebugMessenger;
 
-import jpt.TypeDefs;
-
 export namespace jpt::Vulkan
 {
-	/** Vulkan Debug messenger */
 	class DebugMessenger
 	{
 	private:
-		VkDebugUtilsMessengerEXT m_debugMessenger;
+		VkDebugUtilsMessengerEXT m_debugMessenger = VK_NULL_HANDLE;
 
 	public:
 		bool Init(VkInstance instance);
 		void Shutdown(VkInstance instance);
 
-		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
-                                                            VkDebugUtilsMessageTypeFlagsEXT messageType, 
-                                                            const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
-                                                            void* pUserData);
+		static VkDebugUtilsMessengerCreateInfoEXT MakeCreateInfo();
 
-		VkDebugUtilsMessengerCreateInfoEXT GetCreateInfo() const;
-
-	private:
-		VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
-			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
-			const VkAllocationCallbacks* pAllocator,
-			VkDebugUtilsMessengerEXT* pCallback);
-
-		void DestroyDebugMessenger(VkInstance instance,
-			VkDebugUtilsMessengerEXT callback,
-			const VkAllocationCallbacks* pAllocator);
+		static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+			VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+			VkDebugUtilsMessageTypeFlagsEXT messageType,
+			const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+			void* pUserData);
 	};
 
 	bool DebugMessenger::Init(VkInstance instance)
 	{
-		VkDebugUtilsMessengerCreateInfoEXT createInfo = GetCreateInfo();
-
-		if (const VkResult result = CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &m_debugMessenger); result != VK_SUCCESS)
+		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+		if (func != nullptr)
 		{
-			JPT_ERROR("Failed to set up debug messenger! VkResult: %i", static_cast<uint32>(result));
+			VkDebugUtilsMessengerCreateInfoEXT createInfo = MakeCreateInfo();
+			return func(instance, &createInfo, nullptr, &m_debugMessenger) == VkResult::VK_SUCCESS;
+		}
+		else
+		{
+			JPT_ERROR("Failed to load vkCreateDebugUtilsMessengerEXT function!");
 			return false;
 		}
-
-		return true;
 	}
 
 	void DebugMessenger::Shutdown(VkInstance instance)
 	{
-		DestroyDebugMessenger(instance, m_debugMessenger, nullptr);
+		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+		if (func != nullptr)
+		{
+			func(instance, m_debugMessenger, nullptr);
+		}
 	}
 
-	VkDebugUtilsMessengerCreateInfoEXT DebugMessenger::GetCreateInfo() const
+	VkDebugUtilsMessengerCreateInfoEXT DebugMessenger::MakeCreateInfo()
 	{
 		VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
+
 		createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 
-		createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+		createInfo.messageSeverity =
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 
-		createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+		createInfo.messageType =
+			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
 			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 
 		createInfo.pfnUserCallback = DebugCallback;
-		createInfo.pUserData = nullptr; // Optional
+		createInfo.pUserData = GetApplication();
 
 		return createInfo;
-	}
-
-	VkResult DebugMessenger::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pCallback)
-	{
-		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-		if (func != nullptr)
-		{
-			return func(instance, pCreateInfo, pAllocator, pCallback);
-		}
-		else
-		{
-			return VK_ERROR_EXTENSION_NOT_PRESENT;
-		}
-	}
-
-	void DebugMessenger::DestroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT callback, const VkAllocationCallbacks* pAllocator)
-	{
-		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
-		if (func != nullptr)
-		{
-			func(instance, callback, pAllocator);
-		}
 	}
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL DebugMessenger::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -107,18 +82,18 @@ export namespace jpt::Vulkan
 	{
 		switch (messageSeverity)
 		{
-		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: 
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
 			[[fallthrough]];
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-			JPT_INFO("Validation layer: %s", pCallbackData->pMessage);
+			JPT_INFO(pCallbackData->pMessage);
 			break;
 
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-			JPT_WARN("Validation layer: %s", pCallbackData->pMessage);
+			JPT_WARN(pCallbackData->pMessage);
 			break;
 
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-			JPT_ERROR("Validation layer: %s", pCallbackData->pMessage);
+			JPT_ERROR(pCallbackData->pMessage);
 			break;
 
 		default:
