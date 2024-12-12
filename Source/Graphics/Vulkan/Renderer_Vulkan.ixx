@@ -19,6 +19,7 @@ import jpt.Vulkan.Extensions;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan.LogicalDevice;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
@@ -42,6 +43,7 @@ export namespace jpt
 		DebugMessenger m_debugMessenger;
 #endif
 		PhysicalDevice m_physicalDevice;
+		LogicalDevice m_logicalDevice;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -71,6 +73,7 @@ export namespace jpt
 		success &= m_debugMessenger.Init(m_instance);
 #endif
 		success &= m_physicalDevice.Init(m_instance);
+		success &= m_logicalDevice.Init(m_physicalDevice);
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -86,6 +89,8 @@ export namespace jpt
 
 	void Renderer_Vulkan::Shutdown()
 	{
+		m_logicalDevice.Shutdown();
+
 #if !IS_RELEASE
 		m_debugMessenger.Shutdown(m_instance);
 #endif
