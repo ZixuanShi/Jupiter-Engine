@@ -85,7 +85,6 @@ export namespace jpt::Vulkan
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
 			[[fallthrough]];
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-			JPT_INFO(pCallbackData->pMessage);
 			break;
 
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
