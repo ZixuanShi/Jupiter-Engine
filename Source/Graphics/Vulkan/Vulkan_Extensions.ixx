@@ -27,4 +27,9 @@ export namespace jpt::Vulkan
 
 		return result;
 	}
+
+	const DynamicArray<const char*> g_deviceExtensions = 
+	{
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
 }

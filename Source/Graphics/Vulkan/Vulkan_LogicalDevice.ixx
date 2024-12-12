@@ -10,6 +10,7 @@ export module jpt.Vulkan.LogicalDevice;
 
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan.Extensions;
 
 export namespace jpt::Vulkan
 {
@@ -45,7 +46,8 @@ export namespace jpt::Vulkan
 		createInfo.queueCreateInfoCount = 1;
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
-		createInfo.enabledExtensionCount = 0;
+		createInfo.enabledExtensionCount = static_cast<uint32>(g_deviceExtensions.Count());
+		createInfo.ppEnabledExtensionNames = g_deviceExtensions.ConstBuffer();
 
 #if !IS_RELEASE
 		createInfo.enabledLayerCount = static_cast<uint32>(g_validationLayers.Count());

@@ -8,8 +8,12 @@ module;
 
 export module jpt.Vulkan.PhysicalDevice;
 
+import jpt.Vulkan.Extensions;
+
 import jpt.DynamicArray;
+import jpt.HashSet;
 import jpt.TypeDefs;
+import jpt.String;
 
 export namespace jpt::Vulkan
 {
@@ -26,8 +30,13 @@ export namespace jpt::Vulkan
 
 		uint32 FindPresentFamilyIndex(VkSurfaceKHR surface) const;
 
+	public:
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
+
+	private:
+		bool IsDeviceSuitable(VkPhysicalDevice physicalDevice) const;
+		bool AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const;
 	};
 
 	bool PhysicalDevice::Init(VkInstance instance)
@@ -46,13 +55,9 @@ export namespace jpt::Vulkan
 
 		for (const VkPhysicalDevice& device : devices)
 		{
-			VkPhysicalDeviceProperties deviceProperties;
-			vkGetPhysicalDeviceProperties(device, &deviceProperties);
-
-			if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+			if (IsDeviceSuitable(device))
 			{
 				m_physicalDevice = device;
-				JPT_INFO("Setting Vulkan's Physical device to \"%s\"", deviceProperties.deviceName);
 				break;
 			}
 		}
@@ -107,5 +112,52 @@ export namespace jpt::Vulkan
 		}
 
 		return UINT32_MAX;
+	}
+
+	bool PhysicalDevice::IsDeviceSuitable(VkPhysicalDevice physicalDevice) const
+	{
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+
+		const bool isDiscreteGPU = (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU);
+		const bool areDeviceExtensionsSupported = AreDeviceExtensionsSupported(physicalDevice);
+
+		const bool isSuitable = isDiscreteGPU && areDeviceExtensionsSupported;
+		if (isSuitable)
+		{
+			JPT_INFO("Setting Vulkan's Physical device to \"%s\"", deviceProperties.deviceName);
+		}
+
+		return isSuitable;
+	}
+
+	bool PhysicalDevice::AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const
+	{
+		uint32_t extensionCount;
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+		DynamicArray<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.Buffer());
+
+		HashSet<String> requiredExtensions;
+		for (const char* extension : g_deviceExtensions)
+		{
+			requiredExtensions.Add(extension);
+		}
+
+		for (const auto& extension : availableExtensions) 
+		{
+			requiredExtensions.Erase(extension.extensionName);
+		}
+
+		if (!requiredExtensions.IsEmpty())
+		{
+			for (const String& extension : requiredExtensions)
+			{
+				JPT_ERROR("Missing required extension: %s", extension.ConstBuffer());
+			}
+		}
+
+		return requiredExtensions.IsEmpty();
 	}
 }

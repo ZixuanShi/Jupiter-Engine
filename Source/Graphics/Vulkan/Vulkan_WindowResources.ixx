@@ -29,14 +29,17 @@ export namespace jpt::Vulkan
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 
 	public:
-		bool Init(Window* pWindow, VkInstance instance, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice);
+		bool Init(Window* pWindow, VkInstance instance, 
+			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice);
+
 		void Shutdown(VkInstance instance);
 
 	public:
 		Window* GetOwner() const { return m_pOwner; }
 	};
 
-	bool WindowResources::Init(Window* pWindow, VkInstance instance, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice)
+	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
+		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice)
 	{
 		// Surface
 		m_pOwner = pWindow;

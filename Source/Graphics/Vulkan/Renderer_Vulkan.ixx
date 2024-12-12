@@ -118,7 +118,7 @@ export namespace jpt
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
 
-	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& )
+	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize&  )
 	{
 	}
 
