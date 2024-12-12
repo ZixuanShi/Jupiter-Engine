@@ -89,6 +89,11 @@ export namespace jpt
 
 	void Renderer_Vulkan::Shutdown()
 	{
+		for (WindowResources& resources : m_windowResources)
+		{
+			resources.Shutdown(m_instance);
+		}
+
 		m_logicalDevice.Shutdown();
 
 #if !IS_RELEASE
@@ -108,7 +113,7 @@ export namespace jpt
 	void Renderer_Vulkan::RegisterWindow(Window* pWindow)
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
-		resources.SetOwner(pWindow);
+		resources.Init(pWindow, m_instance, m_physicalDevice, m_logicalDevice);
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}

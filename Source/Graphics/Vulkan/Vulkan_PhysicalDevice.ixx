@@ -24,6 +24,8 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(VkInstance instance);
 
+		uint32 FindPresentFamilyIndex(VkSurfaceKHR surface) const;
+
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
 	};
@@ -84,5 +86,26 @@ export namespace jpt::Vulkan
 		}
 
 		return true;
+	}
+
+	uint32 PhysicalDevice::FindPresentFamilyIndex(VkSurfaceKHR surface) const
+	{
+		uint32 queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueFamilyCount, nullptr);
+
+		DynamicArray<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueFamilyCount, queueFamilies.Buffer());
+
+		for (uint32 i = 0; i < queueFamilyCount; ++i)
+		{
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(m_physicalDevice, i, surface, &presentSupport);
+			if (presentSupport)
+			{
+				return i;
+			}
+		}
+
+		return UINT32_MAX;
 	}
 }
