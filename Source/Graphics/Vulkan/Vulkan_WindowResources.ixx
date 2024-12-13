@@ -16,6 +16,9 @@ import jpt.Graphics.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 
+import jpt.Vulkan.SwapChain;
+import jpt.Vulkan.SwapChain.SupportDetails;
+
 export namespace jpt::Vulkan
 {
 	/** Per-Window specific Vulkan resource. Each Window should have its own data */
@@ -27,12 +30,13 @@ export namespace jpt::Vulkan
 	private:
 		VkSurfaceKHR m_surface = VK_NULL_HANDLE;
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
+		SwapChain m_swapChain;
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
 			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice);
 
-		void Shutdown(VkInstance instance);
+		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
 	public:
 		Window* GetOwner() const { return m_pOwner; }
@@ -46,15 +50,18 @@ export namespace jpt::Vulkan
 		pWindow->CreateSurface({ instance, &m_surface });
 
 		// Present queue
-		uint32 presentFamilyIndex = physicalDevice.FindPresentFamilyIndex(m_surface);
-		JPT_ASSERT(presentFamilyIndex != UINT32_MAX);
+		const uint32 presentFamilyIndex = physicalDevice.FindPresentFamilyIndex(m_surface);
 		vkGetDeviceQueue(logicalDevice.GetHandle(), presentFamilyIndex, 0, &m_presentQueue);
+
+		// SwapChain
+		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
 
 		return true;
 	}
 
-	void WindowResources::Shutdown(VkInstance instance)
+	void WindowResources::Shutdown(VkInstance instance, const LogicalDevice& logicalDevice)
 	{
+		m_swapChain.Shutdown(logicalDevice);
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);
 	}
 }

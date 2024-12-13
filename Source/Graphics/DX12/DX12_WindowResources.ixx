@@ -87,7 +87,7 @@ export namespace jpt::DX12
 		JPT_ASSERT(win32Window, "Window is not of type Window_Win32");
 
 		const HWND hwnd = win32Window->GetHWND();
-		JPT_ASSERT(m_swapChain.Init(m_pOwner->GetSize(), hwnd, factory, commandQueue));
+		JPT_ASSERT(m_swapChain.Init(m_pOwner->GetFrameSize(), hwnd, factory, commandQueue));
 
 		m_currentFrame = m_swapChain.GetCurrentBackBufferIndex();
 
@@ -126,7 +126,7 @@ export namespace jpt::DX12
 	{
 		m_pOwner = pOwner;
 
-		const Vec2i size = pOwner->GetSize();
+		const Vec2i size = pOwner->GetFrameSize();
 
 		m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(size.x), static_cast<float>(size.y));
 		m_scissorRect = CD3DX12_RECT(0, 0, size.x, size.y);

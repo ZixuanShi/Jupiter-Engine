@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
@@ -9,6 +10,7 @@ module;
 export module jpt.Vulkan.PhysicalDevice;
 
 import jpt.Vulkan.Extensions;
+import jpt.Vulkan.SwapChain.SupportDetails;
 
 import jpt.DynamicArray;
 import jpt.HashSet;
@@ -29,6 +31,7 @@ export namespace jpt::Vulkan
 		bool Init(VkInstance instance);
 
 		uint32 FindPresentFamilyIndex(VkSurfaceKHR surface) const;
+		SwapChainSupportDetails QuerySwapChainSupport(VkSurfaceKHR surface) const;
 
 	public:
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
@@ -111,7 +114,37 @@ export namespace jpt::Vulkan
 			}
 		}
 
+		JPT_ASSERT(false, "Failed to find a queue family that supports presentation");
 		return UINT32_MAX;
+	}
+
+	SwapChainSupportDetails PhysicalDevice::QuerySwapChainSupport(VkSurfaceKHR surface) const
+	{
+		SwapChainSupportDetails result;
+
+		// Capabilities
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(m_physicalDevice, surface, &result.capabilities);
+
+		// Format
+		uint32 formatCount = 0;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(m_physicalDevice, surface, &formatCount, nullptr);
+		if (formatCount != 0)
+		{
+			result.formats.Resize(formatCount);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(m_physicalDevice, surface, &formatCount, result.formats.Buffer());
+		}
+
+		// Present mode
+		uint32 presentModeCount = 0;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, surface, &presentModeCount, nullptr);
+		if (presentModeCount != 0)
+		{
+			result.presentModes.Resize(presentModeCount);
+			vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, surface, &presentModeCount, result.presentModes.Buffer());
+		}
+
+		JPT_ASSERT(result.IsValid(), "Swap chain support details are invalid");
+		return result;
 	}
 
 	bool PhysicalDevice::IsDeviceSuitable(VkPhysicalDevice physicalDevice) const

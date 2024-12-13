@@ -65,7 +65,7 @@ namespace jpt
 
 	public:
 		virtual bool ShouldClose() const override;
-		virtual Vec2i GetSize() const override;
+		virtual Vec2i GetFrameSize() const override;
 
 		GLFWwindow* GetGLFWWindow() const { return m_pGLFWWindow; }
 	};
@@ -133,7 +133,7 @@ namespace jpt
 		return glfwWindowShouldClose(m_pGLFWWindow);
 	}
 
-	Vec2i Window_GLFW::GetSize() const
+	Vec2i Window_GLFW::GetFrameSize() const
 	{
 		int32 width = 0;
 		int32 height = 0;

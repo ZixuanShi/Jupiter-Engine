@@ -38,10 +38,10 @@ export namespace jpt
 		virtual bool ShouldClose() const { return false; }
 
 		/** @return Vector2, xy are window's screen lengths in pixels */
-		virtual Vec2i GetSize() const { JPT_ASSERT(false); return Vec2i(0, 0); }
+		virtual Vec2i GetFrameSize() const { JPT_ASSERT(false); return Vec2i(0, 0); }
 		
 		float GetAspectRatio() const;
-		bool IsMinimized() const { return GetSize().x == 0 || GetSize().y == 0; }
+		bool IsMinimized() const { return GetFrameSize().x == 0 || GetFrameSize().y == 0; }
 	};
 
 	void Window::Update(TimePrecision deltaSeconds)
@@ -62,7 +62,7 @@ export namespace jpt
 
 	float Window::GetAspectRatio() const
 	{
-		const Vec2i size = GetSize(); 
+		const Vec2i size = GetFrameSize(); 
 		return static_cast<float>(size.x) / static_cast<float>(size.y);
 	}
 }

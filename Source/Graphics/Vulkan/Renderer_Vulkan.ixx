@@ -91,7 +91,7 @@ export namespace jpt
 	{
 		for (WindowResources& resources : m_windowResources)
 		{
-			resources.Shutdown(m_instance);
+			resources.Shutdown(m_instance, m_logicalDevice);
 		}
 
 		m_logicalDevice.Shutdown();

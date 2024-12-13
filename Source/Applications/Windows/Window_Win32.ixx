@@ -36,7 +36,7 @@ namespace jpt
 		virtual void Shutdown() override;
 
 	public:
-		virtual Vec2i GetSize() const override;
+		virtual Vec2i GetFrameSize() const override;
 		HWND GetHWND() const { return m_hwnd; }
 	};
 
@@ -85,7 +85,7 @@ namespace jpt
 		Super::Shutdown();
 	}
 
-	Vec2i Window_Win32::GetSize() const
+	Vec2i Window_Win32::GetFrameSize() const
 	{
 		RECT rect;
 		JPT_ASSERT(GetWindowRect(m_hwnd, &rect));
