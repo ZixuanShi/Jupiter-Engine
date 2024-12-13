@@ -48,6 +48,6 @@ namespace jpt
 		} while(false)
 }
 #else
-	#define JPT_ASSERT(expression, ...) 
+	#define JPT_ASSERT(expression, ...) (expression)
 
 #endif // ASSERT_ENABLED
