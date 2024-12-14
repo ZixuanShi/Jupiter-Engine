@@ -48,9 +48,11 @@ export namespace jpt
 #endif
 		PhysicalDevice m_physicalDevice;
 		LogicalDevice m_logicalDevice;
+
 		RenderPass m_renderPass;
 		PipelineLayout m_pipelineLayout;
 		GraphicsPipeline m_graphicsPipeline;
+
 
 		DynamicArray<WindowResources> m_windowResources;
 

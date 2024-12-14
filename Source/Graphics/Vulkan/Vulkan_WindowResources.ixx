@@ -18,6 +18,7 @@ import jpt.Vulkan.LogicalDevice;
 
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
+import jpt.Vulkan.CommandPool;
 
 export namespace jpt::Vulkan
 {
@@ -31,6 +32,7 @@ export namespace jpt::Vulkan
 		VkSurfaceKHR m_surface = VK_NULL_HANDLE;
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 		SwapChain m_swapChain;
+		CommandPool m_commandPool;
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
@@ -58,12 +60,19 @@ export namespace jpt::Vulkan
 		m_swapChain.CreateImageViews(logicalDevice);
 		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
 
+		// Command pool
+		m_commandPool.Init(logicalDevice, physicalDevice.GetGraphicsFamilyIndex());
+
 		return true;
 	}
 
 	void WindowResources::Shutdown(VkInstance instance, const LogicalDevice& logicalDevice)
 	{
+		m_commandPool.Shutdown(logicalDevice);
+
 		m_swapChain.Shutdown(logicalDevice);
+
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);
+		m_surface = VK_NULL_HANDLE;
 	}
 }
