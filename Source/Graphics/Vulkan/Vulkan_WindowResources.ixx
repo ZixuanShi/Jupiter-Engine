@@ -71,7 +71,7 @@ export namespace jpt::Vulkan
 		m_commandPool.Shutdown(logicalDevice);
 
 		m_swapChain.Shutdown(logicalDevice);
-
+		
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);
 		m_surface = VK_NULL_HANDLE;
 	}

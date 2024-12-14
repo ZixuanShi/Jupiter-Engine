@@ -30,6 +30,9 @@ export namespace jpt::Vulkan
 		bool Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass);
 		void Shutdown(const LogicalDevice& logicalDevice);
 
+	public:
+		VkPipeline GetHandle() const { return m_graphicsPipeline; }
+
 	private:
 		VkPipelineVertexInputStateCreateInfo GetVertexInput() const;
 		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;

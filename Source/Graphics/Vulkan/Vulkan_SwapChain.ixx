@@ -42,6 +42,10 @@ export namespace jpt::Vulkan
 
 	public:
 		VkSwapchainKHR GetHandle() const { return m_swapChain; }
+		const DynamicArray<VkImageView>& GetImageViews() const { return m_imageViews; }
+		const DynamicArray<VkFramebuffer>& GetFramebuffers() const { return m_framebuffers; }
+		VkFormat GetImageFormat() const { return m_imageFormat; }
+		const VkExtent2D& GetExtent() const { return m_extent; }
 	};
 
 	void SwapChain::Shutdown(const LogicalDevice& logicalDevice)
