@@ -23,6 +23,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(const PhysicalDevice& physicalDevice);
 		void Shutdown();
+		void WaitIdle() const;
 
 		VkDevice GetHandle() const { return m_device; }
 		VkQueue GetGraphicsQueue() const { return m_graphicsQueue; }
@@ -69,5 +70,10 @@ export namespace jpt::Vulkan
 	void LogicalDevice::Shutdown()
 	{
 		vkDestroyDevice(m_device, nullptr);
+	}
+
+	void jpt::Vulkan::LogicalDevice::WaitIdle() const
+	{
+		vkDeviceWaitIdle(m_device);
 	}
 }

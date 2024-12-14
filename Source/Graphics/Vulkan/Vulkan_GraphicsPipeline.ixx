@@ -16,6 +16,7 @@ import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.RenderPass;
 
 import jpt.DynamicArray;
+import jpt.StaticArray;
 import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
@@ -36,11 +37,11 @@ export namespace jpt::Vulkan
 	private:
 		VkPipelineVertexInputStateCreateInfo GetVertexInput() const;
 		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;
-		VkPipelineDynamicStateCreateInfo GetDynamicState() const;
+		VkPipelineDynamicStateCreateInfo GetDynamicState(const StaticArray<VkDynamicState, 2>& dynamicStates) const;
 		VkPipelineViewportStateCreateInfo GetViewportState() const;
 		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
 		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
-		VkPipelineColorBlendStateCreateInfo GetColorBlending() const;
+		VkPipelineColorBlendStateCreateInfo GetColorBlending(VkPipelineColorBlendAttachmentState attachment) const;
 	};
 
 	bool GraphicsPipeline::Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
@@ -56,12 +57,22 @@ export namespace jpt::Vulkan
 
 		// Fixed-function stages
 		auto vertexInputInfo = GetVertexInput();
-		auto inputAssembly   = GetInputAssembly();
-		auto dynamicState = GetDynamicState();
+		auto inputAssembly = GetInputAssembly();
 		auto viewportState = GetViewportState();
 		auto rasterizer = GetRasterization();
 		auto multisampling = GetMultisampling();
-		auto colorBlending = GetColorBlending();
+
+		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+		colorBlendAttachment.blendEnable = VK_FALSE;
+		auto colorBlending = GetColorBlending(colorBlendAttachment);
+
+		StaticArray<VkDynamicState, 2> dynamicStates =
+		{
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR
+		};
+		auto dynamicState = GetDynamicState(dynamicStates);
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -122,20 +133,14 @@ export namespace jpt::Vulkan
 		return inputAssembly;
 	}
 
-	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState() const
+	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState(const StaticArray<VkDynamicState, 2>& dynamicStates) const
 	{
 		// Allows certain states of the pipeline to be changed without recreating the pipeline
-
-		static const VkDynamicState dynamicStates[] =
-		{
-			VK_DYNAMIC_STATE_VIEWPORT,
-			VK_DYNAMIC_STATE_SCISSOR,
-		};
 
 		VkPipelineDynamicStateCreateInfo dynamicState{};
 		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
 		dynamicState.dynamicStateCount = 2;
-		dynamicState.pDynamicStates = dynamicStates;
+		dynamicState.pDynamicStates = dynamicStates.ConstBuffer();
 
 		return dynamicState;
 	}
@@ -187,7 +192,7 @@ export namespace jpt::Vulkan
 		return multisampling;
 	}
 
-	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending() const
+	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending(VkPipelineColorBlendAttachmentState attachment) const
 	{
 		/** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer. 
 			This transformation is known as color blending and there are two ways to do it:
@@ -195,16 +200,16 @@ export namespace jpt::Vulkan
 			- Combine the old and new value using a bitwise operation
 		*/
 
-		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		colorBlendAttachment.blendEnable = VK_FALSE;
-
 		VkPipelineColorBlendStateCreateInfo colorBlending{};
 		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		colorBlending.logicOpEnable = VK_FALSE;
 		colorBlending.logicOp = VK_LOGIC_OP_COPY;
 		colorBlending.attachmentCount = 1;
-		colorBlending.pAttachments = &colorBlendAttachment;
+		colorBlending.pAttachments = &attachment;
+		colorBlending.blendConstants[0] = 0.0f;
+		colorBlending.blendConstants[1] = 0.0f;
+		colorBlending.blendConstants[2] = 0.0f;
+		colorBlending.blendConstants[3] = 0.0f;
 
 		return colorBlending;
 	}

@@ -123,6 +123,11 @@ export namespace jpt
 	void Renderer_Vulkan::DrawFrame()
 	{
 		Super::DrawFrame();
+
+		for (WindowResources& resources : m_windowResources)
+		{
+			resources.DrawFrame(m_logicalDevice, m_renderPass, m_graphicsPipeline);
+		}
 	}
 
 	void Renderer_Vulkan::RegisterWindow(Window* pWindow)
