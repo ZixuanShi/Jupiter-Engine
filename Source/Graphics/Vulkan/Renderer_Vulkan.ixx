@@ -126,7 +126,7 @@ export namespace jpt
 	void Renderer_Vulkan::RegisterWindow(Window* pWindow)
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
-		resources.Init(pWindow, m_instance, m_physicalDevice, m_logicalDevice);
+		resources.Init(pWindow, m_instance, m_physicalDevice, m_logicalDevice, m_renderPass);
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}

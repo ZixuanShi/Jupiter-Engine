@@ -11,6 +11,7 @@ export module jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.RenderPass;
 
 import jpt.Window;
 import jpt.DynamicArray;
@@ -24,8 +25,9 @@ export namespace jpt::Vulkan
 	class SwapChain
 	{
 	private:
-		DynamicArray<VkImage>     m_images;
-		DynamicArray<VkImageView> m_imageViews;
+		DynamicArray<VkImage>       m_images;
+		DynamicArray<VkImageView>   m_imageViews;
+		DynamicArray<VkFramebuffer> m_framebuffers;
 
 		VkSwapchainKHR m_swapChain = VK_NULL_HANDLE;
 		VkFormat m_imageFormat = VK_FORMAT_UNDEFINED;
@@ -33,28 +35,22 @@ export namespace jpt::Vulkan
 
 	public:
 		bool Init(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface);
+		bool CreateImageViews(const LogicalDevice& logicalDevice);
+		bool CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass);
+
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkSwapchainKHR GetHandle() const { return m_swapChain; }
-
-	private:
-		bool CreateSwapChain(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface);
-		bool CreateImageViews(const LogicalDevice& logicalDevice);
 	};
-
-	bool SwapChain::Init(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface)
-	{
-		bool success = true;
-
-		success &= CreateSwapChain(pWindow, physicalDevice, logicalDevice, surface);
-		success &= CreateImageViews(logicalDevice);
-
-		return true;
-	}
 
 	void SwapChain::Shutdown(const LogicalDevice& logicalDevice)
 	{
+		for (VkFramebuffer framebuffer : m_framebuffers)
+		{
+			vkDestroyFramebuffer(logicalDevice.GetHandle(), framebuffer, nullptr);
+		}
+
 		for (VkImageView imageView : m_imageViews)
 		{
 			vkDestroyImageView(logicalDevice.GetHandle(), imageView, nullptr);
@@ -63,7 +59,7 @@ export namespace jpt::Vulkan
 		vkDestroySwapchainKHR(logicalDevice.GetHandle(), m_swapChain, nullptr);
 	}
 
-	bool SwapChain::CreateSwapChain(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface)
+	bool SwapChain::Init(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface)
 	{
 		const SwapChainSupportDetails supportDetails = physicalDevice.QuerySwapChainSupport(surface);
 
@@ -149,6 +145,36 @@ export namespace jpt::Vulkan
 			if (vkCreateImageView(logicalDevice.GetHandle(), &createInfo, nullptr, &m_imageViews[i]) != VK_SUCCESS)
 			{
 				JPT_ERROR("Failed to create image views");
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass)
+	{
+		m_framebuffers.Resize(m_imageViews.Count());
+
+		for (uint32 i = 0; i < m_imageViews.Count(); ++i)
+		{
+			VkImageView attachments[] = 
+			{
+				m_imageViews[i] 
+			};
+
+			VkFramebufferCreateInfo framebufferInfo = {};
+			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+			framebufferInfo.renderPass = renderPass.GetHandle();
+			framebufferInfo.attachmentCount = 1;
+			framebufferInfo.pAttachments = attachments;
+			framebufferInfo.width = m_extent.width;
+			framebufferInfo.height = m_extent.height;
+			framebufferInfo.layers = 1;
+
+			if (vkCreateFramebuffer(logicalDevice.GetHandle(), &framebufferInfo, nullptr, &m_framebuffers[i]) != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create framebuffer");
 				return false;
 			}
 		}

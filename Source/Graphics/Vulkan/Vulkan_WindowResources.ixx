@@ -34,7 +34,7 @@ export namespace jpt::Vulkan
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
-			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice);
+			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
@@ -43,7 +43,7 @@ export namespace jpt::Vulkan
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
-		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice)
+		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass)
 	{
 		// Surface
 		m_pOwner = pWindow;
@@ -55,6 +55,8 @@ export namespace jpt::Vulkan
 
 		// SwapChain
 		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
+		m_swapChain.CreateImageViews(logicalDevice);
+		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
 
 		return true;
 	}
