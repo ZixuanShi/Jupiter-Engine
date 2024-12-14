@@ -24,6 +24,8 @@ import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 
+import jpt.Optional;
+
 export namespace jpt::Vulkan
 {
 	/** Per-Window specific Vulkan resource. Each Window should have its own data */
@@ -41,6 +43,7 @@ export namespace jpt::Vulkan
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
 
 		uint32 m_currentFrame = 0;
+		bool m_shouldRecreateSwapChain = false;
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
@@ -51,10 +54,13 @@ export namespace jpt::Vulkan
 		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline);
 		void RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
-	public:
+		bool ShouldRecreateSwapChain() const;
+
 		Window* GetOwner() const { return m_pOwner; }
+		bool CanDraw() const;
 
 	private:
+		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
 		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex);
 		void Submit();
 		void Present(uint32 imageIndex);
@@ -106,19 +112,19 @@ export namespace jpt::Vulkan
 
 	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline)
 	{
+		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
+
 		// Wait for the previous frame to finish
-		vkWaitForFences(logicalDevice.GetHandle(), 1, m_syncObjects[m_currentFrame].GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
-		vkResetFences(logicalDevice.GetHandle(), 1, m_syncObjects[m_currentFrame].GetInFlightFencePtr());
+		vkWaitForFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
+		vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
-		// Acquire an image from the swap chain
-		uint32 imageIndex = 0;
-		vkAcquireNextImageKHR(logicalDevice.GetHandle(), m_swapChain.GetHandle(), UINT64_MAX, m_syncObjects[m_currentFrame].GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
-
-		Record(renderPass, graphicsPipeline, imageIndex);
+		Optional<uint32> imageIndex = AcquireNextImage(logicalDevice);
+		Record(renderPass, graphicsPipeline, imageIndex.Value());
 		Submit();
-		Present(imageIndex);
+		Present(imageIndex.Value());
 
-		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+		m_currentFrame += 1;
+		m_currentFrame %= kMaxFramesInFlight;
 	}
 
 	void WindowResources::RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass)
@@ -130,6 +136,32 @@ export namespace jpt::Vulkan
 		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
 		m_swapChain.CreateImageViews(logicalDevice);
 		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
+
+		m_shouldRecreateSwapChain = false;
+	}
+
+	bool WindowResources::ShouldRecreateSwapChain() const
+	{
+		return m_shouldRecreateSwapChain;
+	}
+
+	Optional<uint32> WindowResources::AcquireNextImage(const LogicalDevice& logicalDevice)
+	{
+		uint32 imageIndex = 0;
+		const VkResult result = vkAcquireNextImageKHR(logicalDevice.GetHandle(), m_swapChain.GetHandle(), UINT64_MAX, m_syncObjects[m_currentFrame].GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR)
+		{
+			m_shouldRecreateSwapChain = true;
+			return {};
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+		{
+			JPT_ERROR("Failed to acquire swap chain image: %d", result);
+			return {};
+		}
+
+		return imageIndex;
 	}
 
 	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex)
@@ -226,5 +258,10 @@ export namespace jpt::Vulkan
 		{
 			JPT_ERROR("Failed to present swap chain image: %d", result);
 		}
+	}
+
+	bool WindowResources::CanDraw() const
+	{
+		return !m_pOwner->IsMinimized();
 	}
 }

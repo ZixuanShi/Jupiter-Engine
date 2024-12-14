@@ -96,6 +96,14 @@ export namespace jpt
 	void Renderer_Vulkan::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
+
+		for (WindowResources& resources : m_windowResources)
+		{
+			if (resources.ShouldRecreateSwapChain())
+			{
+				resources.RecreateSwapChain(m_physicalDevice, m_logicalDevice, m_renderPass);
+			}
+		}
 	}
 
 	void Renderer_Vulkan::Shutdown()
@@ -127,7 +135,10 @@ export namespace jpt
 
 		for (WindowResources& resources : m_windowResources)
 		{
-			resources.DrawFrame(m_logicalDevice, m_renderPass, m_graphicsPipeline);
+			if (resources.CanDraw())
+			{
+				resources.DrawFrame(m_logicalDevice, m_renderPass, m_graphicsPipeline);
+			}
 		}
 	}
 
@@ -139,8 +150,18 @@ export namespace jpt
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
 
-	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize&  )
+	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& )
 	{
+		//const Window* pWindow = eventWindowResize.GetWindow();
+
+		//for (WindowResources& resources : m_windowResources)
+		//{
+		//	if (resources.GetOwner() == pWindow)
+		//	{
+		//		resources.SetShouldRecreateSwapChain(true);
+		//		break;
+		//	}
+		//}
 	}
 
 	void Renderer_Vulkan::OnWindowClose(const Event_Window_Close& eventWindowClose)
