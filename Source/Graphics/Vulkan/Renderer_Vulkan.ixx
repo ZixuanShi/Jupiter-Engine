@@ -14,12 +14,16 @@ export module jpt.Renderer_Vulkan;
 import jpt.Renderer;
 import jpt.Graphics.Constants;
 
+import jpt.Vulkan.Constants;
 import jpt.Vulkan.WindowResources;
 import jpt.Vulkan.Extensions;
 import jpt.Vulkan.ValidationLayers;
 import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.PipelineLayout;
+import jpt.Vulkan.GraphicsPipeline;
+import jpt.Vulkan.RenderPass;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
@@ -44,6 +48,9 @@ export namespace jpt
 #endif
 		PhysicalDevice m_physicalDevice;
 		LogicalDevice m_logicalDevice;
+		RenderPass m_renderPass;
+		PipelineLayout m_pipelineLayout;
+		GraphicsPipeline m_graphicsPipeline;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -74,6 +81,9 @@ export namespace jpt
 #endif
 		success &= m_physicalDevice.Init(m_instance);
 		success &= m_logicalDevice.Init(m_physicalDevice);
+		success &= m_renderPass.Init(m_logicalDevice, kFormat);
+		success &= m_pipelineLayout.Init(m_logicalDevice);
+		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -94,6 +104,9 @@ export namespace jpt
 			resources.Shutdown(m_instance, m_logicalDevice);
 		}
 
+		m_graphicsPipeline.Shutdown(m_logicalDevice);
+		m_pipelineLayout.Shutdown(m_logicalDevice);
+		m_renderPass.Shutdown(m_logicalDevice);
 		m_logicalDevice.Shutdown();
 
 #if !IS_RELEASE

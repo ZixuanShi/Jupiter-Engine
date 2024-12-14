@@ -1,0 +1,31 @@
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+module; 
+
+export module jpt.Vulkan.Shader.Vertex;
+
+import jpt.Vulkan.Shader;
+
+export namespace jpt::Vulkan
+{
+	/** Process each vertex
+		Takes in world position, color, normal, texture coordinates.
+		Output final position in clip coordinates */
+	class VertexShader final : public Shader
+	{
+	public:
+		virtual VkPipelineShaderStageCreateInfo InternalLoad() override;
+	};
+
+	VkPipelineShaderStageCreateInfo VertexShader::InternalLoad()
+	{
+		VkPipelineShaderStageCreateInfo shaderStageInfo{};
+
+		shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		shaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+		shaderStageInfo.module = m_shaderModule;
+		shaderStageInfo.pName = "main";
+
+		return shaderStageInfo;
+	}
+}
