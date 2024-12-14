@@ -49,6 +49,7 @@ export namespace jpt::Vulkan
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
 		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline);
+		void RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
 	public:
 		Window* GetOwner() const { return m_pOwner; }
@@ -118,6 +119,17 @@ export namespace jpt::Vulkan
 		Present(imageIndex);
 
 		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
+	}
+
+	void WindowResources::RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass)
+	{
+		logicalDevice.WaitIdle();
+
+		m_swapChain.Shutdown(logicalDevice);
+
+		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
+		m_swapChain.CreateImageViews(logicalDevice);
+		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
 	}
 
 	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex)

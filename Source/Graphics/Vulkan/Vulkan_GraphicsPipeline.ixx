@@ -41,7 +41,7 @@ export namespace jpt::Vulkan
 		VkPipelineViewportStateCreateInfo GetViewportState() const;
 		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
 		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
-		VkPipelineColorBlendStateCreateInfo GetColorBlending(VkPipelineColorBlendAttachmentState attachment) const;
+		VkPipelineColorBlendStateCreateInfo GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const;
 	};
 
 	bool GraphicsPipeline::Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
@@ -192,7 +192,7 @@ export namespace jpt::Vulkan
 		return multisampling;
 	}
 
-	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending(VkPipelineColorBlendAttachmentState attachment) const
+	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const
 	{
 		/** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer. 
 			This transformation is known as color blending and there are two ways to do it:
