@@ -24,7 +24,9 @@ export namespace jpt::Vulkan
 	class SwapChain
 	{
 	private:
-		DynamicArray<VkImage> m_images;
+		DynamicArray<VkImage>     m_images;
+		DynamicArray<VkImageView> m_imageViews;
+
 		VkSwapchainKHR m_swapChain = VK_NULL_HANDLE;
 		VkFormat m_imageFormat = VK_FORMAT_UNDEFINED;
 		VkExtent2D m_extent;
@@ -35,9 +37,33 @@ export namespace jpt::Vulkan
 
 	public:
 		VkSwapchainKHR GetHandle() const { return m_swapChain; }
+
+	private:
+		bool CreateSwapChain(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface);
+		bool CreateImageViews(const LogicalDevice& logicalDevice);
 	};
 
 	bool SwapChain::Init(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface)
+	{
+		bool success = true;
+
+		success &= CreateSwapChain(pWindow, physicalDevice, logicalDevice, surface);
+		success &= CreateImageViews(logicalDevice);
+
+		return true;
+	}
+
+	void SwapChain::Shutdown(const LogicalDevice& logicalDevice)
+	{
+		for (VkImageView imageView : m_imageViews)
+		{
+			vkDestroyImageView(logicalDevice.GetHandle(), imageView, nullptr);
+		}
+
+		vkDestroySwapchainKHR(logicalDevice.GetHandle(), m_swapChain, nullptr);
+	}
+
+	bool SwapChain::CreateSwapChain(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface)
 	{
 		const SwapChainSupportDetails supportDetails = physicalDevice.QuerySwapChainSupport(surface);
 
@@ -88,18 +114,45 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		vkGetSwapchainImagesKHR(logicalDevice.GetHandle(), m_swapChain, &imageCount, nullptr);
-		m_images.Resize(imageCount);
-		vkGetSwapchainImagesKHR(logicalDevice.GetHandle(), m_swapChain, &imageCount, m_images.Buffer());
-
 		m_imageFormat = surfaceFormat.format;
 		m_extent = extent;
 
 		return true;
 	}
 
-	void SwapChain::Shutdown(const LogicalDevice& logicalDevice)
+	bool SwapChain::CreateImageViews(const LogicalDevice& logicalDevice)
 	{
-		vkDestroySwapchainKHR(logicalDevice.GetHandle(), m_swapChain, nullptr);
+		uint32 imageCount = 0;
+
+		vkGetSwapchainImagesKHR(logicalDevice.GetHandle(), m_swapChain, &imageCount, nullptr);
+		m_images.Resize(imageCount);
+		vkGetSwapchainImagesKHR(logicalDevice.GetHandle(), m_swapChain, &imageCount, m_images.Buffer());
+
+		m_imageViews.Resize(imageCount);
+		for (uint32 i = 0; i < imageCount; ++i)
+		{
+			VkImageViewCreateInfo createInfo = {};
+			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			createInfo.image = m_images[i];
+			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			createInfo.format = m_imageFormat;
+			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			createInfo.subresourceRange.baseMipLevel = 0;
+			createInfo.subresourceRange.levelCount = 1;
+			createInfo.subresourceRange.baseArrayLayer = 0;
+			createInfo.subresourceRange.layerCount = 1;
+
+			if (vkCreateImageView(logicalDevice.GetHandle(), &createInfo, nullptr, &m_imageViews[i]) != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to create image views");
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
