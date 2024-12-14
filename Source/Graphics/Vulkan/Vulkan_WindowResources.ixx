@@ -37,8 +37,10 @@ export namespace jpt::Vulkan
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 		SwapChain m_swapChain;
 		CommandPool m_commandPool;
-		CommandBuffer m_commandBuffers;
-		SyncObjects m_syncObjects;
+		CommandBuffers m_commandBuffers;
+		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
+
+		uint32 m_currentFrame = 0;
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
@@ -78,7 +80,10 @@ export namespace jpt::Vulkan
 		m_commandBuffers.Init(logicalDevice, m_commandPool);
 
 		// Sync objects
-		m_syncObjects.Init(logicalDevice);
+		for (SyncObjects& syncObjects : m_syncObjects)
+		{
+			syncObjects.Init(logicalDevice);
+		}
 
 		return true;
 	}
@@ -87,7 +92,10 @@ export namespace jpt::Vulkan
 	{
 		logicalDevice.WaitIdle();
 
-		m_syncObjects.Shutdown(logicalDevice);
+		for (SyncObjects& syncObjects : m_syncObjects)
+		{
+			syncObjects.Shutdown(logicalDevice);
+		}
 		m_commandPool.Shutdown(logicalDevice);
 		m_swapChain.Shutdown(logicalDevice);
 		
@@ -98,21 +106,23 @@ export namespace jpt::Vulkan
 	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline)
 	{
 		// Wait for the previous frame to finish
-		vkWaitForFences(logicalDevice.GetHandle(), 1, m_syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
-		vkResetFences(logicalDevice.GetHandle(), 1, m_syncObjects.GetInFlightFencePtr());
+		vkWaitForFences(logicalDevice.GetHandle(), 1, m_syncObjects[m_currentFrame].GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
+		vkResetFences(logicalDevice.GetHandle(), 1, m_syncObjects[m_currentFrame].GetInFlightFencePtr());
 
 		// Acquire an image from the swap chain
 		uint32 imageIndex = 0;
-		vkAcquireNextImageKHR(logicalDevice.GetHandle(), m_swapChain.GetHandle(), UINT64_MAX, m_syncObjects.GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
+		vkAcquireNextImageKHR(logicalDevice.GetHandle(), m_swapChain.GetHandle(), UINT64_MAX, m_syncObjects[m_currentFrame].GetImageAvailableSemaphore(), VK_NULL_HANDLE, &imageIndex);
 
 		Record(renderPass, graphicsPipeline, imageIndex);
 		Submit();
 		Present(imageIndex);
+
+		m_currentFrame = (m_currentFrame + 1) % kMaxFramesInFlight;
 	}
 
 	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex)
 	{
-		VkCommandBuffer commandBuffer = m_commandBuffers.GetHandle();
+		VkCommandBuffer commandBuffer = m_commandBuffers.GetHandle(m_currentFrame);
 		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo = {};
@@ -168,19 +178,19 @@ export namespace jpt::Vulkan
 		VkSubmitInfo submitInfo = {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-		VkSemaphore waitSemaphores[] = { m_syncObjects.GetImageAvailableSemaphore() };
+		VkSemaphore waitSemaphores[] = { m_syncObjects[m_currentFrame].GetImageAvailableSemaphore() };
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = m_commandBuffers.GetHandlePtr();
+		submitInfo.pCommandBuffers = m_commandBuffers.GetHandlePtr(m_currentFrame);
 
-		VkSemaphore signalSemaphores[] = { m_syncObjects.GetRenderFinishedSemaphore() };
+		VkSemaphore signalSemaphores[] = { m_syncObjects[m_currentFrame].GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (const VkResult result = vkQueueSubmit(m_presentQueue, 1, &submitInfo, m_syncObjects.GetInFlightFence()); result != VK_SUCCESS)
+		if (const VkResult result = vkQueueSubmit(m_presentQueue, 1, &submitInfo, m_syncObjects[m_currentFrame].GetInFlightFence()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to submit draw command buffer: %d", result);
 		}
@@ -191,7 +201,7 @@ export namespace jpt::Vulkan
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-		VkSemaphore signalSemaphores[] = { m_syncObjects.GetRenderFinishedSemaphore() };
+		VkSemaphore signalSemaphores[] = { m_syncObjects[m_currentFrame].GetRenderFinishedSemaphore() };
 		presentInfo.waitSemaphoreCount = 1;
 		presentInfo.pWaitSemaphores = signalSemaphores;
 

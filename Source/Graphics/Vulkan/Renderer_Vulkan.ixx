@@ -53,7 +53,6 @@ export namespace jpt
 		PipelineLayout m_pipelineLayout;
 		GraphicsPipeline m_graphicsPipeline;
 
-
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:
@@ -101,6 +100,8 @@ export namespace jpt
 
 	void Renderer_Vulkan::Shutdown()
 	{
+		m_logicalDevice.WaitIdle();
+
 		for (WindowResources& resources : m_windowResources)
 		{
 			resources.Shutdown(m_instance, m_logicalDevice);
@@ -142,8 +143,21 @@ export namespace jpt
 	{
 	}
 
-	void Renderer_Vulkan::OnWindowClose(const Event_Window_Close& )
+	void Renderer_Vulkan::OnWindowClose(const Event_Window_Close& eventWindowClose)
 	{
+		const Window* pWindow = eventWindowClose.GetWindow();
+
+		for (auto itr = m_windowResources.begin(); itr != m_windowResources.end(); ++itr)
+		{
+			if (itr->GetOwner() == pWindow)
+			{
+				itr->Shutdown(m_instance, m_logicalDevice);
+				m_windowResources.Erase(itr);
+				break;
+			}
+		}
+
+		JPT_INFO("Window unregistered with Vulkan renderer: %lu", pWindow);
 	}
 
 	bool Renderer_Vulkan::CreateInstance()
