@@ -24,6 +24,7 @@ import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.RenderPass;
+import jpt.Vulkan.VertexBuffer;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
@@ -52,6 +53,7 @@ export namespace jpt
 		RenderPass m_renderPass;
 		PipelineLayout m_pipelineLayout;
 		GraphicsPipeline m_graphicsPipeline;
+		VertexBuffer m_vertexBuffer;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -63,7 +65,6 @@ export namespace jpt
 		virtual void DrawFrame() override;
 
 		virtual void RegisterWindow(Window* pWindow) override;
-		virtual void OnWindowResize(const Event_Window_Resize& eventWindowResize) override;
 		virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
 
 	private:
@@ -85,6 +86,7 @@ export namespace jpt
 		success &= m_renderPass.Init(m_logicalDevice, kFormat);
 		success &= m_pipelineLayout.Init(m_logicalDevice);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
+		success &= m_vertexBuffer.Init(m_physicalDevice, m_logicalDevice);
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -115,6 +117,7 @@ export namespace jpt
 			resources.Shutdown(m_instance, m_logicalDevice);
 		}
 
+		m_vertexBuffer.Shutdown(m_logicalDevice);
 		m_graphicsPipeline.Shutdown(m_logicalDevice);
 		m_pipelineLayout.Shutdown(m_logicalDevice);
 		m_renderPass.Shutdown(m_logicalDevice);
@@ -137,7 +140,7 @@ export namespace jpt
 		{
 			if (resources.CanDraw())
 			{
-				resources.DrawFrame(m_logicalDevice, m_renderPass, m_graphicsPipeline);
+				resources.DrawFrame(m_logicalDevice, m_renderPass, m_graphicsPipeline, m_vertexBuffer);
 			}
 		}
 	}
@@ -148,20 +151,6 @@ export namespace jpt
 		resources.Init(pWindow, m_instance, m_physicalDevice, m_logicalDevice, m_renderPass);
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
-	}
-
-	void Renderer_Vulkan::OnWindowResize(const Event_Window_Resize& )
-	{
-		//const Window* pWindow = eventWindowResize.GetWindow();
-
-		//for (WindowResources& resources : m_windowResources)
-		//{
-		//	if (resources.GetOwner() == pWindow)
-		//	{
-		//		resources.SetShouldRecreateSwapChain(true);
-		//		break;
-		//	}
-		//}
 	}
 
 	void Renderer_Vulkan::OnWindowClose(const Event_Window_Close& eventWindowClose)

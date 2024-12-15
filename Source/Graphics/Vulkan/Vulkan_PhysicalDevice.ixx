@@ -32,6 +32,7 @@ export namespace jpt::Vulkan
 
 		uint32 FindPresentFamilyIndex(VkSurfaceKHR surface) const;
 		SwapChainSupportDetails QuerySwapChainSupport(VkSurfaceKHR surface) const;
+		uint32 FindMemoryType(uint32 typeFilter, VkMemoryPropertyFlags properties) const;
 
 	public:
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
@@ -145,6 +146,23 @@ export namespace jpt::Vulkan
 
 		JPT_ASSERT(result.IsValid(), "Swap chain support details are invalid");
 		return result;
+	}
+
+	uint32 PhysicalDevice::FindMemoryType(uint32 typeFilter, VkMemoryPropertyFlags properties) const
+	{
+		VkPhysicalDeviceMemoryProperties memoryProperties;
+		vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &memoryProperties);
+		for (uint32 i = 0; i < memoryProperties.memoryTypeCount; ++i)
+		{
+			if ((typeFilter & (1 << i)) && 
+				(memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			{
+				return i;
+			}
+		}
+
+		JPT_ASSERT(false, "Failed to find a suitable memory type");
+		return UINT32_MAX;
 	}
 
 	bool PhysicalDevice::IsDeviceSuitable(VkPhysicalDevice physicalDevice) const

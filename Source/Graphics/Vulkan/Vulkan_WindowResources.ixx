@@ -16,6 +16,7 @@ import jpt.Graphics.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 
+import jpt.Vulkan.Data;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.CommandPool;
@@ -23,6 +24,7 @@ import jpt.Vulkan.CommandBuffers;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
+import jpt.Vulkan.VertexBuffer;
 
 import jpt.Optional;
 
@@ -51,7 +53,7 @@ export namespace jpt::Vulkan
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
-		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline);
+		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer);
 		void RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
 		bool ShouldRecreateSwapChain() const;
@@ -61,7 +63,7 @@ export namespace jpt::Vulkan
 
 	private:
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
-		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex);
+		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, uint32 imageIndex);
 		void Submit();
 		void Present(uint32 imageIndex);
 	};
@@ -110,7 +112,7 @@ export namespace jpt::Vulkan
 		m_surface = VK_NULL_HANDLE;
 	}
 
-	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline)
+	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer)
 	{
 		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
 
@@ -119,7 +121,7 @@ export namespace jpt::Vulkan
 		vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
 		Optional<uint32> imageIndex = AcquireNextImage(logicalDevice);
-		Record(renderPass, graphicsPipeline, imageIndex.Value());
+		Record(renderPass, graphicsPipeline, vertexBuffer, imageIndex.Value());
 		Submit();
 		Present(imageIndex.Value());
 
@@ -164,7 +166,7 @@ export namespace jpt::Vulkan
 		return imageIndex;
 	}
 
-	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, uint32 imageIndex)
+	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, uint32 imageIndex)
 	{
 		VkCommandBuffer commandBuffer = m_commandBuffers.GetHandle(m_currentFrame);
 		vkResetCommandBuffer(commandBuffer, 0);
@@ -207,7 +209,11 @@ export namespace jpt::Vulkan
 			scissor.extent = m_swapChain.GetExtent();
 			vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-			vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+			VkBuffer vertexBuffers[] = { vertexBuffer.GetBuffer() };
+			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+
+			vkCmdDraw(commandBuffer, static_cast<uint32>(vertices.Size()), 1, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
