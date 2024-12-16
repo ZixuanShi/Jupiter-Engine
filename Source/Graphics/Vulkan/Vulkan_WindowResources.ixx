@@ -20,13 +20,14 @@ import jpt.Vulkan.Data;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.CommandBuffers;
+import jpt.Vulkan.CommandBuffer;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
 
 import jpt.Optional;
+import jpt.StaticArray;
 
 export namespace jpt::Vulkan
 {
@@ -41,7 +42,7 @@ export namespace jpt::Vulkan
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 		SwapChain m_swapChain;
 		CommandPool m_commandPool;
-		CommandBuffers m_commandBuffers;
+		StaticArray<CommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
 
 		uint32 m_currentFrame = 0;
@@ -86,7 +87,10 @@ export namespace jpt::Vulkan
 
 		// Command pool
 		m_commandPool.Init(logicalDevice, physicalDevice.GetGraphicsFamilyIndex());
-		m_commandBuffers.Init(logicalDevice, m_commandPool);
+		for (CommandBuffer& commandBuffer : m_commandBuffers)
+		{
+			commandBuffer.Init(logicalDevice, m_commandPool);
+		}
 
 		// Sync objects
 		for (SyncObjects& syncObjects : m_syncObjects)
@@ -168,7 +172,7 @@ export namespace jpt::Vulkan
 
 	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, uint32 imageIndex)
 	{
-		VkCommandBuffer commandBuffer = m_commandBuffers.GetHandle(m_currentFrame);
+		VkCommandBuffer commandBuffer = m_commandBuffers[m_currentFrame].GetHandle();
 		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo = {};
@@ -225,16 +229,19 @@ export namespace jpt::Vulkan
 
 	void WindowResources::Submit()
 	{
+		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
+		CommandBuffer& commandBuffer = m_commandBuffers[m_currentFrame];
+
 		VkSubmitInfo submitInfo = {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-		VkSemaphore waitSemaphores[] = { m_syncObjects[m_currentFrame].GetImageAvailableSemaphore() };
+		VkSemaphore waitSemaphores[] = { syncObjects.GetImageAvailableSemaphore() };
 		VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = m_commandBuffers.GetHandlePtr(m_currentFrame);
+		submitInfo.pCommandBuffers = commandBuffer.GetHandlePtr();
 
 		VkSemaphore signalSemaphores[] = { m_syncObjects[m_currentFrame].GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;

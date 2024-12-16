@@ -6,34 +6,33 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.CommandBuffers;
+export module jpt.Vulkan.CommandBuffer;
 
 import jpt.Graphics.Constants;
 
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
 
-import jpt.StaticArray;
 import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
 	/** A command buffer is a buffer that holds commands that are sent to the GPU */
-	class CommandBuffers
+	class CommandBuffer
 	{
 	private:
-		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
+		VkCommandBuffer m_commandBuffer;
 
 	public:
 		bool Init(const LogicalDevice& logicalDevice, const CommandPool& commandPool);
 		void Shutdown(const LogicalDevice& logicalDevice, const CommandPool& commandPool);
 
 	public:
-		VkCommandBuffer GetHandle(uint32 index) const { return m_commandBuffers[index]; }
-		VkCommandBuffer* GetHandlePtr(uint32 index) { return &m_commandBuffers[index]; }
+		VkCommandBuffer GetHandle() const { return m_commandBuffer; }
+		VkCommandBuffer* GetHandlePtr() { return &m_commandBuffer; }
 	};
 
-	bool CommandBuffers::Init(const LogicalDevice& logicalDevice, const CommandPool& commandPool)
+	bool CommandBuffer::Init(const LogicalDevice& logicalDevice, const CommandPool& commandPool)
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -41,7 +40,7 @@ export namespace jpt::Vulkan
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = kMaxFramesInFlight;
 
-		if (const VkResult result = vkAllocateCommandBuffers(logicalDevice.GetHandle(), &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
+		if (const VkResult result = vkAllocateCommandBuffers(logicalDevice.GetHandle(), &allocInfo, &m_commandBuffer); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to allocate command buffers: %d", result);
 			return false;
@@ -50,8 +49,8 @@ export namespace jpt::Vulkan
 		return true;
 	}
 
-	void CommandBuffers::Shutdown(const LogicalDevice& logicalDevice, const CommandPool& commandPool)
+	void CommandBuffer::Shutdown(const LogicalDevice& logicalDevice, const CommandPool& commandPool)
 	{
-		vkFreeCommandBuffers(logicalDevice.GetHandle(), commandPool.GetHandle(), kMaxFramesInFlight, m_commandBuffers.Buffer());
+		vkFreeCommandBuffers(logicalDevice.GetHandle(), commandPool.GetHandle(), kMaxFramesInFlight, &m_commandBuffer);
 	}
 }
