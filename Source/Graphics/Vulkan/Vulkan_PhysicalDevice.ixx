@@ -81,6 +81,7 @@ export namespace jpt::Vulkan
 
 		for (uint32 i = 0; i < queueFamilyCount; ++i)
 		{
+			// VK_QUEUE_GRAPHICS_BIT or VK_QUEUE_COMPUTE_BIT implicitly support VK_QUEUE_TRANSFER_BIT
 			if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
 				m_grahicsFamilyIndex = i;
