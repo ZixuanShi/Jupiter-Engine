@@ -25,6 +25,8 @@ export namespace jpt::Vulkan
 	public:
 		VkResult Create(const VkBufferCreateInfo& createInfo, VkMemoryPropertyFlags properties, const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice);
 		void Copy(VkBuffer srcBuffer, VkDeviceSize size, const LogicalDevice& logicalDevice, const CommandPool& memoryTransferCommandPool);
+		void MapMemory(const LogicalDevice& logicalDevice, const void* pPtr, VkDeviceSize size);
+
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
@@ -98,6 +100,16 @@ export namespace jpt::Vulkan
 		vkQueueWaitIdle(logicalDevice.GetGraphicsQueue());
 
 		vkFreeCommandBuffers(logicalDevice.GetHandle(), memoryTransferCommandPool.GetHandle(), 1, &commandBuffer);
+	}
+
+	void Buffer::MapMemory(const LogicalDevice& logicalDevice, const void* pPtr, VkDeviceSize size)
+	{
+		void* pData = nullptr;
+		vkMapMemory(logicalDevice.GetHandle(), m_bufferMemory, 0, size, 0, &pData);
+		{
+			memcpy(pData, pPtr, size);
+		}
+		vkUnmapMemory(logicalDevice.GetHandle(), m_bufferMemory);
 	}
 
 	void Buffer::Shutdown(const LogicalDevice& logicalDevice)

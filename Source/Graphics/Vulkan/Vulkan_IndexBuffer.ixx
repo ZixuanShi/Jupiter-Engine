@@ -48,12 +48,7 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		void* pData = nullptr;
-		vkMapMemory(logicalDevice.GetHandle(), stagingBuffer.GetBufferMemory(), 0, stagingBufferInfo.size, 0, &pData);
-		{
-			memcpy(pData, indices.ConstBuffer(), indices.Size());
-		}
-		vkUnmapMemory(logicalDevice.GetHandle(), stagingBuffer.GetBufferMemory());
+		stagingBuffer.MapMemory(logicalDevice, indices.ConstBuffer(), indices.Size());
 
 		VkBufferCreateInfo indexBufferInfo{};
 		indexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
