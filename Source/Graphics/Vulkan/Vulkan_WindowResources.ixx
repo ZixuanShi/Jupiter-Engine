@@ -20,11 +20,11 @@ import jpt.Vulkan.Data;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.CommandBuffer;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
+import jpt.Vulkan.IndexBuffer;
 
 import jpt.Optional;
 import jpt.StaticArray;
@@ -42,7 +42,7 @@ export namespace jpt::Vulkan
 		VkQueue m_presentQueue = VK_NULL_HANDLE;
 		SwapChain m_swapChain;
 		CommandPool m_commandPool;
-		StaticArray<CommandBuffer, kMaxFramesInFlight> m_commandBuffers;
+		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
 
 		uint32 m_currentFrame = 0;
@@ -54,7 +54,9 @@ export namespace jpt::Vulkan
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
-		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer);
+		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, 
+			VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer);
+
 		void RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
 		bool ShouldRecreateSwapChain() const;
@@ -64,9 +66,9 @@ export namespace jpt::Vulkan
 
 	private:
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
-		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, uint32 imageIndex);
-		void Submit();
-		void Present(uint32 imageIndex);
+		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
+		void Submit() const;
+		void Present(uint32 imageIndex) const;
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
@@ -85,11 +87,18 @@ export namespace jpt::Vulkan
 		m_swapChain.CreateImageViews(logicalDevice);
 		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
 
-		// Command pool
+		// Command pool & buffers
 		m_commandPool.Init(logicalDevice, physicalDevice.GetGraphicsFamilyIndex());
-		for (CommandBuffer& commandBuffer : m_commandBuffers)
+
+		VkCommandBufferAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.commandPool = m_commandPool.GetHandle();
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandBufferCount = kMaxFramesInFlight;
+		if (const VkResult result = vkAllocateCommandBuffers(logicalDevice.GetHandle(), &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
 		{
-			commandBuffer.Init(logicalDevice, m_commandPool);
+			JPT_ERROR("Failed to allocate command buffers: %d", result);
+			return false;
 		}
 
 		// Sync objects
@@ -109,6 +118,12 @@ export namespace jpt::Vulkan
 		{
 			syncObjects.Shutdown(logicalDevice);
 		}
+
+		for (VkCommandBuffer commandBuffer : m_commandBuffers)
+		{
+			vkFreeCommandBuffers(logicalDevice.GetHandle(), m_commandPool.GetHandle(), 1, &commandBuffer);
+		}
+
 		m_commandPool.Shutdown(logicalDevice);
 		m_swapChain.Shutdown(logicalDevice);
 		
@@ -116,7 +131,8 @@ export namespace jpt::Vulkan
 		m_surface = VK_NULL_HANDLE;
 	}
 
-	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer)
+	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline,
+		VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer)
 	{
 		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
 
@@ -125,7 +141,7 @@ export namespace jpt::Vulkan
 		vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
 		Optional<uint32> imageIndex = AcquireNextImage(logicalDevice);
-		Record(renderPass, graphicsPipeline, vertexBuffer, imageIndex.Value());
+		Record(renderPass, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
 		Submit();
 		Present(imageIndex.Value());
 
@@ -170,9 +186,10 @@ export namespace jpt::Vulkan
 		return imageIndex;
 	}
 
-	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, uint32 imageIndex)
+	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline,
+		VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex)
 	{
-		VkCommandBuffer commandBuffer = m_commandBuffers[m_currentFrame].GetHandle();
+		VkCommandBuffer commandBuffer = m_commandBuffers[m_currentFrame];
 		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo = {};
@@ -217,7 +234,9 @@ export namespace jpt::Vulkan
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-			vkCmdDraw(commandBuffer, static_cast<uint32>(vertices.Size()), 1, 0, 0);
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
+
+			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
@@ -227,10 +246,10 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	void WindowResources::Submit()
+	void WindowResources::Submit() const
 	{
-		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
-		CommandBuffer& commandBuffer = m_commandBuffers[m_currentFrame];
+		const SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
+		const VkCommandBuffer& commandBuffer = m_commandBuffers[m_currentFrame];
 
 		VkSubmitInfo submitInfo = {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -241,7 +260,7 @@ export namespace jpt::Vulkan
 		submitInfo.pWaitSemaphores = waitSemaphores;
 		submitInfo.pWaitDstStageMask = waitStages;
 		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = commandBuffer.GetHandlePtr();
+		submitInfo.pCommandBuffers = &commandBuffer;
 
 		VkSemaphore signalSemaphores[] = { m_syncObjects[m_currentFrame].GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;
@@ -253,7 +272,7 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	void WindowResources::Present(uint32 imageIndex)
+	void WindowResources::Present(uint32 imageIndex) const
 	{
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
