@@ -13,9 +13,11 @@ import jpt.Vulkan.Extensions;
 import jpt.Vulkan.SwapChain.SupportDetails;
 
 import jpt.DynamicArray;
+import jpt.Heap;
 import jpt.HashSet;
 import jpt.TypeDefs;
 import jpt.String;
+import jpt.Optional;
 
 export namespace jpt::Vulkan
 {
@@ -23,6 +25,17 @@ export namespace jpt::Vulkan
 		- Query for swapchain support, memory properties, etc.	*/
 	class PhysicalDevice
 	{
+	private:
+		struct DevicePicker
+		{
+			VkPhysicalDevice device = VK_NULL_HANDLE;
+			uint32 score = 0;
+			String deviceName;
+
+			constexpr bool operator<(const DevicePicker& other) const { return score < other.score; }
+			constexpr bool operator>(const DevicePicker& other) const { return score > other.score; }
+		};
+
 	private:
 		VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
 		uint32 m_grahicsFamilyIndex = UINT32_MAX;
@@ -39,7 +52,7 @@ export namespace jpt::Vulkan
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
 
 	private:
-		bool IsDeviceSuitable(VkPhysicalDevice physicalDevice) const;
+		Optional<DevicePicker> ScoreDevice(VkPhysicalDevice physicalDevice) const;
 		bool AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const;
 	};
 
@@ -57,14 +70,19 @@ export namespace jpt::Vulkan
 		DynamicArray<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.Buffer());
 
+		MaxHeap<DevicePicker> maxHeap;
 		for (const VkPhysicalDevice& device : devices)
 		{
-			if (IsDeviceSuitable(device))
+			if (Optional<DevicePicker> picker = ScoreDevice(device))
 			{
-				m_physicalDevice = device;
-				break;
+				maxHeap.Emplace(picker.Value());
 			}
 		}
+
+		JPT_ASSERT(!maxHeap.IsEmpty(), "Failed to find a suitable GPU!");
+
+		m_physicalDevice = maxHeap.Top().device;
+		JPT_INFO("Setting Vulkan's Physical device to \"%s\"", maxHeap.Top().deviceName.ConstBuffer());
 
 		if (m_physicalDevice == VK_NULL_HANDLE)
 		{
@@ -166,21 +184,28 @@ export namespace jpt::Vulkan
 		return UINT32_MAX;
 	}
 
-	bool PhysicalDevice::IsDeviceSuitable(VkPhysicalDevice physicalDevice) const
+	Optional<PhysicalDevice::DevicePicker> PhysicalDevice::ScoreDevice(VkPhysicalDevice physicalDevice) const
 	{
 		VkPhysicalDeviceProperties deviceProperties;
 		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
 
-		const bool isDiscreteGPU = (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU);
-		const bool areDeviceExtensionsSupported = AreDeviceExtensionsSupported(physicalDevice);
-
-		const bool isSuitable = isDiscreteGPU && areDeviceExtensionsSupported;
-		if (isSuitable)
+		// Some devices are not suitable
+		if (!AreDeviceExtensionsSupported(physicalDevice))
 		{
-			JPT_INFO("Setting Vulkan's Physical device to \"%s\"", deviceProperties.deviceName);
+			return {};
 		}
 
-		return isSuitable;
+		DevicePicker devicePicker;
+		devicePicker.device = physicalDevice;
+		devicePicker.deviceName = deviceProperties.deviceName;
+
+		// Discrete GPUs have a significant performance advantage
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+		{
+			devicePicker.score += 1000;
+		}
+
+		return devicePicker;
 	}
 
 	bool PhysicalDevice::AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const
