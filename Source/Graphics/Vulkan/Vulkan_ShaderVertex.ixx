@@ -14,10 +14,10 @@ export namespace jpt::Vulkan
 	class VertexShader final : public Shader
 	{
 	public:
-		virtual VkPipelineShaderStageCreateInfo InternalLoad() override;
+		virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo() override;
 	};
 
-	VkPipelineShaderStageCreateInfo VertexShader::InternalLoad()
+	VkPipelineShaderStageCreateInfo VertexShader::GetStageCreateInfo()
 	{
 		VkPipelineShaderStageCreateInfo shaderStageInfo{};
 

@@ -140,13 +140,15 @@ export namespace jpt::Vulkan
 		vkWaitForFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
 		vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
-		Optional<uint32> imageIndex = AcquireNextImage(logicalDevice);
-		Record(renderPass, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
-		Submit();
-		Present(imageIndex.Value());
+		if (Optional<uint32> imageIndex = AcquireNextImage(logicalDevice))
+		{
+			Record(renderPass, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
+			Submit();
+			Present(imageIndex.Value());
 
-		m_currentFrame += 1;
-		m_currentFrame %= kMaxFramesInFlight;
+			m_currentFrame += 1;
+			m_currentFrame %= kMaxFramesInFlight;
+		}
 	}
 
 	void WindowResources::RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass)

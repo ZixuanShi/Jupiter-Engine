@@ -14,10 +14,10 @@ export namespace jpt::Vulkan
 	class PixelShader final : public Shader
 	{
 	public:
-		virtual VkPipelineShaderStageCreateInfo InternalLoad() override;
+		virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo() override;
 	};
 
-	VkPipelineShaderStageCreateInfo PixelShader::InternalLoad()
+	VkPipelineShaderStageCreateInfo PixelShader::GetStageCreateInfo()
 	{
 		VkPipelineShaderStageCreateInfo shaderStageInfo{};
 

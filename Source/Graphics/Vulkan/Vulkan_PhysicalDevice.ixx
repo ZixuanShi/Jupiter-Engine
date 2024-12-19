@@ -47,6 +47,9 @@ export namespace jpt::Vulkan
 		SwapChainSupportDetails QuerySwapChainSupport(VkSurfaceKHR surface) const;
 		uint32 FindMemoryType(uint32 typeFilter, VkMemoryPropertyFlags properties) const;
 
+		VkPhysicalDeviceProperties GetProperties() const;
+		VkPhysicalDeviceFeatures GetFeatures() const;
+
 	public:
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
@@ -184,13 +187,39 @@ export namespace jpt::Vulkan
 		return UINT32_MAX;
 	}
 
+	VkPhysicalDeviceProperties PhysicalDevice::GetProperties() const
+	{
+		JPT_ASSERT(m_physicalDevice != VK_NULL_HANDLE, "Physical device is not initialized");
+
+		VkPhysicalDeviceProperties properties;
+		vkGetPhysicalDeviceProperties(m_physicalDevice, &properties);
+		return properties;
+	}
+
+	VkPhysicalDeviceFeatures PhysicalDevice::GetFeatures() const
+	{
+		JPT_ASSERT(m_physicalDevice != VK_NULL_HANDLE, "Physical device is not initialized");
+
+		VkPhysicalDeviceFeatures features;
+		vkGetPhysicalDeviceFeatures(m_physicalDevice, &features);
+		return features;
+	}
+
 	Optional<PhysicalDevice::DevicePicker> PhysicalDevice::ScoreDevice(VkPhysicalDevice physicalDevice) const
 	{
+		// Some devices are not suitable
+		if (!AreDeviceExtensionsSupported(physicalDevice))
+		{
+			return {};
+		}
+
 		VkPhysicalDeviceProperties deviceProperties;
 		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
 
-		// Some devices are not suitable
-		if (!AreDeviceExtensionsSupported(physicalDevice))
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
+
+		if (!deviceFeatures.geometryShader || !deviceFeatures.fillModeNonSolid)
 		{
 			return {};
 		}

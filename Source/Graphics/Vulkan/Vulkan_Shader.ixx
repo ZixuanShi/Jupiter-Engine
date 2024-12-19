@@ -34,7 +34,7 @@ export namespace jpt::Vulkan
 		void Unload(const LogicalDevice& logicalDevice);
 
 	protected:
-		virtual VkPipelineShaderStageCreateInfo InternalLoad() { JPT_ASSERT(false); return VkPipelineShaderStageCreateInfo{}; }
+		virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo() { JPT_ASSERT(false); return VkPipelineShaderStageCreateInfo{}; }
 	};
 
 	VkPipelineShaderStageCreateInfo Shader::Load(const File::Path& path, const LogicalDevice& logicalDevice)
@@ -55,7 +55,7 @@ export namespace jpt::Vulkan
 			return VkPipelineShaderStageCreateInfo{};
 		}
 
-		return InternalLoad();
+		return GetStageCreateInfo();
 	}
 
 	void Shader::Unload(const LogicalDevice& logicalDevice)
