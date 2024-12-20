@@ -11,7 +11,7 @@ export module jpt.Vulkan.IndexBuffer;
 
 import jpt.Vulkan.Buffer;
 
-import jpt.Vulkan.Data;
+import jpt.Vulkan.Vertex;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
@@ -36,7 +36,7 @@ export namespace jpt::Vulkan
 		// Staging buffer
 		VkBufferCreateInfo stagingBufferInfo{};
 		stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stagingBufferInfo.size = indices.Size();
+		stagingBufferInfo.size = g_indices.Size();
 		stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stagingBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -49,12 +49,12 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		stagingBuffer.MapMemory(logicalDevice, indices.ConstBuffer(), indices.Size());
+		stagingBuffer.MapMemory(logicalDevice, g_indices.ConstBuffer(), g_indices.Size());
 
 		// Index buffer
 		VkBufferCreateInfo indexBufferInfo{};
 		indexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		indexBufferInfo.size = indices.Size();
+		indexBufferInfo.size = g_indices.Size();
 		indexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		indexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -66,8 +66,7 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		m_buffer.Copy(stagingBuffer.GetHandle(), indices.Size(), logicalDevice, memoryTransferCommandPool);
-
+		m_buffer.Copy(stagingBuffer.GetHandle(), g_indices.Size(), logicalDevice, memoryTransferCommandPool);
 		stagingBuffer.Shutdown(logicalDevice);
 
 		return true;

@@ -9,7 +9,7 @@ module;
 
 export module jpt.Vulkan.GraphicsPipeline;
 
-import jpt.Vulkan.Data;
+import jpt.Vulkan.Vertex;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.Shader.Vertex;
 import jpt.Vulkan.Shader.Pixel;

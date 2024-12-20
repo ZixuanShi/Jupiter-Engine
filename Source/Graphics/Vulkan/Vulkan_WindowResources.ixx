@@ -16,7 +16,7 @@ import jpt.Graphics.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 
-import jpt.Vulkan.Data;
+import jpt.Vulkan.Vertex;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.CommandPool;
@@ -209,7 +209,7 @@ export namespace jpt::Vulkan
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_swapChain.GetExtent();
 
-		VkClearValue clearColor = { 0.1f, 0.2f, 0.1f, 1.0f };
+		VkClearValue clearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
 		renderPassInfo.clearValueCount = 1;
 		renderPassInfo.pClearValues = &clearColor;
 
@@ -237,8 +237,7 @@ export namespace jpt::Vulkan
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
 			vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
-
-			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(indices.Count()), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
