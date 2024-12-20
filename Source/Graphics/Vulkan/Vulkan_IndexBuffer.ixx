@@ -33,6 +33,7 @@ export namespace jpt::Vulkan
 
 	bool IndexBuffer::Init(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const CommandPool& memoryTransferCommandPool)
 	{
+		// Staging buffer
 		VkBufferCreateInfo stagingBufferInfo{};
 		stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		stagingBufferInfo.size = indices.Size();
@@ -50,13 +51,14 @@ export namespace jpt::Vulkan
 
 		stagingBuffer.MapMemory(logicalDevice, indices.ConstBuffer(), indices.Size());
 
+		// Index buffer
 		VkBufferCreateInfo indexBufferInfo{};
 		indexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 		indexBufferInfo.size = indices.Size();
 		indexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		indexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+		VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
 		if (const VkResult result = m_buffer.Create(indexBufferInfo, memoryProperties, logicalDevice, physicalDevice); result != VK_SUCCESS)
 		{
