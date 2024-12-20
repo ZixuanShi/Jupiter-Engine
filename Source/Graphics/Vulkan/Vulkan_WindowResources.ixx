@@ -28,6 +28,8 @@ import jpt.Vulkan.IndexBuffer;
 
 import jpt.Optional;
 import jpt.StaticArray;
+import jpt.Utilities;
+import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
@@ -236,7 +238,19 @@ export namespace jpt::Vulkan
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-			vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
+			if constexpr (AreSameType<uint16, decltype(g_indices)::TData>)
+			{
+				vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
+			}
+			else if constexpr (AreSameType<uint32, decltype(g_indices)::TData>)
+			{
+				vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
+			}
+			else
+			{
+				JPT_ASSERT(false, "Index buffer type not supported");
+			}
+
 			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);

@@ -117,8 +117,6 @@ export namespace jpt
 
 		locGenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
 
-		JPT_LOG(g_indices.Count());
-
 		success &= CreateInstance();
 #if !IS_RELEASE
 		success &= m_debugMessenger.Init(m_instance);
