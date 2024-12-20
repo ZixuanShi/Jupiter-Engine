@@ -68,7 +68,7 @@ export namespace jpt::Vulkan
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
 		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
 		void Submit() const;
-		void Present(uint32 imageIndex) const;
+		void Present(uint32& imageIndex) const;
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
@@ -94,7 +94,7 @@ export namespace jpt::Vulkan
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.commandPool = m_commandPool.GetHandle();
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandBufferCount = kMaxFramesInFlight;
+		allocInfo.commandBufferCount = static_cast<uint32>(m_commandBuffers.Count());
 		if (const VkResult result = vkAllocateCommandBuffers(logicalDevice.GetHandle(), &allocInfo, m_commandBuffers.Buffer()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to allocate command buffers: %d", result);
@@ -274,7 +274,7 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	void WindowResources::Present(uint32 imageIndex) const
+	void WindowResources::Present(uint32& imageIndex) const
 	{
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
