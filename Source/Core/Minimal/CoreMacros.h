@@ -39,10 +39,10 @@ import jpt.Utilities;
 			JPT_DELETE_ARRAY(pPointer); \
 		}
 
-#define JPT_SHUTDOWN(pPointer)         \
+#define JPT_SHUTDOWN(pPointer)          \
 		if (pPointer)                   \
 		{                               \
-			pPointer->Shutdown();      \
+			pPointer->Shutdown();       \
 			JPT_DELETE(pPointer);       \
 		}
 
@@ -100,12 +100,13 @@ template <typename T, unsigned int kNumber>
 char(&ArrayCountHelper(const T(&)[kNumber]))[kNumber + 1];
 #define JPT_ARRAY_COUNT(inArray) (sizeof(ArrayCountHelper(inArray)) - 1)
 
+/** Declares a singleton class */
 #define JPT_DECLARE_SINGLETON(ClassName)  \
-public:                                       \
-	static ClassName& GetInstance()           \
-	{                                         \
-		static ClassName instance;            \
-		return instance;                      \
+public:                                   \
+	static ClassName& GetInstance()       \
+	{                                     \
+		static ClassName instance;        \
+		return instance;                  \
 	}                                     
 
 /** @return Offset of a member variable in a struct/class */

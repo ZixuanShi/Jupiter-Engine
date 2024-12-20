@@ -9,7 +9,6 @@ module;
 
 export module jpt.Vulkan.Buffer;
 
-import jpt.Vulkan.Data;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
@@ -57,14 +56,6 @@ export namespace jpt::Vulkan
 		}
 
 		vkBindBufferMemory(logicalDevice.GetHandle(), m_buffer, m_bufferMemory, 0);
-
-		void* pData = nullptr;
-		vkMapMemory(logicalDevice.GetHandle(), m_bufferMemory, 0, createInfo.size, 0, &pData);
-		{
-			memcpy(pData, vertices.ConstBuffer(), vertices.Size());
-		}
-		vkUnmapMemory(logicalDevice.GetHandle(), m_bufferMemory);
-
 		return VK_SUCCESS;
 	}
 
