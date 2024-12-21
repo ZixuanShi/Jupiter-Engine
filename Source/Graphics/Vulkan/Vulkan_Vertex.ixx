@@ -30,7 +30,8 @@ export namespace jpt::Vulkan
 	};
 
 	constexpr Vertex::Vertex(const Vec2f& position, const Vec3f& color)
-		: position(position), color(color)
+		: position(position)
+		, color(color)
 	{
 	}
 
@@ -68,18 +69,15 @@ export namespace jpt::Vulkan
 	
 	//DynamicArray<Vertex> g_vertices =
 	//{
-	//	{ Vec2f( 0.5f,  0.5f), Vec3f(0.0f, 0.2f, 0.1f) },
-	//	{ Vec2f(-0.5f,  0.5f), Vec3f(0.0f, 0.2f, 0.1f) },
-	//	{ Vec2f( 0.0f, -0.5f), Vec3f(0.0f, 0.2f, 0.1f) },
-
-	//	{ Vec2f(  0.25f, 0.0f), Vec3f(0.1f, 0.0f, 0.1f) },
-	//	{ Vec2f(  0.0f,  0.5f), Vec3f(0.1f, 0.0f, 0.1f) },
-	//	{ Vec2f( -0.25f, 0.0f), Vec3f(0.1f, 0.0f, 0.1f) },
+	//	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+	//	{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+	//	{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+	//	{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 	//};
 
 	//DynamicArray<uint16> g_indices =
 	//{
 	//	0, 1, 2, 
-	//	3, 4, 5
+	//	2, 3, 0
 	//};
 }

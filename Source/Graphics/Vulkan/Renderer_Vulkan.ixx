@@ -15,6 +15,7 @@ import jpt.Renderer;
 import jpt.Graphics.Constants;
 
 import jpt.Vulkan.Vertex;
+import jpt.Vulkan.Utils;
 
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.WindowResources;
@@ -41,34 +42,6 @@ import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 
 using namespace jpt::Vulkan;
-
-// Clockwise
-void locGenerateSierpinski(size_t depth, Vec2f right, Vec2f left, Vec2f top)
-{
-	if (depth <= 0)
-	{
-		static const Vec3f klocTriangleColor = { 0.95f, 0.05f, 0.05f };
-		const size_t baseIndex = g_vertices.Count();
-
-		g_vertices.EmplaceBack(Vertex(right, klocTriangleColor));
-		g_vertices.EmplaceBack(Vertex(left,  klocTriangleColor));
-		g_vertices.EmplaceBack(Vertex(top,   klocTriangleColor));
-
-		g_indices.EmplaceBack(static_cast<uint16>(baseIndex));     // right
-		g_indices.EmplaceBack(static_cast<uint16>(baseIndex + 1)); // left  
-		g_indices.EmplaceBack(static_cast<uint16>(baseIndex + 2)); // top
-
-		return;
-	}
-
-	const Vec2f rightLeft = (right + left) * 0.5f;
-	const Vec2f rightTop  = (right + top)  * 0.5f;
-	const Vec2f leftTop   = (left  + top)  * 0.5f;
-
-	locGenerateSierpinski(depth - 1, right,     rightLeft, rightTop);
-	locGenerateSierpinski(depth - 1, rightLeft, left,      leftTop);
-	locGenerateSierpinski(depth - 1, rightTop,  leftTop,   top);
-}
 
 export namespace jpt
 {
@@ -115,7 +88,7 @@ export namespace jpt
 
 		bool success = true;
 
-		locGenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
+		GenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
 
 		success &= CreateInstance();
 #if !IS_RELEASE

@@ -70,7 +70,7 @@ export namespace jpt::Vulkan
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
 		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
 		void Submit() const;
-		void Present(uint32& imageIndex) const;
+		void Present(uint32& imageIndex);
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
@@ -193,7 +193,7 @@ export namespace jpt::Vulkan
 	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline,
 		VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex)
 	{
-		VkCommandBuffer commandBuffer = m_commandBuffers[m_currentFrame];
+		const VkCommandBuffer& commandBuffer = m_commandBuffers[m_currentFrame];
 		vkResetCommandBuffer(commandBuffer, 0);
 
 		VkCommandBufferBeginInfo beginInfo = {};
@@ -287,7 +287,7 @@ export namespace jpt::Vulkan
 		}
 	}
 
-	void WindowResources::Present(uint32& imageIndex) const
+	void WindowResources::Present(uint32& imageIndex)
 	{
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -301,14 +301,21 @@ export namespace jpt::Vulkan
 		presentInfo.pSwapchains = swapChains;
 		presentInfo.pImageIndices = &imageIndex;
 
-		if (const VkResult result = vkQueuePresentKHR(m_presentQueue, &presentInfo); result != VK_SUCCESS)
+		const VkResult result = vkQueuePresentKHR(m_presentQueue, &presentInfo);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
 		{
-			JPT_ERROR("Failed to present swap chain image: %d", result);
+			m_shouldRecreateSwapChain = true;
+			return;
 		}
 	}
 
 	bool WindowResources::CanDraw() const
 	{
-		return !m_pOwner->IsMinimized();
+		bool canDraw = true;
+
+		canDraw &= !m_pOwner->IsMinimized();
+
+		return canDraw;
 	}
 }

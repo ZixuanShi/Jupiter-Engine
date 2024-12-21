@@ -29,6 +29,7 @@ export namespace jpt
 		static consteval Vector3 Zero() { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
 		static consteval Vector3 One()  { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
 
+		// Right-handed
 		// X. Pitch
 		static consteval Vector3 Left()  { return Vector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
 		static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
