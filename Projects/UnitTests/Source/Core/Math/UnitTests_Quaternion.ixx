@@ -73,7 +73,7 @@ bool UnitTests_Quaternion_Multiplication()
 
 	quaternion.RotateY(jpt::ToRadians(30.0f));
 	mulResult = quaternion * quaternion2;
-	JPT_ENSURE(mulResult == Quatf(0.683f, -0.183f, 0.183f, 0.683f));
+	JPT_ENSURE(mulResult == Quatf(0.683f, 0.183f, -0.183f, 0.683f));
 
 	return true;
 }

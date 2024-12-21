@@ -34,8 +34,8 @@ export namespace jpt
 		static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
 
 		// Y. Yaw
-		static consteval Vector3 Up()   { return Vector3( static_cast<T>(0),  static_cast<T>(-1),  static_cast<T>(0)); }
-		static consteval Vector3 Down() { return Vector3( static_cast<T>(0), static_cast<T>(1),  static_cast<T>(0)); }
+		static consteval Vector3 Up()   { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
+		static consteval Vector3 Down() { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
 
 		// Z. Roll
 		static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
