@@ -29,6 +29,7 @@ export namespace jpt
 	public:
 		constexpr StaticArray() = default;
 		constexpr StaticArray(const std::initializer_list<TData>& initializerList);
+		constexpr StaticArray(const TData& data);
 		constexpr StaticArray(const StaticArray& other);
 		constexpr StaticArray(StaticArray&& other) noexcept;
 		StaticArray& operator=(const StaticArray& other) noexcept;
@@ -56,6 +57,9 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Count() const { return kCount; }
 		constexpr size_t Size()  const { return kCount * sizeof(TData); }
+
+		// Modifiers
+		constexpr void Fill(const TData& value);
 
 	private:
 		constexpr void CopyData(const TData* pBegin);
@@ -86,6 +90,12 @@ export namespace jpt
 	{
 		JPT_ASSERT(initializerList.size() == kCount, "Initializer list size doesn't match");
 		CopyData(initializerList.begin());
+	}
+
+	template<typename _TData, size_t kCount>
+	constexpr StaticArray<_TData, kCount>::StaticArray(const TData& data)
+	{
+		Fill(data);
 	}
 
 	template<typename _TData, size_t kCount>
@@ -131,6 +141,15 @@ export namespace jpt
 			{
 				m_buffer[i].~TData();
 			}
+		}
+	}
+
+	template<typename _TData, size_t kCount>
+	constexpr void StaticArray<_TData, kCount>::Fill(const TData& value)
+	{
+		for (size_t i = 0; i < kCount; ++i)
+		{
+			m_buffer[i] = value;
 		}
 	}
 

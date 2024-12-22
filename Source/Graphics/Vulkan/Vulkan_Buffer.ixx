@@ -30,7 +30,7 @@ export namespace jpt::Vulkan
 
 	public:
 		VkBuffer GetHandle() const { return m_buffer; }
-		VkDeviceMemory GetBufferMemory() const { return m_bufferMemory; }
+		VkDeviceMemory GetMemory() const { return m_bufferMemory; }
 	};
 
 	VkResult Buffer::Create(const VkBufferCreateInfo& createInfo, VkMemoryPropertyFlags properties, const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice)

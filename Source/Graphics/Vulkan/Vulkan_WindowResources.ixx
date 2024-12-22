@@ -7,6 +7,12 @@ module;
 
 #include <vulkan/vulkan.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <chrono>
+
 export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
@@ -21,6 +27,7 @@ import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.RenderPass;
+import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
@@ -30,6 +37,10 @@ import jpt.Optional;
 import jpt.StaticArray;
 import jpt.Utilities;
 import jpt.TypeDefs;
+
+// Uniform Buffers
+import jpt.Vulkan.Buffer;
+import jpt.Vulkan.UniformBufferObject;
 
 export namespace jpt::Vulkan
 {
@@ -47,34 +58,45 @@ export namespace jpt::Vulkan
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
 
+		// Uniform Buffers
+		StaticArray<Buffer, kMaxFramesInFlight> m_uniformBuffers;
+		StaticArray<void*, kMaxFramesInFlight> m_mappedUniformBuffers;
+
+		// Descriptor sets
+		StaticArray<VkDescriptorSet, kMaxFramesInFlight> m_descriptorSets;
+
 		uint32 m_currentFrame = 0;
 		bool m_shouldRecreateSwapChain = false;
 
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
-			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
+			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
+		    const VkDescriptorSetLayout& descriptorSetLayout, const VkDescriptorPool& descriptorPool);
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
-		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, 
+		void DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline,
 			VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer);
 
 		void RecreateSwapChain(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass);
 
+	public:
 		bool ShouldRecreateSwapChain() const;
-
 		Window* GetOwner() const { return m_pOwner; }
 		bool CanDraw() const;
 
 	private:
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
-		void Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
+		void Record(const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
 		void Submit() const;
 		void Present(uint32& imageIndex);
+
+		void UpdateUniformBuffer();
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
-		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass)
+		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
+		const VkDescriptorSetLayout& descriptorSetLayout, const VkDescriptorPool& descriptorPool)
 	{
 		// Surface
 		m_pOwner = pWindow;
@@ -109,12 +131,74 @@ export namespace jpt::Vulkan
 			syncObjects.Init(logicalDevice);
 		}
 
+		// Uniform Buffers
+		{
+			const VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+			for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
+			{
+				VkBufferCreateInfo createInfo{};
+				createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+				createInfo.size = bufferSize;
+				createInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+				createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+				VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+				m_uniformBuffers[i].Create(createInfo, memoryProperties, logicalDevice, physicalDevice);
+
+				vkMapMemory(logicalDevice.GetHandle(), m_uniformBuffers[i].GetMemory(), 0, bufferSize, 0, &m_mappedUniformBuffers[i]);
+			}
+		}
+
+		// Descriptor sets
+		{
+			StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> layouts(descriptorSetLayout);
+
+			VkDescriptorSetAllocateInfo descriptorAllocInfo{};
+			descriptorAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			descriptorAllocInfo.descriptorPool = descriptorPool;
+			descriptorAllocInfo.descriptorSetCount = static_cast<uint32>(kMaxFramesInFlight);
+			descriptorAllocInfo.pSetLayouts = layouts.ConstBuffer();
+
+			if (const VkResult result = vkAllocateDescriptorSets(logicalDevice.GetHandle(), &descriptorAllocInfo, m_descriptorSets.Buffer()); result != VK_SUCCESS)
+			{
+				JPT_ERROR("Failed to allocate descriptor sets: %d", result);
+				return false;
+			}
+
+			for (size_t i = 0; i < kMaxFramesInFlight; ++i)
+			{
+				VkDescriptorBufferInfo bufferInfo{};
+				bufferInfo.buffer = m_uniformBuffers[i].GetHandle();
+				bufferInfo.offset = 0;
+				bufferInfo.range = sizeof(UniformBufferObject);
+
+				VkWriteDescriptorSet descriptorWrite{};
+				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrite.dstSet = m_descriptorSets[i];
+				descriptorWrite.dstBinding = 0;
+				descriptorWrite.dstArrayElement = 0;
+				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrite.descriptorCount = 1;
+				descriptorWrite.pBufferInfo = &bufferInfo;
+
+				vkUpdateDescriptorSets(logicalDevice.GetHandle(), 1, &descriptorWrite, 0, nullptr);
+			}
+		}
+
 		return true;
 	}
 
 	void WindowResources::Shutdown(VkInstance instance, const LogicalDevice& logicalDevice)
 	{
 		logicalDevice.WaitIdle();
+
+		// Uniform Buffers
+		for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
+		{
+			m_uniformBuffers[i].Shutdown(logicalDevice);
+		}
 
 		for (SyncObjects& syncObjects : m_syncObjects)
 		{
@@ -133,7 +217,7 @@ export namespace jpt::Vulkan
 		m_surface = VK_NULL_HANDLE;
 	}
 
-	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline,
+	void WindowResources::DrawFrame(const LogicalDevice& logicalDevice, const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline,
 		VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer)
 	{
 		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
@@ -143,9 +227,11 @@ export namespace jpt::Vulkan
 
 		if (Optional<uint32> imageIndex = AcquireNextImage(logicalDevice))
 		{
+			UpdateUniformBuffer();
+
 			vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
-			Record(renderPass, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
+			Record(renderPass, pipelineLayout, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
 			Submit();
 			Present(imageIndex.Value());
 
@@ -191,7 +277,7 @@ export namespace jpt::Vulkan
 		return imageIndex;
 	}
 
-	void WindowResources::Record(const RenderPass& renderPass, const GraphicsPipeline& graphicsPipeline,
+	void WindowResources::Record(const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline,
 		VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex)
 	{
 		const VkCommandBuffer& commandBuffer = m_commandBuffers[m_currentFrame];
@@ -252,6 +338,7 @@ export namespace jpt::Vulkan
 				JPT_ASSERT(false, "Index buffer type not supported");
 			}
 
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, &m_descriptorSets[m_currentFrame], 0, nullptr);
 			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
@@ -309,6 +396,23 @@ export namespace jpt::Vulkan
 			m_shouldRecreateSwapChain = true;
 			return;
 		}
+	}
+
+	void WindowResources::UpdateUniformBuffer()
+	{
+		static auto startTime = std::chrono::high_resolution_clock::now();
+
+		const auto currentTime = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+		UniformBufferObject ubo = {};
+		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view  = glm::lookAt(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.proj  = glm::perspective(glm::radians(45.0f), m_swapChain.GetExtent().width / static_cast<float>(m_swapChain.GetExtent().height), 0.1f, 10.0f);
+
+		ubo.proj[1][1] *= -1;
+
+		memcpy(m_mappedUniformBuffers[m_currentFrame], &ubo, sizeof(ubo));
 	}
 
 	bool WindowResources::CanDraw() const
