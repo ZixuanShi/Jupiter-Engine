@@ -32,6 +32,9 @@ import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
+import jpt.Vulkan.UniformBufferObject;
+import jpt.Vulkan.DescriptorSetLayout;
+import jpt.Vulkan.DescriptorPool;
 
 import jpt.Optional;
 import jpt.StaticArray;
@@ -40,7 +43,6 @@ import jpt.TypeDefs;
 
 // Uniform Buffers
 import jpt.Vulkan.Buffer;
-import jpt.Vulkan.UniformBufferObject;
 
 export namespace jpt::Vulkan
 {
@@ -71,7 +73,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(Window* pWindow, VkInstance instance, 
 			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
-		    const VkDescriptorSetLayout& descriptorSetLayout, const VkDescriptorPool& descriptorPool);
+		    const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool);
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
@@ -96,7 +98,7 @@ export namespace jpt::Vulkan
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
 		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
-		const VkDescriptorSetLayout& descriptorSetLayout, const VkDescriptorPool& descriptorPool)
+		const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool)
 	{
 		// Surface
 		m_pOwner = pWindow;
@@ -153,11 +155,11 @@ export namespace jpt::Vulkan
 
 		// Descriptor sets
 		{
-			StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> layouts(descriptorSetLayout);
+			StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> layouts(descriptorSetLayout.GetHandle());
 
 			VkDescriptorSetAllocateInfo descriptorAllocInfo{};
 			descriptorAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			descriptorAllocInfo.descriptorPool = descriptorPool;
+			descriptorAllocInfo.descriptorPool = descriptorPool.GetHandle();
 			descriptorAllocInfo.descriptorSetCount = static_cast<uint32>(kMaxFramesInFlight);
 			descriptorAllocInfo.pSetLayouts = layouts.ConstBuffer();
 

@@ -25,9 +25,11 @@ import jpt.Vulkan.DebugMessenger;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
+import jpt.Vulkan.RenderPass;
+import jpt.Vulkan.DescriptorSetLayout;
+import jpt.Vulkan.DescriptorPool;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
-import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
 
@@ -59,11 +61,8 @@ export namespace jpt
 
 		CommandPool m_memoryTransferCommandPool;
 
-		// Descriptor set layout
-		VkDescriptorSetLayout m_descriptorSetLayout;
-
-		// Descriptor Pool
-		VkDescriptorPool m_descriptorPool;
+		DescriptorSetLayout m_descriptorSetLayout;
+		DescriptorPool m_descriptorPool;
 
 		RenderPass m_renderPass;
 		PipelineLayout m_pipelineLayout;
@@ -107,50 +106,14 @@ export namespace jpt
 
 		success &= m_renderPass.Init(m_logicalDevice, kFormat);
 
-		// Descriptor set layout
-		{
-			VkDescriptorSetLayoutBinding uboLayoutBinding{};
-			uboLayoutBinding.binding = 0;
-			uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			uboLayoutBinding.descriptorCount = 1;
-			uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-
-			VkDescriptorSetLayoutCreateInfo layoutInfo{};
-			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-			layoutInfo.bindingCount = 1;
-			layoutInfo.pBindings = &uboLayoutBinding;
-
-			if (const VkResult result = vkCreateDescriptorSetLayout(m_logicalDevice.GetHandle(), &layoutInfo, nullptr, &m_descriptorSetLayout); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create descriptor set layout: %d", result);
-				success = false;
-			}
-		}
-
+		success &= m_descriptorSetLayout.Init(m_logicalDevice);
 		success &= m_pipelineLayout.Init(m_logicalDevice, m_descriptorSetLayout);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
 
 		success &= m_vertexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 		success &= m_indexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 
-		// Descriptor Pool
-		{
-			VkDescriptorPoolSize poolSize{};
-			poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			poolSize.descriptorCount = static_cast<uint32>(kMaxFramesInFlight);
-
-			VkDescriptorPoolCreateInfo poolInfo{};
-			poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-			poolInfo.poolSizeCount = 1;
-			poolInfo.pPoolSizes = &poolSize;
-			poolInfo.maxSets = static_cast<uint32>(kMaxFramesInFlight);
-
-			if (const VkResult result = vkCreateDescriptorPool(m_logicalDevice.GetHandle(), &poolInfo, nullptr, &m_descriptorPool); result != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create descriptor pool: %d", result);
-				success = false;
-			}
-		}
+		success &= m_descriptorPool.Init(m_logicalDevice);
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -176,11 +139,8 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
-		// Descriptor Pool
-		vkDestroyDescriptorPool(m_logicalDevice.GetHandle(), m_descriptorPool, nullptr);
-
-		// Descriptor set layout
-		vkDestroyDescriptorSetLayout(m_logicalDevice.GetHandle(), m_descriptorSetLayout, nullptr);
+		m_descriptorPool.Shutdown(m_logicalDevice);
+		m_descriptorSetLayout.Shutdown(m_logicalDevice);
 
 		for (WindowResources& resources : m_windowResources)
 		{
