@@ -140,10 +140,11 @@ export namespace jpt::Vulkan
 
 		// Wait for the previous frame to finish
 		vkWaitForFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
-		vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
 		if (Optional<uint32> imageIndex = AcquireNextImage(logicalDevice))
 		{
+			vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
+
 			Record(renderPass, graphicsPipeline, vertexBuffer, indexBuffer, imageIndex.Value());
 			Submit();
 			Present(imageIndex.Value());
