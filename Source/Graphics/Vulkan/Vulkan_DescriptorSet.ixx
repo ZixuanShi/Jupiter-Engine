@@ -25,9 +25,11 @@ export namespace jpt::Vulkan
 	{
 	private:
 		VkDescriptorSet m_descriptorSet = VK_NULL_HANDLE;
+		VkDescriptorPool m_descriptorPool = VK_NULL_HANDLE;
 
 	public:
 		bool Init(const LogicalDevice& logicalDevice, const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool, const UniformBuffer& uniformBuffer);
+		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
 		VkDescriptorSet GetHandle() const { return m_descriptorSet; }
@@ -36,9 +38,11 @@ export namespace jpt::Vulkan
 
 	bool DescriptorSet::Init(const LogicalDevice& logicalDevice, const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool, const UniformBuffer& uniformBuffer)
 	{
+		m_descriptorPool = descriptorPool.GetHandle();
+
 		VkDescriptorSetAllocateInfo descriptorAllocInfo{};
 		descriptorAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		descriptorAllocInfo.descriptorPool = descriptorPool.GetHandle();
+		descriptorAllocInfo.descriptorPool = m_descriptorPool;
 		descriptorAllocInfo.descriptorSetCount = 1;
 		descriptorAllocInfo.pSetLayouts = descriptorSetLayout.GetHandlePtr();
 
@@ -65,5 +69,10 @@ export namespace jpt::Vulkan
 		vkUpdateDescriptorSets(logicalDevice.GetHandle(), 1, &descriptorWrite, 0, nullptr);
 
 		return true;
+	}
+
+	void DescriptorSet::Shutdown(const LogicalDevice& logicalDevice)
+	{
+		vkFreeDescriptorSets(logicalDevice.GetHandle(), m_descriptorPool, 1, &m_descriptorSet);
 	}
 }

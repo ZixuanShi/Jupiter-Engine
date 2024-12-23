@@ -11,6 +11,8 @@ export module jpt.Vulkan.DescriptorPool;
 import jpt.Graphics.Constants;
 import jpt.Vulkan.LogicalDevice;
 
+import jpt.Window.Manager;
+
 export namespace jpt::Vulkan
 {
 	/** Memory Pool for descriptors */
@@ -37,7 +39,8 @@ export namespace jpt::Vulkan
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = 1;
 		poolInfo.pPoolSizes = &poolSize;
-		poolInfo.maxSets = static_cast<uint32>(kMaxFramesInFlight);
+		poolInfo.maxSets = static_cast<uint32>(kMaxFramesInFlight * WindowManager::kMaxWindows);
+		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
 		if (const VkResult result = vkCreateDescriptorPool(logicalDevice.GetHandle(), &poolInfo, nullptr, &m_descriptorPool); result != VK_SUCCESS)
 		{

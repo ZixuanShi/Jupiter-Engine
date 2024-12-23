@@ -155,6 +155,11 @@ export namespace jpt::Vulkan
 	{
 		logicalDevice.WaitIdle();
 
+		for (DescriptorSet& descriptorSet : m_descriptorSets)
+		{
+			descriptorSet.Shutdown(logicalDevice);
+		}
+
 		for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
 		{
 			m_uniformBuffers[i].Shutdown(logicalDevice);

@@ -27,6 +27,9 @@ export namespace jpt
 {
 	class WindowManager
 	{
+	public:
+		static constexpr size_t kMaxWindows = 16;	/**< Maximum number of windows Jupiter can manage simultaneously */
+
 	private:
 		DynamicArray<Window*> m_windows;	/**< All the windows managed by Jupiter. index at 0 is the main window */
 
@@ -84,6 +87,8 @@ export namespace jpt
 
 	Window* WindowManager::Create(const char* title /* = "New Window"*/, int32 width /*= Window::kDefaultWidth*/, int32 height /*= Window::kDefaultHeight*/)
 	{
+		JPT_ASSERT(m_windows.Count() < kMaxWindows, "Maximum number of windows reached");
+		
 		const Framework_API api = GetApplication()->GetFrameworkAPI();
 		switch (api.Value())
 		{

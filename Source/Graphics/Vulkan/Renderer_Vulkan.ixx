@@ -119,6 +119,11 @@ export namespace jpt
 		Window* pMainWindow = GetApplication()->GetMainWindow();
 		RegisterWindow(pMainWindow);
 
+		if (!success)
+		{
+			JPT_ERROR("Failed to initialize Vulkan renderer");
+		}
+
 		return success;
 	}
 
@@ -139,13 +144,13 @@ export namespace jpt
 	{
 		m_logicalDevice.WaitIdle();
 
-		m_descriptorPool.Shutdown(m_logicalDevice);
-		m_descriptorSetLayout.Shutdown(m_logicalDevice);
-
 		for (WindowResources& resources : m_windowResources)
 		{
 			resources.Shutdown(m_instance, m_logicalDevice);
 		}
+
+		m_descriptorPool.Shutdown(m_logicalDevice);
+		m_descriptorSetLayout.Shutdown(m_logicalDevice);
 
 		m_vertexBuffer.Shutdown(m_logicalDevice);
 		m_indexBuffer.Shutdown(m_logicalDevice);
