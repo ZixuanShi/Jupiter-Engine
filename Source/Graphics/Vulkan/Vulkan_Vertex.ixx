@@ -64,20 +64,20 @@ export namespace jpt::Vulkan
 		return attributeDescriptions;
 	}
 
-	//DynamicArray<Vertex> g_vertices;
-	//DynamicArray<uint16> g_indices;
+	DynamicArray<Vertex> g_vertices;
+	DynamicArray<uint16> g_indices;
 	
-	DynamicArray<Vertex> g_vertices =
-	{
-		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
-	};
+	//DynamicArray<Vertex> g_vertices =
+	//{
+	//	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+	//	{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+	//	{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+	//	{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+	//};
 
-	DynamicArray<uint16> g_indices =
-	{
-		0, 1, 2, 
-		2, 3, 0
-	};
+	//DynamicArray<uint16> g_indices =
+	//{
+	//	0, 1, 2, 
+	//	2, 3, 0
+	//};
 }

@@ -369,9 +369,10 @@ export namespace jpt::Vulkan
 
 		const StopWatch::Point currentTime = StopWatch::Now();
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
+		const float rotation = time * ToRadians(90.0f);
 
 		UniformBufferObject ubo = {};
-		ubo.model = Matrix44f::FromRadians(0, 0, time * ToRadians(90.0f));
+		ubo.model = Matrix44f::FromRadians(0, rotation, rotation);
 		ubo.view = Matrix44f::LookAt(Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Forward());
 		ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
