@@ -10,6 +10,7 @@ I design, plan, write, test everything from scratch by myself
   - Types, reflective Enums, Any, Variant, Tuple
 - Implemented Json and CSV for Data-Driven
 - Vulkan and DX12 renderer
+- Core Systems. Input, Event System, Debugging, File IO, and more.
 - GLFW and WIN32 frameworks
 
 # Install and Run Jupiter on Windows
