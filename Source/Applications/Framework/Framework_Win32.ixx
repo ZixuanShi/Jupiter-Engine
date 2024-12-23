@@ -109,6 +109,14 @@ namespace jpt
 
 				return 0;
 			}
+			case WM_SIZE:
+			{
+				if (pWindow)
+				{
+					pWindow->ResizeFrame(Vec2i(LOWORD(lParam), HIWORD(lParam)));
+				}
+				return 0;
+			}
 			default:
 			{ 
 				return DefWindowProc(hWnd, message, wParam, lParam); 

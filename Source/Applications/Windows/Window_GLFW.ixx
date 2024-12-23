@@ -65,7 +65,6 @@ namespace jpt
 
 	public:
 		virtual bool ShouldClose() const override;
-		virtual Vec2i GetFrameSize() const override;
 
 		GLFWwindow* GetGLFWWindow() const { return m_pGLFWWindow; }
 	};
@@ -133,14 +132,6 @@ namespace jpt
 		return glfwWindowShouldClose(m_pGLFWWindow);
 	}
 
-	Vec2i Window_GLFW::GetFrameSize() const
-	{
-		int32 width = 0;
-		int32 height = 0;
-		glfwGetFramebufferSize(m_pGLFWWindow, &width, &height);
-		return Vec2i(width, height);
-	}
-
 	namespace Callbacks
 	{
 		void OnWindowClose(GLFWwindow* pGLFWWindow)
@@ -156,6 +147,8 @@ namespace jpt
 		{
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
+
+			pWindow->ResizeFrame(Vec2i(width, height));
 
 			Event_Window_Resize eventWindowResize = { pWindow, width, height };
 			EventManager::GetInstance().Send(eventWindowResize);
