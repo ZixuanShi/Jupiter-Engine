@@ -35,6 +35,8 @@ import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
 import jpt.Vulkan.DescriptorSet;
 
+import jpt.Matrix44;
+import jpt.Math;
 import jpt.Optional;
 import jpt.StaticArray;
 import jpt.Utilities;
@@ -364,11 +366,13 @@ export namespace jpt::Vulkan
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
 
 		UniformBufferObject ubo = {};
-		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.view  = glm::lookAt(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.proj  = glm::perspective(glm::radians(45.0f), m_swapChain.GetExtent().width / static_cast<float>(m_swapChain.GetExtent().height), 0.1f, 10.0f);
+		ubo.model = Matrix44f::FromRadians(0, time * ToRadians(90.0f), 0);
+		ubo.view = Matrix44f::LookAt(Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Up());
+		ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_swapChain.GetExtent().width / static_cast<float>(m_swapChain.GetExtent().height), 0.1f, 10.0f);
 
-		ubo.proj[1][1] *= -1;
+		//ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		//ubo.view  = glm::lookAt(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		//ubo.proj  = glm::perspective(glm::radians(45.0f), m_swapChain.GetExtent().width / static_cast<float>(m_swapChain.GetExtent().height), 0.1f, 10.0f);
 
 		UniformBuffer& uniformBuffer = m_uniformBuffers[m_currentFrame];
 		memcpy(uniformBuffer.GetMappedMemory(), &ubo, sizeof(ubo));

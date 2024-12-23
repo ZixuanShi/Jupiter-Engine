@@ -31,6 +31,7 @@ namespace jpt
 		using NumericType = T;
 
 		static consteval Matrix44 Identity() { return Matrix44(); }
+		static consteval Matrix44 Zero() { return Matrix44(Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero()); }
 
 	public:
 		constexpr Matrix44();
@@ -53,7 +54,15 @@ namespace jpt
 		constexpr static Matrix44<T> RotationZ(T radians);
 		constexpr static Matrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static Matrix44<T> Transposed(const Matrix44<T>& matrix44);
+
+		/** Creates an orthographic projection matrix */
 		constexpr static Matrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
+
+		/** Creates a view matrix for a camera, defining how the world is oriented relative to the camera's position */
+		constexpr static Matrix44<T> LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up);
+
+		/** Converts 3D coordinates into 2D screen coordinates */
+		constexpr static Matrix44<T> Perspective(T fov, T aspect, T near, T far);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -71,6 +80,10 @@ namespace jpt
 		constexpr static Matrix44<T> FromDegrees(T pitch, T yaw, T roll);
 		constexpr static Matrix44<T> FromRadians(const Vector3<T>& radians);
 		constexpr static Matrix44<T> FromRadians(T pitch, T yaw, T roll);
+
+		// Accessors
+		constexpr       Vector4<T>& operator[](size_t index)       { return m[index]; }
+		constexpr const Vector4<T>& operator[](size_t index) const { return m[index]; }
 
 		constexpr String ToString() const;
 		constexpr bool operator==(const Matrix44<T>& rhs) const;
@@ -255,6 +268,54 @@ namespace jpt
 		result.m[3][0] = -(right + left) / width;
 		result.m[3][1] = -(top + bottom) / height;
 		result.m[3][2] = -(far + near) / depth;
+
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up)
+	{
+		// Calcualte the forward vector
+		const Vector3<T> forward = (center - eye).Normalized();
+
+		// Calculate the right vector
+		const Vector3<T> right = forward.Cross(up).Normalized();
+
+		// Calculate the up vector
+		const Vector3<T> newUp = right.Cross(forward);
+
+		// Create the view matrix
+		Matrix44<T> result = Matrix44<T>::Identity();
+		result.m[0][0] = right.x;
+		result.m[1][0] = right.y;
+		result.m[2][0] = right.z;
+
+		result.m[0][1] = newUp.x;
+		result.m[1][1] = newUp.y;
+		result.m[2][1] = newUp.z;
+
+		result.m[0][2] = -forward.x;
+		result.m[1][2] = -forward.y;
+		result.m[2][2] = -forward.z;
+
+		result.m[3][0] = -right.Dot(eye);
+		result.m[3][1] = -newUp.Dot(eye);
+		result.m[3][2] = forward.Dot(eye);
+
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Matrix44<T> Matrix44<T>::Perspective(T fov, T aspect, T zNear, T zFar)
+	{
+		const T tanHalfFovy = std::tan(fov / static_cast<T>(2));
+		Matrix44<T> result = Matrix44<T>::Zero();
+
+		result.m[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
+		result.m[1][1] = static_cast<T>(1) / tanHalfFovy;
+		result.m[2][2] = -(zFar + zNear) / (zFar - zNear);
+		result.m[2][3] = -static_cast<T>(1);
+		result.m[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
 
 		return result;
 	}

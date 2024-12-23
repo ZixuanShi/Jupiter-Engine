@@ -1,21 +1,31 @@
-struct VertexInput
+cbuffer UniformBufferObject : register(b0)
 {
-    float2 position : POSITION;
-    float3 color : COLOR;
+    matrix model;
+    matrix view;
+    matrix proj;
 };
 
-struct VertexOutput
+struct VSInput
 {
-    float4 position : SV_POSITION;
-    float3 color : COLOR;
+    float2 position : POSITION0;    // Matches layout(location = 0)
+    float3 color : COLOR0;         // Matches layout(location = 1)
 };
 
-VertexOutput main(VertexInput input)
+struct VSOutput
 {
-    VertexOutput output;
+    float4 position : SV_POSITION;  // Required for vertex shader output
+    float3 color : COLOR0;         // Must match your pixel shader input
+};
+
+VSOutput main(VSInput input)
+{
+    VSOutput output;
     
-    output.position = float4(input.position, 0.0, 1.0);
+    // HLSL matrix multiplication order is different from GLSL
+    float4 worldPos = mul(float4(input.position, 0.0, 1.0), model);
+    float4 viewPos = mul(worldPos, view);
+    output.position = mul(viewPos, proj);
+    
     output.color = input.color;
-    
     return output;
 }
