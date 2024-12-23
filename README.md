@@ -5,8 +5,9 @@ I design, plan, write, test everything from scratch by myself
   - Modules. Replaced Pre-Compiled Headers for faster compilation speed
   - Concepts. Safer, and more flexible Templates magic
 - Implemented my own STL
-  - Containers, including DynamicArray, HashMap, SortedMap, Graph, Heap
+  - Containers, DynamicArray, HashMap, Red Black Tree, Graph, Heap
   - Strings Library
+  - Smart Pointers and Memory Pool
   - Types, reflective Enums, Any, Variant, Tuple
 - Implemented Json and CSV for Data-Driven
 - Vulkan and DX12 renderer
