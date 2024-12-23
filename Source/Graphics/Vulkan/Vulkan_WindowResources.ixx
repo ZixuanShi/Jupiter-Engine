@@ -32,7 +32,7 @@ import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
-import jpt.Vulkan.UniformBufferObject;
+import jpt.Vulkan.UniformBuffer;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
 
@@ -59,10 +59,7 @@ export namespace jpt::Vulkan
 		CommandPool m_commandPool;
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
-
-		// Uniform Buffers
-		StaticArray<Buffer, kMaxFramesInFlight> m_uniformBuffers;
-		StaticArray<void*, kMaxFramesInFlight> m_mappedUniformBuffers;
+		StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
 
 		// Descriptor sets
 		StaticArray<VkDescriptorSet, kMaxFramesInFlight> m_descriptorSets;
@@ -130,26 +127,18 @@ export namespace jpt::Vulkan
 		// Sync objects
 		for (SyncObjects& syncObjects : m_syncObjects)
 		{
-			syncObjects.Init(logicalDevice);
+			if (!syncObjects.Init(logicalDevice))
+			{
+				return false;
+			}
 		}
 
 		// Uniform Buffers
+		for (UniformBuffer& uniformBuffer : m_uniformBuffers)
 		{
-			const VkDeviceSize bufferSize = sizeof(UniformBufferObject);
-
-			for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
+			if (!uniformBuffer.Init(physicalDevice, logicalDevice))
 			{
-				VkBufferCreateInfo createInfo{};
-				createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-				createInfo.size = bufferSize;
-				createInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-				createInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-				VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-				m_uniformBuffers[i].Create(createInfo, memoryProperties, logicalDevice, physicalDevice);
-
-				vkMapMemory(logicalDevice.GetHandle(), m_uniformBuffers[i].GetMemory(), 0, bufferSize, 0, &m_mappedUniformBuffers[i]);
+				return false;
 			}
 		}
 
@@ -196,7 +185,6 @@ export namespace jpt::Vulkan
 	{
 		logicalDevice.WaitIdle();
 
-		// Uniform Buffers
 		for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
 		{
 			m_uniformBuffers[i].Shutdown(logicalDevice);
@@ -414,7 +402,8 @@ export namespace jpt::Vulkan
 
 		ubo.proj[1][1] *= -1;
 
-		memcpy(m_mappedUniformBuffers[m_currentFrame], &ubo, sizeof(ubo));
+		UniformBuffer& uniformBuffer = m_uniformBuffers[m_currentFrame];
+		memcpy(uniformBuffer.GetMappedMemory(), &ubo, sizeof(ubo));
 	}
 
 	bool WindowResources::CanDraw() const
