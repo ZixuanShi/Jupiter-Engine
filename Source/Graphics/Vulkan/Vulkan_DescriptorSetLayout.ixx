@@ -12,6 +12,11 @@ import jpt.Vulkan.LogicalDevice;
 
 export namespace jpt::Vulkan
 {
+	/** Descriptor Set Layout defines the "interface" or structure of resources your shader expects:
+		- It specifies what types of resources (uniform buffers, textures, etc.) will be bound
+		- Where they'll be bound (binding numbers)
+		- What shader stages can access them
+		- How many resources of each type */
 	class DescriptorSetLayout
 	{
 	private:

@@ -23,6 +23,7 @@ export namespace jpt::Vulkan
 		alignas(16) glm::mat4 proj;
 	};
 
+	/** Holds constant across all shaders. Think of it like a global configuration that all our shaders can read from */
 	class UniformBuffer
 	{
 	private:

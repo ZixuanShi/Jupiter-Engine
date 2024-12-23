@@ -35,6 +35,7 @@ import jpt.Vulkan.IndexBuffer;
 import jpt.Vulkan.UniformBuffer;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
+import jpt.Vulkan.DescriptorSet;
 
 import jpt.Optional;
 import jpt.StaticArray;
@@ -60,9 +61,7 @@ export namespace jpt::Vulkan
 		StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
 		StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
 		StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
-
-		// Descriptor sets
-		StaticArray<VkDescriptorSet, kMaxFramesInFlight> m_descriptorSets;
+		StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
 
 		uint32 m_currentFrame = 0;
 		bool m_shouldRecreateSwapChain = false;
@@ -143,38 +142,11 @@ export namespace jpt::Vulkan
 		}
 
 		// Descriptor sets
+		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			StaticArray<VkDescriptorSetLayout, kMaxFramesInFlight> layouts(descriptorSetLayout.GetHandle());
-
-			VkDescriptorSetAllocateInfo descriptorAllocInfo{};
-			descriptorAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			descriptorAllocInfo.descriptorPool = descriptorPool.GetHandle();
-			descriptorAllocInfo.descriptorSetCount = static_cast<uint32>(kMaxFramesInFlight);
-			descriptorAllocInfo.pSetLayouts = layouts.ConstBuffer();
-
-			if (const VkResult result = vkAllocateDescriptorSets(logicalDevice.GetHandle(), &descriptorAllocInfo, m_descriptorSets.Buffer()); result != VK_SUCCESS)
+			if (!m_descriptorSets[i].Init(logicalDevice, descriptorSetLayout, descriptorPool, m_uniformBuffers[i]))
 			{
-				JPT_ERROR("Failed to allocate descriptor sets: %d", result);
 				return false;
-			}
-
-			for (size_t i = 0; i < kMaxFramesInFlight; ++i)
-			{
-				VkDescriptorBufferInfo bufferInfo{};
-				bufferInfo.buffer = m_uniformBuffers[i].GetHandle();
-				bufferInfo.offset = 0;
-				bufferInfo.range = sizeof(UniformBufferObject);
-
-				VkWriteDescriptorSet descriptorWrite{};
-				descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				descriptorWrite.dstSet = m_descriptorSets[i];
-				descriptorWrite.dstBinding = 0;
-				descriptorWrite.dstArrayElement = 0;
-				descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-				descriptorWrite.descriptorCount = 1;
-				descriptorWrite.pBufferInfo = &bufferInfo;
-
-				vkUpdateDescriptorSets(logicalDevice.GetHandle(), 1, &descriptorWrite, 0, nullptr);
 			}
 		}
 
@@ -328,7 +300,7 @@ export namespace jpt::Vulkan
 				JPT_ASSERT(false, "Index buffer type not supported");
 			}
 
-			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, &m_descriptorSets[m_currentFrame], 0, nullptr);
+			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, m_descriptorSets[m_currentFrame].GetHandlePtr(), 0, nullptr);
 			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);

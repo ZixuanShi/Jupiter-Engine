@@ -13,6 +13,7 @@ import jpt.Vulkan.LogicalDevice;
 
 export namespace jpt::Vulkan
 {
+	/** Memory Pool for descriptors */
 	class DescriptorPool
 	{
 	private:
