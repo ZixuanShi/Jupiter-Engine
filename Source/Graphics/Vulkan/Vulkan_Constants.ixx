@@ -18,7 +18,7 @@ export namespace jpt::Vulkan
 	/** 128 bytes limits. Shared across shaders */
 	struct PushConstantData
 	{
-		uint32 value;
+		float32 value;
 
 		//alignas(16) Vec2f positionOffset;
 		//alignas(16) Vec3f color;

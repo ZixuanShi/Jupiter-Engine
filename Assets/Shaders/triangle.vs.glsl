@@ -14,7 +14,7 @@ layout(location = 0) out vec3 outFragColor;
 
 layout(push_constant) uniform PushConstantObject
 {
-    int value;
+    float value;
 } pco;
 
 void main() 

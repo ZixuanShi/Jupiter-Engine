@@ -304,7 +304,7 @@ export namespace jpt::Vulkan
 			}
 
 			PushConstantData pushConstantData = {};
-			pushConstantData.value = 1;
+			pushConstantData.value = 1.0f;
 			vkCmdPushConstants(commandBuffer, pipelineLayout.GetHandle(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstantData), &pushConstantData);
 
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, m_descriptorSets[m_currentFrame].GetHandlePtr(), 0, nullptr);
