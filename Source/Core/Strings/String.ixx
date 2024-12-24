@@ -549,8 +549,9 @@ export namespace jpt
 
 			// Update count and index for the next search
 			startIndex = foundPos + stringToReplaceSize;	// In case 'StringToReplace' Has 'StringToFind', like replacing 'x' with 'yx'		
-			endIndex += stringToReplaceSize - stringToFindSize;
-			m_count  += stringToReplaceSize - stringToFindSize;
+			const int64 offset = static_cast<int64>(stringToReplaceSize) - static_cast<int64>(stringToFindSize);
+			endIndex += offset;
+			m_count  += offset;
 		}
 
 		return *this;
