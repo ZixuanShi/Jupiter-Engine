@@ -12,6 +12,11 @@ layout(location = 1) in vec3 inColor;
 
 layout(location = 0) out vec3 outFragColor;
 
+layout(push_constant) uniform PushConstantObject
+{
+    int value;
+} pco;
+
 void main() 
 {
     gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 0.0, 1.0);

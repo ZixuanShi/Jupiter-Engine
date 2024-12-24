@@ -93,7 +93,7 @@ export namespace jpt
 
 		bool success = true;
 
-		GenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
+		//GenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
 
 		success &= CreateInstance();
 #if !IS_RELEASE

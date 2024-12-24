@@ -8,6 +8,7 @@ module;
 
 export module jpt.Vulkan.PipelineLayout;
 
+import jpt.Vulkan.Constants;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.DescriptorSetLayout;
 
@@ -28,10 +29,17 @@ export namespace jpt::Vulkan
 
 	bool PipelineLayout::Init(const LogicalDevice& logicalDevice, const DescriptorSetLayout& descriptorSetLayout)
 	{
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(PushConstantData);
+
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 1;
 		pipelineLayoutInfo.pSetLayouts = descriptorSetLayout.GetHandlePtr();
+		pipelineLayoutInfo.pushConstantRangeCount = 1;	// Shared for all shaders
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
 		if (const VkResult result = vkCreatePipelineLayout(logicalDevice.GetHandle(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout); result != VK_SUCCESS)
 		{

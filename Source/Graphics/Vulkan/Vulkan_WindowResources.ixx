@@ -17,9 +17,9 @@ import jpt.Window;
 
 import jpt.Graphics.Constants;
 
+import jpt.Vulkan.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
-
 import jpt.Vulkan.Vertex;
 import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
@@ -302,6 +302,10 @@ export namespace jpt::Vulkan
 			{
 				JPT_ASSERT(false, "Index buffer type not supported");
 			}
+
+			PushConstantData pushConstantData = {};
+			pushConstantData.value = 1;
+			vkCmdPushConstants(commandBuffer, pipelineLayout.GetHandle(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstantData), &pushConstantData);
 
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, m_descriptorSets[m_currentFrame].GetHandlePtr(), 0, nullptr);
 			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
