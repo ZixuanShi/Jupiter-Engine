@@ -8,6 +8,7 @@ I design, plan, write, test everything from scratch by myself
   - Containers, DynamicArray, HashMap, Red Black Tree, Graph, Heap
   - Strings Library
   - Smart Pointers and Memory Pool
+  - Threading, Mutex, ThreadSafeQueue
   - Types, reflective Enums, Any, Variant, Tuple
 - Implemented Json and CSV for Data-Driven
 - Vulkan and DX12 renderer
