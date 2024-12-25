@@ -24,15 +24,15 @@ export namespace jpt
 	{
 	protected:
 		HashMap<Id, EntityComponent*> m_components;	/**< Components of this entity holds */
-		DynamicArray<Id> m_updateableComponents;		/**< Components that should be updated */
+		DynamicArray<Id> m_updateableComponents;	/**< Components that should be updated */
 
 		Id m_id = kInvalidValue<Id>;
 
 	public:
 		virtual ~Entity() = default;
 
-		virtual bool PreInit() { return true; }
-		virtual bool Init() { return true; }
+		virtual bool PreInit();
+		virtual bool Init();
 		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Shutdown();
 
@@ -48,6 +48,34 @@ export namespace jpt
 
 		Id GetId() const;
 	};
+
+	bool Entity::PreInit()
+	{
+		for (auto& [typeId, pComponent] : m_components)
+		{
+			JPT_IGNORE(typeId);
+			if (!pComponent->PreInit())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool Entity::Init()
+	{
+		for (auto& [typeId, pComponent] : m_components)
+		{
+			JPT_IGNORE(typeId);
+			if (!pComponent->Init())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	void Entity::Update(TimePrecision deltaSeconds)
 	{

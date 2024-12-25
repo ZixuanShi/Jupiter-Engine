@@ -16,6 +16,7 @@ export namespace jpt
 	public:
 		virtual ~EntityComponent() = default;
 
+		virtual bool PreInit() { return true; }
 		virtual bool Init() { return true; }
 		virtual void Shutdown() {}
 	};
