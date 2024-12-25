@@ -19,7 +19,7 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	/** An object in game world. Carries components */
+	/** An object in game world. Carries components. */
 	class Entity
 	{
 	protected:

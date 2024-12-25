@@ -20,13 +20,13 @@ export namespace jpt::Vulkan
 	struct alignas(16) UniformBufferObject
 	{
 	public:
-		//alignas(16) Matrix44f model;
-		//alignas(16) Matrix44f view;
-		//alignas(16) Matrix44f proj;
+		//Matrix44f model;
+		//Matrix44f view;
+		//Matrix44f proj;
 
-		alignas(16) glm::mat4 model;
-		alignas(16) glm::mat4 view;
-		alignas(16) glm::mat4 proj;
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
 	};
 
 	/** Holds constant across all shaders. Think of it like a global configuration that all our shaders can read from */

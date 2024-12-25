@@ -62,7 +62,7 @@ namespace jpt
 		constexpr static Matrix44<T> LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up);
 
 		/** Converts 3D coordinates into 2D screen coordinates */
-		constexpr static Matrix44<T> Perspective_Vulkan(T fov, T aspect, T near, T far);
+		constexpr static Matrix44<T> Perspective(T fov, T aspect, T near, T far);
 
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void RotateX(T radians);
@@ -306,7 +306,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> Matrix44<T>::Perspective_Vulkan(T fov, T aspect, T zNear, T zFar)
+	constexpr Matrix44<T> Matrix44<T>::Perspective(T fov, T aspect, T zNear, T zFar)
 	{
 		const T tanHalfFovy = std::tan(fov / static_cast<T>(2));
 		Matrix44<T> result = Matrix44<T>::Zero();

@@ -16,6 +16,7 @@ import jpt.Constants;
 import jpt.TypeTraits;
 import jpt.TypeRegistry;
 import jpt.Utilities;
+import jpt.TypeDefs;
 
 static constexpr size_t kLocSmallDataSize = 8;
 
@@ -34,7 +35,7 @@ export namespace jpt
 		Constructor m_constructor = nullptr;   /**< Constructor function pointer. Needed for copy constructing */
 		Destructor  m_destructor  = nullptr;   /**< Destructor function pointer. Needed for destructing */
 
-		Id m_currentTypeId   = 0;       /**< Id of the current type. Used for comparing */
+		Id m_currentTypeId       = 0;       /**< Id of the current type. Used for comparing */
 		size_t m_currentTypeSize = 0;       /**< Size in bytes of the current type */
 
 	public:
