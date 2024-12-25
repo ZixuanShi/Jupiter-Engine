@@ -16,9 +16,9 @@ export namespace jpt::Vulkan
 	constexpr VkColorSpaceKHR kColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
 
 	/** 128 bytes limits. Shared across shaders */
-	struct PushConstantData
+	struct alignas(16) PushConstantData
 	{
-		float32 value;
+		alignas(16) float32 value;
 
 		//alignas(16) Vec2f positionOffset;
 		//alignas(16) Vec3f color;

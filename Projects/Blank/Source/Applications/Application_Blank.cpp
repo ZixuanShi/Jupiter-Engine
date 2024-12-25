@@ -19,6 +19,30 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
 
+import jpt.Entity.Component;
+
+class EntityComponent_1 : public jpt::EntityComponent
+{
+};
+
+class UpdatableEntityComponent_1 : public jpt::UpdatableEntityComponent
+{
+private:
+	int m_data = 0;
+
+public:
+	virtual bool Init() override
+	{
+		m_data = jpt::RNG::Global().RangedInt(0, 100);
+		return true;
+	}
+
+	virtual void Update(jpt::TimePrecision) override
+	{
+		JPT_LOG(m_data);
+	}
+};
+
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
@@ -36,6 +60,15 @@ bool Application_Blank::PreInit()
 			{
 				jpt::Window* pWindow = m_pWindowManager->Create();
 				GetRenderer()->RegisterWindow(pWindow);
+			}
+
+			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::A)
+			{
+				m_foo.AddComponent<UpdatableEntityComponent_1>();
+			}
+			if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::B)
+			{
+				m_foo.EraseComponent<UpdatableEntityComponent_1>();
 			}
 		});
 
