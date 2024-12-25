@@ -209,7 +209,7 @@ export namespace jpt
 	template<typename T>
 	constexpr bool Any::Is() const
 	{
-		return m_currentTypeSize == sizeof(T) && m_currentTypeId == TypeRegistry::Id<T>();
+		return m_currentTypeSize == sizeof(T) && m_currentTypeId == TypeRegistry::GetId<T>();
 	}
 
 	constexpr bool Any::IsEmpty() const
@@ -329,7 +329,7 @@ export namespace jpt
 				}
 			};
 		
-		m_currentTypeId   = TypeRegistry::Id<T>();
+		m_currentTypeId   = TypeRegistry::GetId<T>();
 		m_currentTypeSize = newSize;
 	}
 }

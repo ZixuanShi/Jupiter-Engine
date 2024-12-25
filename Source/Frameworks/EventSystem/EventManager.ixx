@@ -40,13 +40,13 @@ export namespace jpt
 		struct QueueItem
 		{
 			Event* pEvent = nullptr;	                                         /**< Event to be sent */
-			TypeRegistry::TypeId eventId = kInvalidValue<TypeRegistry::TypeId>;	 /**< Id of the event when Queue() called. Used for getting the right handlers */
+			Id eventId = kInvalidValue<Id>;	 /**< Id of the event when Queue() called. Used for getting the right handlers */
 			TimePrecision m_timer = 0.0;                                         /**< Timer to delay the event. 0.0 means next frame */
 		};
 
 	private:
 		using Handlers     = DynamicArray<Handler>;                     /**< List of functions to be called when an event is sent */
-		using HandlersMap  = HashMap<TypeRegistry::TypeId, Handlers>;   /**< Key: Event Id. Value: The handlers that are registered to listen to this event */
+		using HandlersMap  = HashMap<Id, Handlers>;   /**< Key: Event Id. Value: The handlers that are registered to listen to this event */
 
 	private:
 		HandlersMap m_handlersMap;		        /**< Map from event Ids to handlers */
@@ -162,7 +162,7 @@ export namespace jpt
 	template<typename TEvent>
 	void EventManager::Queue(const TEvent& event, TimePrecision timer /*= 0.0*/)
 	{
-		m_eventQueue.EmplaceBack(new TEvent(event), TypeRegistry::Id<TEvent>(), timer);
+		m_eventQueue.EmplaceBack(new TEvent(event), TypeRegistry::GetId<TEvent>(), timer);
 	}
 
 	void EventManager::Update(TimePrecision deltaSeconds)
@@ -220,14 +220,14 @@ export namespace jpt
 	template<typename TEvent>
 	EventManager::Handlers& EventManager::GetHandlers()
 	{
-		const TypeRegistry::TypeId eventId = TypeRegistry::Id<TEvent>();
+		const Id eventId = TypeRegistry::GetId<TEvent>();
 		return m_handlersMap[eventId];
 	}
 
 	template<typename TEvent>
 	const EventManager::Handlers& EventManager::GetHandlers() const
 	{
-		const TypeRegistry::TypeId eventId = TypeRegistry::Id<TEvent>();
+		const Id eventId = TypeRegistry::GetId<TEvent>();
 		return m_handlersMap[eventId];
 	}
 }

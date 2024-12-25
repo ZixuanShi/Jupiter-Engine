@@ -3,7 +3,6 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
-
 #include "Core/Validation/Assert.h"
 
 export module jpt.Entity;
@@ -24,10 +23,10 @@ export namespace jpt
 	class Entity
 	{
 	protected:
-		HashMap<TypeRegistry::TypeId, EntityComponent*> m_components;	/**< Components of this entity holds */
-		DynamicArray<TypeRegistry::TypeId> m_updateableComponents;		/**< Components that should be updated */
+		HashMap<Id, EntityComponent*> m_components;	/**< Components of this entity holds */
+		DynamicArray<Id> m_updateableComponents;		/**< Components that should be updated */
 
-		size_t m_id = kInvalidValue<size_t>;
+		Id m_id = kInvalidValue<Id>;
 
 	public:
 		virtual ~Entity() = default;
@@ -47,12 +46,12 @@ export namespace jpt
 		template<typename TComponent>
 		void EraseComponent();
 
-		size_t GetId() const;
+		Id GetId() const;
 	};
 
 	void Entity::Update(TimePrecision deltaSeconds)
 	{
-		for (TypeRegistry::TypeId typeId : m_updateableComponents)
+		for (Id typeId : m_updateableComponents)
 		{
 			EntityComponent* pComponent = m_components[typeId];
 			UpdatableEntityComponent* pUpdatableComponent = static_cast<UpdatableEntityComponent*>(pComponent);
@@ -76,7 +75,7 @@ export namespace jpt
 	template<typename TComponent>
 	void Entity::AddComponent(TComponent* pComponent /* = nullptr*/)
 	{
-		const TypeRegistry::TypeId typeId = TypeRegistry::Id<TComponent>();
+		const Id typeId = TypeRegistry::GetId<TComponent>();
 		JPT_ASSERT(!m_components.Has(typeId), "Component already exists in entity");
 
 		if (!pComponent)
@@ -96,7 +95,7 @@ export namespace jpt
 	template<typename TComponent>
 	TComponent* Entity::GetComponent() const
 	{
-		const TypeRegistry::TypeId typeId = TypeRegistry::Id<TComponent>();
+		const Id typeId = TypeRegistry::GetId<TComponent>();
 		JPT_ASSERT(m_components.Has(typeId), "Component does not exist in entity");
 		return static_cast<TComponent*>(m_components[typeId]);
 	}
@@ -104,7 +103,7 @@ export namespace jpt
 	template<typename TComponent>
 	void Entity::EraseComponent()
 	{
-		const TypeRegistry::TypeId typeId = TypeRegistry::Id<TComponent>();
+		const Id typeId = TypeRegistry::GetId<TComponent>();
 		JPT_ASSERT(m_components.Has(typeId), "Component does not exist in entity");
 
 		EntityComponent* pComponent = m_components[typeId];

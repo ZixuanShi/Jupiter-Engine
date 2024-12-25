@@ -20,6 +20,7 @@ export using float32  = float;
 export using float64  = double;
 export using Weight   = float32;
 
+export using Id       = size_t;
 export using Index    = size_t;
 export using Distance = float64;
 
