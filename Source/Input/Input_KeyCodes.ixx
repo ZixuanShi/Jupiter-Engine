@@ -81,6 +81,8 @@ export namespace jpt::Input
 		Ctrl_Right,
 		Alt_Left,
 		Alt_Right,
+		Super_Left,
+		Super_Right,
 		Space,
 		Enter,
 		Backspace,
@@ -134,4 +136,13 @@ export namespace jpt::Input
 
 		Invalid,
 	);
+
+	JPT_ENUM_UINT8(Modifier,
+		Shift = (1 << 0),
+		Ctrl = (1 << 1),
+		Alt = (1 << 2),
+		Super = (1 << 3),
+
+		Invalid,
+		);
 }

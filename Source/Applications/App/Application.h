@@ -6,6 +6,7 @@ import jpt.Time.TypeDefs;
 
 import jpt.Framework.Enums;
 import jpt.Graphics.Enums;
+import jpt.Scene.Manager;
 
 namespace jpt
 {
@@ -24,6 +25,7 @@ namespace jpt
 		Framework*     m_pFramework     = nullptr;
 		WindowManager* m_pWindowManager = nullptr;
 		Renderer*      m_pRenderer      = nullptr;
+		SceneManager   m_sceneManager;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
 		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
@@ -46,6 +48,7 @@ namespace jpt
 		Framework*     GetFramework()     const { return m_pFramework;     }
 		WindowManager* GetWindowManager() const { return m_pWindowManager; }
 		Renderer*      GetRenderer()      const { return m_pRenderer;      }
+		SceneManager*  GetSceneManager()        { return &m_sceneManager;  }
 
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }

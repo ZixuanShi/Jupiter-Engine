@@ -28,6 +28,9 @@ export namespace jpt::Input
 		HashMap<Key, uint32> m_toGLFWKeys;
 		HashMap<uint32, Key> m_fromGLFWKeys;
 
+		HashMap<Modifier, uint32> m_toGLFWModifiers;
+		HashMap<uint32, Modifier> m_fromGLFWModifiers;
+
 		HashMap<MouseButton, uint32> m_toGLFWMouseButtons;
 		HashMap<uint32, MouseButton> m_fromGLFWMouseButtons;
 
@@ -37,6 +40,8 @@ export namespace jpt::Input
 	public:
 		virtual uint32 FromKey(Key key) const override;
 		virtual Key ToKey(uint32 key) const override;
+
+		virtual Modifier ParseModifiers(uint32 glfwMods) const override;
 
 		virtual uint32 FromMouseButton(MouseButton mouseButton) const override;
 		virtual MouseButton ToMouseButton(uint32 mouseButton) const override;
@@ -52,6 +57,12 @@ export namespace jpt::Input
 		m_fromGLFWKeys.SetShouldGrow(false);
 		m_fromGLFWKeys.ResizeBuckets(Key::Count());
 
+		m_fromGLFWModifiers.SetShouldGrow(false);
+		m_fromGLFWModifiers.ResizeBuckets(Modifier::Count());
+
+		m_toGLFWModifiers.SetShouldGrow(false);
+		m_toGLFWModifiers.ResizeBuckets(Modifier::Count());
+
 		m_toGLFWMouseButtons.SetShouldGrow(false);
 		m_toGLFWMouseButtons.ResizeBuckets(MouseButton::Count());
 
@@ -66,6 +77,12 @@ export namespace jpt::Input
 		m_toGLFWMouseButtons[MouseButton::Button5] = GLFW_MOUSE_BUTTON_5;
 		m_toGLFWMouseButtons[MouseButton::Button6] = GLFW_MOUSE_BUTTON_6;
 		m_toGLFWMouseButtons[MouseButton::Button7] = GLFW_MOUSE_BUTTON_7;
+
+		// Modifiers
+		m_toGLFWModifiers[Modifier::Shift] = GLFW_MOD_SHIFT;
+		m_toGLFWModifiers[Modifier::Ctrl] = GLFW_MOD_CONTROL;
+		m_toGLFWModifiers[Modifier::Alt] = GLFW_MOD_ALT;
+		m_toGLFWModifiers[Modifier::Super] = GLFW_MOD_SUPER;
 
 		// Keyboard
 		m_toGLFWKeys[Key::A] = GLFW_KEY_A;
@@ -127,6 +144,8 @@ export namespace jpt::Input
 		m_toGLFWKeys[Key::Ctrl_Right] = GLFW_KEY_RIGHT_CONTROL;
 		m_toGLFWKeys[Key::Alt_Left] = GLFW_KEY_LEFT_ALT;
 		m_toGLFWKeys[Key::Alt_Right] = GLFW_KEY_RIGHT_ALT;
+		m_toGLFWKeys[Key::Super_Left] = GLFW_KEY_LEFT_SUPER;
+		m_toGLFWKeys[Key::Super_Right] = GLFW_KEY_RIGHT_SUPER;
 		m_toGLFWKeys[Key::Space] = GLFW_KEY_SPACE;
 		m_toGLFWKeys[Key::Enter] = GLFW_KEY_ENTER;
 		m_toGLFWKeys[Key::Backspace] = GLFW_KEY_BACKSPACE;
@@ -182,6 +201,10 @@ export namespace jpt::Input
 		{
 			m_fromGLFWKeys[pair.second] = pair.first;
 		}
+		for (const auto& pair : m_toGLFWModifiers)
+		{
+			m_fromGLFWModifiers[pair.second] = pair.first;
+		}
 		for (const auto& pair : m_toGLFWMouseButtons)
 		{
 			m_fromGLFWMouseButtons[pair.second] = pair.first;
@@ -210,6 +233,30 @@ export namespace jpt::Input
 
 		JPT_ERROR("Unknown key code: " + ToString(key));
 		return Key::Invalid;
+	}
+
+	Modifier RawInput_GLFW::ParseModifiers(uint32 glfwMods) const
+	{
+		Modifier modifier = Modifier::Invalid;
+
+		if (glfwMods & GLFW_MOD_SHIFT)
+		{
+			modifier |= Modifier::Shift;
+		}
+		if (glfwMods & GLFW_MOD_CONTROL)
+		{
+			modifier |= Modifier::Ctrl;
+		}
+		if (glfwMods & GLFW_MOD_ALT)
+		{
+			modifier |= Modifier::Alt;
+		}
+		if (glfwMods & GLFW_MOD_SUPER)
+		{
+			modifier |= Modifier::Super;
+		}
+
+		return modifier;
 	}
 
 	uint32 RawInput_GLFW::FromMouseButton(MouseButton mouseButton) const

@@ -38,7 +38,9 @@ bool Entity_Foo::PreInit()
 
 void Entity_Foo::OnKeyPress(const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
 {
-	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer());
+	const bool hasCtrlMod = eventKeyboardKeyPress.HasModifier(jpt::Input::Modifier::Ctrl);
+	const jpt::String hasCtrlModStr = hasCtrlMod ? "true" : "false";
+	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer(), hasCtrlModStr.ConstBuffer());
 }
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)

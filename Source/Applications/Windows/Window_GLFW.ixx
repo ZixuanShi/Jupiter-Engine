@@ -174,14 +174,16 @@ namespace jpt
 			}
 		}
 
-		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, [[maybe_unused]] int32 mods)
+		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
 		{
 			if (action == GLFW_PRESS)
 			{
 				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-				const Input::Key keyCode = InputManager::GetInstance().GetRawInput()->ToKey(key);
 
-				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode };
+				const Input::Key keyCode = InputManager::GetInstance().GetRawInput()->ToKey(key);
+				const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
+
+				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode, modifiers };
 				EventManager::GetInstance().Send(eventKeyboardKeyPress);
 			}
 		}
