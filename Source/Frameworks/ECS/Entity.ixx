@@ -4,6 +4,7 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
+#include "Debugging/Logger.h"
 
 export module jpt.Entity;
 
@@ -19,12 +20,12 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	/** An object in game world. Carries components. */
+	/** An object in game world. Carries components */
 	class Entity
 	{
 	protected:
 		HashMap<Id, EntityComponent*> m_components;	/**< Components of this entity holds */
-		DynamicArray<Id> m_updateableComponents;	/**< Components that should be updated */
+		DynamicArray<Id> m_updateableComponents;		/**< Components that should be updated */
 
 		Id m_id = kInvalidValue<Id>;
 
@@ -54,10 +55,7 @@ export namespace jpt
 		for (auto& [typeId, pComponent] : m_components)
 		{
 			JPT_IGNORE(typeId);
-			if (!pComponent->PreInit())
-			{
-				return false;
-			}
+			JPT_ENSURE(pComponent->PreInit());
 		}
 
 		return true;
@@ -68,10 +66,7 @@ export namespace jpt
 		for (auto& [typeId, pComponent] : m_components)
 		{
 			JPT_IGNORE(typeId);
-			if (!pComponent->Init())
-			{
-				return false;
-			}
+			JPT_ENSURE(pComponent->Init());
 		}
 
 		return true;
@@ -114,7 +109,7 @@ export namespace jpt
 
 		m_components.Emplace(typeId, pComponent);
 
-		if constexpr (IsComponentUpdatable<TComponent>())
+		if constexpr (IsChildOf<TComponent, UpdatableEntityComponent>)
 		{
 			m_updateableComponents.EmplaceBack(typeId);
 		}
@@ -139,7 +134,7 @@ export namespace jpt
 
 		m_components.Erase(typeId);
 
-		if constexpr (IsComponentUpdatable<TComponent>())
+		if constexpr (IsChildOf<TComponent, UpdatableEntityComponent>)
 		{
 			for (size_t i = 0; i < m_updateableComponents.Count(); ++i)
 			{

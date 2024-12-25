@@ -78,7 +78,12 @@ export namespace jpt
 				double bar = 42.0;
 				jpt::IsAnyOf<decltype(foo), float, char, int>; // true
 				jpt::IsAnyOf<decltype(bar), float, char, int>; // false	*/
-	template<typename T, typename ...TOthers> constexpr bool IsAnyOf  = (AreSameType<T, TOthers> || ...);
+	template<typename T, typename ...TOthers> 
+	constexpr bool IsAnyOf  = (AreSameType<T, TOthers> || ...);
+
+	/** @return true if TChild is a subclass inherited from TParent. */
+	template<typename TChild, typename TParent> 
+	constexpr bool IsChildOf = std::is_base_of_v<TParent, TChild>;
 
 	// Is Array
 	/** @note	This doesn't work on heap allocated array

@@ -1,9 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include <type_traits>
-
 export module jpt.Entity.Component;
 
 import jpt.Time.TypeDefs;
@@ -27,10 +23,4 @@ export namespace jpt
 	public:
 		virtual void Update([[maybe_unused]] TimePrecision deltaSeconds) = 0;
 	};
-
-	template<typename TComponent>
-	consteval bool IsComponentUpdatable()
-	{
-		return std::is_base_of_v<UpdatableEntityComponent, TComponent>;
-	}
 }
