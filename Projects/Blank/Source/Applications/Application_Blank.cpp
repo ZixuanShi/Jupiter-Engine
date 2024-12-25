@@ -19,13 +19,11 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
 
-import jpt.Entity.Factory;
-
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
-	m_pFoo = jpt::EntityFactory::Create<Entity_Foo>();
+	m_pFoo = new Entity_Foo();
 	m_pFoo->PreInit();
 
 	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
