@@ -11,6 +11,7 @@ export module UnitTests_ECS;
 import jpt.Scene;
 import jpt.Entity;
 import jpt.Entity.Component;
+import jpt.Entity.Factory;
 
 import jpt.Vector3;
 import jpt.Matrix44;

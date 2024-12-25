@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
 export module Entity.Foo;
@@ -26,6 +27,8 @@ public:
 
 bool Entity_Foo::PreInit()
 {
+	JPT_ENSURE(jpt::Entity::PreInit());
+
 	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>(this, &Entity_Foo::OnKeyPress);
 	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_ButtonPress>(this, &Entity_Foo::OnMouseButtonPress);
 	jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);

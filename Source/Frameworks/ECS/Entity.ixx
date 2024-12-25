@@ -25,9 +25,9 @@ export namespace jpt
 	{
 	protected:
 		HashMap<Id, EntityComponent*> m_components;	/**< Components of this entity holds */
-		DynamicArray<Id> m_updateableComponents;		/**< Components that should be updated */
+		DynamicArray<Id> m_updateableComponents;	/**< Components that should be updated */
 
-		Id m_id = kInvalidValue<Id>;
+		Id m_id = kInvalidValue<Id>;	/**< Unique Id of this entity. Used by Scene and Components */
 
 	public:
 		virtual ~Entity() = default;
@@ -47,11 +47,14 @@ export namespace jpt
 		template<typename TComponent>
 		void EraseComponent();
 
-		Id GetId() const;
+		void SetId(Id id) { m_id = id; }
+		Id GetId() const { return m_id; }
 	};
 
 	bool Entity::PreInit()
 	{
+		JPT_ASSERT(m_id != kInvalidValue<Id>, "Entity Id is not assigned");
+
 		for (auto& [typeId, pComponent] : m_components)
 		{
 			JPT_IGNORE(typeId);
@@ -104,6 +107,7 @@ export namespace jpt
 		if (!pComponent)
 		{
 			pComponent = new TComponent;
+			JPT_ASSERT(pComponent->PreInit());
 			JPT_ASSERT(pComponent->Init());
 		}
 
@@ -145,10 +149,5 @@ export namespace jpt
 				}
 			}
 		}
-	}
-
-	size_t Entity::GetId() const
-	{
-		return m_id;
 	}
 }

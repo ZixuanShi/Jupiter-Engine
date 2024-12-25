@@ -7,6 +7,7 @@ module;
 export module jpt.Scene;
 
 import jpt.Entity;
+import jpt.Entity.Factory;
 
 import jpt.Constants;
 import jpt.DynamicArray;
@@ -30,6 +31,11 @@ export namespace jpt
 		bool Init();
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
+
+	public:
+		template<typename TEntity>
+		TEntity* AddEntity();
+		Entity* GetEntity(Id id) const;
 	};
 
 	bool Scene::PreInit()
@@ -72,5 +78,32 @@ export namespace jpt
 		{
 			JPT_SHUTDOWN(pEntity);
 		}
+
+		m_entities.Clear();
+	}
+
+	template<typename TEntity>
+	TEntity* Scene::AddEntity()
+	{
+		TEntity* pEntity = EntityFactory::Create<TEntity>();
+		m_entities.EmplaceBack(pEntity);
+
+		pEntity->PreInit();
+		pEntity->Init();
+
+		return pEntity;
+	}
+
+	Entity* Scene::GetEntity(Id id) const
+	{
+		for (Entity* pEntity : m_entities)
+		{
+			if (pEntity->GetId() == id)
+			{
+				return pEntity;
+			}
+		}
+
+		return nullptr;
 	}
 }

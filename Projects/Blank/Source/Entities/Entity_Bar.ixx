@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
 export module Entity.Bar;
@@ -23,5 +24,6 @@ public:
 
 bool Entity_Bar::PreInit()
 {
+	JPT_ENSURE(jpt::Entity::PreInit());
 	return true;
 }

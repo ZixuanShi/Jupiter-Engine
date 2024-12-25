@@ -14,8 +14,7 @@ class Application_Blank final : public jpt::Application
 	using Super = jpt::Application;
 
 private:
-	Entity_Foo m_foo;
-	Entity_Bar m_bar;
+	Entity_Foo* m_pFoo;
 
 public:
 	virtual bool PreInit() override;

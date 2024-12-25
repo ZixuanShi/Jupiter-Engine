@@ -19,12 +19,14 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Close;
 import jpt.Event.Keyboard.KeyPress;
 
+import jpt.Entity.Factory;
+
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
-	m_foo.PreInit();
-	m_bar.PreInit();
+	m_pFoo = jpt::EntityFactory::Create<Entity_Foo>();
+	m_pFoo->PreInit();
 
 	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
 		{
@@ -46,14 +48,12 @@ void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
 {
 	Super::Update(deltaSeconds);
 
-	m_foo.Update(deltaSeconds);
-	m_bar.Update(deltaSeconds);
+	m_pFoo->Update(deltaSeconds);
 }
 
 void Application_Blank::Shutdown()
 {
-	m_foo.Shutdown();
-	m_bar.Shutdown();
+	JPT_SHUTDOWN(m_pFoo);
 
 	Super::Shutdown();
 }
