@@ -20,4 +20,5 @@ private:
 public:
 	virtual bool PreInit() override;
 	virtual void Update(jpt::TimePrecision deltaSeconds) override;
+	virtual void Shutdown() override;
 };

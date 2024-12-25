@@ -55,10 +55,7 @@ export namespace jpt
 		for (TypeRegistry::TypeId typeId : m_updateableComponents)
 		{
 			EntityComponent* pComponent = m_components[typeId];
-			JPT_ASSERT(pComponent, "Component is nullptr");
-
 			UpdatableEntityComponent* pUpdatableComponent = static_cast<UpdatableEntityComponent*>(pComponent);
-			JPT_ASSERT(pUpdatableComponent, "pUpdatableComponent is nullptr");
 
 			pUpdatableComponent->Update(deltaSeconds);
 		}
@@ -100,6 +97,7 @@ export namespace jpt
 	TComponent* Entity::GetComponent() const
 	{
 		const TypeRegistry::TypeId typeId = TypeRegistry::Id<TComponent>();
+		JPT_ASSERT(m_components.Has(typeId), "Component does not exist in entity");
 		return static_cast<TComponent*>(m_components[typeId]);
 	}
 
@@ -108,6 +106,9 @@ export namespace jpt
 	{
 		const TypeRegistry::TypeId typeId = TypeRegistry::Id<TComponent>();
 		JPT_ASSERT(m_components.Has(typeId), "Component does not exist in entity");
+
+		EntityComponent* pComponent = m_components[typeId];
+		JPT_SHUTDOWN(pComponent);
 
 		m_components.Erase(typeId);
 
