@@ -29,7 +29,7 @@ export namespace jpt
 		
 		bool HasModifier(Input::Modifier modifier) const 
 		{ 
-			return (m_modifiers.Value() & modifier.Value()) != 0;
+			return m_modifiers.Has(modifier);
 		}
 	};
 }

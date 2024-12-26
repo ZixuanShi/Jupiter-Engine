@@ -219,7 +219,8 @@ public:                                                                         
     constexpr TSize operator^(Values value) const { return m_value ^ value; }                                                \
     constexpr TSize operator~() const { return ~m_value; }                                                                   \
                                                                                                                              \
-    constexpr bool Has(Values value) const { return (m_value & value) != 0; }                                                \
+    constexpr bool Has(Values value)   const { return (m_value & value)         != 0; }                                      \
+    constexpr bool Has(EnumName value) const { return (m_value & value.Value()) != 0; }                                      \
     constexpr void Or(Values value) { m_value |= value; }                                                                    \
     constexpr void Toggle(Values value) { m_value ^= value; }                                                                \
                                                                                                                              \
