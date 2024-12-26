@@ -66,6 +66,7 @@ namespace jpt
 		success &= m_pWindowManager->PreInit();
 		success &= m_pRenderer->PreInit();
 		success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
+		success &= m_sceneManager.PreInit();
 
 		return success;
 	}
@@ -84,6 +85,7 @@ namespace jpt
 		success &= m_pWindowManager->Init(GetName());
 		success &= m_pRenderer->Init();
 		success &= InputManager::GetInstance().Init();
+		success &= m_sceneManager.Init();
 
 		return success;
 	}
@@ -96,22 +98,25 @@ namespace jpt
 		m_pWindowManager->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
 		InputManager::GetInstance().Update(deltaSeconds);
+		m_sceneManager.Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
 	{
 		ProjectSettings::GetInstance().Save();
 
+		m_sceneManager.Shutdown();
+		InputManager::GetInstance().Shutdown();
+		EventManager::GetInstance().Shutdown();
+
 		if (!CommandLine::GetInstance().Has("no_window"))
 		{
+			JPT_SHUTDOWN(m_pRenderer);
 			JPT_SHUTDOWN(m_pWindowManager);
 			JPT_SHUTDOWN(m_pFramework);
-			JPT_SHUTDOWN(m_pRenderer);
 		}
 
 		JPT_SHUTDOWN(m_pPlatform);
-		InputManager::GetInstance().Shutdown();
-		EventManager::GetInstance().Shutdown();
 	}
 
 	static TimePrecision GetDeltaSeconds()

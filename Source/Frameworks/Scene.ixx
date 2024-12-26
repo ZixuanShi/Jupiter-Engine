@@ -2,14 +2,27 @@
 
 export module jpt.Scene;
 
+import jpt.Entity;
+
+import jpt.Time.TypeDefs;
+
+import jpt.DynamicArray;
+
 export namespace jpt
 {
 	/** Represents a game world. 
 		- Entities and Components
-		- Scene Scripts
-		- UI */
+		- Scene Scripts */
 	class Scene
 	{
-		// Array of entities
+	private:
+		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
+
+	public:
+		virtual ~Scene() = default;
+		
+		virtual bool Init() { return true; }
+		virtual void Update(TimePrecision) {}
+		virtual void Shutdown() {}
 	};
 }
