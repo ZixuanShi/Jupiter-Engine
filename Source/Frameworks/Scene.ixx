@@ -7,6 +7,7 @@ import jpt.Entity;
 import jpt.Time.TypeDefs;
 
 import jpt.DynamicArray;
+import jpt.String;
 
 export namespace jpt
 {
@@ -15,8 +16,9 @@ export namespace jpt
 		- Scene Scripts */
 	class Scene
 	{
-	private:
+	protected:
 		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
+		String m_name;						/**< The name of the scene */
 
 	public:
 		virtual ~Scene() = default;
