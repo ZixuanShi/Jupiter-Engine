@@ -154,7 +154,7 @@ namespace jpt
 			EventManager::GetInstance().Send(eventWindowResize);
 		}
 
-		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, [[maybe_unused]] int32 mods)
+		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods)
 		{
 			if (action == GLFW_PRESS)
 			{
@@ -164,11 +164,13 @@ namespace jpt
 				glfwGetCursorPos(pGLFWWindow, &x, &y);
 
 				const Input::MouseButton mouseButton = InputManager::GetInstance().GetRawInput()->ToMouseButton(button);
+				const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
 
 				Event_Mouse_ButtonPress eventMouseButtonPress = { pWindow,
 					                                              static_cast<int32>(x),
 					                                              static_cast<int32>(y), 
-					                                              mouseButton };
+					                                              mouseButton,
+				                                                  modifiers };
 
 				EventManager::GetInstance().Send(eventMouseButtonPress);
 			}

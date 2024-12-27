@@ -17,8 +17,8 @@ export namespace jpt
 	class Scene
 	{
 	protected:
-		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
 		String m_name;						/**< The name of the scene */
+		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
 
 	public:
 		virtual ~Scene() = default;

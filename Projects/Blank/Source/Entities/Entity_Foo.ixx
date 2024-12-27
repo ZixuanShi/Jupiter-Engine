@@ -45,7 +45,9 @@ void Entity_Foo::OnKeyPress(const jpt::Event_Keyboard_KeyPress& eventKeyboardKey
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)
 {
-	JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, KeyCode: %s", eventMouseButtonPress.GetWindow(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), eventMouseButtonPress.GetButton().ToString().ConstBuffer());
+	const bool hasShiftMod = eventMouseButtonPress.HasModifier(jpt::Input::Modifier::Shift);
+	const jpt::String hasShiftModStr = hasShiftMod ? "true" : "false";
+	JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButtonPress.GetWindow(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), eventMouseButtonPress.GetButton().ToString().ConstBuffer(), hasShiftModStr.ConstBuffer());
 }
 
 void Entity_Foo::OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize)

@@ -2,6 +2,7 @@
 
 export module jpt.Entity;
 
+import jpt.String;
 import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
@@ -12,6 +13,7 @@ export namespace jpt
 	class Entity
 	{
 	protected:
+		String m_name = "Entity";	    /**< The name of the entity */
 		Id m_id = kInvalidValue<Id>;	/**< Unique Identifier to search for this entity */
 
 	public:

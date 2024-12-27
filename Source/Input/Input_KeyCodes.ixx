@@ -138,11 +138,11 @@ export namespace jpt::Input
 	);
 
 	JPT_ENUM_UINT8(Modifier,
-		Shift = (1 << 0),
-		Ctrl = (1 << 1),
-		Alt = (1 << 2),
-		Super = (1 << 3),
+		Shift   = (1 << 0),
+		Ctrl    = (1 << 1),
+		Alt     = (1 << 2),
+		Super   = (1 << 3),
 
-		Invalid,
-		);
+		Invalid = 0,
+	);
 }
