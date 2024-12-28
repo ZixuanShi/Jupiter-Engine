@@ -47,6 +47,7 @@ export namespace jpt
 			constexpr bool EndsWith(const Path& path) const;
 			constexpr Path GetParent() const;
 
+			String ToString() const;
 			constexpr const WString& ToWString() const { return m_path; }
 			constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 			constexpr size_t Count() const { return m_path.Count(); }
@@ -141,6 +142,11 @@ export namespace jpt
 			JPT_ASSERT(lastSeparatorIndex != npos, "Path has no parent");
 
 			return m_path.SubStr(0, lastSeparatorIndex + seprator.Count());
+		}
+
+		String Path::ToString() const
+		{
+			return jpt::ToString(m_path);
 		}
 	}
 }

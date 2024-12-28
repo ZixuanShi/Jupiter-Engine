@@ -12,6 +12,7 @@ export module jpt.Vulkan.Buffer;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.CommandPool;
+import jpt.Vulkan.Utils;
 
 export namespace jpt::Vulkan
 {
@@ -61,36 +62,13 @@ export namespace jpt::Vulkan
 
 	void Buffer::Copy(VkBuffer srcBuffer, VkDeviceSize size, const LogicalDevice& logicalDevice, const CommandPool& memoryTransferCommandPool)
 	{
-		VkCommandBufferAllocateInfo allocateInfo{};
-		allocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocateInfo.commandPool = memoryTransferCommandPool.GetHandle();
-		allocateInfo.commandBufferCount = 1;
-
-		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(logicalDevice.GetHandle(), &allocateInfo, &commandBuffer);
-
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		vkBeginCommandBuffer(commandBuffer, &beginInfo);
+		VkCommandBuffer commandBuffer = BeginSingleTimeCommand(logicalDevice, memoryTransferCommandPool);
 		{
 			VkBufferCopy copyRegion{};
 			copyRegion.size = size;
 			vkCmdCopyBuffer(commandBuffer, srcBuffer, m_buffer, 1, &copyRegion);
 		}
-		vkEndCommandBuffer(commandBuffer);
-
-		VkSubmitInfo submitInfo{};
-		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &commandBuffer;
-
-		vkQueueSubmit(logicalDevice.GetGraphicsQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(logicalDevice.GetGraphicsQueue());
-
-		vkFreeCommandBuffers(logicalDevice.GetHandle(), memoryTransferCommandPool.GetHandle(), 1, &commandBuffer);
+		EndSingleTimeCommand(logicalDevice, memoryTransferCommandPool, commandBuffer);
 	}
 
 	void Buffer::MapMemory(const LogicalDevice& logicalDevice, const void* pPtr, VkDeviceSize size)

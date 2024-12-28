@@ -9,6 +9,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
@@ -43,6 +46,10 @@ import jpt.Framework;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 
+import jpt.File.IO;
+import jpt.File.Path;
+import jpt.File.Path.Utils;
+
 using namespace jpt::Vulkan;
 
 export namespace jpt
@@ -70,6 +77,10 @@ export namespace jpt
 
 		VertexBuffer m_vertexBuffer;
 		IndexBuffer m_indexBuffer;
+
+		// Texture
+		VkImage m_textureImage;
+		VkDeviceMemory m_textureImageMemory;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -114,6 +125,68 @@ export namespace jpt
 		success &= m_indexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 
 		success &= m_descriptorPool.Init(m_logicalDevice);
+
+		// Texture Image
+		//{
+		//	int32 texWidth, texHeight, texChannels;
+		//	const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/texture.jpg");
+		//	stbi_uc* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		//	JPT_ASSERT(pixels, "Failed to load texture image");
+
+		//	const VkDeviceSize imageSize = texWidth * texHeight * 4;
+		//	VkBufferCreateInfo bufferInfo = {};
+		//	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		//	bufferInfo.size = imageSize;
+		//	bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		//	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		//	VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+		//	Buffer stagingBuffer;
+		//	stagingBuffer.Create(bufferInfo, properties, m_logicalDevice, m_physicalDevice);
+		//	stagingBuffer.MapMemory(m_logicalDevice, pixels, imageSize);
+
+		//	stbi_image_free(pixels);
+
+		//	{
+		//		VkImageCreateInfo imageInfo = {};
+		//		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		//		imageInfo.imageType = VK_IMAGE_TYPE_2D;
+		//		imageInfo.extent.width = static_cast<uint32>(texWidth);
+		//		imageInfo.extent.height = static_cast<uint32>(texHeight);
+		//		imageInfo.extent.depth = 1;
+		//		imageInfo.mipLevels = 1;
+		//		imageInfo.arrayLayers = 1;
+		//		imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+		//		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+		//		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		//		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+		//		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		//		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+
+		//		if (vkCreateImage(m_logicalDevice.GetHandle(), &imageInfo, nullptr, &m_textureImage) != VK_SUCCESS)
+		//		{
+		//			JPT_ERROR("Failed to create image");
+		//			success = false;
+		//		}
+
+		//		VkMemoryRequirements memRequirements;
+		//		vkGetImageMemoryRequirements(m_logicalDevice.GetHandle(), m_textureImage, &memRequirements);
+
+		//		VkMemoryAllocateInfo allocInfo = {};
+		//		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		//		allocInfo.allocationSize = memRequirements.size;
+		//		allocInfo.memoryTypeIndex = m_physicalDevice.FindMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+		//		if (vkAllocateMemory(m_logicalDevice.GetHandle(), &allocInfo, nullptr, &m_textureImageMemory) != VK_SUCCESS)
+		//		{
+		//			JPT_ERROR("Failed to allocate image memory");
+		//			success = false;
+		//		}
+
+		//		vkBindImageMemory(m_logicalDevice.GetHandle(), m_textureImage, m_textureImageMemory, 0);
+		//	}
+		//}
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
