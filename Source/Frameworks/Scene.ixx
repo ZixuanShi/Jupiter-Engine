@@ -3,6 +3,7 @@
 export module jpt.Scene;
 
 import jpt.Entity;
+import jpt.Entity.Component.Manager;
 
 import jpt.Time.TypeDefs;
 
@@ -19,12 +20,23 @@ export namespace jpt
 	protected:
 		String m_name;						/**< The name of the scene */
 		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
+		EntityComponentManager m_componentManager;	/**< Manages all entity components in current scene */
 
 	public:
 		virtual ~Scene() = default;
 		
 		virtual bool Init() { return true; }
-		virtual void Update(TimePrecision) {}
+		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Shutdown() {}
 	};
+
+	void Scene::Update(TimePrecision deltaSeconds)
+	{
+		for (Entity* pEntity : m_entities)
+		{
+			pEntity->Update(deltaSeconds);
+		}
+
+		m_componentManager.Update(deltaSeconds);
+	}
 }
