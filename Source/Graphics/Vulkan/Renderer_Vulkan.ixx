@@ -294,7 +294,7 @@ export namespace jpt
 	bool Renderer_Vulkan::CreateTextureImage()
 	{
 		int32 texWidth, texHeight, texChannels;
-		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/texture.jpg");
+		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/T_Default.jpg");
 		unsigned char* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
 
