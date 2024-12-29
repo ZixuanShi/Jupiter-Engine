@@ -8,6 +8,8 @@ module;
 
 export module jpt.Vulkan.SwapChain;
 
+import jpt.Vulkan.Utils;
+
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
@@ -131,26 +133,7 @@ export namespace jpt::Vulkan
 		m_imageViews.Resize(imageCount);
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			VkImageViewCreateInfo createInfo = {};
-			createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			createInfo.image = m_images[i];
-			createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			createInfo.format = m_imageFormat;
-			createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-			createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			createInfo.subresourceRange.baseMipLevel = 0;
-			createInfo.subresourceRange.levelCount = 1;
-			createInfo.subresourceRange.baseArrayLayer = 0;
-			createInfo.subresourceRange.layerCount = 1;
-
-			if (vkCreateImageView(logicalDevice.GetHandle(), &createInfo, nullptr, &m_imageViews[i]) != VK_SUCCESS)
-			{
-				JPT_ERROR("Failed to create image views");
-				return false;
-			}
+			m_imageViews[i] = CreateImageView(logicalDevice, m_images[i], m_imageFormat);
 		}
 
 		return true;

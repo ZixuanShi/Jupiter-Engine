@@ -81,6 +81,7 @@ export namespace jpt
 		// Texture
 		VkImage m_textureImage;
 		VkDeviceMemory m_textureImageMemory;
+		VkImageView m_textureImageView;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -96,6 +97,9 @@ export namespace jpt
 
 	private:
 		bool CreateInstance();
+
+		bool CreateTextureImage();
+		bool CreateTextureImageImageView();
 
 		void CreateImage(uint32 width, uint32 height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 		void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
@@ -130,38 +134,8 @@ export namespace jpt
 
 		success &= m_descriptorPool.Init(m_logicalDevice);
 
-		// Texture Image
-		{
-			int32 texWidth, texHeight, texChannels;
-			const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/texture.jpg");
-			stbi_uc* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-			JPT_ASSERT(pixels, "Failed to load texture image");
-
-			const VkDeviceSize imageSize = texWidth * texHeight * 4;
-			VkBufferCreateInfo bufferInfo = {};
-			bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			bufferInfo.size = imageSize;
-			bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-			bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-			VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-			Buffer stagingBuffer;
-			stagingBuffer.Create(bufferInfo, properties, m_logicalDevice, m_physicalDevice);
-			stagingBuffer.MapMemory(m_logicalDevice, pixels, imageSize);
-
-			stbi_image_free(pixels);
-
-			CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_textureImage, m_textureImageMemory);
-
-			TransitionImageLayout(m_textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-			{
-				CopyBufferToImage(stagingBuffer.GetHandle(), m_textureImage, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
-			}
-			TransitionImageLayout(m_textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-			stagingBuffer.Shutdown(m_logicalDevice);
-		}
+		success &= CreateTextureImage();
+		success &= CreateTextureImageImageView();
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -198,6 +172,7 @@ export namespace jpt
 		}
 
 		// Texture
+		vkDestroyImageView(m_logicalDevice.GetHandle(), m_textureImageView, nullptr);
 		vkDestroyImage(m_logicalDevice.GetHandle(), m_textureImage, nullptr);
 		vkFreeMemory(m_logicalDevice.GetHandle(), m_textureImageMemory, nullptr);
 
@@ -307,6 +282,48 @@ export namespace jpt
 			JPT_ERROR("Failed to create Vulkan instance: %d", result);
 			return false;
 		}
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateTextureImage()
+	{
+		int32 texWidth, texHeight, texChannels;
+		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/texture.jpg");
+		stbi_uc* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		JPT_ASSERT(pixels, "Failed to load texture image");
+
+		const VkDeviceSize imageSize = texWidth * texHeight * 4;
+		VkBufferCreateInfo bufferInfo = {};
+		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		bufferInfo.size = imageSize;
+		bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+		Buffer stagingBuffer;
+		stagingBuffer.Create(bufferInfo, properties, m_logicalDevice, m_physicalDevice);
+		stagingBuffer.MapMemory(m_logicalDevice, pixels, imageSize);
+
+		stbi_image_free(pixels);
+
+		CreateImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_textureImage, m_textureImageMemory);
+
+		TransitionImageLayout(m_textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+		{
+			CopyBufferToImage(stagingBuffer.GetHandle(), m_textureImage, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
+		}
+		TransitionImageLayout(m_textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+		stagingBuffer.Shutdown(m_logicalDevice);
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::CreateTextureImageImageView()
+	{
+		m_textureImageView = CreateImageView(m_logicalDevice, m_textureImage, VK_FORMAT_R8G8B8A8_SRGB);
 
 		return true;
 	}

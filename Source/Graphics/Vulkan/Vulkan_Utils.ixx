@@ -2,6 +2,8 @@
 
 module;
 
+#include "Debugging/Logger.h"
+
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.Utils;
@@ -75,5 +77,27 @@ export namespace jpt::Vulkan
 		vkQueueWaitIdle(logicalDevice.GetGraphicsQueue());
 
 		vkFreeCommandBuffers(logicalDevice.GetHandle(), commandPool.GetHandle(), 1, &commandBuffer);
+	}
+
+	VkImageView CreateImageView(const LogicalDevice& logicalDevice, VkImage image, VkFormat format)
+	{
+		VkImageViewCreateInfo viewInfo = {};
+		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		viewInfo.image = image;
+		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		viewInfo.format = format;
+		viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		viewInfo.subresourceRange.baseMipLevel = 0;
+		viewInfo.subresourceRange.levelCount = 1;
+		viewInfo.subresourceRange.baseArrayLayer = 0;
+		viewInfo.subresourceRange.layerCount = 1;
+
+		VkImageView imageView;
+		if (vkCreateImageView(logicalDevice.GetHandle(), &viewInfo, nullptr, &imageView) != VK_SUCCESS)
+		{
+			JPT_ERROR("Failed to create texture image view");
+		}
+
+		return imageView;
 	}
 }
