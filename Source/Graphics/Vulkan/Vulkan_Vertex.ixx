@@ -19,19 +19,28 @@ export namespace jpt::Vulkan
 	public:
 		Vec2f position;
 		Vec3f color;
+		Vec2f texCoord;
 
 	public:
 		constexpr Vertex() = default;
 		constexpr Vertex(const Vec2f& position, const Vec3f& color);
+		constexpr Vertex(const Vec2f& position, const Vec3f& color, const Vec2f& texCoord);
 
 	public:
 		static VkVertexInputBindingDescription GetBindingDescription();
-		static StaticArray<VkVertexInputAttributeDescription, 2> GetAttributeDescriptions();
+		static StaticArray<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions();
 	};
 
 	constexpr Vertex::Vertex(const Vec2f& position, const Vec3f& color)
 		: position(position)
 		, color(color)
+	{
+	}
+
+	constexpr Vertex::Vertex(const Vec2f& position, const Vec3f& color, const Vec2f& texCoord)
+		: position(position)
+		, color(color)
+		, texCoord(texCoord)
 	{
 	}
 
@@ -45,9 +54,9 @@ export namespace jpt::Vulkan
 		return bindingDescription;
 	}
 
-	StaticArray<VkVertexInputAttributeDescription, 2> Vertex::GetAttributeDescriptions()
+	StaticArray<VkVertexInputAttributeDescription, 3> Vertex::GetAttributeDescriptions()
 	{
-		StaticArray<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 
 		// Position
 		attributeDescriptions[0].binding = 0;
@@ -61,6 +70,12 @@ export namespace jpt::Vulkan
 		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 		attributeDescriptions[1].offset = offsetof(Vertex, color);
 
+		// TexCoord
+		attributeDescriptions[2].binding = 0;
+		attributeDescriptions[2].location = 2;
+		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
 		return attributeDescriptions;
 	}
 
@@ -69,10 +84,10 @@ export namespace jpt::Vulkan
 	
 	DynamicArray<Vertex> g_vertices =
 	{
-		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
-		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+		{ { -0.5f, -0.5f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f } },
+		{ {  0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } },
+		{ {  0.5f,  0.5f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
+		{ { -0.5f,  0.5f }, { 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f } }
 	};
 
 	DynamicArray<uint16> g_indices =

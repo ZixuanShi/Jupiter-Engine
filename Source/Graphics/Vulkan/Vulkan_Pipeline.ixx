@@ -36,7 +36,7 @@ export namespace jpt::Vulkan
 		VkPipeline GetHandle() const { return m_graphicsPipeline; }
 
 	private:
-		VkPipelineVertexInputStateCreateInfo GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 2>& attributeDescs) const;
+		VkPipelineVertexInputStateCreateInfo GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 3>& attributeDescs) const;
 		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;
 		VkPipelineDynamicStateCreateInfo GetDynamicState(const StaticArray<VkDynamicState, 2>& dynamicStates) const;
 		VkPipelineViewportStateCreateInfo GetViewportState() const;
@@ -58,7 +58,7 @@ export namespace jpt::Vulkan
 
 		// Fixed-function stages
 		VkVertexInputBindingDescription bindingDescription = Vertex::GetBindingDescription();
-		StaticArray<VkVertexInputAttributeDescription, 2> attributeDescriptions = Vertex::GetAttributeDescriptions();
+		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::GetAttributeDescriptions();
 		auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
 
 		auto inputAssembly = GetInputAssembly();
@@ -111,7 +111,7 @@ export namespace jpt::Vulkan
 		vkDestroyPipeline(logicalDevice.GetHandle(), m_graphicsPipeline, nullptr);
 	}
 
-	VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 2>& attributeDescs) const
+	VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 3>& attributeDescs) const
 	{
 		// how to interpret vertex data from your vertex buffers
 		// Binding Description: spacing between data and whether the data is per-vertex or per-instance

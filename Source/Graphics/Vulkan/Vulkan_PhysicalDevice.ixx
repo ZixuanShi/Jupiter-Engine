@@ -219,7 +219,9 @@ export namespace jpt::Vulkan
 		VkPhysicalDeviceFeatures deviceFeatures;
 		vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
 
-		if (!deviceFeatures.geometryShader || !deviceFeatures.fillModeNonSolid)
+		if (!deviceFeatures.geometryShader || 
+			!deviceFeatures.fillModeNonSolid ||
+			!deviceFeatures.samplerAnisotropy)
 		{
 			return {};
 		}
