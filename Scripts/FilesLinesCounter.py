@@ -1,4 +1,4 @@
-# Counts how many files and lines of code are in a directory, recursively.
+# Counts how many files and lines of code are in Jupiter Engine
 
 import os
 

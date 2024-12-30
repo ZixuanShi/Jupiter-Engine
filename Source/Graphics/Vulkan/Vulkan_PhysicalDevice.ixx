@@ -46,6 +46,8 @@ export namespace jpt::Vulkan
 		uint32 FindPresentFamilyIndex(VkSurfaceKHR surface) const;
 		SwapChainSupportDetails QuerySwapChainSupport(VkSurfaceKHR surface) const;
 		uint32 FindMemoryType(uint32 typeFilter, VkMemoryPropertyFlags properties) const;
+		VkFormat FindDepthFormat() const;
+		VkFormat FindSupportedFormat(const DynamicArray<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
 
 		VkPhysicalDeviceProperties GetProperties() const;
 		VkPhysicalDeviceFeatures GetFeatures() const;
@@ -185,6 +187,44 @@ export namespace jpt::Vulkan
 
 		JPT_ASSERT(false, "Failed to find a suitable memory type");
 		return UINT32_MAX;
+	}
+
+	VkFormat PhysicalDevice::FindDepthFormat() const
+	{
+		const DynamicArray<VkFormat> candidates =
+		{
+			VK_FORMAT_D32_SFLOAT,
+			VK_FORMAT_D32_SFLOAT_S8_UINT,
+			VK_FORMAT_D24_UNORM_S8_UINT
+		};
+
+		const VkImageTiling tiling = VK_IMAGE_TILING_OPTIMAL;
+		const VkFormatFeatureFlags features = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+		return FindSupportedFormat(candidates, tiling, features);
+	}
+
+	VkFormat PhysicalDevice::FindSupportedFormat(const DynamicArray<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const
+	{
+		for (VkFormat format : candidates)
+		{
+			VkFormatProperties props;
+			vkGetPhysicalDeviceFormatProperties(m_physicalDevice, format, &props);
+
+			if (tiling == VK_IMAGE_TILING_LINEAR && 
+				(props.linearTilingFeatures & features) == features)
+			{
+				return format;
+			}
+			else if (tiling == VK_IMAGE_TILING_OPTIMAL && 
+				(props.optimalTilingFeatures & features) == features)
+			{
+				return format;
+			}
+		}
+
+		JPT_ASSERT(false, "Failed to find a supported format");
+		return VK_FORMAT_UNDEFINED;
 	}
 
 	VkPhysicalDeviceProperties PhysicalDevice::GetProperties() const

@@ -43,6 +43,7 @@ export namespace jpt::Vulkan
 		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
 		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
 		VkPipelineColorBlendStateCreateInfo GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const;
+		VkPipelineDepthStencilStateCreateInfo GetDepthStencil() const;
 	};
 
 	bool GraphicsPipeline::Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
@@ -61,11 +62,6 @@ export namespace jpt::Vulkan
 		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::GetAttributeDescriptions();
 		auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
 
-		auto inputAssembly = GetInputAssembly();
-		auto viewportState = GetViewportState();
-		auto rasterizer = GetRasterization();
-		auto multisampling = GetMultisampling();
-
 		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
 		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 		colorBlendAttachment.blendEnable = VK_FALSE;
@@ -78,6 +74,12 @@ export namespace jpt::Vulkan
 		};
 		auto dynamicState = GetDynamicState(dynamicStates);
 
+		auto inputAssembly = GetInputAssembly();
+		auto viewportState = GetViewportState();
+		auto rasterizer = GetRasterization();
+		auto multisampling = GetMultisampling();
+		auto depthStencil = GetDepthStencil();
+
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 		pipelineInfo.stageCount = 2;
@@ -87,7 +89,7 @@ export namespace jpt::Vulkan
 		pipelineInfo.pViewportState = &viewportState;
 		pipelineInfo.pRasterizationState = &rasterizer;
 		pipelineInfo.pMultisampleState = &multisampling;
-		pipelineInfo.pDepthStencilState = nullptr;
+		pipelineInfo.pDepthStencilState = &depthStencil;
 		pipelineInfo.pColorBlendState = &colorBlending;
 		pipelineInfo.pDynamicState = &dynamicState;
 		pipelineInfo.layout = pipelineLayout.GetHandle();
@@ -218,5 +220,21 @@ export namespace jpt::Vulkan
 		colorBlending.blendConstants[3] = 0.0f;
 
 		return colorBlending;
+	}
+	VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::GetDepthStencil() const
+	{
+		VkPipelineDepthStencilStateCreateInfo depthStencil{};
+		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		depthStencil.depthTestEnable = VK_TRUE;
+		depthStencil.depthWriteEnable = VK_TRUE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthBoundsTestEnable = VK_FALSE;
+		depthStencil.minDepthBounds = 0.0f; // Optional
+		depthStencil.maxDepthBounds = 1.0f; // Optional
+		depthStencil.stencilTestEnable = VK_FALSE;
+		depthStencil.front = {}; // Optional
+		depthStencil.back = {}; // Optional
+
+		return depthStencil;
 	}
 }

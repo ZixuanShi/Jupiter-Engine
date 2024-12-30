@@ -2,6 +2,7 @@
 
 module; 
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
@@ -38,7 +39,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(Window* pWindow, const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, VkSurfaceKHR surface);
 		bool CreateImageViews(const LogicalDevice& logicalDevice);
-		bool CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass);
+		bool CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass, VkImageView depthImageView);
 
 		void Shutdown(const LogicalDevice& logicalDevice);
 
@@ -133,13 +134,13 @@ export namespace jpt::Vulkan
 		m_imageViews.Resize(imageCount);
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			m_imageViews[i] = CreateImageView(logicalDevice, m_images[i], m_imageFormat);
+			m_imageViews[i] = CreateImageView(logicalDevice, m_images[i], m_imageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 		}
 
 		return true;
 	}
 
-	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass)
+	bool SwapChain::CreateFramebuffers(const LogicalDevice& logicalDevice, const RenderPass& renderPass, VkImageView depthImageView)
 	{
 		m_framebuffers.Resize(m_imageViews.Count());
 
@@ -147,13 +148,14 @@ export namespace jpt::Vulkan
 		{
 			VkImageView attachments[] = 
 			{
-				m_imageViews[i] 
+				m_imageViews[i],
+				depthImageView
 			};
 
 			VkFramebufferCreateInfo framebufferInfo = {};
 			framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 			framebufferInfo.renderPass = renderPass.GetHandle();
-			framebufferInfo.attachmentCount = 1;
+			framebufferInfo.attachmentCount = JPT_ARRAY_COUNT(attachments);
 			framebufferInfo.pAttachments = attachments;
 			framebufferInfo.width = m_extent.width;
 			framebufferInfo.height = m_extent.height;

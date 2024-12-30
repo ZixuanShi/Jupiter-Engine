@@ -2,12 +2,14 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -16,6 +18,7 @@ export module jpt.Vulkan.WindowResources;
 import jpt.Window;
 
 import jpt.Graphics.Constants;
+import jpt.Vulkan.Utils;
 
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.PhysicalDevice;
@@ -61,6 +64,11 @@ export namespace jpt::Vulkan
 		StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
 		StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
 
+		// Depth Buffer
+		VkImage m_depthImage;
+		VkDeviceMemory m_depthImageMemory;
+		VkImageView m_depthImageView;
+
 		uint32 m_currentFrame = 0;
 		bool m_shouldRecreateSwapChain = false;
 
@@ -84,11 +92,15 @@ export namespace jpt::Vulkan
 
 	private:
 		Optional<uint32> AcquireNextImage(const LogicalDevice& logicalDevice);
-		void Record(const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline, VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
+		void Record(const RenderPass& renderPass, const PipelineLayout& pipelineLayout, const GraphicsPipeline& graphicsPipeline, 
+			VertexBuffer& vertexBuffer, IndexBuffer& indexBuffer, uint32 imageIndex);
 		void Submit() const;
 		void Present(uint32& imageIndex);
 
 		void UpdateUniformBuffer();
+
+		void CreateDepthResources(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice);
+		void DestroyDepthResources(const LogicalDevice& logicalDevice);
 	};
 
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
@@ -104,10 +116,13 @@ export namespace jpt::Vulkan
 		const uint32 presentFamilyIndex = physicalDevice.FindPresentFamilyIndex(m_surface);
 		vkGetDeviceQueue(logicalDevice.GetHandle(), presentFamilyIndex, 0, &m_presentQueue);
 
+		// Depth Buffer
+		CreateDepthResources(logicalDevice, physicalDevice);
+
 		// SwapChain
 		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
 		m_swapChain.CreateImageViews(logicalDevice);
-		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
+		m_swapChain.CreateFramebuffers(logicalDevice, renderPass, m_depthImageView);
 
 		// Command pool & buffers
 		m_commandPool.Init(logicalDevice, physicalDevice.GetGraphicsFamilyIndex());
@@ -151,13 +166,17 @@ export namespace jpt::Vulkan
 				return false;
 			}
 		}
-
+	
 		return true;
 	}
 
 	void WindowResources::Shutdown(VkInstance instance, const LogicalDevice& logicalDevice)
 	{
 		logicalDevice.WaitIdle();
+
+		vkDestroyImageView(logicalDevice.GetHandle(), m_depthImageView, nullptr);
+		vkDestroyImage(logicalDevice.GetHandle(), m_depthImage, nullptr);
+		vkFreeMemory(logicalDevice.GetHandle(), m_depthImageMemory, nullptr);
 
 		for (DescriptorSet& descriptorSet : m_descriptorSets)
 		{
@@ -214,10 +233,12 @@ export namespace jpt::Vulkan
 		logicalDevice.WaitIdle();
 
 		m_swapChain.Shutdown(logicalDevice);
+		DestroyDepthResources(logicalDevice);
 
 		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
 		m_swapChain.CreateImageViews(logicalDevice);
-		m_swapChain.CreateFramebuffers(logicalDevice, renderPass);
+		CreateDepthResources(logicalDevice, physicalDevice);
+		m_swapChain.CreateFramebuffers(logicalDevice, renderPass, m_depthImageView);
 
 		m_shouldRecreateSwapChain = false;
 	}
@@ -267,9 +288,11 @@ export namespace jpt::Vulkan
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = m_swapChain.GetExtent();
 
-		VkClearValue clearColor = { 0.05f, 0.05f, 0.05f, 1.0f };
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
+		VkClearValue clearValues[2];
+		clearValues[0].color = { 0.05f, 0.05f, 0.05f, 1.0f };
+		clearValues[1].depthStencil = { 1.0f, 0 };
+		renderPassInfo.clearValueCount = JPT_ARRAY_COUNT(clearValues);
+		renderPassInfo.pClearValues = clearValues;
 
 		// Start recording commands
 		vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -392,6 +415,27 @@ export namespace jpt::Vulkan
 
 		UniformBuffer& uniformBuffer = m_uniformBuffers[m_currentFrame];
 		memcpy(uniformBuffer.GetMappedMemory(), &ubo, sizeof(ubo));
+	}
+
+	void WindowResources::CreateDepthResources(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice)
+	{
+		Vec2i frameSize = m_pOwner->GetFrameSize();
+		const VkFormat depthFormat = physicalDevice.FindDepthFormat();
+
+		CreateImage(logicalDevice, physicalDevice,
+			frameSize.x, frameSize.y,
+			depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+			m_depthImage, m_depthImageMemory);
+
+		m_depthImageView = CreateImageView(logicalDevice, m_depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+	}
+
+	void WindowResources::DestroyDepthResources(const LogicalDevice& logicalDevice)
+	{
+		vkDestroyImageView(logicalDevice.GetHandle(), m_depthImageView, nullptr);
+		vkDestroyImage(logicalDevice.GetHandle(), m_depthImage, nullptr);
+		vkFreeMemory(logicalDevice.GetHandle(), m_depthImageMemory, nullptr);
 	}
 
 	bool WindowResources::CanDraw() const
