@@ -12,6 +12,13 @@ module;
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
+#include <vector>
+#include <string>
+#include <unordered_map>
+
 export module jpt.Renderer_Vulkan;
 
 import jpt.Renderer;
@@ -37,6 +44,7 @@ import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
 
 import jpt.DynamicArray;
+import jpt.HashMap;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -84,6 +92,8 @@ export namespace jpt
 		VkImageView m_textureImageView;
 		VkSampler m_textureSampler;
 
+		// Model
+
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:
@@ -102,6 +112,8 @@ export namespace jpt
 		bool CreateTextureImage();
 		bool CreateTextureImageImageView();
 		bool CreateTextureSampler();
+
+		bool LoadModel();
 	};
 
 	bool Renderer_Vulkan::Init()
@@ -110,7 +122,7 @@ export namespace jpt
 
 		bool success = true;
 
-		//GenerateSierpinski(5, { 0.5f, 0.5f }, { -0.5f, 0.5f }, { 0.0f, -0.5f });
+		//GenerateSierpinski(5, { 0.5f, 0.5f, -0.25f }, { -0.5f, 0.5f, -0.25f }, { 0.0f, -0.5f, -0.25f });
 
 		success &= CreateInstance();
 #if !IS_RELEASE
@@ -126,6 +138,9 @@ export namespace jpt
 		success &= m_descriptorSetLayout.Init(m_logicalDevice);
 		success &= m_pipelineLayout.Init(m_logicalDevice, m_descriptorSetLayout);
 		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
+
+		// Model
+		success &= LoadModel();
 
 		success &= m_vertexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 		success &= m_indexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
@@ -291,7 +306,7 @@ export namespace jpt
 	bool Renderer_Vulkan::CreateTextureImage()
 	{
 		int32 texWidth, texHeight, texChannels;
-		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/T_Default.jpg");
+		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png");
 		unsigned char* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
 
@@ -363,6 +378,53 @@ export namespace jpt
 		{
 			JPT_ERROR("Failed to create texture sampler");
 			return false;
+		}
+
+		return true;
+	}
+
+	bool Renderer_Vulkan::LoadModel()
+	{
+		File::Path modelPath = File::FixDependencies("Assets/Jupiter_Common/Models/Model_Viking_Room.obj");
+
+		tinyobj::attrib_t attrib;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string warn, err;
+
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.ToString().ConstBuffer()))
+		{
+			JPT_ERROR("Failed to load model: %s", err.c_str());
+			return false;
+		}
+
+		// TODO: Benchmark
+		//std::unordered_map<Vertex, uint32> uniqueVertices;
+		HashMap<Vertex, uint32> uniqueVertices;
+
+		for (const tinyobj::shape_t& shape : shapes)
+		{
+			for (const tinyobj::index_t& index : shape.mesh.indices)
+			{
+				Vertex vertex = {};
+
+				vertex.position.x = attrib.vertices[3 * index.vertex_index + 0];
+				vertex.position.y = attrib.vertices[3 * index.vertex_index + 1];
+				vertex.position.z = attrib.vertices[3 * index.vertex_index + 2];
+
+				vertex.texCoord.x = attrib.texcoords[2 * index.texcoord_index + 0];
+				vertex.texCoord.y = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
+
+				vertex.color = { 1.0f, 1.0f, 1.0f };
+
+				if (!uniqueVertices.Has(vertex))
+				{
+					uniqueVertices[vertex] = static_cast<uint32>(g_vertices.Count());
+					g_vertices.EmplaceBack(vertex);
+				}
+
+				g_indices.EmplaceBack(uniqueVertices[vertex]);
+			}
 		}
 
 		return true;

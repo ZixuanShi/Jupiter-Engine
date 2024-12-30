@@ -3,6 +3,7 @@
 module;
 
 #include <cmath>
+#include <type_traits>
 
 export module jpt.Vector2;
 
@@ -11,6 +12,7 @@ import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Math;
+import jpt.Hash;
 import jpt.String;
 import jpt.ToString;
 
@@ -97,6 +99,7 @@ namespace jpt
 		constexpr static Vector2 RotateDegreesAround(Vector2 vec2, Vector2 pivot, T degrees);
 
 		constexpr jpt::String ToString() const;
+		constexpr uint64 Hash() const;
 	};
 
 	template<Numeric T>
@@ -487,6 +490,29 @@ namespace jpt
 		result += ", y:";
 		result += jpt::ToString(y);
 		return result;
+	}
+
+	template<Numeric T>
+	constexpr uint64 Vector2<T>::Hash() const
+	{
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			const T epsilon = static_cast<T>(1e-6);
+			auto round = [epsilon](T value) -> T
+				{
+					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
+				};
+
+			uint64 hash = jpt::Hash(round(x));
+			hash ^= jpt::Hash(round(y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+		else
+		{
+			uint64 hash = jpt::Hash(x);
+			hash ^= jpt::Hash(y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
 	}
 }
 

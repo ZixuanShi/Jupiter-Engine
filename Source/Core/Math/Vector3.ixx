@@ -3,6 +3,7 @@
 module;
 
 #include <cmath>
+#include <type_traits>
 
 export module jpt.Vector3;
 
@@ -12,6 +13,7 @@ import jpt.TypeTraits;
 import jpt.Math;
 import jpt.String;
 import jpt.ToString;
+import jpt.Hash;
 
 export namespace jpt
 {
@@ -102,6 +104,7 @@ export namespace jpt
 		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
 
 		constexpr String ToString() const;
+		constexpr uint64 Hash() const;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -446,6 +449,31 @@ export namespace jpt
 	constexpr String Vector3<T>::ToString() const
 	{
 		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", x, y, z);
+	}
+
+	template<Numeric T>
+	constexpr uint64 Vector3<T>::Hash() const
+	{
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			const T epsilon = static_cast<T>(1e-6);
+			auto round = [epsilon](T value) -> T
+				{
+					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
+				};
+
+			uint64 hash = jpt::Hash(round(x));
+			hash ^= jpt::Hash(round(y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(round(z)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+		else
+		{
+			uint64 hash = jpt::Hash(x);
+			hash ^= jpt::Hash(y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
 	}
 }
 

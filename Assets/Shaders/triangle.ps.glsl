@@ -14,5 +14,5 @@ layout(push_constant) uniform PushConstantObject
 
 void main() 
 {
-    outColor = vec4(inFragColor * texture(texSampler, inFragTexCoord).rgb, 1.0);
+    outColor = texture(texSampler, inFragTexCoord);
 }

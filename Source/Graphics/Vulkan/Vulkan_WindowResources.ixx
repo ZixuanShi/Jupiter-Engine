@@ -404,11 +404,11 @@ export namespace jpt::Vulkan
 
 		UniformBufferObject ubo = {};
 		//ubo.model = Matrix44f::FromRadians(0, rotation, rotation);
-		//ubo.view = Matrix44f::LookAt(Vec3f(1.0f, 1.0f, 1.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Forward());
+		//ubo.view = Matrix44f::LookAt(Vec3f(2.0f, 2.0f, 2.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Forward());
 		//ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
 		ubo.model = glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.view  = glm::lookAt(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view  = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.proj  = glm::perspective(glm::radians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 		
 		ubo.proj[1][1] *= -1;
