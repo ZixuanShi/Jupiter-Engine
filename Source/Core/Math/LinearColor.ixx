@@ -6,6 +6,7 @@ import jpt.Math;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
+import jpt.Hash;
 
 namespace jpt
 {
@@ -74,6 +75,7 @@ namespace jpt
 		constexpr String ToString() const noexcept;
 
 		constexpr bool operator==(LinearColor other) const noexcept;
+		constexpr uint64 Hash() const noexcept;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -204,6 +206,21 @@ namespace jpt
 			   AreValuesClose(g, other.g) &&
 			   AreValuesClose(b, other.b) &&
 			   AreValuesClose(a, other.a);
+	}
+
+	constexpr uint64 LinearColor::Hash() const noexcept
+	{
+		const float32 epsilon = static_cast<float32>(1e-6);
+		auto round = [epsilon](float32 value) -> float32
+			{
+				return (value < epsilon && value > -epsilon) ? static_cast<float32>(0) : value;
+			};
+
+		uint64 hash = jpt::Hash(round(r));
+		hash ^= jpt::Hash(round(g)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(round(b)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(round(a)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		return hash;
 	}
 }
 

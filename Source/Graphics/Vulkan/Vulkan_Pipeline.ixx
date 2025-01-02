@@ -9,7 +9,8 @@ module;
 
 export module jpt.Vulkan.GraphicsPipeline;
 
-import jpt.Vulkan.Vertex;
+import jpt.Vertex;
+
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.Shader.Vertex;
 import jpt.Vulkan.Shader.Pixel;
@@ -44,6 +45,9 @@ export namespace jpt::Vulkan
 		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
 		VkPipelineColorBlendStateCreateInfo GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const;
 		VkPipelineDepthStencilStateCreateInfo GetDepthStencil() const;
+
+		VkVertexInputBindingDescription GetBindingDescription();
+		StaticArray<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions();
 	};
 
 	bool GraphicsPipeline::Init(const LogicalDevice& logicalDevice, const PipelineLayout& pipelineLayout, const RenderPass& renderPass)
@@ -58,8 +62,8 @@ export namespace jpt::Vulkan
 		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 
 		// Fixed-function stages
-		VkVertexInputBindingDescription bindingDescription = Vertex::GetBindingDescription();
-		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::GetAttributeDescriptions();
+		VkVertexInputBindingDescription bindingDescription = GetBindingDescription();
+		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = GetAttributeDescriptions();
 		auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
 
 		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
@@ -236,5 +240,40 @@ export namespace jpt::Vulkan
 		depthStencil.back = {}; // Optional
 
 		return depthStencil;
+	}
+
+	VkVertexInputBindingDescription GraphicsPipeline::GetBindingDescription()
+	{
+		VkVertexInputBindingDescription bindingDescription{};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	StaticArray<VkVertexInputAttributeDescription, 3> GraphicsPipeline::GetAttributeDescriptions()
+	{
+		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+
+		// Position
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof(Vertex, position);
+
+		// Color
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		// TexCoord
+		attributeDescriptions[2].binding = 0;
+		attributeDescriptions[2].location = 2;
+		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
+		return attributeDescriptions;
 	}
 }

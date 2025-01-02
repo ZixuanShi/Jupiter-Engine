@@ -4,8 +4,9 @@ module;
 
 #include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
-#include "Debugging/Logger.h"
 #include "Core/Validation/Assert.h"
+#include "Debugging/Logger.h"
+#include "Profiling/TimingProfiler.h"
 
 #include <vulkan/vulkan.h>
 
@@ -24,7 +25,8 @@ export module jpt.Renderer_Vulkan;
 import jpt.Renderer;
 import jpt.Graphics.Constants;
 
-import jpt.Vulkan.Vertex;
+import jpt.Vertex;
+import jpt.Vulkan.Data;
 import jpt.Vulkan.Utils;
 
 import jpt.Vulkan.Constants;
@@ -398,33 +400,42 @@ export namespace jpt
 			return false;
 		}
 
-		// TODO: Benchmark
-		//std::unordered_map<Vertex, uint32> uniqueVertices;
-		HashMap<Vertex, uint32> uniqueVertices;
-
-		for (const tinyobj::shape_t& shape : shapes)
 		{
-			for (const tinyobj::index_t& index : shape.mesh.indices)
+			JPT_SCOPED_TIMING_PROFILER("Load model");
+
+			//std::unordered_map<Vertex, uint32> uniqueVertices;
+			HashMap<Vertex, uint32> uniqueVertices;
+
+			for (const tinyobj::shape_t& shape : shapes)
 			{
-				Vertex vertex = {};
-
-				vertex.position.x = attrib.vertices[3 * index.vertex_index + 0];
-				vertex.position.y = attrib.vertices[3 * index.vertex_index + 1];
-				vertex.position.z = attrib.vertices[3 * index.vertex_index + 2];
-
-				vertex.texCoord.x = attrib.texcoords[2 * index.texcoord_index + 0];
-				vertex.texCoord.y = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
-
-				vertex.color = { 1.0f, 1.0f, 1.0f };
-
-				if (!uniqueVertices.Has(vertex))
+				for (const tinyobj::index_t& index : shape.mesh.indices)
 				{
-					uniqueVertices[vertex] = static_cast<uint32>(g_vertices.Count());
-					g_vertices.EmplaceBack(vertex);
-				}
+					Vertex vertex = {};
 
-				g_indices.EmplaceBack(uniqueVertices[vertex]);
+					vertex.position.x = attrib.vertices[3 * index.vertex_index + 0];
+					vertex.position.y = attrib.vertices[3 * index.vertex_index + 1];
+					vertex.position.z = attrib.vertices[3 * index.vertex_index + 2];
+
+					vertex.texCoord.x = attrib.texcoords[2 * index.texcoord_index + 0];
+					vertex.texCoord.y = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
+
+					vertex.color = { 1.0f, 1.0f, 1.0f };
+
+					//g_vertices.Add(vertex);
+					//g_indices.Add(static_cast<uint32>(g_indices.Count()));
+
+					if (!uniqueVertices.Has(vertex))
+					{
+						uniqueVertices[vertex] = static_cast<uint32>(g_vertices.Count());
+						g_vertices.EmplaceBack(vertex);
+					}
+
+					g_indices.EmplaceBack(uniqueVertices[vertex]);
+				}
 			}
+
+			JPT_LOG("Vertices: %i", g_vertices.Count());
+			JPT_LOG("Indices: %i", g_indices.Count());
 		}
 
 		return true;

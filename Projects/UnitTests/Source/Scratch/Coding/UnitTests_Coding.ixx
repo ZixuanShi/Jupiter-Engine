@@ -35,5 +35,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
 	JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
 
+	// https://claude.ai/chat/588f655f-8a30-4819-9812-e892ff528625
+
 	return true;
 }

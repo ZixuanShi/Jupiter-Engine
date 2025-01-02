@@ -8,13 +8,16 @@ module;
 
 export module jpt.Vulkan.Utils;
 
-import jpt.Vulkan.Vertex;
+import jpt.Vulkan.Data;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.PhysicalDevice;
 
 import jpt.Vector2;
 import jpt.Vector3;
+import jpt.LinearColor;
+
+import jpt.StaticArray;
 
 export namespace jpt::Vulkan
 {
@@ -22,7 +25,7 @@ export namespace jpt::Vulkan
 	{
 		if (depth <= 0)
 		{
-			static const Vec3f klocTriangleColor = { 0.95f, 0.05f, 0.05f };
+			static const LinearColor klocTriangleColor = { 0.95f, 0.05f, 0.05f };
 			const size_t baseIndex = g_vertices.Count();
 
 			g_vertices.EmplaceBack(Vertex(right, klocTriangleColor));
