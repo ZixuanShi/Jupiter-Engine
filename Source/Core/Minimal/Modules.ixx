@@ -20,6 +20,8 @@ export import jpt.Queue;
 export import jpt.HashMap;
 export import jpt.HashSet;
 export import jpt.SortedMap;
+export import jpt.SortedSet;
+export import jpt.Heap;
 
 // Functional
 export import jpt.Function;
