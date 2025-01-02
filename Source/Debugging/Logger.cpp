@@ -33,7 +33,7 @@ import jpt.String.Helpers;
 namespace jpt
 {
 	static constexpr size_t kMaxMessageSize = 1024;
-	static const File::Path kLogFilePath = Combine(File::Source::Saved, "Log.txt");
+	static File::Path locLogFilePath;
 
 	static const char* locGetLogStr(Logger::ELogType type)
 	{
@@ -70,6 +70,8 @@ namespace jpt
 
 	bool Logger::PreInit()
 	{
+		locLogFilePath = File::Combine(File::Source::Saved, "Log.txt");
+
 #if ASSERT_ENABLED
 		g_AssertCallback = locAssertCallback;
 #endif
@@ -111,7 +113,7 @@ namespace jpt
 
 		if (System::Paths::GetInstance().IsInitialized())
 		{
-			File::AppendTextFile(kLogFilePath, GetTimeStamp() + contentToLog);
+			File::AppendTextFile(locLogFilePath, GetTimeStamp() + contentToLog);
 		}
 	}
 
@@ -130,7 +132,7 @@ namespace jpt
 
 		if (System::Paths::GetInstance().IsInitialized())
 		{
-			File::AppendTextFile(kLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
+			File::AppendTextFile(locLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
 		}
 	}
 

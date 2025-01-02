@@ -7,6 +7,9 @@
 
 import jpt.CoreModules;
 
+import jpt.CommandLine;
+import jpt.System.Paths;
+
 import jpt.RawInput;
 import jpt.Input.KeyCode;
 
@@ -38,6 +41,9 @@ bool Application_Blank::PreInit()
 				GetRenderer()->RegisterWindow(pWindow);
 			}
 		});
+
+	JPT_LOG(jpt::System::Paths::GetInstance().GetOutputDir());
+	JPT_LOG(jpt::System::Paths::GetInstance().GetExecutablePath());
 
 	return true;
 }

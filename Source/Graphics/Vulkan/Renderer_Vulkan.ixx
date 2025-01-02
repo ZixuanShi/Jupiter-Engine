@@ -309,7 +309,7 @@ export namespace jpt
 	{
 		int32 texWidth, texHeight, texChannels;
 		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png");
-		unsigned char* pixels = stbi_load(texturePath.ToString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+		unsigned char* pixels = stbi_load(texturePath.ToCString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
 
 		const VkDeviceSize imageSize = texWidth * texHeight * 4;
@@ -394,7 +394,7 @@ export namespace jpt
 		std::vector<tinyobj::material_t> materials;
 		std::string warn, err;
 
-		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.ToString().ConstBuffer()))
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.ToCString().ConstBuffer()))
 		{
 			JPT_ERROR("Failed to load model: %s", err.c_str());
 			return false;

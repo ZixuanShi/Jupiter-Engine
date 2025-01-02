@@ -46,8 +46,9 @@ export namespace jpt
 			constexpr bool Has(const Path& path) const;
 			constexpr bool EndsWith(const Path& path) const;
 			constexpr Path GetParent() const;
+			constexpr Path SubPath(size_t index, size_t count = npos) const;
 
-			String ToString() const;
+			String ToCString() const;
 			constexpr const WString& ToWString() const { return m_path; }
 			constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 			constexpr size_t Count() const { return m_path.Count(); }
@@ -144,7 +145,12 @@ export namespace jpt
 			return m_path.SubStr(0, lastSeparatorIndex + seprator.Count());
 		}
 
-		String Path::ToString() const
+		constexpr Path Path::SubPath(size_t index, size_t count) const
+		{
+			return m_path.SubStr(index, count);
+		}
+
+		String Path::ToCString() const
 		{
 			return jpt::ToString(m_path);
 		}

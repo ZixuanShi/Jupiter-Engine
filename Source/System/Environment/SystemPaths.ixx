@@ -51,7 +51,6 @@ export namespace jpt::System
 	{
 		m_engineDir = JPT_ENGINE_DIR_W;
 		m_clientDir = GetClientDirW();
-		m_outputDir = GetOutputDirW();
 
 #if IS_RELEASE
 		m_savedDir = m_outputDir + L"_Saved/";
@@ -64,6 +63,9 @@ export namespace jpt::System
 		GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 		m_executablePath = buffer;
 #endif
+
+		const size_t lastSlash = m_executablePath.FindLastOf(L"\\");
+		m_outputDir = m_executablePath.SubPath(0, lastSlash + 1);
 
 		JPT_ASSERT(!m_engineDir.IsEmpty());
 		JPT_ASSERT(!m_clientDir.IsEmpty());

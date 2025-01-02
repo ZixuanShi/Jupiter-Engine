@@ -15,8 +15,8 @@ export namespace jpt::File
 	{
 		Engine,
 		Client,		// Client development folder
-		Output,		// Build output folder
-		Saved,		
+		Output,		// Build output folder. This could be anywhere if Release build
+		Saved,		// Output/_Saved
 
 		Baked
 	};

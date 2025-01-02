@@ -214,7 +214,7 @@ export namespace jpt
 		// Compile Shaders
 		Microsoft::WRL::ComPtr<ID3DBlob> vertexShader;
 		Microsoft::WRL::ComPtr<ID3DBlob> pixelShader;
-		const File::Path shadersPath = File::Combine(File::Source::Engine, L"Assets/Shaders/shaders.hlsl");
+		const File::Path shadersPath = File::FixDependencies("Assets/Jupiter_Common/Shaders/shaders.hlsl");
 
 #if !IS_RELEASE
 		// Enable better shader debugging with the graphics debugging tools.
