@@ -31,13 +31,15 @@ import jpt.StopWatch;
 import jpt.ProjectSettings;
 
 import jpt.Event.Manager;
+import jpt.Event.Window.Close;
+import jpt.Event.Keyboard.KeyPress;
 
 namespace jpt
 {
 	bool jpt::Application::PreInit()
 	{
-		Logger::GetInstance().PreInit();
 		System::Paths::GetInstance().PreInit();
+		Logger::GetInstance().PreInit();
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		HardwareManager::GetInstance().PreInit();
@@ -67,6 +69,20 @@ namespace jpt
 		success &= m_pRenderer->PreInit();
 		success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
 		success &= m_sceneManager.PreInit();
+
+		// Register for events
+		jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
+			{
+				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
+				{
+					m_shouldShutdown = true;
+				}
+				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N)
+				{
+					jpt::Window* pWindow = m_pWindowManager->Create();
+					GetRenderer()->RegisterWindow(pWindow);
+				}
+			});
 
 		return success;
 	}

@@ -30,12 +30,7 @@ export namespace jpt::File
 			path.Append(paths.GetOutputDir());
 			break;
 		case Source::Saved:
-#if IS_RELEASE
-			path.Append(paths.GetOutputDir());
-#else
-			path.Append(paths.GetClientDir());
-#endif
-			path.Append(L"_Saved/");
+			path.Append(paths.GetSavedDir());
 			break;
 
 		case Source::Baked:

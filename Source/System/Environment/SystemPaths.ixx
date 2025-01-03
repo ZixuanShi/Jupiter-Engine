@@ -13,7 +13,7 @@ module;
 export module jpt.System.Paths;
 
 import jpt.File.Path;
-import jpt.File.IO;
+import jpt.File.Path.Helpers;
 
 using namespace jpt::File;
 
@@ -35,8 +35,8 @@ export namespace jpt::System
 		void PreInit();
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
-		const Path& GetClientDir();
-		const Path& GetOutputDir();
+		const Path& GetClientDir() 	    const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
+		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
 
@@ -44,7 +44,6 @@ export namespace jpt::System
 
 	private:
 		const wchar_t* GetClientDirW() const;
-		const wchar_t* GetOutputDirW() const;
 	};
 
 	void Paths::PreInit()
@@ -52,44 +51,23 @@ export namespace jpt::System
 		m_engineDir = JPT_ENGINE_DIR_W;
 		m_clientDir = GetClientDirW();
 
-#if IS_RELEASE
-		m_savedDir = m_outputDir + L"_Saved/";
-#else
-		m_savedDir = m_clientDir + L"_Saved/";
-#endif
-
 #if IS_PLATFORM_WIN64
 		wchar_t buffer[MAX_PATH];
 		GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 		m_executablePath = buffer;
 #endif
 
-		const size_t lastSlash = m_executablePath.FindLastOf(L"\\");
+		const size_t lastSlash = m_executablePath.FindLastOf(GetSeparator<Path::TString>());
 		m_outputDir = m_executablePath.SubPath(0, lastSlash + 1);
+
+		m_savedDir = m_outputDir + L"_Saved/";
 
 		JPT_ASSERT(!m_engineDir.IsEmpty());
 		JPT_ASSERT(!m_clientDir.IsEmpty());
 		JPT_ASSERT(!m_outputDir.IsEmpty());
 		JPT_ASSERT(!m_savedDir.IsEmpty());
 		JPT_ASSERT(!m_executablePath.IsEmpty());
+
 		m_isInitialized = true;
-	}
-
-	const Path& Paths::GetClientDir()
-	{
-		if (!m_isInitialized)
-		{
-			m_clientDir = GetClientDirW();
-		}
-		return m_clientDir;
-	}
-
-	const Path& Paths::GetOutputDir()
-	{
-		if (!m_isInitialized)
-		{
-			m_outputDir = GetOutputDirW();
-		}
-		return m_outputDir;
 	}
 }

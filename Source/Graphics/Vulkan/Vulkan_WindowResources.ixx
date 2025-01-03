@@ -400,7 +400,7 @@ export namespace jpt::Vulkan
 
 		const StopWatch::Point currentTime = StopWatch::Now();
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
-		const float rotation = time * ToRadians(90.0f);
+		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
 		//ubo.model = Matrix44f::FromRadians(0, rotation, rotation);

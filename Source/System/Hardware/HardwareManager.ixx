@@ -29,6 +29,8 @@ export namespace jpt
 	{
 		JPT_ENSURE(m_cpu.PreInit());
 
+		JPT_INFO("CPU: " + m_cpu.GetName());
+
 		return true;
 	}
 

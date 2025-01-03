@@ -8,17 +8,20 @@ module;
 #endif
 
 #include <thread>
+#include <intrin.h>
 
 export module jpt.CPU;
 
 import jpt.TypeDefs;
 import jpt.String;
+import jpt.StaticArray;
 
 export namespace jpt
 {
     class CPU
     {
     private:
+        String m_name;
         uint32 m_logicalProcessorsCount = 0;
         uint32 m_coresCount = 0;
 
@@ -26,6 +29,7 @@ export namespace jpt
         bool PreInit();
 
     public:
+		const String& GetName() const { return m_name; }
         uint32 GetLogicalProcessorsCount() const { return m_logicalProcessorsCount; }
         uint32 GetCoresCount() const { return m_coresCount; };
     };
@@ -54,6 +58,25 @@ export namespace jpt
             }
         }
 
+        // Get CPU Name
+       StaticArray<int32, 4> cpuInfo;
+       m_name.Resize(64);
+
+        // Get extended ids
+        __cpuid(cpuInfo.Buffer(), 0x80000000);
+        uint32_t nExIds = cpuInfo[0];
+
+        // Get the CPU brand string using extended CPUID
+        for (uint32_t i = 0x80000002; i <= 0x80000004; ++i)
+        {
+            if (i <= nExIds)
+            {
+                __cpuid(cpuInfo.Buffer(), i);
+                memcpy(m_name.Buffer() + (i - 0x80000002) * 16, cpuInfo.Buffer(), sizeof(cpuInfo));
+            }
+        }
+
+        // Free resources
         free(buffer);
 
 		return true;

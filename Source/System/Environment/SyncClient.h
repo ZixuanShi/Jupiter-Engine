@@ -20,10 +20,5 @@ namespace jpt                                                                   
     { 																				 \
 	    return JPT_CLIENT_DIR_W;                                                     \
     }                                                                                \
-                                                                                     \
-    const wchar_t* System::Paths::GetOutputDirW() const                              \
-    { 																				 \
-	    return JPT_OUTPUT_DIR_W;                                                     \
-	}                                                                                \
 }
 

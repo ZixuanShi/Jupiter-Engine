@@ -87,7 +87,7 @@ export namespace jpt::Vulkan
 		JPT_ASSERT(!maxHeap.IsEmpty(), "Failed to find a suitable GPU!");
 
 		m_physicalDevice = maxHeap.Top().device;
-		JPT_INFO("Setting Vulkan's Physical device to \"%s\"", maxHeap.Top().deviceName.ConstBuffer());
+		JPT_INFO("GPU: %s", maxHeap.Top().deviceName.ConstBuffer());
 
 		if (m_physicalDevice == VK_NULL_HANDLE)
 		{
