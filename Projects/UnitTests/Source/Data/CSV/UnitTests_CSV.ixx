@@ -18,7 +18,7 @@ import jpt.File.Path.Utils;
 import jpt.File.IO;
 import jpt.File.Enums;
 
-const jpt::File::Path kCSVPath = jpt::File::Combine(jpt::File::Source::Client, "Assets/Test.csv");
+const jpt::File::Path kCSVPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/Test.csv");
 
 static bool Write()
 {

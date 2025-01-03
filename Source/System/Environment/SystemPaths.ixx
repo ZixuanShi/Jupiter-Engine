@@ -34,11 +34,11 @@ export namespace jpt::System
 		JPT_DECLARE_SINGLETON(Paths);
 		void PreInit();
 
-		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
+		const Path& GetEngineDir();
 		const Path& GetClientDir();
-		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
-		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
-		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
+		const Path& GetOutputDir();
+		const Path& GetSavedDir();
+		const Path& GetExecutablePath();
 
 		bool IsInitialized() const { return m_isInitialized; }
 
@@ -48,6 +48,11 @@ export namespace jpt::System
 
 	void Paths::PreInit()
 	{
+		if (m_isInitialized)
+		{
+			return;
+		}
+
 		m_engineDir = JPT_ENGINE_DIR_W;
 		m_clientDir = GetClientDirW();
 
@@ -71,12 +76,48 @@ export namespace jpt::System
 		m_isInitialized = true;
 	}
 
+	const Path& Paths::GetEngineDir()
+	{
+		if (!m_isInitialized)
+		{
+			PreInit();
+		}
+		return m_engineDir;
+	}
+
 	const Path& Paths::GetClientDir()
 	{
 		if (!m_isInitialized)
 		{
-			m_clientDir = GetClientDirW();
+			PreInit();
 		}
 		return m_clientDir;
+	}
+
+	const Path& Paths::GetOutputDir()
+	{
+		if (!m_isInitialized)
+		{
+			PreInit();
+		}
+		return m_outputDir;
+	}
+
+	const Path& Paths::GetSavedDir()
+	{
+		if (!m_isInitialized)
+		{
+			PreInit();
+		}
+		return m_savedDir;
+	}
+
+	const Path& Paths::GetExecutablePath()
+	{
+		if (!m_isInitialized)
+		{
+			PreInit();
+		}
+		return m_executablePath;
 	}
 }

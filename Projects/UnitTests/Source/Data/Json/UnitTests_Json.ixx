@@ -20,8 +20,8 @@ import jpt.File.Enums;
 
 import jpt.Graphics.Enums;
 
-static const jpt::File::Path path = jpt::File::Combine(jpt::File::Source::Client, "Assets/TestJson_UnitTest.json");
-static const jpt::File::Path engineJsonPath = jpt::File::Combine(jpt::File::Source::Engine, "Assets/TestJson_UnitTest.json");
+static const jpt::File::Path path = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
+static const jpt::File::Path engineJsonPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
 
 bool UnitTests_Json_Write()
 {
