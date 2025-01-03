@@ -51,19 +51,19 @@ static bool IsSerializeOverridden()
 bool UnitTests_FileIO_Exists()
 {
     // Engine
-    jpt::File::WriteTextFile(jpt::File::Combine(Source::Output, "Assets/Config/TextTxt.txt"), "Hello, World!");
-    jpt::File::WriteTextFile(jpt::File::Combine(Source::Output, L"Assets/中文测试/中文文本.txt"), "中文测试");
+    jpt::File::WriteTextFile(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt"), "Hello, World!");
+    jpt::File::WriteTextFile(jpt::File::Combine(Source::Engine, L"Assets/中文测试/中文文本.txt"), "中文测试");
 
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, "Assets/Config/TextTxt.txt")));
-    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Output, "Assets/Config/NotExist.txt")));
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, L"Assets/中文测试/中文文本.txt")));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt")));
+    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Engine, "Assets/Config/NotExist.txt")));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, L"Assets/中文测试/中文文本.txt")));
 
-    jpt::File::Delete(jpt::File::Combine(Source::Output, "Assets/Config/TextTxt.txt"));
-    jpt::File::Delete(jpt::File::Combine(Source::Output, L"Assets/中文测试"));
+    jpt::File::Delete(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt"));
+    jpt::File::Delete(jpt::File::Combine(Source::Engine, L"Assets/中文测试"));
 
     // Client
-    jpt::File::WriteTextFile(jpt::File::Combine(Source::Output, L"Assets/好家伙/中文文本.txt"), "中文测试");
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, L"Assets/好家伙/中文文本.txt")));
+    jpt::File::WriteTextFile(jpt::File::Combine(Source::Client, L"Assets/好家伙/中文文本.txt"), "中文测试");
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Client, L"Assets/好家伙/中文文本.txt")));
     jpt::File::Delete(jpt::System::Paths::GetInstance().GetClientDir() + L"Assets/好家伙");
 
     return true;
@@ -72,56 +72,56 @@ bool UnitTests_FileIO_Exists()
 bool UnitTests_FileIO_Directory()
 {
     // Create
-    jpt::File::MakeDirectory(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest"));
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest")));
+    jpt::File::MakeDirectory(jpt::File::Combine(Source::Engine, "Assets/NewDirectory_UnitTest"));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, "Assets/NewDirectory_UnitTest")));
 
-    jpt::File::MakeDirectory(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest"));
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest")));
+    jpt::File::MakeDirectory(jpt::File::Combine(Source::Client, "Assets/NewDirectory_UnitTest"));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Client, "Assets/NewDirectory_UnitTest")));
 
-    jpt::File::MakeDirectory(jpt::File::Combine(Source::Output, L"Assets/新文件夹_UnitTest"));
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Output, L"Assets/新文件夹_UnitTest")));
+    jpt::File::MakeDirectory(jpt::File::Combine(Source::Client, L"Assets/新文件夹_UnitTest"));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Client, L"Assets/新文件夹_UnitTest")));
 
     // Destroy
-    jpt::File::Delete(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest"));
-    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest")));
+    jpt::File::Delete(jpt::File::Combine(Source::Engine, "Assets/NewDirectory_UnitTest"));
+    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Engine, "Assets/NewDirectory_UnitTest")));
 
-    jpt::File::Delete(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest"));
-    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Output, "Assets/NewDirectory_UnitTest")));
+    jpt::File::Delete(jpt::File::Combine(Source::Client, "Assets/NewDirectory_UnitTest"));
+    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Client, "Assets/NewDirectory_UnitTest")));
 
-    jpt::File::Delete(jpt::File::Combine(Source::Output, L"Assets/新文件夹_UnitTest"));
-    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Output, L"Assets/新文件夹_UnitTest")));
+    jpt::File::Delete(jpt::File::Combine(Source::Client, L"Assets/新文件夹_UnitTest"));
+    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Client, L"Assets/新文件夹_UnitTest")));
 
     return true;
 }
 
 bool UnitTests_FileIO_TextFile()
 {
-	// Load existing file
+    // Load existing file
     //jpt::String text;
-    //jpt::File::ReadTextFile({ ESource::Output, "Assets/Configs/TestJson.json"), text);
+    //jpt::File::ReadTextFile({ ESource::Client, "Assets/Configs/TestJson.json"), text);
     //JPT_LOG(text);
 
-    const Path path = jpt::File::Combine(Source::Output, "Assets/NewTextFile_UnitTest.txt");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/NewTextFile_UnitTest.txt");
 
     // Save new file
     jpt::String newContent = "Hello, World! I'm a new text file\n I'm the second line";
-	WriteTextFile(path, newContent);
+    WriteTextFile(path, newContent);
     JPT_ENSURE(Exists(path));
 
     // Load again
     jpt::Optional<jpt::String> loaded = ReadTextFile(path);
     JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file\n I'm the second line");
 
-	// Clean up
-	Delete(path);
+    // Clean up
+    Delete(path);
     JPT_ENSURE(!Exists(path));
 
-	return true;
+    return true;
 }
 
 static bool FileIO_AppendTextFile()
 {
-    const Path path = jpt::File::Combine(Source::Output, "Assets/StackFile_UnitTest.txt");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/StackFile_UnitTest.txt");
     jpt::String newContent;
 
     // Save new file
@@ -152,36 +152,36 @@ bool UnitTests_FileIO_BinaryFile()
 {
     struct Foo
     {
-		bool m_bool = false;
+        bool m_bool = false;
         double m_double = 0.0;
         const char* m_cstr = "";
-		const wchar_t* m_wcstr = L"";
+        const wchar_t* m_wcstr = L"";
 
-		bool operator==(const Foo& other) const
-		{
-			return m_bool == other.m_bool &&
-				jpt::AreValuesClose(m_double, other.m_double) &&
-				jpt::AreStringsSame(m_cstr, other.m_cstr) &&
-				jpt::AreStringsSame(m_wcstr, other.m_wcstr);
-		}
+        bool operator==(const Foo& other) const
+        {
+            return m_bool == other.m_bool &&
+                jpt::AreValuesClose(m_double, other.m_double) &&
+                jpt::AreStringsSame(m_cstr, other.m_cstr) &&
+                jpt::AreStringsSame(m_wcstr, other.m_wcstr);
+        }
     };
 
-	const Path path = jpt::File::Combine(Source::Output, "Assets/Bin_UnitTest.bin");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/Bin_UnitTest.bin");
     Foo saver = { true, 3.14, "ABCDRFG", L"中文" };
 
     // Save Binary
     WriteBinaryFile(path, saver);
 
-	// Load Binary
-    jpt::Optional<Foo> loader = ReadBinaryFile<Foo>(path);    
-	JPT_ENSURE(loader.Value() == saver);
+    // Load Binary
+    jpt::Optional<Foo> loader = ReadBinaryFile<Foo>(path);
+    JPT_ENSURE(loader.Value() == saver);
 
     // Another loader
     jpt::Optional<Foo> loader2 = ReadBinaryFile<Foo>(path);
     JPT_ENSURE(loader2.Value() == saver);
 
     // Clean
-	Delete(path);
+    Delete(path);
     JPT_ENSURE(!Exists(path));
 
     return true;
@@ -191,55 +191,55 @@ bool UnitTests_FileIO_Serialization()
 {
     struct Foo
     {
-		int32 m_int = 0;
-		jpt::WString m_string;
-		jpt::DynamicArray<int32> m_array;
+        int32 m_int = 0;
+        jpt::WString m_string;
+        jpt::DynamicArray<int32> m_array;
 
-		void Serialize(jpt::Serializer& serializer) const
+        void Serialize(jpt::Serializer& serializer) const
         {
-			serializer.Write(m_int);
-			serializer.Write(m_string);
-			serializer.Write(m_array);
+            serializer.Write(m_int);
+            serializer.Write(m_string);
+            serializer.Write(m_array);
         }
         void Deserialize(jpt::Serializer& serializer)
         {
-			serializer.Read(m_int);
-			serializer.Read(m_string);
-			serializer.Read(m_array);
+            serializer.Read(m_int);
+            serializer.Read(m_string);
+            serializer.Read(m_array);
         }
 
         jpt::WString ToWString() const
         {
-			jpt::WString result;
-			result.Append(L"m_int: ");
-			result.Append(jpt::ToString<jpt::WString>(m_int));
-			result.Append(L", m_string: ");
-			result.Append(m_string);
-			result.Append(L", m_array: ");
-			result.Append(jpt::ToWString(m_array));
-			return result;
+            jpt::WString result;
+            result.Append(L"m_int: ");
+            result.Append(jpt::ToString<jpt::WString>(m_int));
+            result.Append(L", m_string: ");
+            result.Append(m_string);
+            result.Append(L", m_array: ");
+            result.Append(jpt::ToWString(m_array));
+            return result;
         }
 
         bool operator==(const Foo& other) const
-		{
-			return m_int == other.m_int &&
-				m_string == other.m_string &&
-				m_array == other.m_array;
-		}
-	};
+        {
+            return m_int == other.m_int &&
+                m_string == other.m_string &&
+                m_array == other.m_array;
+        }
+    };
 
-	const Path path = jpt::File::Combine(Source::Output, "Assets/Serialization_UnitTest.bin");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/Serialization_UnitTest.bin");
 
-	// Save
+    // Save
     Foo saver = { 56, L"Hello哥们儿, World! 你弄啥类", { 9,8,6,4,5 } };
-	WriteBinaryFile(path, saver);
+    WriteBinaryFile(path, saver);
 
-	// Load
+    // Load
     jpt::Optional<Foo> loader = ReadBinaryFile<Foo>(path);
-	JPT_ENSURE(saver == loader.Value());
+    JPT_ENSURE(saver == loader.Value());
 
-	// Clean
-	Delete(path);
+    // Clean
+    Delete(path);
     JPT_ENSURE(!Exists(path));
 
     return true;
@@ -249,7 +249,7 @@ static bool Array_String_Text()
 {
     jpt::DynamicArray<jpt::String> data = { "Hello", "World", "I'm", "a", "DynamicArray" };
 
-    const Path path = jpt::File::Combine(Source::Output, "Assets/ArrayText_UnitTest.txt");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/ArrayText_UnitTest.txt");
 
     // Save
     WriteTextFile(path, jpt::ToString(data));
@@ -269,7 +269,7 @@ static bool Array_String_Serialization()
 {
     jpt::DynamicArray<jpt::String> data = { "Hello", "World", "I'm", "a", "DynamicArray" };
 
-    const Path path = jpt::File::Combine(Source::Output, "Assets/ArraySerialization_UnitTest.bin");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/ArraySerialization_UnitTest.bin");
 
     // Save
     WriteBinaryFile(path, data);
@@ -289,7 +289,7 @@ static bool Array_Float_Text()
 {
     jpt::DynamicArray<float64> data = { 3.14, 2.718, 1.618, 0.618, 0.577 };
 
-    const Path path = jpt::File::Combine(Source::Output, "Assets/ArrayText_UnitTest.txt");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/ArrayText_UnitTest.txt");
 
     // Save
     WriteTextFile(path, jpt::ToString(data));
@@ -309,7 +309,7 @@ static bool Array_Float_Serialization()
 {
     jpt::DynamicArray<float64> data = { 3.14, 2.718, 1.618, 0.618, 0.577 };
 
-    const Path path = jpt::File::Combine(Source::Output, "Assets/ArraySerialization_UnitTest.bin");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/ArraySerialization_UnitTest.bin");
 
     // Save
     WriteBinaryFile(path, data);
@@ -327,7 +327,7 @@ static bool Array_Float_Serialization()
 
 static bool FileIO_HashMap_Text()
 {
-    const Path path = jpt::File::Combine(Source::Output, "Assets/HashMapText_UnitTest.txt");
+    const Path path = jpt::File::Combine(Source::Client, "Assets/HashMapText_UnitTest.txt");
     jpt::HashMap<jpt::String, int32> data;
 
     data["Hello"] = 1;
@@ -380,20 +380,20 @@ export bool RunUnitTests_FileIO()
     JPT_ENSURE(IsSerializeOverridden());
 
     JPT_ENSURE(UnitTests_FileIO_Exists());
-	JPT_ENSURE(UnitTests_FileIO_Directory());
+    JPT_ENSURE(UnitTests_FileIO_Directory());
 
-	JPT_ENSURE(UnitTests_FileIO_TextFile());
-	JPT_ENSURE(FileIO_AppendTextFile());
-	JPT_ENSURE(UnitTests_FileIO_BinaryFile());
-	JPT_ENSURE(UnitTests_FileIO_Serialization());
+    JPT_ENSURE(UnitTests_FileIO_TextFile());
+    JPT_ENSURE(FileIO_AppendTextFile());
+    JPT_ENSURE(UnitTests_FileIO_BinaryFile());
+    JPT_ENSURE(UnitTests_FileIO_Serialization());
 
-	JPT_ENSURE(Array_String_Text());
-	JPT_ENSURE(Array_String_Serialization());
+    JPT_ENSURE(Array_String_Text());
+    JPT_ENSURE(Array_String_Serialization());
     JPT_ENSURE(Array_Float_Text());
     JPT_ENSURE(Array_Float_Serialization());
 
-	JPT_ENSURE(FileIO_HashMap_Text());
-	JPT_ENSURE(FileIO_HashMap_Serialization());
+    JPT_ENSURE(FileIO_HashMap_Text());
+    JPT_ENSURE(FileIO_HashMap_Serialization());
 
     return true;
 }

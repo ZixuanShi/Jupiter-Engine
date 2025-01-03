@@ -24,6 +24,7 @@ import jpt.Utilities;
 import jpt.DynamicArray;
 
 jpt::Mutex rawThreadsMutex;
+jpt::Mutex rawThreadsShutdownMutex;
 
 static bool RawThreads()
 {
@@ -49,6 +50,8 @@ static bool RawThreads()
 
         void Shutdown() override 
         {
+            jpt::LockGuard lock(rawThreadsShutdownMutex);
+
             JPT_LOG("Terminating thread " + m_name);
         }
     };
