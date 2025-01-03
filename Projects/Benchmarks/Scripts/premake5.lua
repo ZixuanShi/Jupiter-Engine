@@ -9,10 +9,16 @@ function FindJupiterRootDir()
     end
 end
 
+function GetProjectDir()
+    local projectDir = path.getdirectory(_SCRIPT)
+    projectDir = projectDir:sub(1, projectDir:find("Scripts") - 1)
+    return projectDir
+end
+
 include (FindJupiterRootDir() .. "Scripts/premake5.lua")
 
 context.project_name = "Benchmarks"
-context.project_dir  = "C:/Program Files/Jupiter Technologies/Jupiter-Engine/Projects/Benchmarks/"
+context.project_dir  = GetProjectDir()
 context.configurations = { "Debug", "Development" }
 
 GenerateProjectFiles()

@@ -68,15 +68,20 @@ def create_premake_lua():
     end
 end
 
+function GetProjectDir()
+    local projectDir = path.getdirectory(_SCRIPT)
+    projectDir = projectDir:sub(1, projectDir:find("Scripts") - 1)
+    return projectDir
+end
+
 include (FindJupiterRootDir() .. "Scripts/premake5.lua")
 
 context.project_name = "<ProjectName>"
-context.project_dir  = "<ProjectDirectory>"
+context.project_dir  = GetProjectDir()
 
 GenerateProjectFiles()
 """
 	premake_lua = premake_lua.replace("<ProjectName>", project_name)
-	premake_lua = premake_lua.replace("<ProjectDirectory>", project_directory)
 	with open(project_directory + "/Scripts/premake5.lua", "w") as file:
 	    file.write(premake_lua)
 
