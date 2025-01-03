@@ -1,5 +1,6 @@
 # Jupiter-Engine
 I design, plan, write, test everything from scratch by myself
+![Screenshot](Docs/ReadMe/Demo.png)
 
 - C++ 20 Features
   - Modules. Replaced Pre-Compiled Headers for faster compilation speed
@@ -24,5 +25,3 @@ I design, plan, write, test everything from scratch by myself
 - Compile shaders. Navigate to Jupiter-Engine/Scripts, run CompileShaders - GLSL.bat
 - Build Visual Studio Solution and Projects. Navigate to Jupiter-Engine/Projects/Blank/Scripts, run GenerateProjectFiles_vs2022.bat. You will have Blank/_ProjectFiles, it contains the VS solution file
 - You can build Jupiter Engine and Blank project now, enjoy
-
-![Screenshot](Docs/ReadMe/Demo.png)
