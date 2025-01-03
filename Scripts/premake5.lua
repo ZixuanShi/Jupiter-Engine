@@ -125,7 +125,6 @@ function CreateClientProject()
         defines
         {
             ("JPT_CLIENT_DIR_W=L\"" .. context.project_dir .."\""),
-            ("JPT_OUTPUT_DIR_W=L\"" .. context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output/\""),
         }
 
         includedirs
