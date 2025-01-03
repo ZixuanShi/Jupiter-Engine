@@ -35,7 +35,7 @@ export namespace jpt::System
 		void PreInit();
 
 		const Path& GetEngineDir()      const { JPT_ASSERT(m_isInitialized); return m_engineDir;      }
-		const Path& GetClientDir() 	    const { JPT_ASSERT(m_isInitialized); return m_clientDir;      }
+		const Path& GetClientDir();
 		const Path& GetOutputDir()      const { JPT_ASSERT(m_isInitialized); return m_outputDir;      }
 		const Path& GetSavedDir()       const { JPT_ASSERT(m_isInitialized); return m_savedDir;       }
 		const Path& GetExecutablePath() const { JPT_ASSERT(m_isInitialized); return m_executablePath; }
@@ -69,5 +69,14 @@ export namespace jpt::System
 		JPT_ASSERT(!m_executablePath.IsEmpty());
 
 		m_isInitialized = true;
+	}
+
+	const Path& Paths::GetClientDir()
+	{
+		if (!m_isInitialized)
+		{
+			m_clientDir = GetClientDirW();
+		}
+		return m_clientDir;
 	}
 }
