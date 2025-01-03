@@ -43,8 +43,7 @@ def create_assets():
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProject.bat
 def create_generate_project_files_bat():
-	generator_bat = """set args="platform=win64"
-call "C:\Program Files\Jupiter Technologies\Jupiter-Engine\Tools\Premake\Bin\premake5.exe" vs2022 %args%
+	generator_bat = """call "%JUPITER_ENGINE_DIR%Tools\Premake\Bin\premake5.exe" vs2022
 pause
 """
 	
