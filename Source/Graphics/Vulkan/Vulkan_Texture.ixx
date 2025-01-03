@@ -37,9 +37,9 @@ export namespace jpt::Vulkan
 
 	public:
 		bool Init(PhysicalDevice& physicalDevice, LogicalDevice& logicalDevice, CommandPool& commandPool);
-		void Shutdown();
+		virtual void Shutdown() override;
 
-		bool Load(const File::Path& fullPath);
+		virtual bool Load(const File::Path& fullPath) override;
 
 	public:
 		VkImageView GetImageView() const { return m_imageView; }
