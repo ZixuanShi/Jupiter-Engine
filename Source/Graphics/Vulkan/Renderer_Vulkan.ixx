@@ -10,9 +10,6 @@ module;
 
 #include <vulkan/vulkan.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
@@ -44,6 +41,7 @@ import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
+import jpt.Vulkan.Texture;
 
 import jpt.DynamicArray;
 import jpt.HashMap;
@@ -89,12 +87,8 @@ export namespace jpt
 		IndexBuffer m_indexBuffer;
 
 		// Texture
-		VkImage m_textureImage;
-		VkDeviceMemory m_textureImageMemory;
-		VkImageView m_textureImageView;
+		Texture_Vulkan m_texture;
 		VkSampler m_textureSampler;
-
-		// Model
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -111,8 +105,6 @@ export namespace jpt
 	private:
 		bool CreateInstance();
 
-		bool CreateTextureImage();
-		bool CreateTextureImageImageView();
 		bool CreateTextureSampler();
 
 		bool LoadModel();
@@ -149,9 +141,8 @@ export namespace jpt
 
 		success &= m_descriptorPool.Init(m_logicalDevice);
 
-		// Texture
-		success &= CreateTextureImage();
-		success &= CreateTextureImageImageView();
+		success &= m_texture.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
+		success &= m_texture.Load(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
 		success &= CreateTextureSampler();
 
 		// Main window
@@ -190,9 +181,7 @@ export namespace jpt
 
 		// Texture
 		vkDestroySampler(m_logicalDevice.GetHandle(), m_textureSampler, nullptr);
-		vkDestroyImageView(m_logicalDevice.GetHandle(), m_textureImageView, nullptr);
-		vkDestroyImage(m_logicalDevice.GetHandle(), m_textureImage, nullptr);
-		vkFreeMemory(m_logicalDevice.GetHandle(), m_textureImageMemory, nullptr);
+		m_texture.Shutdown();
 
 		m_descriptorPool.Shutdown(m_logicalDevice);
 		m_descriptorSetLayout.Shutdown(m_logicalDevice);
@@ -238,7 +227,7 @@ export namespace jpt
 		resources.Init(pWindow, m_instance, 
 			m_physicalDevice, m_logicalDevice, m_renderPass,
 			m_descriptorSetLayout, m_descriptorPool,
-			m_textureImageView, m_textureSampler);
+			m_texture.GetImageView(), m_textureSampler);
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
@@ -301,55 +290,6 @@ export namespace jpt
 			JPT_ERROR("Failed to create Vulkan instance: %d", result);
 			return false;
 		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateTextureImage()
-	{
-		int32 texWidth, texHeight, texChannels;
-		const File::Path texturePath = File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png");
-		unsigned char* pixels = stbi_load(texturePath.ToCString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-		JPT_ASSERT(pixels, "Failed to load texture image");
-
-		const VkDeviceSize imageSize = texWidth * texHeight * 4;
-		VkBufferCreateInfo bufferInfo = {};
-		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		bufferInfo.size = imageSize;
-		bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-		VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-
-		Buffer stagingBuffer;
-		stagingBuffer.Create(bufferInfo, properties, m_logicalDevice, m_physicalDevice);
-		stagingBuffer.MapMemory(m_logicalDevice, pixels, imageSize);
-
-		stbi_image_free(pixels);
-
-		CreateImage(m_logicalDevice, m_physicalDevice,
-			texWidth, texHeight, 
-			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, 
-			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
-			m_textureImage, m_textureImageMemory);
-
-		TransitionImageLayout(m_logicalDevice, m_memoryTransferCommandPool,
-			m_textureImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-		{
-			CopyBufferToImage(m_logicalDevice, m_memoryTransferCommandPool,
-				stagingBuffer.GetHandle(), m_textureImage, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
-		}
-		TransitionImageLayout(m_logicalDevice, m_memoryTransferCommandPool,
-			m_textureImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-		stagingBuffer.Shutdown(m_logicalDevice);
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateTextureImageImageView()
-	{
-		m_textureImageView = CreateImageView(m_logicalDevice, m_textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		return true;
 	}
