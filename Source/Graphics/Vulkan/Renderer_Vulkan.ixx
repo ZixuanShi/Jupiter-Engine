@@ -42,6 +42,7 @@ import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
 import jpt.Vulkan.Texture;
+import jpt.Vulkan.Texture.Sampler;
 
 import jpt.DynamicArray;
 import jpt.HashMap;
@@ -88,7 +89,6 @@ export namespace jpt
 
 		// Texture
 		Texture_Vulkan m_texture;
-		VkSampler m_textureSampler;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -104,8 +104,6 @@ export namespace jpt
 
 	private:
 		bool CreateInstance();
-
-		bool CreateTextureSampler();
 
 		bool LoadModel();
 	};
@@ -143,7 +141,9 @@ export namespace jpt
 
 		success &= m_texture.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 		success &= m_texture.Load(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
-		success &= CreateTextureSampler();
+
+		m_pTextureSampler = new TextureSampler_Vulkan(m_physicalDevice, m_logicalDevice);
+		m_pTextureSampler->Init();
 
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
@@ -179,8 +179,7 @@ export namespace jpt
 			resources.Shutdown(m_instance, m_logicalDevice);
 		}
 
-		// Texture
-		vkDestroySampler(m_logicalDevice.GetHandle(), m_textureSampler, nullptr);
+		JPT_SHUTDOWN(m_pTextureSampler);
 		m_texture.Shutdown();
 
 		m_descriptorPool.Shutdown(m_logicalDevice);
@@ -224,10 +223,12 @@ export namespace jpt
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
 
+		TextureSampler_Vulkan* pTextureSampler = static_cast<TextureSampler_Vulkan*>(m_pTextureSampler);
+
 		resources.Init(pWindow, m_instance, 
 			m_physicalDevice, m_logicalDevice, m_renderPass,
 			m_descriptorSetLayout, m_descriptorPool,
-			m_texture.GetImageView(), m_textureSampler);
+			m_texture.GetImageView(), pTextureSampler->GetHandle());
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
@@ -288,37 +289,6 @@ export namespace jpt
 		if (const VkResult result = vkCreateInstance(&createInfo, nullptr, &m_instance); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create Vulkan instance: %d", result);
-			return false;
-		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::CreateTextureSampler()
-	{
-		VkPhysicalDeviceProperties properties = m_physicalDevice.GetProperties();
-
-		VkSamplerCreateInfo samplerInfo = {};
-		samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerInfo.magFilter = VK_FILTER_LINEAR;
-		samplerInfo.minFilter = VK_FILTER_LINEAR;
-		samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-		samplerInfo.anisotropyEnable = VK_TRUE;
-		samplerInfo.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
-		samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
-		samplerInfo.unnormalizedCoordinates = VK_FALSE;
-		samplerInfo.compareEnable = VK_FALSE;
-		samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
-		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		samplerInfo.mipLodBias = 0.0f;
-		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 0.0f;
-
-		if (vkCreateSampler(m_logicalDevice.GetHandle(), &samplerInfo, nullptr, &m_textureSampler) != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create texture sampler");
 			return false;
 		}
 

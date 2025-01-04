@@ -17,6 +17,7 @@ export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
 
+import jpt.Renderer;
 import jpt.Graphics.Constants;
 import jpt.Vulkan.Utils;
 
