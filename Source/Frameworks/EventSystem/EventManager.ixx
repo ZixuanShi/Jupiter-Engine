@@ -39,13 +39,13 @@ export namespace jpt
 		/** Queued events to be sent later */
 		struct QueueItem
 		{
-			Event* pEvent = nullptr;	                                         /**< Event to be sent */
+			Event* pEvent = nullptr;	     /**< Event to be sent */
 			Id eventId = kInvalidValue<Id>;	 /**< Id of the event when Queue() called. Used for getting the right handlers */
-			TimePrecision m_timer = 0.0;                                         /**< Timer to delay the event. 0.0 means next frame */
+			TimePrecision m_timer = 0.0;     /**< Timer to delay the event. 0.0 means next frame */
 		};
 
 	private:
-		using Handlers     = DynamicArray<Handler>;                     /**< List of functions to be called when an event is sent */
+		using Handlers     = DynamicArray<Handler>;   /**< List of functions to be called when an event is sent */
 		using HandlersMap  = HashMap<Id, Handlers>;   /**< Key: Event Id. Value: The handlers that are registered to listen to this event */
 
 	private:
