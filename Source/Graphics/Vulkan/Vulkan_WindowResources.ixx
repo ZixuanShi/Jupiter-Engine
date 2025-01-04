@@ -17,10 +17,9 @@ export module jpt.Vulkan.WindowResources;
 
 import jpt.Window;
 
-import jpt.Renderer;
 import jpt.Graphics.Constants;
-import jpt.Vulkan.Utils;
 
+import jpt.Vulkan.Utils;
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
@@ -77,7 +76,7 @@ export namespace jpt::Vulkan
 		bool Init(Window* pWindow, VkInstance instance, 
 			const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
 		    const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool,
-			VkImageView textureImageView, VkSampler textureSampler);
+			VkImageView textureImageView);
 
 		void Shutdown(VkInstance instance, const LogicalDevice& logicalDevice);
 
@@ -107,7 +106,7 @@ export namespace jpt::Vulkan
 	bool WindowResources::Init(Window* pWindow, VkInstance instance, 
 		const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const RenderPass& renderPass,
 		const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool,
-		VkImageView textureImageView, VkSampler textureSampler)
+		VkImageView textureImageView)
 	{
 		// Surface
 		m_pOwner = pWindow;
@@ -162,7 +161,7 @@ export namespace jpt::Vulkan
 		{
 			if (!m_descriptorSets[i].Init(logicalDevice, 
 				descriptorSetLayout, descriptorPool, 
-				m_uniformBuffers[i], textureImageView, textureSampler))
+				m_uniformBuffers[i], textureImageView))
 			{
 				return false;
 			}

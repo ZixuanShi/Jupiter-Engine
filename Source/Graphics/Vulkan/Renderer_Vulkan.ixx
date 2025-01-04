@@ -223,12 +223,10 @@ export namespace jpt
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
 
-		TextureSampler_Vulkan* pTextureSampler = static_cast<TextureSampler_Vulkan*>(m_pTextureSampler);
-
 		resources.Init(pWindow, m_instance, 
 			m_physicalDevice, m_logicalDevice, m_renderPass,
 			m_descriptorSetLayout, m_descriptorPool,
-			m_texture.GetImageView(), pTextureSampler->GetHandle());
+			m_texture.GetImageView());
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}

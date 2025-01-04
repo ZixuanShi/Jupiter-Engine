@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
@@ -9,12 +10,15 @@ module;
 
 export module jpt.Vulkan.DescriptorSet;
 
+import jpt.Renderer;
 import jpt.Graphics.Constants;
+import jpt.Texture.Sampler;
 
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
 import jpt.Vulkan.UniformBuffer;
+import jpt.Vulkan.Texture.Sampler;
 
 export namespace jpt::Vulkan
 {
@@ -31,7 +35,7 @@ export namespace jpt::Vulkan
 	public:
 		bool Init(const LogicalDevice& logicalDevice, 
 			const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool, 
-			const UniformBuffer& uniformBuffer, VkImageView textureImageView, VkSampler textureSampler);
+			const UniformBuffer& uniformBuffer, VkImageView textureImageView);
 
 		void Shutdown(const LogicalDevice& logicalDevice);
 
@@ -42,7 +46,7 @@ export namespace jpt::Vulkan
 
 	bool DescriptorSet::Init(const LogicalDevice& logicalDevice, 
 		const DescriptorSetLayout& descriptorSetLayout, const DescriptorPool& descriptorPool,
-		const UniformBuffer& uniformBuffer, VkImageView textureImageView, VkSampler textureSampler)
+		const UniformBuffer& uniformBuffer, VkImageView textureImageView)
 	{
 		m_descriptorPool = descriptorPool.GetHandle();
 
@@ -62,6 +66,10 @@ export namespace jpt::Vulkan
 		bufferInfo.buffer = uniformBuffer.GetHandle();
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
+
+		TextureSampler* pTextureSampler = GetApplication()->GetRenderer()->GetTextureSampler();
+		TextureSampler_Vulkan* pTextureSamplerVulkan = static_cast<TextureSampler_Vulkan*>(pTextureSampler);
+		VkSampler textureSampler = pTextureSamplerVulkan->GetHandle();
 
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
