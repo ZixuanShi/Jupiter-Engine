@@ -24,13 +24,13 @@ export namespace jpt
 
 	/** Returns LValue if obj is LValue, Returns RValue if obj is RValue */
 	template<class T>
-	constexpr T&& Forward(TRemoveReference<T>& obj)
+	constexpr T&& Forward(TRemoveReference<T>& obj) noexcept
 	{
 		return static_cast<T&&>(obj);
 	}
 
 	template<class T>
-	constexpr T&& Forward(TRemoveReference<T>&& obj)
+	constexpr T&& Forward(TRemoveReference<T>&& obj) noexcept
 	{
 		static_assert(!IsLValueRef<T>, "Bad forward call");
 		return static_cast<T&&>(obj);
@@ -56,4 +56,13 @@ export namespace jpt
 	{
 		return sizeof...(Ts) > 0;
 	}
+
+	bool Foo();
+}
+
+module:private;
+
+bool jpt::Foo()
+{
+	return true;
 }
