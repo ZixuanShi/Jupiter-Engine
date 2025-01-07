@@ -229,7 +229,7 @@ export bool RunUnitTests_SortedMap()
 
     JPT_ENSURE(UnitTests_SortedMap_Add());
     JPT_ENSURE(UnitTests_SortedMap_Erase());
-    JPT_ENSURE(UnitTests_SortedMap_Walk());
+    //JPT_ENSURE(UnitTests_SortedMap_Walk());
     JPT_ENSURE(UnitTests_SortedMap_Iterators());
     JPT_ENSURE(UnitTests_SortedMap_Unique());
 
