@@ -158,7 +158,7 @@ bool UnitTests_SortedMap_Walk()
         {
 			JPT_LOG("Key: %i, Value: %c", key, value);
         });
-    JPT_LOG("-------------------------------------------------");
+    JPT_LOG("-------------------------------------------------\nIn Order");
 	sortedMap.InOrderWalk([](int32 key, char value)
 		{
 			JPT_LOG("Key: %i, Value: %c", key, value);
@@ -168,7 +168,11 @@ bool UnitTests_SortedMap_Walk()
 		{
 			JPT_LOG("Key: %i, Value: %c", key, value);
 		});
-
+	JPT_LOG("-------------------------------------------------\nBFS");
+	sortedMap.BFS([](int32 key, char value)
+		{
+			JPT_LOG("Key: %i, Value: %c", key, value);
+		});
 
 	return true;
 }
@@ -225,7 +229,7 @@ export bool RunUnitTests_SortedMap()
 
     JPT_ENSURE(UnitTests_SortedMap_Add());
     JPT_ENSURE(UnitTests_SortedMap_Erase());
-    //JPT_ENSURE(UnitTests_SortedMap_Walk());
+    JPT_ENSURE(UnitTests_SortedMap_Walk());
     JPT_ENSURE(UnitTests_SortedMap_Iterators());
     JPT_ENSURE(UnitTests_SortedMap_Unique());
 

@@ -16,6 +16,7 @@ import jpt.Constants;
 import jpt.Function;
 import jpt.Pair;
 import jpt.Utilities;
+import jpt.Queue;
 
 import jpt_private.RedBlackTreeIterator;
 
@@ -74,6 +75,7 @@ export namespace jpt
 		constexpr const TValue& Max() const;
 
 		/** Traverse
+			DFS: PreOrder, InOrder, PostOrder
 			           A
 				    /    \
 			      /        \
@@ -93,6 +95,9 @@ export namespace jpt
 		/** Left - Right - Root. H, I, D, J, K, E, B, L, M, F, N, O, G, C, A. 
 			Used for deleting the tree */
 		constexpr void PostOrderWalk(const WalkerFunc& function);
+
+		/** Breadth First Search. A, B, C, D, E, F, G, H, I, J, K, L, M, N, O. */
+		constexpr void BFS(const WalkerFunc& function);
 
 		// Iterators
 		constexpr      Iterator begin();
@@ -405,6 +410,30 @@ export namespace jpt
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalk(const WalkerFunc& function)
 	{
 		PostOrderWalk(m_pRoot, function);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::BFS(const WalkerFunc& function)
+	{
+		Queue<TNode*> queue;
+		queue.Enqueue(m_pRoot);
+
+		while (!queue.IsEmpty())
+		{
+			TNode* pNode = queue.Front();
+			queue.Dequeue();
+
+			function(pNode->data.first, pNode->data.second);
+
+			if (pNode->pLeftChild)
+			{
+				queue.Enqueue(pNode->pLeftChild);
+			}
+			if (pNode->pRightChild)
+			{
+				queue.Enqueue(pNode->pRightChild);
+			}
+		}
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
