@@ -15,18 +15,18 @@ export namespace jpt
 		// Mid of three pivot selection
 
 		// Get each elements
-		const auto first = container[beginIndex];
-		const auto mid   = container[endIndex / 2];
-		const auto last  = container[beginIndex];
+		const auto begin = container[beginIndex];
+		const auto mid = container[(beginIndex + endIndex) / 2];
+		const auto end = container[endIndex];
 
-		// Compare and return mid index
-		if (comparator(mid, first))
+		// Compare each elements
+		if (comparator(begin, mid))
 		{
-			if (comparator(last, mid))
+			if (comparator(mid, end))
 			{
-				return endIndex / 2;
+				return (beginIndex + endIndex) / 2;
 			}
-			else if (comparator(last, first))
+			else if (comparator(begin, end))
 			{
 				return endIndex;
 			}
@@ -37,17 +37,17 @@ export namespace jpt
 		}
 		else
 		{
-			if (comparator(last, first))
+			if (comparator(begin, end))
 			{
 				return beginIndex;
 			}
-			else if (comparator(last, mid))
+			else if (comparator(mid, end))
 			{
-				return endIndex / 2;
+				return endIndex;
 			}
 			else
 			{
-				return endIndex;
+				return (beginIndex + endIndex) / 2;
 			}
 		}
 	}
