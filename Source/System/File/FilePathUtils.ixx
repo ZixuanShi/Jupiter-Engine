@@ -21,7 +21,7 @@ export namespace jpt::File
 		switch (source)
 		{
 		case Source::Engine:
-			path.Append(JPT_ENGINE_DIR_W);
+			path.Append(paths.GetEngineDir());
 			break;
 		case Source::Client:
 			path.Append(paths.GetClientDir());
