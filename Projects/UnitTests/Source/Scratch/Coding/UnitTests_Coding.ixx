@@ -20,6 +20,7 @@ import UnitTests_Coding_DeleteDuplicatesFromList;
 import UnitTests_Coding_MergeCloseVertices;
 import UnitTests_Coding_BuildPalindromeWithRemains;
 import UnitTests_Coding_MaximumVisitableCities;
+import UnitTests_Coding_SearchSuggestions;
 
 export bool RunUnitTests_Coding()
 {
@@ -34,6 +35,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
 	JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
 	JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
+	JPT_ENSURE(UnitTests_Coding_SearchSuggestions());
 
 	// https://claude.ai/chat/588f655f-8a30-4819-9812-e892ff528625
 

@@ -4,11 +4,6 @@ module;
 
 #include "Core/Minimal/CoreHeaders.h"
 
-#include <thread>
-#include <mutex>
-#include <atomic>
-#include <condition_variable>
-
 export module UnitTests_Coding_Scratch;
 
 import jpt.CoreModules;
