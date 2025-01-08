@@ -108,7 +108,7 @@ export namespace jpt
 	template<typename _TData, typename _TComparator, typename _TAllocator>
 	constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(size_t capacity)
 	{
-		m_buffer.Reserve(capacity);
+		m_buffer.Reserve(capacity + 1);
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>

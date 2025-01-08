@@ -41,7 +41,6 @@ export bool UnitTests_Coding_SearchSuggestions()
 	repository = { "mobile", "mouse", "mouth", "moneypot", "monitor", "mousepad" };
 	customerQuery = "mouse";
 	result = SearchSuggestions(repository, customerQuery);
-	JPT_LOG(result);
 
 	return true;
 }
