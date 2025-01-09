@@ -15,6 +15,9 @@ import jpt.ThreadSafeQueue;
 import jpt.Mutex;
 import jpt.LockGuard;
 
+import jpt.Event;
+import jpt.Event.Manager;
+
 import jpt.Hardware.Manager;
 
 import jpt.TypeDefs;
@@ -99,7 +102,7 @@ static bool ThreadSafeQueue()
                 jpt::SleepMs(100);
             }
 
-            m_shouldShutdown = true;
+            m_isActive = false;
         }
     };
 
@@ -148,10 +151,79 @@ static bool ThreadSafeQueue()
     return true;
 }
 
+class TestThread final : public jpt::Thread
+{
+public:
+    TestThread() :
+        jpt::Thread("Test Thread Hello")
+    {
+    }
+
+protected:
+    virtual void Update() override
+    {
+        JPT_LOG("Hello");
+        jpt::Sleep(1);
+    }
+};
+class TestThread2 final : public jpt::Thread
+{
+public:
+    TestThread2() :
+        jpt::Thread("Test Thread Bye")
+    {
+    }
+
+protected:
+    virtual void Update() override
+    {
+        JPT_LOG("Bye");
+        jpt::Sleep(2);
+    }
+};
+
+TestThread thread;
+TestThread2 thread2;
+
+class Event_ShutdownThread final : public jpt::Event
+{
+private:
+    jpt::Thread* m_pThread;
+
+public:
+    Event_ShutdownThread(jpt::Thread* pThread) :
+        m_pThread(pThread)
+    {
+    }
+
+    jpt::Thread* GetThread() const { return m_pThread; }
+};
+
+static bool NotBlockingMain()
+{
+    thread.Start();
+    thread2.Start();
+
+    Event_ShutdownThread eventShutdownThread(&thread);
+    jpt::EventManager::GetInstance().Queue(eventShutdownThread, 5.0f);
+
+    Event_ShutdownThread eventShutdownThread2(&thread2);
+	jpt::EventManager::GetInstance().Queue(eventShutdownThread2, 10.0f);
+
+    jpt::EventManager::GetInstance().Register<Event_ShutdownThread>([](const Event_ShutdownThread& event)
+        {
+            event.GetThread()->Stop();
+            JPT_LOG("Stopped Thread: %s", event.GetThread()->GetName().ConstBuffer());
+        });
+
+	return true;
+}
+
 export bool RunUnitTests_Threading()
 {
     JPT_ENSURE(RawThreads());
     JPT_ENSURE(ThreadSafeQueue());
+    JPT_ENSURE(NotBlockingMain());
 
     return true;
 }

@@ -43,8 +43,7 @@ export namespace jpt
     {
     protected:
         String m_name = "Unnamed";
-        Atomic<bool> m_isRunning{ false };
-        Atomic<bool> m_shouldShutdown{ false };
+        Atomic<bool> m_isActive{ false };
 
     private:
         UniquePtr<std::thread> m_thread;
@@ -79,16 +78,19 @@ export namespace jpt
     Thread::~Thread() noexcept
     {
         Stop();
+
+        if (m_thread && m_thread->joinable())
+        {
+            m_thread->join();
+        }
     }
 
     Thread::Thread(Thread&& other) noexcept
         : m_name(Move(other.m_name))
-        , m_isRunning(other.m_isRunning.Load())
-        , m_shouldShutdown(other.m_shouldShutdown.Load())
+        , m_isActive(other.m_isActive.Load())
         , m_thread(Move(other.m_thread))
     {
-        other.m_isRunning = false;
-        other.m_shouldShutdown = true;
+        other.m_isActive = false;
     }
 
     Thread& Thread::operator=(Thread&& other) noexcept
@@ -98,12 +100,11 @@ export namespace jpt
             Stop();
 
             m_name = Move(other.m_name);
-            m_isRunning = other.m_isRunning.Load();
-            m_shouldShutdown = other.m_shouldShutdown.Load();
+            m_isActive = other.m_isActive.Load();
             m_thread = Move(other.m_thread);
 
-            other.m_isRunning = false;
-            other.m_shouldShutdown = true;
+            other.m_isActive = false;
+            other.m_isActive = true;
         }
 
         return *this;
@@ -111,31 +112,27 @@ export namespace jpt
 
     void Thread::Start()
     {
-        if (!m_isRunning)
+        if (!m_isActive)
         {
-            m_shouldShutdown = false;
-            m_isRunning = true;
+            m_isActive = true;
             m_thread = MakeUnique<std::thread>([this]()
                 {
                     Init();
-                    while (!m_shouldShutdown)
+
+                    while (m_isActive)
                     {
                         Update();
                     }
+
                     Shutdown();
-                    m_isRunning = false;
+                    Stop();
                 });
         }
     }
 
     void Thread::Stop()
     {
-        m_shouldShutdown = true;
-        if (m_thread && m_thread->joinable())
-        {
-            m_thread->join();
-        }
-        m_isRunning = false;
+        m_isActive = false;
     }
 
     const String& Thread::GetName() const noexcept
