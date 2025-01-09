@@ -178,10 +178,10 @@ export namespace jpt
 				for (const Handler& handlerData : handlers)
 				{
 					handlerData.func(*item.pEvent);
-
-					delete item.pEvent;
-					item.pEvent = nullptr;
 				}
+
+				delete item.pEvent;
+				item.pEvent = nullptr;
 
 				itr = m_eventQueue.Erase(itr);
 			}
