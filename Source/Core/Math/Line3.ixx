@@ -61,9 +61,10 @@ namespace jpt
 	template<Numeric T>
 	constexpr T Line3<T>::Distance(const Vector3<T>& point) const
 	{
-		const Vector3<T> pointOnLine = Project(point);
-		const Vector3<T> pointToLine = point - pointOnLine;
-		return pointToLine.Length();
+		const Vector3<T> dir = Dir();
+		const Vector3<T> aToP = point - a;
+		const Vector3<T> cross = aToP.Cross(dir);
+		return cross.Length();
 	}
 
 	template<Numeric T>
@@ -76,9 +77,9 @@ namespace jpt
 	constexpr Vector3<T> Line3<T>::Project(const Vector3<T>& point) const
 	{
 		const Vector3<T> dir = Dir();
-		const Vector3<T> pToLine = point - a;
+		const Vector3<T> aToP = point - a;
 
-		const T t = pToLine.Dot(dir);
+		const T t = aToP.Dot(dir);
 		const Vector3<T> projected = a + dir * t;
 		return projected;
 	}
