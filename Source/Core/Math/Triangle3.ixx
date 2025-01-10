@@ -70,10 +70,8 @@ namespace jpt
 	constexpr T Triangle3<T>::Distance(const Vector3<T>& point) const
 	{
 		const Vector3 normal = Normal();
-
-		// Compute the vector from the point to the triangle
-		const Vector3 pointToTriangle = point - a;
-		const T distance = Abs(pointToTriangle.Dot(normal));
+		const Vector3 aToP = point - a;
+		const T distance = Abs(aToP.Dot(normal));
 
 		return distance;
 	}
