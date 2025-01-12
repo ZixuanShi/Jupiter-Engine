@@ -9,7 +9,7 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	/** Represents a game object */
+	/** Represents a game object. Can be inherited and change Life-Cycle behaviors */
 	class Entity
 	{
 	protected:

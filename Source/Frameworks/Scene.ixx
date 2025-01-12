@@ -2,6 +2,8 @@
 
 export module jpt.Scene;
 
+import jpt.Object.Pool;
+
 import jpt.Entity;
 import jpt.Entity.Component.Manager;
 
@@ -18,9 +20,12 @@ export namespace jpt
 	class Scene
 	{
 	protected:
-		String m_name;						/**< The name of the scene */
-		DynamicArray<Entity*> m_entities;	/**< All entities in the scene */
+		ObjectPool<Entity*> m_entityPool;	/**< Pool of entities */
+		DynamicArray<Index> m_activeEntities;	/**< All entities id in the scene that's active */
+
 		EntityComponentManager m_componentManager;	/**< Manages all entity components in current scene */
+		
+		String m_name;						/**< The name of the scene */
 
 	public:
 		virtual ~Scene() = default;
@@ -32,9 +37,9 @@ export namespace jpt
 
 	void Scene::Update(TimePrecision deltaSeconds)
 	{
-		for (Entity* pEntity : m_entities)
+		for (Index id : m_activeEntities)
 		{
-			pEntity->Update(deltaSeconds);
+			m_entityPool[id]->Update(deltaSeconds);
 		}
 
 		m_componentManager.Update(deltaSeconds);
