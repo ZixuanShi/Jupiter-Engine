@@ -43,12 +43,14 @@ export namespace jpt
 		struct ObjectData
 		{
 			TObject instance;
+			Index nextFreeIndex = kInvalidValue<Index>;
 			bool inUse = false;
 		};
 
 	private:
 		Mutex m_mutex;
 		DynamicArray<ObjectData> m_objects;
+		Index m_firstFreeIndex = kInvalidValue<Index>;
 		size_t m_usedCount = 0;
 
 	public:
@@ -69,6 +71,13 @@ export namespace jpt
 	void ObjectPool<TObject>::Init(size_t count)
 	{
 		m_objects.Resize(count);
+
+		for (Index i = 0; i < count; ++i)
+		{
+			m_objects[i].nextFreeIndex = i + 1;
+		}
+		m_objects[count - 1].nextFreeIndex = kInvalidValue<Index>;
+		m_firstFreeIndex = 0;
 
 		if constexpr (std::is_pointer_v<TObject>)
 		{
@@ -99,6 +108,7 @@ export namespace jpt
 		}
 
 		m_usedCount = 0;
+		m_firstFreeIndex = kInvalidValue<Index>;
 		m_objects.Clear();
 	}
 
@@ -108,27 +118,27 @@ export namespace jpt
 		LockGuard lock(m_mutex);
 
 		JPT_ASSERT(!IsFull(), "ObjectPool is full");
+		JPT_ASSERT(m_firstFreeIndex != kInvalidValue<Index>, "No free index available");
 
-		for (Index i = 0; i < m_objects.Count(); ++i)
+		// Acquire the first free index
+		const Index acquiredIndex = m_firstFreeIndex;
+		ObjectData& objectData = m_objects[acquiredIndex];
+
+		// Update the first free index
+		m_firstFreeIndex = objectData.nextFreeIndex;
+
+		objectData.inUse = true;
+		objectData.nextFreeIndex = kInvalidValue<Index>;
+		++m_usedCount;
+
+		if constexpr (std::is_pointer_v<TObject>)
 		{
-			ObjectData& objectData = m_objects[i];
-			if (!objectData.inUse)
-			{
-				++m_usedCount;
-				objectData.inUse = true;
-
-				if constexpr (std::is_pointer_v<TObject>)
-				{
-					return { objectData.instance, i };
-				}
-				else
-				{
-					return { &objectData.instance, i };
-				}
-			}
+			return { objectData.instance, acquiredIndex };
 		}
-
-		return { nullptr, kInvalidValue<Index> };
+		else
+		{
+			return { &objectData.instance, acquiredIndex };
+		}
 	}
 
 	template<typename TObject>
@@ -141,6 +151,11 @@ export namespace jpt
 
 		ObjectData& objectData = m_objects[index];
 		JPT_ASSERT(objectData.inUse, "Object is not in use");
+		JPT_ASSERT(objectData.nextFreeIndex == kInvalidValue<Index>, "Object is already free");
+
+		// Add the index to the free list
+		objectData.nextFreeIndex = m_firstFreeIndex;
+		m_firstFreeIndex = index;
 
 		--m_usedCount;
 		objectData.inUse = false;

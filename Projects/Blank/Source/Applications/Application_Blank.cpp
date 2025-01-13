@@ -18,28 +18,12 @@ import jpt.Window.Manager;
 
 import jpt.Renderer;
 
-import jpt.Object.Pool;
-
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
 	m_pFoo = new Entity_Foo();
 	m_pFoo->PreInit();
-
-	jpt::ObjectPool<jpt::String> stringPool;
-
-	stringPool.Init(8);
-
-	auto handle = stringPool.Acquire();
-	(*handle.first) = "Hello, World!";
-
-	JPT_LOG(*handle.first);
-	JPT_LOG(handle.second);
-
-	stringPool.Release(handle.second);
-
-	stringPool.Shutdown();
 
 	return true;
 }

@@ -21,7 +21,7 @@ export namespace jpt
 	{
 	protected:
 		ObjectPool<Entity*> m_entityPool;	/**< Pool of entities */
-		DynamicArray<Index> m_activeEntities;	/**< All entities id in the scene that's active */
+		DynamicArray<Index> m_activeEntities;	/**< All entities id in the scene that's active. Maps to the entity pool */
 
 		EntityComponentManager m_componentManager;	/**< Manages all entity components in current scene */
 		
