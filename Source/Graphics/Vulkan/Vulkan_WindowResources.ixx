@@ -402,11 +402,11 @@ export namespace jpt::Vulkan
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
 
 		// Rotation
-		const float rotation = time * ToRadians(30.0f);
+		const float rotation = time * ToRadians(45.0f);
 
 		UniformBufferObject ubo = {};
 		//ubo.model = Matrix44f::FromRadians(0, rotation, rotation);
-		//ubo.view = Matrix44f::LookAt(Vec3f(2.0f, 2.0f, 2.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Forward());
+		//ubo.view = Matrix44f::LookAt(Vec3f(2.0f, 2.0f, 2.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f::Up());
 		//ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
 		// TODO: make model per object transform

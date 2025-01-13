@@ -22,18 +22,19 @@ context.configurations =
 {
     -- Debugging. No optimization will be performed
     "Debug",
-    "DebugEditor",
+    "Debug_Editor",
 
     -- Develop the project. Use Engine's editors and tools 
     "Development",
-    "DevelopmentEditor",
+    "Development_Editor",
 
     -- Relese/Shipping
     "Release",
 }
 context.platforms =
 {
-    "Win64",
+    "Win64_Client",
+    "Win64_Server",
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -69,12 +70,12 @@ function CreateEngineWorkspace()
         filter "configurations:Release"
             flags{ "FatalCompileWarnings" }
 
-        filter "configurations:Debug or DebugEditor"
+        filter "configurations:Debug or Debug_Editor"
             defines { "IS_DEBUG" }
             optimize "Off"
             symbols "On"
 
-        filter "configurations:Development or DevelopmentEditor"
+        filter "configurations:Development or Development_Editor"
             defines { "IS_DEVELOPMENT" }
             optimize "Speed"
             symbols "On"
@@ -84,15 +85,17 @@ function CreateEngineWorkspace()
             optimize "Speed"
             symbols "off"
 
-        filter "configurations:DebugEditor or DevelopmentEditor"
+        filter "configurations:Debug_Editor or Development_Editor"
             defines { "IS_EDITOR" }
 
         -- Global filters for platforms
-        filter "platforms:Win64"
+        filter "platforms:Win64_Client or Win64_Server"
             defines { "IS_PLATFORM_WIN64" }
+            system "Windows"
+            architecture "x86_64"
 
         -- Only windows platform supports editor
-        filter "platforms:not Win64"
+        filter "platforms:not Win64_Client"
             removedefines { "IS_EDITOR" }
 
     -- Jupiter Engine
@@ -119,7 +122,7 @@ end
 
 function CreateClientProject()
     project (context.project_name)
-        filter "platforms:Win64"
+        filter "platforms:Win64_Client or Win64_Server"
             kind "WindowedApp"
 
         defines
@@ -158,12 +161,12 @@ function CreateClientProject()
             "d3dcompiler",
         }
 
-        filter "configurations:Debug or DebugEditor"
+        filter "configurations:Debug or Debug_Editor"
             links
             {
                 "glfw3_Debug",
             }
-        filter "configurations:Development or DevelopmentEditor or Release"
+        filter "configurations:Development or Development_Editor or Release"
             links
             {
                 "glfw3_Release",
@@ -184,7 +187,7 @@ end
 function ParseContext()
     -- Parse command line arguments to context
     for i = 1, #_ARGS do
-        -- arg is either key-value paired like "platform=win64" or a flag like "show_fps"
+        -- arg is either key-value paired like "platform=win64_Client" or a flag like "show_fps"
         arg = _ARGS[i]
 
         -- Key-value paired arguments
