@@ -22,11 +22,11 @@ context.configurations =
 {
     -- Debugging. No optimization will be performed
     "Debug",
-    "Debug Editor",
+    "DebugEditor",
 
     -- Develop the project. Use Engine's editors and tools 
     "Development",
-    "Development Editor",
+    "DevelopmentEditor",
 
     -- Relese/Shipping
     "Release",
@@ -69,12 +69,12 @@ function CreateEngineWorkspace()
         filter "configurations:Release"
             flags{ "FatalCompileWarnings" }
 
-        filter "configurations:Debug or Debug Editor"
+        filter "configurations:Debug or DebugEditor"
             defines { "IS_DEBUG" }
             optimize "Off"
             symbols "On"
 
-        filter "configurations:Development or Development Editor"
+        filter "configurations:Development or DevelopmentEditor"
             defines { "IS_DEVELOPMENT" }
             optimize "Speed"
             symbols "On"
@@ -84,7 +84,7 @@ function CreateEngineWorkspace()
             optimize "Speed"
             symbols "off"
 
-        filter "configurations:Debug Editor or Development Editor"
+        filter "configurations:DebugEditor or DevelopmentEditor"
             defines { "IS_EDITOR" }
 
         -- Global filters for platforms
@@ -158,12 +158,12 @@ function CreateClientProject()
             "d3dcompiler",
         }
 
-        filter "configurations:Debug or Debug Editor"
+        filter "configurations:Debug or DebugEditor"
             links
             {
                 "glfw3_Debug",
             }
-        filter "configurations:Development or Development Editor or Release"
+        filter "configurations:Development or DevelopmentEditor or Release"
             links
             {
                 "glfw3_Release",
