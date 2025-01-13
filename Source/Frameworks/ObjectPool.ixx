@@ -18,14 +18,31 @@ import jpt.DynamicArray;
 
 export namespace jpt
 {
-	/** Pre-Allocate a pool of objects. */
+	/** Pre-Allocate a pool of objects. 
+		@example: 
+			jpt::ObjectPool<jpt::String> stringPool;
+			
+			stringPool.Init(8);
+			
+			auto handle = stringPool.Acquire();
+			(*handle.first) = "Hello, World!";
+
+			JPT_LOG(*handle.first);
+
+			stringPool.Release(handle.second);
+
+			stringPool.Shutdown(); */
 	template<typename TObject>
 	class ObjectPool
 	{
+	public:
+		using TRaw   = std::remove_pointer_t<TObject>;
+		using Handle = Pair<TRaw*, const Index>;
+
 	private:
 		struct ObjectData
 		{
-			TObject pObject;
+			TObject instance;
 			bool inUse = false;
 		};
 
@@ -38,14 +55,14 @@ export namespace jpt
 		void Init(size_t count);
 		void Shutdown();
 
-		Pair<std::remove_pointer_t<TObject>*, Index> Acquire();
+		Handle Acquire();
 		void Release(Index index);
 
-		std::remove_pointer_t<TObject>* operator[](Index index) { return m_objects[index].pObject; }
-		const std::remove_pointer_t<TObject>* operator[](Index index) const { return m_objects[index].pObject; }
+		TRaw* operator[](Index index);
+		const TRaw* operator[](Index index) const;
 
-		bool IsFull() const { return m_usedCount == m_objects.Count(); }
-		size_t UsedCount() const { return m_usedCount; }
+		bool IsFull() const;
+		size_t UsedCount() const;
 	};
 
 	template<typename TObject>
@@ -55,17 +72,16 @@ export namespace jpt
 
 		if constexpr (std::is_pointer_v<TObject>)
 		{
-			using T = std::remove_pointer_t<TObject>;
 			for (ObjectData& objectData : m_objects)
 			{
-				objectData.pObject = Allocator<T>::Allocate();
+				objectData.instance = Allocator<TRaw>::Allocate();
 			}
 		}
 		else
 		{
 			for (ObjectData& objectData : m_objects)
 			{
-				objectData.pObject = TObject();
+				objectData.instance = TObject();
 			}
 		}
 	}
@@ -77,8 +93,8 @@ export namespace jpt
 		{
 			for (ObjectData& objectData : m_objects)
 			{
-				delete objectData.pObject;
-				objectData.pObject = nullptr;
+				delete objectData.instance;
+				objectData.instance = nullptr;
 			}
 		}
 
@@ -87,7 +103,7 @@ export namespace jpt
 	}
 
 	template<typename TObject>
-	Pair<std::remove_pointer_t<TObject>*, Index> ObjectPool<TObject>::Acquire()
+	ObjectPool<TObject>::Handle ObjectPool<TObject>::Acquire()
 	{
 		LockGuard lock(m_mutex);
 
@@ -103,11 +119,11 @@ export namespace jpt
 
 				if constexpr (std::is_pointer_v<TObject>)
 				{
-					return { objectData.pObject, i };
+					return { objectData.instance, i };
 				}
 				else
 				{
-					return { &objectData.pObject, i };
+					return { &objectData.instance, i };
 				}
 			}
 		}
@@ -128,5 +144,29 @@ export namespace jpt
 
 		--m_usedCount;
 		objectData.inUse = false;
+	}
+
+	template<typename TObject>
+	ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index)
+	{
+		return m_objects[index].instance;
+	}
+
+	template<typename TObject>
+	const ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index) const
+	{
+		return m_objects[index].instance;
+	}
+
+	template<typename TObject>
+	bool ObjectPool<TObject>::IsFull() const
+	{
+		return m_usedCount == m_objects.Count();
+	}
+
+	template<typename TObject>
+	size_t ObjectPool<TObject>::UsedCount() const
+	{
+		return m_usedCount;
 	}
 }

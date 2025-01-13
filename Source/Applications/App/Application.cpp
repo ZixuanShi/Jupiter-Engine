@@ -26,6 +26,8 @@ import jpt.Renderer.Create;
 import jpt.Input.KeyCode;
 import jpt.Input.Manager;
 
+import jpt.Scene.Manager;
+
 import jpt.System.Paths;
 import jpt.StopWatch;
 import jpt.ProjectSettings;
@@ -61,6 +63,7 @@ namespace jpt
 		m_pFramework     = Framework_Create(m_frameworkAPI);
 		m_pWindowManager = new WindowManager();
 		m_pRenderer      = Renderer_Create(m_graphicsAPI);
+		m_pSceneManager  = new SceneManager();
 
 		bool success = true;
 		success &= m_pPlatform->PreInit();
@@ -68,7 +71,7 @@ namespace jpt
 		success &= m_pWindowManager->PreInit();
 		success &= m_pRenderer->PreInit();
 		success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
-		success &= m_sceneManager.PreInit();
+		success &= m_pSceneManager->PreInit();
 
 		// Register for events
 		jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
@@ -101,7 +104,7 @@ namespace jpt
 		success &= m_pWindowManager->Init(GetName());
 		success &= m_pRenderer->Init();
 		success &= InputManager::GetInstance().Init();
-		success &= m_sceneManager.Init();
+		success &= m_pSceneManager->Init();
 
 		return success;
 	}
@@ -114,14 +117,14 @@ namespace jpt
 		m_pWindowManager->Update(deltaSeconds);
 		m_pRenderer->Update(deltaSeconds);
 		InputManager::GetInstance().Update(deltaSeconds);
-		m_sceneManager.Update(deltaSeconds);
+		m_pSceneManager->Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
 	{
 		ProjectSettings::GetInstance().Save();
 
-		m_sceneManager.Shutdown();
+		JPT_SHUTDOWN(m_pSceneManager);
 		InputManager::GetInstance().Shutdown();
 		EventManager::GetInstance().Shutdown();
 
