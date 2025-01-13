@@ -7,7 +7,7 @@ module;
 
 export module jpt.Scene.Manager;
 
-import jpt.Scene;
+import jpt.Scene.Graph;
 
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
@@ -18,8 +18,8 @@ export namespace jpt
 	class SceneManager
 	{
 	private:
-		Scene* m_pCurrentScene = nullptr;	/**< The current scene. Can be nullptr if IS_EDITOR, the Jupiter Editor will still able to run non-scene related tools */
-		Scene* m_pNextScene = nullptr;
+		SceneGraph* m_pCurrentScene = nullptr;	/**< The current scene. Can be nullptr if IS_EDITOR, the Jupiter Editor will still able to run non-scene related tools */
+		SceneGraph* m_pNextScene = nullptr;
 
 	public:
 		bool PreInit();
@@ -27,7 +27,7 @@ export namespace jpt
 		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
-		void SwitchScene(Scene* pScene);
+		void SwitchScene(SceneGraph* pScene);
 	};
 
 	bool SceneManager::PreInit()
@@ -70,7 +70,7 @@ export namespace jpt
 		JPT_SHUTDOWN(m_pNextScene);
 	}
 
-	void SceneManager::SwitchScene(Scene* pScene)
+	void SceneManager::SwitchScene(SceneGraph* pScene)
 	{
 		m_pNextScene = pScene;
 	}
