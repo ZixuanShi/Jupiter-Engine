@@ -34,7 +34,6 @@ context.configurations =
 context.platforms =
 {
     "Win64_Client",
-    "Win64_Server",
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -89,7 +88,7 @@ function CreateEngineWorkspace()
             defines { "IS_EDITOR" }
 
         -- Global filters for platforms
-        filter "platforms:Win64_Client or Win64_Server"
+        filter "platforms:Win64_Client"
             defines { "IS_PLATFORM_WIN64" }
             system "Windows"
             architecture "x86_64"
@@ -122,7 +121,7 @@ end
 
 function CreateClientProject()
     project (context.project_name)
-        filter "platforms:Win64_Client or Win64_Server"
+        filter "platforms:Win64_Client"
             kind "WindowedApp"
 
         defines

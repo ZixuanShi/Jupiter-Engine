@@ -8,9 +8,8 @@ module;
 
 export module UnitTests_ECS;
 
-import jpt.Scene;
+import jpt.Scene.Graph;
 import jpt.Entity;
-import jpt.Entity.Factory;
 
 import jpt.Vector3;
 import jpt.Matrix44;
