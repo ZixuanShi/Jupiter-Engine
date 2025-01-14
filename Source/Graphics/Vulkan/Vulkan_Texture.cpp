@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/App/Application.h"
 #include "Core/Validation/Assert.h"
 
 #include <vulkan/vulkan.h>
@@ -10,6 +11,9 @@ module;
 #include <stb_image.h>
 
 module jpt.Vulkan.Texture;
+
+import jpt.Renderer;
+import jpt.Renderer_Vulkan;
 
 namespace jpt::Vulkan
 {
@@ -21,7 +25,6 @@ namespace jpt::Vulkan
 		}
 
 		JPT_ASSERT(File::Exists(fullPath));
-		JPT_ASSERT(m_pPhysicalDevice && m_pLogicalDevice && m_pCommandPool);
 
 		if (!CreateImage(fullPath))
 		{
@@ -36,28 +39,31 @@ namespace jpt::Vulkan
 		return true;
 	}
 
-	bool Texture_Vulkan::Init(PhysicalDevice& physicalDevice, LogicalDevice& logicalDevice, CommandPool& commandPool)
-	{
-		m_pPhysicalDevice = &physicalDevice;
-		m_pLogicalDevice = &logicalDevice;
-		m_pCommandPool = &commandPool;
-
-		return true;
-	}
-
 	void Texture_Vulkan::Shutdown()
 	{
-		vkDestroyImageView(m_pLogicalDevice->GetHandle(), m_imageView, nullptr);
-		vkDestroyImage(m_pLogicalDevice->GetHandle(), m_image, nullptr);
-		vkFreeMemory(m_pLogicalDevice->GetHandle(), m_imageMemory, nullptr);
+		Renderer* pRenderer = GetApplication()->GetRenderer();
+		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
 
-		m_imageView = VK_NULL_HANDLE;
-		m_image = VK_NULL_HANDLE;
+		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
+
+		vkDestroyImageView(logicalDevice.GetHandle(), m_imageView, nullptr);
+		vkDestroyImage(logicalDevice.GetHandle(), m_image, nullptr);
+		vkFreeMemory(logicalDevice.GetHandle(), m_imageMemory, nullptr);
+
+		m_imageView   = VK_NULL_HANDLE;
+		m_image       = VK_NULL_HANDLE;
 		m_imageMemory = VK_NULL_HANDLE;
 	}
 
 	bool Texture_Vulkan::CreateImage(const File::Path& fullPath)
 	{
+		Renderer* pRenderer = GetApplication()->GetRenderer();
+		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
+
+		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
+		const PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
+		const CommandPool& memTransferCommandPool = pRendererVulkan->GetMemoryTransferCommandPool();
+
 		int32 texWidth, texHeight, texChannels;
 		unsigned char* pixels = stbi_load(fullPath.ToCString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
@@ -72,34 +78,39 @@ namespace jpt::Vulkan
 		VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
 		Buffer stagingBuffer;
-		stagingBuffer.Create(bufferInfo, properties, *m_pLogicalDevice, *m_pPhysicalDevice);
-		stagingBuffer.MapMemory(*m_pLogicalDevice, pixels, imageSize);
+		stagingBuffer.Create(bufferInfo, properties, logicalDevice, physicalDevice);
+		stagingBuffer.MapMemory(logicalDevice, pixels, imageSize);
 
 		stbi_image_free(pixels);
 
-		jpt::Vulkan::CreateImage(*m_pLogicalDevice, *m_pPhysicalDevice,
+		jpt::Vulkan::CreateImage(logicalDevice, physicalDevice,
 			texWidth, texHeight,
 			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			m_image, m_imageMemory);
 
-		TransitionImageLayout(*m_pLogicalDevice, *m_pCommandPool,
+		TransitionImageLayout(logicalDevice, memTransferCommandPool,
 			m_image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 		{
-			CopyBufferToImage(*m_pLogicalDevice, *m_pCommandPool,
+			CopyBufferToImage(logicalDevice, memTransferCommandPool,
 				stagingBuffer.GetHandle(), m_image, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
 		}
-		TransitionImageLayout(*m_pLogicalDevice, *m_pCommandPool,
+		TransitionImageLayout(logicalDevice, memTransferCommandPool,
 			m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-		stagingBuffer.Shutdown(*m_pLogicalDevice);
+		stagingBuffer.Shutdown(logicalDevice);
 
 		return true;
 	}
 
 	bool Texture_Vulkan::CreateImageView()
 	{
-		m_imageView = jpt::Vulkan::CreateImageView(*m_pLogicalDevice, m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+		Renderer* pRenderer = GetApplication()->GetRenderer();
+		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
+
+		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
+
+		m_imageView = jpt::Vulkan::CreateImageView(logicalDevice, m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		return true;
 	}

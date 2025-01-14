@@ -144,7 +144,6 @@ export namespace jpt
 
 		success &= m_descriptorPool.Init(m_logicalDevice);
 
-		success &= m_texture.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
 		success &= m_texture.Load(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
 
 		m_pTextureSampler = new TextureSampler_Vulkan(m_physicalDevice, m_logicalDevice);

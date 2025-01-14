@@ -26,12 +26,7 @@ export namespace jpt::Vulkan
 		VkDeviceMemory m_imageMemory = VK_NULL_HANDLE;
 		VkImageView m_imageView = VK_NULL_HANDLE;
 
-		PhysicalDevice* m_pPhysicalDevice;
-		LogicalDevice* m_pLogicalDevice;
-		CommandPool* m_pCommandPool;
-
 	public:
-		bool Init(PhysicalDevice& physicalDevice, LogicalDevice& logicalDevice, CommandPool& commandPool);
 		virtual void Shutdown() override;
 
 		virtual bool Load(const File::Path& fullPath) override;
