@@ -236,4 +236,9 @@ export namespace jpt
 	{
 		return static_cast<TInt>(std::floor(value));
 	}
+
+	constexpr auto Log2(auto value)
+	{
+		return std::log2(value);
+	}
 }

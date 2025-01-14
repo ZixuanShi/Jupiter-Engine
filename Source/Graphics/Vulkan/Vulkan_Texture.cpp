@@ -10,10 +10,22 @@ module;
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include <cmath>
+
 module jpt.Vulkan.Texture;
 
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
+
+import jpt.Vulkan.Buffer;
+import jpt.Vulkan.CommandPool;
+import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan.Utils;
+
+import jpt.Math;
+
+import jpt.File.IO;
 
 namespace jpt::Vulkan
 {
@@ -64,6 +76,7 @@ namespace jpt::Vulkan
 		int32 texWidth, texHeight, texChannels;
 		unsigned char* pixels = stbi_load(fullPath.ToCString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
+		m_mipLevels = static_cast<uint32>(Floor(Log2(Max(texWidth, texHeight)))) + 1;
 
 		const VkDeviceSize imageSize = texWidth * texHeight * 4;
 		VkBufferCreateInfo bufferInfo = {};
@@ -81,21 +94,21 @@ namespace jpt::Vulkan
 		stbi_image_free(pixels);
 
 		jpt::Vulkan::CreateImage(logicalDevice, physicalDevice,
-			texWidth, texHeight,
-			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+			texWidth, texHeight, m_mipLevels,
+			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			m_image, m_imageMemory);
 
 		TransitionImageLayout(logicalDevice, memTransferCommandPool,
-			m_image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+			m_image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_mipLevels);
 		{
 			CopyBufferToImage(logicalDevice, memTransferCommandPool,
 				stagingBuffer.GetHandle(), m_image, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
 		}
-		TransitionImageLayout(logicalDevice, memTransferCommandPool,
-			m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
 		stagingBuffer.Shutdown(logicalDevice);
+
+		GenerateMipmaps(m_image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_mipLevels);
 
 		return true;
 	}
@@ -106,7 +119,7 @@ namespace jpt::Vulkan
 
 		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
 
-		m_imageView = jpt::Vulkan::CreateImageView(logicalDevice, m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+		m_imageView = jpt::Vulkan::CreateImageView(logicalDevice, m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_mipLevels);
 
 		return true;
 	}

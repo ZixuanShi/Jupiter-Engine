@@ -84,7 +84,7 @@ export namespace jpt::Vulkan
 	}
 
 	void CreateImage(const LogicalDevice& logicalDevice, const PhysicalDevice& physicalDevice,
-		uint32 width, uint32 height,
+		uint32 width, uint32 height, uint32 mipLevels,
 		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties,
 		VkImage& image, VkDeviceMemory& imageMemory)
@@ -95,7 +95,7 @@ export namespace jpt::Vulkan
 		imageInfo.extent.width = width;
 		imageInfo.extent.height = height;
 		imageInfo.extent.depth = 1;
-		imageInfo.mipLevels = 1;
+		imageInfo.mipLevels = mipLevels;
 		imageInfo.arrayLayers = 1;
 		imageInfo.format = format;
 		imageInfo.tiling = tiling;
@@ -125,7 +125,7 @@ export namespace jpt::Vulkan
 		vkBindImageMemory(logicalDevice.GetHandle(), image, imageMemory, 0);
 	}
 
-	VkImageView CreateImageView(const LogicalDevice& logicalDevice, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
+	VkImageView CreateImageView(const LogicalDevice& logicalDevice, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32 mipLevels)
 	{
 		VkImageViewCreateInfo viewInfo = {};
 		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -134,7 +134,7 @@ export namespace jpt::Vulkan
 		viewInfo.format = format;
 		viewInfo.subresourceRange.aspectMask = aspectFlags;
 		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = 1;
+		viewInfo.subresourceRange.levelCount = mipLevels;
 		viewInfo.subresourceRange.baseArrayLayer = 0;
 		viewInfo.subresourceRange.layerCount = 1;
 
@@ -148,7 +148,7 @@ export namespace jpt::Vulkan
 	}
 
 	void TransitionImageLayout(const LogicalDevice& logicalDevice, const CommandPool& commandPool,
-		VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout)
+		VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, uint32 mipLevels)
 	{
 		VkCommandBuffer commandBuffer = BeginSingleTimeCommand(logicalDevice, commandPool);
 
@@ -161,7 +161,7 @@ export namespace jpt::Vulkan
 		barrier.image = image;
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		barrier.subresourceRange.baseMipLevel = 0;
-		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.levelCount = mipLevels;
 		barrier.subresourceRange.baseArrayLayer = 0;
 		barrier.subresourceRange.layerCount = 1;
 
@@ -228,4 +228,6 @@ export namespace jpt::Vulkan
 		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || 
 			   format == VK_FORMAT_D24_UNORM_S8_UINT;
 	}
+
+	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32 texWidth, int32 texHeight, uint32 mipLevels);
 }

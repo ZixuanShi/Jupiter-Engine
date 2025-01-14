@@ -77,12 +77,25 @@ bool UnitTests_MinMax()
 	return true;
 }
 
+bool UnitTests_Floor()
+{
+	JPT_ENSURE(jpt::Floor(1.3) == 1);
+	JPT_ENSURE(jpt::Floor(1.5) == 1);
+	JPT_ENSURE(jpt::Floor(1.7) == 1);
+	JPT_ENSURE(jpt::Floor(1.3f) == 1);
+	JPT_ENSURE(jpt::Floor(1.5f) == 1);
+	JPT_ENSURE(jpt::Floor(1.7f) == 1);
+
+	return true;
+}
+
 export bool RunUnitTests_Math()
 {
 	JPT_ENSURE(UnitTests_Clamping());
 	JPT_ENSURE(UnitTests_Abs());
 	JPT_ENSURE(UnitTests_AreValuesClose());
 	JPT_ENSURE(UnitTests_MinMax());
+	JPT_ENSURE(UnitTests_Floor());
 
 	return true;
 }

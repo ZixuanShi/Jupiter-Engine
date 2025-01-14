@@ -7,15 +7,7 @@ module;
 export module jpt.Vulkan.Texture;
 
 import jpt.Texture;
-
-import jpt.Vulkan.Utils;
-import jpt.Vulkan.Buffer;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
-
-import jpt.File.Path;
-import jpt.File.IO;
+import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
@@ -25,6 +17,7 @@ export namespace jpt::Vulkan
 		VkImage m_image = VK_NULL_HANDLE;
 		VkDeviceMemory m_imageMemory = VK_NULL_HANDLE;
 		VkImageView m_imageView = VK_NULL_HANDLE;
+		uint32 m_mipLevels = 0;
 
 	public:
 		virtual void Shutdown() override;

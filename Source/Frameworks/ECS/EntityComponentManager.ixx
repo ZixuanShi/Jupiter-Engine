@@ -15,6 +15,7 @@ export namespace jpt
 	class EntityComponentManager
 	{
 	private:
+		// Todo: refactor. Using a map for components won't benefit cache coherency.
 		HashMap<Id, EntityComponent*> m_components;	/**< All components in the scene. Key: Unique EntityComponent::m_id  */
 		DynamicArray<Id> m_updatableComponents;	    /**< All components that can be updated. Key: Unique EntityComponent::m_id */
 

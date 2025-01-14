@@ -134,7 +134,7 @@ export namespace jpt::Vulkan
 		m_imageViews.Resize(imageCount);
 		for (uint32 i = 0; i < imageCount; ++i)
 		{
-			m_imageViews[i] = CreateImageView(logicalDevice, m_images[i], m_imageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+			m_imageViews[i] = CreateImageView(logicalDevice, m_images[i], m_imageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 		}
 
 		return true;
