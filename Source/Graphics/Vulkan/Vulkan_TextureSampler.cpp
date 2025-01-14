@@ -40,7 +40,7 @@ namespace jpt::Vulkan
 		samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 		samplerInfo.minLod = 0.0f;
-		samplerInfo.maxLod = 11;
+		samplerInfo.maxLod = VK_LOD_CLAMP_NONE;
 		samplerInfo.mipLodBias = 0.0f;
 
 		if (vkCreateSampler(logicalDevice.GetHandle(), &samplerInfo, nullptr, &m_sampler) != VK_SUCCESS)
