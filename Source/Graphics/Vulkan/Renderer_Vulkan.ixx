@@ -102,6 +102,11 @@ export namespace jpt
 		virtual void RegisterWindow(Window* pWindow) override;
 		virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
 
+	public:
+		PhysicalDevice& GetPhysicalDevice()         { return m_physicalDevice;            }
+		LogicalDevice& GetLogicalDevice()           { return m_logicalDevice;             }
+		CommandPool& GetMemoryTransferCommandPool() { return m_memoryTransferCommandPool; }
+
 	private:
 		bool CreateInstance();
 
