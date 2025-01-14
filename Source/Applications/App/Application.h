@@ -2,6 +2,7 @@
 
 #pragma once
 
+import jpt.TypeTraits;
 import jpt.Time.TypeDefs;
 
 import jpt.Framework.Enums;
@@ -47,8 +48,14 @@ namespace jpt
 		Platform*      GetPlatform()      const { return m_pPlatform;      }
 		Framework*     GetFramework()     const { return m_pFramework;     }
 		WindowManager* GetWindowManager() const { return m_pWindowManager; }
-		Renderer*      GetRenderer()      const { return m_pRenderer;      }
 		SceneManager*  GetSceneManager()  const { return m_pSceneManager;  }
+		
+		template<typename TRenderer = Renderer> 
+		requires IsChildOf<TRenderer, Renderer>
+		TRenderer* GetRenderer() const
+		{
+			return static_cast<TRenderer*>(m_pRenderer);
+		}
 
 		Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
 		Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }

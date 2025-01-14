@@ -41,9 +41,7 @@ namespace jpt::Vulkan
 
 	void Texture_Vulkan::Shutdown()
 	{
-		Renderer* pRenderer = GetApplication()->GetRenderer();
-		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
-
+		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
 		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
 
 		vkDestroyImageView(logicalDevice.GetHandle(), m_imageView, nullptr);
@@ -57,8 +55,7 @@ namespace jpt::Vulkan
 
 	bool Texture_Vulkan::CreateImage(const File::Path& fullPath)
 	{
-		Renderer* pRenderer = GetApplication()->GetRenderer();
-		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
+		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
 
 		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
 		const PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
@@ -105,8 +102,7 @@ namespace jpt::Vulkan
 
 	bool Texture_Vulkan::CreateImageView()
 	{
-		Renderer* pRenderer = GetApplication()->GetRenderer();
-		Renderer_Vulkan* pRendererVulkan = static_cast<Renderer_Vulkan*>(pRenderer);
+		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
 
 		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
 
