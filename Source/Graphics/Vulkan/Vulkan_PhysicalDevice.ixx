@@ -13,7 +13,6 @@ import jpt.Vulkan.Extensions;
 import jpt.Vulkan.SwapChain.SupportDetails;
 
 import jpt.DynamicArray;
-import jpt.Heap;
 import jpt.HashSet;
 import jpt.TypeDefs;
 import jpt.String;
@@ -75,19 +74,20 @@ export namespace jpt::Vulkan
 		DynamicArray<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance, &deviceCount, devices.Buffer());
 
-		MaxHeap<DevicePicker> maxHeap;
+		DevicePicker bestDevice;
 		for (const VkPhysicalDevice& device : devices)
 		{
 			if (Optional<DevicePicker> picker = ScoreDevice(device))
 			{
-				maxHeap.Emplace(picker.Value());
+				if (picker.Value().score > bestDevice.score)
+				{
+					bestDevice = picker.Value();
+				}
 			}
 		}
 
-		JPT_ASSERT(!maxHeap.IsEmpty(), "Failed to find a suitable GPU!");
-
-		m_physicalDevice = maxHeap.Top().device;
-		JPT_INFO("GPU: %s", maxHeap.Top().deviceName.ConstBuffer());
+		m_physicalDevice = bestDevice.device;
+		JPT_INFO("GPU: %s", bestDevice.deviceName.ConstBuffer());
 
 		if (m_physicalDevice == VK_NULL_HANDLE)
 		{
