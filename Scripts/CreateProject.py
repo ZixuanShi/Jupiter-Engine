@@ -94,12 +94,14 @@ def create_scripts():
 # -----------------------------------------------------------------------------------------------------
 # Source folder
 # -----------------------------------------------------------------------------------------------------
-def create_application_header():
-	content = """#pragma once
+def create_application_ixx():
+	content = """module;
 
-#include "Applications/App/Application.h"
+export module Aplications_<ProjectName>;
 
-class Application_<ProjectName> final : public jpt::Application
+import jpt.Application;
+
+export class Application_<ProjectName> final : public jpt::Application
 {
 private:
 	using Super = jpt::Application;
@@ -109,14 +111,16 @@ public:
 };"""
 
 	content = content.replace("<ProjectName>", project_name)
-	with open(project_directory + "/Source/Applications/Application_" + project_name + ".h", "w") as file:
+	with open(project_directory + "/Source/Applications/Application_" + project_name + ".ixx", "w") as file:
 	    file.write(content)
 
 def create_application_cpp():
-	content = """#include "Applications/Application_<ProjectName>.h"
+	content = """module;
 
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
+
+module Aplications_<ProjectName>;
 
 import jpt.CoreModules;
 
@@ -137,7 +141,7 @@ JPT_SYNC_CLIENT(<ProjectName>)"""
 def create_source():
 	os.makedirs(project_directory + "/Source/Applications")
 
-	create_application_header()
+	create_application_ixx()
 	create_application_cpp()
 
 
