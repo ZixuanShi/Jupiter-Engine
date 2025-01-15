@@ -2,7 +2,6 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
@@ -12,6 +11,7 @@ module;
 
 export module jpt.Window_Win32;
 
+import jpt.Application;
 import jpt.Window;
 
 import jpt.Time.TypeDefs;

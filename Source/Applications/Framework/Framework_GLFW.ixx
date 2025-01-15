@@ -5,12 +5,12 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
-#include "Applications/App/Application.h"
 
 #include <GLFW/glfw3.h>
 
 export module jpt.Framework_GLFW;
 
+import jpt.Application;
 import jpt.Framework;
 
 import jpt.Window;

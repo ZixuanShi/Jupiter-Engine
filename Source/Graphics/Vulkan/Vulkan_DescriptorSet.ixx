@@ -2,7 +2,6 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
@@ -10,6 +9,7 @@ module;
 
 export module jpt.Vulkan.DescriptorSet;
 
+import jpt.Application;
 import jpt.Renderer;
 import jpt.Graphics.Constants;
 import jpt.Texture.Sampler;

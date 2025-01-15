@@ -1,9 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Applications/Application_Blank.h"
+module;
 
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
+
+module Application_Blank;
 
 import jpt.CoreModules;
 

@@ -2,12 +2,11 @@
 
 module; 
 
-#include "Applications/App/Application.h"
-
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.Extensions;
 
+import jpt.Application;
 import jpt.DynamicArray;
 import jpt.Framework;
 import jpt.TypeDefs;

@@ -2,12 +2,13 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.DebugMessenger;
+
+import jpt.Application;
 
 export namespace jpt::Vulkan
 {

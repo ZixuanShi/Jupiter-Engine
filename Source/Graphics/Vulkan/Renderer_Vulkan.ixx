@@ -2,7 +2,6 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
@@ -18,6 +17,8 @@ module;
 #include <unordered_map>
 
 export module jpt.Renderer_Vulkan;
+
+import jpt.Application;
 
 import jpt.Renderer;
 import jpt.Graphics.Constants;

@@ -1,9 +1,11 @@
 ﻿// Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Application_JupiterUnitTests.h"
+module;
 
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
+
+module Application_JupiterUnitTests;
 
 import jpt.CommandLine;
 import jpt.Utilities;

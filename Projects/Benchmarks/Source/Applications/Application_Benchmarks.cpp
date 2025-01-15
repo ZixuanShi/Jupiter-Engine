@@ -1,10 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Application_Benchmarks.h"
+module;
 
 #include "System/Environment/SyncClient.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
+
+module Application_Benchmarks;
 
 import jpt.CoreModules;
 import jpt.BenchmarksReporter;

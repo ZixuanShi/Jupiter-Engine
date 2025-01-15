@@ -2,12 +2,11 @@
 
 module; 
 
-#include "Applications/App/Application.h"
-
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.ValidationLayers;
 
+import jpt.Application;
 import jpt.String.Helpers;
 import jpt.DynamicArray;
 import jpt.TypeDefs;

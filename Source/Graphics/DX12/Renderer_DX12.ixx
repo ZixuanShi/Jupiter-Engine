@@ -2,7 +2,6 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
@@ -24,6 +23,8 @@ module;
 #include <d3dx12/d3dx12_barriers.h>
 
 export module jpt.Renderer_DX12;
+
+import jpt.Application;
 
 import jpt.Renderer;
 import jpt.Graphics.Constants;

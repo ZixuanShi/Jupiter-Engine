@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
+export module jpt.Application;
 
 import jpt.TypeTraits;
 import jpt.Time.TypeDefs;
@@ -8,7 +8,7 @@ import jpt.Time.TypeDefs;
 import jpt.Framework.Enums;
 import jpt.Graphics.Enums;
 
-namespace jpt
+export namespace jpt
 {
 	class Framework;
 	class Window;

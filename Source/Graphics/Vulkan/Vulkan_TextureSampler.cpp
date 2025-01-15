@@ -2,13 +2,13 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
 
 module jpt.Vulkan.Texture.Sampler;
 
+import jpt.Application;
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
 

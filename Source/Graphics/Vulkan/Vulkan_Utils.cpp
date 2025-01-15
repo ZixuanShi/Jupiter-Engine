@@ -2,13 +2,13 @@
 
 module;
 
-#include "Applications/App/Application.h"
 #include "Core/Validation/Assert.h"
 
 #include <vulkan/vulkan.h>
 
 module jpt.Vulkan.Utils;
 
+import jpt.Application;
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
 

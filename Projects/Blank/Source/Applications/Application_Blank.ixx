@@ -1,15 +1,15 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
 
-#include "Applications/App/Application.h"
+export module Application_Blank;
 
 import jpt.Time.TypeDefs;
 
+import jpt.Application;
 import Entity.Foo;
 import Entity.Bar;
 
-class Application_Blank final : public jpt::Application
+export class Application_Blank final : public jpt::Application
 {
 	using Super = jpt::Application;
 

@@ -1,10 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#include "Applications/App/Application.h"
+module;
 
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
+
+module jpt.Application;
 
 import jpt.CommandLine;
 

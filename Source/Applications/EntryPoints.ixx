@@ -2,8 +2,6 @@
 
 module;
 
-#include "Applications/App/Application.h"
-
 #if IS_PLATFORM_WIN64
 	#define WIN32_LEAN_AND_MEAN
 	#include <Windows.h>
@@ -11,6 +9,7 @@ module;
 
 export module jpt.EntryPoints;
 
+import jpt.Application;
 import jpt.CommandLine;
 
 #if IS_DEBUG

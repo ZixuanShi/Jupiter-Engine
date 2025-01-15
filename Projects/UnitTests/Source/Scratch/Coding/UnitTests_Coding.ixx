@@ -22,6 +22,7 @@ import UnitTests_Coding_BuildPalindromeWithRemains;
 import UnitTests_Coding_MaximumVisitableCities;
 import UnitTests_Coding_SearchSuggestions;
 import UnitTests_Coding_MinUniqueSubArray;
+import UnitTests_Coding_BestSeat;
 
 export bool RunUnitTests_Coding()
 {
@@ -38,8 +39,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
 	JPT_ENSURE(UnitTests_Coding_SearchSuggestions());
 	JPT_ENSURE(UnitTests_Coding_MinUniqueSubArray());
-
-	// https://claude.ai/chat/588f655f-8a30-4819-9812-e892ff528625
+	JPT_ENSURE(UnitTests_Coding_BestSeat());
 
 	return true;
 }

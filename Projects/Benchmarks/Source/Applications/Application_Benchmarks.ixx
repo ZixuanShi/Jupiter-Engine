@@ -1,10 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-#pragma once
+export module Application_Benchmarks;
 
-#include "Applications/App/Application.h"
+import jpt.Application;
 
-class Application_Benchmarks final : public jpt::Application
+export class Application_Benchmarks final : public jpt::Application
 {
 private:
 	using Super = jpt::Application;
