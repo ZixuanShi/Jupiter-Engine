@@ -68,9 +68,6 @@ namespace jpt::Vulkan
 	bool Texture_Vulkan::CreateImage(const File::Path& fullPath)
 	{
 		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
-
-		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
-		const PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
 		const CommandPool& memTransferCommandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 
 		int32 texWidth, texHeight, texChannels;
@@ -93,16 +90,15 @@ namespace jpt::Vulkan
 
 		stbi_image_free(pixels);
 
-		jpt::Vulkan::CreateImage(logicalDevice, physicalDevice,
-			texWidth, texHeight, m_mipLevels,
+		jpt::Vulkan::CreateImage(texWidth, texHeight, m_mipLevels,
 			VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			m_image, m_imageMemory);
 
-		TransitionImageLayout(logicalDevice, memTransferCommandPool,
+		TransitionImageLayout(memTransferCommandPool,
 			m_image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_mipLevels);
 		{
-			CopyBufferToImage(logicalDevice, memTransferCommandPool,
+			CopyBufferToImage(memTransferCommandPool,
 				stagingBuffer.GetHandle(), m_image, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
 		}
 
@@ -115,11 +111,7 @@ namespace jpt::Vulkan
 
 	bool Texture_Vulkan::CreateImageView()
 	{
-		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
-
-		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
-
-		m_imageView = jpt::Vulkan::CreateImageView(logicalDevice, m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_mipLevels);
+		m_imageView = jpt::Vulkan::CreateImageView(m_image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_mipLevels);
 
 		return true;
 	}

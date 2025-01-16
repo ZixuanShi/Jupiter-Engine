@@ -50,6 +50,9 @@ export namespace jpt::Vulkan
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
 
+		static PhysicalDevice& Get();
+		static VkPhysicalDevice GetVkPhysicalDevice();
+
 	private:
 		Optional<DevicePicker> ScoreDevice(VkPhysicalDevice physicalDevice) const;
 		bool AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const;

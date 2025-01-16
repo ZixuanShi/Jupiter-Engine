@@ -52,16 +52,15 @@ namespace jpt::Vulkan
 	void Buffer::Copy(VkBuffer srcBuffer, VkDeviceSize size)
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 		const CommandPool& memoryTransferCommandPool = pVulkanRenderer->GetMemoryTransferCommandPool();
 
-		VkCommandBuffer commandBuffer = BeginSingleTimeCommand(logicalDevice, memoryTransferCommandPool);
+		VkCommandBuffer commandBuffer = BeginSingleTimeCommand(memoryTransferCommandPool);
 		{
 			VkBufferCopy copyRegion{};
 			copyRegion.size = size;
 			vkCmdCopyBuffer(commandBuffer, srcBuffer, m_buffer, 1, &copyRegion);
 		}
-		EndSingleTimeCommand(logicalDevice, memoryTransferCommandPool, commandBuffer);
+		EndSingleTimeCommand(memoryTransferCommandPool, commandBuffer);
 	}
 
 	void Buffer::MapMemory(const void* pPtr, VkDeviceSize size)

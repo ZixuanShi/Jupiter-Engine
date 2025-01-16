@@ -10,13 +10,7 @@ module;
 export module jpt.Vulkan.VertexBuffer;
 
 import jpt.Vulkan.Buffer;
-
 import jpt.Vulkan.Data;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
-
-import jpt.Time.TypeDefs;
 
 export namespace jpt::Vulkan
 {

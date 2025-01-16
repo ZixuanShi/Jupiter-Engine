@@ -47,7 +47,6 @@ namespace jpt::Vulkan
 		const VkInstance instance = pVulkanRenderer->GetVkInstance();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
 
 		// Surface
 		m_pOwner = pWindow;
@@ -61,9 +60,9 @@ namespace jpt::Vulkan
 		CreateDepthResources();
 
 		// SwapChain
-		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
-		m_swapChain.CreateImageViews(logicalDevice);
-		m_swapChain.CreateFramebuffers(logicalDevice, renderPass, m_depthImageView);
+		m_swapChain.Init(m_pOwner, m_surface);
+		m_swapChain.CreateImageViews();
+		m_swapChain.CreateFramebuffers(m_depthImageView);
 
 		// Command pool & buffers
 		m_commandPool.Init();
@@ -82,7 +81,7 @@ namespace jpt::Vulkan
 		// Sync objects
 		for (SyncObjects& syncObjects : m_syncObjects)
 		{
-			if (!syncObjects.Init(logicalDevice))
+			if (!syncObjects.Init())
 			{
 				return false;
 			}
@@ -91,7 +90,7 @@ namespace jpt::Vulkan
 		// Uniform Buffers
 		for (UniformBuffer& uniformBuffer : m_uniformBuffers)
 		{
-			if (!uniformBuffer.Init(logicalDevice))
+			if (!uniformBuffer.Init())
 			{
 				return false;
 			}
@@ -128,12 +127,12 @@ namespace jpt::Vulkan
 
 		for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			m_uniformBuffers[i].Shutdown(logicalDevice);
+			m_uniformBuffers[i].Shutdown();
 		}
 
 		for (SyncObjects& syncObjects : m_syncObjects)
 		{
-			syncObjects.Shutdown(logicalDevice);
+			syncObjects.Shutdown();
 		}
 
 		for (VkCommandBuffer commandBuffer : m_commandBuffers)
@@ -142,7 +141,7 @@ namespace jpt::Vulkan
 		}
 
 		m_commandPool.Shutdown();
-		m_swapChain.Shutdown(logicalDevice);
+		m_swapChain.Shutdown();
 
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);
 		m_surface = VK_NULL_HANDLE;
@@ -180,20 +179,15 @@ namespace jpt::Vulkan
 
 	void WindowResources::RecreateSwapChain()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
-		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
+		LogicalDevice::Get().WaitIdle();
 
-		logicalDevice.WaitIdle();
-
-		m_swapChain.Shutdown(logicalDevice);
+		m_swapChain.Shutdown();
 		DestroyDepthResources();
 
-		m_swapChain.Init(m_pOwner, physicalDevice, logicalDevice, m_surface);
-		m_swapChain.CreateImageViews(logicalDevice);
+		m_swapChain.Init(m_pOwner, m_surface);
+		m_swapChain.CreateImageViews();
 		CreateDepthResources();
-		m_swapChain.CreateFramebuffers(logicalDevice, renderPass, m_depthImageView);
+		m_swapChain.CreateFramebuffers(m_depthImageView);
 
 		m_shouldRecreateSwapChain = false;
 	}
@@ -388,20 +382,15 @@ namespace jpt::Vulkan
 
 	void WindowResources::CreateDepthResources()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
-
 		Vec2i frameSize = m_pOwner->GetFrameSize();
-		const VkFormat depthFormat = physicalDevice.FindDepthFormat();
+		const VkFormat depthFormat = PhysicalDevice::Get().FindDepthFormat();
 
-		CreateImage(logicalDevice, physicalDevice,
-			frameSize.x, frameSize.y, 1,
+		CreateImage(frameSize.x, frameSize.y, 1,
 			depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			m_depthImage, m_depthImageMemory);
 
-		m_depthImageView = CreateImageView(logicalDevice, m_depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
+		m_depthImageView = CreateImageView(m_depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
 	}
 
 	void WindowResources::DestroyDepthResources()

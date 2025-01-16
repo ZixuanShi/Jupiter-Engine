@@ -208,6 +208,17 @@ namespace jpt::Vulkan
 		return features;
 	}
 
+	PhysicalDevice& PhysicalDevice::Get()
+	{
+		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		return pVulkanRenderer->GetPhysicalDevice();
+	}
+
+	VkPhysicalDevice PhysicalDevice::GetVkPhysicalDevice()
+	{
+		return Get().GetHandle();
+	}
+
 	Optional<PhysicalDevice::DevicePicker> PhysicalDevice::ScoreDevice(VkPhysicalDevice physicalDevice) const
 	{
 		// Some devices are not suitable

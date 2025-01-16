@@ -5,16 +5,12 @@ module;
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
-#include <memory>
 
 export module jpt.Vulkan.IndexBuffer;
 
 import jpt.Vulkan.Buffer;
 
 import jpt.Vulkan.Data;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
 
 export namespace jpt::Vulkan
 {

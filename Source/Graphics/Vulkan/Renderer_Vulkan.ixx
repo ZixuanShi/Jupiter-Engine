@@ -151,11 +151,11 @@ export namespace jpt
 
 		success &= m_memoryTransferCommandPool.Init();
 
-		success &= m_renderPass.Init(m_physicalDevice, m_logicalDevice, kFormat);
+		success &= m_renderPass.Init(kFormat);
 
-		success &= m_descriptorSetLayout.Init(m_logicalDevice);
-		success &= m_pipelineLayout.Init(m_logicalDevice, m_descriptorSetLayout);
-		success &= m_graphicsPipeline.Init(m_logicalDevice, m_pipelineLayout, m_renderPass);
+		success &= m_descriptorSetLayout.Init();
+		success &= m_pipelineLayout.Init();
+		success &= m_graphicsPipeline.Init();
 
 		// Model
 		success &= LoadModel();
@@ -208,14 +208,14 @@ export namespace jpt
 		m_texture.Shutdown();
 
 		m_descriptorPool.Shutdown();
-		m_descriptorSetLayout.Shutdown(m_logicalDevice);
+		m_descriptorSetLayout.Shutdown();
 
 		m_vertexBuffer.Shutdown();
 		m_indexBuffer.Shutdown();
 
-		m_graphicsPipeline.Shutdown(m_logicalDevice);
-		m_pipelineLayout.Shutdown(m_logicalDevice);
-		m_renderPass.Shutdown(m_logicalDevice);
+		m_graphicsPipeline.Shutdown();
+		m_pipelineLayout.Shutdown();
+		m_renderPass.Shutdown();
 
 		m_memoryTransferCommandPool.Shutdown();
 

@@ -21,5 +21,9 @@ export namespace jpt::Vulkan
 
 		VkDevice GetHandle() const { return m_device; }
 		VkQueue GetGraphicsQueue() const { return m_graphicsQueue; }
+
+		static LogicalDevice& Get();
+		static VkDevice GetVkDevice();
+		static VkQueue GetGraphicsVkQueue();
 	};
 }

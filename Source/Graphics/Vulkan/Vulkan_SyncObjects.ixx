@@ -2,13 +2,9 @@
 
 module;
 
-#include "Debugging/Logger.h"
-
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.SyncObjects;
-
-import jpt.Vulkan.LogicalDevice;
 
 export namespace jpt::Vulkan
 {
@@ -21,8 +17,8 @@ export namespace jpt::Vulkan
 		VkFence m_inFlightFence = VK_NULL_HANDLE; /**< Signaled when a command buffer finishes execution */
 
 	public:
-		bool Init(const LogicalDevice& logicalDevice);
-		void Shutdown(const LogicalDevice& logicalDevice);
+		bool Init();
+		void Shutdown();
 
 	public:
 		VkSemaphore GetImageAvailableSemaphore() const { return m_imageAvailableSemaphore; }
@@ -30,31 +26,4 @@ export namespace jpt::Vulkan
 		VkFence GetInFlightFence() const { return m_inFlightFence; }
 		VkFence* GetInFlightFencePtr() { return &m_inFlightFence; }
 	};
-
-	bool SyncObjects::Init(const LogicalDevice& logicalDevice)
-	{
-		VkSemaphoreCreateInfo semaphoreInfo = {};
-		semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-		VkFenceCreateInfo fenceInfo = {};
-		fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-		if (vkCreateSemaphore(logicalDevice.GetHandle(), &semaphoreInfo, nullptr, &m_imageAvailableSemaphore) != VK_SUCCESS ||
-			vkCreateSemaphore(logicalDevice.GetHandle(), &semaphoreInfo, nullptr, &m_renderFinishedSemaphore) != VK_SUCCESS ||
-			vkCreateFence(logicalDevice.GetHandle(), &fenceInfo, nullptr, &m_inFlightFence) != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create synchronization objects");
-			return false;
-		}
-
-		return true;
-	}
-
-	void SyncObjects::Shutdown(const LogicalDevice& logicalDevice)
-	{
-		vkDestroySemaphore(logicalDevice.GetHandle(), m_imageAvailableSemaphore, nullptr);
-		vkDestroySemaphore(logicalDevice.GetHandle(), m_renderFinishedSemaphore, nullptr);
-		vkDestroyFence(logicalDevice.GetHandle(), m_inFlightFence, nullptr);
-	}
 }

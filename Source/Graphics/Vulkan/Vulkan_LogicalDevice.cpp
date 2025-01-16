@@ -64,8 +64,24 @@ namespace jpt::Vulkan
 		vkDestroyDevice(m_device, nullptr);
 	}
 
-	void jpt::Vulkan::LogicalDevice::WaitIdle() const
+	void LogicalDevice::WaitIdle() const
 	{
 		vkDeviceWaitIdle(m_device);
+	}
+
+	LogicalDevice& LogicalDevice::Get()
+	{
+		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		return pVulkanRenderer->GetLogicalDevice();
+	}
+
+	VkDevice LogicalDevice::GetVkDevice()
+	{
+		return Get().GetHandle();
+	}
+
+	VkQueue LogicalDevice::GetGraphicsVkQueue()
+	{
+		return Get().GetGraphicsQueue();
 	}
 }

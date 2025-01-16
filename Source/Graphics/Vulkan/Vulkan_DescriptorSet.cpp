@@ -87,9 +87,6 @@ namespace jpt::Vulkan
 
 	void DescriptorSet::Shutdown()
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-
-		vkFreeDescriptorSets(logicalDevice.GetHandle(), m_descriptorPool, 1, &m_descriptorSet);
+		vkFreeDescriptorSets(LogicalDevice::Get().GetHandle(), m_descriptorPool, 1, &m_descriptorSet);
 	}
 }
