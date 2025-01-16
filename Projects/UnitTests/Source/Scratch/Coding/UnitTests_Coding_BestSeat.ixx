@@ -10,11 +10,12 @@ export module UnitTests_Coding_BestSeat;
 import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.DynamicArray;
+import jpt.Optional;
 
-uint32 GetBestSeat(const jpt::DynamicArray<uint32>& seats)
+jpt::Optional<uint32> GetBestSeat(const jpt::DynamicArray<uint32>& seats)
 {
-	uint32 bestSeat = 0;
-	uint32 bestScore = jpt::Constants<uint32>::kMin;
+	uint32 bestSeat = jpt::kInvalidValue<uint32>;
+	int32 bestScore = jpt::Constants<uint32>::kMin;
 	for (uint32 i = 0; i < seats.Count(); ++i)
 	{
 		if (seats[i] == 1)
@@ -22,7 +23,7 @@ uint32 GetBestSeat(const jpt::DynamicArray<uint32>& seats)
 			continue;
 		}
 
-		uint32 score = 0;
+		int32 score = 0;
 		uint32 current = i;
 		while (current < seats.Count() && 
 			   seats[current] == 0)
@@ -40,6 +41,11 @@ uint32 GetBestSeat(const jpt::DynamicArray<uint32>& seats)
 		}
 	}
 
+	if (bestSeat == jpt::kInvalidValue<uint32>)
+	{
+		return {};
+	}
+
 	return bestSeat;
 }
 
@@ -48,13 +54,22 @@ export bool UnitTests_Coding_BestSeat()
 	jpt::DynamicArray<uint32> seats;
 
 	seats = { 1, 0, 1, 0, 0, 0, 1 };
-	JPT_ENSURE(GetBestSeat(seats) == 4);
+	JPT_ENSURE(GetBestSeat(seats).Value() == 4);
 
 	seats = { 1, 0, 1 };
-	JPT_ENSURE(GetBestSeat(seats) == 1);
+	JPT_ENSURE(GetBestSeat(seats).Value() == 1);
 
 	seats = { 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 };
-	JPT_ENSURE(GetBestSeat(seats) == 10);
+	JPT_ENSURE(GetBestSeat(seats).Value() == 10);
+
+	seats = { 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1 };
+	JPT_ENSURE(GetBestSeat(seats).Value() == 3);
+
+	seats = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	JPT_ENSURE(GetBestSeat(seats).Value() == 4);
+
+	seats = { 1, 1, 1 };
+	JPT_ENSURE(!GetBestSeat(seats).HasValue());
 
 	return true;
 }

@@ -104,9 +104,29 @@ export namespace jpt
 		virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
 
 	public:
-		PhysicalDevice& GetPhysicalDevice()         { return m_physicalDevice;            }
-		LogicalDevice& GetLogicalDevice()           { return m_logicalDevice;             }
-		CommandPool& GetMemoryTransferCommandPool() { return m_memoryTransferCommandPool; }
+		VkInstance GetVkInstance()                    { return m_instance;                  }
+		PhysicalDevice& GetPhysicalDevice()           { return m_physicalDevice;            }
+		LogicalDevice& GetLogicalDevice()             { return m_logicalDevice;             }
+		CommandPool& GetMemoryTransferCommandPool()   { return m_memoryTransferCommandPool; }
+		RenderPass& GetRenderPass()                   { return m_renderPass;                }
+		DescriptorSetLayout& GetDescriptorSetLayout() { return m_descriptorSetLayout;       }
+		DescriptorPool& GetDescriptorPool()           { return m_descriptorPool;            }
+		PipelineLayout& GetPipelineLayout()           { return m_pipelineLayout;            }
+		GraphicsPipeline& GetGraphicsPipeline()       { return m_graphicsPipeline;          }
+		VertexBuffer& GetVertexBuffer()               { return m_vertexBuffer;              }
+		IndexBuffer& GetIndexBuffer()                 { return m_indexBuffer;               }
+
+		const VkInstance GetVkInstance()                    const { return m_instance;                  }
+		const PhysicalDevice& GetPhysicalDevice()           const { return m_physicalDevice;            }
+		const LogicalDevice& GetLogicalDevice()             const { return m_logicalDevice;             }
+		const CommandPool& GetMemoryTransferCommandPool()   const { return m_memoryTransferCommandPool; }
+		const RenderPass& GetRenderPass()                   const { return m_renderPass;                }
+		const DescriptorSetLayout& GetDescriptorSetLayout() const { return m_descriptorSetLayout;       }
+		const DescriptorPool& GetDescriptorPool()           const { return m_descriptorPool;            }
+		const PipelineLayout& GetPipelineLayout()           const { return m_pipelineLayout;            }
+		const GraphicsPipeline& GetGraphicsPipeline()       const { return m_graphicsPipeline;          }
+		const VertexBuffer& GetVertexBuffer()               const { return m_vertexBuffer;              }
+		const IndexBuffer& GetIndexBuffer()                 const { return m_indexBuffer;               }
 
 	private:
 		bool CreateInstance();
@@ -170,7 +190,7 @@ export namespace jpt
 		{
 			if (resources.ShouldRecreateSwapChain())
 			{
-				resources.RecreateSwapChain(m_physicalDevice, m_logicalDevice, m_renderPass);
+				resources.RecreateSwapChain();
 			}
 		}
 	}
@@ -181,7 +201,7 @@ export namespace jpt
 
 		for (WindowResources& resources : m_windowResources)
 		{
-			resources.Shutdown(m_instance, m_logicalDevice);
+			resources.Shutdown();
 		}
 
 		JPT_SHUTDOWN(m_pTextureSampler);
@@ -218,8 +238,7 @@ export namespace jpt
 		{
 			if (resources.CanDraw())
 			{
-				resources.DrawFrame(m_logicalDevice, m_renderPass, m_pipelineLayout, m_graphicsPipeline, 
-					m_vertexBuffer, m_indexBuffer);
+				resources.DrawFrame();
 			}
 		}
 	}
@@ -228,10 +247,7 @@ export namespace jpt
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
 
-		resources.Init(pWindow, m_instance, 
-			m_physicalDevice, m_logicalDevice, m_renderPass,
-			m_descriptorSetLayout, m_descriptorPool,
-			m_texture.GetImageView());
+		resources.Init(pWindow, m_texture.GetImageView());
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}
@@ -244,7 +260,7 @@ export namespace jpt
 		{
 			if (itr->GetOwner() == pWindow)
 			{
-				itr->Shutdown(m_instance, m_logicalDevice);
+				itr->Shutdown();
 				m_windowResources.Erase(itr);
 				break;
 			}
