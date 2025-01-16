@@ -88,8 +88,8 @@ namespace jpt::Vulkan
 		VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
 		Buffer stagingBuffer;
-		stagingBuffer.Create(bufferInfo, properties, logicalDevice, physicalDevice);
-		stagingBuffer.MapMemory(logicalDevice, pixels, imageSize);
+		stagingBuffer.Create(bufferInfo, properties);
+		stagingBuffer.MapMemory(pixels, imageSize);
 
 		stbi_image_free(pixels);
 
@@ -106,7 +106,7 @@ namespace jpt::Vulkan
 				stagingBuffer.GetHandle(), m_image, static_cast<uint32>(texWidth), static_cast<uint32>(texHeight));
 		}
 
-		stagingBuffer.Shutdown(logicalDevice);
+		stagingBuffer.Shutdown();
 
 		GenerateMipmaps(m_image, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, m_mipLevels);
 

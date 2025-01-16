@@ -40,7 +40,7 @@ export namespace jpt::Vulkan
 		void* m_mappedMemory = nullptr;
 
 	public:
-		bool Init(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice);
+		bool Init(const LogicalDevice& logicalDevice);
 		void Shutdown(const LogicalDevice& logicalDevice);
 
 	public:
@@ -48,7 +48,7 @@ export namespace jpt::Vulkan
 		void* GetMappedMemory() const { return m_mappedMemory; }
 	};
 
-	bool UniformBuffer::Init(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice)
+	bool UniformBuffer::Init(const LogicalDevice& logicalDevice)
 	{
 		const VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -60,7 +60,7 @@ export namespace jpt::Vulkan
 
 		VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-		if (const VkResult result = m_buffer.Create(createInfo, memoryProperties, logicalDevice, physicalDevice); result != VK_SUCCESS)
+		if (const VkResult result = m_buffer.Create(createInfo, memoryProperties); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create uniform buffer: %d", result);
 			return false;
@@ -73,6 +73,6 @@ export namespace jpt::Vulkan
 	void UniformBuffer::Shutdown(const LogicalDevice& logicalDevice)
 	{
 		vkUnmapMemory(logicalDevice.GetHandle(), m_buffer.GetMemory());
-		m_buffer.Shutdown(logicalDevice);
+		m_buffer.Shutdown();
 	}
 }

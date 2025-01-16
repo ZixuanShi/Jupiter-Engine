@@ -16,6 +16,7 @@ import jpt.Vulkan.UniformBuffer;
 
 import jpt.StaticArray;
 import jpt.Optional;
+import jpt.TypeDefs;
 
 export namespace jpt
 {

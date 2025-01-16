@@ -18,7 +18,6 @@ module jpt.Vulkan.WindowResources;
 import jpt.Application;
 import jpt.Window;
 
-import jpt.Graphics.Constants;
 import jpt.Renderer_Vulkan;
 
 import jpt.Vulkan.Utils;
@@ -26,26 +25,18 @@ import jpt.Vulkan.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.Data;
-import jpt.Vulkan.SwapChain;
 import jpt.Vulkan.SwapChain.SupportDetails;
-import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
-import jpt.Vulkan.SyncObjects;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
-import jpt.Vulkan.UniformBuffer;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
-import jpt.Vulkan.DescriptorSet;
 
 import jpt.Matrix44;
 import jpt.Math;
-import jpt.Optional;
-import jpt.StaticArray;
 import jpt.Utilities;
-import jpt.TypeDefs;
 import jpt.StopWatch;
 
 namespace jpt::Vulkan
@@ -57,8 +48,6 @@ namespace jpt::Vulkan
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
-		const DescriptorSetLayout& descriptorSetLayout = pVulkanRenderer->GetDescriptorSetLayout();
-		const DescriptorPool& descriptorPool = pVulkanRenderer->GetDescriptorPool();
 
 		// Surface
 		m_pOwner = pWindow;
@@ -77,7 +66,7 @@ namespace jpt::Vulkan
 		m_swapChain.CreateFramebuffers(logicalDevice, renderPass, m_depthImageView);
 
 		// Command pool & buffers
-		m_commandPool.Init(logicalDevice, physicalDevice.GetGraphicsFamilyIndex());
+		m_commandPool.Init();
 
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -102,7 +91,7 @@ namespace jpt::Vulkan
 		// Uniform Buffers
 		for (UniformBuffer& uniformBuffer : m_uniformBuffers)
 		{
-			if (!uniformBuffer.Init(physicalDevice, logicalDevice))
+			if (!uniformBuffer.Init(logicalDevice))
 			{
 				return false;
 			}
@@ -111,9 +100,7 @@ namespace jpt::Vulkan
 		// Descriptor sets
 		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			if (!m_descriptorSets[i].Init(logicalDevice,
-				descriptorSetLayout, descriptorPool,
-				m_uniformBuffers[i], textureImageView))
+			if (!m_descriptorSets[i].Init(m_uniformBuffers[i], textureImageView))
 			{
 				return false;
 			}
@@ -136,7 +123,7 @@ namespace jpt::Vulkan
 
 		for (DescriptorSet& descriptorSet : m_descriptorSets)
 		{
-			descriptorSet.Shutdown(logicalDevice);
+			descriptorSet.Shutdown();
 		}
 
 		for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
@@ -154,7 +141,7 @@ namespace jpt::Vulkan
 			vkFreeCommandBuffers(logicalDevice.GetHandle(), m_commandPool.GetHandle(), 1, &commandBuffer);
 		}
 
-		m_commandPool.Shutdown(logicalDevice);
+		m_commandPool.Shutdown();
 		m_swapChain.Shutdown(logicalDevice);
 
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);

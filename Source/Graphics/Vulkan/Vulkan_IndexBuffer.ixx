@@ -24,14 +24,14 @@ export namespace jpt::Vulkan
 		Buffer m_buffer;
 
 	public:
-		bool Init(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const CommandPool& memoryTransferCommandPool);
-		void Shutdown(const LogicalDevice& logicalDevice);
+		bool Init();
+		void Shutdown();
 
 	public:
 		VkBuffer GetBuffer() const { return m_buffer.GetHandle(); }
 	};
 
-	bool IndexBuffer::Init(const PhysicalDevice& physicalDevice, const LogicalDevice& logicalDevice, const CommandPool& memoryTransferCommandPool)
+	bool IndexBuffer::Init()
 	{
 		// Staging buffer
 		VkBufferCreateInfo stagingBufferInfo{};
@@ -43,13 +43,13 @@ export namespace jpt::Vulkan
 		VkMemoryPropertyFlags stagingMemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
 		Buffer stagingBuffer;
-		if (const VkResult result = stagingBuffer.Create(stagingBufferInfo, stagingMemoryProperties, logicalDevice, physicalDevice); result != VK_SUCCESS)
+		if (const VkResult result = stagingBuffer.Create(stagingBufferInfo, stagingMemoryProperties); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create staging buffer: %d", result);
 			return false;
 		}
 
-		stagingBuffer.MapMemory(logicalDevice, g_indices.ConstBuffer(), g_indices.Size());
+		stagingBuffer.MapMemory(g_indices.ConstBuffer(), g_indices.Size());
 
 		// Index buffer
 		VkBufferCreateInfo indexBufferInfo{};
@@ -60,20 +60,20 @@ export namespace jpt::Vulkan
 
 		VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-		if (const VkResult result = m_buffer.Create(indexBufferInfo, memoryProperties, logicalDevice, physicalDevice); result != VK_SUCCESS)
+		if (const VkResult result = m_buffer.Create(indexBufferInfo, memoryProperties); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create index buffer: %d", result);
 			return false;
 		}
 
-		m_buffer.Copy(stagingBuffer.GetHandle(), g_indices.Size(), logicalDevice, memoryTransferCommandPool);
-		stagingBuffer.Shutdown(logicalDevice);
+		m_buffer.Copy(stagingBuffer.GetHandle(), g_indices.Size());
+		stagingBuffer.Shutdown();
 
 		return true;
 	}
 
-	void IndexBuffer::Shutdown(const LogicalDevice& logicalDevice)
+	void IndexBuffer::Shutdown()
 	{
-		m_buffer.Shutdown(logicalDevice);
+		m_buffer.Shutdown();
 	}
 }

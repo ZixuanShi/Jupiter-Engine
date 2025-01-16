@@ -144,12 +144,12 @@ export namespace jpt
 
 		success &= CreateInstance();
 #if !IS_RELEASE
-		success &= m_debugMessenger.Init(m_instance);
+		success &= m_debugMessenger.Init();
 #endif
-		success &= m_physicalDevice.Init(m_instance);
-		success &= m_logicalDevice.Init(m_physicalDevice);
+		success &= m_physicalDevice.Init();
+		success &= m_logicalDevice.Init();
 
-		success &= m_memoryTransferCommandPool.Init(m_logicalDevice, m_physicalDevice.GetGraphicsFamilyIndex());
+		success &= m_memoryTransferCommandPool.Init();
 
 		success &= m_renderPass.Init(m_physicalDevice, m_logicalDevice, kFormat);
 
@@ -160,10 +160,10 @@ export namespace jpt
 		// Model
 		success &= LoadModel();
 
-		success &= m_vertexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
-		success &= m_indexBuffer.Init(m_physicalDevice, m_logicalDevice, m_memoryTransferCommandPool);
+		success &= m_vertexBuffer.Init();
+		success &= m_indexBuffer.Init();
 
-		success &= m_descriptorPool.Init(m_logicalDevice);
+		success &= m_descriptorPool.Init();
 
 		success &= m_texture.Load(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
 
@@ -207,22 +207,22 @@ export namespace jpt
 		JPT_SHUTDOWN(m_pTextureSampler);
 		m_texture.Shutdown();
 
-		m_descriptorPool.Shutdown(m_logicalDevice);
+		m_descriptorPool.Shutdown();
 		m_descriptorSetLayout.Shutdown(m_logicalDevice);
 
-		m_vertexBuffer.Shutdown(m_logicalDevice);
-		m_indexBuffer.Shutdown(m_logicalDevice);
+		m_vertexBuffer.Shutdown();
+		m_indexBuffer.Shutdown();
 
 		m_graphicsPipeline.Shutdown(m_logicalDevice);
 		m_pipelineLayout.Shutdown(m_logicalDevice);
 		m_renderPass.Shutdown(m_logicalDevice);
 
-		m_memoryTransferCommandPool.Shutdown(m_logicalDevice);
+		m_memoryTransferCommandPool.Shutdown();
 
 		m_logicalDevice.Shutdown();
 
 #if !IS_RELEASE
-		m_debugMessenger.Shutdown(m_instance);
+		m_debugMessenger.Shutdown();
 #endif
 
 		vkDestroyInstance(m_instance, nullptr);
