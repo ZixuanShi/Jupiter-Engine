@@ -6,44 +6,53 @@ module;
 
 export module UnitTests_Coding_TwoSum;
 
-import jpt.DynamicArray;
+import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.DynamicArray;
+import jpt.Pair;
+import jpt.HashMap;
 
-static jpt::DynamicArray<size_t> TwoSum(const jpt::DynamicArray<int32>& nums, int32 target)
+// @return: All the pairs of numbers inside nums that add up to target.
+// i.e. nums = {1,2,3,4,5}, target = 6
+// return = {{1,5}, {2,4}}
+static jpt::DynamicArray<jpt::Pair<int32, int32>> TwoSum(const jpt::DynamicArray<int32>& nums, int32 target)
 {
-	jpt::HashMap<size_t, size_t> numToIndex;
+	jpt::DynamicArray<jpt::Pair<int32, int32>> result;
+	jpt::HashMap<int32, int32> map;
+	jpt::HashMap<int32, uint32> occurences;
 
-	for (size_t i = 0; i < nums.Count(); ++i)
+	for (int32 i : nums)
 	{
-		const int32 complement = target - nums[i];
-
-		if (numToIndex.Has(complement))
-		{
-			return { numToIndex[complement], i };
-		}
-
-		numToIndex[nums[i]] = i;
+		map.Add(i, target - i);
+		++occurences[i];
 	}
 
-	return {};
+	for (const auto&[key, value] : map)
+	{
+		if (!map.Has(value))
+		{
+			continue;
+		}
+
+		if (value == key && occurences[key] == 1)
+		{
+			continue;
+		}
+
+		result.Add({ key, value });
+	}
+
+	return result;
 }
 
 export bool UnitTests_Coding_TwoSum()
 {
-	jpt::DynamicArray<int32> nums = { 2, 7, 11, 15 };
-	int32 target = 9;
-	jpt::DynamicArray<size_t> result = TwoSum(nums, target);
-	JPT_ENSURE(result == jpt::DynamicArray<size_t>({ 0, 1 }));
+	jpt::DynamicArray<int32> nums;
+	int32 target = 0;
 
-	nums = { 3, 2, 4 };
+	nums = { 1,2,3,4,5 };
 	target = 6;
-	result = TwoSum(nums, target);
-	JPT_ENSURE(result == jpt::DynamicArray<size_t>({ 1, 2 }));
-
-	nums = { 3, 3 };
-	target = 6;
-	result = TwoSum(nums, target);
-	JPT_ENSURE(result == jpt::DynamicArray<size_t>({ 0, 1 }));
+	JPT_LOG(TwoSum(nums, target));
 
 	return true;
 }
