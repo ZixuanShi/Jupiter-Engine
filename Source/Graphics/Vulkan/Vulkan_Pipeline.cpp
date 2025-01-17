@@ -39,22 +39,9 @@ namespace jpt::Vulkan
 		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 
 		// Fixed-function stages
-		VkVertexInputBindingDescription bindingDescription = GetBindingDescription();
-		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = GetAttributeDescriptions();
-		auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
-
-		VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-		colorBlendAttachment.blendEnable = VK_FALSE;
-		auto colorBlending = GetColorBlending(colorBlendAttachment);
-
-		StaticArray<VkDynamicState, 2> dynamicStates =
-		{
-			VK_DYNAMIC_STATE_VIEWPORT,
-			VK_DYNAMIC_STATE_SCISSOR
-		};
-		auto dynamicState = GetDynamicState(dynamicStates);
-
+		auto vertexInputInfo = GetVertexInput();
+		auto colorBlending = GetColorBlending();
+		auto dynamicState = GetDynamicState();
 		auto inputAssembly = GetInputAssembly();
 		auto viewportState = GetViewportState();
 		auto rasterizer = GetRasterization();
@@ -94,18 +81,21 @@ namespace jpt::Vulkan
 		vkDestroyPipeline(LogicalDevice::GetVkDevice(), m_graphicsPipeline, nullptr);
 	}
 
-	VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 3>& attributeDescs) const
+	VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput() const
 	{
 		// how to interpret vertex data from your vertex buffers
 		// Binding Description: spacing between data and whether the data is per-vertex or per-instance
 		// Attribute Descriptions: type of the attributes passed to the vertex shader, which binding to load them from and at which offset
 
+		static VkVertexInputBindingDescription bindingDescription = GetBindingDescription();
+		static StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = GetAttributeDescriptions();
+
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexBindingDescriptionCount = 1;
-		vertexInputInfo.pVertexBindingDescriptions = &inputBindingDesc;
-		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescs.Count());
-		vertexInputInfo.pVertexAttributeDescriptions = attributeDescs.ConstBuffer();
+		vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32>(attributeDescriptions.Count());
+		vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.ConstBuffer();
 
 		return vertexInputInfo;
 	}
@@ -122,9 +112,15 @@ namespace jpt::Vulkan
 		return inputAssembly;
 	}
 
-	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState(const StaticArray<VkDynamicState, 2>& dynamicStates) const
+	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState() const
 	{
 		// Allows certain states of the pipeline to be changed without recreating the pipeline
+
+		static StaticArray<VkDynamicState, 2> dynamicStates =
+		{
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR
+		};
 
 		VkPipelineDynamicStateCreateInfo dynamicState{};
 		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -181,7 +177,7 @@ namespace jpt::Vulkan
 		return multisampling;
 	}
 
-	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const
+	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending() const
 	{
 		/** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer.
 			This transformation is known as color blending and there are two ways to do it:
@@ -189,12 +185,16 @@ namespace jpt::Vulkan
 			- Combine the old and new value using a bitwise operation
 		*/
 
+		static VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+		colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+		colorBlendAttachment.blendEnable = VK_FALSE;
+
 		VkPipelineColorBlendStateCreateInfo colorBlending{};
 		colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 		colorBlending.logicOpEnable = VK_FALSE;
 		colorBlending.logicOp = VK_LOGIC_OP_COPY;
 		colorBlending.attachmentCount = 1;
-		colorBlending.pAttachments = &attachment;
+		colorBlending.pAttachments = &colorBlendAttachment;
 		colorBlending.blendConstants[0] = 0.0f;
 		colorBlending.blendConstants[1] = 0.0f;
 		colorBlending.blendConstants[2] = 0.0f;
@@ -219,7 +219,7 @@ namespace jpt::Vulkan
 		return depthStencil;
 	}
 
-	VkVertexInputBindingDescription GraphicsPipeline::GetBindingDescription()
+	VkVertexInputBindingDescription GraphicsPipeline::GetBindingDescription() const
 	{
 		VkVertexInputBindingDescription bindingDescription{};
 		bindingDescription.binding = 0;
@@ -229,7 +229,7 @@ namespace jpt::Vulkan
 		return bindingDescription;
 	}
 
-	StaticArray<VkVertexInputAttributeDescription, 3> GraphicsPipeline::GetAttributeDescriptions()
+	StaticArray<VkVertexInputAttributeDescription, 3> GraphicsPipeline::GetAttributeDescriptions() const
 	{
 		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 

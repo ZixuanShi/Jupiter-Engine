@@ -29,16 +29,16 @@ export namespace jpt::Vulkan
 		VkPipeline GetHandle() const { return m_graphicsPipeline; }
 
 	private:
-		VkPipelineVertexInputStateCreateInfo GetVertexInput(const VkVertexInputBindingDescription& inputBindingDesc, const StaticArray<VkVertexInputAttributeDescription, 3>& attributeDescs) const;
+		VkPipelineVertexInputStateCreateInfo GetVertexInput() const;
 		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;
-		VkPipelineDynamicStateCreateInfo GetDynamicState(const StaticArray<VkDynamicState, 2>& dynamicStates) const;
+		VkPipelineDynamicStateCreateInfo GetDynamicState() const;
 		VkPipelineViewportStateCreateInfo GetViewportState() const;
 		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
 		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
-		VkPipelineColorBlendStateCreateInfo GetColorBlending(const VkPipelineColorBlendAttachmentState& attachment) const;
+		VkPipelineColorBlendStateCreateInfo GetColorBlending() const;
 		VkPipelineDepthStencilStateCreateInfo GetDepthStencil() const;
 
-		VkVertexInputBindingDescription GetBindingDescription();
-		StaticArray<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions();
+		VkVertexInputBindingDescription GetBindingDescription() const;
+		StaticArray<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions() const;
 	};
 }

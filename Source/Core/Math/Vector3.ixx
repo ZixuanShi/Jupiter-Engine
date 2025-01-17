@@ -90,6 +90,7 @@ export namespace jpt
 		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
 		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
 		constexpr Vector3 Project(const Vector3& to) const;
+		constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
 
 		constexpr static T Dot(const Vector3& left, const Vector3& right);
 		constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
@@ -375,6 +376,19 @@ export namespace jpt
 		const T dot = this->Dot(to);
 		const T scalar = dot / length2;
 		return to * scalar;
+	}
+
+	template<Numeric T>
+	constexpr bool Vector3<T>::OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const
+	{
+		// Calculate the vector from the view position to the point
+		const Vector3 viewToPoint = *this - viewPosition;
+
+		// Calculate the cross product of the view direction and the view to point vector
+		const Vector3 cross = viewDirection.Cross(viewToPoint);
+
+		// If the cross product is pointing up, the point is to the left of the view
+		return cross.y > static_cast<T>(0);
 	}
 
 	template<Numeric T>

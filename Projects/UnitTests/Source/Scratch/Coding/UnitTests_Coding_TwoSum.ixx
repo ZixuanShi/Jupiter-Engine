@@ -45,6 +45,11 @@ static jpt::DynamicArray<jpt::Pair<int32, int32>> TwoSum(const jpt::DynamicArray
 	return result;
 }
 
+// @return: All possible combination of numbers inside nums that add up to target.
+static jpt::DynamicArray<jpt::DynamicArray<int32>> CombinationSum(const jpt::DynamicArray<int32>& candidates, int32 target)
+{
+}
+
 export bool UnitTests_Coding_TwoSum()
 {
 	jpt::DynamicArray<int32> nums;
@@ -53,6 +58,8 @@ export bool UnitTests_Coding_TwoSum()
 	nums = { 1,2,3,4,5 };
 	target = 6;
 	JPT_LOG(TwoSum(nums, target));
+
+	//-------------------------------------------------
 
 	return true;
 }
