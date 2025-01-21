@@ -3,9 +3,12 @@
 module;
 
 #include "Core/Minimal/CoreHeaders.h"
+#include "Profiling/TimingProfiler.h"
 
 #include <type_traits>
 #include <thread>
+#include <atomic>
+#include <mutex>
 
 export module UnitTests_Threading;
 
@@ -24,6 +27,7 @@ import jpt.TypeDefs;
 import jpt.String;
 import jpt.ToString;
 import jpt.Utilities;
+import jpt.StaticArray;
 import jpt.DynamicArray;
 
 jpt::Mutex rawThreadsMutex;
@@ -219,8 +223,53 @@ static bool NotBlockingMain()
 	return true;
 }
 
+
+std::mutex g_mutex;
+bool MutexVsAtomic(size_t threadsCount)
+{
+	jpt::DynamicArray<uint32> data(1024, 1);
+
+	jpt::Atomic<uint32> sum = 0;
+
+    {
+		JPT_SCOPED_TIMING_PROFILER("MutexVsAtomic");
+
+		jpt::DynamicArray<std::thread> threads;
+		threads.Reserve(threadsCount);
+
+		const size_t chunkSize = data.Count() / threadsCount;
+
+        for (size_t i = 0; i < threadsCount; ++i)
+        {
+			const size_t startIndex = i * chunkSize;
+			const size_t endIndex = startIndex + chunkSize;
+
+            threads.EmplaceBack([startIndex, endIndex, &data, &sum]() 
+                {
+					//std::lock_guard<std::mutex> lock(g_mutex); // Mutex is slow because it locks the entire data structure. Use atomic for counter or flag
+
+					for (size_t j = startIndex; j < endIndex; ++j)
+					{
+                        sum += data[j];
+					}
+                });
+        }
+
+		for (size_t i = 0; i < threadsCount; ++i)
+		{
+			threads[i].join();
+		}
+    }
+
+    return sum == data.Count();
+}
+
 export bool RunUnitTests_Threading()
 {
+	JPT_ENSURE(MutexVsAtomic(2));
+	JPT_ENSURE(MutexVsAtomic(4));
+	JPT_ENSURE(MutexVsAtomic(16));
+
     JPT_ENSURE(RawThreads());
     JPT_ENSURE(ThreadSafeQueue());
     JPT_ENSURE(NotBlockingMain());
