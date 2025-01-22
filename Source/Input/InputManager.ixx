@@ -21,7 +21,7 @@ export namespace jpt
 		JPT_DECLARE_SINGLETON(InputManager);
 
 	private:
-		RawInput* m_pRawInput = nullptr;
+		Input::RawInput* m_pRawInput = nullptr;
 
 	public:
 		bool PreInit(Framework_API api);
@@ -30,12 +30,12 @@ export namespace jpt
 		void Shutdown();
 
 	public:
-		RawInput* GetRawInput() const { return m_pRawInput; }
+		Input::RawInput* GetRawInput() const { return m_pRawInput; }
 	};
 
 	bool InputManager::PreInit(Framework_API api)
 	{
-		m_pRawInput  = RawInput_Create(api);
+		m_pRawInput  = Input::RawInput_Create(api);
 
 		bool success = true;
 		success &= m_pRawInput->PreInit();

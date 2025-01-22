@@ -27,6 +27,7 @@ import jpt.DynamicArray;
 import jpt.Input.KeyCode;
 import jpt.Input.Manager;
 import jpt.RawInput;
+import jpt.RawInput_GLFW;
 
 import jpt.Time.TypeDefs;
 
@@ -182,7 +183,11 @@ namespace jpt
 			{
 				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 
-				const Input::Key keyCode = InputManager::GetInstance().GetRawInput()->ToKey(key);
+				const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
+				const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
+				JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
+
+				const Input::Key keyCode = pRawInputGLFW->ToKey(key);
 				const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
 
 				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode, modifiers };

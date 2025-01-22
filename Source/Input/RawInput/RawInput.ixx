@@ -10,9 +10,7 @@ import jpt.Time.TypeDefs;
 
 import jpt.StaticArray;
 
-using namespace jpt::Input;
-
-export namespace jpt
+export namespace jpt::Input
 {
 	/** Responsible for low-level input query.
 		- Input State per input device, per window
