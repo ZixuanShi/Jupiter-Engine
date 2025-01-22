@@ -20,7 +20,7 @@ export namespace jpt::Vulkan
 	void EndSingleTimeCommand(const CommandPool& commandPool, VkCommandBuffer commandBuffer);
 
 	void CreateImage(uint32 width, uint32 height, uint32 mipLevels,
-		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+		VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties,
 		VkImage& image, VkDeviceMemory& imageMemory);
 

@@ -31,7 +31,7 @@ export namespace jpt
 		public:
 			bool Init(Window* pWindow, VkSurfaceKHR surface);
 			bool CreateImageViews();
-			bool CreateFramebuffers(VkImageView depthImageView);
+			bool CreateFramebuffers(VkImageView colorImageView, VkImageView depthImageView);
 
 			void Shutdown();
 

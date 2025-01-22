@@ -40,6 +40,11 @@ export namespace jpt
 			StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
 			StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
 
+			// 
+			VkImage m_colorImage;
+			VkDeviceMemory m_colorImageMemory;
+			VkImageView m_colorImageView;
+
 			// Depth Buffer
 			VkImage m_depthImage;
 			VkDeviceMemory m_depthImageMemory;
@@ -69,6 +74,9 @@ export namespace jpt
 			void Present(uint32& imageIndex);
 
 			void UpdateUniformBuffer();
+
+			void CreateColorResources();
+			void DestroyColorResources();
 
 			void CreateDepthResources();
 			void DestroyDepthResources();

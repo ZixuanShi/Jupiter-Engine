@@ -56,13 +56,13 @@ namespace jpt::Vulkan
 		const uint32 presentFamilyIndex = physicalDevice.FindPresentFamilyIndex(m_surface);
 		vkGetDeviceQueue(logicalDevice.GetHandle(), presentFamilyIndex, 0, &m_presentQueue);
 
-		// Depth Buffer
-		CreateDepthResources();
-
 		// SwapChain
 		m_swapChain.Init(m_pOwner, m_surface);
 		m_swapChain.CreateImageViews();
-		m_swapChain.CreateFramebuffers(m_depthImageView);
+
+		CreateColorResources();
+		CreateDepthResources();
+		m_swapChain.CreateFramebuffers(m_colorImageView, m_depthImageView);
 
 		// Command pool & buffers
 		m_commandPool.Init();
@@ -116,9 +116,8 @@ namespace jpt::Vulkan
 
 		logicalDevice.WaitIdle();
 
-		vkDestroyImageView(logicalDevice.GetHandle(), m_depthImageView, nullptr);
-		vkDestroyImage(logicalDevice.GetHandle(), m_depthImage, nullptr);
-		vkFreeMemory(logicalDevice.GetHandle(), m_depthImageMemory, nullptr);
+		DestroyColorResources();
+		DestroyDepthResources();
 
 		for (DescriptorSet& descriptorSet : m_descriptorSets)
 		{
@@ -182,12 +181,14 @@ namespace jpt::Vulkan
 		LogicalDevice::Get().WaitIdle();
 
 		m_swapChain.Shutdown();
+		DestroyColorResources();
 		DestroyDepthResources();
 
 		m_swapChain.Init(m_pOwner, m_surface);
 		m_swapChain.CreateImageViews();
+		CreateColorResources();
 		CreateDepthResources();
-		m_swapChain.CreateFramebuffers(m_depthImageView);
+		m_swapChain.CreateFramebuffers(m_colorImageView, m_depthImageView);
 
 		m_shouldRecreateSwapChain = false;
 	}
@@ -380,13 +381,34 @@ namespace jpt::Vulkan
 		memcpy(uniformBuffer.GetMappedMemory(), &ubo, sizeof(ubo));
 	}
 
+	void WindowResources::CreateColorResources()
+	{
+		const VkSampleCountFlagBits msaaSamples = PhysicalDevice::Get().GetMsaaSamples();
+		const Vec2i frameSize = m_pOwner->GetFrameSize();
+		const VkFormat colorFormat = m_swapChain.GetImageFormat();
+
+		CreateImage(frameSize.x, frameSize.y, 1,
+			msaaSamples, colorFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_colorImage, m_colorImageMemory);
+
+		m_colorImageView = CreateImageView(m_colorImage, colorFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	}
+
+	void WindowResources::DestroyColorResources()
+	{
+		vkDestroyImageView(LogicalDevice::GetVkDevice(), m_colorImageView, nullptr);
+		vkDestroyImage(LogicalDevice::GetVkDevice(), m_colorImage, nullptr);
+		vkFreeMemory(LogicalDevice::GetVkDevice(), m_colorImageMemory, nullptr);
+	}
+
 	void WindowResources::CreateDepthResources()
 	{
-		Vec2i frameSize = m_pOwner->GetFrameSize();
+		const VkSampleCountFlagBits msaaSamples = PhysicalDevice::Get().GetMsaaSamples();
+		const Vec2i frameSize = m_pOwner->GetFrameSize();
 		const VkFormat depthFormat = PhysicalDevice::Get().FindDepthFormat();
 
 		CreateImage(frameSize.x, frameSize.y, 1,
-			depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+			msaaSamples, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
 			m_depthImage, m_depthImageMemory);
 
@@ -395,12 +417,9 @@ namespace jpt::Vulkan
 
 	void WindowResources::DestroyDepthResources()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-
-		vkDestroyImageView(logicalDevice.GetHandle(), m_depthImageView, nullptr);
-		vkDestroyImage(logicalDevice.GetHandle(), m_depthImage, nullptr);
-		vkFreeMemory(logicalDevice.GetHandle(), m_depthImageMemory, nullptr);
+		vkDestroyImageView(LogicalDevice::GetVkDevice(), m_depthImageView, nullptr);
+		vkDestroyImage(LogicalDevice::GetVkDevice(), m_depthImage, nullptr);
+		vkFreeMemory(LogicalDevice::GetVkDevice(), m_depthImageMemory, nullptr);
 	}
 
 	bool WindowResources::CanDraw() const

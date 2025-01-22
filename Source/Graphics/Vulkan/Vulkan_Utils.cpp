@@ -85,8 +85,8 @@ namespace jpt::Vulkan
 		vkFreeCommandBuffers(LogicalDevice::GetVkDevice(), commandPool.GetHandle(), 1, &commandBuffer);
 	}
 
-	void CreateImage(uint32 width, uint32 height, uint32 mipLevels,
-		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
+	void CreateImage(uint32 width, uint32 height, uint32 mipLevels, 
+		VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage,
 		VkMemoryPropertyFlags properties,
 		VkImage& image, VkDeviceMemory& imageMemory)
 	{
@@ -102,7 +102,7 @@ namespace jpt::Vulkan
 		imageInfo.tiling = tiling;
 		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		imageInfo.usage = usage;
-		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+		imageInfo.samples = numSamples;
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 		if (vkCreateImage(LogicalDevice::GetVkDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS)

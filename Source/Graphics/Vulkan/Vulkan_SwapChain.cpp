@@ -103,7 +103,7 @@ namespace jpt::Vulkan
 		return true;
 	}
 
-	bool SwapChain::CreateFramebuffers(VkImageView depthImageView)
+	bool SwapChain::CreateFramebuffers(VkImageView colorImageView, VkImageView depthImageView)
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
@@ -115,8 +115,9 @@ namespace jpt::Vulkan
 		{
 			VkImageView attachments[] =
 			{
+				colorImageView,
+				depthImageView,
 				m_imageViews[i],
-				depthImageView
 			};
 
 			VkFramebufferCreateInfo framebufferInfo = {};

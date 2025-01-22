@@ -33,6 +33,7 @@ export namespace jpt::Vulkan
 	private:
 		VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
 		uint32 m_grahicsFamilyIndex = UINT32_MAX;
+		VkSampleCountFlagBits m_msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	public:
 		bool Init();
@@ -49,6 +50,7 @@ export namespace jpt::Vulkan
 	public:
 		VkPhysicalDevice GetHandle() const { return m_physicalDevice; }
 		uint32 GetGraphicsFamilyIndex() const { return m_grahicsFamilyIndex; }
+		VkSampleCountFlagBits GetMsaaSamples() const { return m_msaaSamples; }
 
 		static PhysicalDevice& Get();
 		static VkPhysicalDevice GetVkPhysicalDevice();
@@ -56,5 +58,6 @@ export namespace jpt::Vulkan
 	private:
 		Optional<DevicePicker> ScoreDevice(VkPhysicalDevice physicalDevice) const;
 		bool AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const;
+		VkSampleCountFlagBits FindMaxUsableSampleCount() const;
 	};
 }

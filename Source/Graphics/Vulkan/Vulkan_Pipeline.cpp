@@ -12,6 +12,7 @@ module jpt.Vulkan.GraphicsPipeline;
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
+import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.Shader.Vertex;
 import jpt.Vulkan.Shader.Pixel;
@@ -171,8 +172,9 @@ namespace jpt::Vulkan
 
 		VkPipelineMultisampleStateCreateInfo multisampling{};
 		multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-		multisampling.sampleShadingEnable = VK_FALSE;
-		multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+		multisampling.sampleShadingEnable = VK_TRUE;
+		multisampling.rasterizationSamples = PhysicalDevice::Get().GetMsaaSamples();
+		multisampling.minSampleShading = 0.2f; // Optional
 
 		return multisampling;
 	}
