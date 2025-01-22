@@ -17,6 +17,7 @@ import jpt.Application;
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
 
+import jpt.Vulkan.Constants;
 import jpt.Vulkan.Buffer;
 import jpt.Vulkan.CommandPool;
 import jpt.Vulkan.LogicalDevice;
@@ -70,7 +71,9 @@ namespace jpt::Vulkan
 		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
 		const CommandPool& memTransferCommandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 
-		int32 texWidth, texHeight, texChannels;
+		int32 texWidth = 0;
+		int32 texHeight = 0;
+		int32 texChannels = 0;
 		unsigned char* pixels = stbi_load(fullPath.ToCString().ConstBuffer(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
 		m_mipLevels = static_cast<uint32>(Floor(Log2(Max(texWidth, texHeight)))) + 1;
@@ -82,7 +85,7 @@ namespace jpt::Vulkan
 		bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+		const VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
 		Buffer stagingBuffer;
 		stagingBuffer.Create(bufferInfo, properties);
