@@ -9,15 +9,16 @@ export module jpt.Vulkan.Texture;
 import jpt.Texture;
 import jpt.TypeDefs;
 
+import jpt.Vulkan.Image;
+
 export namespace jpt::Vulkan
 {
+	/** Image and Sampling/Access information */
 	class Texture_Vulkan final : public Texture
 	{
 	private:
-		VkImage m_image = VK_NULL_HANDLE;
-		VkDeviceMemory m_imageMemory = VK_NULL_HANDLE;
+		Image_Vulkan m_image;
 		VkImageView m_imageView = VK_NULL_HANDLE;
-		uint32 m_mipLevels = 0;
 
 	public:
 		virtual void Shutdown() override;
@@ -28,7 +29,6 @@ export namespace jpt::Vulkan
 		VkImageView GetImageView() const { return m_imageView; }
 
 	private:
-		bool CreateImage(const File::Path& fullPath);
 		bool CreateImageView();
 	};
 }
