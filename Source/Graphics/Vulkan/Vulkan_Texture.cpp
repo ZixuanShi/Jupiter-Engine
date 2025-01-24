@@ -64,6 +64,6 @@ namespace jpt::Vulkan
 	{
 		m_imageView = jpt::Vulkan::CreateImageView(m_image.GetHandle(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_image.GetMipLevels());
 
-		return true;
+		return m_imageView != VK_NULL_HANDLE;
 	}
 }
