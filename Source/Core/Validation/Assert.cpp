@@ -6,6 +6,11 @@
 
 #include "Core/Strings/StringMacros.h"
 
+#if IS_PLATFORM_WIN64
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
+#endif
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -16,6 +21,10 @@ namespace jpt
 {
 	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...)
 	{
+#if IS_PLATFORM_WIN64
+		MessageBoxA(nullptr, expression, "Assertion Failed", MB_ABORTRETRYIGNORE);
+#endif
+
 		if (!g_AssertCallback)
 		{
 			assert(false);

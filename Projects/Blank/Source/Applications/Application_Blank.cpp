@@ -5,6 +5,8 @@ module;
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
 
+#include <Windows.h>
+
 module Application_Blank;
 
 import jpt.CoreModules;
@@ -20,12 +22,19 @@ import jpt.Window.Manager;
 
 import jpt.Renderer;
 
+import jpt.Event.Manager;
+import jpt.Event.Keyboard.KeyPress;
+
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());
 
 	m_pFoo = new Entity_Foo();
 	m_pFoo->PreInit();
+
+	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([]([[maybe_unused]] const jpt::Event_Keyboard_KeyPress& keyPressEvent) 
+		{
+		});
 
 	return true;
 }

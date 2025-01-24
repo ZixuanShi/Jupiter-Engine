@@ -8,7 +8,9 @@ export module jpt.Vulkan.SyncObjects;
 
 export namespace jpt::Vulkan
 {
-	/** Synchronization objects that are used to coordinate operations between the CPU and the GPU */
+	/** Synchronization objects that are used to coordinate operations between the CPU and the GPU
+		- Semaphore: GPU-GPU. Coordinate queues. i.e. Waiting for a render pass to complete before starting post-processing. Can't be waited by the CPU
+		- Fence: GPU-CPU. Signal completion of GPU operations back to CPU. Can be waited by vkWaitForFence */
 	class SyncObjects
 	{
 	private:
