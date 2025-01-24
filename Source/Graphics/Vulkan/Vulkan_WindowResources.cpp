@@ -361,7 +361,7 @@ namespace jpt::Vulkan
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
 
 		// Rotation
-		const float rotation = time * ToRadians(45.0f);
+		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
 		//ubo.model = Matrix44f::FromRadians(0, rotation, rotation);
@@ -370,8 +370,7 @@ namespace jpt::Vulkan
 
 		// TODO: make model per object transform
 		ubo.model = glm::mat4(1.0f);
-		ubo.model = glm::rotate(ubo.model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, 0.0f, -1.0f));
+		ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, -1.0f, 0.0f));
 
 		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
