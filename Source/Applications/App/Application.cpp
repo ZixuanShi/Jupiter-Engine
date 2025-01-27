@@ -36,7 +36,7 @@ import jpt.ProjectSettings;
 
 import jpt.Event.Manager;
 import jpt.Event.Window.Close;
-import jpt.Event.Keyboard.KeyPress;
+import jpt.Event.Key;
 
 namespace jpt
 {
@@ -76,7 +76,7 @@ namespace jpt
 		success &= m_pSceneManager->PreInit();
 
 		// Register for events
-		jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([this](const jpt::Event_Keyboard_KeyPress& eventKeyboardKeyPress)
+		jpt::EventManager::GetInstance().Register<jpt::Event_Key>([this](const jpt::Event_Key& eventKeyboardKeyPress)
 			{
 				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
 				{

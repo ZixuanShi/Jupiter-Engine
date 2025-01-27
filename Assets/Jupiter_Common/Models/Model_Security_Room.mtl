@@ -1,0 +1,45 @@
+# Blender 4.3.0 MTL File: 'None'
+# www.blender.org
+
+newmtl Door
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/Door_baseColor.png
+map_Bump -bm 1.000000 C:/Door_normal.png
+
+newmtl Glass
+Ns 907.126221
+Ka 1.000000 1.000000 1.000000
+Kd 0.603827 0.603827 0.603827
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.250000
+illum 9
+
+newmtl material
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/material_baseColor.png
+map_Ke C:/material_emissive.png
+map_Bump -bm 1.000000 C:/material_normal.png
+
+newmtl material_2
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:/material_2_baseColor.png
+map_Bump -bm 1.000000 C:/material_2_normal.png

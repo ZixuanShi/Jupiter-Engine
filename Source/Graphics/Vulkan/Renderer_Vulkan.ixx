@@ -2,6 +2,8 @@
 
 module;
 
+#include <glm/glm.hpp>
+
 #include <vulkan/vulkan.h>
 
 export module jpt.Renderer_Vulkan;
@@ -34,6 +36,7 @@ import jpt.Vulkan.Texture;
 import jpt.Vulkan.Texture.Sampler;
 
 import jpt.DynamicArray;
+import jpt.Matrix44;
 
 using namespace jpt::Vulkan;
 
@@ -66,6 +69,9 @@ export namespace jpt
 		// Texture
 		Texture_Vulkan m_texture;
 
+		glm::mat4 m_cameraMat;
+		glm::vec3 m_cameraMove = glm::vec3(0.0f);
+
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:
@@ -90,6 +96,7 @@ export namespace jpt
 		GraphicsPipeline& GetGraphicsPipeline()       { return m_graphicsPipeline;          }
 		VertexBuffer& GetVertexBuffer()               { return m_vertexBuffer;              }
 		IndexBuffer& GetIndexBuffer()                 { return m_indexBuffer;               }
+		glm::mat4& GetCameraMatrix()                  { return m_cameraMat;                 }
 
 		const VkInstance GetVkInstance()                    const { return m_instance;                  }
 		const PhysicalDevice& GetPhysicalDevice()           const { return m_physicalDevice;            }
@@ -102,6 +109,7 @@ export namespace jpt
 		const GraphicsPipeline& GetGraphicsPipeline()       const { return m_graphicsPipeline;          }
 		const VertexBuffer& GetVertexBuffer()               const { return m_vertexBuffer;              }
 		const IndexBuffer& GetIndexBuffer()                 const { return m_indexBuffer;               }
+		const glm::mat4& GetCameraMatrix()                  const { return m_cameraMat;                 }
 
 	private:
 		bool CreateInstance();

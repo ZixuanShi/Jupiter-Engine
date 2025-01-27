@@ -26,6 +26,7 @@ import jpt.DynamicArray;
 
 import jpt.Input.KeyCode;
 import jpt.Input.Manager;
+import jpt.Input.Enums;
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
 
@@ -37,7 +38,7 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.Mouse.ButtonPress;
-import jpt.Event.Keyboard.KeyPress;
+import jpt.Event.Key;
 
 namespace jpt
 {
@@ -179,20 +180,27 @@ namespace jpt
 
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
 		{
+			Input::KeyState state = Input::KeyState::Invalid;
 			if (action == GLFW_PRESS)
 			{
-				Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-
-				const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
-				const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
-				JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
-
-				const Input::Key keyCode = pRawInputGLFW->ToKey(key);
-				const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
-
-				Event_Keyboard_KeyPress eventKeyboardKeyPress = { pWindow, keyCode, modifiers };
-				EventManager::GetInstance().Send(eventKeyboardKeyPress);
+				state = Input::KeyState::Pressed;
 			}
+			else if (action == GLFW_RELEASE)
+			{
+				state = Input::KeyState::Released;
+			}
+
+			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+
+			const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
+			const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
+			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
+
+			const Input::Key keyCode = pRawInputGLFW->ToKey(key);
+			const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
+
+			Event_Key eventKeyboardKeyPress = { pWindow, keyCode, state, modifiers };
+			EventManager::GetInstance().Send(eventKeyboardKeyPress);
 		}
 	}
 }

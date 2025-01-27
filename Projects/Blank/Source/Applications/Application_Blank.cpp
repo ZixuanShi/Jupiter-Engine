@@ -23,7 +23,7 @@ import jpt.Window.Manager;
 import jpt.Renderer;
 
 import jpt.Event.Manager;
-import jpt.Event.Keyboard.KeyPress;
+import jpt.Event.Key;
 
 bool Application_Blank::PreInit()
 {
@@ -32,7 +32,7 @@ bool Application_Blank::PreInit()
 	m_pFoo = new Entity_Foo();
 	m_pFoo->PreInit();
 
-	jpt::EventManager::GetInstance().Register<jpt::Event_Keyboard_KeyPress>([]([[maybe_unused]] const jpt::Event_Keyboard_KeyPress& keyPressEvent) 
+	jpt::EventManager::GetInstance().Register<jpt::Event_Key>([]([[maybe_unused]] const jpt::Event_Key& keyPressEvent) 
 		{
 		});
 

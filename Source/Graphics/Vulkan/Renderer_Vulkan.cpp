@@ -9,6 +9,11 @@ module;
 
 #include <vulkan/vulkan.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
@@ -25,12 +30,18 @@ import jpt.Vector3;
 
 import jpt.Window;
 import jpt.Framework;
+import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
+import jpt.Event.Key;
+
+import jpt.Input.KeyCode;
 
 import jpt.File.IO;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
+
+import jpt.Math;
 
 using namespace jpt::Vulkan;
 
@@ -72,6 +83,59 @@ namespace jpt
 		m_pTextureSampler = new TextureSampler_Vulkan();
 		m_pTextureSampler->Init();
 
+		// Camera movement and rotation
+		m_cameraMat = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		EventManager::GetInstance().Register<Event_Key>([this](const Event_Key& keyPressEvent)
+			{
+				Input::Key key = keyPressEvent.GetKey();
+				Input::KeyState keyState = keyPressEvent.GetState();
+
+				switch (key.Value())
+				{
+				case Input::Key::W:
+					if (keyState == Input::KeyState::Pressed)
+					{
+						m_cameraMove.z = 1;
+					}
+					else if (keyState == Input::KeyState::Released)
+					{
+						m_cameraMove.z = 0;
+					}
+					break;
+				case Input::Key::S:
+					if (keyState == Input::KeyState::Pressed)
+					{
+						m_cameraMove.z = -1;
+					}
+					else if (keyState == Input::KeyState::Released)
+					{
+						m_cameraMove.z = 0;
+					}
+					break;
+				case Input::Key::D:
+					if (keyState == Input::KeyState::Pressed)
+					{
+						m_cameraMove.x = -1;
+					}
+					else if (keyState == Input::KeyState::Released)
+					{
+						m_cameraMove.x = 0;
+					}
+					break;
+				case Input::Key::A:
+					if (keyState == Input::KeyState::Pressed)
+					{
+						m_cameraMove.x = 1;
+					}
+					else if (keyState == Input::KeyState::Released)
+					{
+						m_cameraMove.x = 0;
+					}
+					break;
+				}
+			});
+
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
 		RegisterWindow(pMainWindow);
@@ -87,6 +151,14 @@ namespace jpt
 	void Renderer_Vulkan::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
+
+		static constexpr float kCameraSpeed = 2.5f;
+
+		const glm::vec3 forward = glm::normalize(glm::vec3(m_cameraMat[0][2], m_cameraMat[1][2], m_cameraMat[2][2]));
+		const glm::vec3 right = glm::normalize(glm::vec3(m_cameraMat[0][0], m_cameraMat[1][0], m_cameraMat[2][0]));
+
+		m_cameraMat = glm::translate(m_cameraMat, forward * m_cameraMove.z * kCameraSpeed * static_cast<float>(deltaSeconds));
+		m_cameraMat = glm::translate(m_cameraMat, right * m_cameraMove.x * kCameraSpeed * static_cast<float>(deltaSeconds));
 
 		for (WindowResources& resources : m_windowResources)
 		{
