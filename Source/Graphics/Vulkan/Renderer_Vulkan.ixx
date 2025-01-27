@@ -38,6 +38,10 @@ import jpt.Vulkan.Texture.Sampler;
 import jpt.DynamicArray;
 import jpt.Matrix44;
 
+import jpt.Event.Key;
+import jpt.Event.MouseButton;
+import jpt.Event.MouseMove;
+
 using namespace jpt::Vulkan;
 
 export namespace jpt
@@ -71,6 +75,9 @@ export namespace jpt
 
 		glm::mat4 m_cameraMat;
 		glm::vec3 m_cameraMove = glm::vec3(0.0f);
+		glm::vec3 m_cameraRot = glm::vec3(0.0f);
+
+		bool m_isRotating = false;
 
 		DynamicArray<WindowResources> m_windowResources;
 
@@ -115,5 +122,9 @@ export namespace jpt
 		bool CreateInstance();
 
 		bool LoadModel();
+
+		void OnKey(const Event_Key& eventKey);
+		void OnMouseButton(const Event_Mouse_Button& eventMouseButton);
+		void OnMouseMove(const Event_Mouse_Move& eventMouseMove);
 	};
 }

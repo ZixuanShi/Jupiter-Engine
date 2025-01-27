@@ -12,7 +12,7 @@ import jpt.Entity;
 import jpt.Window.Manager;
 
 import jpt.Event.Manager;
-import jpt.Event.Mouse.ButtonPress;
+import jpt.Event.MouseButton;
 import jpt.Event.Window.Close;
 import jpt.Event.Window.Resize;
 

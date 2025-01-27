@@ -11,7 +11,7 @@ import jpt.Entity;
 import jpt.Event.Manager;
 
 import jpt.Event.Key;
-import jpt.Event.Mouse.ButtonPress;
+import jpt.Event.MouseButton;
 import jpt.Event.Window.Close;
 import jpt.Event.Window.Resize;
 
@@ -21,7 +21,7 @@ public:
 	virtual bool PreInit() override;
 
 	void OnKeyPress(const jpt::Event_Key& eventKeyboardKeyPress);
-	void OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress);
+	void OnMouseButtonPress(const jpt::Event_Mouse_Button& eventMouseButtonPress);
 	void OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize);
 };
 
@@ -29,9 +29,9 @@ bool Entity_Foo::PreInit()
 {
 	JPT_ENSURE(jpt::Entity::PreInit());
 
-	jpt::EventManager::GetInstance().Register<jpt::Event_Key>(this, &Entity_Foo::OnKeyPress);
-	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_ButtonPress>(this, &Entity_Foo::OnMouseButtonPress);
-	jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Key>(this, &Entity_Foo::OnKeyPress);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>(this, &Entity_Foo::OnMouseButtonPress);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
 
 	return true;
 }
@@ -43,7 +43,7 @@ void Entity_Foo::OnKeyPress(const jpt::Event_Key& eventKeyboardKeyPress)
 	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer(), hasCtrlModStr.ConstBuffer());
 }
 
-void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)
+void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_Button& eventMouseButtonPress)
 {
 	const bool hasShiftMod = eventMouseButtonPress.HasModifier(jpt::Input::Modifier::Shift);
 	const jpt::String hasShiftModStr = hasShiftMod ? "true" : "false";
