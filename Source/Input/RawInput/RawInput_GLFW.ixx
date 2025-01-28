@@ -270,6 +270,9 @@ export namespace jpt::Input
 		case GLFW_RELEASE:
 			return KeyState::Released;
 
+		case GLFW_REPEAT:
+			return KeyState::Held;
+
 		default:
 			JPT_ERROR("Unknown key state: " + ToString(state));
 			return KeyState::Invalid;

@@ -10,6 +10,8 @@ import jpt.Event.Key;
 import jpt.Event.MouseButton;
 import jpt.Event.MouseMove;
 
+import jpt.Constants;
+
 import jpt.Time.TypeDefs;
 
 export namespace jpt
@@ -22,7 +24,7 @@ export namespace jpt
 
 		glm::vec3 m_position = glm::vec3(2.0f, 2.0f, 2.0f);
 
-		glm::vec2 m_lastMousePos = glm::vec2(0.0f);
+		glm::vec2 m_lastMousePos = glm::vec2(Constants<float>::kMax);
 		float m_yaw = 0.0f;
 		float m_pitch = 0.0f;
 

@@ -185,9 +185,6 @@ namespace jpt
 
 		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
 		{
-			//static double lastX = x;
-			//static double lastY = y;
-
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			Event_Mouse_Move eventMouseMove = { pWindow, x, y };
 
