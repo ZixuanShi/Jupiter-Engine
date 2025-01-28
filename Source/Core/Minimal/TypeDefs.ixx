@@ -18,10 +18,10 @@ export using int64    = int64_t;
 
 export using float32  = float;
 export using float64  = double;
-export using Weight   = float32;
 
 export using Id            = size_t;
 export using Index         = size_t;
+export using Weight        = float32;
 export using Distance      = float64;
 export using Precision     = float64;
 export using TimePrecision = float64;

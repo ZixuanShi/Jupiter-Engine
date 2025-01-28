@@ -9,7 +9,7 @@ module;
 export module jpt.Vulkan.Utils;
 
 import jpt.Vulkan.CommandPool;
-import jpt.Vector3;
+import jpt.TVector3;
 
 export namespace jpt::Vulkan
 {

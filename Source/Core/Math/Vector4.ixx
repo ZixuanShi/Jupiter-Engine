@@ -12,7 +12,7 @@ import jpt.TypeTraits;
 import jpt.Math;
 import jpt.String;
 import jpt.ToString;
-import jpt.Vector3;
+import jpt.TVector3;
 
 namespace jpt
 {
@@ -39,7 +39,7 @@ namespace jpt
 		constexpr Vector4() = default;
 		constexpr Vector4(T scalar);
 		constexpr Vector4(T x, T y, T z, T w);
-		constexpr Vector4(const Vector3<T>& vector, T w);
+		constexpr Vector4(const TVector3<T>& vector, T w);
 
 		constexpr Vector4 operator-() const;
 
@@ -68,7 +68,7 @@ namespace jpt
 
 		constexpr bool operator==(const Vector4& other) const;
 
-		constexpr Vector3<T> XYZ() const;
+		constexpr TVector3<T> XYZ() const;
 
 		constexpr T Length2() const;
 		constexpr T Length2W() const;
@@ -77,7 +77,7 @@ namespace jpt
 
 		constexpr T Dot(const Vector4& other) const;
 		constexpr T DotW(const Vector4& other) const;
-		constexpr Vector3<T> Cross(const Vector4& other) const;
+		constexpr TVector3<T> Cross(const Vector4& other) const;
 
 		// Homogeneous coordinates
 		constexpr bool IsDir() const;
@@ -105,7 +105,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector4<T>::Vector4(const Vector3<T>& vector, T w)
+	constexpr Vector4<T>::Vector4(const TVector3<T>& vector, T w)
 		: x(vector.x)
 		, y(vector.y)
 		, z(vector.z)
@@ -275,9 +275,9 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector4<T>::XYZ() const
+	constexpr TVector3<T> Vector4<T>::XYZ() const
 	{
-		return Vector3<T>(x, y, z);
+		return TVector3<T>(x, y, z);
 	}
 
 	template<Numeric T>
@@ -317,7 +317,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector4<T>::Cross(const Vector4& other) const
+	constexpr TVector3<T> Vector4<T>::Cross(const Vector4& other) const
 	{
 		return XYZ().Cross(other.XYZ());
 	}

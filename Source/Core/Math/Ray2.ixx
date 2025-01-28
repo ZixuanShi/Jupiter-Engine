@@ -11,35 +11,35 @@ namespace jpt
 {
 	/** Has one endpoint, endless towards one direction */
 	export template<Numeric T>
-	struct Ray2
+	struct TRay2
 	{
 	public:
-		Vector2<T> origin;
-		Vector2<T> direction;
+		TVector2<T> origin;
+		TVector2<T> direction;
 
 	public:
-		constexpr Ray2() noexcept = default;
-		constexpr Ray2(Vector2<T> origin, Vector2<T> direction) noexcept;
+		constexpr TRay2() noexcept = default;
+		constexpr TRay2(TVector2<T> origin, TVector2<T> direction) noexcept;
 
-		constexpr Vector2<T> GetPoint(T t) const noexcept;
-		constexpr T Distance(Vector2<T> point) const noexcept;
+		constexpr TVector2<T> GetPoint(T t) const noexcept;
+		constexpr T Distance(TVector2<T> point) const noexcept;
 	};
 
 	template<Numeric T>
-	constexpr Ray2<T>::Ray2(Vector2<T> origin, Vector2<T> direction) noexcept
+	constexpr TRay2<T>::TRay2(TVector2<T> origin, TVector2<T> direction) noexcept
 		: origin(origin)
 		, direction(direction)
 	{
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Ray2<T>::GetPoint(T t) const noexcept
+	constexpr TVector2<T> TRay2<T>::GetPoint(T t) const noexcept
 	{
 		return origin + direction * t;
 	}
 
 	template<Numeric T>
-	constexpr T Ray2<T>::Distance(Vector2<T> point) const noexcept
+	constexpr T TRay2<T>::Distance(TVector2<T> point) const noexcept
 	{
 		const float dot = Vec2f::Dot(point - origin, direction);
 		float distance = jpt::kInvalidValue<T>;
@@ -60,9 +60,10 @@ namespace jpt
 	}
 }
 
-export using Ray2i = jpt::Ray2<int32>;
-export using Ray2f = jpt::Ray2<float32>;
-export using Ray2d = jpt::Ray2<float64>;
+export using Ray2  = jpt::TRay2<Precision>;
+export using Ray2i = jpt::TRay2<int32>;
+export using Ray2f = jpt::TRay2<float32>;
+export using Ray2d = jpt::TRay2<float64>;
 
 template<> constexpr bool jpt::IsTrivial<Ray2f> = true;
 template<> constexpr bool jpt::IsTrivial<Ray2i> = true;

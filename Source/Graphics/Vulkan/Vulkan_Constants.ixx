@@ -7,7 +7,7 @@ module;
 export module jpt.Vulkan.Constants;
 
 import jpt.Vector2;
-import jpt.Vector3;
+import jpt.TVector3;
 import jpt.TypeDefs;
 
 export namespace jpt::Vulkan

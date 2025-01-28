@@ -26,7 +26,7 @@ module jpt.Renderer_Vulkan;
 import jpt.HashMap;
 import jpt.TypeDefs;
 import jpt.Vector2;
-import jpt.Vector3;
+import jpt.TVector3;
 
 import jpt.Window;
 import jpt.Framework;

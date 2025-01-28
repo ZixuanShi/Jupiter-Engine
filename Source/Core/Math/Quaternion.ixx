@@ -16,7 +16,7 @@ import jpt.Matrix44;
 import jpt.String;
 import jpt.ToString;
 import jpt.TypeDefs;
-import jpt.Vector3;
+import jpt.TVector3;
 
 namespace jpt
 {
@@ -55,7 +55,7 @@ namespace jpt
 		constexpr void Normalize();
 		constexpr void Conjugate();
 		constexpr void Inverse();
-		constexpr Matrix44<T> ToMatrix() const;
+		constexpr TMatrix44<T> ToMatrix() const;
 
 		constexpr TQuaternion Normalized() const;
 		constexpr TQuaternion Conjugated() const;
@@ -69,14 +69,14 @@ namespace jpt
 
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
-		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axisAngle, T radians);
+		constexpr static TQuaternion FromAxisAngle(const TVector3<T>& axisAngle, T radians);
 
 		// Euler Conversion
-		constexpr Vector3<T> ToEulerRadians() const;
-		constexpr Vector3<T> ToEulerDegrees() const;
-		constexpr static TQuaternion FromRadians(const Vector3<T>& radians);
+		constexpr TVector3<T> ToEulerRadians() const;
+		constexpr TVector3<T> ToEulerDegrees() const;
+		constexpr static TQuaternion FromRadians(const TVector3<T>& radians);
 		constexpr static TQuaternion FromRadians(T pitch, T yaw, T roll);
-		constexpr static TQuaternion FromDegrees(const Vector3<T>& degrees);
+		constexpr static TQuaternion FromDegrees(const TVector3<T>& degrees);
 		constexpr static TQuaternion FromDegrees(T pitch, T yaw, T roll);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
@@ -207,7 +207,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Matrix44<T> TQuaternion<T>::ToMatrix() const
+	constexpr TMatrix44<T> TQuaternion<T>::ToMatrix() const
 	{
 		const T xx = x * x;
 		const T yy = y * y;
@@ -229,7 +229,7 @@ namespace jpt
 		const T m21 = 2 * (yz + xw);
 		const T m22 = 1 - 2 * (xx + yy);
 
-		return Matrix44<T>(m00, m01, m02, 0,
+		return TMatrix44<T>(m00, m01, m02, 0,
 			               m10, m11, m12, 0,
 			               m20, m21, m22, 0,
 			                 0,   0,   0, 1);
@@ -285,21 +285,21 @@ namespace jpt
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateX(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Right(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Right(), radians);
 		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateY(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Up(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Up(), radians);
 		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateZ(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Forward(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Forward(), radians);
 		*this *= rotation;
 	}
 
@@ -337,7 +337,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
+	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const TVector3<T>& axisAngle, T radians)
 	{
 		JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
 
@@ -354,9 +354,9 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> TQuaternion<T>::ToEulerRadians() const
+	constexpr TVector3<T> TQuaternion<T>::ToEulerRadians() const
 	{
-		Vector3<T> euler;
+		TVector3<T> euler;
 
 		// Convert quaternion to rotation matrix elements for easier conversion
 		const T xx = x * x;
@@ -481,7 +481,7 @@ namespace jpt
 			default:
 			{
 				JPT_ASSERT(false, "Invalid Rotation Order");
-				return Vector3<T>();
+				return TVector3<T>();
 			}
 		}
 
@@ -489,13 +489,13 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> TQuaternion<T>::ToEulerDegrees() const
+	constexpr TVector3<T> TQuaternion<T>::ToEulerDegrees() const
 	{
 		return ToDegrees(ToEulerRadians());
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(const Vector3<T>& radians)
+	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(const TVector3<T>& radians)
 	{
 		// Calculate Half angles
 		const T cx = std::cos(radians.x * static_cast<T>(0.5));
@@ -572,20 +572,20 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(T pitch, T yaw, T roll)
 	{
-		return FromRadians(Vector3<T>(pitch, yaw, roll));
+		return FromRadians(TVector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const Vector3<T>& degrees)
+	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const TVector3<T>& degrees)
 	{
-		const Vector3<T> radians = ToRadians(degrees);
+		const TVector3<T> radians = ToRadians(degrees);
 		return FromRadians(radians);
 	}
 
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(T pitch, T yaw, T roll)
 	{
-		return FromDegrees(Vector3<T>(pitch, yaw, roll));
+		return FromDegrees(TVector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
@@ -604,5 +604,6 @@ namespace jpt
 	}
 }
 
-export using Quatf = jpt::TQuaternion<float>;
-export using Quatd = jpt::TQuaternion<double>;
+export using Quaternion  = jpt::TQuaternion<Precision>;
+export using Quaternionf = jpt::TQuaternion<float32>;
+export using Quaterniond = jpt::TQuaternion<float64>;

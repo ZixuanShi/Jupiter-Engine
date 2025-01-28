@@ -5,7 +5,7 @@ module;
 #include <cmath>
 #include <type_traits>
 
-export module jpt.Vector3;
+export module jpt.TVector3;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
@@ -18,7 +18,7 @@ import jpt.Hash;
 export namespace jpt
 {
 	template<Numeric T>
-	struct Vector3
+	struct TVector3
 	{
 	public:
 		T x = static_cast<T>(0);
@@ -28,81 +28,81 @@ export namespace jpt
 	public:
 		using NumericType = T;
 
-		static consteval Vector3 Zero() { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
-		static consteval Vector3 One()  { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
+		static consteval TVector3 Zero() { return TVector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
+		static consteval TVector3 One()  { return TVector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
 
 		// Right-handed
 		// X. Pitch
-		static consteval Vector3 Left()  { return Vector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
-		static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
+		static consteval TVector3 Left()  { return TVector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
+		static consteval TVector3 Right() { return TVector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
 
 		// Y. Yaw
-		static consteval Vector3 Up()   { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
-		static consteval Vector3 Down() { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
+		static consteval TVector3 Up()   { return TVector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
+		static consteval TVector3 Down() { return TVector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
 
 		// Z. Roll
-		static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
-		static consteval Vector3 Backward() { return Vector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
+		static consteval TVector3 Forward()  { return TVector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
+		static consteval TVector3 Backward() { return TVector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
 
 	public:
-		constexpr Vector3() = default;
-		constexpr Vector3(T scalar);
-		constexpr Vector3(T _x, T _y, T _z);
+		constexpr TVector3() = default;
+		constexpr TVector3(T scalar);
+		constexpr TVector3(T _x, T _y, T _z);
 
-		constexpr Vector3 operator-() const;
+		constexpr TVector3 operator-() const;
 
-		constexpr Vector3 operator+(const Vector3& other) const;
-		constexpr Vector3 operator-(const Vector3& other) const;
-		constexpr Vector3 operator*(const Vector3& other) const;
-		constexpr Vector3 operator/(const Vector3& other) const;
+		constexpr TVector3 operator+(const TVector3& other) const;
+		constexpr TVector3 operator-(const TVector3& other) const;
+		constexpr TVector3 operator*(const TVector3& other) const;
+		constexpr TVector3 operator/(const TVector3& other) const;
 
-		constexpr Vector3& operator+=(const Vector3& other);
-		constexpr Vector3& operator-=(const Vector3& other);
-		constexpr Vector3& operator*=(const Vector3& other);
-		constexpr Vector3& operator/=(const Vector3& other);
+		constexpr TVector3& operator+=(const TVector3& other);
+		constexpr TVector3& operator-=(const TVector3& other);
+		constexpr TVector3& operator*=(const TVector3& other);
+		constexpr TVector3& operator/=(const TVector3& other);
 
-		constexpr Vector3 operator+(T scalar) const;
-		constexpr Vector3 operator-(T scalar) const;
-		constexpr Vector3 operator*(T scalar) const;
-		constexpr Vector3 operator/(T scalar) const;
+		constexpr TVector3 operator+(T scalar) const;
+		constexpr TVector3 operator-(T scalar) const;
+		constexpr TVector3 operator*(T scalar) const;
+		constexpr TVector3 operator/(T scalar) const;
 
-		constexpr Vector3& operator+=(T scalar);
-		constexpr Vector3& operator-=(T scalar);
-		constexpr Vector3& operator*=(T scalar);
-		constexpr Vector3& operator/=(T scalar);
+		constexpr TVector3& operator+=(T scalar);
+		constexpr TVector3& operator-=(T scalar);
+		constexpr TVector3& operator*=(T scalar);
+		constexpr TVector3& operator/=(T scalar);
 
 		constexpr T& operator[](size_t index) { return (&x)[index]; }
 		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
 
-		constexpr bool operator==(const Vector3& other) const;
+		constexpr bool operator==(const TVector3& other) const;
 
-		constexpr T Dot(const Vector3& other) const;
-		constexpr Vector3 Cross(const Vector3& other) const;
+		constexpr T Dot(const TVector3& other) const;
+		constexpr TVector3 Cross(const TVector3& other) const;
 		constexpr T Length() const;
 		constexpr T Length2() const;
-		constexpr T Distance(const Vector3& other) const;
-		constexpr T Distance2(const Vector3& other) const;
+		constexpr T Distance(const TVector3& other) const;
+		constexpr T Distance2(const TVector3& other) const;
 		constexpr void Normalize();
-		constexpr Vector3 Normalized() const;
-		constexpr T Angle(const Vector3& other) const;
-		constexpr Vector3 Lerp(const Vector3& other, T t) const;
-		constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
-		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
-		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
-		constexpr Vector3 Project(const Vector3& to) const;
-		constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
+		constexpr TVector3 Normalized() const;
+		constexpr T Angle(const TVector3& other) const;
+		constexpr TVector3 Lerp(const TVector3& other, T t) const;
+		constexpr TVector3 InvLerp(const TVector3& other, const TVector3& value) const;
+		constexpr TVector3 RotateAxis(const TVector3& axis, T radians) const;
+		constexpr TVector3 RotatePoint(const TVector3& point, const TVector3& axis, T radians) const;
+		constexpr TVector3 Project(const TVector3& to) const;
+		constexpr bool OnLeft(const TVector3& viewPosition, const TVector3& viewDirection) const;
 
-		constexpr static T Dot(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
-		constexpr static T Length(const Vector3& vector3);
-		constexpr static T Length2(const Vector3& vector3);
-		constexpr static T Distance(const Vector3& left, const Vector3& right);
-		constexpr static T Distance2(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Normalize(const Vector3& vector3);
-		constexpr static T Angle(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
-		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3& end, const Vector3& value);
-		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
+		constexpr static T Dot(const TVector3& left, const TVector3& right);
+		constexpr static TVector3 Cross(const TVector3& left, const TVector3& right);
+		constexpr static T Length(const TVector3& TVector3);
+		constexpr static T Length2(const TVector3& TVector3);
+		constexpr static T Distance(const TVector3& left, const TVector3& right);
+		constexpr static T Distance2(const TVector3& left, const TVector3& right);
+		constexpr static TVector3 Normalize(const TVector3& TVector3);
+		constexpr static T Angle(const TVector3& left, const TVector3& right);
+		constexpr static TVector3 Lerp(const TVector3& start, const TVector3& end, T t);
+		constexpr static TVector3 InvLerp(const TVector3& start, const TVector3& end, const TVector3& value);
+		constexpr static TVector3 Project(const TVector3& from, const TVector3& to);
 
 		constexpr String ToString() const;
 		constexpr uint64 Hash() const;
@@ -112,7 +112,7 @@ export namespace jpt
 	// Member functions
 	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
-	constexpr Vector3<T>::Vector3(T scalar)
+	constexpr TVector3<T>::TVector3(T scalar)
 		: x(scalar)
 		, y(scalar)
 		, z(scalar)
@@ -120,7 +120,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>::Vector3(T _x, T _y, T _z)
+	constexpr TVector3<T>::TVector3(T _x, T _y, T _z)
 		: x(_x)
 		, y(_y)
 		, z(_z)
@@ -128,37 +128,37 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator-() const
+	constexpr TVector3<T> TVector3<T>::operator-() const
 	{
-		return Vector3(-x, -y, -z);
+		return TVector3(-x, -y, -z);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator+(const Vector3& other) const
+	constexpr TVector3<T> TVector3<T>::operator+(const TVector3& other) const
 	{
-		return Vector3(x + other.x, y + other.y, z + other.z);
+		return TVector3(x + other.x, y + other.y, z + other.z);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator-(const Vector3& other) const
+	constexpr TVector3<T> TVector3<T>::operator-(const TVector3& other) const
 	{
-		return Vector3(x - other.x, y - other.y, z - other.z);
+		return TVector3(x - other.x, y - other.y, z - other.z);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator*(const Vector3& other) const
+	constexpr TVector3<T> TVector3<T>::operator*(const TVector3& other) const
 	{
-		return Vector3(x * other.x, y * other.y, z * other.z);
+		return TVector3(x * other.x, y * other.y, z * other.z);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator/(const Vector3& other) const
+	constexpr TVector3<T> TVector3<T>::operator/(const TVector3& other) const
 	{
-		return Vector3(x / other.x, y / other.y, z / other.z);
+		return TVector3(x / other.x, y / other.y, z / other.z);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator+=(const Vector3& other)
+	constexpr TVector3<T>& TVector3<T>::operator+=(const TVector3& other)
 	{
 		x += other.x;
 		y += other.y;
@@ -167,7 +167,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator-=(const Vector3& other)
+	constexpr TVector3<T>& TVector3<T>::operator-=(const TVector3& other)
 	{
 		x -= other.x;
 		y -= other.y;
@@ -176,7 +176,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator*=(const Vector3& other)
+	constexpr TVector3<T>& TVector3<T>::operator*=(const TVector3& other)
 	{
 		x *= other.x;
 		y *= other.y;
@@ -185,7 +185,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator/=(const Vector3& other)
+	constexpr TVector3<T>& TVector3<T>::operator/=(const TVector3& other)
 	{
 		x /= other.x;
 		y /= other.y;
@@ -194,31 +194,31 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator+(T scalar) const
+	constexpr TVector3<T> TVector3<T>::operator+(T scalar) const
 	{
-		return Vector3(x + scalar, y + scalar, z + scalar);
+		return TVector3(x + scalar, y + scalar, z + scalar);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator-(T scalar) const
+	constexpr TVector3<T> TVector3<T>::operator-(T scalar) const
 	{
-		return Vector3(x - scalar, y - scalar, z - scalar);
+		return TVector3(x - scalar, y - scalar, z - scalar);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator*(T scalar) const
+	constexpr TVector3<T> TVector3<T>::operator*(T scalar) const
 	{
-		return Vector3(x * scalar, y * scalar, z * scalar);
+		return TVector3(x * scalar, y * scalar, z * scalar);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::operator/(T scalar) const
+	constexpr TVector3<T> TVector3<T>::operator/(T scalar) const
 	{
-		return Vector3(x / scalar, y / scalar, z / scalar);
+		return TVector3(x / scalar, y / scalar, z / scalar);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator+=(T scalar)
+	constexpr TVector3<T>& TVector3<T>::operator+=(T scalar)
 	{
 		x += scalar;
 		y += scalar;
@@ -227,7 +227,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator-=(T scalar)
+	constexpr TVector3<T>& TVector3<T>::operator-=(T scalar)
 	{
 		x -= scalar;
 		y -= scalar;
@@ -236,7 +236,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator*=(T scalar)
+	constexpr TVector3<T>& TVector3<T>::operator*=(T scalar)
 	{
 		x *= scalar;
 		y *= scalar;
@@ -245,7 +245,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T>& Vector3<T>::operator/=(T scalar)
+	constexpr TVector3<T>& TVector3<T>::operator/=(T scalar)
 	{
 		x /= scalar;
 		y /= scalar;
@@ -254,7 +254,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr bool Vector3<T>::operator==(const Vector3& other) const
+	constexpr bool TVector3<T>::operator==(const TVector3& other) const
 	{
 		return AreValuesClose(x, other.x, static_cast<T>(0.05)) && 
 			   AreValuesClose(y, other.y, static_cast<T>(0.05)) && 
@@ -262,45 +262,45 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Dot(const Vector3& other) const
+	constexpr T TVector3<T>::Dot(const TVector3& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Cross(const Vector3& other) const
+	constexpr TVector3<T> TVector3<T>::Cross(const TVector3& other) const
 	{
-		return Vector3(y * other.z - z * other.y, 
+		return TVector3(y * other.z - z * other.y, 
 			           z * other.x - x * other.z, 
 			           x * other.y - y * other.x);
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Length() const
+	constexpr T TVector3<T>::Length() const
 	{
 		return std::sqrt(Length2());
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Length2() const
+	constexpr T TVector3<T>::Length2() const
 	{
 		return x * x + y * y + z * z;
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Distance(const Vector3& other) const
+	constexpr T TVector3<T>::Distance(const TVector3& other) const
 	{
 		return std::sqrt(Distance2(other));
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Distance2(const Vector3& other) const
+	constexpr T TVector3<T>::Distance2(const TVector3& other) const
 	{
 		return (x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z);
 	}
 
 	template<Numeric T>
-	constexpr void Vector3<T>::Normalize()
+	constexpr void TVector3<T>::Normalize()
 	{
 		const T length = Length();
 		if (length > static_cast<T>(0))
@@ -312,33 +312,33 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Normalized() const
+	constexpr TVector3<T> TVector3<T>::Normalized() const
 	{
-		Vector3<T> result = *this;
+		TVector3<T> result = *this;
 		result.Normalize();
 		return result;
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Angle(const Vector3& other) const
+	constexpr T TVector3<T>::Angle(const TVector3& other) const
 	{
 		return std::acos(Dot(other) / (Length() * other.Length()));
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& other, T t) const
+	constexpr TVector3<T> TVector3<T>::Lerp(const TVector3& other, T t) const
 	{
 		return *this + (other - *this) * t;
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& other, const Vector3&value) const
+	constexpr TVector3<T> TVector3<T>::InvLerp(const TVector3& other, const TVector3&value) const
 	{
 		return (value - *this) / (other - *this);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::RotateAxis(const Vector3& axis, T radians) const
+	constexpr TVector3<T> TVector3<T>::RotateAxis(const TVector3& axis, T radians) const
 	{
 		// Rotates a position vector around an axis by a given angle
 		// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
@@ -346,23 +346,23 @@ export namespace jpt
 		const T cosTheta = std::cos(radians);
 		const T sinTheta = std::sin(radians);
 
-		const Vector3<T> cross = axis.Cross(*this);
-		const Vector3<T> crossCross = axis.Cross(cross);
+		const TVector3<T> cross = axis.Cross(*this);
+		const TVector3<T> crossCross = axis.Cross(cross);
 
 		return *this * cosTheta + cross * sinTheta + crossCross * (static_cast<T>(1) - cosTheta);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::RotatePoint(const Vector3& point, const Vector3& axis, T radians) const
+	constexpr TVector3<T> TVector3<T>::RotatePoint(const TVector3& point, const TVector3& axis, T radians) const
 	{
 		// Rotates this position vector around a point by a given angle around a specified axis
-		const Vector3<T> offset = *this - point;
-		const Vector3<T> rotated = offset.RotateAxis(axis, radians);
+		const TVector3<T> offset = *this - point;
+		const TVector3<T> rotated = offset.RotateAxis(axis, radians);
 		return rotated + point;
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& to) const
+	constexpr TVector3<T> TVector3<T>::Project(const TVector3& to) const
 	{
 		// Projects from this vector to the other
 		// Formula: proj_v(u) = (u . v / |v|^2) * v
@@ -370,7 +370,7 @@ export namespace jpt
 		const T length2 = to.Length2();
 		if (length2 == static_cast<T>(0))
 		{
-			return Vector3<T>::Zero();
+			return TVector3<T>::Zero();
 		}
 
 		const T dot = this->Dot(to);
@@ -379,94 +379,94 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr bool Vector3<T>::OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const
+	constexpr bool TVector3<T>::OnLeft(const TVector3& viewPosition, const TVector3& viewDirection) const
 	{
 		// Calculate the vector from the view position to the point
-		const Vector3 viewToPoint = *this - viewPosition;
+		const TVector3 viewToPoint = *this - viewPosition;
 
 		// Calculate the cross product of the view direction and the view to point vector
-		const Vector3 cross = viewDirection.Cross(viewToPoint);
+		const TVector3 cross = viewDirection.Cross(viewToPoint);
 
 		// If the cross product is pointing up, the point is to the left of the view
 		return cross.y > static_cast<T>(0);
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3& right)
+	constexpr T TVector3<T>::Dot(const TVector3& left, const TVector3& right)
 	{
 		return left.Dot(right);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Cross(const Vector3& left, const Vector3& right)
+	constexpr TVector3<T> TVector3<T>::Cross(const TVector3& left, const TVector3& right)
 	{
 		return left.Cross(right);
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Length(const Vector3& vector3)
+	constexpr T TVector3<T>::Length(const TVector3& TVector3)
 	{
-		return vector3.Length();
+		return TVector3.Length();
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Length2(const Vector3& vector3)
+	constexpr T TVector3<T>::Length2(const TVector3& TVector3)
 	{
-		return vector3.Length2();
+		return TVector3.Length2();
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Distance(const Vector3& left, const Vector3& right)
+	constexpr T TVector3<T>::Distance(const TVector3& left, const TVector3& right)
 	{
 		return left.Distance(right);
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Distance2(const Vector3& left, const Vector3& right)
+	constexpr T TVector3<T>::Distance2(const TVector3& left, const TVector3& right)
 	{
 		return left.Distance2(right);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Normalize(const Vector3& vector3)
+	constexpr TVector3<T> TVector3<T>::Normalize(const TVector3& vector)
 	{
-		Vector3<T> result = vector3;
+		TVector3<T> result = vector;
 		result.Normalize();
 		return result;
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Angle(const Vector3& left, const Vector3& right)
+	constexpr T TVector3<T>::Angle(const TVector3& left, const TVector3& right)
 	{
 		return left.Angle(right);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& start, const Vector3& end, T t)
+	constexpr TVector3<T> TVector3<T>::Lerp(const TVector3& start, const TVector3& end, T t)
 	{
 		return start.Lerp(end, t);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& start, const Vector3& end, const Vector3& value)
+	constexpr TVector3<T> TVector3<T>::InvLerp(const TVector3& start, const TVector3& end, const TVector3& value)
 	{
 		return start.InvLerp(end, value);
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& from, const Vector3& to)
+	constexpr TVector3<T> TVector3<T>::Project(const TVector3& from, const TVector3& to)
 	{
 		return from.Project(to);
 	}
 
 	template<Numeric T>
-	constexpr String Vector3<T>::ToString() const
+	constexpr String TVector3<T>::ToString() const
 	{
 		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", x, y, z);
 	}
 
 	template<Numeric T>
-	constexpr uint64 Vector3<T>::Hash() const
+	constexpr uint64 TVector3<T>::Hash() const
 	{
 		if constexpr (std::is_floating_point_v<T>)
 		{
@@ -491,35 +491,36 @@ export namespace jpt
 	}
 }
 
-export using Vec3f = jpt::Vector3<float>;
-export using Vec3d = jpt::Vector3<double>;
-export using Vec3i = jpt::Vector3<int32>;
-export using Vec3u = jpt::Vector3<uint32>;
+export using Vec3  = jpt::TVector3<Precision>;
+export using Vec3f = jpt::TVector3<float>;
+export using Vec3d = jpt::TVector3<double>;
+export using Vec3i = jpt::TVector3<int32>;
+export using Vec3u = jpt::TVector3<uint32>;
 
 template<> constexpr bool jpt::IsTrivial<Vec3f> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3i> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3u> = true;
 
 export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator+(T scaler, const jpt::Vector3<T>& vector3)
+constexpr jpt::TVector3<T> operator+(T scaler, const jpt::TVector3<T>& TVector3)
 {
-	return vector3 + scaler;
+	return TVector3 + scaler;
 }
 
 export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator-(T scaler, const jpt::Vector3<T>& vector3)
+constexpr jpt::TVector3<T> operator-(T scaler, const jpt::TVector3<T>& TVector3)
 {
-	return vector3 - scaler;
+	return TVector3 - scaler;
 }
 
 export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator*(T scaler, const jpt::Vector3<T>& vector3)
+constexpr jpt::TVector3<T> operator*(T scaler, const jpt::TVector3<T>& TVector3)
 {
-	return vector3 * scaler;
+	return TVector3 * scaler;
 }
 
 export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator/(T scaler, const jpt::Vector3<T>& vector3)
+constexpr jpt::TVector3<T> operator/(T scaler, const jpt::TVector3<T>& TVector3)
 {
-	return vector3 / scaler;
+	return TVector3 / scaler;
 }

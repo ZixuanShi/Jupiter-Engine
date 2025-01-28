@@ -14,7 +14,7 @@ import jpt.Constants;
 import jpt.TypeDefs;
 
 import jpt.Vector2;
-import jpt.Vector3;
+import jpt.TVector3;
 import jpt.Matrix44;
 
 export namespace jpt
