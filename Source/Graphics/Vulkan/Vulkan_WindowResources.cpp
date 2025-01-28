@@ -365,16 +365,16 @@ namespace jpt::Vulkan
 		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
-		//ubo.model = Matrix44f::FromRadians(0, rotation, 0);
-		//ubo.view = Matrix44f::LookAt({ 2.0f, 2.0f, 2.0f }, Vec3f::Zero(), Vec3f::Up());
-		////ubo.view = GetApplication()->GetRenderer<Renderer_Vulkan>()->GetCameraMatrix();
-		//ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
+		ubo.model = Matrix44f::FromRadians(0, rotation, 0);
+		ubo.view = Matrix44f::LookAt({ 2.0f, 2.0f, 2.0f }, Vec3f::Zero(), Vec3f::Up());
+		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
+		ubo.proj = Matrix44f::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
 		// TODO: make model per object transform
-		ubo.model = glm::mat4(1.0f);
-		ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, -1.0f, 0.0f));
-		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
-		ubo.proj = glm::perspective(glm::radians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
+		//ubo.model = glm::mat4(1.0f);
+		//ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, -1.0f, 0.0f));
+		//ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
+		//ubo.proj = glm::perspective(glm::radians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
 		ubo.proj[1][1] *= -1;
 

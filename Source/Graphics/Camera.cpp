@@ -24,7 +24,7 @@ import jpt.Math;
 
 namespace jpt
 {
-	static constexpr glm::vec3 kUp = glm::vec3(0.0f, 1.0f, 0.0f);	// World up vector
+	//static constexpr glm::vec3 kUp = glm::vec3(0.0f, 1.0f, 0.0f);	// World up vector
 	static constexpr float kMoveSpeed   = 2.5f;		// Camera movement speed
 	static constexpr float kSensitivity = 0.001f;	// Camera rotation sensitivity
 	static constexpr float kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping
@@ -37,7 +37,7 @@ namespace jpt
 		EventManager::GetInstance().Register<Event_Mouse_Move>(this, &Camera::OnMouseMove);
 
 		// Init position and rotation
-		m_forward = glm::normalize(glm::vec3(0.0f) - m_position);
+		m_forward = (Vec3f(0.0f) - m_position).Normalized();
 		m_yaw   = std::atan2(m_forward.x, m_forward.z);
 		m_pitch = std::asin(m_forward.y);
 
@@ -46,12 +46,12 @@ namespace jpt
 
 	void Camera::Update(TimePrecision deltaSeconds)
 	{
-		const glm::vec3 right = glm::cross(m_forward, kUp);
+		const Vec3f right = Vec3f::Cross(m_forward, Vec3f::Up());
 
 		m_position += m_forward * m_move.z * kMoveSpeed * static_cast<float>(deltaSeconds);
 		m_position +=     right * m_move.x * kMoveSpeed * static_cast<float>(deltaSeconds);
 
-		m_matrix = glm::lookAt(m_position, m_position + m_forward, kUp);
+		m_matrix = Matrix44f::LookAt(m_position, m_position + m_forward, Vec3f::Up());
 	}
 
 	void Camera::OnKey(const Event_Key& eventKey)
@@ -84,11 +84,11 @@ namespace jpt
 			{
 				double x = eventMouseButton.GetX();
 				double y = eventMouseButton.GetY();
-				m_lastMousePos = glm::i32vec2(static_cast<int32>(x), static_cast<int32>(y));
+				m_lastMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
 			}
 			else if (state == Input::KeyState::Released)
 			{
-				m_lastMousePos = glm::i32vec2(Constants<glm::i32>::kMax);
+				m_lastMousePos = Vec2i(Constants<glm::i32>::kMax);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ namespace jpt
 	void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
 	{
 		// If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
-		if (m_lastMousePos == glm::i32vec2(Constants<glm::i32>::kMax))
+		if (m_lastMousePos == Vec2i(Constants<glm::i32>::kMax))
 		{
 			return;
 		}
@@ -118,9 +118,9 @@ namespace jpt
 		m_forward.x = std::cos(m_pitch) * std::sin(m_yaw);
 		m_forward.y = std::sin(m_pitch);
 		m_forward.z = std::cos(m_pitch) * std::cos(m_yaw);
-		m_forward = glm::normalize(m_forward);
+		m_forward.Normalize();
 
 		// Update the last mouse position
-		m_lastMousePos = glm::vec2(x, y);
+		m_lastMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
 	}
 }

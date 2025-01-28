@@ -35,6 +35,7 @@ namespace jpt
 
 	public:
 		constexpr Vector2() = default;
+		constexpr Vector2(T val);
 		constexpr Vector2(T x, T y);
 
 		constexpr Vector2 operator+(Vector2 other) const;
@@ -124,6 +125,13 @@ namespace jpt
 	constexpr Vector2<T> operator/(T scaler, Vector2<T> vector2)
 	{
 		return vector2 / scaler;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T>::Vector2(T val)
+		: x(val)
+		, y(val)
+	{
 	}
 
 	template<Numeric T>
