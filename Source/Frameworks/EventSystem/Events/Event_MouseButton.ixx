@@ -13,14 +13,14 @@ export namespace jpt
 	{
 	private:
 		Window* m_pWindow = nullptr;	/**< Window that the event occurred */
-		int32 m_x = 0;
-		int32 m_y = 0;
+		double m_x = 0;
+		double m_y = 0;
 		Input::MouseButton m_button = Input::MouseButton::Left;
 		Input::Modifier m_modifiers = Input::Modifier::Invalid;	/**< Modifier keys that were pressed */
 		Input::KeyState m_state = Input::KeyState::Invalid;
 
 	public:
-		Event_Mouse_Button(Window* pWindow, int32 x, int32 y, Input::MouseButton button, Input::KeyState state, Input::Modifier modifiers = Input::Modifier::Invalid)
+		Event_Mouse_Button(Window* pWindow, double x, double y, Input::MouseButton button, Input::KeyState state, Input::Modifier modifiers = Input::Modifier::Invalid)
 			: m_pWindow(pWindow)
 			, m_x(x)
 			, m_y(y)
@@ -31,8 +31,8 @@ export namespace jpt
 		}
 
 		Window* GetWindow() const { return m_pWindow; }
-		int32 GetX() const { return m_x; }
-		int32 GetY() const { return m_y; }
+		double GetX() const { return m_x; }
+		double GetY() const { return m_y; }
 		Input::MouseButton GetButton() const { return m_button; }
 		Input::KeyState GetState() const { return m_state; }
 

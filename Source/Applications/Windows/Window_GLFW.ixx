@@ -160,30 +160,25 @@ namespace jpt
 
 		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods)
 		{
-			Input::KeyState state = Input::KeyState::Invalid;
-			if (action == GLFW_PRESS)
-			{
-				state = Input::KeyState::Pressed;
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				state = Input::KeyState::Released;
-			}
+			const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
+			const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
+			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
+
+			const Input::MouseButton mouseButton = pRawInputGLFW->ToMouseButton(button);
+			const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
+			const Input::KeyState state = pRawInputGLFW->ParseKeyState(action);
 
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 
 			double x, y;
 			glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-			const Input::MouseButton mouseButton = InputManager::GetInstance().GetRawInput()->ToMouseButton(button);
-			const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
-
-			Event_Mouse_Button eventMouseButtonPress = { pWindow,
-														 static_cast<int32>(x),
-														 static_cast<int32>(y),
-														 mouseButton,
-														 state,
-														 modifiers };
+			const Event_Mouse_Button eventMouseButtonPress = { pWindow,
+														       x,
+														       y,
+														       mouseButton,
+														       state,
+														       modifiers };
 
 			EventManager::GetInstance().Send(eventMouseButtonPress);
 		}
@@ -201,26 +196,17 @@ namespace jpt
 
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
 		{
-			Input::KeyState state = Input::KeyState::Invalid;
-			if (action == GLFW_PRESS)
-			{
-				state = Input::KeyState::Pressed;
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				state = Input::KeyState::Released;
-			}
-
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-
 			const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
 			const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
 			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
 
 			const Input::Key keyCode = pRawInputGLFW->ToKey(key);
 			const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
+			const Input::KeyState keyState = pRawInputGLFW->ParseKeyState(action);
 
-			Event_Key eventKeyboardKeyPress = { pWindow, keyCode, state, modifiers };
+			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+			const Event_Key eventKeyboardKeyPress = { pWindow, keyCode, keyState, modifiers };
+
 			EventManager::GetInstance().Send(eventKeyboardKeyPress);
 		}
 	}

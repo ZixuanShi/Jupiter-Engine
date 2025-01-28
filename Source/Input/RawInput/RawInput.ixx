@@ -30,6 +30,7 @@ export namespace jpt::Input
 		virtual Key ToKey([[maybe_unused]] uint32 key) const { return Key::Invalid; }
 
 		virtual Modifier ParseModifiers([[maybe_unused]] uint32 modifier) const { return Modifier::Invalid;	}
+		virtual KeyState ParseKeyState([[maybe_unused]] uint32 state) const { return KeyState::Invalid; }
 
 		virtual uint32 FromMouseButton([[maybe_unused]] MouseButton button) const { return kInvalidValue<uint32>; }
 		virtual MouseButton ToMouseButton([[maybe_unused]] uint32 button) const { return MouseButton::Invalid; }

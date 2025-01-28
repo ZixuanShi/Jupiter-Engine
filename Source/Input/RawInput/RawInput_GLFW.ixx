@@ -42,6 +42,7 @@ export namespace jpt::Input
 		virtual Key ToKey(uint32 key) const override;
 
 		virtual Modifier ParseModifiers(uint32 glfwMods) const override;
+		virtual KeyState ParseKeyState(uint32 state) const override;
 
 		virtual uint32 FromMouseButton(MouseButton mouseButton) const override;
 		virtual MouseButton ToMouseButton(uint32 mouseButton) const override;
@@ -257,6 +258,22 @@ export namespace jpt::Input
 		}
 
 		return modifier;
+	}
+
+	KeyState RawInput_GLFW::ParseKeyState(uint32 state) const
+	{
+		switch (state)
+		{
+		case GLFW_PRESS:
+			return KeyState::Pressed;
+
+		case GLFW_RELEASE:
+			return KeyState::Released;
+
+		default:
+			JPT_ERROR("Unknown key state: " + ToString(state));
+			return KeyState::Invalid;
+		}
 	}
 
 	uint32 RawInput_GLFW::FromMouseButton(MouseButton mouseButton) const
