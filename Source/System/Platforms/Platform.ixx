@@ -2,7 +2,7 @@
 
 export module jpt.Platform;
 
-import jpt.Time.TypeDefs;
+import jpt.TypeDefs;
 
 export namespace jpt
 {

@@ -6,7 +6,7 @@ module;
 
 export module jpt.BouncingValue_1D;
 
-import jpt.Time.TypeDefs;
+import jpt.TypeDefs;
 
 export namespace jpt
 {

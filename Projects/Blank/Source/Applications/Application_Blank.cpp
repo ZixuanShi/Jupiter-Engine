@@ -39,7 +39,7 @@ bool Application_Blank::PreInit()
 	return true;
 }
 
-void Application_Blank::Update(jpt::TimePrecision deltaSeconds)
+void Application_Blank::Update(TimePrecision deltaSeconds)
 {
 	Super::Update(deltaSeconds);
 

@@ -6,7 +6,7 @@ module;
 
 export module jpt.Input.Manager;
 
-import jpt.Time.TypeDefs;
+import jpt.TypeDefs;
 
 import jpt.RawInput;
 

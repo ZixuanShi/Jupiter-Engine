@@ -12,7 +12,6 @@ import jpt.Event.MouseMove;
 
 import jpt.Constants;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
 
 import jpt.Vector2;
 import jpt.Vector3;

@@ -12,7 +12,6 @@ export module jpt.Time.TypeDefs;
 export namespace jpt
 {
 	using RawTimeType   = time_t;
-	using TimePrecision = double;	// For delta time
 	using TimeUnit		= int64;	// Milliseconds. For timing units
 
 	consteval TimeUnit operator"" _ms(unsigned long long ms)
