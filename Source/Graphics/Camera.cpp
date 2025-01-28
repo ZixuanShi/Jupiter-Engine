@@ -24,7 +24,6 @@ import jpt.Math;
 
 namespace jpt
 {
-	//static constexpr glm::vec3 kUp = glm::vec3(0.0f, 1.0f, 0.0f);	// World up vector
 	static constexpr float kMoveSpeed   = 2.5f;		// Camera movement speed
 	static constexpr float kSensitivity = 0.001f;	// Camera rotation sensitivity
 	static constexpr float kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping

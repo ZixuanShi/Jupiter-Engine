@@ -32,6 +32,7 @@ export namespace jpt
 		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
 
 		bool m_shouldShutdown = false;
+		TimePrecision m_deltaSeconds = 0.0;
 
 	public:
 		virtual ~Application() = default;
@@ -62,6 +63,7 @@ export namespace jpt
 
 		Window* GetMainWindow() const;
 		const char* GetName() const;
+		TimePrecision GetDeltaSeconds() const { return m_deltaSeconds; }
 
 		void SetPlatform(Platform* pPlatform) { m_pPlatform = pPlatform; }
 		void SetShouldShutdown();

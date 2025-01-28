@@ -140,7 +140,7 @@ namespace jpt
 		JPT_SHUTDOWN(m_pPlatform);
 	}
 
-	static TimePrecision GetDeltaSeconds()
+	static TimePrecision locCalculateDeltaSeconds()
 	{
 		static StopWatch::Point previous = StopWatch::Now();
 		const StopWatch::Point current = StopWatch::Now();
@@ -153,9 +153,9 @@ namespace jpt
 	{
 		while (!m_shouldShutdown)
 		{
-			const TimePrecision deltaSeconds = GetDeltaSeconds();
+			m_deltaSeconds = locCalculateDeltaSeconds();
 
-			Update(deltaSeconds);
+			Update(m_deltaSeconds);
 			if (m_shouldShutdown)
 			{
 				break;
