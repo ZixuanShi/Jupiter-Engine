@@ -4,7 +4,6 @@ export module jpt.Event.Key;
 
 import jpt.Event;
 import jpt.Input.Enums;
-import jpt.Input.KeyCode;
 import jpt.TypeDefs;
 import jpt.Window;
 

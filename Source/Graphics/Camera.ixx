@@ -20,6 +20,12 @@ export namespace jpt
 		glm::mat4 m_matrix;
 		glm::vec3 m_move = glm::vec3(0.0f);
 
+		glm::vec3 m_position = glm::vec3(2.0f, 2.0f, 2.0f);
+
+		glm::vec2 m_lastMousePos = glm::vec2(0.0f);
+		float m_yaw = 0.0f;
+		float m_pitch = 0.0f;
+
 		bool m_isRotating = false;
 
 	public:
@@ -30,6 +36,10 @@ export namespace jpt
 		void OnMouseButton(const Event_Mouse_Button& eventMouseButton);
 		void OnMouseMove(const Event_Mouse_Move& eventMouseMove);
 
+	public:
 		const auto& GetMatrix() const { return m_matrix; }
+
+	private:
+		void UpdateViewMatrix();
 	};
 }

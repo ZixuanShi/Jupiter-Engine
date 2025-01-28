@@ -15,7 +15,7 @@ import jpt.CommandLine;
 import jpt.System.Paths;
 
 import jpt.RawInput;
-import jpt.Input.KeyCode;
+import jpt.Input.Enums;
 
 import jpt.Window;
 import jpt.Window.Manager;

@@ -25,7 +25,7 @@ import jpt.Window.Manager;
 import jpt.Renderer;
 import jpt.Renderer.Create;
 
-import jpt.Input.KeyCode;
+import jpt.Input.Enums;
 import jpt.Input.Manager;
 
 import jpt.Scene.Manager;

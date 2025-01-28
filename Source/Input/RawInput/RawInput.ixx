@@ -2,7 +2,7 @@
 
 export module jpt.RawInput;
 
-import jpt.Input.KeyCode;
+import jpt.Input.Enums;
 
 import jpt.Constants;
 import jpt.TypeDefs;

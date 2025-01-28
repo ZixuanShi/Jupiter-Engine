@@ -3,7 +3,6 @@
 export module jpt.Event.MouseButton;
 
 import jpt.Event;
-import jpt.Input.KeyCode;
 import jpt.Input.Enums;
 import jpt.TypeDefs;
 import jpt.Window;

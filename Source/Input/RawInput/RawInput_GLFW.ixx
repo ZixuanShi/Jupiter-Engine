@@ -11,7 +11,7 @@ module;
 export module jpt.RawInput_GLFW;
 
 import jpt.RawInput;
-import jpt.Input.KeyCode;
+import jpt.Input.Enums;
 
 import jpt.Constants;
 import jpt.HashMap;

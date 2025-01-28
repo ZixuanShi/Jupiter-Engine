@@ -37,7 +37,7 @@ import jpt.Event.Key;
 import jpt.Event.MouseButton;
 import jpt.Event.MouseMove;
 
-import jpt.Input.KeyCode;
+import jpt.Input.Enums;
 import jpt.Input.Manager;
 
 import jpt.File.IO;

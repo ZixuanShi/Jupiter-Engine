@@ -24,7 +24,6 @@ import jpt.Vector2;
 import jpt.Any;
 import jpt.DynamicArray;
 
-import jpt.Input.KeyCode;
 import jpt.Input.Manager;
 import jpt.Input.Enums;
 import jpt.RawInput;
@@ -191,8 +190,12 @@ namespace jpt
 
 		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
 		{
+			//static double lastX = x;
+			//static double lastY = y;
+
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			Event_Mouse_Move eventMouseMove = { pWindow, x, y };
+
 			EventManager::GetInstance().Send(eventMouseMove);
 		}
 
@@ -215,7 +218,7 @@ namespace jpt
 			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
 
 			const Input::Key keyCode = pRawInputGLFW->ToKey(key);
-			const Input::Modifier modifiers = InputManager::GetInstance().GetRawInput()->ParseModifiers(mods);
+			const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
 
 			Event_Key eventKeyboardKeyPress = { pWindow, keyCode, state, modifiers };
 			EventManager::GetInstance().Send(eventKeyboardKeyPress);
