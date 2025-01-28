@@ -19,6 +19,7 @@ import jpt.Application;
 import jpt.Window;
 
 import jpt.Renderer_Vulkan;
+import jpt.Camera;
 
 import jpt.Vulkan.Utils;
 import jpt.Vulkan.Constants;
@@ -372,7 +373,7 @@ namespace jpt::Vulkan
 		// TODO: make model per object transform
 		ubo.model = glm::mat4(1.0f);
 		ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, -1.0f, 0.0f));
-		ubo.view = GetApplication()->GetRenderer<Renderer_Vulkan>()->GetCameraMatrix();
+		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
 		ubo.proj = glm::perspective(glm::radians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
 		ubo.proj[1][1] *= -1;

@@ -7,6 +7,7 @@ module;
 export module jpt.Renderer;
 
 import jpt.Texture.Sampler;
+import jpt.Camera;
 
 import jpt.Window;
 import jpt.Time.TypeDefs;
@@ -22,13 +23,15 @@ export namespace jpt
 	protected:
 		TextureSampler* m_pTextureSampler = nullptr;
 
+		Camera m_camera;
+
 	public:
 		virtual ~Renderer() = default;
 
 		virtual bool PreInit();
-		virtual bool Init() { return true; }
+		virtual bool Init();
 
-		virtual void Update(TimePrecision) { }
+		virtual void Update(TimePrecision deltaSeconds);
 		virtual void Render() { }
 		virtual void Shutdown() {}
 
@@ -40,13 +43,8 @@ export namespace jpt
 
 	public:
 		TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
+		
+		Camera& GetCamera() { return m_camera; }
+		const Camera& GetCamera() const { return m_camera; }
 	};
-
-	bool Renderer::PreInit()
-	{
-		EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResize);
-		EventManager::GetInstance().Register<Event_Window_Close>(this, &Renderer::OnWindowClose);
-
-		return true;
-	}
 }

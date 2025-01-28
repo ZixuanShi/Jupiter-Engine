@@ -86,13 +86,6 @@ namespace jpt
 		m_pTextureSampler = new TextureSampler_Vulkan();
 		m_pTextureSampler->Init();
 
-		// Camera movement and rotation
-		m_cameraMat = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		
-		EventManager::GetInstance().Register<Event_Key>(this, &Renderer_Vulkan::OnKey);
-		EventManager::GetInstance().Register<Event_Mouse_Button>(this, &Renderer_Vulkan::OnMouseButton);
-		EventManager::GetInstance().Register<Event_Mouse_Move>(this, &Renderer_Vulkan::OnMouseMove);
-
 		// Main window
 		Window* pMainWindow = GetApplication()->GetMainWindow();
 		RegisterWindow(pMainWindow);
@@ -108,14 +101,6 @@ namespace jpt
 	void Renderer_Vulkan::Update(TimePrecision deltaSeconds)
 	{
 		Super::Update(deltaSeconds);
-
-		static constexpr float kCameraSpeed = 2.5f;
-
-		const glm::vec3 forward = glm::normalize(glm::vec3(m_cameraMat[0][2], m_cameraMat[1][2], m_cameraMat[2][2]));
-		const glm::vec3 right = glm::normalize(glm::vec3(m_cameraMat[0][0], m_cameraMat[1][0], m_cameraMat[2][0]));
-
-		m_cameraMat = glm::translate(m_cameraMat, forward * m_cameraMove.z * kCameraSpeed * static_cast<float>(deltaSeconds));
-		m_cameraMat = glm::translate(m_cameraMat, right * m_cameraMove.x * kCameraSpeed * static_cast<float>(deltaSeconds));
 
 		for (WindowResources& resources : m_windowResources)
 		{
@@ -299,70 +284,5 @@ namespace jpt
 		}
 
 		return true;
-	}
-
-	void Renderer_Vulkan::OnKey(const Event_Key& eventKey)
-	{
-		Input::Key key = eventKey.GetKey();
-		Input::KeyState keyState = eventKey.GetState();
-
-		switch (key.Value())
-		{
-		case Input::Key::W:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_cameraMove.z = 1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_cameraMove.z = 0;
-			}
-			break;
-		case Input::Key::S:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_cameraMove.z = -1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_cameraMove.z = 0;
-			}
-			break;
-		case Input::Key::D:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_cameraMove.x = -1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_cameraMove.x = 0;
-			}
-			break;
-		case Input::Key::A:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_cameraMove.x = 1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_cameraMove.x = 0;
-			}
-			break;
-		}
-	}
-
-	void Renderer_Vulkan::OnMouseButton(const Event_Mouse_Button& eventMouseButton)
-	{
-		Input::MouseButton button = eventMouseButton.GetButton();
-		Input::KeyState state = eventMouseButton.GetState();
-
-		if (button == Input::MouseButton::Right)
-		{
-			m_isRotating = (state == Input::KeyState::Pressed);
-		}
-	}
-
-	void Renderer_Vulkan::OnMouseMove([[maybe_unused]] const Event_Mouse_Move& eventMouseMove)
-	{
 	}
 }
