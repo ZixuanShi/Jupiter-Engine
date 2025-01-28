@@ -23,6 +23,7 @@ export namespace jpt
 		glm::vec3 m_move = glm::vec3(0.0f);
 
 		glm::vec3 m_position = glm::vec3(2.0f, 2.0f, 2.0f);
+		glm::vec3 m_forward = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		glm::vec2 m_lastMousePos = glm::vec2(Constants<float>::kMax);
 		float m_yaw = 0.0f;
@@ -40,8 +41,5 @@ export namespace jpt
 
 	public:
 		const auto& GetMatrix() const { return m_matrix; }
-
-	private:
-		void UpdateViewMatrix();
 	};
 }

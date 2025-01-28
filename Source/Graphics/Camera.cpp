@@ -24,6 +24,10 @@ import jpt.Math;
 
 namespace jpt
 {
+	static constexpr glm::vec3 kUp = glm::vec3(0.0f, 1.0f, 0.0f);	// World up vector
+	static constexpr float kMoveSpeed = 2.5f;		// Camera movement speed
+	static constexpr float kSensitivity = 0.001f;	// Camera rotation sensitivity
+
 	bool Camera::Init()
 	{
 		// Register input events
@@ -32,74 +36,38 @@ namespace jpt
 		EventManager::GetInstance().Register<Event_Mouse_Move>(this, &Camera::OnMouseMove);
 
 		// Init position and rotation
-		const glm::vec3 direction = glm::normalize(glm::vec3(0.0f) - m_position);
-		m_yaw = std::atan2(direction.x, direction.z);
-		m_pitch = std::asin(direction.y);
-
-		UpdateViewMatrix();
+		m_forward = glm::normalize(glm::vec3(0.0f) - m_position);
+		m_yaw   = std::atan2(m_forward.x, m_forward.z);
+		m_pitch = std::asin(m_forward.y);
 
 		return true;
 	}
 
 	void Camera::Update(TimePrecision deltaSeconds)
 	{
-		static constexpr float kMoveSpeed = 2.5f;
+		const glm::vec3 right = glm::cross(m_forward, kUp);
 
-		const glm::vec3 forward = glm::normalize(glm::vec3(m_matrix[0][2], m_matrix[1][2], m_matrix[2][2]));
-		const glm::vec3 right = glm::normalize(glm::vec3(m_matrix[0][0], m_matrix[1][0], m_matrix[2][0]));
+		m_position += m_forward * m_move.z * kMoveSpeed * static_cast<float>(deltaSeconds);
+		m_position +=     right * m_move.x * kMoveSpeed * static_cast<float>(deltaSeconds);
 
-		m_position += forward * m_move.z * kMoveSpeed * static_cast<float>(deltaSeconds);
-		m_position += right * m_move.x * kMoveSpeed * static_cast<float>(deltaSeconds);
-
-		UpdateViewMatrix();
+		m_matrix = glm::lookAt(m_position, m_position + m_forward, kUp);
 	}
 
 	void Camera::OnKey(const Event_Key& eventKey)
 	{
-		Input::Key key = eventKey.GetKey();
-		Input::KeyState keyState = eventKey.GetState();
+		const Input::Key key = eventKey.GetKey();
+		const Input::KeyState keyState = eventKey.GetState();
+		const bool keyDown = (keyState == Input::KeyState::Pressed) || (keyState == Input::KeyState::Held);
 
 		switch (key.Value())
 		{
 		case Input::Key::W:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_move.z = -1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_move.z = 0;
-			}
-			break;
 		case Input::Key::S:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_move.z = 1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_move.z = 0;
-			}
+			m_move.z = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
 			break;
 		case Input::Key::D:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_move.x = 1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_move.x = 0;
-			}
-			break;
 		case Input::Key::A:
-			if (keyState == Input::KeyState::Pressed)
-			{
-				m_move.x = -1;
-			}
-			else if (keyState == Input::KeyState::Released)
-			{
-				m_move.x = 0;
-			}
+			m_move.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
 			break;
 		}
 	}
@@ -125,41 +93,28 @@ namespace jpt
 
 	void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
 	{
-		static constexpr float kSensitivity = 0.001f;
-
 		if (!m_isRotating)
 		{
 			return;
 		}
 
+		// Calculate the change in mouse position
 		const double x = eventMouseMove.GetX();
 		const double y = eventMouseMove.GetY();
+		const float dx = m_lastMousePos.x - static_cast<float>(x);
+		const float dy = m_lastMousePos.y - static_cast<float>(y);
 
-		const float dx = static_cast<float>(x) - m_lastMousePos.x;
-		const float dy = static_cast<float>(y) - m_lastMousePos.y;
+		// Update the yaw and pitch relative to the mouse movement
+		m_yaw   += dx * kSensitivity;
+		m_pitch += dy * kSensitivity;
 
-		m_yaw   -= dx * kSensitivity;
-		m_pitch -= dy * kSensitivity;
+		// Calculate the new forward vector
+		m_forward.x = std::cos(m_pitch) * std::sin(m_yaw);
+		m_forward.y = std::sin(m_pitch);
+		m_forward.z = std::cos(m_pitch) * std::cos(m_yaw);
+		m_forward = glm::normalize(m_forward);
 
-		UpdateViewMatrix();
-
+		// Update the last mouse position
 		m_lastMousePos = glm::vec2(x, y);
-	}
-
-	void Camera::UpdateViewMatrix()
-	{
-		// Calculate the new front vector
-		glm::vec3 front;
-		front.x = std::cos(m_pitch) * std::sin(m_yaw);
-		front.y = std::sin(m_pitch);
-		front.z = std::cos(m_pitch) * std::cos(m_yaw);
-		front = glm::normalize(front);
-
-		// Calculate the new right vector and up vector
-		glm::vec3 right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
-		glm::vec3 up = glm::normalize(glm::cross(right, front));
-
-		// Update the view matrix
-		m_matrix = glm::lookAt(m_position, m_position + front, up);
 	}
 }
