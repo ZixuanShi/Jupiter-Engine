@@ -25,8 +25,9 @@ import jpt.Math;
 namespace jpt
 {
 	static constexpr glm::vec3 kUp = glm::vec3(0.0f, 1.0f, 0.0f);	// World up vector
-	static constexpr float kMoveSpeed = 2.5f;		// Camera movement speed
+	static constexpr float kMoveSpeed   = 2.5f;		// Camera movement speed
 	static constexpr float kSensitivity = 0.001f;	// Camera rotation sensitivity
+	static constexpr float kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping
 
 	bool Camera::Init()
 	{
@@ -81,19 +82,21 @@ namespace jpt
 		{
 			if (state == Input::KeyState::Pressed)
 			{
-				m_isRotating = true;
-				m_lastMousePos = glm::vec2(eventMouseButton.GetX(), eventMouseButton.GetY());
+				double x = eventMouseButton.GetX();
+				double y = eventMouseButton.GetY();
+				m_lastMousePos = glm::i32vec2(static_cast<int32>(x), static_cast<int32>(y));
 			}
 			else if (state == Input::KeyState::Released)
 			{
-				m_isRotating = false;
+				m_lastMousePos = glm::i32vec2(Constants<glm::i32>::kMax);
 			}
 		}
 	}
 
 	void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
 	{
-		if (!m_isRotating)
+		// If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
+		if (m_lastMousePos == glm::i32vec2(Constants<glm::i32>::kMax))
 		{
 			return;
 		}
@@ -101,12 +104,15 @@ namespace jpt
 		// Calculate the change in mouse position
 		const double x = eventMouseMove.GetX();
 		const double y = eventMouseMove.GetY();
-		const float dx = m_lastMousePos.x - static_cast<float>(x);
-		const float dy = m_lastMousePos.y - static_cast<float>(y);
+		const float dx = static_cast<float>(m_lastMousePos.x) - static_cast<float>(x);
+		const float dy = static_cast<float>(m_lastMousePos.y) - static_cast<float>(y);
 
 		// Update the yaw and pitch relative to the mouse movement
 		m_yaw   += dx * kSensitivity;
 		m_pitch += dy * kSensitivity;
+
+		// Clamp the pitch to prevent the camera from flipping
+		m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
 
 		// Calculate the new forward vector
 		m_forward.x = std::cos(m_pitch) * std::sin(m_yaw);
