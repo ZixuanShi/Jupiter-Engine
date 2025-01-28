@@ -12,7 +12,7 @@ import jpt.TypeDefs;
 import jpt.Event;
 import jpt.Event.Manager;
 
-import jpt.Event.Mouse.ButtonPress;
+import jpt.Event.MouseButton;
 
 //------------------------------------------------------------------------
 // Test data
@@ -166,7 +166,7 @@ static bool UnregisterAll()
 //------------------------------------------------------------------------
 static bool MouseButtonPress()
 {
-	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_ButtonPress>([](const jpt::Event_Mouse_ButtonPress& eventMouseButtonPress)
+	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>([](const jpt::Event_Mouse_Button& eventMouseButtonPress)
 		{
 			JPT_LOG("Mouse button press: %s, x: %i, y: %i", eventMouseButtonPress.GetButton().ToString().ConstBuffer(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
 		});

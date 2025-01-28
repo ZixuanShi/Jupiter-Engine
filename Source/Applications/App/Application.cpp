@@ -82,7 +82,7 @@ namespace jpt
 				{
 					m_shouldShutdown = true;
 				}
-				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N)
+				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N && eventKeyboardKeyPress.GetState() == jpt::Input::KeyState::Pressed)
 				{
 					jpt::Window* pWindow = m_pWindowManager->Create();
 					GetRenderer()->RegisterWindow(pWindow);
