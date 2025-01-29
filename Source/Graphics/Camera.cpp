@@ -14,6 +14,9 @@ module;
 
 module jpt.Camera;
 
+import jpt.Window;
+import jpt.Framework;
+
 import jpt.Event.Manager;
 import jpt.Event.Key;
 import jpt.Event.MouseButton;
@@ -65,6 +68,7 @@ namespace jpt
 		case Input::Key::S:
 			m_move.z = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
 			break;
+
 		case Input::Key::D:
 		case Input::Key::A:
 			m_move.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
@@ -81,13 +85,14 @@ namespace jpt
 		{
 			if (state == Input::KeyState::Pressed)
 			{
+				m_pWindow = eventMouseButton.GetWindow();
 				double x = eventMouseButton.GetX();
 				double y = eventMouseButton.GetY();
-				m_lastMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
+				m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
 			}
 			else if (state == Input::KeyState::Released)
 			{
-				m_lastMousePos = Vec2i(Constants<glm::i32>::kMax);
+				m_lockMousePos = Vec2i(Constants<glm::i32>::kMax);
 			}
 		}
 	}
@@ -95,7 +100,7 @@ namespace jpt
 	void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
 	{
 		// If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
-		if (m_lastMousePos == Vec2i(Constants<glm::i32>::kMax))
+		if (m_lockMousePos == Vec2i(Constants<glm::i32>::kMax))
 		{
 			return;
 		}
@@ -103,8 +108,8 @@ namespace jpt
 		// Calculate the change in mouse position
 		const double x = eventMouseMove.GetX();
 		const double y = eventMouseMove.GetY();
-		const Precision dx = static_cast<Precision>(m_lastMousePos.x) - static_cast<Precision>(x);
-		const Precision dy = static_cast<Precision>(m_lastMousePos.y) - static_cast<Precision>(y);
+		const Precision dx = static_cast<Precision>(m_lockMousePos.x) - static_cast<Precision>(x);
+		const Precision dy = static_cast<Precision>(m_lockMousePos.y) - static_cast<Precision>(y);
 
 		// Update the yaw and pitch relative to the mouse movement
 		m_yaw   += dx * kSensitivity;
@@ -120,6 +125,6 @@ namespace jpt
 		m_forward.Normalize();
 
 		// Update the last mouse position
-		m_lastMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
+		m_pWindow->SetMousePosition(m_lockMousePos);
 	}
 }

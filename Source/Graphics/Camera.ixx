@@ -19,6 +19,8 @@ import jpt.Matrix44;
 
 export namespace jpt
 {
+	class Window;
+
 	class Camera
 	{
 	private:
@@ -28,7 +30,8 @@ export namespace jpt
 		Vec3 m_position = Vec3(2.0f, 2.0f, 2.0f);
 		Vec3 m_forward;
 
-		Vec2i m_lastMousePos = Vec2i(Constants<int32>::kMax);
+		Window* m_pWindow = nullptr;
+		Vec2i m_lockMousePos = Vec2i(Constants<int32>::kMax);
 		float m_yaw = 0.0f;
 		float m_pitch = 0.0f;
 
