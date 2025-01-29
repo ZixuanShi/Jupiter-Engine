@@ -87,8 +87,8 @@ namespace jpt
 			{
 				m_pWindow = eventMouseButton.GetWindow();
 
-				double x = eventMouseButton.GetX();
-				double y = eventMouseButton.GetY();
+				const double x = eventMouseButton.GetX();
+				const double y = eventMouseButton.GetY();
 				m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
 
 				m_pWindow->SetCursorVisible(false);

@@ -10,10 +10,6 @@ module;
 
 module jpt.Vulkan.Texture;
 
-import jpt.Application;
-import jpt.Renderer;
-import jpt.Renderer_Vulkan;
-
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.Buffer;
 import jpt.Vulkan.CommandPool;
@@ -51,12 +47,9 @@ namespace jpt::Vulkan
 
 	void Texture_Vulkan::Shutdown()
 	{
-		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
-		const LogicalDevice& logicalDevice = pRendererVulkan->GetLogicalDevice();
-
 		m_image.Shutdown();
 
-		vkDestroyImageView(logicalDevice.GetHandle(), m_imageView, nullptr);
+		vkDestroyImageView(LogicalDevice::GetVkDevice(), m_imageView, nullptr);
 		m_imageView   = VK_NULL_HANDLE;
 	}
 
