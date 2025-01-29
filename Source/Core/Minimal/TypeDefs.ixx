@@ -23,8 +23,8 @@ export using Id            = size_t;
 export using Index         = size_t;
 export using Weight        = float32;
 export using Distance      = float64;
-export using Precision     = float64;
-export using TimePrecision = float64;
+export using Precision     = float32;
+export using TimePrecision = float32;
 
 export using uintptr = uintptr_t;
 

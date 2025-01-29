@@ -95,6 +95,5 @@ export using Line2i = jpt::TLine2<int32>;
 export using Line2f = jpt::TLine2<float32>;
 export using Line2d = jpt::TLine2<float64>;
 
-template<> constexpr bool jpt::IsTrivial<Line2> = true;
 template<> constexpr bool jpt::IsTrivial<Line2i> = true;
 template<> constexpr bool jpt::IsTrivial<Line2f> = true;
