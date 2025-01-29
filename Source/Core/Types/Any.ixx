@@ -239,12 +239,12 @@ export namespace jpt
 		if (m_currentTypeSize <= kLocSmallDataSize)
 		{
 			m_pBuffer = m_smallBuffer;
-			std::memcpy(m_pBuffer, other.m_smallBuffer, kLocSmallDataSize);
+			MemCpy(m_pBuffer, other.m_smallBuffer, kLocSmallDataSize);
 		}
 		else
 		{
 			m_pBuffer = Allocator<Byte>::AllocateArray(m_currentTypeSize);
-			std::memcpy(m_pBuffer, other.m_pBuffer, m_currentTypeSize);
+			MemCpy(m_pBuffer, other.m_pBuffer, m_currentTypeSize);
 		}
 
 		m_constructor = other.m_constructor;
@@ -261,7 +261,7 @@ export namespace jpt
 		m_currentTypeId = other.m_currentTypeId;
 		m_currentTypeSize = other.m_currentTypeSize;
 
-		std::memmove(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
+		MemCpy(m_smallBuffer, other.m_smallBuffer, kLocSmallDataSize);
 		if (m_currentTypeSize <= kLocSmallDataSize)
 		{
 			m_pBuffer = m_smallBuffer;

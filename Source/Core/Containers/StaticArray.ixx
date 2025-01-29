@@ -158,7 +158,7 @@ export namespace jpt
 	{
 		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
-			std::memcpy(m_buffer, pBegin, kCount * sizeof(TData));
+			MemCpy(m_buffer, pBegin, kCount * sizeof(TData));
 		}
 		else
 		{

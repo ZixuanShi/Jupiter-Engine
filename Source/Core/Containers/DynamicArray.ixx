@@ -419,7 +419,7 @@ export namespace jpt
 		{
 			if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 			{
-				std::memmove(pNewBuffer, m_pBuffer, m_count * sizeof(TData));
+				MemMove(pNewBuffer, m_pBuffer, m_count * sizeof(TData));
 			}
 			else
 			{
@@ -455,7 +455,7 @@ export namespace jpt
 
 		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
-			std::memmove(m_pBuffer + index + distance, m_pBuffer + index, (m_count - index) * sizeof(TData));
+			MemMove(m_pBuffer + index + distance, m_pBuffer + index, (m_count - index) * sizeof(TData));
 		}
 		else
 		{
@@ -473,7 +473,7 @@ export namespace jpt
 
 		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
 		{
-			std::memmove(m_pBuffer + index, m_pBuffer + index + distance, (m_count - index) * sizeof(TData));
+			MemMove(m_pBuffer + index, m_pBuffer + index + distance, (m_count - index) * sizeof(TData));
 		}
 		else
 		{
@@ -506,7 +506,7 @@ export namespace jpt
 
 		if constexpr (std::is_trivially_copyable_v<TData>)
 		{
-			std::memcpy(m_pBuffer, pBegin, m_count * sizeof(TData));
+			MemCpy(m_pBuffer, pBegin, m_count * sizeof(TData));
 		}
 		else
 		{

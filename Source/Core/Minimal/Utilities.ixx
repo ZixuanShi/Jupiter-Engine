@@ -57,12 +57,39 @@ export namespace jpt
 		return sizeof...(Ts) > 0;
 	}
 
-	bool Foo();
+	void MemCpy(void* pDestination, const void* pSource, size_t sizeInBytes)
+	{
+		unsigned char* pDst = static_cast<unsigned char*>(pDestination);
+		const unsigned char* pSrc = static_cast<const unsigned char*>(pSource);
+
+		for (size_t i = 0; i < sizeInBytes; ++i)
+		{
+			pDst[i] = pSrc[i];
+		}
+	}
+
+	void MemMove(void* pDestination, const void* pSource, size_t sizeInBytes)
+	{
+		unsigned char* pDst = static_cast<unsigned char*>(pDestination);
+		const unsigned char* pSrc = static_cast<const unsigned char*>(pSource);
+
+		// If the destination is before the source, copy from the beginning
+		if (pDst < pSrc)
+		{
+			for (size_t i = 0; i < sizeInBytes; ++i)
+			{
+				pDst[i] = pSrc[i];
+			}
+		}
+		// If the destination is after the source, copy from the end to avoid overwriting
+		else
+		{
+			for (size_t i = sizeInBytes; i > 0; --i)
+			{
+				pDst[i - 1] = pSrc[i - 1];
+			}
+		}
+	}
 }
 
 module:private;
-
-bool jpt::Foo()
-{
-	return true;
-}
