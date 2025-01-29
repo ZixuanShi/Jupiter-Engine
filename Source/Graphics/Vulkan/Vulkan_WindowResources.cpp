@@ -365,7 +365,10 @@ namespace jpt::Vulkan
 		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
-		ubo.model *= Matrix44::FromRadians(0, rotation, 0);
+		ubo.model.Translate(-1.0f, -1.0f, -1.0f);
+		ubo.model.RotateY(rotation);
+		ubo.model.Scale(2.0f);
+
 		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
 		ubo.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 

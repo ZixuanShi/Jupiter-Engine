@@ -49,10 +49,12 @@ namespace jpt
 		constexpr T Determinant() const;
 
 		constexpr static TMatrix44<T> Translation(const TVector3<T>& v);
+		constexpr static TMatrix44<T> Translation(T x, T y, T z);
 		constexpr static TMatrix44<T> RotationX(T radians);
 		constexpr static TMatrix44<T> RotationY(T radians);
 		constexpr static TMatrix44<T> RotationZ(T radians);
 		constexpr static TMatrix44<T> Scaling(const TVector3<T>& v);
+		constexpr static TMatrix44<T> Scaling(T x, T y, T z);
 		constexpr static TMatrix44<T> Transposed(const TMatrix44<T>& matrix44);
 
 		/** Creates an orthographic projection matrix */
@@ -65,10 +67,12 @@ namespace jpt
 		constexpr static TMatrix44<T> Perspective(T fov, T aspect, T near, T far);
 
 		constexpr void Translate(const TVector3<T>& v);
+		constexpr void Translate(T x, T y, T z);
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
 		constexpr void RotateZ(T radians);
 		constexpr void Scale(const TVector3<T>& v);
+		constexpr void Scale(T x, T y, T z);
 		constexpr void Transpose();
 		constexpr void Inverse();
 		constexpr bool IsOrthogonal() const;
@@ -124,10 +128,10 @@ namespace jpt
 		{
 			for (size_t j = 0; j < 4; ++j)
 			{
-				result.m[i][j] = m[i][0] * rhs.m[0][j] + 
-					             m[i][1] * rhs.m[1][j] + 
-					             m[i][2] * rhs.m[2][j] + 
-					             m[i][3] * rhs.m[3][j];
+				result.m[j][i] = m[0][i] * rhs.m[j][0] + 
+				                 m[1][i] * rhs.m[j][1] + 
+				                 m[2][i] * rhs.m[j][2] + 
+				                 m[3][i] * rhs.m[j][3];
 			}
 		}
 
@@ -147,10 +151,10 @@ namespace jpt
 		Vector4<T> result;
 		for (size_t i = 0; i < 4; ++i)
 		{
-			result[i] = m[i][0] * rhs[0] + 
-				        m[i][1] * rhs[1] + 
-				        m[i][2] * rhs[2] + 
-				        m[i][3] * rhs[3];
+			result[i] = m[0][i] * rhs[0] + 
+			            m[1][i] * rhs[1] + 
+			            m[2][i] * rhs[2] + 
+			            m[3][i] * rhs[3];
 		}
 		return result;
 	}
@@ -197,10 +201,19 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Translation(const TVector3<T>& v)
 	{
-		return TMatrix44<T>(1, 0, 0, v.x,
-			               0, 1, 0, v.y,
-			               0, 0, 1, v.z,
-			               0, 0, 0,   1);
+		return TMatrix44<T>(  1,   0,   0, 0,
+			                  0,   1,   0, 0,
+			                  0,   0,   1, 0,
+			                v.x, v.y, v.z, 1);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix44<T> TMatrix44<T>::Translation(T x, T y, T z)
+	{
+		return TMatrix44<T>(1, 0, 0, 0,
+						    0, 1, 0, 0,
+						    0, 0, 1, 0,
+						    x, y, z, 1);
 	}
 
 	template<Numeric T>
@@ -243,6 +256,15 @@ namespace jpt
 			                 0, v.y,   0, 0,
 			                 0,   0, v.z, 0,
 			                 0,   0,   0, 1);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix44<T> TMatrix44<T>::Scaling(T x, T y, T z)
+	{
+		return TMatrix44<T>(x, 0, 0, 0,
+							0, y, 0, 0,
+							0, 0, z, 0,
+							0, 0, 0, 1);
 	}
 
 	template<Numeric T>
@@ -583,6 +605,12 @@ namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr void TMatrix44<T>::Translate(T x, T y, T z)
+	{
+		*this *= Translation(x, y, z);
+	}
+
+	template<Numeric T>
 	constexpr void TMatrix44<T>::RotateX(T radians)
 	{
 		*this *= RotationX(radians);
@@ -604,6 +632,12 @@ namespace jpt
 	constexpr void TMatrix44<T>::Scale(const TVector3<T>& v)
 	{
 		*this *= Scaling(v);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Scale(T x, T y, T z)
+	{
+		*this *= Scaling(x, y, z);
 	}
 
 	template<Numeric T>
