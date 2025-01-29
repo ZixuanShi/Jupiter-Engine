@@ -22,11 +22,11 @@ export namespace jpt
 	class Camera
 	{
 	private:
-		Matrix44f m_matrix;
-		Vec3f m_move;
+		Matrix44 m_matrix;
+		Vec3 m_move;
 
-		Vec3f m_position = Vec3f(2.0f, 2.0f, 2.0f);
-		Vec3f m_forward;
+		Vec3 m_position = Vec3(2.0f, 2.0f, 2.0f);
+		Vec3 m_forward;
 
 		Vec2i m_lastMousePos = Vec2i(Constants<int32>::kMax);
 		float m_yaw = 0.0f;

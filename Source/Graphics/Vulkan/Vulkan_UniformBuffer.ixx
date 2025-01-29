@@ -19,9 +19,9 @@ export namespace jpt::Vulkan
 	struct alignas(16) UniformBufferObject
 	{
 	public:
-		Matrix44f model;
-		Matrix44f view;
-		Matrix44f proj;
+		Matrix44 model;
+		Matrix44 view;
+		Matrix44 proj;
 
 		//glm::mat4 model;
 		//glm::mat4 view;

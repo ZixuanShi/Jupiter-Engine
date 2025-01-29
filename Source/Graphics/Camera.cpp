@@ -24,9 +24,9 @@ import jpt.Math;
 
 namespace jpt
 {
-	static constexpr float kMoveSpeed   = 2.5f;		// Camera movement speed
-	static constexpr float kSensitivity = 0.001f;	// Camera rotation sensitivity
-	static constexpr float kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping
+	static constexpr Precision kMoveSpeed   = 2.5f;		// Camera movement speed
+	static constexpr Precision kSensitivity = 0.001f;	// Camera rotation sensitivity
+	static constexpr Precision kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping
 
 	bool Camera::Init()
 	{
@@ -36,7 +36,7 @@ namespace jpt
 		EventManager::GetInstance().Register<Event_Mouse_Move>(this, &Camera::OnMouseMove);
 
 		// Init position and rotation
-		m_forward = (Vec3f(0.0f) - m_position).Normalized();
+		m_forward = (Vec3(0.0f) - m_position).Normalized();
 		m_yaw   = std::atan2(m_forward.x, m_forward.z);
 		m_pitch = std::asin(m_forward.y);
 
@@ -45,12 +45,12 @@ namespace jpt
 
 	void Camera::Update(TimePrecision deltaSeconds)
 	{
-		const Vec3f right = Vec3f::Cross(m_forward, Vec3f::Up());
+		const Vec3 right = Vec3::Cross(m_forward, Vec3::Up());
 
-		m_position += m_forward * m_move.z * kMoveSpeed * static_cast<float>(deltaSeconds);
-		m_position +=     right * m_move.x * kMoveSpeed * static_cast<float>(deltaSeconds);
+		m_position += m_forward * m_move.z * kMoveSpeed * deltaSeconds;
+		m_position +=     right * m_move.x * kMoveSpeed * deltaSeconds;
 
-		m_matrix = Matrix44f::LookAt(m_position, m_position + m_forward, Vec3f::Up());
+		m_matrix = Matrix44::LookAt(m_position, m_position + m_forward, Vec3::Up());
 	}
 
 	void Camera::OnKey(const Event_Key& eventKey)
@@ -103,8 +103,8 @@ namespace jpt
 		// Calculate the change in mouse position
 		const double x = eventMouseMove.GetX();
 		const double y = eventMouseMove.GetY();
-		const float dx = static_cast<float>(m_lastMousePos.x) - static_cast<float>(x);
-		const float dy = static_cast<float>(m_lastMousePos.y) - static_cast<float>(y);
+		const Precision dx = static_cast<Precision>(m_lastMousePos.x) - static_cast<Precision>(x);
+		const Precision dy = static_cast<Precision>(m_lastMousePos.y) - static_cast<Precision>(y);
 
 		// Update the yaw and pitch relative to the mouse movement
 		m_yaw   += dx * kSensitivity;
