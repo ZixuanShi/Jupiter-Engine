@@ -34,6 +34,7 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Resize;
 import jpt.Event.Window.Close;
 import jpt.Event.MouseButton;
+import jpt.Event.MouseScroll;
 import jpt.Event.MouseMove;
 import jpt.Event.Key;
 
@@ -46,6 +47,7 @@ namespace jpt
 
 		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
 		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y);
+		void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset);
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
 	}
 
@@ -72,6 +74,7 @@ namespace jpt
 		// Input
 		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
 		glfwSetCursorPosCallback(m_pGLFWWindow, Callbacks::OnMouseMove);
+		glfwSetScrollCallback(m_pGLFWWindow, Callbacks::OnMouseScroll);
 		glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
 
 		return true;
@@ -173,9 +176,17 @@ namespace jpt
 		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
 		{
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			Event_Mouse_Move eventMouseMove = { pWindow, x, y };
+			const Event_Mouse_Move eventMouseMove = { pWindow, x, y };
 
 			EventManager::GetInstance().Send(eventMouseMove);
+		}
+
+		void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset)
+		{
+			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+			const Event_Mouse_Scroll eventMouseScroll = { pWindow, xOffset, yOffset };
+
+			EventManager::GetInstance().Send(eventMouseScroll);
 		}
 
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)

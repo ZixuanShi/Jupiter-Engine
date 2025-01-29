@@ -20,6 +20,7 @@ import jpt.Framework;
 import jpt.Event.Manager;
 import jpt.Event.Key;
 import jpt.Event.MouseButton;
+import jpt.Event.MouseScroll;
 import jpt.Event.MouseMove;
 
 import jpt.Input.Enums;
