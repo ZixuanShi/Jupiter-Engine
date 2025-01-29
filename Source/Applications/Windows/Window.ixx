@@ -37,6 +37,7 @@ export namespace jpt
 		virtual bool ShouldClose() const { JPT_ASSERT(false); return false; }
 
 		virtual void SetMousePosition(Vec2i) { JPT_ASSERT(false); }
+		virtual void SetCursorVisible(bool) { JPT_ASSERT(false); }
 
 	public:
 		Vec2i GetFrameSize() const;

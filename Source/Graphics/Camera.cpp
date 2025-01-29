@@ -86,13 +86,17 @@ namespace jpt
 			if (state == Input::KeyState::Pressed)
 			{
 				m_pWindow = eventMouseButton.GetWindow();
+
 				double x = eventMouseButton.GetX();
 				double y = eventMouseButton.GetY();
 				m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
+
+				m_pWindow->SetCursorVisible(false);
 			}
 			else if (state == Input::KeyState::Released)
 			{
 				m_lockMousePos = Vec2i(Constants<glm::i32>::kMax);
+				m_pWindow->SetCursorVisible(true);
 			}
 		}
 	}

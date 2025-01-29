@@ -113,6 +113,11 @@ namespace jpt
 		glfwSetCursorPos(m_pGLFWWindow, position.x, position.y);
 	}
 
+	void Window_GLFW::SetCursorVisible(bool isVisible)
+	{
+		glfwSetInputMode(m_pGLFWWindow, GLFW_CURSOR, isVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+	}
+
 	bool Window_GLFW::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_pGLFWWindow);

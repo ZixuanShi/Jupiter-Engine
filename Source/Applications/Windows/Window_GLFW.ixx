@@ -26,6 +26,7 @@ namespace jpt
 
 		virtual bool CreateSurface(const DynamicArray<Any>& context) override;
 		virtual void SetMousePosition(Vec2i position) override;
+		virtual void SetCursorVisible(bool isVisible) override;
 
 	public:
 		virtual bool ShouldClose() const override;
