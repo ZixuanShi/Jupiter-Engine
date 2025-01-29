@@ -5,7 +5,7 @@ export module jpt.KDTree3;
 import jpt.Concepts;
 import jpt.Sort;
 import jpt.DynamicArray;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt_private.BinaryTreeIterator;
 
 namespace jpt

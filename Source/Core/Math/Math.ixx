@@ -173,6 +173,61 @@ export namespace jpt
 
 #pragma endregion MinMax
 
+#pragma region Geometry
+	template<Floating TFloat = float32>
+	constexpr TFloat ToDegrees(TFloat radians)
+	{
+		return radians * static_cast<TFloat>(180) / kPi<TFloat>;
+	}
+	template<typename T> requires (!Floating<T>)
+		constexpr T ToDegrees(const T& obj)
+	{
+		return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat ToRadians(TFloat degrees)
+	{
+		return degrees * kPi<TFloat> / static_cast<TFloat>(180);
+	}
+	template<typename T> requires (!Floating<T>)
+		constexpr T ToRadians(const T& obj)
+	{
+		return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
+	}
+
+	template<Floating TFloat = float32>
+	constexpr TFloat Sin(TFloat value)
+	{
+		return std::sin(value);
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat Cos(TFloat value)
+	{
+		return std::cos(value);
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat Tan(TFloat value)
+	{
+		return std::tan(value);
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat Atan2(TFloat lhs, TFloat rhs)
+	{
+		return std::atan2(lhs, rhs);
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat Asin(TFloat value)
+	{
+		return std::asin(value);
+	}
+	template<Floating TFloat = float32>
+	constexpr TFloat Acos(TFloat value)
+	{
+		return std::acos(value);
+	}
+
+#pragma endregion Geometry
+
 	/** @return The absolute value of input arithmetic parameter */
 	template<Numeric TNum>
 	constexpr TNum Abs(TNum value)
@@ -190,27 +245,6 @@ export namespace jpt
 	constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001))
 	{
 		return Abs(A - static_cast<TNum1>(B)) <= tolerance;
-	}
-
-	template<Floating TFloat = float32>
-	constexpr TFloat ToDegrees(TFloat radians)
-	{
-		return radians * static_cast<TFloat>(180) / kPi<TFloat>;
-	}
-	template<typename T> requires (!Floating<T>)
-	constexpr T ToDegrees(const T& obj)
-	{
-		return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
-	}
-	template<Floating TFloat = float32>
-	constexpr TFloat ToRadians(TFloat degrees)
-	{
-		return degrees * kPi<TFloat> / static_cast<TFloat>(180);
-	}
-	template<typename T> requires (!Floating<T>)
-	constexpr T ToRadians(const T& obj)
-	{
-		return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
 	}
 
 	template<Integral TInt>

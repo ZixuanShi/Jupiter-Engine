@@ -10,7 +10,7 @@ export module jpt.Line3;
 
 import jpt.TypeDefs;
 import jpt.Concepts;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.Math;
 
 namespace jpt

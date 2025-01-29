@@ -16,7 +16,7 @@ import jpt.Matrix44;
 import jpt.String;
 import jpt.ToString;
 import jpt.TypeDefs;
-import jpt.TVector3;
+import jpt.Vector3;
 
 namespace jpt
 {
@@ -273,9 +273,9 @@ namespace jpt
 		const T theta = std::acos(dot);
 		const T theta1 = theta * (static_cast<T>(1) - t);
 		const T theta2 = theta * t;
-		const T sinTheta1 = std::sin(theta1);
-		const T sinTheta2 = std::sin(theta2);
-		const T sinTheta = std::sin(theta);
+		const T sinTheta1 = Sin(theta1);
+		const T sinTheta2 = Sin(theta2);
+		const T sinTheta = Sin(theta);
 
 		const TQuaternion q1 = *this * sinTheta1 / sinTheta;
 		const TQuaternion q2 = rhs * sinTheta2 / sinTheta;
@@ -327,9 +327,9 @@ namespace jpt
 		const T theta = std::acos(dot);
 		const T theta1 = theta * (static_cast<T>(1) - t);
 		const T theta2 = theta * t;
-		const T sinTheta1 = std::sin(theta1);
-		const T sinTheta2 = std::sin(theta2);
-		const T sinTheta = std::sin(theta);
+		const T sinTheta1 = Sin(theta1);
+		const T sinTheta2 = Sin(theta2);
+		const T sinTheta = Sin(theta);
 
 		const TQuaternion q1 = start * sinTheta1 / sinTheta;
 		const TQuaternion q2 = end * sinTheta2 / sinTheta;
@@ -342,8 +342,8 @@ namespace jpt
 		JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
 
 		const T halfAngle = radians * static_cast<T>(0.5);
-		const T sinHalfAngle = std::sin(halfAngle);
-		const T cosHalfAngle = std::cos(halfAngle);
+		const T sinHalfAngle = Sin(halfAngle);
+		const T cosHalfAngle = Cos(halfAngle);
 
 		const T x = axisAngle.x * sinHalfAngle;
 		const T y = axisAngle.y * sinHalfAngle;
@@ -498,12 +498,12 @@ namespace jpt
 	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(const TVector3<T>& radians)
 	{
 		// Calculate Half angles
-		const T cx = std::cos(radians.x * static_cast<T>(0.5));
-		const T cy = std::cos(radians.y * static_cast<T>(0.5));
-		const T cz = std::cos(radians.z * static_cast<T>(0.5));
-		const T sx = std::sin(radians.x * static_cast<T>(0.5));
-		const T sy = std::sin(radians.y * static_cast<T>(0.5));
-		const T sz = std::sin(radians.z * static_cast<T>(0.5));
+		const T cx = Cos(radians.x * static_cast<T>(0.5));
+		const T cy = Cos(radians.y * static_cast<T>(0.5));
+		const T cz = Cos(radians.z * static_cast<T>(0.5));
+		const T sx = Sin(radians.x * static_cast<T>(0.5));
+		const T sy = Sin(radians.y * static_cast<T>(0.5));
+		const T sz = Sin(radians.z * static_cast<T>(0.5));
 
 		// Apply formula
 		T qw = 0;

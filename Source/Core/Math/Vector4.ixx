@@ -12,7 +12,7 @@ import jpt.TypeTraits;
 import jpt.Math;
 import jpt.String;
 import jpt.ToString;
-import jpt.TVector3;
+import jpt.Vector3;
 
 namespace jpt
 {

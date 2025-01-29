@@ -11,7 +11,7 @@ import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Vector2;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.String;
 import jpt.ToString;
 import jpt.Utilities;
@@ -140,8 +140,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::Rotation(T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 
 		return TMatrix33<T>(cos, -sin, 0,
 			               sin,  cos, 0,

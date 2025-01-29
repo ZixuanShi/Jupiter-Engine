@@ -12,7 +12,7 @@ import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Vector2;
-import jpt.TVector3;
+import jpt.Vector3;
 
 namespace jpt
 {

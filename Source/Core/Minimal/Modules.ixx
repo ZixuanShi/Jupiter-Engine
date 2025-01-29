@@ -47,7 +47,7 @@ export import jpt.LineSegment3;
 export import jpt.Ray2;
 export import jpt.Ray3;
 export import jpt.Vector2;
-export import jpt.TVector3;
+export import jpt.Vector3;
 export import jpt.Vector4;
 export import jpt.Triangle2;
 export import jpt.Triangle3;

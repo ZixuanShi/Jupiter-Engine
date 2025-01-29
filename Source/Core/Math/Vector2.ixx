@@ -361,8 +361,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr void TVector2<T>::Rotate(T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 
 		const T dx = x * cos - y * sin;
 		const T dy = x * sin + y * cos;
@@ -374,8 +374,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr void TVector2<T>::RotateAround(TVector2 pivot, T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 
 		const TVector2<T> temp = *this - pivot;
 

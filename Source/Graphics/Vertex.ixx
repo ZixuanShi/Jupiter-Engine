@@ -7,7 +7,7 @@ module;
 export module jpt.Vertex;
 
 import jpt.Vector2;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.LinearColor;
 import jpt.Hash;
 

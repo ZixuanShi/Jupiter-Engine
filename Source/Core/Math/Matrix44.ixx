@@ -13,7 +13,7 @@ import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Math.Settings;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.Vector4;
 import jpt.Utilities;
 import jpt.String;
@@ -37,9 +37,9 @@ namespace jpt
 		constexpr TMatrix44();
 		constexpr TMatrix44(const Vector4<T>& v0, const Vector4<T>& v1, const Vector4<T>& v2, const Vector4<T>& v3);
 		constexpr TMatrix44(T m00, T m01, T m02, T m03,
-		                   T m10, T m11, T m12, T m13,
-		                   T m20, T m21, T m22, T m23,
-		                   T m30, T m31, T m32, T m33);
+		                    T m10, T m11, T m12, T m13,
+		                    T m20, T m21, T m22, T m23,
+		                    T m30, T m31, T m32, T m33);
 
 		constexpr TMatrix44<T> operator*(const TMatrix44<T>& rhs) const;
 		constexpr TVector3<T> operator*(const TVector3<T>& rhs) const;
@@ -219,8 +219,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::RotationX(T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 		return TMatrix44<T>(1,   0,    0, 0,
 			               0, cos, -sin, 0,
 			               0, sin,  cos, 0,
@@ -230,8 +230,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::RotationY(T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 		return TMatrix44<T>( cos, 0, sin, 0,
 			                  0, 1,   0, 0,
 			               -sin, 0, cos, 0,
@@ -241,8 +241,8 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::RotationZ(T radians)
 	{
-		const T cos = std::cos(radians);
-		const T sin = std::sin(radians);
+		const T cos = Cos(radians);
+		const T sin = Sin(radians);
 		return TMatrix44<T>(cos, -sin, 0, 0,
 			               sin,  cos, 0, 0,
 			                 0,    0, 1, 0,
@@ -478,12 +478,12 @@ namespace jpt
 	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(const TVector3<T>& radians)
 	{
 		// Calculate the cosine and sine of the angles
-		const T cx = std::cos(radians.x);  // pitch
-		const T cy = std::cos(radians.y);  // yaw
-		const T cz = std::cos(radians.z);  // roll
-		const T sx = std::sin(radians.x);
-		const T sy = std::sin(radians.y);
-		const T sz = std::sin(radians.z);
+		const T cx = Cos(radians.x);  // pitch
+		const T cy = Cos(radians.y);  // yaw
+		const T cz = Cos(radians.z);  // roll
+		const T sx = Sin(radians.x);
+		const T sy = Sin(radians.y);
+		const T sz = Sin(radians.z);
 
 		// Apply rotation based on order
 		switch (MathSettings::RotationOrder)

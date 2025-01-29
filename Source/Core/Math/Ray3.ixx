@@ -4,7 +4,7 @@ export module jpt.Ray3;
 
 import jpt.Concepts;
 import jpt.Constants;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.TypeDefs;
 
 namespace jpt

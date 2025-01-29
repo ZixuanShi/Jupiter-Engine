@@ -44,8 +44,8 @@ bool UnitTests_Timer()
 
     Sleep(1000);
 
-    JPT_ENSURE(jpt::AreValuesClose(timer.GetDuration(), 1.0, 0.1));
-    JPT_ENSURE(jpt::AreValuesClose(timer.GetDurationMs(), 1000.0, 100.0));
+    JPT_ENSURE(jpt::AreValuesClose(timer.GetDuration(), 1.0f, 0.1f));
+    JPT_ENSURE(jpt::AreValuesClose(timer.GetDurationMs(), 1000.0f, 100.0f));
 #endif
 
     return true;

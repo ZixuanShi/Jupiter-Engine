@@ -1,9 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include <glm/glm.hpp>
-
 export module jpt.Camera;
 
 import jpt.Event.Key;
@@ -14,7 +10,7 @@ import jpt.Constants;
 import jpt.TypeDefs;
 
 import jpt.Vector2;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.Matrix44;
 
 export namespace jpt

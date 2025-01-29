@@ -3,7 +3,7 @@
 export module jpt.Box3;
 
 import jpt.Concepts;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.Math;
 import jpt.TypeDefs;
 

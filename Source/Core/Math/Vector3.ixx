@@ -2,10 +2,9 @@
 
 module;
 
-#include <cmath>
 #include <type_traits>
 
-export module jpt.TVector3;
+export module jpt.Vector3;
 
 import jpt.Concepts;
 import jpt.TypeDefs;
@@ -278,7 +277,7 @@ export namespace jpt
 	template<Numeric T>
 	constexpr T TVector3<T>::Length() const
 	{
-		return std::sqrt(Length2());
+		return Sqrt(Length2());
 	}
 
 	template<Numeric T>
@@ -290,7 +289,7 @@ export namespace jpt
 	template<Numeric T>
 	constexpr T TVector3<T>::Distance(const TVector3& other) const
 	{
-		return std::sqrt(Distance2(other));
+		return Sqrt(Distance2(other));
 	}
 
 	template<Numeric T>
@@ -322,7 +321,7 @@ export namespace jpt
 	template<Numeric T>
 	constexpr T TVector3<T>::Angle(const TVector3& other) const
 	{
-		return std::acos(Dot(other) / (Length() * other.Length()));
+		return Acos(Dot(other) / (Length() * other.Length()));
 	}
 
 	template<Numeric T>
@@ -343,8 +342,8 @@ export namespace jpt
 		// Rotates a position vector around an axis by a given angle
 		// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
 
-		const T cosTheta = std::cos(radians);
-		const T sinTheta = std::sin(radians);
+		const T cosTheta = Cos(radians);
+		const T sinTheta = Sin(radians);
 
 		const TVector3<T> cross = axis.Cross(*this);
 		const TVector3<T> crossCross = axis.Cross(cross);

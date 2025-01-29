@@ -10,7 +10,7 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
-import jpt.TVector3;
+import jpt.Vector3;
 import jpt.Math;
 
 namespace jpt

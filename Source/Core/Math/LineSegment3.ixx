@@ -4,7 +4,7 @@ export module jpt.LineSegment3;
 
 import jpt.TypeDefs;
 import jpt.Concepts;
-import jpt.TVector3;
+import jpt.Vector3;
 
 namespace jpt
 {

@@ -4,14 +4,6 @@ module;
 
 #include "Debugging/Logger.h"
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#define GLM_ENABLE_EXPERIMENTAL
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
-
 module jpt.Camera;
 
 import jpt.Window;
@@ -30,7 +22,7 @@ namespace jpt
 {
 	static constexpr Precision kMoveSpeed   = 2.5f;		// Camera movement speed
 	static constexpr Precision kSensitivity = 0.001f;	// Camera rotation sensitivity
-	static constexpr Precision kPitchLimit  = glm::radians(89.0f);  // Prevent camera flipping
+	static constexpr Precision kPitchLimit  = ToRadians(89.0f);  // Prevent camera flipping
 
 	bool Camera::Init()
 	{
@@ -41,8 +33,8 @@ namespace jpt
 
 		// Init position and rotation
 		m_forward = (Vec3(0.0f) - m_position).Normalized();
-		m_yaw   = std::atan2(m_forward.x, m_forward.z);
-		m_pitch = std::asin(m_forward.y);
+		m_yaw   = Atan2(m_forward.x, m_forward.z);
+		m_pitch = Asin(m_forward.y);
 
 		return true;
 	}
@@ -96,7 +88,7 @@ namespace jpt
 			}
 			else if (state == Input::KeyState::Released)
 			{
-				m_lockMousePos = Vec2i(Constants<glm::i32>::kMax);
+				m_lockMousePos = Vec2i(Constants<int32>::kMax);
 				m_pWindow->SetCursorVisible(true);
 			}
 		}
@@ -105,7 +97,7 @@ namespace jpt
 	void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
 	{
 		// If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
-		if (m_lockMousePos == Vec2i(Constants<glm::i32>::kMax))
+		if (m_lockMousePos == Vec2i(Constants<int32>::kMax))
 		{
 			return;
 		}
@@ -124,9 +116,9 @@ namespace jpt
 		m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
 
 		// Calculate the new forward vector
-		m_forward.x = std::cos(m_pitch) * std::sin(m_yaw);
-		m_forward.y = std::sin(m_pitch);
-		m_forward.z = std::cos(m_pitch) * std::cos(m_yaw);
+		m_forward.x = Cos(m_pitch) * Sin(m_yaw);
+		m_forward.y = Sin(m_pitch);
+		m_forward.z = Cos(m_pitch) * Cos(m_yaw);
 		m_forward.Normalize();
 
 		// Update the last mouse position

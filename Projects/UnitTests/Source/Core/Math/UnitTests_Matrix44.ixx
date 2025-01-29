@@ -18,10 +18,10 @@ import jpt.Utilities;
 bool UnitTests_Matrix44_Translation()
 {
 	Matrix44f translation = Matrix44f::Translation(Vec3f(1.0f, 2.0f, 3.0f));
-	JPT_ENSURE(translation.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 1.0f));
-	JPT_ENSURE(translation.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 2.0f));
-	JPT_ENSURE(translation.m[2] == Vec4f(0.0f, 0.0f, 1.0f, 3.0f));
-	JPT_ENSURE(translation.m[3] == Vec4f(0.0f, 0.0f, 0.0f, 1.0f));
+	JPT_ENSURE(translation.m[0] == Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
+	JPT_ENSURE(translation.m[1] == Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
+	JPT_ENSURE(translation.m[2] == Vec4f(0.0f, 0.0f, 1.0f, 0.0f));
+	JPT_ENSURE(translation.m[3] == Vec4f(1.0f, 2.0f, 3.0f, 1.0f));
 
 	Vec3f translationVector = Vec3f(4.0f, 5.0f, 6.0f);
 	Vec3f translationResult = translation * translationVector;
@@ -54,9 +54,9 @@ bool UnitTests_Matrix44_Rotation()
 	rotation.RotateX(jpt::ToRadians(45.0f));
 	rotation.RotateY(jpt::ToRadians(-29.0f));
 	rotation.RotateZ(jpt::ToRadians(90.0f));
-	JPT_ENSURE(rotation.m[0] == Vec4f(0.000f, -0.875f, -0.485f, 0.000f));
-	JPT_ENSURE(rotation.m[1] == Vec4f(0.707f,  0.343f, -0.618f, 0.000f));
-	JPT_ENSURE(rotation.m[2] == Vec4f(0.707f, -0.343f,  0.618f, 0.000f));
+	JPT_ENSURE(rotation.m[0] == Vec4f(0.000f, -0.707f,  0.707f, 0.000f));
+	JPT_ENSURE(rotation.m[1] == Vec4f(0.875f, -0.343f, -0.343f, 0.000f));
+	JPT_ENSURE(rotation.m[2] == Vec4f(0.485f,  0.618f,  0.618f, 0.000f));
 	JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
 
 	// 3
@@ -64,10 +64,10 @@ bool UnitTests_Matrix44_Rotation()
 	rotation.RotateX(jpt::ToRadians(23.0f));
 	rotation.RotateY(jpt::ToRadians(11.0f));
 	rotation.RotateZ(jpt::ToRadians(50.0f));
-	JPT_ENSURE(rotation.m[0] == Vec4f(0.631f, -0.752f,  0.191f, 0.000f));
-	JPT_ENSURE(rotation.m[1] == Vec4f(0.753f,  0.535f, -0.384f, 0.000f));
-	JPT_ENSURE(rotation.m[2] == Vec4f(0.186f,  0.386f,  0.904f, 0.000f));
-	JPT_ENSURE(rotation.m[3] == Vec4f(0.000f,  0.000f,  0.000f, 1.000f));
+	JPT_ENSURE(rotation.m[0] == Vec4f( 0.631f, -0.657f,  0.412f, 0.000f));
+	JPT_ENSURE(rotation.m[1] == Vec4f( 0.752f,  0.649f, -0.117f, 0.000f));
+	JPT_ENSURE(rotation.m[2] == Vec4f(-0.191f,  0.384f,  0.904f, 0.000f));
+	JPT_ENSURE(rotation.m[3] == Vec4f( 0.000f,  0.000f,  0.000f, 1.000f));
 
 	return true;
 }
