@@ -28,7 +28,7 @@ namespace jpt::Vulkan
 {
 	bool Image_Vulkan::Load(const File::Path& fullPath)
 	{
-		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pRendererVulkan = GetVkRenderer();
 		const CommandPool& memTransferCommandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 
 		int32 texChannels = 0;

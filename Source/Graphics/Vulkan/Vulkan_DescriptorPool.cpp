@@ -20,7 +20,7 @@ namespace jpt::Vulkan
 {
 	bool DescriptorPool::Init()
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		VkDescriptorPoolSize poolSize{};
@@ -45,7 +45,7 @@ namespace jpt::Vulkan
 
 	void DescriptorPool::Shutdown()
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		vkDestroyDescriptorPool(logicalDevice.GetHandle(), m_descriptorPool, nullptr);

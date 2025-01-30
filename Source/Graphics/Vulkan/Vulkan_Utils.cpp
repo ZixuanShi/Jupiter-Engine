@@ -232,7 +232,7 @@ namespace jpt::Vulkan
 
 	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32 texWidth, int32 texHeight, uint32 mipLevels)
 	{
-		Renderer_Vulkan* pRendererVulkan = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pRendererVulkan = GetVkRenderer();
 		PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
 		CommandPool& commandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 

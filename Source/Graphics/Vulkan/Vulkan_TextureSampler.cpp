@@ -19,7 +19,7 @@ namespace jpt::Vulkan
 {
 	bool TextureSampler_Vulkan::Init()
 	{
-		Renderer_Vulkan* pRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pRenderer = GetVkRenderer();
 		PhysicalDevice& physicalDevice = pRenderer->GetPhysicalDevice();
 		LogicalDevice& logicalDevice = pRenderer->GetLogicalDevice();
 
@@ -54,7 +54,7 @@ namespace jpt::Vulkan
 
 	void TextureSampler_Vulkan::Shutdown()
 	{
-		Renderer_Vulkan* pRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pRenderer = GetVkRenderer();
 		LogicalDevice& logicalDevice = pRenderer->GetLogicalDevice();
 
 		vkDestroySampler(logicalDevice.GetHandle(), m_sampler, nullptr);

@@ -19,7 +19,7 @@ namespace jpt::Vulkan
 {
 	bool PipelineLayout::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const DescriptorSetLayout& descriptorSetLayout = pVulkanRenderer->GetDescriptorSetLayout();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 

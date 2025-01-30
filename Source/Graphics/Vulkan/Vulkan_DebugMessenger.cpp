@@ -15,7 +15,7 @@ namespace jpt::Vulkan
 {
 	bool DebugMessenger::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance vkInstance = pVulkanRenderer->GetVkInstance();
 
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vkInstance, "vkCreateDebugUtilsMessengerEXT");
@@ -33,7 +33,7 @@ namespace jpt::Vulkan
 
 	void DebugMessenger::Shutdown()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance vkInstance = pVulkanRenderer->GetVkInstance();
 
 		auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(vkInstance, "vkDestroyDebugUtilsMessengerEXT");

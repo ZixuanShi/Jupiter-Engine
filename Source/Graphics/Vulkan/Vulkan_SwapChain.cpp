@@ -25,7 +25,7 @@ namespace jpt::Vulkan
 {
 	bool SwapChain::Init(Window* pWindow, VkSurfaceKHR surface)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
@@ -105,7 +105,7 @@ namespace jpt::Vulkan
 
 	bool SwapChain::CreateFramebuffers(VkImageView colorImageView, VkImageView depthImageView)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
 

@@ -108,4 +108,6 @@ export namespace jpt
 
 		bool LoadModel();
 	};
+
+	Renderer_Vulkan* GetVkRenderer();
 }

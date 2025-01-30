@@ -23,7 +23,6 @@ export namespace jpt
 	public:
 		bool PreInit();
 		bool Init();
-		void Update(TimePrecision deltaSeconds);
 		void Shutdown();
 
 	public:
@@ -58,4 +57,6 @@ export namespace jpt
 		JPT_ASSERT(m_assets.Has(path));
 		return static_cast<TAsset*>(m_assets[path]);
 	}
+
+	AssetManager* GetAssetManager();
 }

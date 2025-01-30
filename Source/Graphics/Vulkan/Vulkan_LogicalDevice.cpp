@@ -19,7 +19,7 @@ namespace jpt::Vulkan
 {
 	bool LogicalDevice::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 
 		VkDeviceQueueCreateInfo queueCreateInfo = {};
@@ -72,7 +72,7 @@ namespace jpt::Vulkan
 
 	LogicalDevice& LogicalDevice::Get()
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		return pVulkanRenderer->GetLogicalDevice();
 	}
 

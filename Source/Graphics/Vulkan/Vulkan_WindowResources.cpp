@@ -44,7 +44,7 @@ namespace jpt::Vulkan
 {
 	bool WindowResources::Init(Window* pWindow, VkImageView textureImageView)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance instance = pVulkanRenderer->GetVkInstance();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
@@ -111,7 +111,7 @@ namespace jpt::Vulkan
 
 	void WindowResources::Shutdown()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance instance = pVulkanRenderer->GetVkInstance();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
@@ -149,7 +149,7 @@ namespace jpt::Vulkan
 
 	void WindowResources::DrawFrame()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
@@ -201,7 +201,7 @@ namespace jpt::Vulkan
 
 	Optional<uint32> WindowResources::AcquireNextImage()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		uint32 imageIndex = 0;
@@ -223,7 +223,7 @@ namespace jpt::Vulkan
 
 	void WindowResources::Record(uint32 imageIndex)
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
 		const PipelineLayout& pipelineLayout = pVulkanRenderer->GetPipelineLayout();
 		const GraphicsPipeline& graphicsPipeline = pVulkanRenderer->GetGraphicsPipeline();

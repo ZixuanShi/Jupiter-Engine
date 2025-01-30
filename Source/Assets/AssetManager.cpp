@@ -6,6 +6,7 @@ module;
 
 module jpt.Asset.Manager;
 
+import jpt.Application;
 import jpt.Asset;
 
 namespace jpt
@@ -18,10 +19,6 @@ namespace jpt
 	bool AssetManager::Init()
 	{
 		return true;
-	}
-
-	void AssetManager::Update([[maybe_unused]] TimePrecision deltaSeconds)
-	{
 	}
 
 	void AssetManager::Shutdown()
@@ -44,5 +41,10 @@ namespace jpt
 		itr->second->Unload();
 		delete itr->second;
 		m_assets.Erase(path);
+	}
+
+	AssetManager* GetAssetManager()
+	{
+		return GetApplication()->GetAssetManager();
 	}
 }

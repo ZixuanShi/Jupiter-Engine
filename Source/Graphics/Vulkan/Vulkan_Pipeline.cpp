@@ -26,7 +26,7 @@ namespace jpt::Vulkan
 {
 	bool GraphicsPipeline::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const PipelineLayout& pipelineLayout = pVulkanRenderer->GetPipelineLayout();
 		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
 

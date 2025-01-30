@@ -22,7 +22,7 @@ namespace jpt::Vulkan
 {
 	bool PhysicalDevice::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance vkInstance = pVulkanRenderer->GetVkInstance();
 
 		// Find a GPU that supports Vulkan
@@ -246,7 +246,7 @@ namespace jpt::Vulkan
 
 	PhysicalDevice& PhysicalDevice::Get()
 	{
-		Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		return pVulkanRenderer->GetPhysicalDevice();
 	}
 

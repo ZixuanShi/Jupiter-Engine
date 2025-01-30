@@ -29,9 +29,9 @@ bool Entity_Foo::PreInit()
 {
 	JPT_ENSURE(jpt::Entity::PreInit());
 
-	jpt::EventManager::GetInstance().Register<jpt::Event_Key>(this, &Entity_Foo::OnKeyPress);
-	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>(this, &Entity_Foo::OnMouseButtonPress);
-	jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Key>(this, &Entity_Foo::OnKeyPress);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>(this, &Entity_Foo::OnMouseButtonPress);
+	//jpt::EventManager::GetInstance().Register<jpt::Event_Window_Resize>(this, &Entity_Foo::OnWindowResize);
 
 	return true;
 }

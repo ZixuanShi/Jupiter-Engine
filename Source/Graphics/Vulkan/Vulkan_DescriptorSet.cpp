@@ -23,7 +23,7 @@ namespace jpt::Vulkan
 {
 	bool DescriptorSet::Init(const UniformBuffer& uniformBuffer, VkImageView textureImageView)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 		const DescriptorSetLayout& descriptorSetLayout = pVulkanRenderer->GetDescriptorSetLayout();
 		const DescriptorPool& descriptorPool = pVulkanRenderer->GetDescriptorPool();

@@ -18,7 +18,7 @@ namespace jpt::Vulkan
 {
 	bool CommandPool::Init()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
@@ -38,7 +38,7 @@ namespace jpt::Vulkan
 
 	void CommandPool::Shutdown()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		vkDestroyCommandPool(logicalDevice.GetHandle(), m_commandPool, nullptr);

@@ -21,7 +21,7 @@ namespace jpt::Vulkan
 {
 	VkResult Buffer::Create(const VkBufferCreateInfo& createInfo, VkMemoryPropertyFlags properties)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
@@ -51,7 +51,7 @@ namespace jpt::Vulkan
 
 	void Buffer::Copy(VkBuffer srcBuffer, VkDeviceSize size)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const CommandPool& memoryTransferCommandPool = pVulkanRenderer->GetMemoryTransferCommandPool();
 
 		VkCommandBuffer commandBuffer = BeginSingleTimeCommand(memoryTransferCommandPool);
@@ -65,7 +65,7 @@ namespace jpt::Vulkan
 
 	void Buffer::MapMemory(const void* pPtr, VkDeviceSize size)
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		void* pData = nullptr;
@@ -78,7 +78,7 @@ namespace jpt::Vulkan
 
 	void Buffer::Shutdown()
 	{
-		const Renderer_Vulkan* pVulkanRenderer = GetApplication()->GetRenderer<Renderer_Vulkan>();
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
 		vkDestroyBuffer(logicalDevice.GetHandle(), m_buffer, nullptr);

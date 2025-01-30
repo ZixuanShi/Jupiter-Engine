@@ -83,7 +83,7 @@ namespace jpt
 
 		success &= m_descriptorPool.Init();
 
-		success &= GetApplication()->GetAssetManager()->Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png")) != nullptr;
+		success &= GetAssetManager()->Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png")) != nullptr;
 
 		m_pTextureSampler = new TextureSampler_Vulkan();
 		m_pTextureSampler->Init();
@@ -286,5 +286,16 @@ namespace jpt
 		}
 
 		return true;
+	}
+
+	Renderer_Vulkan* GetVkRenderer()
+	{
+		Renderer* pRenderer = GetApplication()->GetRenderer();
+		JPT_ASSERT(pRenderer != nullptr);
+
+		Renderer_Vulkan* pVkRenderer = static_cast<Renderer_Vulkan*>(pRenderer);
+		JPT_ASSERT(pVkRenderer != nullptr);
+
+		return pVkRenderer;
 	}
 }

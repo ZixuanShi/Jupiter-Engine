@@ -125,7 +125,6 @@ namespace jpt
 		m_pRenderer->Update(deltaSeconds);
 		InputManager::GetInstance().Update(deltaSeconds);
 		m_pSceneManager->Update(deltaSeconds);
-		m_pAssetManager->Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
