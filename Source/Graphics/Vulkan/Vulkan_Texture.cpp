@@ -27,7 +27,7 @@ namespace jpt::Vulkan
 	{
 		if (m_imageView != VK_NULL_HANDLE)
 		{
-			Shutdown();
+			Unload();
 		}
 
 		JPT_ASSERT(File::Exists(fullPath));
@@ -45,8 +45,10 @@ namespace jpt::Vulkan
 		return true;
 	}
 
-	void Texture_Vulkan::Shutdown()
+	void Texture_Vulkan::Unload()
 	{
+		LogicalDevice::Get().WaitIdle();
+
 		m_image.Shutdown();
 
 		vkDestroyImageView(LogicalDevice::GetVkDevice(), m_imageView, nullptr);

@@ -30,6 +30,8 @@ import jpt.Input.Manager;
 
 import jpt.Scene.Manager;
 
+import jpt.Asset.Manager;
+
 import jpt.System.Paths;
 import jpt.StopWatch;
 import jpt.ProjectSettings;
@@ -66,6 +68,7 @@ namespace jpt
 		m_pWindowManager = new WindowManager();
 		m_pRenderer      = Renderer_Create(m_graphicsAPI);
 		m_pSceneManager  = new SceneManager();
+		m_pAssetManager  = new AssetManager();
 
 		bool success = true;
 		success &= m_pPlatform->PreInit();
@@ -74,6 +77,7 @@ namespace jpt
 		success &= m_pRenderer->PreInit();
 		success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
 		success &= m_pSceneManager->PreInit();
+		success &= m_pAssetManager->PreInit();
 
 		// Register for events
 		jpt::EventManager::GetInstance().Register<jpt::Event_Key>([this](const jpt::Event_Key& eventKeyboardKeyPress)
@@ -107,6 +111,7 @@ namespace jpt
 		success &= m_pRenderer->Init();
 		success &= InputManager::GetInstance().Init();
 		success &= m_pSceneManager->Init();
+		success &= m_pAssetManager->Init();
 
 		return success;
 	}
@@ -120,12 +125,14 @@ namespace jpt
 		m_pRenderer->Update(deltaSeconds);
 		InputManager::GetInstance().Update(deltaSeconds);
 		m_pSceneManager->Update(deltaSeconds);
+		m_pAssetManager->Update(deltaSeconds);
 	}
 
 	void Application::Shutdown()
 	{
 		ProjectSettings::GetInstance().Save();
 
+		JPT_SHUTDOWN(m_pAssetManager);
 		JPT_SHUTDOWN(m_pSceneManager);
 		InputManager::GetInstance().Shutdown();
 		EventManager::GetInstance().Shutdown();

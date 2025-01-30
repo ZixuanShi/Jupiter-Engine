@@ -21,9 +21,8 @@ export namespace jpt::Vulkan
 		VkImageView m_imageView = VK_NULL_HANDLE;
 
 	public:
-		virtual void Shutdown() override;
-
 		virtual bool Load(const File::Path& fullPath) override;
+		virtual void Unload() override;
 
 	public:
 		VkImageView GetImageView() const { return m_imageView; }

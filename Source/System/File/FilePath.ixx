@@ -35,6 +35,7 @@ export namespace jpt
 			constexpr Path(const wchar_t* path);
 			constexpr Path(const TString& path);
 
+		public:
 			constexpr void Append(const Path& path);
 			constexpr void operator+=(const WString& path);
 
@@ -47,6 +48,9 @@ export namespace jpt
 			constexpr bool EndsWith(const Path& path) const;
 			constexpr Path GetParent() const;
 			constexpr Path SubPath(size_t index, size_t count = npos) const;
+
+		public:
+			constexpr uint64 Hash() const { return m_path.Hash(); }
 
 			String ToCString() const;
 			constexpr const WString& ToWString() const { return m_path; }

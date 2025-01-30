@@ -66,9 +66,6 @@ export namespace jpt
 		VertexBuffer m_vertexBuffer;
 		IndexBuffer m_indexBuffer;
 
-		// Texture
-		Texture_Vulkan m_texture;
-
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:

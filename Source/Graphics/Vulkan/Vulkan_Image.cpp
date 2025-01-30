@@ -72,6 +72,8 @@ namespace jpt::Vulkan
 
 	void Image_Vulkan::Shutdown()
 	{
+		LogicalDevice::Get().WaitIdle();
+
 		vkDestroyImage(LogicalDevice::GetVkDevice(), m_handle, nullptr);
 		vkFreeMemory(LogicalDevice::GetVkDevice(), m_memory, nullptr);
 

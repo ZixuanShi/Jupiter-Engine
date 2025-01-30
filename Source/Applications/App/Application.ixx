@@ -16,6 +16,7 @@ export namespace jpt
 	class Renderer;
 	class Platform;
 	class SceneManager;
+	class AssetManager;
 
 	/** Base abstract class for applications.
 		It holds window, renderer, audio, collision managers, etc.*/
@@ -27,6 +28,7 @@ export namespace jpt
 		WindowManager* m_pWindowManager = nullptr;
 		Renderer*      m_pRenderer      = nullptr;
 		SceneManager*  m_pSceneManager  = nullptr;
+		AssetManager*  m_pAssetManager  = nullptr;
 
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
 		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
@@ -50,6 +52,7 @@ export namespace jpt
 		Framework*     GetFramework()     const { return m_pFramework;     }
 		WindowManager* GetWindowManager() const { return m_pWindowManager; }
 		SceneManager*  GetSceneManager()  const { return m_pSceneManager;  }
+		AssetManager*  GetAssetManager()  const { return m_pAssetManager;  }
 		
 		template<typename TRenderer = Renderer> 
 		requires IsChildOf<TRenderer, Renderer>
