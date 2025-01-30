@@ -21,7 +21,7 @@ export namespace jpt::Vulkan
 		VkDescriptorPool m_descriptorPool = VK_NULL_HANDLE;
 
 	public:
-		bool Init(const UniformBuffer& uniformBuffer, VkImageView textureImageView);
+		bool Init(const UniformBuffer& uniformBuffer);
 		void Shutdown();
 
 	public:

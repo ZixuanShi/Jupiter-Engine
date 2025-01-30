@@ -42,7 +42,7 @@ import jpt.StopWatch;
 
 namespace jpt::Vulkan
 {
-	bool WindowResources::Init(Window* pWindow, VkImageView textureImageView)
+	bool WindowResources::Init(Window* pWindow)
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const VkInstance instance = pVulkanRenderer->GetVkInstance();
@@ -100,7 +100,7 @@ namespace jpt::Vulkan
 		// Descriptor sets
 		for (size_t i = 0; i < kMaxFramesInFlight; ++i)
 		{
-			if (!m_descriptorSets[i].Init(m_uniformBuffers[i], textureImageView))
+			if (!m_descriptorSets[i].Init(m_uniformBuffers[i]))
 			{
 				return false;
 			}

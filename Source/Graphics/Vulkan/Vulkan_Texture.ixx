@@ -25,6 +25,7 @@ export namespace jpt::Vulkan
 		virtual void Unload() override;
 
 	public:
+		const Image_Vulkan& GetImage() const { return m_image; }
 		VkImageView GetImageView() const { return m_imageView; }
 
 	private:

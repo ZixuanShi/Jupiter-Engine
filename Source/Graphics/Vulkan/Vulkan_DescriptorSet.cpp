@@ -11,17 +11,22 @@ module jpt.Vulkan.DescriptorSet;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
+import jpt.Asset.Manager;
+
 import jpt.Graphics.Constants;
 import jpt.Texture.Sampler;
 
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
+import jpt.Vulkan.Texture;
 import jpt.Vulkan.Texture.Sampler;
+
+import jpt.File.Path.Utils;
 
 namespace jpt::Vulkan
 {
-	bool DescriptorSet::Init(const UniformBuffer& uniformBuffer, VkImageView textureImageView)
+	bool DescriptorSet::Init(const UniformBuffer& uniformBuffer)
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
@@ -51,9 +56,10 @@ namespace jpt::Vulkan
 		TextureSampler_Vulkan* pTextureSamplerVulkan = static_cast<TextureSampler_Vulkan*>(pTextureSampler);
 		VkSampler textureSampler = pTextureSamplerVulkan->GetHandle();
 
+		const Texture_Vulkan* pTexture = AssetManager::GetInstance().Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = textureImageView;
+		imageInfo.imageView = pTexture->GetImageView();
 		imageInfo.sampler = textureSampler;
 
 		VkWriteDescriptorSet descriptorWrites[2];

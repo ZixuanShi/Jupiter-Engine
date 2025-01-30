@@ -164,8 +164,7 @@ namespace jpt
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
 
-		const Texture_Vulkan* pTexture = AssetManager::GetInstance().Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
-		resources.Init(pWindow, pTexture->GetImageView());
+		resources.Init(pWindow);
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
 	}

@@ -54,7 +54,7 @@ export namespace jpt
 			bool m_shouldRecreateSwapChain = false;
 
 		public:
-			bool Init(Window* pWindow, VkImageView textureImageView);
+			bool Init(Window* pWindow);
 			void Shutdown();
 
 			void DrawFrame();
