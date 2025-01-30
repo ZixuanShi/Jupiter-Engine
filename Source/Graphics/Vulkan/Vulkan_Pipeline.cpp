@@ -34,8 +34,11 @@ namespace jpt::Vulkan
 		VertexShader vertexShader;
 		PixelShader pixelShader;
 
-		VkPipelineShaderStageCreateInfo vertexShaderStageInfo = vertexShader.Load("_Baked/Jupiter_Common/Shaders/sample.vs.spv");
-		VkPipelineShaderStageCreateInfo pixelShaderStageInfo = pixelShader.Load("_Baked/Jupiter_Common/Shaders/sample.ps.spv");
+		JPT_ASSERT(vertexShader.Load("_Baked/Jupiter_Common/Shaders/sample.vs.spv"));
+		JPT_ASSERT(pixelShader.Load("_Baked/Jupiter_Common/Shaders/sample.ps.spv"));
+
+		VkPipelineShaderStageCreateInfo vertexShaderStageInfo = vertexShader.GetStageCreateInfo();
+		VkPipelineShaderStageCreateInfo pixelShaderStageInfo = pixelShader.GetStageCreateInfo();
 
 		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 

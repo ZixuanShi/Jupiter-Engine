@@ -19,7 +19,7 @@ import jpt.File.Path.Utils;
 
 namespace jpt::Vulkan
 {
-	VkPipelineShaderStageCreateInfo Shader::Load(const File::Path& path)
+	bool Shader::Load(const File::Path& path)
 	{
 		const File::Path shaderPath = File::FixDependencies(path);
 		JPT_ASSERT(File::Exists(shaderPath), "Failed finding shader in %ls, did you compile shaders from Engine's Scripts/CompileShaders.bat?", shaderPath.ConstBuffer());
@@ -34,10 +34,10 @@ namespace jpt::Vulkan
 		if (vkCreateShaderModule(LogicalDevice::GetVkDevice(), &createInfo, nullptr, &m_shaderModule) != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to create shader module from %ls", shaderPath.ConstBuffer());
-			return VkPipelineShaderStageCreateInfo{};
+			return false;
 		}
 
-		return GetStageCreateInfo();
+		return true;
 	}
 
 	VkPipelineShaderStageCreateInfo Shader::GetStageCreateInfo()

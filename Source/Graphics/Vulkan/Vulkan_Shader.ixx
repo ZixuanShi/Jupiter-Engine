@@ -6,22 +6,20 @@ module;
 
 export module jpt.Vulkan.Shader;
 
+import jpt.Asset;
 import jpt.File.Path;
 
 export namespace jpt::Vulkan
 {
 	/** Base class for shaders */
-	class Shader
+	class Shader : public Asset
 	{
 	protected:
 		VkShaderModule m_shaderModule = VK_NULL_HANDLE;
 
 	public:
-		virtual ~Shader() = default;
-
-	public:
-		VkPipelineShaderStageCreateInfo Load(const File::Path& path);
-		void Unload();
+		virtual bool Load(const File::Path& path) override;
+		virtual void Unload() override;
 
 	protected:
 		virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo();

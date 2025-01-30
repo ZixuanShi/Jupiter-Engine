@@ -170,7 +170,7 @@ namespace jpt
 															   state,
 															   modifiers };
 
-			EventManager::GetInstance().Send(eventMouseButtonPress);
+			EventManager::GetInstance().Queue(eventMouseButtonPress);
 		}
 
 		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
@@ -178,7 +178,7 @@ namespace jpt
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			const Event_Mouse_Move eventMouseMove = { pWindow, x, y };
 
-			EventManager::GetInstance().Send(eventMouseMove);
+			EventManager::GetInstance().Queue(eventMouseMove);
 		}
 
 		void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset)
@@ -186,7 +186,7 @@ namespace jpt
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			const Event_Mouse_Scroll eventMouseScroll = { pWindow, xOffset, yOffset };
 
-			EventManager::GetInstance().Send(eventMouseScroll);
+			EventManager::GetInstance().Queue(eventMouseScroll);
 		}
 
 		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
@@ -202,7 +202,7 @@ namespace jpt
 			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 			const Event_Key eventKeyboardKeyPress = { pWindow, keyCode, keyState, modifiers };
 
-			EventManager::GetInstance().Send(eventKeyboardKeyPress);
+			EventManager::GetInstance().Queue(eventKeyboardKeyPress);
 		}
 	}
 }
