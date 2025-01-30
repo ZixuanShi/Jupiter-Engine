@@ -42,9 +42,4 @@ namespace jpt
 		delete itr->second;
 		m_assets.Erase(path);
 	}
-
-	AssetManager* GetAssetManager()
-	{
-		return GetApplication()->GetAssetManager();
-	}
 }

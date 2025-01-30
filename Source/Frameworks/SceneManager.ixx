@@ -17,6 +17,8 @@ export namespace jpt
 	/** Manages the scenes in the game as a finite state machine */
 	class SceneManager
 	{
+		JPT_DECLARE_SINGLETON(SceneManager);
+
 	private:
 		SceneGraph* m_pCurrentScene = nullptr;	/**< The current scene. Can be nullptr if IS_EDITOR, the Jupiter Editor will still able to run non-scene related tools */
 		SceneGraph* m_pNextScene = nullptr;

@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
 export module jpt.Asset.Manager;
@@ -17,6 +18,8 @@ export namespace jpt
 
 	class AssetManager
 	{
+		JPT_DECLARE_SINGLETON(AssetManager);
+
 	private:
 		HashMap<File::Path, Asset*> m_assets;
 
@@ -57,6 +60,4 @@ export namespace jpt
 		JPT_ASSERT(m_assets.Has(path));
 		return static_cast<TAsset*>(m_assets[path]);
 	}
-
-	AssetManager* GetAssetManager();
 }

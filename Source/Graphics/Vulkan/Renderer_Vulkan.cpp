@@ -83,7 +83,7 @@ namespace jpt
 
 		success &= m_descriptorPool.Init();
 
-		success &= GetAssetManager()->Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png")) != nullptr;
+		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png")) != nullptr;
 
 		m_pTextureSampler = new TextureSampler_Vulkan();
 		m_pTextureSampler->Init();
@@ -164,7 +164,7 @@ namespace jpt
 	{
 		WindowResources& resources = m_windowResources.EmplaceBack();
 
-		const Texture_Vulkan* pTexture = GetApplication()->GetAssetManager()->Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
+		const Texture_Vulkan* pTexture = AssetManager::GetInstance().Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
 		resources.Init(pWindow, pTexture->GetImageView());
 
 		JPT_INFO("Window registered with Vulkan renderer: %lu", pWindow);
