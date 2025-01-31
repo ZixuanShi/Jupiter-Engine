@@ -56,7 +56,7 @@ namespace jpt::Vulkan
 		TextureSampler_Vulkan* pTextureSamplerVulkan = static_cast<TextureSampler_Vulkan*>(pTextureSampler);
 		VkSampler textureSampler = pTextureSamplerVulkan->GetHandle();
 
-		const Texture_Vulkan* pTexture = AssetManager::GetInstance().Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png"));
+		const Texture_Vulkan* pTexture = AssetManager::GetInstance().Get<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Cat.png"));
 		VkDescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imageInfo.imageView = pTexture->GetImageView();

@@ -83,7 +83,7 @@ namespace jpt
 
 		success &= m_descriptorPool.Init();
 
-		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Viking_Room.png")) != nullptr;
+		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Cat.png")) != nullptr;
 
 		m_pTextureSampler = new TextureSampler_Vulkan();
 		m_pTextureSampler->Init();
@@ -233,7 +233,7 @@ namespace jpt
 
 	bool Renderer_Vulkan::LoadMesh()
 	{
-		File::Path meshPath = File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_VikingRoom.obj");
+		File::Path meshPath = File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_Cat.obj");
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
