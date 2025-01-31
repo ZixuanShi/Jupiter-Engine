@@ -360,8 +360,6 @@ namespace jpt::Vulkan
 
 		const StopWatch::Point currentTime = StopWatch::Now();
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
-
-		// Rotation
 		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
@@ -370,16 +368,8 @@ namespace jpt::Vulkan
 		ubo.model.Scale(1.3f);
 
 		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
-		ubo.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
 
-		// TODO: make model per object transform
-		//ubo.model = glm::mat4(1.0f);
-		//ubo.model = glm::rotate(ubo.model, rotation, glm::vec3(0.0f, -1.0f, 0.0f));
-		//ubo.model = glm::translate(ubo.model, glm::vec3(0.0f, 0.0f, -2.5f));
-		//ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		////ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
-		//ubo.proj = glm::perspective(glm::radians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 10.0f);
-
+		ubo.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
 		ubo.proj[1][1] *= -1;
 
 		UniformBuffer& uniformBuffer = m_uniformBuffers[m_currentFrame];
