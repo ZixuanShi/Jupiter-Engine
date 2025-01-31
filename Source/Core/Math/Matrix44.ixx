@@ -19,9 +19,9 @@ import jpt.Utilities;
 import jpt.String;
 import jpt.ToString;
 
-namespace jpt
+export namespace jpt
 {
-	export template<Numeric T>
+	template<Numeric T>
 	struct TMatrix44
 	{
 	public:
@@ -41,19 +41,24 @@ namespace jpt
 		                    T m20, T m21, T m22, T m23,
 		                    T m30, T m31, T m32, T m33);
 
-		constexpr TMatrix44<T> operator*(const TMatrix44<T>& rhs) const;
-		constexpr TVector3<T> operator*(const TVector3<T>& rhs) const;
-		constexpr Vector4<T> operator*(const Vector4<T>& rhs) const;
+	public:
+		constexpr TMatrix44<T>  operator* (const TMatrix44<T>& rhs) const;
 		constexpr TMatrix44<T>& operator*=(const TMatrix44<T>& rhs);
+		constexpr Vector3<T>    operator* (const Vector3<T>&  rhs) const;
+		constexpr Vector4<T>    operator* (const Vector4<T>&   rhs) const;
 
+		constexpr       Vector4<T>& operator[](size_t index)       { return m[index]; }
+		constexpr const Vector4<T>& operator[](size_t index) const { return m[index]; }
+
+	public:
 		constexpr T Determinant() const;
 
-		constexpr static TMatrix44<T> Translation(const TVector3<T>& v);
+		constexpr static TMatrix44<T> Translation(const Vector3<T>& v);
 		constexpr static TMatrix44<T> Translation(T x, T y, T z);
 		constexpr static TMatrix44<T> RotationX(T radians);
 		constexpr static TMatrix44<T> RotationY(T radians);
 		constexpr static TMatrix44<T> RotationZ(T radians);
-		constexpr static TMatrix44<T> Scaling(const TVector3<T>& v);
+		constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static TMatrix44<T> Scaling(T x, T y, T z);
 		constexpr static TMatrix44<T> Transposed(const TMatrix44<T>& matrix44);
 
@@ -61,37 +66,41 @@ namespace jpt
 		constexpr static TMatrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
 
 		/** Creates a view matrix for a camera, defining how the world is oriented relative to the camera's position */
-		constexpr static TMatrix44<T> LookAt(const TVector3<T>& eye, const TVector3<T>& center, const TVector3<T>& up);
+		constexpr static TMatrix44<T> LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up);
 
 		/** Converts 3D coordinates into 2D screen coordinates */
 		constexpr static TMatrix44<T> Perspective(T fov, T aspect, T near, T far);
 
-		constexpr void Translate(const TVector3<T>& v);
+		constexpr void Translate(const Vector3<T>& v);
 		constexpr void Translate(T x, T y, T z);
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
 		constexpr void RotateZ(T radians);
-		constexpr void Scale(const TVector3<T>& v);
+		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Scale(T x, T y, T z);
 		constexpr void Transpose();
 		constexpr void Inverse();
 		constexpr bool IsOrthogonal() const;
 
 		// Euler Conversion
-		constexpr TVector3<T> ToEulerDegrees() const;
-		constexpr TVector3<T> ToEulerRadians() const;
-		constexpr static TMatrix44<T> FromDegrees(const TVector3<T>& degrees);
+		constexpr Vector3<T> ToEulerDegrees() const;
+		constexpr Vector3<T> ToEulerRadians() const;
+		constexpr static TMatrix44<T> FromDegrees(const Vector3<T>& degrees);
 		constexpr static TMatrix44<T> FromDegrees(T pitch, T yaw, T roll);
-		constexpr static TMatrix44<T> FromRadians(const TVector3<T>& radians);
+		constexpr static TMatrix44<T> FromRadians(const Vector3<T>& radians);
 		constexpr static TMatrix44<T> FromRadians(T pitch, T yaw, T roll);
 
-		// Accessors
-		constexpr       Vector4<T>& operator[](size_t index)       { return m[index]; }
-		constexpr const Vector4<T>& operator[](size_t index) const { return m[index]; }
-
 		constexpr String ToString() const;
-		constexpr bool operator==(const TMatrix44<T>& rhs) const;
 	};
+
+	template<Numeric T>
+	constexpr bool operator==(const TMatrix44<T>& lhs, const TMatrix44<T>& rhs)
+	{
+		return lhs.m[0] == rhs.m[0] &&
+			   lhs.m[1] == rhs.m[1] &&
+			   lhs.m[2] == rhs.m[2] &&
+			   lhs.m[3] == rhs.m[3];
+	}
 
 	template<Numeric T>
 	constexpr TMatrix44<T>::TMatrix44()
@@ -139,10 +148,10 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TMatrix44<T>::operator*(const TVector3<T>& rhs) const
+	constexpr Vector3<T> TMatrix44<T>::operator*(const Vector3<T>& rhs) const
 	{
 		Vector4<T> result = *this * Vector4<T>(rhs, 1);
-		return TVector3<T>(result.x, result.y, result.z);
+		return Vector3<T>(result.x, result.y, result.z);
 	}
 
 	template<Numeric T>
@@ -199,7 +208,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::Translation(const TVector3<T>& v)
+	constexpr TMatrix44<T> TMatrix44<T>::Translation(const Vector3<T>& v)
 	{
 		return TMatrix44<T>(  1,   0,   0, 0,
 			                  0,   1,   0, 0,
@@ -250,7 +259,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::Scaling(const TVector3<T>& v)
+	constexpr TMatrix44<T> TMatrix44<T>::Scaling(const Vector3<T>& v)
 	{
 		return TMatrix44<T>(v.x,   0,   0, 0,
 			                 0, v.y,   0, 0,
@@ -295,16 +304,16 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::LookAt(const TVector3<T>& eye, const TVector3<T>& center, const TVector3<T>& up)
+	constexpr TMatrix44<T> TMatrix44<T>::LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up)
 	{
 		// Calcualte the forward vector
-		const TVector3<T> forward = (center - eye).Normalized();
+		const Vector3<T> forward = (center - eye).Normalized();
 
 		// Calculate the right vector
-		const TVector3<T> right = forward.Cross(up).Normalized();
+		const Vector3<T> right = forward.Cross(up).Normalized();
 
 		// Calculate the up vector
-		const TVector3<T> newUp = right.Cross(forward);
+		const Vector3<T> newUp = right.Cross(forward);
 
 		// Create the view matrix
 		TMatrix44<T> result = TMatrix44<T>::Identity();
@@ -343,15 +352,15 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TMatrix44<T>::ToEulerDegrees() const
+	constexpr Vector3<T> TMatrix44<T>::ToEulerDegrees() const
 	{
 		return ToDegrees(ToEulerRadians());
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TMatrix44<T>::ToEulerRadians() const
+	constexpr Vector3<T> TMatrix44<T>::ToEulerRadians() const
 	{
-		TVector3<T> euler;
+		Vector3<T> euler;
 
 		switch (MathSettings::RotationOrder)
 		{
@@ -454,7 +463,7 @@ namespace jpt
 			default:
 			{
 				JPT_ASSERT(false, "Invalid Rotation Order");
-				return TVector3<T>();
+				return Vector3<T>();
 			}
 		}
 
@@ -462,20 +471,20 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromDegrees(const TVector3<T>& degrees)
+	constexpr TMatrix44<T> TMatrix44<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		const TVector3<T> radians = ToRadians(degrees);
+		const Vector3<T> radians = ToRadians(degrees);
 		return FromRadians(radians);
 	}
 
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::FromDegrees(T pitch, T yaw, T roll)
 	{
-		return FromDegrees(TVector3<T>(pitch, yaw, roll));
+		return FromDegrees(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(const TVector3<T>& radians)
+	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(const Vector3<T>& radians)
 	{
 		// Calculate the cosine and sine of the angles
 		const T cx = Cos(radians.x);  // pitch
@@ -595,11 +604,11 @@ namespace jpt
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(T pitch, T yaw, T roll)
 	{
-		return FromRadians(TVector3<T>(pitch, yaw, roll));
+		return FromRadians(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
-	constexpr void TMatrix44<T>::Translate(const TVector3<T>& v)
+	constexpr void TMatrix44<T>::Translate(const Vector3<T>& v)
 	{
 		*this *= Translation(v);
 	}
@@ -629,7 +638,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TMatrix44<T>::Scale(const TVector3<T>& v)
+	constexpr void TMatrix44<T>::Scale(const Vector3<T>& v)
 	{
 		*this *= Scaling(v);
 	}
@@ -716,15 +725,6 @@ namespace jpt
 			                                                                                                                           m[1][0], m[1][1], m[1][2], m[1][3],
 			                                                                                                                           m[2][0], m[2][1], m[2][2], m[2][3],
 			                                                                                                                           m[3][0], m[3][1], m[3][2], m[3][3]);
-	}
-
-	template<Numeric T>
-	constexpr bool TMatrix44<T>::operator==(const TMatrix44<T>& rhs) const
-	{
-		return m[0] == rhs.m[0] &&
-			   m[1] == rhs.m[1] &&
-			   m[2] == rhs.m[2] &&
-			   m[3] == rhs.m[3];
 	}
 }
 

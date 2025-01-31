@@ -15,7 +15,7 @@ namespace jpt
 	class KDTree3
 	{
 	private:
-		using Node = jpt_private::BinaryTreeNode<TVector3<T>>;
+		using Node = jpt_private::BinaryTreeNode<Vector3<T>>;
 
 	private:
 		Node* m_pRoot = nullptr;
@@ -23,12 +23,12 @@ namespace jpt
 
 	public:
 		constexpr KDTree3() = default;
-		constexpr KDTree3(const DynamicArray<TVector3<T>>& points);
+		constexpr KDTree3(const DynamicArray<Vector3<T>>& points);
 		constexpr ~KDTree3();
 
 		// Modifiers
-		constexpr void Add(const TVector3<T>& point);
-		constexpr void Erase(const TVector3<T>& point);
+		constexpr void Add(const Vector3<T>& point);
+		constexpr void Erase(const Vector3<T>& point);
 		constexpr void Clear();
 
 		// Capacity
@@ -36,18 +36,18 @@ namespace jpt
 		constexpr bool IsEmpty() const;
 
 		// Building
-		constexpr void Build(const DynamicArray<TVector3<T>>& points);
+		constexpr void Build(const DynamicArray<Vector3<T>>& points);
 
 		// Searching
-		constexpr bool Has(const TVector3<T>& point) const;
-		constexpr DynamicArray<TVector3<T>> FindNearest(const TVector3<T>& point, T threshold) const;
+		constexpr bool Has(const Vector3<T>& point) const;
+		constexpr DynamicArray<Vector3<T>> FindNearest(const Vector3<T>& point, T threshold) const;
 
 	private:
 		// Building
-		constexpr Node* InternalBuild(const DynamicArray<TVector3<T>>& points, size_t begin, size_t end, size_t depth);
+		constexpr Node* InternalBuild(const DynamicArray<Vector3<T>>& points, size_t begin, size_t end, size_t depth);
 
 		// Searching
-		void RecurFindNearest(Node* pNode, const TVector3<T>& point, T threshold, size_t depth, DynamicArray<TVector3<T>>& result) const;
+		void RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, size_t depth, DynamicArray<Vector3<T>>& result) const;
 
 		// Traversal
 		template<typename TFunc>
@@ -55,7 +55,7 @@ namespace jpt
 	};
 
 	template<Floating T>
-	constexpr KDTree3<T>::KDTree3(const DynamicArray<TVector3<T>>& points)
+	constexpr KDTree3<T>::KDTree3(const DynamicArray<Vector3<T>>& points)
 	{
 		Build(points);
 	}
@@ -67,7 +67,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr void KDTree3<T>::Add(const TVector3<T>& point)
+	constexpr void KDTree3<T>::Add(const Vector3<T>& point)
 	{
 		Node* pNode = m_pRoot;
 		size_t depth = 0;
@@ -110,7 +110,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr void KDTree3<T>::Erase(const TVector3<T>& point)
+	constexpr void KDTree3<T>::Erase(const Vector3<T>& point)
 	{
 		Node* pNode = m_pRoot;
 		Node* pParent = nullptr;
@@ -256,7 +256,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr void KDTree3<T>::Build(const DynamicArray<TVector3<T>>& points)
+	constexpr void KDTree3<T>::Build(const DynamicArray<Vector3<T>>& points)
 	{
 		Clear();
 		m_pRoot = InternalBuild(points, 0, points.Count(), 0);
@@ -264,7 +264,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr bool KDTree3<T>::Has(const TVector3<T>& point) const
+	constexpr bool KDTree3<T>::Has(const Vector3<T>& point) const
 	{
 		Node* pNode = m_pRoot;
 		size_t depth = 0;
@@ -294,15 +294,15 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr DynamicArray<TVector3<T>> KDTree3<T>::FindNearest(const TVector3<T>& point, T threshold) const
+	constexpr DynamicArray<Vector3<T>> KDTree3<T>::FindNearest(const Vector3<T>& point, T threshold) const
 	{
-		DynamicArray<TVector3<T>> result;
+		DynamicArray<Vector3<T>> result;
 		RecurFindNearest(m_pRoot, point, threshold, 0, result);
 		return result;
 	}
 
 	template<Floating T>
-	constexpr typename KDTree3<T>::Node* KDTree3<T>::InternalBuild(const DynamicArray<TVector3<T>>& points, size_t begin, size_t end, size_t depth)
+	constexpr typename KDTree3<T>::Node* KDTree3<T>::InternalBuild(const DynamicArray<Vector3<T>>& points, size_t begin, size_t end, size_t depth)
 	{
 		if (begin >= end)
 		{
@@ -313,8 +313,8 @@ namespace jpt
 		size_t mid = begin + (end - begin) / 2;
 
 		// Sort the points based on the axis so that we can find the median
-		DynamicArray<TVector3<T>> sortedpoints = points;
-		jpt::Sort(sortedpoints, [axis](const TVector3<T>& a, const TVector3<T>& b)
+		DynamicArray<Vector3<T>> sortedpoints = points;
+		jpt::Sort(sortedpoints, [axis](const Vector3<T>& a, const Vector3<T>& b)
 			{
 				return a[axis] < b[axis];
 			});
@@ -329,7 +329,7 @@ namespace jpt
 	}
 
 	template<Floating T>
-	void KDTree3<T>::RecurFindNearest(Node* pNode, const TVector3<T>& point, T threshold, size_t depth, DynamicArray<TVector3<T>>& result) const
+	void KDTree3<T>::RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, size_t depth, DynamicArray<Vector3<T>>& result) const
 	{
 		if (pNode == nullptr)
 		{

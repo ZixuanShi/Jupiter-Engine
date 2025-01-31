@@ -19,23 +19,23 @@ namespace jpt
 	struct TTriangle3
 	{
 	public:
-		TVector3<T> a = static_cast<TVector3<T>>(0);
-		TVector3<T> b = static_cast<TVector3<T>>(0);
-		TVector3<T> c = static_cast<TVector3<T>>(0);
+		Vector3<T> a = static_cast<Vector3<T>>(0);
+		Vector3<T> b = static_cast<Vector3<T>>(0);
+		Vector3<T> c = static_cast<Vector3<T>>(0);
 
 	public:
 		constexpr TTriangle3() = default;
-		constexpr TTriangle3(const TVector3<T>& _a, const TVector3<T>& _b, const TVector3<T>& _c);
+		constexpr TTriangle3(const Vector3<T>& _a, const Vector3<T>& _b, const Vector3<T>& _c);
 
 		constexpr T Perimeter() const;
 		constexpr T Area() const;
-		constexpr TVector3<T> Normal() const;
-		constexpr T Distance(const TVector3<T>& point) const;
-		constexpr bool Inside(const TVector3<T>& point) const;
+		constexpr Vector3<T> Normal() const;
+		constexpr T Distance(const Vector3<T>& point) const;
+		constexpr bool Inside(const Vector3<T>& point) const;
 	};
 
 	template<Numeric T>
-	constexpr TTriangle3<T>::TTriangle3(const TVector3<T>& _a, const TVector3<T>& _b, const TVector3<T>& _c)
+	constexpr TTriangle3<T>::TTriangle3(const Vector3<T>& _a, const Vector3<T>& _b, const Vector3<T>& _c)
 		: a(_a), b(_b), c(_c)
 	{
 	}
@@ -43,47 +43,47 @@ namespace jpt
 	template<Numeric T>
 	constexpr T TTriangle3<T>::Perimeter() const
 	{
-		return TVector3<T>::Distance(a, b) + TVector3<T>::Distance(b, c) + TVector3<T>::Distance(c, a);
+		return Vector3<T>::Distance(a, b) + Vector3<T>::Distance(b, c) + Vector3<T>::Distance(c, a);
 	}
 
 	template<Numeric T>
 	constexpr T TTriangle3<T>::Area() const
 	{
 		const T s = Perimeter() * static_cast<T>(0.5);
-		return std::sqrt(s * (s - TVector3<T>::Distance(a, b)) * (s - TVector3<T>::Distance(b, c)) * (s - TVector3<T>::Distance(c, a)));
+		return std::sqrt(s * (s - Vector3<T>::Distance(a, b)) * (s - Vector3<T>::Distance(b, c)) * (s - Vector3<T>::Distance(c, a)));
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TTriangle3<T>::Normal() const
+	constexpr Vector3<T> TTriangle3<T>::Normal() const
 	{
 		// Compute the edges of the triangle
-		const TVector3 edge1 = b - a;
-		const TVector3 edge2 = c - a;
+		const Vector3 edge1 = b - a;
+		const Vector3 edge2 = c - a;
 
 		// Compute the normal of the triangle
-		TVector3 normal = edge1.Cross(edge2);
+		Vector3 normal = edge1.Cross(edge2);
 		normal.Normalize();
 		return normal;
 	}
 
 	template<Numeric T>
-	constexpr T TTriangle3<T>::Distance(const TVector3<T>& point) const
+	constexpr T TTriangle3<T>::Distance(const Vector3<T>& point) const
 	{
-		const TVector3 normal = Normal();
-		const TVector3 aToP = point - a;
+		const Vector3 normal = Normal();
+		const Vector3 aToP = point - a;
 		const T distance = Abs(aToP.Dot(normal));
 
 		return distance;
 	}
 
 	template<Numeric T>
-	constexpr bool TTriangle3<T>::Inside(const TVector3<T>& point) const
+	constexpr bool TTriangle3<T>::Inside(const Vector3<T>& point) const
 	{
 		// https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
 
-		const TVector3 BA = b - a;
-		const TVector3 CA = c - a;
-		const TVector3 PA = point - a;
+		const Vector3 BA = b - a;
+		const Vector3 CA = c - a;
+		const Vector3 PA = point - a;
 
 		const T dot00 = BA.Dot(BA);
 		const T dot01 = BA.Dot(CA);

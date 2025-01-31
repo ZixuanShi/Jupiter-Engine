@@ -12,19 +12,19 @@ namespace jpt
 	struct TLineSegment3
 	{
 	public:
-		TVector3<T> a;
-		TVector3<T> b;
+		Vector3<T> a;
+		Vector3<T> b;
 
 	public:
 		constexpr T Length() const noexcept;
 
-		constexpr T Distance(const TVector3<T>& point) const noexcept;
-		constexpr T Dist(const TVector3<T>& point) const noexcept;
+		constexpr T Distance(const Vector3<T>& point) const noexcept;
+		constexpr T Dist(const Vector3<T>& point) const noexcept;
 
-		constexpr TVector3<T> Direction() const noexcept;
-		constexpr TVector3<T> Dir() const noexcept;
+		constexpr Vector3<T> Direction() const noexcept;
+		constexpr Vector3<T> Dir() const noexcept;
 
-		constexpr TVector3<T> Project(const TVector3<T>& point) const noexcept;
+		constexpr Vector3<T> Project(const Vector3<T>& point) const noexcept;
 
 		constexpr bool Intersects(const TLineSegment3<T>& other) const noexcept;
 	};
@@ -36,36 +36,36 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T TLineSegment3<T>::Distance(const TVector3<T>& point) const noexcept
+	constexpr T TLineSegment3<T>::Distance(const Vector3<T>& point) const noexcept
 	{
-		const TVector3<T> pointOnLine = Project(point);
-		const TVector3<T> pointToLine = point - pointOnLine;
+		const Vector3<T> pointOnLine = Project(point);
+		const Vector3<T> pointToLine = point - pointOnLine;
 		return pointToLine.Length();
 	}
 
 	template<Numeric T>
-	constexpr T TLineSegment3<T>::Dist(const TVector3<T>& point) const noexcept
+	constexpr T TLineSegment3<T>::Dist(const Vector3<T>& point) const noexcept
 	{
 		return Distance(point);
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TLineSegment3<T>::Direction() const noexcept
+	constexpr Vector3<T> TLineSegment3<T>::Direction() const noexcept
 	{
 		return (b - a).Normalize();
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TLineSegment3<T>::Dir() const noexcept
+	constexpr Vector3<T> TLineSegment3<T>::Dir() const noexcept
 	{
 		return Direction();
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TLineSegment3<T>::Project(const TVector3<T>& point) const noexcept
+	constexpr Vector3<T> TLineSegment3<T>::Project(const Vector3<T>& point) const noexcept
 	{
-		const TVector3<T> ab = b - a;
-		const TVector3<T> ap = point - a;
+		const Vector3<T> ab = b - a;
+		const Vector3<T> ap = point - a;
 		T t = ab.Dot(ap) / ab.Dot(ab);
 		ClampTo(t, static_cast<T>(0), static_cast<T>(1));
 		return a + ab * t;
@@ -74,16 +74,16 @@ namespace jpt
 	template<Numeric T>
 	constexpr bool TLineSegment3<T>::Intersects(const TLineSegment3<T>& other) const noexcept
 	{
-		const TVector3<T> p1 = a;
-		const TVector3<T> q1 = b;
-		const TVector3<T> p2 = other.a;
-		const TVector3<T> q2 = other.b;
+		const Vector3<T> p1 = a;
+		const Vector3<T> q1 = b;
+		const Vector3<T> p2 = other.a;
+		const Vector3<T> q2 = other.b;
 
-		const TVector3<T> r = q1 - p1;
-		const TVector3<T> s = q2 - p2;
+		const Vector3<T> r = q1 - p1;
+		const Vector3<T> s = q2 - p2;
 
 		const T rxs = r.Cross(s);
-		const TVector3<T> qp = p2 - p1;
+		const Vector3<T> qp = p2 - p1;
 		const T t = qp.Cross(s) / rxs;
 		const T u = qp.Cross(r) / rxs;
 

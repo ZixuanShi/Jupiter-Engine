@@ -13,64 +13,64 @@ namespace jpt
 	struct TRay3
 	{
 	public:
-		TVector3<T> origin;
-		TVector3<T> direction;
+		Vector3<T> origin;
+		Vector3<T> direction;
 
 	public:
 		constexpr TRay3() noexcept = default;
-		constexpr TRay3(const TVector3<T>& origin, const TVector3<T>& direction) noexcept;
+		constexpr TRay3(const Vector3<T>& origin, const Vector3<T>& direction) noexcept;
 
-		constexpr TVector3<T> GetPoint(T t) const noexcept;
-		constexpr T Distance(const TVector3<T>& point) const noexcept;
-		constexpr TVector3<T> ClosestPoint(const TVector3<T>& point) const noexcept;
+		constexpr Vector3<T> GetPoint(T t) const noexcept;
+		constexpr T Distance(const Vector3<T>& point) const noexcept;
+		constexpr Vector3<T> ClosestPoint(const Vector3<T>& point) const noexcept;
 	};
 
 	template<Numeric T>
-	constexpr TRay3<T>::TRay3(const TVector3<T>& origin, const TVector3<T>& direction) noexcept
+	constexpr TRay3<T>::TRay3(const Vector3<T>& origin, const Vector3<T>& direction) noexcept
 		: origin(origin)
 		, direction(direction)
 	{
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TRay3<T>::GetPoint(T t) const noexcept
+	constexpr Vector3<T> TRay3<T>::GetPoint(T t) const noexcept
 	{
 		return origin + direction * t;
 	}
 
 	template<Numeric T>
-	constexpr T TRay3<T>::Distance(const TVector3<T>& point) const noexcept
+	constexpr T TRay3<T>::Distance(const Vector3<T>& point) const noexcept
 	{
-		const T dot = TVector3<T>::Dot(point - origin, direction);
+		const T dot = Vector3<T>::Dot(point - origin, direction);
 		T distance = kInvalidValue<T>;
 
 		// If the point is behind the ray's origin, return the distance to the origin
 		if (dot < 0)
 		{
-			distance = TVector3<T>::Distance(point, origin);
+			distance = Vector3<T>::Distance(point, origin);
 		}
 		else
 		{
 			// Otherwise, return the distance to the point on the ray closest to the point
-			const TVector3<T> projection = origin + direction * (dot / direction.Length2());
-			distance = TVector3<T>::Distance(point, projection);
+			const Vector3<T> projection = origin + direction * (dot / direction.Length2());
+			distance = Vector3<T>::Distance(point, projection);
 		}
 
 		return distance;
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TRay3<T>::ClosestPoint(const TVector3<T>& point) const noexcept
+	constexpr Vector3<T> TRay3<T>::ClosestPoint(const Vector3<T>& point) const noexcept
 	{
-		const TVector3<T> op = point - origin;
-		const T t = TVector3<T>::Dot(op, direction);
+		const Vector3<T> op = point - origin;
+		const T t = Vector3<T>::Dot(op, direction);
 		if (t <= 0)
 		{
 			return origin;
 		}
 		else
 		{
-			const T d = TVector3<T>::Dot(direction, direction);
+			const T d = Vector3<T>::Dot(direction, direction);
 			if (t >= d)
 			{
 				return origin + direction;

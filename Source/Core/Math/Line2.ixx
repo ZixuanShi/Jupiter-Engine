@@ -29,7 +29,7 @@ namespace jpt
 		constexpr TLine2(const TVector2<T>& a, const TVector2<T>& b);
 
 		/** ax + by + c = 0 */
-		constexpr TVector3<T> Coefficients() const;
+		constexpr Vector3<T> Coefficients() const;
 
 		/** distance from point to line */
 		constexpr T Distance(const TVector2<T>& point) const;
@@ -48,12 +48,12 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TLine2<T>::Coefficients() const
+	constexpr Vector3<T> TLine2<T>::Coefficients() const
 	{
 		const T x = a.y - b.y;
 		const T y = b.x - a.x;
 		const T z = a.x * b.y - a.y * b.x;
-		return TVector3<T>(x, y, z);
+		return Vector3<T>(x, y, z);
 	}
 
 	template<Numeric T>
@@ -61,7 +61,7 @@ namespace jpt
 	{
 		// d = |Ax0 + By0 + C| / sqrt(A^2 + B^2)
 
-		const TVector3<T> coefficients = Coefficients();
+		const Vector3<T> coefficients = Coefficients();
 		
 		const T numerator = Abs(coefficients.x * point.x + coefficients.y * point.y + coefficients.z);
 		const T denominator = Sqrt(coefficients.x * coefficients.x + coefficients.y * coefficients.y);
@@ -79,7 +79,7 @@ namespace jpt
 	template<Numeric T>
 	constexpr TVector2<T> TLine2<T>::Project(const TVector2<T>& point) const
 	{
-		const TVector3<T> coefficients = Coefficients();
+		const Vector3<T> coefficients = Coefficients();
 
 		const T denominator = coefficients.x * coefficients.x + coefficients.y * coefficients.y;
 		JPT_ASSERT(denominator != 0.0f);

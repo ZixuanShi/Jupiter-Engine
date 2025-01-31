@@ -108,11 +108,11 @@ bool UnitTests_Quaternion_EulerAngles()
 
 bool UnitTests_Quaternion_ToMatrix()
 {
-	Matrix44f matrix = Matrix44f::FromDegrees(180, -60, 22);
+	Matrix44 matrix = Matrix44::FromDegrees(180, -60, 22);
 	Quaternion quaternion = Quaternion::FromDegrees(180, -60, 22);
 	JPT_ENSURE(matrix == quaternion.ToMatrix());
 
-	matrix = Matrix44f::FromDegrees(90, 45, 90);
+	matrix = Matrix44::FromDegrees(90, 45, 90);
 	quaternion = Quaternion::FromDegrees(90, 45, 90);
 	JPT_ENSURE(matrix == quaternion.ToMatrix());
 

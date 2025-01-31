@@ -168,7 +168,7 @@ static bool MouseButtonPress()
 {
 	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>([](const jpt::Event_Mouse_Button& eventMouseButtonPress)
 		{
-			JPT_LOG("Mouse button press: %s, x: %i, y: %i", eventMouseButtonPress.GetButton().ToString().ConstBuffer(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
+			JPT_LOG("Mouse button press: %s, x: %f, y: %f", eventMouseButtonPress.GetButton().ToString().ConstBuffer(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
 		});
 
 	return true;

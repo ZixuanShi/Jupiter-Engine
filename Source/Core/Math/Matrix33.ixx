@@ -22,14 +22,14 @@ namespace jpt
 	struct TMatrix33
 	{
 	public:
-		TVector3<T> m[3];
+		Vector3<T> m[3];
 
 	public:
 		static consteval TMatrix33 Identity() { return TMatrix33(); }
 
 	public:
 		constexpr TMatrix33();
-		constexpr TMatrix33(const TVector3<T>& xAxis, const TVector3<T>& yAxis, const TVector3<T>& zAxis);
+		constexpr TMatrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis);
 		constexpr TMatrix33(T m00, T m01, T m02,
 						   T m10, T m11, T m12,
 						   T m20, T m21, T m22);
@@ -70,7 +70,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix33<T>::TMatrix33(const TVector3<T>& xAxis, const TVector3<T>& yAxis, const TVector3<T>& zAxis)
+	constexpr TMatrix33<T>::TMatrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis)
 		: m{ xAxis, yAxis, zAxis }
 	{
 	}

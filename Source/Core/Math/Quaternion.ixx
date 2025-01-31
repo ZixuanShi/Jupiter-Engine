@@ -69,14 +69,14 @@ namespace jpt
 
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
-		constexpr static TQuaternion FromAxisAngle(const TVector3<T>& axisAngle, T radians);
+		constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axisAngle, T radians);
 
 		// Euler Conversion
-		constexpr TVector3<T> ToEulerRadians() const;
-		constexpr TVector3<T> ToEulerDegrees() const;
-		constexpr static TQuaternion FromRadians(const TVector3<T>& radians);
+		constexpr Vector3<T> ToEulerRadians() const;
+		constexpr Vector3<T> ToEulerDegrees() const;
+		constexpr static TQuaternion FromRadians(const Vector3<T>& radians);
 		constexpr static TQuaternion FromRadians(T pitch, T yaw, T roll);
-		constexpr static TQuaternion FromDegrees(const TVector3<T>& degrees);
+		constexpr static TQuaternion FromDegrees(const Vector3<T>& degrees);
 		constexpr static TQuaternion FromDegrees(T pitch, T yaw, T roll);
 
 		constexpr bool operator==(const TQuaternion& rhs) const;
@@ -285,21 +285,21 @@ namespace jpt
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateX(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Right(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Right(), radians);
 		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateY(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Up(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Up(), radians);
 		*this *= rotation;
 	}
 
 	template<Numeric T>
 	constexpr void TQuaternion<T>::RotateZ(T radians)
 	{
-		const TQuaternion<T> rotation = FromAxisAngle(TVector3<T>::Forward(), radians);
+		const TQuaternion<T> rotation = FromAxisAngle(Vector3<T>::Forward(), radians);
 		*this *= rotation;
 	}
 
@@ -337,7 +337,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const TVector3<T>& axisAngle, T radians)
+	constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
 	{
 		JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
 
@@ -354,9 +354,9 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TQuaternion<T>::ToEulerRadians() const
+	constexpr Vector3<T> TQuaternion<T>::ToEulerRadians() const
 	{
-		TVector3<T> euler;
+		Vector3<T> euler;
 
 		// Convert quaternion to rotation matrix elements for easier conversion
 		const T xx = x * x;
@@ -481,7 +481,7 @@ namespace jpt
 			default:
 			{
 				JPT_ASSERT(false, "Invalid Rotation Order");
-				return TVector3<T>();
+				return Vector3<T>();
 			}
 		}
 
@@ -489,13 +489,13 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector3<T> TQuaternion<T>::ToEulerDegrees() const
+	constexpr Vector3<T> TQuaternion<T>::ToEulerDegrees() const
 	{
 		return ToDegrees(ToEulerRadians());
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(const TVector3<T>& radians)
+	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(const Vector3<T>& radians)
 	{
 		// Calculate Half angles
 		const T cx = Cos(radians.x * static_cast<T>(0.5));
@@ -572,20 +572,20 @@ namespace jpt
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromRadians(T pitch, T yaw, T roll)
 	{
-		return FromRadians(TVector3<T>(pitch, yaw, roll));
+		return FromRadians(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const TVector3<T>& degrees)
+	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(const Vector3<T>& degrees)
 	{
-		const TVector3<T> radians = ToRadians(degrees);
+		const Vector3<T> radians = ToRadians(degrees);
 		return FromRadians(radians);
 	}
 
 	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::FromDegrees(T pitch, T yaw, T roll)
 	{
-		return FromDegrees(TVector3<T>(pitch, yaw, roll));
+		return FromDegrees(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
