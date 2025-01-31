@@ -26,6 +26,11 @@ export namespace jpt::File
 	/** @return		true if path exists in system. Could be either file or directory */
 	bool Exists(const Path& absoluteFullPath)
 	{
+		if (absoluteFullPath.IsEmpty()) [[unlikely]]
+		{
+			return false;
+		}
+
 		std::error_code errorCode;
 		const bool result = std::filesystem::exists(absoluteFullPath.ConstBuffer(), errorCode);
 		if (errorCode) [[unlikely]]
@@ -37,24 +42,34 @@ export namespace jpt::File
 	}
 
 	/** Creates a directory and all necessary parent folders */
-	void MakeDirectory(const Path& absoluteFullPath)
+	bool MakeDirectory(const Path& absoluteFullPath)
 	{
 		std::error_code errorCode;
 		std::filesystem::create_directories(absoluteFullPath.ConstBuffer(), errorCode);
 		if (errorCode) [[unlikely]]
 		{
 			JPT_ERROR("Error creating directory (%ls): %s", absoluteFullPath.ConstBuffer(), errorCode.message().c_str());
+			return false;
 		}
+
+		return true;
 	}
 
 	/** Ensures path's parent folder exists */
-	void EnsureParentDirExists(const Path& absoluteFullPath)
+	bool EnsureParentDirExists(const Path& absoluteFullPath)
 	{
+		if (absoluteFullPath.IsEmpty()) [[unlikely]]
+		{
+			return false;
+		}
+
 		const Path parentPath = absoluteFullPath.GetParent();
 		if (!Exists(parentPath)) [[unlikely]]
 		{
-			MakeDirectory(parentPath);
+			return MakeDirectory(parentPath);
 		}
+
+		return true;
 	}
 
 	/** Deletes either file or directory */
@@ -115,7 +130,11 @@ export namespace jpt::File
 	/** Appends content to file on disk. Write if not present */
 	bool AppendTextFile(const Path& path, const char* data, size_t sizeInBytes, SerializerMode mode = SerializerMode::Append)
 	{
-		EnsureParentDirExists(path);
+		if(!EnsureParentDirExists(path))[[unlikely]]
+		{
+			return false;
+		}
+
 		Serializer serializer(path.ConstBuffer(), mode);
 
 		if (!serializer.IsOpen()) [[unlikely]]
