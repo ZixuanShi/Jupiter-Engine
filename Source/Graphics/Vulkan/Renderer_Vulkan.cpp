@@ -75,8 +75,8 @@ namespace jpt
 		success &= m_pipelineLayout.Init();
 		success &= m_graphicsPipeline.Init();
 
-		// Model
-		success &= LoadModel();
+		// Mesh
+		success &= LoadMesh();
 
 		success &= m_vertexBuffer.Init();
 		success &= m_indexBuffer.Init();
@@ -231,23 +231,23 @@ namespace jpt
 		return true;
 	}
 
-	bool Renderer_Vulkan::LoadModel()
+	bool Renderer_Vulkan::LoadMesh()
 	{
-		File::Path modelPath = File::FixDependencies("Assets/Jupiter_Common/Models/Model_Viking_Room.obj");
+		File::Path meshPath = File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_VikingRoom.obj");
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 		std::string warn, err;
 
-		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, modelPath.ToCString().ConstBuffer()))
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, meshPath.ToCString().ConstBuffer()))
 		{
-			JPT_ERROR("Failed to load model: %s", err.c_str());
+			JPT_ERROR("Failed to load mesh: %s", err.c_str());
 			return false;
 		}
 
 		{
-			JPT_SCOPED_TIMING_PROFILER("Load model");
+			JPT_SCOPED_TIMING_PROFILER("Load Mesh");
 
 			//std::unordered_map<Vertex, uint32> uniqueVertices;
 			HashMap<Vertex, uint32> uniqueVertices;
