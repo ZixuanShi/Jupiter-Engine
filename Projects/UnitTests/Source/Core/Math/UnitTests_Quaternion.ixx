@@ -47,16 +47,16 @@ bool UnitTests_Quaternion_Rotate()
 	JPT_ENSURE(quaternion == Quaternion(0.653f, -0.271f, 0.271f, 0.653f));
 
 	// 3
-	Quaternion quaternion2 = Quaternion::FromDegrees(90, 0, 45);
+	Quaternion quaternion2 = Quaternion::Rotation(jpt::ToRadians(Vec3(90, 0, 45)));
 	JPT_ENSURE(quaternion2 == Quaternion(0.653f, -0.271f, 0.271f, 0.653f));
 	JPT_ENSURE(quaternion2 == quaternion);
 
 	// 4
-	Quaternion quaternion3 = Quaternion::FromAxisAngle(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
+	Quaternion quaternion3 = Quaternion::Rotation(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion3 == Quaternion(0.000f, 0.383f, 0.000f, 0.924f));
 
 	// 5
-	Quaternion quaternion4 = Quaternion::FromAxisAngle(Vec3f(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
+	Quaternion quaternion4 = Quaternion::Rotation(Vec3f(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion4 == Quaternion(0.707f, 0, 0, 0.707f));
 
 	//JPT_LOG(quaternion);
@@ -80,10 +80,10 @@ bool UnitTests_Quaternion_Multiplication()
 
 bool UnitTests_Quaternion_AxisAngles()
 {
-	Quaternion quaternion = Quaternion::FromAxisAngle(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
+	Quaternion quaternion = Quaternion::Rotation(Vec3f(0, 1, 0), jpt::ToRadians(45.0f));
 	JPT_ENSURE(quaternion == Quaternion(0.0f,0.383f, 0.0f, 0.924f));
 
-	quaternion = Quaternion::FromAxisAngle(Vec3f(1, 0, 0), jpt::ToRadians(90.0f));
+	quaternion = Quaternion::Rotation(Vec3f(1, 0, 0), jpt::ToRadians(90.0f));
 	JPT_ENSURE(quaternion == Quaternion(0.707f, 0, 0, 0.707f));
 
 	return true;
@@ -93,15 +93,15 @@ bool UnitTests_Quaternion_EulerAngles()
 {
 	{
 		Vec3f degrees = Vec3f(89, 45, 90);
-		Quaternion quaternion = Quaternion::FromDegrees(degrees);
+		Quaternion quaternion = Quaternion::Rotation(jpt::ToRadians(degrees));
 		JPT_ENSURE(quaternion == Quaternion(0.651f, -0.265f, 0.276f, 0.656f));
-		JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
+		JPT_ENSURE(jpt::ToDegrees(quaternion.GetRotation()) == degrees);
 	}
 	{
 		Vec3f degrees = Vec3f(12, 136, 25);
-		Quaternion quaternion = Quaternion::FromDegrees(degrees);
+		Quaternion quaternion = Quaternion::Rotation(jpt::ToRadians(degrees));
 		JPT_ENSURE(quaternion == Quaternion(0.238f, 0.892f, -0.014f, 0.385f));
-		JPT_ENSURE(quaternion.ToEulerDegrees() == degrees);
+		JPT_ENSURE(jpt::ToDegrees(quaternion.GetRotation()) == degrees);
 	}
 	return true;
 }
