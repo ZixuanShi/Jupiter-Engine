@@ -16,9 +16,9 @@ import jpt.String;
 import jpt.ToString;
 import jpt.Utilities;
 
-namespace jpt
+export namespace jpt
 {
-	export template<Numeric T>
+	template<Numeric T>
 	struct TMatrix33
 	{
 	public:
@@ -34,32 +34,43 @@ namespace jpt
 						   T m10, T m11, T m12,
 						   T m20, T m21, T m22);
 
+	public:
 		constexpr TVector2<T> operator*(TVector2<T> v) const;
 		constexpr TMatrix33<T> operator*(const TMatrix33<T>& rhs) const;
 		constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
 
-		constexpr T Determinant() const;
-
+	public:
+		// Translation & Position
 		constexpr static TMatrix33 Translation(TVector2<T> v);
+		constexpr void Translate(TVector2<T> v);
+
+		// Rotation & Orientation
 		constexpr static TMatrix33 Rotation(T radians);
-		constexpr static TMatrix33 RotationDegrees(T degrees);
+		constexpr void Rotate(T radians);
+
+		// Scaling & Size
 		constexpr static TMatrix33 Scaling(TVector2<T> v);
 		constexpr static TMatrix33 Scaling(T scalar);
-		constexpr static TMatrix33 Orthographic(T left, T right, T bottom, T top, T near, T far);
-
-		constexpr void Translate(TVector2<T> v);
-		constexpr void Rotate(T radians);
-		constexpr void RotateDegrees(T degrees);
 		constexpr void Scale(TVector2<T> v);
 		constexpr void Scale(T scalar);
+
+		// Utils
+		constexpr static TMatrix33 Orthographic(T left, T right, T bottom, T top, T near, T far);
 		constexpr void Transpose();
 		constexpr void Inverse();
 		constexpr bool IsOrthogonal() const;
-
-		constexpr bool operator==(const TMatrix33<T>& rhs) const;
+		constexpr T Determinant() const;
 
 		constexpr String ToString() const;
 	};
+
+	template<Numeric T>
+	constexpr bool operator==(const TMatrix33<T>& lhs, const TMatrix33<T>& rhs)
+	{
+		return lhs.m[0] == rhs.m[0] &&
+			   lhs.m[1] == rhs.m[1] &&
+			   lhs.m[2] == rhs.m[2];
+	}
 
 	template<Numeric T>
 	constexpr TMatrix33<T>::TMatrix33()
@@ -149,12 +160,6 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix33<T> TMatrix33<T>::RotationDegrees(T degrees)
-	{
-		return Rotation(ToRadians(degrees));
-	}
-
-	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::Scaling(TVector2<T> v)
 	{
 		return TMatrix33<T>(v.x,   0, 0,
@@ -199,12 +204,6 @@ namespace jpt
 	constexpr void TMatrix33<T>::Rotate(T radians)
 	{
 		*this *= Rotation(radians);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix33<T>::RotateDegrees(T degrees)
-	{
-		*this *= RotationDegrees(degrees);
 	}
 
 	template<Numeric T>
@@ -262,14 +261,6 @@ namespace jpt
 		return AreValuesClose(dotX, static_cast<T>(0)) &&
 			   AreValuesClose(dotY, static_cast<T>(0)) &&
 			   AreValuesClose(dotZ, static_cast<T>(0));
-	}
-
-	template<Numeric T>
-	constexpr bool TMatrix33<T>::operator==(const TMatrix33<T>& rhs) const
-	{
-		return m[0] == rhs.m[0] && 
-			   m[1] == rhs.m[1] && 
-			   m[2] == rhs.m[2];
 	}
 
 	template<Numeric T>
