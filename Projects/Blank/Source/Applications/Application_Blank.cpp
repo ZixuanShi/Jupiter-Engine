@@ -36,26 +36,6 @@ bool Application_Blank::PreInit()
 		{
 		});
 
-
-	Matrix44 m = Matrix44::Identity();
-
-	// Translation
-	m.Translate(1, 2, 3);
-	m.Translate(1, 2, 3);
-	JPT_LOG(m.GetPosition());
-
-	// Rotation
-	m.RotateX(jpt::ToRadians(-90.0f));
-	m.RotateY(jpt::ToRadians(45.0f));
-	m.RotateZ(jpt::ToRadians(-65.0f));
-	JPT_LOG(jpt::ToDegrees(m.GetRotation()));
-
-	// Scale
-	m.Scale(4, 5, 6);
-	JPT_LOG(m.GetScale());
-
-	Quaternion q = Quaternion::Identity();
-
 	return true;
 }
 
