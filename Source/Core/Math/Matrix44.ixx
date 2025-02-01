@@ -58,16 +58,16 @@ export namespace jpt
 		constexpr void Translate(T x, T y, T z);
 
 		// Rotation & Orientation
-		constexpr static TMatrix44<T> Rotation(const Vector3<T>& radians);
-		constexpr static TMatrix44<T> Rotation(T pitch, T yaw, T roll);
 		constexpr static TMatrix44<T> RotationX(T radians);
 		constexpr static TMatrix44<T> RotationY(T radians);
 		constexpr static TMatrix44<T> RotationZ(T radians);
-		constexpr void Rotate(const Vector3<T>& radians);
-		constexpr void Rotate(T pitch, T yaw, T roll);
+		constexpr static TMatrix44<T> Rotation(const Vector3<T>& radians);
+		constexpr static TMatrix44<T> Rotation(T pitch, T yaw, T roll);
 		constexpr void RotateX(T radians);
 		constexpr void RotateY(T radians);
 		constexpr void RotateZ(T radians);
+		constexpr void Rotate(const Vector3<T>& radians);
+		constexpr void Rotate(T pitch, T yaw, T roll);
 
 		// Scaling & Size
 		constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
@@ -178,38 +178,6 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T TMatrix44<T>::Determinant() const
-	{
-		const T a = m[0][0];
-		const T b = m[0][1];
-		const T c = m[0][2];
-		const T d = m[0][3];
-		const T e = m[1][0];
-		const T f = m[1][1];
-		const T g = m[1][2];
-		const T h = m[1][3];
-		const T i = m[2][0];
-		const T j = m[2][1];
-		const T k = m[2][2];
-		const T l = m[2][3];
-		const T m = m[3][0];
-		const T n = m[3][1];
-		const T o = m[3][2];
-		const T p = m[3][3];
-
-		const T det = a * f * k * p + a * g * l * n + a * h * j * o +
-					  b * e * l * p + b * g * i * p + b * h * k * n +
-					  c * e * j * p + c * f * l * m + c * h * i * m +
-					  d * e * k * n + d * f * i * o + d * g * j * m -
-					  a * f * l * o - a * g * j * p - a * h * k * m -
-					  b * e * k * o - b * g * l * m - b * h * i * p -
-					  c * e * l * n - c * f * i * p - c * h * j * m -
-					  d * e * j * n - d * f * k * m - d * g * i * l;
-
-		return det;
-	}
-
-	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Translation(const Vector3<T>& v)
 	{
 		return TMatrix44<T>(  1,   0,   0, 0,
@@ -228,14 +196,26 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr void TMatrix44<T>::Translate(const Vector3<T>& v)
+	{
+		*this *= Translation(v);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Translate(T x, T y, T z)
+	{
+		*this *= Translation(x, y, z);
+	}
+
+	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::RotationX(T radians)
 	{
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
-		return TMatrix44<T>(1,  0,    0,  0,
-			                0, cos, -sin, 0,
-			                0, sin,  cos, 0,
-			                0,   0,    0, 1);
+		return TMatrix44<T>(1,   0,    0,  0,
+			                0,  cos,  sin, 0,
+			                0, -sin,  cos, 0,
+			                0,    0,    0, 1);
 	}
 
 	template<Numeric T>
@@ -243,10 +223,10 @@ export namespace jpt
 	{
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
-		return TMatrix44<T>( cos, 0, sin, 0,
-			                   0, 1,   0, 0,
-			                -sin, 0, cos, 0,
-			                   0, 0,   0, 1);
+		return TMatrix44<T>( cos, 0, -sin, 0,
+			                   0, 1,    0, 0,
+			                 sin, 0,  cos, 0,
+			                   0, 0,    0, 1);
 	}
 
 	template<Numeric T>
@@ -254,10 +234,40 @@ export namespace jpt
 	{
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
-		return TMatrix44<T>(cos, -sin, 0, 0,
-			                sin,  cos, 0, 0,
-			                  0,    0, 1, 0,
-			                  0,    0, 0, 1);
+		return TMatrix44<T>( cos,  sin, 0, 0,
+			                -sin,  cos, 0, 0,
+			                   0,    0, 1, 0,
+			                   0,    0, 0, 1);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix44<T> TMatrix44<T>::Rotation(const Vector3<T>& radians)
+	{
+		return RotationX(radians.x) * RotationY(radians.y) * RotationZ(radians.z);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix44<T> TMatrix44<T>::Rotation(T pitch, T yaw, T roll)
+	{
+		return RotationX(pitch) * RotationY(yaw) * RotationZ(roll);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::RotateX(T radians)
+	{
+		*this *= RotationX(radians);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::RotateY(T radians)
+	{
+		*this *= RotationY(radians);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::RotateZ(T radians)
+	{
+		*this *= RotationZ(radians);
 	}
 
 	template<Numeric T>
@@ -291,11 +301,34 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr void TMatrix44<T>::Scale(const Vector3<T>& v)
+	{
+		*this *= Scaling(v);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Scale(T x, T y, T z)
+	{
+		*this *= Scaling(x, y, z);
+	}
+
+	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Transposed(const TMatrix44<T>& matrix44)
 	{
 		TMatrix44<T> result = matrix44;
 		result.Transpose();
 		return result;
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Transpose()
+	{
+		Swap(m[0][1], m[1][0]);
+		Swap(m[0][2], m[2][0]);
+		Swap(m[0][3], m[3][0]);
+		Swap(m[1][2], m[2][1]);
+		Swap(m[1][3], m[3][1]);
+		Swap(m[2][3], m[3][2]);
 	}
 
 	template<Numeric T>
@@ -366,183 +399,6 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::Rotation(const Vector3<T>& radians)
-	{
-		// Calculate the cosine and sine of the angles
-		const T cx = Cos(radians.x);  // pitch
-		const T cy = Cos(radians.y);  // yaw
-		const T cz = Cos(radians.z);  // roll
-		const T sx = Sin(radians.x);
-		const T sy = Sin(radians.y);
-		const T sz = Sin(radians.z);
-
-		// Apply rotation based on order
-		switch (MathSettings::RotationOrder)
-		{
-			case RotationOrder::XZY:
-			{
-				const T m00 = cy * cz;
-				const T m01 = -cy * sz * cx + sy * sx;
-				const T m02 = cy * sz * sx + sy * cx;
-				const T m10 = sz;
-				const T m11 = cx * cz;
-				const T m12 = -sx * cz;
-				const T m20 = -sy * cz;
-				const T m21 = sy * sz * cx + cy * sx;
-				const T m22 = -sy * sz * sx + cy * cx;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			case RotationOrder::XYZ:
-			{
-				const T m00 = cy * cz;
-				const T m01 = -cy * sz;
-				const T m02 = sy;
-				const T m10 = sx * sy * cz + cx * sz;
-				const T m11 = -sx * sy * sz + cx * cz;
-				const T m12 = -sx * cy;
-				const T m20 = -cx * sy * cz + sx * sz;
-				const T m21 = cx * sy * sz + sx * cz;
-				const T m22 = cx * cy;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			[[likely]] case RotationOrder::YXZ:
-			{
-				const T m00 = cy * cz + sy * sx * sz;
-				const T m01 = -cy * sz + sy * sx * cz;
-				const T m02 = sy * cx;
-				const T m10 = cx * sz;
-				const T m11 = cx * cz;
-				const T m12 = -sx;
-				const T m20 = -sy * cz + cy * sx * sz;
-				const T m21 = sy * sz + cy * sx * cz;
-				const T m22 = cy * cx;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			case RotationOrder::YZX:
-			{
-				const T m00 = cy * cz;
-				const T m01 = -sz;
-				const T m02 = sy;
-				const T m10 = cx * cy * sz + sx * sy;
-				const T m11 = cx * cz;
-				const T m12 = -cx * sy * sz + sx * cy;
-				const T m20 = sx * cy * sz - cx * sy;
-				const T m21 = sx * cz;
-				const T m22 = -sx * sy * sz - cx * cy;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			case RotationOrder::ZXY:
-			{
-				const T m00 = cy * cz - sy * sx * sz;
-				const T m01 = -cx * sz;
-				const T m02 = sy * cz + cy * sx * sz;
-				const T m10 = cy * sz + sy * sx * cz;
-				const T m11 = cx * cz;
-				const T m12 = sy * sz - cy * sx * cz;
-				const T m20 = -sy * cx;
-				const T m21 = sx;
-				const T m22 = cy * cx;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			case RotationOrder::ZYX:
-			{
-				const T m00 = cy * cz;
-				const T m01 = -sz;
-				const T m02 = sy * cz;
-				const T m10 = cy * sz * cx + sy * sx;
-				const T m11 = cz * cx;
-				const T m12 = sy * sz * cx - cy * sx;
-				const T m20 = cy * sz * sx - sy * cx;
-				const T m21 = cz * sx;
-				const T m22 = sy * sz * sx + cy * cx;
-				return TMatrix44<T>(m00, m01, m02, 0,
-					                m10, m11, m12, 0,
-					                m20, m21, m22, 0,
-					                  0,   0,   0, 1);
-			}
-			default:
-			{
-				JPT_ASSERT(false, "Invalid Rotation Order");
-				return TMatrix44<T>();
-			}
-		}
-	}
-
-	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::Rotation(T pitch, T yaw, T roll)
-	{
-		return Rotation(Vector3<T>(pitch, yaw, roll));
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::Translate(const Vector3<T>& v)
-	{
-		*this *= Translation(v);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::Translate(T x, T y, T z)
-	{
-		*this *= Translation(x, y, z);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::RotateX(T radians)
-	{
-		*this *= RotationX(radians);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::RotateY(T radians)
-	{
-		*this *= RotationY(radians);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::RotateZ(T radians)
-	{
-		*this *= RotationZ(radians);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::Scale(const Vector3<T>& v)
-	{
-		*this *= Scaling(v);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::Scale(T x, T y, T z)
-	{
-		*this *= Scaling(x, y, z);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix44<T>::Transpose()
-	{
-		Swap(m[0][1], m[1][0]);
-		Swap(m[0][2], m[2][0]);
-		Swap(m[0][3], m[3][0]);
-		Swap(m[1][2], m[2][1]);
-		Swap(m[1][3], m[3][1]);
-		Swap(m[2][3], m[3][2]);
-	}
-
-	template<Numeric T>
 	constexpr void TMatrix44<T>::Inverse()
 	{
 		const T det = Determinant();
@@ -598,6 +454,38 @@ export namespace jpt
 		return AreValuesClose(dotX, static_cast<T>(0)) &&
 			   AreValuesClose(dotY, static_cast<T>(0)) &&
 			   AreValuesClose(dotZ, static_cast<T>(0));
+	}
+
+	template<Numeric T>
+	constexpr T TMatrix44<T>::Determinant() const
+	{
+		const T a = m[0][0];
+		const T b = m[0][1];
+		const T c = m[0][2];
+		const T d = m[0][3];
+		const T e = m[1][0];
+		const T f = m[1][1];
+		const T g = m[1][2];
+		const T h = m[1][3];
+		const T i = m[2][0];
+		const T j = m[2][1];
+		const T k = m[2][2];
+		const T l = m[2][3];
+		const T m = m[3][0];
+		const T n = m[3][1];
+		const T o = m[3][2];
+		const T p = m[3][3];
+
+		const T det = a * f * k * p + a * g * l * n + a * h * j * o +
+			b * e * l * p + b * g * i * p + b * h * k * n +
+			c * e * j * p + c * f * l * m + c * h * i * m +
+			d * e * k * n + d * f * i * o + d * g * j * m -
+			a * f * l * o - a * g * j * p - a * h * k * m -
+			b * e * k * o - b * g * l * m - b * h * i * p -
+			c * e * l * n - c * f * i * p - c * h * j * m -
+			d * e * j * n - d * f * k * m - d * g * i * l;
+
+		return det;
 	}
 
 	template<Numeric T>
