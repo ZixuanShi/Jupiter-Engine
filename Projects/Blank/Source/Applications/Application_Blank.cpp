@@ -36,6 +36,9 @@ bool Application_Blank::PreInit()
 		{
 		});
 
+	Matrix44 m = Matrix44::Identity();
+	Quaternion q = Quaternion::Identity();
+
 	return true;
 }
 

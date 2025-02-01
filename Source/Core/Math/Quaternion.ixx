@@ -53,13 +53,13 @@ export namespace jpt
 		constexpr T Length() const;
 		constexpr T Length2() const;
 		constexpr T Dot(const TQuaternion& rhs) const;
-		constexpr void Normalize();
-		constexpr void Conjugate();
-		constexpr void Inverse();
 
 		constexpr TQuaternion Normalized() const;
 		constexpr TQuaternion Conjugated() const;
 		constexpr TQuaternion Inversed() const;
+		constexpr void Normalize();
+		constexpr void Conjugate();
+		constexpr void Inverse();
 
 		constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
 		constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
@@ -67,12 +67,7 @@ export namespace jpt
 		constexpr TQuaternion Slerp(const TQuaternion& rhs, T t) const;
 
 		constexpr static TQuaternion Rotation(const Vector3<T>& axisAngle, T radians);
-		constexpr static TQuaternion Rotation(const Vector3<T>& radians);
-		constexpr static TQuaternion Rotation(T pitch, T yaw, T roll);
-		constexpr void RotateX(T radians);
-		constexpr void RotateY(T radians);
-		constexpr void RotateZ(T radians);
-		constexpr Vector3<T> GetRotation() const;	// Returns pitch, yaw, roll in radians
+		constexpr void Rotate(const Vector3<T>& axisAngle, T radians);
 
 		constexpr String ToString() const;
 	};
@@ -257,27 +252,6 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TQuaternion<T>::RotateX(T radians)
-	{
-		const TQuaternion<T> rotation = Rotation(Vector3<T>::Right(), radians);
-		*this *= rotation;
-	}
-
-	template<Numeric T>
-	constexpr void TQuaternion<T>::RotateY(T radians)
-	{
-		const TQuaternion<T> rotation = Rotation(Vector3<T>::Up(), radians);
-		*this *= rotation;
-	}
-
-	template<Numeric T>
-	constexpr void TQuaternion<T>::RotateZ(T radians)
-	{
-		const TQuaternion<T> rotation = Rotation(Vector3<T>::Forward(), radians);
-		*this *= rotation;
-	}
-
-	template<Numeric T>
 	constexpr TQuaternion<T> TQuaternion<T>::Lerp(const TQuaternion& start, const TQuaternion& end, T t)
 	{
 		const T t1 = static_cast<T>(1) - t;
@@ -328,219 +302,9 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> TQuaternion<T>::GetRotation() const
+	constexpr void TQuaternion<T>::Rotate(const Vector3<T>& axisAngle, T radians)
 	{
-		Vector3<T> euler;
-
-		// Convert quaternion to rotation matrix elements for easier conversion
-		const T xx = x * x;
-		const T xy = x * y;
-		const T xz = x * z;
-		const T xw = x * w;
-		const T yy = y * y;
-		const T yz = y * z;
-		const T yw = y * w;
-		const T zz = z * z;
-		const T zw = z * w;
-
-		const T m11 = 1 - 2 * (yy + zz);
-		const T m12 = 2 * (xy - zw);
-		const T m13 = 2 * (xz + yw);
-		const T m21 = 2 * (xy + zw);
-		const T m22 = 1 - 2 * (xx + zz);
-		const T m23 = 2 * (yz - xw);
-		const T m31 = 2 * (xz - yw);
-		const T m32 = 2 * (yz + xw);
-		const T m33 = 1 - 2 * (xx + yy);
-
-		switch (MathSettings::RotationOrder)
-		{
-			case RotationOrder::XYZ:
-			{
-				euler.y = std::asin(Clamp(m13, static_cast<T>(-1), static_cast<T>(1)));
-
-				if (std::abs(m13) < static_cast<T>(0.9999999))
-				{
-					euler.x = std::atan2(-m23, m33);
-					euler.z = std::atan2(-m12, m11);
-				}
-				else
-				{
-					euler.x = std::atan2(m32, m22);
-					euler.z = 0;
-				}
-				break;
-			}
-			case RotationOrder::XZY:
-			{
-				euler.z = std::asin(Clamp(-m12, static_cast<T>(-1), static_cast<T>(1)));
-
-				if (std::abs(m12) < static_cast<T>(0.9999999))
-				{
-					euler.x = std::atan2(m32, m22);
-					euler.y = std::atan2(m13, m11);
-				}
-				else
-				{
-					euler.x = std::atan2(-m23, m33);
-					euler.y = 0;
-				}
-				break;
-			}
-			[[likely]] case RotationOrder::YXZ:
-			{
-				euler.x = std::asin(Clamp(-m23, static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m23) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(m13, m33);     // Yaw
-					euler.z = std::atan2(m21, m22);     // Roll
-				}
-				else
-				{
-					// Gimbal lock - arbitrary choice for remaining angle
-					euler.y = std::atan2(-m31, m11);    // Yaw
-					euler.z = 0;                        // Roll
-				}
-				break;
-			}
-			case RotationOrder::YZX:
-			{
-				euler.z = std::asin(Clamp(m21, static_cast<T>(-1), static_cast<T>(1)));
-
-				if (std::abs(m21) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(-m23, m22);
-					euler.x = std::atan2(-m31, m11);
-				}
-				else
-				{
-					euler.y = std::atan2(m13, m33);
-					euler.x = 0;
-				}
-				break;
-			}
-			case RotationOrder::ZXY:
-			{
-				euler.x = std::asin(Clamp(m32, static_cast<T>(-1), static_cast<T>(1)));
-
-				if (std::abs(m32) < static_cast<T>(0.9999999))
-				{
-					euler.z = std::atan2(-m12, m22);
-					euler.y = std::atan2(-m31, m33);
-				}
-				else
-				{
-					euler.z = std::atan2(m21, m11);
-					euler.y = 0;
-				}
-				break;
-			}
-			case RotationOrder::ZYX:
-			{
-				euler.y = std::asin(Clamp(-m31, static_cast<T>(-1), static_cast<T>(1)));
-
-				if (std::abs(m31) < static_cast<T>(0.9999999))
-				{
-					euler.z = std::atan2(m21, m11);
-					euler.x = std::atan2(m32, m33);
-				}
-				else
-				{
-					euler.z = std::atan2(-m12, m22);
-					euler.x = 0;
-				}
-				break;
-			}
-			default:
-			{
-				JPT_ASSERT(false, "Invalid Rotation Order");
-				return Vector3<T>();
-			}
-		}
-
-		return euler;
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotation(const Vector3<T>& radians)
-	{
-		return Rotation(radians.x, radians.y, radians.z);
-	}
-
-	template<Numeric T>
-	constexpr TQuaternion<T> TQuaternion<T>::Rotation(T pitch, T yaw, T roll)
-	{
-		// Calculate Half angles
-		const T cx = Cos(pitch * static_cast<T>(0.5));
-		const T cy = Cos(yaw   * static_cast<T>(0.5));
-		const T cz = Cos(roll  * static_cast<T>(0.5));
-		const T sx = Sin(pitch * static_cast<T>(0.5));
-		const T sy = Sin(yaw   * static_cast<T>(0.5));
-		const T sz = Sin(roll  * static_cast<T>(0.5));
-
-		// Apply formula
-		T qw = 0;
-		T qx = 0;
-		T qy = 0;
-		T qz = 0;
-
-		switch (MathSettings::RotationOrder)
-		{
-			case RotationOrder::XYZ:
-			{
-				qw = cx * cy * cz - sx * sy * sz;
-				qx = sx * cy * cz + cx * sy * sz;
-				qy = cx * sy * cz - sx * cy * sz;
-				qz = cx * cy * sz + sx * sy * cz;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			case RotationOrder::XZY:
-			{
-				qw = cx * cz * cy + sx * sy * sz;
-				qx = sx * cz * cy - cx * sy * sz;
-				qy = cx * sy * cz + sx * cy * sz;
-				qz = cx * cy * sz - sx * sy * cz;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			[[likely]] case RotationOrder::YXZ:
-			{
-				qw = cy * cx * cz + sy * sx * sz;
-				qx = cy * sx * cz + sy * cx * sz;
-				qy = sy * cx * cz - cy * sx * sz;
-				qz = cy * cx * sz - sy * sx * cz;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			case RotationOrder::YZX:
-			{
-				qw = cy * cz * cx - sy * sx * sz;
-				qx = cy * sz * cx + sy * sx * cz;
-				qy = sy * cz * cx + cy * sx * sz;
-				qz = cy * sx * cz - sy * sz * cx;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			case RotationOrder::ZXY:
-			{
-				qw = cz * cx * cy - sz * sx * sy;
-				qx = cz * sx * cy + sz * cx * sy;
-				qy = cz * cx * sy + sz * sx * cy;
-				qz = sz * cx * cy - cz * sx * sy;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			case RotationOrder::ZYX:
-			{
-				qw = cz * cy * cx + sz * sy * sx;
-				qx = cz * cy * sx - sz * sy * cx;
-				qy = cz * sy * cx + sz * cy * sx;
-				qz = sz * cy * cx - cz * sy * sx;
-				return TQuaternion<T>(qx, qy, qz, qw);
-			}
-			default:
-			{
-				JPT_ASSERT(false, "Invalid Rotation Order");
-				return TQuaternion<T>();
-			}
-		}
+		*this *= Rotation(axisAngle, radians);
 	}
 
 	template<Numeric T>
