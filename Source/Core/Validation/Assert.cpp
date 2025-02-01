@@ -21,10 +21,6 @@ namespace jpt
 {
 	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...)
 	{
-#if IS_PLATFORM_WIN64
-		MessageBoxA(nullptr, expression, "Assertion Failed", MB_ABORTRETRYIGNORE);
-#endif
-
 		if (!g_AssertCallback)
 		{
 			assert(false);
@@ -43,6 +39,10 @@ namespace jpt
 
 			message.Append(messageBuffer);
 		}
+
+#if IS_PLATFORM_WIN64
+		MessageBoxA(nullptr, message.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
+#endif
 
 		g_AssertCallback(line, file, message.ConstBuffer());
 	}

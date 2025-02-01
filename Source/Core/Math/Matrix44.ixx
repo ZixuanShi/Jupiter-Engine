@@ -56,6 +56,7 @@ export namespace jpt
 		constexpr static TMatrix44<T> Translation(T x, T y, T z);
 		constexpr void Translate(const Vector3<T>& v);
 		constexpr void Translate(T x, T y, T z);
+		constexpr Vector3<T> GetPosition() const;
 
 		// Rotation & Orientation
 		constexpr static TMatrix44<T> RotationX(T radians);
@@ -68,12 +69,14 @@ export namespace jpt
 		constexpr void RotateZ(T radians);
 		constexpr void Rotate(const Vector3<T>& radians);
 		constexpr void Rotate(T pitch, T yaw, T roll);
+		constexpr Vector3<T> GetRotation() const;	// Euler Angles in Radians
 
 		// Scaling & Size
 		constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static TMatrix44<T> Scaling(T x, T y, T z);
 		constexpr void Scale(const Vector3<T>& v);
 		constexpr void Scale(T x, T y, T z);
+		constexpr Vector3<T> GetScale() const;
 
 		// Operations
 
@@ -135,6 +138,7 @@ export namespace jpt
 	{
 		TMatrix44<T> result;
 
+		// Column Major Order
 		for (size_t i = 0; i < 4; ++i)
 		{
 			for (size_t j = 0; j < 4; ++j)
@@ -205,6 +209,12 @@ export namespace jpt
 	constexpr void TMatrix44<T>::Translate(T x, T y, T z)
 	{
 		*this *= Translation(x, y, z);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> TMatrix44<T>::GetPosition() const
+	{
+		return Vector3<T>(m[3].x, m[3].y, m[3].z);
 	}
 
 	template<Numeric T>
@@ -283,6 +293,34 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector3<T> TMatrix44<T>::GetRotation() const
+	{
+		// Extracting Euler Angles from a Rotation Matrix
+
+		const Vector3<T> scale = GetScale();
+		TMatrix44<T> rotation = *this;
+		rotation[0] = Vector4<T>(m[0][0] / scale.x, m[0][1] / scale.x, m[0][2] / scale.x, 0);
+		rotation[1] = Vector4<T>(m[1][0] / scale.y, m[1][1] / scale.y, m[1][2] / scale.y, 0);
+		rotation[2] = Vector4<T>(m[2][0] / scale.z, m[2][1] / scale.z, m[2][2] / scale.z, 0);
+		rotation[3] = Vector4<T>(0, 0, 0, 1);
+
+		const T sy = Sqrt(rotation[0][0] * rotation[0][0] + rotation[1][0] * rotation[1][0]);
+		if (sy > Constants<T>::kEpsilon)
+		{
+			const T x = -Atan2(rotation[2][1], rotation[2][2]);
+			const T y = -Atan2(-rotation[2][0], sy);
+			const T z = -Atan2(rotation[1][0], rotation[0][0]);
+			return Vector3<T>(x, y, z);
+		}
+		// Gimbal lock
+		else
+		{
+			JPT_ASSERT(false, "Gimbal lock detected");
+			return Vector3<T>(0);
+		}
+	}
+
+	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Scaling(const Vector3<T>& v)
 	{
 		return TMatrix44<T>(v.x,  0,   0, 0,
@@ -310,6 +348,15 @@ export namespace jpt
 	constexpr void TMatrix44<T>::Scale(T x, T y, T z)
 	{
 		*this *= Scaling(x, y, z);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> TMatrix44<T>::GetScale() const
+	{
+		const T x = Vector3<T>(m[0].x, m[0].y, m[0].z).Length();
+		const T y = Vector3<T>(m[1].x, m[1].y, m[1].z).Length();
+		const T z = Vector3<T>(m[2].x, m[2].y, m[2].z).Length();
+		return Vector3<T>(x, y, z);
 	}
 
 	template<Numeric T>
