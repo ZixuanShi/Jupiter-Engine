@@ -106,19 +106,6 @@ bool UnitTests_Quaternion_EulerAngles()
 	return true;
 }
 
-bool UnitTests_Quaternion_ToMatrix()
-{
-	Matrix44 matrix = Matrix44::FromDegrees(180, -60, 22);
-	Quaternion quaternion = Quaternion::FromDegrees(180, -60, 22);
-	JPT_ENSURE(matrix == quaternion.ToMatrix());
-
-	matrix = Matrix44::FromDegrees(90, 45, 90);
-	quaternion = Quaternion::FromDegrees(90, 45, 90);
-	JPT_ENSURE(matrix == quaternion.ToMatrix());
-
-	return true;
-}
-
 export bool RunUnitTests_Quaternion()
 {
 	Quaternion quaternion = Quaternion::Identity();
@@ -130,7 +117,6 @@ export bool RunUnitTests_Quaternion()
 	JPT_ENSURE(UnitTests_Quaternion_Multiplication());
 	JPT_ENSURE(UnitTests_Quaternion_AxisAngles());
 	JPT_ENSURE(UnitTests_Quaternion_EulerAngles());
-	JPT_ENSURE(UnitTests_Quaternion_ToMatrix());
 
 	return true;
 }

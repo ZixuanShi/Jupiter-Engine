@@ -367,7 +367,7 @@ namespace jpt::Vulkan
 		ubo.model.RotateY(rotation);
 		ubo.model.Scale(1.3f);
 
-		ubo.view = GetApplication()->GetRenderer()->GetCamera().GetMatrix();
+		ubo.view = GetVkRenderer()->GetCamera().GetMatrix();
 
 		ubo.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
 		ubo.proj[1][1] *= -1;

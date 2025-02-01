@@ -87,30 +87,6 @@ bool UnitTests_Matrix44_Scaling()
 	return true;
 }
 
-bool UnitTests_Matrix44_EulerAngles()
-{
-	{
-		Vec3f degrees = Vec3f(89, 45, 90);
-		Matrix44f rotation = Matrix44f::FromDegrees(degrees);
-		JPT_ENSURE(rotation.m[0] == Vec4f(0.707f, -0.707f, 0.012f, 0.000f));
-		JPT_ENSURE(rotation.m[1] == Vec4f(0.017f, 0.000f, -1.000f, 0.000f));
-		JPT_ENSURE(rotation.m[2] == Vec4f(0.707f, 0.707f, 0.012f, 0.000f));
-		JPT_ENSURE(rotation.m[3] == Vec4f(0.000f, 0.000f, 0.000f, 1.000f));
-		JPT_ENSURE(rotation.ToEulerDegrees() == degrees);
-	}
-	{
-		Vec3f degrees = Vec3f(12, 136, 25);
-		Matrix44f rotation = Matrix44f::FromDegrees(degrees);
-		JPT_ENSURE(rotation.m[0] == Vec4f(-0.591f,  0.435f,  0.680f, 0.000f));
-		JPT_ENSURE(rotation.m[1] == Vec4f( 0.413f,  0.887f, -0.208f, 0.000f));
-		JPT_ENSURE(rotation.m[2] == Vec4f(-0.693f,  0.158f, -0.704f, 0.000f));
-		JPT_ENSURE(rotation.m[3] == Vec4f( 0.000f,  0.000f,  0.000f, 1.000f));
-		JPT_ENSURE(rotation.ToEulerDegrees() == degrees);
-	}
-
-	return true;
-}
-
 bool UnitTests_Matrix44_Transpose()
 {
 	Matrix44f matrix44 = Matrix44f::Identity();
@@ -146,7 +122,6 @@ export bool RunUnitTests_Matrix44()
 	JPT_ENSURE(UnitTests_Matrix44_Translation());
 	JPT_ENSURE(UnitTests_Matrix44_Rotation());
 	JPT_ENSURE(UnitTests_Matrix44_Scaling());
-	JPT_ENSURE(UnitTests_Matrix44_EulerAngles());
 	JPT_ENSURE(UnitTests_Matrix44_Transpose());
 
 	return true;

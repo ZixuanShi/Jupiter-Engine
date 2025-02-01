@@ -51,16 +51,31 @@ export namespace jpt
 		constexpr const Vector4<T>& operator[](size_t index) const { return m[index]; }
 
 	public:
-		constexpr T Determinant() const;
-
+		// Translation & Position
 		constexpr static TMatrix44<T> Translation(const Vector3<T>& v);
 		constexpr static TMatrix44<T> Translation(T x, T y, T z);
+		constexpr void Translate(const Vector3<T>& v);
+		constexpr void Translate(T x, T y, T z);
+
+		// Rotation & Orientation
+		constexpr static TMatrix44<T> Rotation(const Vector3<T>& radians);
+		constexpr static TMatrix44<T> Rotation(T pitch, T yaw, T roll);
 		constexpr static TMatrix44<T> RotationX(T radians);
 		constexpr static TMatrix44<T> RotationY(T radians);
 		constexpr static TMatrix44<T> RotationZ(T radians);
+		constexpr void Rotate(const Vector3<T>& radians);
+		constexpr void Rotate(T pitch, T yaw, T roll);
+		constexpr void RotateX(T radians);
+		constexpr void RotateY(T radians);
+		constexpr void RotateZ(T radians);
+
+		// Scaling & Size
 		constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
 		constexpr static TMatrix44<T> Scaling(T x, T y, T z);
-		constexpr static TMatrix44<T> Transposed(const TMatrix44<T>& matrix44);
+		constexpr void Scale(const Vector3<T>& v);
+		constexpr void Scale(T x, T y, T z);
+
+		// Operations
 
 		/** Creates an orthographic projection matrix */
 		constexpr static TMatrix44<T> Orthographic(T left, T right, T bottom, T top, T near, T far);
@@ -71,24 +86,11 @@ export namespace jpt
 		/** Converts 3D coordinates into 2D screen coordinates */
 		constexpr static TMatrix44<T> Perspective(T fov, T aspect, T near, T far);
 
-		constexpr void Translate(const Vector3<T>& v);
-		constexpr void Translate(T x, T y, T z);
-		constexpr void RotateX(T radians);
-		constexpr void RotateY(T radians);
-		constexpr void RotateZ(T radians);
-		constexpr void Scale(const Vector3<T>& v);
-		constexpr void Scale(T x, T y, T z);
+		constexpr static TMatrix44<T> Transposed(const TMatrix44<T>& matrix44);
 		constexpr void Transpose();
 		constexpr void Inverse();
 		constexpr bool IsOrthogonal() const;
-
-		// Euler Conversion
-		constexpr Vector3<T> ToEulerDegrees() const;
-		constexpr Vector3<T> ToEulerRadians() const;
-		constexpr static TMatrix44<T> FromDegrees(const Vector3<T>& degrees);
-		constexpr static TMatrix44<T> FromDegrees(T pitch, T yaw, T roll);
-		constexpr static TMatrix44<T> FromRadians(const Vector3<T>& radians);
-		constexpr static TMatrix44<T> FromRadians(T pitch, T yaw, T roll);
+		constexpr T Determinant() const;
 
 		constexpr String ToString() const;
 	};
@@ -230,10 +232,10 @@ export namespace jpt
 	{
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
-		return TMatrix44<T>(1,   0,    0, 0,
-			               0, cos, -sin, 0,
-			               0, sin,  cos, 0,
-			               0,   0,    0, 1);
+		return TMatrix44<T>(1,  0,    0,  0,
+			                0, cos, -sin, 0,
+			                0, sin,  cos, 0,
+			                0,   0,    0, 1);
 	}
 
 	template<Numeric T>
@@ -242,9 +244,9 @@ export namespace jpt
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
 		return TMatrix44<T>( cos, 0, sin, 0,
-			                  0, 1,   0, 0,
-			               -sin, 0, cos, 0,
-			                  0, 0,   0, 1);
+			                   0, 1,   0, 0,
+			                -sin, 0, cos, 0,
+			                   0, 0,   0, 1);
 	}
 
 	template<Numeric T>
@@ -253,15 +255,27 @@ export namespace jpt
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
 		return TMatrix44<T>(cos, -sin, 0, 0,
-			               sin,  cos, 0, 0,
-			                 0,    0, 1, 0,
-			                 0,    0, 0, 1);
+			                sin,  cos, 0, 0,
+			                  0,    0, 1, 0,
+			                  0,    0, 0, 1);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Rotate(const Vector3<T>& radians)
+	{
+		*this *= Rotation(radians);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix44<T>::Rotate(T pitch, T yaw, T roll)
+	{
+		*this *= Rotation(pitch, yaw, roll);
 	}
 
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Scaling(const Vector3<T>& v)
 	{
-		return TMatrix44<T>(v.x,   0,   0, 0,
+		return TMatrix44<T>(v.x,  0,   0, 0,
 			                 0, v.y,   0, 0,
 			                 0,   0, v.z, 0,
 			                 0,   0,   0, 1);
@@ -352,139 +366,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> TMatrix44<T>::ToEulerDegrees() const
-	{
-		return ToDegrees(ToEulerRadians());
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> TMatrix44<T>::ToEulerRadians() const
-	{
-		Vector3<T> euler;
-
-		switch (MathSettings::RotationOrder)
-		{
-			case RotationOrder::XYZ:
-			{
-				euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
-					euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(m[2][0], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			case RotationOrder::XZY:
-			{
-				euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
-					euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(-m[2][0], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			[[likely]] case RotationOrder::YXZ:
-			{
-				euler.x = std::asin(Clamp(-m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(m[0][2], m[2][2]);     // Yaw
-					euler.z = std::atan2(m[1][0], m[1][1]);     // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(-m[2][0], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			case RotationOrder::YZX:
-			{
-				euler.x = std::asin(Clamp(m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(-m[2][0], m[2][2]);    // Yaw
-					euler.z = std::atan2(-m[0][1], m[1][1]);    // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(m[0][2], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			case RotationOrder::ZXY:
-			{
-				euler.x = std::asin(Clamp(m[1][2], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[1][2]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(-m[0][2], m[2][2]);    // Yaw
-					euler.z = std::atan2(-m[1][0], m[1][1]);    // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(m[2][0], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			case RotationOrder::ZYX:
-			{
-				euler.x = std::asin(Clamp(-m[2][1], static_cast<T>(-1), static_cast<T>(1)));  // Pitch
-
-				if (std::abs(m[2][1]) < static_cast<T>(0.9999999))
-				{
-					euler.y = std::atan2(m[2][0], m[2][2]);     // Yaw
-					euler.z = std::atan2(m[0][1], m[1][1]);     // Roll
-				}
-				else
-				{
-					euler.y = std::atan2(-m[0][2], m[0][0]);
-					euler.z = 0;
-				}
-				break;
-			}
-			default:
-			{
-				JPT_ASSERT(false, "Invalid Rotation Order");
-				return Vector3<T>();
-			}
-		}
-
-		return euler;
-	}
-
-	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromDegrees(const Vector3<T>& degrees)
-	{
-		const Vector3<T> radians = ToRadians(degrees);
-		return FromRadians(radians);
-	}
-
-	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromDegrees(T pitch, T yaw, T roll)
-	{
-		return FromDegrees(Vector3<T>(pitch, yaw, roll));
-	}
-
-	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(const Vector3<T>& radians)
+	constexpr TMatrix44<T> TMatrix44<T>::Rotation(const Vector3<T>& radians)
 	{
 		// Calculate the cosine and sine of the angles
 		const T cx = Cos(radians.x);  // pitch
@@ -509,9 +391,9 @@ export namespace jpt
 				const T m21 = sy * sz * cx + cy * sx;
 				const T m22 = -sy * sz * sx + cy * cx;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			case RotationOrder::XYZ:
 			{
@@ -525,9 +407,9 @@ export namespace jpt
 				const T m21 = cx * sy * sz + sx * cz;
 				const T m22 = cx * cy;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			[[likely]] case RotationOrder::YXZ:
 			{
@@ -541,9 +423,9 @@ export namespace jpt
 				const T m21 = sy * sz + cy * sx * cz;
 				const T m22 = cy * cx;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			case RotationOrder::YZX:
 			{
@@ -557,9 +439,9 @@ export namespace jpt
 				const T m21 = sx * cz;
 				const T m22 = -sx * sy * sz - cx * cy;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			case RotationOrder::ZXY:
 			{
@@ -573,9 +455,9 @@ export namespace jpt
 				const T m21 = sx;
 				const T m22 = cy * cx;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			case RotationOrder::ZYX:
 			{
@@ -589,9 +471,9 @@ export namespace jpt
 				const T m21 = cz * sx;
 				const T m22 = sy * sz * sx + cy * cx;
 				return TMatrix44<T>(m00, m01, m02, 0,
-					               m10, m11, m12, 0,
-					               m20, m21, m22, 0,
-					                 0,   0,   0, 1);
+					                m10, m11, m12, 0,
+					                m20, m21, m22, 0,
+					                  0,   0,   0, 1);
 			}
 			default:
 			{
@@ -602,9 +484,9 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix44<T> TMatrix44<T>::FromRadians(T pitch, T yaw, T roll)
+	constexpr TMatrix44<T> TMatrix44<T>::Rotation(T pitch, T yaw, T roll)
 	{
-		return FromRadians(Vector3<T>(pitch, yaw, roll));
+		return Rotation(Vector3<T>(pitch, yaw, roll));
 	}
 
 	template<Numeric T>
