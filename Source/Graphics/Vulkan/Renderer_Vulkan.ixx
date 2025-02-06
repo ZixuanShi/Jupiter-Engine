@@ -105,8 +105,6 @@ export namespace jpt
 
 	private:
 		bool CreateInstance();
-
-		bool LoadMesh();
 	};
 
 	Renderer_Vulkan* GetVkRenderer();

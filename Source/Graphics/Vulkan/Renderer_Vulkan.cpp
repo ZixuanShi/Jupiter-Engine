@@ -5,27 +5,16 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
-#include "Profiling/TimingProfiler.h"
 
 #include <vulkan/vulkan.h>
-
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
-
-#include <vector>
-#include <string>
-#include <unordered_map>
 
 module jpt.Renderer_Vulkan;
 
 import jpt.Asset.Manager;
+import jpt.Mesh;
 
-import jpt.HashMap;
+import jpt.Math;
+import jpt.Optional;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -46,8 +35,6 @@ import jpt.File.IO;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
 
-import jpt.Math;
-
 using namespace jpt::Vulkan;
 
 namespace jpt
@@ -57,8 +44,6 @@ namespace jpt
 		JPT_ENSURE(Super::Init());
 
 		bool success = true;
-
-		//GenerateSierpinski(5, { 0.5f, 0.5f, -0.25f }, { -0.5f, 0.5f, -0.25f }, { 0.0f, -0.5f, -0.25f });
 
 		success &= CreateInstance();
 #if !IS_RELEASE
@@ -75,10 +60,13 @@ namespace jpt
 		success &= m_pipelineLayout.Init();
 		success &= m_graphicsPipeline.Init();
 
-		success &= LoadMesh();
+		Mesh mesh;
+		success &= mesh.Load(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_VikingRoom.obj"));
+		//success &= LoadMesh(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_Cat.obj"));
+		//success &= LoadMesh(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_SecurityRoom.obj"));
 
-		success &= m_vertexBuffer.Init();
-		success &= m_indexBuffer.Init();
+		success &= m_vertexBuffer.Init(mesh.GetVertices());
+		success &= m_indexBuffer.Init(mesh.GetIndices());
 
 		success &= m_descriptorPool.Init();
 
@@ -227,62 +215,6 @@ namespace jpt
 		{
 			JPT_ERROR("Failed to create Vulkan instance: %d", result);
 			return false;
-		}
-
-		return true;
-	}
-
-	bool Renderer_Vulkan::LoadMesh()
-	{
-		File::Path meshPath = File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_VikingRoom.obj");
-
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-		std::string warn, err;
-
-		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, meshPath.ToCString().ConstBuffer()))
-		{
-			JPT_ERROR("Failed to load mesh: %s", err.c_str());
-			return false;
-		}
-
-		{
-			JPT_SCOPED_TIMING_PROFILER("Load Mesh");
-
-			//std::unordered_map<Vertex, uint32> uniqueVertices;
-			HashMap<Vertex, uint32> uniqueVertices;
-
-			for (const tinyobj::shape_t& shape : shapes)
-			{
-				for (const tinyobj::index_t& index : shape.mesh.indices)
-				{
-					Vertex vertex = {};
-
-					vertex.position.x = attrib.vertices[3 * index.vertex_index + 0];
-					vertex.position.y = attrib.vertices[3 * index.vertex_index + 1];
-					vertex.position.z = attrib.vertices[3 * index.vertex_index + 2];
-
-					vertex.texCoord.x = attrib.texcoords[2 * index.texcoord_index + 0];
-					vertex.texCoord.y = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
-
-					vertex.color = { 1.0f, 1.0f, 1.0f };
-
-					//g_vertices.Add(vertex);
-					//g_indices.Add(static_cast<uint32>(g_indices.Count()));
-
-					if (!uniqueVertices.Has(vertex))
-					{
-						uniqueVertices[vertex] = static_cast<uint32>(g_vertices.Count());
-						g_vertices.EmplaceBack(vertex);
-					}
-
-					g_indices.EmplaceBack(uniqueVertices[vertex]);
-				}
-			}
-
-			JPT_LOG("Vertices: %i", g_vertices.Count());
-			JPT_LOG("Indices: %i", g_indices.Count());
 		}
 
 		return true;

@@ -23,33 +23,6 @@ import jpt.StaticArray;
 
 namespace jpt::Vulkan
 {
-	void GenerateSierpinski(size_t depth, Vec3f right, Vec3f left, Vec3f top)
-	{
-		if (depth <= 0)
-		{
-			static const LinearColor klocTriangleColor = { 0.95f, 0.05f, 0.05f };
-			const size_t baseIndex = g_vertices.Count();
-
-			g_vertices.EmplaceBack(Vertex(right, klocTriangleColor));
-			g_vertices.EmplaceBack(Vertex(left, klocTriangleColor));
-			g_vertices.EmplaceBack(Vertex(top, klocTriangleColor));
-
-			g_indices.EmplaceBack(static_cast<uint16>(baseIndex));     // right
-			g_indices.EmplaceBack(static_cast<uint16>(baseIndex + 1)); // left  
-			g_indices.EmplaceBack(static_cast<uint16>(baseIndex + 2)); // top
-
-			return;
-		}
-
-		const Vec3f rightLeft = (right + left) * 0.5f;
-		const Vec3f rightTop = (right + top) * 0.5f;
-		const Vec3f leftTop = (left + top) * 0.5f;
-
-		GenerateSierpinski(depth - 1, right, rightLeft, rightTop);
-		GenerateSierpinski(depth - 1, rightLeft, left, leftTop);
-		GenerateSierpinski(depth - 1, rightTop, leftTop, top);
-	}
-
 	VkCommandBuffer BeginSingleTimeCommand(const CommandPool& commandPool)
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};

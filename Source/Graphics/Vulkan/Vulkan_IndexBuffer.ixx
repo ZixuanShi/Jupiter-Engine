@@ -12,27 +12,37 @@ import jpt.Vulkan.Buffer;
 
 import jpt.Vulkan.Data;
 
+import jpt.DynamicArray;
+import jpt.TypeDefs;
+import jpt.Utilities;
+
 export namespace jpt::Vulkan
 {
 	class IndexBuffer
 	{
+	public:
+		using IndexType = uint32;
+
 	private:
 		Buffer m_buffer;
+		size_t m_count = 0;
 
 	public:
-		bool Init();
+		bool Init(const DynamicArray<uint32>& indices);
+
 		void Shutdown();
 
 	public:
 		VkBuffer GetBuffer() const { return m_buffer.GetHandle(); }
+		size_t GetCount() const { return m_count; }
 	};
 
-	bool IndexBuffer::Init()
+	bool IndexBuffer::Init(const DynamicArray<uint32>& indices)
 	{
 		// Staging buffer
 		VkBufferCreateInfo stagingBufferInfo{};
 		stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stagingBufferInfo.size = g_indices.Size();
+		stagingBufferInfo.size = indices.Size();
 		stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stagingBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -45,12 +55,12 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		stagingBuffer.MapMemory(g_indices.ConstBuffer(), g_indices.Size());
+		stagingBuffer.MapMemory(indices.ConstBuffer(), indices.Size());
 
 		// Index buffer
 		VkBufferCreateInfo indexBufferInfo{};
 		indexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		indexBufferInfo.size = g_indices.Size();
+		indexBufferInfo.size = indices.Size();
 		indexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 		indexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -62,14 +72,16 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		m_buffer.Copy(stagingBuffer.GetHandle(), g_indices.Size());
+		m_buffer.Copy(stagingBuffer.GetHandle(), indices.Size());
 		stagingBuffer.Shutdown();
 
+		m_count = indices.Count();
 		return true;
 	}
 
 	void IndexBuffer::Shutdown()
 	{
 		m_buffer.Shutdown();
+		m_count = 0;
 	}
 }

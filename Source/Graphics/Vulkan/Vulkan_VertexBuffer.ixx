@@ -12,6 +12,10 @@ export module jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.Buffer;
 import jpt.Vulkan.Data;
 
+import jpt.DynamicArray;
+import jpt.Vertex;
+import jpt.Utilities;
+
 export namespace jpt::Vulkan
 {
 	class VertexBuffer
@@ -20,19 +24,20 @@ export namespace jpt::Vulkan
 		Buffer m_buffer;
 
 	public:
-		bool Init();
+		bool Init(const DynamicArray<Vertex>& vertices);
+
 		void Shutdown();
 
 	public:
 		VkBuffer GetBuffer() { return m_buffer.GetHandle(); }
 	};
 
-	bool VertexBuffer::Init()
+	bool VertexBuffer::Init(const DynamicArray<Vertex>& vertices)
 	{
 		// Staging buffer
 		VkBufferCreateInfo stagingBufferInfo{};
 		stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stagingBufferInfo.size = g_vertices.Size();
+		stagingBufferInfo.size = vertices.Size();
 		stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 		stagingBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -45,12 +50,12 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		stagingBuffer.MapMemory(g_vertices.ConstBuffer(), g_vertices.Size());
+		stagingBuffer.MapMemory(vertices.ConstBuffer(), vertices.Size());
 
 		// Vertex buffer
 		VkBufferCreateInfo vertexBufferInfo{};
 		vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		vertexBufferInfo.size = g_vertices.Size();
+		vertexBufferInfo.size = vertices.Size();
 		vertexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 		vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -62,7 +67,7 @@ export namespace jpt::Vulkan
 			return false;
 		}
 
-		m_buffer.Copy(stagingBuffer.GetHandle(), g_vertices.Size());
+		m_buffer.Copy(stagingBuffer.GetHandle(), vertices.Size());
 		stagingBuffer.Shutdown();
 
 		return true;

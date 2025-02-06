@@ -10,11 +10,10 @@ export module jpt.Vulkan.Utils;
 
 import jpt.Vulkan.CommandPool;
 import jpt.Vector3;
+import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
-	void GenerateSierpinski(size_t depth, Vec3f right, Vec3f left, Vec3f top);
-
 	VkCommandBuffer BeginSingleTimeCommand(const CommandPool& commandPool);
 
 	void EndSingleTimeCommand(const CommandPool& commandPool, VkCommandBuffer commandBuffer);

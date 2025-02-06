@@ -277,11 +277,11 @@ namespace jpt::Vulkan
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-			if constexpr (AreSameType<uint16, decltype(g_indices)::TData>)
+			if constexpr (AreSameType<uint16, IndexBuffer::IndexType>)
 			{
 				vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
 			}
-			else if constexpr (AreSameType<uint32, decltype(g_indices)::TData>)
+			else if constexpr (AreSameType<uint32, IndexBuffer::IndexType>)
 			{
 				vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 			}
@@ -295,7 +295,7 @@ namespace jpt::Vulkan
 			vkCmdPushConstants(commandBuffer, pipelineLayout.GetHandle(), VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(PushConstantData), &pushConstantData);
 
 			vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.GetHandle(), 0, 1, m_descriptorSets[m_currentFrame].GetHandlePtr(), 0, nullptr);
-			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(g_indices.Count()), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffer, static_cast<uint32>(indexBuffer.GetCount()), 1, 0, 0, 0);
 		}
 		vkCmdEndRenderPass(commandBuffer);
 
@@ -360,12 +360,14 @@ namespace jpt::Vulkan
 
 		const StopWatch::Point currentTime = StopWatch::Now();
 		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
+		
+		const Vec3 translation = Vec3(0.0f, 0.0f, 0.0f);
 		const float rotation = time * ToRadians(30.0f);
 
 		UniformBufferObject ubo = {};
-		ubo.model.Translate(-1.0f, -1.0f, -1.0f);
+		ubo.model.Translate(translation);
 		ubo.model.RotateY(rotation);
-		ubo.model.Scale(1.3f);
+		ubo.model.Scale(1.0f);
 
 		ubo.view = GetVkRenderer()->GetCamera().GetMatrix();
 
