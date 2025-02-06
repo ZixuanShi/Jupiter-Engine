@@ -41,14 +41,22 @@ namespace jpt
 				{
 					Vertex vertex = {};
 
+					// Position
 					vertex.position.x = attrib.vertices[3 * index.vertex_index + 0];
 					vertex.position.y = attrib.vertices[3 * index.vertex_index + 1];
 					vertex.position.z = attrib.vertices[3 * index.vertex_index + 2];
 
+					// Texture Coordinates
 					vertex.texCoord.x = attrib.texcoords[2 * index.texcoord_index + 0];
 					vertex.texCoord.y = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
 
+					// Color
 					vertex.color = { 1.0f, 1.0f, 1.0f };
+					
+					// Normal
+					vertex.normal.x = attrib.normals[3 * index.normal_index + 0];
+					vertex.normal.y = attrib.normals[3 * index.normal_index + 1];
+					vertex.normal.z = attrib.normals[3 * index.normal_index + 2];
 
 					if (!uniqueVertices.Has(vertex))
 					{

@@ -16,23 +16,31 @@ export namespace jpt
 	struct Vertex
 	{
 	public:
-		Vec3f position;
 		LinearColor color;
+		Vec3f position;
+		Vec3f normal;
 		Vec2f texCoord;
 
 	public:
 		constexpr Vertex() = default;
+		constexpr Vertex(const Vec3f& position);
 		constexpr Vertex(const Vec3f& position, const LinearColor& color);
-		constexpr Vertex(const Vec3f& position, const LinearColor& color, const Vec2f& texCoord);
+		constexpr Vertex(const Vec3f& position, const LinearColor& color, const Vec2f& texCoord, const Vec3f& normal);
 
 		constexpr uint64 Hash() const;
 	};
 
 	constexpr bool operator==(const Vertex& lhs, const Vertex& rhs)
 	{
-		return lhs.position == rhs.position &&
-			lhs.color == rhs.color &&
-			lhs.texCoord == rhs.texCoord;
+		return lhs.color    == rhs.color    &&
+		       lhs.position == rhs.position &&
+			   lhs.normal   == rhs.normal   &&
+			   lhs.texCoord == rhs.texCoord;
+	}
+
+	constexpr Vertex::Vertex(const Vec3f& position)
+		: position(position)
+	{
 	}
 
 	constexpr Vertex::Vertex(const Vec3f& position, const LinearColor& color)
@@ -41,10 +49,11 @@ export namespace jpt
 	{
 	}
 
-	constexpr Vertex::Vertex(const Vec3f& position, const LinearColor& color, const Vec2f& texCoord)
+	constexpr Vertex::Vertex(const Vec3f& position, const LinearColor& color, const Vec2f& texCoord, const Vec3f& normal)
 		: position(position)
 		, color(color)
 		, texCoord(texCoord)
+		, normal(normal)
 	{
 	}
 
@@ -57,6 +66,7 @@ export namespace jpt
 		hash = (hash * 1099511628211ULL) ^ jpt::Hash(position);  // FNV prime
 		hash = (hash * 1099511628211ULL) ^ jpt::Hash(color);
 		hash = (hash * 1099511628211ULL) ^ jpt::Hash(texCoord);
+		hash = (hash * 1099511628211ULL) ^ jpt::Hash(normal);
 
 		return hash;
 	}

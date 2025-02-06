@@ -44,13 +44,13 @@ namespace jpt::Vulkan
 
 		// Fixed-function stages
 		auto vertexInputInfo = GetVertexInput();
-		auto colorBlending = GetColorBlending();
-		auto dynamicState = GetDynamicState();
-		auto inputAssembly = GetInputAssembly();
-		auto viewportState = GetViewportState();
-		auto rasterizer = GetRasterization();
-		auto multisampling = GetMultisampling();
-		auto depthStencil = GetDepthStencil();
+		auto inputAssembly   = GetInputAssembly();
+		auto dynamicState    = GetDynamicState();
+		auto viewportState   = GetViewportState();
+		auto rasterizer      = GetRasterization();
+		auto multisampling   = GetMultisampling();
+		auto depthStencil    = GetDepthStencil();
+		auto colorBlending   = GetColorBlending();
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -92,7 +92,7 @@ namespace jpt::Vulkan
 		// Attribute Descriptions: type of the attributes passed to the vertex shader, which binding to load them from and at which offset
 
 		static VkVertexInputBindingDescription bindingDescription = GetBindingDescription();
-		static StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions = GetAttributeDescriptions();
+		static StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions = GetAttributeDescriptions();
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -234,27 +234,33 @@ namespace jpt::Vulkan
 		return bindingDescription;
 	}
 
-	StaticArray<VkVertexInputAttributeDescription, 3> GraphicsPipeline::GetAttributeDescriptions() const
+	StaticArray<VkVertexInputAttributeDescription, 4> GraphicsPipeline::GetAttributeDescriptions() const
 	{
-		StaticArray<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+		StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
 
-		// Position
+		// Color
 		attributeDescriptions[0].binding = 0;
 		attributeDescriptions[0].location = 0;
 		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[0].offset = offsetof(Vertex, position);
+		attributeDescriptions[0].offset = offsetof(Vertex, color);
 
-		// Color
+		// Position
 		attributeDescriptions[1].binding = 0;
 		attributeDescriptions[1].location = 1;
 		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[1].offset = offsetof(Vertex, color);
+		attributeDescriptions[1].offset = offsetof(Vertex, position);
 
-		// TexCoord
+		// Normal
 		attributeDescriptions[2].binding = 0;
 		attributeDescriptions[2].location = 2;
-		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+		attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[2].offset = offsetof(Vertex, normal);
+
+		// TexCoord
+		attributeDescriptions[3].binding = 0;
+		attributeDescriptions[3].location = 3;
+		attributeDescriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[3].offset = offsetof(Vertex, texCoord);
 
 		return attributeDescriptions;
 	}

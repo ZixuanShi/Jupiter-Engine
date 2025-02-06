@@ -39,6 +39,6 @@ export namespace jpt::Vulkan
 		VkPipelineDepthStencilStateCreateInfo GetDepthStencil() const;
 
 		VkVertexInputBindingDescription GetBindingDescription() const;
-		StaticArray<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions() const;
+		StaticArray<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions() const;
 	};
 }
