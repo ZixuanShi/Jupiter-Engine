@@ -46,7 +46,7 @@ namespace jpt
 		m_position += m_forward * m_move.z * kMoveSpeed * deltaSeconds;
 		m_position +=     right * m_move.x * kMoveSpeed * deltaSeconds;
 
-		m_matrix = Matrix44::LookAt(m_position, m_position + m_forward, Vec3::Up());
+		m_matrix = Matrix44::LookAt(m_position, m_position + m_forward);
 	}
 
 	void Camera::OnKey(const Event_Key& eventKey)

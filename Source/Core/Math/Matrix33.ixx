@@ -35,9 +35,9 @@ export namespace jpt
 						   T m20, T m21, T m22);
 
 	public:
-		constexpr TVector2<T> operator*(TVector2<T> v) const;
-		constexpr TMatrix33<T> operator*(const TMatrix33<T>& rhs) const;
+		constexpr TMatrix33<T>  operator* (const TMatrix33<T>& rhs) const;
 		constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
+		constexpr TVector2<T>   operator* (TVector2<T> v) const;
 
 	public:
 		// Translation & Position
@@ -55,12 +55,6 @@ export namespace jpt
 		constexpr void Scale(T scalar);
 
 		// Utils
-		constexpr static TMatrix33 Orthographic(T left, T right, T bottom, T top, T near, T far);
-		constexpr void Transpose();
-		constexpr void Inverse();
-		constexpr bool IsOrthogonal() const;
-		constexpr T Determinant() const;
-
 		constexpr String ToString() const;
 	};
 
@@ -88,8 +82,8 @@ export namespace jpt
 
 	template<Numeric T>
 	constexpr TMatrix33<T>::TMatrix33(T m00, T m01, T m02, 
-		                            T m10, T m11, T m12, 
-		                            T m20, T m21, T m22)
+		                              T m10, T m11, T m12, 
+		                              T m20, T m21, T m22)
 		: m{ { m00, m01, m02 },
 			 { m10, m11, m12 },
 			 { m20, m21, m22 } }
@@ -97,25 +91,18 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector2<T> TMatrix33<T>::operator*(TVector2<T> v) const
-	{
-		const T x = m[0][0] * v.x + m[0][1] * v.y + m[0][2];
-		const T y = m[1][0] * v.x + m[1][1] * v.y + m[1][2];
-		return TVector2<T>(x, y);
-	}
-
-	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::operator*(const TMatrix33<T>& rhs) const
 	{
 		TMatrix33<T> result;
 
+		// Column Major Order
 		for (size_t i = 0; i < 3; ++i)
 		{
 			for (size_t j = 0; j < 3; ++j)
 			{
-				result.m[i][j] = m[i][0] * rhs.m[0][j] +
-								 m[i][1] * rhs.m[1][j] +
-								 m[i][2] * rhs.m[2][j];
+				result.m[j][i] = m[0][i] * rhs.m[j][0] + 
+								 m[1][i] * rhs.m[j][1] + 
+								 m[2][i] * rhs.m[j][2];
 			}
 		}
 
@@ -130,22 +117,19 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T TMatrix33<T>::Determinant() const
+	constexpr TVector2<T> TMatrix33<T>::operator*(TVector2<T> v) const
 	{
-		return m[0][0] * m[1][1] * m[2][2] +
-			   m[0][1] * m[1][2] * m[2][0] +
-			   m[0][2] * m[1][0] * m[2][1] -
-			   m[0][2] * m[1][1] * m[2][0] -
-			   m[0][1] * m[1][0] * m[2][2] -
-			   m[0][0] * m[1][2] * m[2][1];
+		const T x = m[0][0] * v.x + m[0][1] * v.y + m[0][2];
+		const T y = m[1][0] * v.x + m[1][1] * v.y + m[1][2];
+		return TVector2<T>(x, y);
 	}
 
 	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::Translation(TVector2<T> v)
 	{
 		return TMatrix33<T>(1, 0, v.x,
-					       0, 1, v.y,
-			               0, 0,   1);
+					        0, 1, v.y,
+			                0, 0,   1);
 	}
 
 	template<Numeric T>
@@ -155,7 +139,7 @@ export namespace jpt
 		const T sin = Sin(radians);
 
 		return TMatrix33<T>(cos, -sin, 0,
-			               sin,  cos, 0,
+			                sin,  cos, 0,
 			                 0,    0, 1);
 	}
 
@@ -163,35 +147,16 @@ export namespace jpt
 	constexpr TMatrix33<T> TMatrix33<T>::Scaling(TVector2<T> v)
 	{
 		return TMatrix33<T>(v.x,   0, 0,
-			                 0, v.y, 0,
-			                 0,   0, 1);
+			                  0, v.y, 0,
+			                  0,   0, 1);
 	}
 
 	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::Scaling(T scalar)
 	{
 		return TMatrix33<T>(scalar,      0, 0,
-			                    0, scalar, 0,
-			                    0,      0, 1);
-	}
-
-	template<Numeric T>
-	constexpr TMatrix33<T> TMatrix33<T>::Orthographic(T left, T right, T bottom, T top, T near, T far)
-	{
-		TMatrix33<T> result = Identity();
-
-		const T width = right - left;
-		const T height = top - bottom;
-		const T depth = far - near;
-
-		result.m[0][0] = 2 / width;
-		result.m[1][1] = 2 / height;
-		result.m[2][2] = -2 / depth;
-		result.m[0][2] = -(right + left) / width;
-		result.m[1][2] = -(top + bottom) / height;
-		result.m[2][2] = -(far + near) / depth;
-
-		return result;
+			                     0, scalar, 0,
+			                     0,      0, 1);
 	}
 
 	template<Numeric T>
@@ -216,51 +181,6 @@ export namespace jpt
 	constexpr void TMatrix33<T>::Scale(T scalar)
 	{
 		*this *= Scaling(scalar);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix33<T>::Transpose()
-	{
-		Swap(m[0][1], m[1][0]);
-		Swap(m[0][2], m[2][0]);
-		Swap(m[1][2], m[2][1]);
-	}
-
-	template<Numeric T>
-	constexpr void TMatrix33<T>::Inverse()
-	{
-		const T det = Determinant();
-		if (det == 0)
-		{
-			return;
-		}
-
-		const T invDet = 1 / det;
-
-		TMatrix33<T> result;
-		result.m[0][0] = (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * invDet;
-		result.m[0][1] = (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invDet;
-		result.m[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invDet;
-		result.m[1][0] = (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invDet;
-		result.m[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invDet;
-		result.m[1][2] = (m[0][2] * m[1][0] - m[0][0] * m[1][2]) * invDet;
-		result.m[2][0] = (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * invDet;
-		result.m[2][1] = (m[0][1] * m[2][0] - m[0][0] * m[2][1]) * invDet;
-		result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
-
-		*this = result;
-	}
-
-	template<Numeric T>
-	constexpr bool TMatrix33<T>::IsOrthogonal() const
-	{
-		const T dotX = m[0].Dot(m[1]);
-		const T dotY = m[1].Dot(m[2]);
-		const T dotZ = m[2].Dot(m[0]);
-
-		return AreValuesClose(dotX, static_cast<T>(0)) &&
-			   AreValuesClose(dotY, static_cast<T>(0)) &&
-			   AreValuesClose(dotZ, static_cast<T>(0));
 	}
 
 	template<Numeric T>
