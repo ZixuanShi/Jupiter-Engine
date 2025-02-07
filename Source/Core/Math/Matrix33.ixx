@@ -37,21 +37,21 @@ export namespace jpt
 	public:
 		constexpr TMatrix33<T>  operator* (const TMatrix33<T>& rhs) const;
 		constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
-		constexpr TVector2<T>   operator* (TVector2<T> v) const;
+		constexpr Vector2<T>   operator* (Vector2<T> v) const;
 
 	public:
 		// Translation & Position
-		constexpr static TMatrix33 Translation(TVector2<T> v);
-		constexpr void Translate(TVector2<T> v);
+		constexpr static TMatrix33 Translation(Vector2<T> v);
+		constexpr void Translate(Vector2<T> v);
 
 		// Rotation & Orientation
 		constexpr static TMatrix33 Rotation(T radians);
 		constexpr void Rotate(T radians);
 
 		// Scaling & Size
-		constexpr static TMatrix33 Scaling(TVector2<T> v);
+		constexpr static TMatrix33 Scaling(Vector2<T> v);
 		constexpr static TMatrix33 Scaling(T scalar);
-		constexpr void Scale(TVector2<T> v);
+		constexpr void Scale(Vector2<T> v);
 		constexpr void Scale(T scalar);
 
 		// Utils
@@ -117,15 +117,15 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TVector2<T> TMatrix33<T>::operator*(TVector2<T> v) const
+	constexpr Vector2<T> TMatrix33<T>::operator*(Vector2<T> v) const
 	{
 		const T x = m[0][0] * v.x + m[0][1] * v.y + m[0][2];
 		const T y = m[1][0] * v.x + m[1][1] * v.y + m[1][2];
-		return TVector2<T>(x, y);
+		return Vector2<T>(x, y);
 	}
 
 	template<Numeric T>
-	constexpr TMatrix33<T> TMatrix33<T>::Translation(TVector2<T> v)
+	constexpr TMatrix33<T> TMatrix33<T>::Translation(Vector2<T> v)
 	{
 		return TMatrix33<T>(1, 0, v.x,
 					        0, 1, v.y,
@@ -144,7 +144,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr TMatrix33<T> TMatrix33<T>::Scaling(TVector2<T> v)
+	constexpr TMatrix33<T> TMatrix33<T>::Scaling(Vector2<T> v)
 	{
 		return TMatrix33<T>(v.x,   0, 0,
 			                  0, v.y, 0,
@@ -160,7 +160,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TMatrix33<T>::Translate(TVector2<T> v)
+	constexpr void TMatrix33<T>::Translate(Vector2<T> v)
 	{
 		*this *= Translation(v); 
 	}
@@ -172,7 +172,7 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr void TMatrix33<T>::Scale(TVector2<T> v)
+	constexpr void TMatrix33<T>::Scale(Vector2<T> v)
 	{
 		*this *= Scaling(v);
 	}

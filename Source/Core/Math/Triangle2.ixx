@@ -18,21 +18,21 @@ namespace jpt
 	struct TTriangle2
 	{
 	public:
-		TVector2<T> a = static_cast<TVector2<T>>(0);
-		TVector2<T> b = static_cast<TVector2<T>>(0);
-		TVector2<T> c = static_cast<TVector2<T>>(0);
+		Vector2<T> a = static_cast<Vector2<T>>(0);
+		Vector2<T> b = static_cast<Vector2<T>>(0);
+		Vector2<T> c = static_cast<Vector2<T>>(0);
 
 	public:
 		constexpr TTriangle2() = default;
-		constexpr TTriangle2(TVector2<T> _a, TVector2<T> _b, TVector2<T> _c);
+		constexpr TTriangle2(Vector2<T> _a, Vector2<T> _b, Vector2<T> _c);
 
 		constexpr T Perimeter() const;
 		constexpr T Area() const;
-		constexpr bool Inside(TVector2<T> point) const;
+		constexpr bool Inside(Vector2<T> point) const;
 	};
 
 	template<Numeric T>
-	constexpr TTriangle2<T>::TTriangle2(TVector2<T> _a, TVector2<T> _b, TVector2<T> _c)
+	constexpr TTriangle2<T>::TTriangle2(Vector2<T> _a, Vector2<T> _b, Vector2<T> _c)
 		: a(_a), b(_b), c(_c)
 	{
 	}
@@ -40,18 +40,18 @@ namespace jpt
 	template<Numeric T>
 	constexpr T TTriangle2<T>::Perimeter() const
 	{
-		return TVector2<T>::Distance(a, b) + TVector2<T>::Distance(b, c) + TVector2<T>::Distance(c, a);
+		return Vector2<T>::Distance(a, b) + Vector2<T>::Distance(b, c) + Vector2<T>::Distance(c, a);
 	}
 
 	template<Numeric T>
 	constexpr T TTriangle2<T>::Area() const
 	{
 		const T s = Perimeter() * static_cast<T>(0.5);
-		return std::sqrt(s * (s - TVector2<T>::Distance(a, b)) * (s - TVector2<T>::Distance(b, c)) * (s - TVector2<T>::Distance(c, a)));
+		return std::sqrt(s * (s - Vector2<T>::Distance(a, b)) * (s - Vector2<T>::Distance(b, c)) * (s - Vector2<T>::Distance(c, a)));
 	}
 
 	template<Numeric T>
-	constexpr bool TTriangle2<T>::Inside(TVector2<T> point) const
+	constexpr bool TTriangle2<T>::Inside(Vector2<T> point) const
 	{
 		// Barycentric coordinates
 

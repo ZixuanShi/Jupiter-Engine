@@ -17,14 +17,14 @@ import jpt.Vector2;
 float FindAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 {
 	const Vec2f toTargetDir = (targetPos - sourcePos).Normalized();
-	return sourceFacingDir.AngleDegrees(toTargetDir);
+	return jpt::ToDegrees(sourceFacingDir.Angle(toTargetDir));
 }
 
 /** @return Angle in dgrees from -180 to 180 between 2 position respective to facing dir */
 float FindSignedAngle2D(Vec2f sourcePos, Vec2f sourceFacingDir, Vec2f targetPos)
 {
 	const Vec2f toTargetDir = (targetPos - sourcePos).Normalized();
-	return sourceFacingDir.AngleSignedDegrees(toTargetDir);
+	return jpt::ToDegrees(sourceFacingDir.AngleSigned(toTargetDir));
 }
 
 export bool UnitTests_Math_FindAngle2D()

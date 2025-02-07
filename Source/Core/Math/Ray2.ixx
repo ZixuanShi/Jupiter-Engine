@@ -14,32 +14,32 @@ namespace jpt
 	struct TRay2
 	{
 	public:
-		TVector2<T> origin;
-		TVector2<T> direction;
+		Vector2<T> origin;
+		Vector2<T> direction;
 
 	public:
 		constexpr TRay2() noexcept = default;
-		constexpr TRay2(TVector2<T> origin, TVector2<T> direction) noexcept;
+		constexpr TRay2(Vector2<T> origin, Vector2<T> direction) noexcept;
 
-		constexpr TVector2<T> GetPoint(T t) const noexcept;
-		constexpr T Distance(TVector2<T> point) const noexcept;
+		constexpr Vector2<T> GetPoint(T t) const noexcept;
+		constexpr T Distance(Vector2<T> point) const noexcept;
 	};
 
 	template<Numeric T>
-	constexpr TRay2<T>::TRay2(TVector2<T> origin, TVector2<T> direction) noexcept
+	constexpr TRay2<T>::TRay2(Vector2<T> origin, Vector2<T> direction) noexcept
 		: origin(origin)
 		, direction(direction)
 	{
 	}
 
 	template<Numeric T>
-	constexpr TVector2<T> TRay2<T>::GetPoint(T t) const noexcept
+	constexpr Vector2<T> TRay2<T>::GetPoint(T t) const noexcept
 	{
 		return origin + direction * t;
 	}
 
 	template<Numeric T>
-	constexpr T TRay2<T>::Distance(TVector2<T> point) const noexcept
+	constexpr T TRay2<T>::Distance(Vector2<T> point) const noexcept
 	{
 		const float dot = Vec2f::Dot(point - origin, direction);
 		float distance = jpt::kInvalidValue<T>;

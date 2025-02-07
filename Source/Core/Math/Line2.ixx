@@ -21,27 +21,27 @@ namespace jpt
 	struct TLine2
 	{
 	public:
-		TVector2<T> a;
-		TVector2<T> b;
+		Vector2<T> a;
+		Vector2<T> b;
 
 	public:
 		constexpr TLine2() = default;
-		constexpr TLine2(const TVector2<T>& a, const TVector2<T>& b);
+		constexpr TLine2(const Vector2<T>& a, const Vector2<T>& b);
 
 		/** ax + by + c = 0 */
 		constexpr Vector3<T> Coefficients() const;
 
 		/** distance from point to line */
-		constexpr T Distance(const TVector2<T>& point) const;
-		constexpr T Dist(const TVector2<T>& point) const;
+		constexpr T Distance(const Vector2<T>& point) const;
+		constexpr T Dist(const Vector2<T>& point) const;
 
 		/** The projected point is the closest point on the line to the given point
             We can find it by moving from the original point perpendicular to the line */
-		constexpr TVector2<T> Project(const TVector2<T>& point) const;
+		constexpr Vector2<T> Project(const Vector2<T>& point) const;
 	};
 
 	template<Numeric T>
-	constexpr TLine2<T>::TLine2(const TVector2<T>& a, const TVector2<T>& b)
+	constexpr TLine2<T>::TLine2(const Vector2<T>& a, const Vector2<T>& b)
 		: a(a)
 		, b(b) 
 	{
@@ -57,7 +57,7 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T TLine2<T>::Distance(const TVector2<T>& point) const
+	constexpr T TLine2<T>::Distance(const Vector2<T>& point) const
 	{
 		// d = |Ax0 + By0 + C| / sqrt(A^2 + B^2)
 
@@ -71,13 +71,13 @@ namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T TLine2<T>::Dist(const TVector2<T>& point) const
+	constexpr T TLine2<T>::Dist(const Vector2<T>& point) const
 	{
 		return Distance(point);
 	}
 
 	template<Numeric T>
-	constexpr TVector2<T> TLine2<T>::Project(const TVector2<T>& point) const
+	constexpr Vector2<T> TLine2<T>::Project(const Vector2<T>& point) const
 	{
 		const Vector3<T> coefficients = Coefficients();
 
@@ -86,7 +86,7 @@ namespace jpt
 
 		const T invDenominator = T(1) / denominator;
 		const T t = -(coefficients.x * point.x + coefficients.y * point.y + coefficients.z) * invDenominator;
-		return TVector2<T>(point.x + t * coefficients.x, point.y + t * coefficients.y);
+		return Vector2<T>(point.x + t * coefficients.x, point.y + t * coefficients.y);
 	}
 }
 
