@@ -85,6 +85,7 @@ export namespace jpt
 
 		/** Creates a view matrix for a camera, defining how the world is oriented relative to the camera's position */
 		constexpr static TMatrix44<T> LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up = Vector3<T>::Up());
+		//constexpr void LookAt(const Vector3<T>& direction, const Vector3<T>& up = Vector3<T>::Up());
 
 		/** Converts 3D coordinates into 2D screen coordinates */
 		constexpr static TMatrix44<T> Perspective(T fov, T aspect, T near, T far);
@@ -405,6 +406,12 @@ export namespace jpt
 
 		return result;
 	}
+
+	//template<Numeric T>
+	//constexpr void TMatrix44<T>::LookAt(const Vector3<T>& direction, const Vector3<T>& up /* = Vector3<T>::Up()*/)
+	//{
+
+	//}
 
 	template<Numeric T>
 	constexpr TMatrix44<T> TMatrix44<T>::Perspective(T fov, T aspect, T zNear, T zFar)

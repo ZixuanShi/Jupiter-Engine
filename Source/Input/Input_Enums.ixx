@@ -15,8 +15,7 @@ export namespace jpt::Input
 		Gamepad,
 	);
 
-	enum class KeyState
-	{
+	JPT_ENUM_UINT8(KeyState,
 		Invalid,
 
 		Pressed,    // Newly pressed in last frame
@@ -29,7 +28,7 @@ export namespace jpt::Input
 		Smashed,    // Repeatedly pressed within a short time
 
 		ItemCount,
-	};
+	);
 
 	JPT_ENUM_UINT8(MouseButton,
 		Left,

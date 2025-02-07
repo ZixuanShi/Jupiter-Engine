@@ -13,6 +13,8 @@ import jpt.Event;
 import jpt.Event.Manager;
 
 import jpt.Event.MouseButton;
+import jpt.Event.MouseScroll;
+import jpt.Event.Key;
 
 //------------------------------------------------------------------------
 // Test data
@@ -164,11 +166,21 @@ static bool UnregisterAll()
 //------------------------------------------------------------------------
 // Mouse button press
 //------------------------------------------------------------------------
-static bool MouseButtonPress()
+static bool RegisterEvents()
 {
 	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>([](const jpt::Event_Mouse_Button& eventMouseButtonPress)
 		{
 			JPT_LOG("Mouse button press: %s, x: %f, y: %f", eventMouseButtonPress.GetButton().ToString().ConstBuffer(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
+		});
+
+	jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Scroll>([](const jpt::Event_Mouse_Scroll& eventMouseScroll)
+		{
+			JPT_LOG("Mouse Scroll: y: %f", eventMouseScroll.GetY());
+		});
+
+	jpt::EventManager::GetInstance().Register<jpt::Event_Key>([](const jpt::Event_Key& eventKey)
+		{
+			JPT_LOG("Key: %s, state: %s", eventKey.GetKey().ToString().ConstBuffer(), eventKey.GetState().ToString().ConstBuffer());
 		});
 
 	return true;
@@ -188,7 +200,7 @@ export bool RunUnitTests_EventSystem()
 
 	JPT_ENSURE(UnregisterAll());
 
-	JPT_ENSURE(MouseButtonPress());
+	JPT_ENSURE(RegisterEvents());
 
 	return true;
 }
