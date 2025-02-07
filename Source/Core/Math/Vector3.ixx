@@ -48,6 +48,7 @@ export namespace jpt
 		constexpr Vector3(T scalar);
 		constexpr Vector3(T _x, T _y, T _z);
 
+	public:
 		constexpr Vector3 operator-() const;
 
 		constexpr Vector3 operator+(const Vector3& other) const;
@@ -73,39 +74,57 @@ export namespace jpt
 		constexpr T& operator[](size_t index) { return (&x)[index]; }
 		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
 
-		constexpr bool operator==(const Vector3& other) const;
-
+	public:
+		constexpr static T Dot(const Vector3& left, const Vector3& right);
 		constexpr T Dot(const Vector3& other) const;
+
+		constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
 		constexpr Vector3 Cross(const Vector3& other) const;
+
+		constexpr static T Length(const Vector3& TVector3);
 		constexpr T Length() const;
+
+		constexpr static T Length2(const Vector3& TVector3);
 		constexpr T Length2() const;
+
+		constexpr static T Distance(const Vector3& left, const Vector3& right);
 		constexpr T Distance(const Vector3& other) const;
+
+		constexpr static T Distance2(const Vector3& left, const Vector3& right);
 		constexpr T Distance2(const Vector3& other) const;
-		constexpr void Normalize();
+
+		constexpr static Vector3 Normalize(const Vector3& TVector3);
 		constexpr Vector3 Normalized() const;
+		constexpr void Normalize();
+
+		constexpr static T Angle(const Vector3& left, const Vector3& right);
 		constexpr T Angle(const Vector3& other) const;
+
+		constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
 		constexpr Vector3 Lerp(const Vector3& other, T t) const;
+
+		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3& end, const Vector3& value);
 		constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
+
+		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
+		constexpr Vector3 Project(const Vector3& to) const;
+
 		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
 		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
-		constexpr Vector3 Project(const Vector3& to) const;
 		constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
 
-		constexpr static T Dot(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
-		constexpr static T Length(const Vector3& TVector3);
-		constexpr static T Length2(const Vector3& TVector3);
-		constexpr static T Distance(const Vector3& left, const Vector3& right);
-		constexpr static T Distance2(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Normalize(const Vector3& TVector3);
-		constexpr static T Angle(const Vector3& left, const Vector3& right);
-		constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
-		constexpr static Vector3 InvLerp(const Vector3& start, const Vector3& end, const Vector3& value);
-		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
-
+		// Utils
 		constexpr String ToString() const;
 		constexpr uint64 Hash() const;
 	};
+
+	template<Numeric T>
+	constexpr bool operator==(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+	{
+		return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
+			   AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05)) &&
+			   AreValuesClose(lhs.z, rhs.z, static_cast<T>(0.05));
+	}
 
 	// ------------------------------------------------------------------------------------------------
 	// Member functions
@@ -250,14 +269,6 @@ export namespace jpt
 		y /= scalar;
 		z /= scalar;
 		return *this;
-	}
-
-	template<Numeric T>
-	constexpr bool Vector3<T>::operator==(const Vector3& other) const
-	{
-		return AreValuesClose(x, other.x, static_cast<T>(0.05)) && 
-			   AreValuesClose(y, other.y, static_cast<T>(0.05)) && 
-			   AreValuesClose(z, other.z, static_cast<T>(0.05));
 	}
 
 	template<Numeric T>

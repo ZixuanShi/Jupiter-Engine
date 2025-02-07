@@ -63,11 +63,11 @@ export namespace jpt
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr T Dot(Vector2 other) const;
 
-		constexpr static T Length2(Vector2 vector);
-		constexpr T Length2() const;
-
 		constexpr static T Length(Vector2 vector);
 		constexpr T Length()  const;
+
+		constexpr static T Length2(Vector2 vector);
+		constexpr T Length2() const;
 
 		constexpr static T Distance(Vector2 from, Vector2 to);
 		constexpr T Distance(Vector2 other) const;
