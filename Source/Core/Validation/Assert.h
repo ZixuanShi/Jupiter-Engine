@@ -8,7 +8,7 @@
 
 namespace jpt
 {
-	using AssertCallback = void(*)(int line, const char* file, const char* message);
+	using AssertCallback = void(*)(int line, const char* file, const char* expression, const char* message);
 	inline AssertCallback g_AssertCallback;
 
 	/** Implementation when an assertion has failed

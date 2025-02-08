@@ -6,7 +6,7 @@ module;
 
 export module jpt.File.Path.Utils;
 
-import jpt.Debug.Utils;
+import jpt.Debugger;
 import jpt.File.Enums;
 import jpt.File.Path;
 import jpt.System.Paths;
@@ -65,7 +65,7 @@ export namespace jpt::File
 	{
 #if IS_RELEASE
 		// If ran from VS debugger, use absolute path to Client as it's using Visual Studio's working directory
-		if (IsDebuggerPresent())
+		if (Debugger::GetInstance().IsDebuggerPresent())
 		{
 			if (relativePath.Has("Jupiter_Common"))
 			{

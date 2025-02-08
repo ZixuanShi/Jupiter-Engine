@@ -61,8 +61,6 @@ namespace jpt
 		void Log(ELogType type, int32 line, const char* file, const char* format, ...);
 		void Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...);
 
-		bool PreInit();
-
 		static Logger& GetInstance();
 
 	private:

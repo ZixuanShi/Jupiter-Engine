@@ -15,8 +15,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-import jpt.String;
-
 namespace jpt
 {
 	void OnAssertionFailed(int line, const char* file, const char* expression, const char* format, ...)
@@ -27,24 +25,16 @@ namespace jpt
 			return;
 		}
 
-		jpt::String message = "Assertion Failed: ";
-		message.Append(expression);
-
 		if (format)
 		{
-			message.Append(", ");
-
 			char messageBuffer[512];
 			JPT_FORMAT_STRING(messageBuffer, format, ...);
-
-			message.Append(messageBuffer);
+			g_AssertCallback(line, file, expression, messageBuffer);
 		}
-
-#if IS_PLATFORM_WIN64
-		MessageBoxA(nullptr, message.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
-#endif
-
-		g_AssertCallback(line, file, message.ConstBuffer());
+		else
+		{
+			g_AssertCallback(line, file, expression, nullptr);
+		}
 	}
 
 	void OnAssertionFailed(int line, const char* file, const char* expression)

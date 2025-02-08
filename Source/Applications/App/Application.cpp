@@ -9,6 +9,7 @@ module;
 module jpt.Application;
 
 import jpt.CommandLine;
+import jpt.Debugger;
 
 import jpt.ToString;
 
@@ -45,7 +46,7 @@ namespace jpt
 	bool jpt::Application::PreInit()
 	{
 		System::Paths::GetInstance().PreInit();
-		Logger::GetInstance().PreInit();
+		Debugger::GetInstance().PreInit();
 		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
 
 		HardwareManager::GetInstance().PreInit();

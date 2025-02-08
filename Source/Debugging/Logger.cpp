@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <mutex>
 
 #if IS_PLATFORM_WIN64
 	#define WIN32_LEAN_AND_MEAN
@@ -20,7 +19,7 @@
 import jpt.Clock;
 import jpt.DateTime;
 
-import jpt.Debug.Utils;
+import jpt.Debugger;
 
 import jpt.File.Enums;
 import jpt.File.IO;
@@ -47,13 +46,6 @@ namespace jpt
 		}
 	}
 
-#if ASSERT_ENABLED
-	void locAssertCallback(int line, const char* file, const char* message)
-	{
-		Logger::GetInstance().Log(Logger::ELogType::Error, line, file, message);
-	}
-#endif
-
 	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
 	{
 		char messageBuffer[kMaxMessageSize];
@@ -66,14 +58,6 @@ namespace jpt
 		wchar_t messageBuffer[kMaxMessageSize];
 		JPT_FORMAT_WSTRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
-	}
-
-	bool Logger::PreInit()
-	{
-#if ASSERT_ENABLED
-		g_AssertCallback = locAssertCallback;
-#endif
-		return true;
 	}
 
 	String Logger::GetInfoStamp(ELogType type, int32 line, const char* file)
@@ -104,7 +88,7 @@ namespace jpt
 		contentToLog += pMessage;
 		contentToLog += "\n";
 
-		if (jpt::IsDebuggerPresent())
+		if (Debugger::GetInstance().IsDebuggerPresent())
 		{
 			SendToOutputWindow(contentToLog.ConstBuffer());
 		}
@@ -123,7 +107,7 @@ namespace jpt
 		ContentToLogW += pMessage;
 		ContentToLogW += L"\n";
 
-		if (jpt::IsDebuggerPresent())
+		if (Debugger::GetInstance().IsDebuggerPresent())
 		{
 			SendToOutputWindow(ContentToLogW.ConstBuffer());
 		}
