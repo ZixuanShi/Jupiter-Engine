@@ -142,10 +142,7 @@ namespace jpt
 
 		for (WindowResources& resources : m_windowResources)
 		{
-			if (resources.CanDraw())
-			{
-				resources.DrawFrame();
-			}
+			resources.DrawFrame();
 		}
 	}
 

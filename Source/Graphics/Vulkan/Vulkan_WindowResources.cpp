@@ -149,6 +149,11 @@ namespace jpt::Vulkan
 
 	void WindowResources::DrawFrame()
 	{
+		if (!CanDraw())
+		{
+			return;
+		}
+
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
