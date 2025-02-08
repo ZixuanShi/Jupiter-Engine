@@ -95,10 +95,7 @@ namespace jpt
 
 		for (WindowResources& resources : m_windowResources)
 		{
-			if (resources.ShouldRecreateSwapChain())
-			{
-				resources.RecreateSwapChain();
-			}
+			resources.Update(deltaSeconds);
 		}
 	}
 

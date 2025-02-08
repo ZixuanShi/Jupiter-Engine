@@ -37,7 +37,7 @@ export namespace jpt
 	constexpr T kPi = static_cast<T>(3.14159265358979323846f);
 
 	template<typename T = float>
-	constexpr T kTAU = static_cast<T>(6.28318530717958647692f);
+	constexpr T kTwoPi = static_cast<T>(6.28318530717958647692f);
 
 	template<typename T = float>
 	constexpr T kHalfPi = static_cast<T>(1.57079632679489661923f);

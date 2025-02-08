@@ -38,7 +38,6 @@ import jpt.Vulkan.DescriptorPool;
 import jpt.Matrix44;
 import jpt.Math;
 import jpt.Utilities;
-import jpt.StopWatch;
 
 namespace jpt::Vulkan
 {
@@ -109,6 +108,16 @@ namespace jpt::Vulkan
 		return true;
 	}
 
+	void WindowResources::Update(TimePrecision deltaSeconds)
+	{
+		if (m_shouldRecreateSwapChain)
+		{
+			RecreateSwapChain();
+		}
+
+		UpdateUniformBuffer(deltaSeconds);
+	}
+
 	void WindowResources::Shutdown()
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
@@ -164,8 +173,6 @@ namespace jpt::Vulkan
 
 		if (Optional<uint32> imageIndex = AcquireNextImage())
 		{
-			UpdateUniformBuffer();
-
 			vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
 
 			Record(imageIndex.Value());
@@ -197,11 +204,6 @@ namespace jpt::Vulkan
 		m_swapChain.CreateFramebuffers(m_colorImageView, m_depthImageView);
 
 		m_shouldRecreateSwapChain = false;
-	}
-
-	bool WindowResources::ShouldRecreateSwapChain() const
-	{
-		return m_shouldRecreateSwapChain;
 	}
 
 	Optional<uint32> WindowResources::AcquireNextImage()
@@ -359,15 +361,15 @@ namespace jpt::Vulkan
 		}
 	}
 
-	void WindowResources::UpdateUniformBuffer()
+	void WindowResources::UpdateUniformBuffer(TimePrecision deltaSeconds)
 	{
-		static StopWatch::Point startTime = StopWatch::Now();
-
-		const StopWatch::Point currentTime = StopWatch::Now();
-		const float time = static_cast<float>(StopWatch::GetSecondsBetween(startTime, currentTime));
-		
 		const Vec3 translation = Vec3(0.0f, 0.0f, 0.0f);
-		const float rotation = time * ToRadians(30.0f);
+		static Precision rotation = 0.0f;
+		rotation += deltaSeconds * ToRadians(30.0f);
+		if (rotation > kTwoPi<Precision>)
+		{
+			rotation -= kTwoPi<Precision>;
+		}
 
 		UniformBufferObject ubo = {};
 		ubo.model.Translate(translation);

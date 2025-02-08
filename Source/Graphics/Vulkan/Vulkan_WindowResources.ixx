@@ -17,6 +17,7 @@ import jpt.Vulkan.UniformBuffer;
 import jpt.StaticArray;
 import jpt.Optional;
 import jpt.TypeDefs;
+import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
@@ -40,7 +41,7 @@ export namespace jpt
 			StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
 			StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
 
-			// 
+			// Multisampling anti-aliasing
 			VkImage m_colorImage;
 			VkDeviceMemory m_colorImageMemory;
 			VkImageView m_colorImageView;
@@ -55,16 +56,20 @@ export namespace jpt
 
 		public:
 			bool Init(Window* pWindow);
-			void Shutdown();
+			
+			/** CPU. Handles per-frame logic & data that aren't directly related to drawing */
+			void Update(TimePrecision deltaSeconds);
 
+			/** GPU. Handles rendering commands for drawing a frame */
 			void DrawFrame();
 
+			void Shutdown();
+			
 			void RecreateSwapChain();
 
 		public:
 			Window* GetOwner() const;
 
-			bool ShouldRecreateSwapChain() const;
 			bool CanDraw() const;
 
 		private:
@@ -73,7 +78,7 @@ export namespace jpt
 			void Submit() const;
 			void Present(uint32& imageIndex);
 
-			void UpdateUniformBuffer();
+			void UpdateUniformBuffer(TimePrecision deltaSeconds);
 
 			void CreateColorResources();
 			void DestroyColorResources();
