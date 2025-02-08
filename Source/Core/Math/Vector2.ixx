@@ -257,9 +257,21 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector2<T>::Dot(Vector2 left, Vector2 right)
+	{
+		return (left.x * right.x) + (left.y * right.y);
+	}
+
+	template<Numeric T>
 	constexpr T Vector2<T>::Dot(Vector2 other) const
 	{
 		return (x * other.x) + (y * other.y);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::Length(Vector2 vector)
+	{
+		return vector.Length();
 	}
 
 	template<Numeric T>
@@ -269,9 +281,21 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector2<T>::Length2(Vector2 vector)
+	{
+		return vector.Length2();
+	}
+
+	template<Numeric T>
 	constexpr T Vector2<T>::Length2() const
 	{
 		return (x * x) + (y * y);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::Distance(Vector2 from, Vector2 to)
+	{
+		return from.Distance(to);
 	}
 
 	template<Numeric T>
@@ -281,9 +305,29 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector2<T>::Distance2(Vector2 from, Vector2 to)
+	{
+		return from.Distance2(to);
+	}
+
+	template<Numeric T>
 	constexpr T Vector2<T>::Distance2(Vector2 other) const
 	{
 		return (*this - other).Length2();
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Normalized(Vector2 vector)
+	{
+		return vector.Normalized();
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Normalized() const
+	{
+		Vector2<T> result = *this;
+		result.Normalize();
+		return result;
 	}
 
 	template<Numeric T>
@@ -298,11 +342,15 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Normalized() const
+	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
 	{
-		Vector2<T> result = *this;
-		result.Normalize();
-		return result;
+		return from.Lerped(to, t);
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 other, T t) const
+	{
+		return *this + (other - *this) * t;
 	}
 
 	template<Numeric T>
@@ -312,9 +360,15 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Lerped(Vector2 other, T t) const
+	constexpr T Vector2<T>::Angle(Vector2 lhs, Vector2 rhs)
 	{
-		return *this + (other - *this) * t;
+		return lhs.Angle(rhs);
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
+	{
+		return from.AngleSigned(to);
 	}
 
 	template<Numeric T>
@@ -343,6 +397,20 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::Rotate(Vector2 vec2, T radians)
+	{
+		vec2.Rotate(radians);
+		return vec2;
+	}
+
+	template<Numeric T>
+	constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 vec2, Vector2 pivot, T radians)
+	{
+		vec2.RotateAround(pivot, radians);
+		return vec2;
+	}
+
+	template<Numeric T>
 	constexpr void Vector2<T>::Rotate(T radians)
 	{
 		const T cos = Cos(radians);
@@ -365,74 +433,6 @@ export namespace jpt
 
 		x = temp.x * cos - temp.y * sin + pivot.x;
 		y = temp.x * sin + temp.y * cos + pivot.y;
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Dot(Vector2 left, Vector2 right)
-	{
-		return (left.x * right.x) + (left.y * right.y);
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Length(Vector2 vector)
-	{
-		return vector.Length();
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Length2(Vector2 vector)
-	{
-		return vector.Length2();
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Distance(Vector2 from, Vector2 to)
-	{
-		return from.Distance(to);
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Distance2(Vector2 from, Vector2 to)
-	{
-		return from.Distance2(to);
-	}
-
-	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Normalized(Vector2 vector)
-	{
-		return vector.Normalized();
-	}
-
-	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
-	{
-		return from.Lerped(to, t);
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Angle(Vector2 lhs, Vector2 rhs)
-	{
-		return lhs.Angle(rhs);
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
-	{
-		return from.AngleSigned(to);
-	}
-
-	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::Rotate(Vector2 vec2, T radians)
-	{
-		vec2.Rotate(radians);
-		return vec2;
-	}
-
-	template<Numeric T>
-	constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 vec2, Vector2 pivot, T radians)
-	{
-		vec2.RotateAround(pivot, radians);
-		return vec2;
 	}
 
 	template<Numeric T>

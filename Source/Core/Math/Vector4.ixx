@@ -13,6 +13,7 @@ import jpt.Math;
 import jpt.String;
 import jpt.ToString;
 import jpt.Vector3;
+import jpt.Hash;
 
 export namespace jpt
 {
@@ -64,8 +65,8 @@ export namespace jpt
 		constexpr Vector4& operator*=(T scalar);
 		constexpr Vector4& operator/=(T scalar);
 
-		constexpr T& operator[](size_t index) { return (&x)[index]; }
-		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
+		constexpr T& operator[](size_t index) noexcept;
+		constexpr const T& operator[](size_t index) const noexcept;
 
 	public:
 		constexpr T Length2() const;
@@ -85,6 +86,7 @@ export namespace jpt
 
 		// Utils
 		constexpr String ToString() const;
+		constexpr uint64 Hash() const;
 	};
 
 	template<Numeric T>
@@ -258,27 +260,15 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr bool Vector4<T>::IsDir() const
+	constexpr T& Vector4<T>::operator[](size_t index) noexcept
 	{
-		return w == static_cast<T>(0);
+		return (&x)[index];
 	}
 
 	template<Numeric T>
-	constexpr bool Vector4<T>::IsPos() const
+	constexpr const T& Vector4<T>::operator[](size_t index) const noexcept
 	{
-		return w > static_cast<T>(0);
-	}
-
-	template<Numeric T>
-	constexpr String Vector4<T>::ToString() const
-	{
-		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", x, y, z, w);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector4<T>::XYZ() const
-	{
-		return Vector3<T>(x, y, z);
+		return (&x)[index];
 	}
 
 	template<Numeric T>
@@ -321,6 +311,56 @@ export namespace jpt
 	constexpr Vector3<T> Vector4<T>::Cross(const Vector4& other) const
 	{
 		return XYZ().Cross(other.XYZ());
+	}
+
+	template<Numeric T>
+	constexpr bool Vector4<T>::IsDir() const
+	{
+		return w == static_cast<T>(0);
+	}
+
+	template<Numeric T>
+	constexpr bool Vector4<T>::IsPos() const
+	{
+		return w > static_cast<T>(0);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector4<T>::XYZ() const
+	{
+		return Vector3<T>(x, y, z);
+	}
+
+	template<Numeric T>
+	constexpr String Vector4<T>::ToString() const
+	{
+		return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", x, y, z, w);
+	}
+
+	template<Numeric T>
+	constexpr uint64 Vector4<T>::Hash() const
+	{
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			const T epsilon = static_cast<T>(1e-6);
+			auto round = [epsilon](T value) -> T
+				{
+					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
+				};
+			uint64 hash = jpt::Hash(round(x));
+			hash ^= jpt::Hash(round(y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(round(z)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(round(w)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+		else
+		{
+			uint64 hash = jpt::Hash(x);
+			hash ^= jpt::Hash(y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(w) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
 	}
 }
 

@@ -71,8 +71,8 @@ export namespace jpt
 		constexpr Vector3& operator*=(T scalar);
 		constexpr Vector3& operator/=(T scalar);
 
-		constexpr T& operator[](size_t index) { return (&x)[index]; }
-		constexpr const T& operator[](size_t index) const { return (&x)[index]; }
+		constexpr T& operator[](size_t index) noexcept;
+		constexpr const T& operator[](size_t index) const noexcept;
 
 	public:
 		constexpr static T Dot(const Vector3& left, const Vector3& right);
@@ -272,9 +272,33 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T& Vector3<T>::operator[](size_t index) noexcept
+	{
+		return (&x)[index];
+	}
+
+	template<Numeric T>
+	constexpr const T& Vector3<T>::operator[](size_t index) const noexcept
+	{
+		return (&x)[index];
+	}
+
+	template<Numeric T>
+	constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3& right)
+	{
+		return left.Dot(right);
+	}
+
+	template<Numeric T>
 	constexpr T Vector3<T>::Dot(const Vector3& other) const
 	{
 		return x * other.x + y * other.y + z * other.z;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Cross(const Vector3& left, const Vector3& right)
+	{
+		return left.Cross(right);
 	}
 
 	template<Numeric T>
@@ -286,9 +310,21 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector3<T>::Length(const Vector3& TVector3)
+	{
+		return TVector3.Length();
+	}
+
+	template<Numeric T>
 	constexpr T Vector3<T>::Length() const
 	{
 		return Sqrt(Length2());
+	}
+
+	template<Numeric T>
+	constexpr T Vector3<T>::Length2(const Vector3& TVector3)
+	{
+		return TVector3.Length2();
 	}
 
 	template<Numeric T>
@@ -298,15 +334,43 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr T Vector3<T>::Distance(const Vector3& left, const Vector3& right)
+	{
+		return left.Distance(right);
+	}
+
+	template<Numeric T>
 	constexpr T Vector3<T>::Distance(const Vector3& other) const
 	{
 		return Sqrt(Distance2(other));
 	}
 
 	template<Numeric T>
+	constexpr T Vector3<T>::Distance2(const Vector3& left, const Vector3& right)
+	{
+		return left.Distance2(right);
+	}
+
+	template<Numeric T>
 	constexpr T Vector3<T>::Distance2(const Vector3& other) const
 	{
 		return (x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Normalize(const Vector3& vector)
+	{
+		Vector3<T> result = vector;
+		result.Normalize();
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Normalized() const
+	{
+		Vector3<T> result = *this;
+		result.Normalize();
+		return result;
 	}
 
 	template<Numeric T>
@@ -322,11 +386,9 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Normalized() const
+	constexpr T Vector3<T>::Angle(const Vector3& left, const Vector3& right)
 	{
-		Vector3<T> result = *this;
-		result.Normalize();
-		return result;
+		return left.Angle(right);
 	}
 
 	template<Numeric T>
@@ -336,15 +398,50 @@ export namespace jpt
 	}
 
 	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& start, const Vector3& end, T t)
+	{
+		return start.Lerp(end, t);
+	}
+
+	template<Numeric T>
 	constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& other, T t) const
 	{
 		return *this + (other - *this) * t;
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& other, const Vector3&value) const
+	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& start, const Vector3& end, const Vector3& value)
+	{
+		return start.InvLerp(end, value);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& other, const Vector3& value) const
 	{
 		return (value - *this) / (other - *this);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& from, const Vector3& to)
+	{
+		return from.Project(to);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> Vector3<T>::Project(const Vector3& to) const
+	{
+		// Projects from this vector to the other
+		// Formula: proj_v(u) = (u . v / |v|^2) * v
+
+		const T length2 = to.Length2();
+		if (length2 == static_cast<T>(0))
+		{
+			return Vector3<T>::Zero();
+		}
+
+		const T dot = this->Dot(to);
+		const T scalar = dot / length2;
+		return to * scalar;
 	}
 
 	template<Numeric T>
@@ -372,23 +469,6 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& to) const
-	{
-		// Projects from this vector to the other
-		// Formula: proj_v(u) = (u . v / |v|^2) * v
-
-		const T length2 = to.Length2();
-		if (length2 == static_cast<T>(0))
-		{
-			return Vector3<T>::Zero();
-		}
-
-		const T dot = this->Dot(to);
-		const T scalar = dot / length2;
-		return to * scalar;
-	}
-
-	template<Numeric T>
 	constexpr bool Vector3<T>::OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const
 	{
 		// Calculate the vector from the view position to the point
@@ -399,74 +479,6 @@ export namespace jpt
 
 		// If the cross product is pointing up, the point is to the left of the view
 		return cross.y > static_cast<T>(0);
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3& right)
-	{
-		return left.Dot(right);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Cross(const Vector3& left, const Vector3& right)
-	{
-		return left.Cross(right);
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Length(const Vector3& TVector3)
-	{
-		return TVector3.Length();
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Length2(const Vector3& TVector3)
-	{
-		return TVector3.Length2();
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Distance(const Vector3& left, const Vector3& right)
-	{
-		return left.Distance(right);
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Distance2(const Vector3& left, const Vector3& right)
-	{
-		return left.Distance2(right);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Normalize(const Vector3& vector)
-	{
-		Vector3<T> result = vector;
-		result.Normalize();
-		return result;
-	}
-
-	template<Numeric T>
-	constexpr T Vector3<T>::Angle(const Vector3& left, const Vector3& right)
-	{
-		return left.Angle(right);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& start, const Vector3& end, T t)
-	{
-		return start.Lerp(end, t);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& start, const Vector3& end, const Vector3& value)
-	{
-		return start.InvLerp(end, value);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::Project(const Vector3& from, const Vector3& to)
-	{
-		return from.Project(to);
 	}
 
 	template<Numeric T>
