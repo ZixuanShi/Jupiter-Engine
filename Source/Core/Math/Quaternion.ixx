@@ -324,11 +324,11 @@ export namespace jpt
 		const T cz = Cos(halfZ);
 		const T sz = Sin(halfZ);
 
-		// Compute quaternion components for right-handed system
-		const T x = sx * cy * cz + cx * sy * sz;
-		const T y = cx * sy * cz - sx * cy * sz;
-		const T z = cx * cy * sz + sx * sy * cz;
-		const T w = cx * cy * cz - sx * sy * sz;
+		// Compute quaternion components for right-handed system. ZYX order
+		const T x = cx * sy * cz + sx * cy * sz;
+		const T y = sx * sy * cz - cx * cy * sz;
+		const T z = cx * sy * sz - sx * cy * cz;
+		const T w = cx * cy * cz + sx * sy * sz;
 
 		return TQuaternion(x, y, z, w).Normalized(); // Ensure unit quaternion
 	}
