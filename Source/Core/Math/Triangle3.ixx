@@ -19,6 +19,7 @@ namespace jpt
 	struct TTriangle3
 	{
 	public:
+		// Counter-clockwise winding order
 		Vector3<T> a = static_cast<Vector3<T>>(0);
 		Vector3<T> b = static_cast<Vector3<T>>(0);
 		Vector3<T> c = static_cast<Vector3<T>>(0);

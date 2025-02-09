@@ -1,9 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Validation/Assert.h"
-
 export module jpt.Ray2;
 
 import jpt.Concepts;
@@ -19,7 +15,7 @@ namespace jpt
 	{
 	public:
 		Vector2<T> origin;
-		Vector2<T> direction;	// Normalized
+		Vector2<T> direction;
 
 	public:
 		constexpr TRay2() noexcept = default;
@@ -34,7 +30,6 @@ namespace jpt
 		: origin(origin)
 		, direction(direction)
 	{
-		JPT_ASSERT(direction == direction.Normalized(), "Direction must be normalized");
 	}
 
 	template<Numeric T>
@@ -57,7 +52,7 @@ namespace jpt
 		else
 		{
 			// Otherwise, return the distance to the point on the ray closest to the point
-			const Vec2f projection = origin + direction * dot;
+			const Vec2f projection = origin + direction * (dot / direction.Length2());
 			distance = Vec2f::Distance(point, projection);
 		}
 

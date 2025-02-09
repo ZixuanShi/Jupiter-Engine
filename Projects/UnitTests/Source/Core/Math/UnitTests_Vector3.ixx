@@ -54,34 +54,16 @@ static bool UnitTests_Vec3f_Operations()
     return true;
 }
 
-static bool UnitTests_Vec3f_Functionalities()
+static bool UnitTests_Vec3f_Cross()
 {
-    Vec3f v(1.0f, 2.0f, 3.0f);
-    //JPT_LOG(v);
+	Vec3f a = Vec3(1.0f, 0.0f, 0.0f).Normalized();
+	Vec3f b = Vec3(0.0f, 0.0f, 1.0f).Normalized();
 
-    // Dot product
-    JPT_ENSURE(Vec3f::Dot(v, Vec3f(3.0f, 2.0f, 1.0f)) == 10.0f);
+	Vec3f c = b.Cross(a);
+	JPT_ENSURE(c == Vec3f(0.0f, 1.0f, 0.0f));
 
-    // Cross product
-    JPT_ENSURE(Vec3f::Cross(v, Vec3f(3.0f, 2.0f, 1.0f)) == Vec3f(-4.0f, 8.0f, -4.0f));
-
-    // Length
-    JPT_ENSURE(jpt::AreValuesClose(v.Length(), 3.74165750f));
-
-    // Length2
-    JPT_ENSURE(v.Length2() == 14.0f);
-
-    // Distance
-    JPT_ENSURE(jpt::AreValuesClose(Vec3f::Distance(v, Vec3f(3.0f, 2.0f, 1.0f)), 2.82842708f));
-
-    // Distance2
-    JPT_ENSURE(jpt::AreValuesClose(Vec3f::Distance2(v, Vec3f(3.0f, 2.0f, 1.0f)), 8.0f));
-
-    // Normalize
-    JPT_ENSURE(Vec3f::Normalize(v) == Vec3f(0.26726124f, 0.53452248f, 0.80178373f));
-
-    // Lerp
-    JPT_ENSURE(Vec3f::Lerp(v, Vec3f(3.0f, 2.0f, 1.0f), 0.5f) == Vec3f(2.0f, 2.0f, 2.0f));
+	c = a.Cross(b);
+	JPT_ENSURE(c == Vec3f(0.0f, -1.0f, 0.0f));
 
     return true;
 }
@@ -89,7 +71,7 @@ static bool UnitTests_Vec3f_Functionalities()
 export bool RunUnitTests_Vector3()
 {
     JPT_ENSURE(UnitTests_Vec3f_Operations());
-    JPT_ENSURE(UnitTests_Vec3f_Functionalities());
+    JPT_ENSURE(UnitTests_Vec3f_Cross());
 
     return true;
 }

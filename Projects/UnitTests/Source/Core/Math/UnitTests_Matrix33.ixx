@@ -91,6 +91,14 @@ bool UnitTests_Matrix33_Scaling()
 	return true;
 }
 
+bool UnitTests_Matrix33_Transpose()
+{
+	glm::mat3 glmMat = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glmMat = glm::transpose(glmMat);
+
+	return true;
+}
+
 export bool RunUnitTests_Matrix33()
 {
 	JPT_ENSURE(UnitTests_Matrix33_Mul());
