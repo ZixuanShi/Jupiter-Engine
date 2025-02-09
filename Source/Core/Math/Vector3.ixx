@@ -13,6 +13,7 @@ import jpt.Math;
 import jpt.String;
 import jpt.ToString;
 import jpt.Hash;
+import jpt.Vector2;
 
 export namespace jpt
 {
@@ -47,6 +48,7 @@ export namespace jpt
 		constexpr Vector3() = default;
 		constexpr Vector3(T scalar);
 		constexpr Vector3(T _x, T _y, T _z);
+		constexpr Vector3(const Vector2<T>& vector2, T _z);
 
 	public:
 		constexpr Vector3 operator-() const;
@@ -141,6 +143,14 @@ export namespace jpt
 	constexpr Vector3<T>::Vector3(T _x, T _y, T _z)
 		: x(_x)
 		, y(_y)
+		, z(_z)
+	{
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T>::Vector3(const Vector2<T>& vector2, T _z)
+		: x(vector2.x)
+		, y(vector2.y)
 		, z(_z)
 	{
 	}

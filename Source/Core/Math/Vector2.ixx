@@ -59,6 +59,9 @@ export namespace jpt
 		constexpr Vector2& operator*=(T scalar);
 		constexpr Vector2& operator/=(T scalar);
 
+		constexpr T& operator[](size_t index) noexcept;
+		constexpr const T& operator[](size_t index) const noexcept;
+
 	public:
 		constexpr static T Dot(Vector2 left, Vector2 right);
 		constexpr T Dot(Vector2 other) const;
@@ -254,6 +257,18 @@ export namespace jpt
 		x /= scalar;
 		y /= scalar;
 		return *this;
+	}
+
+	template<Numeric T>
+	constexpr T& Vector2<T>::operator[](size_t index) noexcept
+	{
+		return (&x)[index];
+	}
+
+	template<Numeric T>
+	constexpr const T& Vector2<T>::operator[](size_t index) const noexcept
+	{
+		return (&x)[index];
 	}
 
 	template<Numeric T>

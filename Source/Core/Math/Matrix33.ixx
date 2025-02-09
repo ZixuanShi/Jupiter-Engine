@@ -37,7 +37,8 @@ export namespace jpt
 	public:
 		constexpr TMatrix33<T>  operator* (const TMatrix33<T>& rhs) const;
 		constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
-		constexpr Vector2<T>   operator* (Vector2<T> v) const;
+		constexpr Vector2<T>   operator*  (const Vector2<T>& v) const;
+		constexpr Vector3<T>   operator*  (const Vector3<T>& v) const;
 
 	public:
 		// Translation & Position
@@ -117,19 +118,31 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr Vector2<T> TMatrix33<T>::operator*(Vector2<T> v) const
+	constexpr Vector2<T> TMatrix33<T>::operator*(const Vector2<T>& v) const
 	{
-		const T x = m[0][0] * v.x + m[0][1] * v.y + m[0][2];
-		const T y = m[1][0] * v.x + m[1][1] * v.y + m[1][2];
-		return Vector2<T>(x, y);
+		Vector3<T> result = *this * Vector3<T>(v, 1);
+		return Vector2<T>(result.x, result.y);
+	}
+
+	template<Numeric T>
+	constexpr Vector3<T> TMatrix33<T>::operator*(const Vector3<T>& v) const
+	{
+		Vector3<T> result;
+		for (size_t i = 0; i < 3; ++i)
+		{
+			result[i] = m[0][i] * v[0] + 
+						m[1][i] * v[1] + 
+						m[2][i] * v[2];
+		}
+		return result;
 	}
 
 	template<Numeric T>
 	constexpr TMatrix33<T> TMatrix33<T>::Translation(Vector2<T> v)
 	{
-		return TMatrix33<T>(1, 0, v.x,
-					        0, 1, v.y,
-			                0, 0,   1);
+		return TMatrix33<T>(1,   0, 0,
+					        0,   1, 0,
+			              v.x, v.y, 1);
 	}
 
 	template<Numeric T>
@@ -138,8 +151,8 @@ export namespace jpt
 		const T cos = Cos(radians);
 		const T sin = Sin(radians);
 
-		return TMatrix33<T>(cos, -sin, 0,
-			                sin,  cos, 0,
+		return TMatrix33<T>(cos,  sin, 0,
+			               -sin,  cos, 0,
 			                 0,    0, 1);
 	}
 
