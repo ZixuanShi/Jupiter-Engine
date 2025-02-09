@@ -15,6 +15,7 @@ import jpt.DynamicArray;
 export namespace jpt::Vulkan
 {
 	/** Actual GPU unit hardware 
+		- Find the queue family indices
 		- Query for swapchain support, memory properties, etc.	*/
 	class PhysicalDevice
 	{

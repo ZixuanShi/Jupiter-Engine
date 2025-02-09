@@ -8,6 +8,8 @@ export module jpt.Vulkan.LogicalDevice;
 
 export namespace jpt::Vulkan
 {
+	/** Logical device that interfaces with the physical device
+		- Create and use queues	*/
 	class LogicalDevice
 	{
 	private:
