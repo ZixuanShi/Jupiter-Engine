@@ -15,11 +15,86 @@ import jpt.Renderer_Vulkan;
 import jpt.Vulkan.Extensions;
 import jpt.Vulkan.SwapChain.SupportDetails;
 
-import jpt.DynamicArray;
 import jpt.HashSet;
+import jpt.Optional;
+import jpt.String;
 
 namespace jpt::Vulkan
 {
+	static bool locAreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice)
+	{
+		uint32_t extensionCount;
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+		DynamicArray<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.Buffer());
+
+		HashSet<String> requiredExtensions;
+		for (const char* extension : g_deviceExtensions)
+		{
+			requiredExtensions.Add(extension);
+		}
+
+		for (const auto& extension : availableExtensions)
+		{
+			requiredExtensions.Erase(extension.extensionName);
+		}
+
+		if (!requiredExtensions.IsEmpty())
+		{
+			for (const String& extension : requiredExtensions)
+			{
+				JPT_ERROR("Missing required extension: %s", extension.ConstBuffer());
+			}
+		}
+
+		return requiredExtensions.IsEmpty();
+	}
+
+	struct DevicePicker
+	{
+		VkPhysicalDevice device = VK_NULL_HANDLE;
+		uint32 score = 0;
+		String deviceName;
+
+		constexpr bool operator<(const DevicePicker& other) const { return score < other.score; }
+		constexpr bool operator>(const DevicePicker& other) const { return score > other.score; }
+	};
+
+	static Optional<DevicePicker> locScoreDevice(VkPhysicalDevice physicalDevice) 
+	{
+		// Some devices are not suitable
+		if (!locAreDeviceExtensionsSupported(physicalDevice))
+		{
+			return {};
+		}
+
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
+
+		if (!deviceFeatures.geometryShader ||
+			!deviceFeatures.fillModeNonSolid ||
+			!deviceFeatures.samplerAnisotropy)
+		{
+			return {};
+		}
+
+		DevicePicker devicePicker;
+		devicePicker.device = physicalDevice;
+		devicePicker.deviceName = deviceProperties.deviceName;
+
+		// Discrete GPUs have a significant performance advantage
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+		{
+			devicePicker.score += 1000;
+		}
+
+		return devicePicker;
+	}
+
 	bool PhysicalDevice::Init()
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
@@ -40,7 +115,7 @@ namespace jpt::Vulkan
 		DevicePicker bestDevice;
 		for (const VkPhysicalDevice& device : devices)
 		{
-			if (Optional<DevicePicker> picker = ScoreDevice(device))
+			if (Optional<DevicePicker> picker = locScoreDevice(device))
 			{
 				if (picker.Value().score > bestDevice.score)
 				{
@@ -253,69 +328,5 @@ namespace jpt::Vulkan
 	VkPhysicalDevice PhysicalDevice::GetVkPhysicalDevice()
 	{
 		return Get().GetHandle();
-	}
-
-	Optional<PhysicalDevice::DevicePicker> PhysicalDevice::ScoreDevice(VkPhysicalDevice physicalDevice) const
-	{
-		// Some devices are not suitable
-		if (!AreDeviceExtensionsSupported(physicalDevice))
-		{
-			return {};
-		}
-
-		VkPhysicalDeviceProperties deviceProperties;
-		vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
-
-		VkPhysicalDeviceFeatures deviceFeatures;
-		vkGetPhysicalDeviceFeatures(physicalDevice, &deviceFeatures);
-
-		if (!deviceFeatures.geometryShader ||
-			!deviceFeatures.fillModeNonSolid ||
-			!deviceFeatures.samplerAnisotropy)
-		{
-			return {};
-		}
-
-		DevicePicker devicePicker;
-		devicePicker.device = physicalDevice;
-		devicePicker.deviceName = deviceProperties.deviceName;
-
-		// Discrete GPUs have a significant performance advantage
-		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-		{
-			devicePicker.score += 1000;
-		}
-
-		return devicePicker;
-	}
-
-	bool PhysicalDevice::AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const
-	{
-		uint32_t extensionCount;
-		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
-
-		DynamicArray<VkExtensionProperties> availableExtensions(extensionCount);
-		vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.Buffer());
-
-		HashSet<String> requiredExtensions;
-		for (const char* extension : g_deviceExtensions)
-		{
-			requiredExtensions.Add(extension);
-		}
-
-		for (const auto& extension : availableExtensions)
-		{
-			requiredExtensions.Erase(extension.extensionName);
-		}
-
-		if (!requiredExtensions.IsEmpty())
-		{
-			for (const String& extension : requiredExtensions)
-			{
-				JPT_ERROR("Missing required extension: %s", extension.ConstBuffer());
-			}
-		}
-
-		return requiredExtensions.IsEmpty();
 	}
 }

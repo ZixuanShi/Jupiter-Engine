@@ -35,6 +35,7 @@ import jpt.Vulkan.IndexBuffer;
 import jpt.Vulkan.DescriptorSetLayout;
 import jpt.Vulkan.DescriptorPool;
 
+import jpt.Constants;
 import jpt.Matrix44;
 import jpt.Math;
 import jpt.Utilities;
@@ -118,6 +119,34 @@ namespace jpt::Vulkan
 		UpdateUniformBuffer(deltaSeconds);
 	}
 
+	void WindowResources::DrawFrame()
+	{
+		if (!CanDraw())
+		{
+			return;
+		}
+
+		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
+		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
+
+		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
+
+		// Wait for the previous frame to finish
+		vkWaitForFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
+
+		if (Optional<uint32> imageIndex = AcquireNextImage())
+		{
+			vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
+
+			Record(imageIndex.Value());
+			Submit();
+			Present(imageIndex.Value());
+
+			m_currentFrame += 1;
+			m_currentFrame %= kMaxFramesInFlight;
+		}
+	}
+
 	void WindowResources::Shutdown()
 	{
 		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
@@ -154,34 +183,6 @@ namespace jpt::Vulkan
 
 		vkDestroySurfaceKHR(instance, m_surface, nullptr);
 		m_surface = VK_NULL_HANDLE;
-	}
-
-	void WindowResources::DrawFrame()
-	{
-		if (!CanDraw())
-		{
-			return;
-		}
-
-		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
-
-		SyncObjects& syncObjects = m_syncObjects[m_currentFrame];
-
-		// Wait for the previous frame to finish
-		vkWaitForFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr(), VK_TRUE, UINT64_MAX);
-
-		if (Optional<uint32> imageIndex = AcquireNextImage())
-		{
-			vkResetFences(logicalDevice.GetHandle(), 1, syncObjects.GetInFlightFencePtr());
-
-			Record(imageIndex.Value());
-			Submit();
-			Present(imageIndex.Value());
-
-			m_currentFrame += 1;
-			m_currentFrame %= kMaxFramesInFlight;
-		}
 	}
 
 	Window* WindowResources::GetOwner() const

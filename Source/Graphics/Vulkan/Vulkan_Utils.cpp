@@ -205,9 +205,9 @@ namespace jpt::Vulkan
 
 	void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32 texWidth, int32 texHeight, uint32 mipLevels)
 	{
-		Renderer_Vulkan* pRendererVulkan = GetVkRenderer();
-		PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
-		CommandPool& commandPool = pRendererVulkan->GetMemoryTransferCommandPool();
+		const Renderer_Vulkan* pRendererVulkan = GetVkRenderer();
+		const PhysicalDevice& physicalDevice = pRendererVulkan->GetPhysicalDevice();
+		const CommandPool& commandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 
 		VkFormatProperties formatProperties;
 		vkGetPhysicalDeviceFormatProperties(physicalDevice.GetHandle(), imageFormat, &formatProperties);

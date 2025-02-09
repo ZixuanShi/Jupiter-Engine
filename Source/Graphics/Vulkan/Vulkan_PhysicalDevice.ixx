@@ -10,8 +10,7 @@ import jpt.Vulkan.Extensions;
 import jpt.Vulkan.SwapChain.SupportDetails;
 
 import jpt.TypeDefs;
-import jpt.String;
-import jpt.Optional;
+import jpt.DynamicArray;
 
 export namespace jpt::Vulkan
 {
@@ -19,17 +18,6 @@ export namespace jpt::Vulkan
 		- Query for swapchain support, memory properties, etc.	*/
 	class PhysicalDevice
 	{
-	private:
-		struct DevicePicker
-		{
-			VkPhysicalDevice device = VK_NULL_HANDLE;
-			uint32 score = 0;
-			String deviceName;
-
-			constexpr bool operator<(const DevicePicker& other) const { return score < other.score; }
-			constexpr bool operator>(const DevicePicker& other) const { return score > other.score; }
-		};
-
 	private:
 		VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
 		uint32 m_grahicsFamilyIndex = UINT32_MAX;
@@ -56,8 +44,6 @@ export namespace jpt::Vulkan
 		static VkPhysicalDevice GetVkPhysicalDevice();
 
 	private:
-		Optional<DevicePicker> ScoreDevice(VkPhysicalDevice physicalDevice) const;
-		bool AreDeviceExtensionsSupported(VkPhysicalDevice physicalDevice) const;
 		VkSampleCountFlagBits FindMaxUsableSampleCount() const;
 	};
 }
