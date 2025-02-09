@@ -21,9 +21,9 @@ export namespace jpt
 	struct Vector3
 	{
 	public:
-		T x = static_cast<T>(0);
-		T y = static_cast<T>(0);
-		T z = static_cast<T>(0);
+		T x = static_cast<T>(0); /**< i, right */
+		T y = static_cast<T>(0); /**< j, up */
+		T z = static_cast<T>(0); /**< k, forward */
 
 	public:
 		using NumericType = T;
@@ -32,15 +32,15 @@ export namespace jpt
 		static consteval Vector3 One()  { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
 
 		// Right-handed
-		// X. Pitch
+		// X. Pitch.
 		static consteval Vector3 Left()  { return Vector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
 		static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
 
-		// Y. Yaw
+		// Y. Yaw.
 		static consteval Vector3 Up()   { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
 		static consteval Vector3 Down() { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
 
-		// Z. Roll
+		// Z. Roll.
 		static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
 		static consteval Vector3 Backward() { return Vector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
 

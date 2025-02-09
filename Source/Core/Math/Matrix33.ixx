@@ -65,9 +65,12 @@ export namespace jpt
 		constexpr static TMatrix33 Transposed(const TMatrix33& matrix);
 		constexpr void Transpose();
 
-		/** Inverse matrix's behaviors */
+		/** Inverse matrix's behaviors. Undo */
 		constexpr static TMatrix33 Inverse(const TMatrix33& matrix);
 		constexpr void Invert();
+
+		/** @return true if matrix is orthogonal. Validates that a matrix only contains rotation (no scaling/shearing) */
+		constexpr bool IsOrthogonal() const;
 
 		// Utils
 		constexpr String ToString() const;
@@ -265,6 +268,14 @@ export namespace jpt
 		result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
 
 		*this = result;
+	}
+
+	template<Numeric T>
+	constexpr bool TMatrix33<T>::IsOrthogonal() const
+	{
+		const TMatrix33<T> inverse = Inverse(*this);
+		const TMatrix33<T> transposed = Transposed(*this);
+		return inverse == transposed;
 	}
 
 	template<Numeric T>

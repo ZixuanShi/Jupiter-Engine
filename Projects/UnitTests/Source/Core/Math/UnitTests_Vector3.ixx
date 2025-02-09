@@ -56,14 +56,14 @@ static bool UnitTests_Vec3f_Operations()
 
 static bool UnitTests_Vec3f_Cross()
 {
-	Vec3f a = Vec3(1.0f, 0.0f, 0.0f).Normalized();
-	Vec3f b = Vec3(0.0f, 0.0f, 1.0f).Normalized();
+	Vec3f i = Vec3(1.0f, 0.0f, 0.0f).Normalized();
+	Vec3f k = Vec3(0.0f, 0.0f, 1.0f).Normalized();
 
-	Vec3f c = b.Cross(a);
-	JPT_ENSURE(c == Vec3f(0.0f, 1.0f, 0.0f));
+	Vec3f j = k.Cross(i);
+	JPT_ENSURE(j == Vec3f(0.0f, 1.0f, 0.0f));
 
-	c = a.Cross(b);
-	JPT_ENSURE(c == Vec3f(0.0f, -1.0f, 0.0f));
+	j = i.Cross(k);
+	JPT_ENSURE(j == Vec3f(0.0f, -1.0f, 0.0f));
 
     return true;
 }
