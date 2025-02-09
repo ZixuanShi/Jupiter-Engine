@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Validation/Assert.h"
+
 export module jpt.Ray3;
 
 import jpt.Concepts;
@@ -14,7 +18,7 @@ namespace jpt
 	{
 	public:
 		Vector3<T> origin;
-		Vector3<T> direction;
+		Vector3<T> direction;	// Normalized
 
 	public:
 		constexpr TRay3() noexcept = default;
@@ -30,6 +34,7 @@ namespace jpt
 		: origin(origin)
 		, direction(direction)
 	{
+		JPT_ASSERT(direction == direction.Normalized(), "Direction must be normalized");
 	}
 
 	template<Numeric T>
@@ -52,7 +57,7 @@ namespace jpt
 		else
 		{
 			// Otherwise, return the distance to the point on the ray closest to the point
-			const Vector3<T> projection = origin + direction * (dot / direction.Length2());
+			const Vector3<T> projection = origin + direction * dot;
 			distance = Vector3<T>::Distance(point, projection);
 		}
 
@@ -62,23 +67,15 @@ namespace jpt
 	template<Numeric T>
 	constexpr Vector3<T> TRay3<T>::ClosestPoint(const Vector3<T>& point) const noexcept
 	{
-		const Vector3<T> op = point - origin;
-		const T t = Vector3<T>::Dot(op, direction);
+		const Vector3<T> originToPoint = point - origin;
+		const T t = Vector3<T>::Dot(originToPoint, direction);
 		if (t <= 0)
 		{
 			return origin;
 		}
 		else
 		{
-			const T d = Vector3<T>::Dot(direction, direction);
-			if (t >= d)
-			{
-				return origin + direction;
-			}
-			else
-			{
-				return origin + direction * (t / d);
-			}
+			return origin + direction * t;
 		}
 	}
 }
