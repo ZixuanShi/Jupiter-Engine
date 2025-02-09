@@ -29,16 +29,28 @@ export namespace jpt::Vulkan
 		VkPipeline GetHandle() const { return m_graphicsPipeline; }
 
 	private:
-		VkPipelineVertexInputStateCreateInfo GetVertexInput() const;
-		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;
-		VkPipelineDynamicStateCreateInfo GetDynamicState() const;
-		VkPipelineViewportStateCreateInfo GetViewportState() const;
-		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
-		VkPipelineMultisampleStateCreateInfo GetMultisampling() const;
-		VkPipelineColorBlendStateCreateInfo GetColorBlending() const;
-		VkPipelineDepthStencilStateCreateInfo GetDepthStencil() const;
+		// 1. Input stage - defines vertex data format
+		VkPipelineVertexInputStateCreateInfo   GetVertexInput() const;
 
-		VkVertexInputBindingDescription GetBindingDescription() const;
-		StaticArray<VkVertexInputAttributeDescription, 4> GetAttributeDescriptions() const;
+		// 2. Input Assembly - how to interpret vertices (triangles, lines, etc)
+		VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;
+
+		// 3. Viewport & Scissors - where to render
+		VkPipelineViewportStateCreateInfo      GetViewportState() const;
+
+		// 4. Rasterization - converts primitives to fragments
+		VkPipelineRasterizationStateCreateInfo GetRasterization() const;
+
+		// 5. Multisampling - anti-aliasing settings
+		VkPipelineMultisampleStateCreateInfo   GetMultisampling() const;
+
+		// 6. Depth & Stencil testing
+		VkPipelineDepthStencilStateCreateInfo  GetDepthStencil() const;
+
+		// 7. Color blending - how to combine with render target
+		VkPipelineColorBlendStateCreateInfo    GetColorBlending() const;
+
+		// Unordered. Dynamic state - allows changing some settings without recreating the pipeline
+		VkPipelineDynamicStateCreateInfo       GetDynamicState() const;
 	};
 }

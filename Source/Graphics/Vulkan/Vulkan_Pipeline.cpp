@@ -43,14 +43,14 @@ namespace jpt::Vulkan
 		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 
 		// Fixed-function stages
-		auto vertexInputInfo = GetVertexInput();
 		auto inputAssembly   = GetInputAssembly();
-		auto dynamicState    = GetDynamicState();
+		auto vertexInputInfo = GetVertexInput();
 		auto viewportState   = GetViewportState();
 		auto rasterizer      = GetRasterization();
 		auto multisampling   = GetMultisampling();
 		auto depthStencil    = GetDepthStencil();
 		auto colorBlending   = GetColorBlending();
+		auto dynamicState    = GetDynamicState();
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -91,8 +91,19 @@ namespace jpt::Vulkan
 		// Binding Description: spacing between data and whether the data is per-vertex or per-instance
 		// Attribute Descriptions: type of the attributes passed to the vertex shader, which binding to load them from and at which offset
 
-		static VkVertexInputBindingDescription bindingDescription = GetBindingDescription();
-		static StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions = GetAttributeDescriptions();
+		static VkVertexInputBindingDescription bindingDescription{};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		static StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions
+		{
+			// location, binding, format,                     offset
+			{ 0,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)    }, // Color
+			{ 1,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) }, // Position
+			{ 2,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)   }, // Normal
+			{ 3,         0,       VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, texCoord) }, // TexCoord
+		};
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -114,24 +125,6 @@ namespace jpt::Vulkan
 		inputAssembly.primitiveRestartEnable = VK_FALSE;
 
 		return inputAssembly;
-	}
-
-	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState() const
-	{
-		// Allows certain states of the pipeline to be changed without recreating the pipeline
-
-		static StaticArray<VkDynamicState, 2> dynamicStates =
-		{
-			VK_DYNAMIC_STATE_VIEWPORT,
-			VK_DYNAMIC_STATE_SCISSOR
-		};
-
-		VkPipelineDynamicStateCreateInfo dynamicState{};
-		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-		dynamicState.dynamicStateCount = 2;
-		dynamicState.pDynamicStates = dynamicStates.ConstBuffer();
-
-		return dynamicState;
 	}
 
 	VkPipelineViewportStateCreateInfo GraphicsPipeline::GetViewportState() const
@@ -182,6 +175,23 @@ namespace jpt::Vulkan
 		return multisampling;
 	}
 
+	VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::GetDepthStencil() const
+	{
+		VkPipelineDepthStencilStateCreateInfo depthStencil{};
+		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		depthStencil.depthTestEnable = VK_TRUE;
+		depthStencil.depthWriteEnable = VK_TRUE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthBoundsTestEnable = VK_FALSE;
+		depthStencil.minDepthBounds = 0.0f; // Optional
+		depthStencil.maxDepthBounds = 1.0f; // Optional
+		depthStencil.stencilTestEnable = VK_FALSE;
+		depthStencil.front = {}; // Optional
+		depthStencil.back = {}; // Optional
+
+		return depthStencil;
+	}
+
 	VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending() const
 	{
 		/** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer.
@@ -207,61 +217,22 @@ namespace jpt::Vulkan
 
 		return colorBlending;
 	}
-	VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::GetDepthStencil() const
+
+	VkPipelineDynamicStateCreateInfo GraphicsPipeline::GetDynamicState() const
 	{
-		VkPipelineDepthStencilStateCreateInfo depthStencil{};
-		depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencil.depthTestEnable = VK_TRUE;
-		depthStencil.depthWriteEnable = VK_TRUE;
-		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
-		depthStencil.depthBoundsTestEnable = VK_FALSE;
-		depthStencil.minDepthBounds = 0.0f; // Optional
-		depthStencil.maxDepthBounds = 1.0f; // Optional
-		depthStencil.stencilTestEnable = VK_FALSE;
-		depthStencil.front = {}; // Optional
-		depthStencil.back = {}; // Optional
+		// Allows certain states of the pipeline to be changed without recreating the pipeline
 
-		return depthStencil;
-	}
+		static StaticArray<VkDynamicState, 2> dynamicStates =
+		{
+			VK_DYNAMIC_STATE_VIEWPORT,
+			VK_DYNAMIC_STATE_SCISSOR
+		};
 
-	VkVertexInputBindingDescription GraphicsPipeline::GetBindingDescription() const
-	{
-		VkVertexInputBindingDescription bindingDescription{};
-		bindingDescription.binding = 0;
-		bindingDescription.stride = sizeof(Vertex);
-		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+		VkPipelineDynamicStateCreateInfo dynamicState{};
+		dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+		dynamicState.dynamicStateCount = 2;
+		dynamicState.pDynamicStates = dynamicStates.ConstBuffer();
 
-		return bindingDescription;
-	}
-
-	StaticArray<VkVertexInputAttributeDescription, 4> GraphicsPipeline::GetAttributeDescriptions() const
-	{
-		StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
-
-		// Color
-		attributeDescriptions[0].binding = 0;
-		attributeDescriptions[0].location = 0;
-		attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[0].offset = offsetof(Vertex, color);
-
-		// Position
-		attributeDescriptions[1].binding = 0;
-		attributeDescriptions[1].location = 1;
-		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[1].offset = offsetof(Vertex, position);
-
-		// Normal
-		attributeDescriptions[2].binding = 0;
-		attributeDescriptions[2].location = 2;
-		attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[2].offset = offsetof(Vertex, normal);
-
-		// TexCoord
-		attributeDescriptions[3].binding = 0;
-		attributeDescriptions[3].location = 3;
-		attributeDescriptions[3].format = VK_FORMAT_R32G32_SFLOAT;
-		attributeDescriptions[3].offset = offsetof(Vertex, texCoord);
-
-		return attributeDescriptions;
+		return dynamicState;
 	}
 }
