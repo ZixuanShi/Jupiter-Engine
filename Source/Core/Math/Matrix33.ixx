@@ -31,14 +31,17 @@ export namespace jpt
 		constexpr TMatrix33();
 		constexpr TMatrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis);
 		constexpr TMatrix33(T m00, T m01, T m02,
-						   T m10, T m11, T m12,
-						   T m20, T m21, T m22);
+						    T m10, T m11, T m12,
+						    T m20, T m21, T m22);
 
 	public:
 		constexpr TMatrix33<T>  operator* (const TMatrix33<T>& rhs) const;
 		constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
-		constexpr Vector2<T>   operator*  (const Vector2<T>& v) const;
-		constexpr Vector3<T>   operator*  (const Vector3<T>& v) const;
+		constexpr Vector2<T>    operator* (const Vector2<T>& v) const;
+		constexpr Vector3<T>    operator* (const Vector3<T>& v) const;
+
+		constexpr       Vector3<T>& operator[](size_t index)       noexcept { return m[index]; }
+		constexpr const Vector3<T>& operator[](size_t index) const noexcept { return m[index]; }
 
 	public:
 		// Translation & Position
@@ -54,6 +57,17 @@ export namespace jpt
 		constexpr static TMatrix33 Scaling(T scalar);
 		constexpr void Scale(Vector2<T> v);
 		constexpr void Scale(T scalar);
+
+		/** Measures the volume of the parallelepiped spanned by the vectors of the matrix.	If determinant is 0, matrix is not invertible. */
+		constexpr T Determinant() const;
+
+		/** Swaps elements across the main diagonal. Used in checking orthogonality and normalizing the matrix. */
+		constexpr static TMatrix33 Transposed(const TMatrix33& matrix);
+		constexpr void Transpose();
+
+		/** Inverse matrix's behaviors */
+		constexpr static TMatrix33 Inverse(const TMatrix33& matrix);
+		constexpr void Invert();
 
 		// Utils
 		constexpr String ToString() const;
@@ -194,6 +208,63 @@ export namespace jpt
 	constexpr void TMatrix33<T>::Scale(T scalar)
 	{
 		*this *= Scaling(scalar);
+	}
+
+	template<Numeric T>
+	constexpr T TMatrix33<T>::Determinant() const
+	{
+		return m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
+			   m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+			   m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix33<T> TMatrix33<T>::Transposed(const TMatrix33& matrix)
+	{
+		return TMatrix33(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
+						 matrix.m[0][1], matrix.m[1][1], matrix.m[2][1],
+						 matrix.m[0][2], matrix.m[1][2], matrix.m[2][2]);
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix33<T>::Transpose()
+	{
+		Swap(m[0][1], m[1][0]);
+		Swap(m[0][2], m[2][0]);
+		Swap(m[1][2], m[2][1]);
+	}
+
+	template<Numeric T>
+	constexpr TMatrix33<T> TMatrix33<T>::Inverse(const TMatrix33& matrix)
+	{
+		TMatrix33<T> result = matrix;
+		result.Invert();
+		return result;
+	}
+
+	template<Numeric T>
+	constexpr void TMatrix33<T>::Invert()
+	{
+		const T det = Determinant();
+		if (det == static_cast<T>(0))
+		{
+			return;
+		}
+
+		const T invDet = static_cast<T>(1) / det;
+
+		TMatrix33<T> result;
+		result.m[0][0] = (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * invDet;
+		result.m[0][1] = (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invDet;
+		result.m[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invDet;
+		result.m[1][0] = (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invDet;
+		result.m[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invDet;
+		result.m[1][2] = (m[0][2] * m[1][0] - m[0][0] * m[1][2]) * invDet;
+		result.m[2][0] = (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * invDet;
+		result.m[2][1] = (m[0][1] * m[2][0] - m[0][0] * m[2][1]) * invDet;
+		result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
+
+		*this = result;
 	}
 
 	template<Numeric T>

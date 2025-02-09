@@ -93,8 +93,42 @@ bool UnitTests_Matrix33_Scaling()
 
 bool UnitTests_Matrix33_Transpose()
 {
-	glm::mat3 glmMat = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	glmMat = glm::transpose(glmMat);
+	Matrix33 jptMat = Matrix33::Identity();
+
+	jptMat.Rotate(jpt::ToRadians(90.0f));
+	JPT_ENSURE(jptMat[0] == Vec3(0.0f, 1.0f, 0.0f));
+	JPT_ENSURE(jptMat[1] == Vec3(-1.0f, 0.0f, 0.0f));
+	JPT_ENSURE(jptMat[2] == Vec3(0.0f, 0.0f, 1.0f));
+
+	jptMat.Transpose();
+	JPT_ENSURE(jptMat[0] == Vec3(0.0f, -1.0f, 0.0f));
+	JPT_ENSURE(jptMat[1] == Vec3(1.0f, 0.0f, 0.0f));
+	JPT_ENSURE(jptMat[2] == Vec3(0.0f, 0.0f, 1.0f));
+
+	return true;
+}
+
+bool UnitTests_Matrix33_Inverse()
+{
+	Vec2 originV = Vec2(1.0f, 1.0f);
+	Matrix33 jptMat = Matrix33::Identity();
+
+	// Translation
+	jptMat.Translate(Vec2(2.0f, 3.0f));
+
+	// Rotation
+	jptMat.Rotate(jpt::ToRadians(90.0f));
+
+	// Scaling
+	jptMat.Scale(2.0f);
+
+	Vec2 v = jptMat * originV;
+	
+	jptMat.Invert();
+
+	Vec2 invV = jptMat * v;
+
+	JPT_ENSURE(invV == originV);
 
 	return true;
 }
@@ -105,6 +139,8 @@ export bool RunUnitTests_Matrix33()
 	JPT_ENSURE(UnitTests_Matrix33_Translation());
 	JPT_ENSURE(UnitTests_Matrix33_Rotation());
 	JPT_ENSURE(UnitTests_Matrix33_Scaling());
+	JPT_ENSURE(UnitTests_Matrix33_Transpose());
+	JPT_ENSURE(UnitTests_Matrix33_Inverse());
 
 	return true;
 }
