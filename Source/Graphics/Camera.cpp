@@ -112,7 +112,8 @@ namespace jpt
 		m_yaw   += dx * kSensitivity;
 		m_pitch += dy * kSensitivity;
 
-		// Clamp the pitch to prevent the camera from flipping
+		// Clamp the pitch and yaw
+		m_yaw = Modf(m_yaw, TwoPi);
 		m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
 
 		// Calculate the new forward vector
