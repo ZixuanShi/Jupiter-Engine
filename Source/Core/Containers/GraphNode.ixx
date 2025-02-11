@@ -29,8 +29,13 @@ export namespace jpt
 		Edges& GetEdges();
 		const Edges& GetEdges() const;
 
-		constexpr bool operator==(const GraphNode& other) const;
 	};
+
+	template<typename TData>
+	constexpr bool operator==(const GraphNode<TData>& lhs, const GraphNode<TData>& rhs) noexcept
+	{
+		return lhs.GetData() == rhs.GetData();
+	}
 
 	template<typename TData>
 	constexpr GraphNode<TData>::GraphNode::GraphNode(const TData& data)
@@ -84,11 +89,5 @@ export namespace jpt
 	const Edges& GraphNode<TData>::GetEdges() const
 	{
 		return m_edges;
-	}
-
-	template<typename TData>
-	constexpr bool GraphNode<TData>::GraphNode::operator==(const GraphNode& other) const
-	{
-		return m_data == other.m_data;
 	}
 }

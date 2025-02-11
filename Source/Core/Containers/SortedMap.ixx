@@ -31,18 +31,18 @@ export namespace jpt
 		using TValue        = _TValue;
 		using TComparator   = _TComparator;
 		using TData         = Pair<const TKey, TValue>;
-		using TNode         = jpt_private::RedBlackTreeNode<TData>;
+		using Node          = jpt_private::RedBlackTreeNode<TData>;
 		using Iterator      = jpt_private::RedBlackTreeIterator<TData>;
 		using ConstIterator = jpt_private::ConstRedBlackTreeIterator<TData>;
 
-		using Color 	    = typename TNode::EColor;
+		using Color 	    = typename Node::EColor;
 		using WalkerFunc    = Function<void(const TKey&, TValue&)>;
 
 	public:
 		static constexpr TComparator kComparator = TComparator();
 
 	private:
-		TNode* m_pRoot = nullptr;
+		Node* m_pRoot = nullptr;
 		size_t m_count = 0;
 
 	public:
@@ -62,8 +62,8 @@ export namespace jpt
 		constexpr void Clear();
 
 		// Searching
-		constexpr size_t Count() const;
-		constexpr bool IsEmpty() const;
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Has(const TKey& key);
@@ -100,37 +100,37 @@ export namespace jpt
 		constexpr void BFS(const WalkerFunc& function);
 
 		// Iterators
-		constexpr      Iterator begin();
-		constexpr      Iterator end();
-		constexpr ConstIterator begin()  const;
-		constexpr ConstIterator end()    const;
-		constexpr ConstIterator cbegin() const;
-		constexpr ConstIterator cend()   const;
+		constexpr      Iterator begin() noexcept;
+		constexpr      Iterator end() noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
 
 	private:
-		constexpr void PreOrderWalk(TNode* pNode, const WalkerFunc& function);
-		constexpr void InOrderWalk(TNode* pNode, const WalkerFunc& function);
-		constexpr void PostOrderWalk(TNode* pNode, const WalkerFunc& function);
-		constexpr void PostOrderWalkNode(TNode* pNode, const Function<void(TNode*)>& func);
+		constexpr void PreOrderWalk(Node* pNode, const WalkerFunc& function);
+		constexpr void InOrderWalk(Node* pNode, const WalkerFunc& function);
+		constexpr void PostOrderWalk(Node* pNode, const WalkerFunc& function);
+		constexpr void PostOrderWalkNode(Node* pNode, const Function<void(Node*)>& func);
 
 		// Search
-		constexpr       TNode* FindNode(const TKey& key);
-		constexpr const TNode* FindNode(const TKey& key) const;
-		constexpr       TNode* FindMinNode(TNode* pNode);
-		constexpr const TNode* FindMinNode(TNode* pNode) const;
-		constexpr       TNode* FindMaxNode(TNode* pNode);
-		constexpr const TNode* FindMaxNode(TNode* pNode) const;
-		constexpr       TNode* FindSuccessor(TNode* pNode);
-		constexpr const TNode* FindSuccessor(TNode* pNode) const;
-		constexpr       TNode* FindPredecessor(TNode* pNode);
-		constexpr const TNode* FindPredecessor(TNode* pNode) const;
+		constexpr       Node* FindNode(const TKey& key);
+		constexpr const Node* FindNode(const TKey& key) const;
+		constexpr       Node* FindMinNode(Node* pNode);
+		constexpr const Node* FindMinNode(Node* pNode) const;
+		constexpr       Node* FindMaxNode(Node* pNode);
+		constexpr const Node* FindMaxNode(Node* pNode) const;
+		constexpr       Node* FindSuccessor(Node* pNode);
+		constexpr const Node* FindSuccessor(Node* pNode) const;
+		constexpr       Node* FindPredecessor(Node* pNode);
+		constexpr const Node* FindPredecessor(Node* pNode) const;
 
 		// Red Black Tree Utils
-		constexpr void FixAdd(TNode* pNode);
-		constexpr void FixErase(TNode* pNode);
-		constexpr void RotateLeft(TNode* pNode);
-		constexpr void RotateRight(TNode* pNode);
-		constexpr void Transplant(TNode* pOldNode, TNode* pNewNode);
+		constexpr void FixAdd(Node* pNode);
+		constexpr void FixErase(Node* pNode);
+		constexpr void RotateLeft(Node* pNode);
+		constexpr void RotateRight(Node* pNode);
+		constexpr void Transplant(Node* pOldNode, Node* pNewNode);
 
 		// Copy and move
 		constexpr void CopyMap(const SortedMap& other);
@@ -192,8 +192,8 @@ export namespace jpt
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Add(const TKey& key, const TValue& value)
 	{
 		// Find the parent node
-		TNode* pParent = nullptr;
-		TNode* pCurrent = m_pRoot;
+		Node* pParent = nullptr;
+		Node* pCurrent = m_pRoot;
 		while (pCurrent != nullptr)
 		{
 			pParent = pCurrent;
@@ -214,7 +214,7 @@ export namespace jpt
 				pCurrent = pCurrent->pRightChild;
 			}
 		}
-		TNode* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
+		Node* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
 		pNewNode->pParent = pParent;
 
 		// Tree is empty
@@ -247,11 +247,11 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Erase(const TKey& key)
 	{
-		TNode* pNode = FindNode(key);
+		Node* pNode = FindNode(key);
 		JPT_ASSERT(pNode != nullptr, "Key not found");
 
 		Color originalColor = pNode->color;
-		TNode* pChild = nullptr;
+		Node* pChild = nullptr;
 
 		if (pNode->pLeftChild == nullptr)
 		{
@@ -265,7 +265,7 @@ export namespace jpt
 		}
 		else
 		{
-			TNode* pSuccessor = FindMinNode(pNode->pRightChild);
+			Node* pSuccessor = FindMinNode(pNode->pRightChild);
 			originalColor = pSuccessor->color;
 			pChild = pSuccessor->pRightChild;
 
@@ -308,7 +308,7 @@ export namespace jpt
 	template<Comparable _TKey, typename _TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<_TKey, _TValue, TComparator, TAllocator>::Clear()
 	{
-		PostOrderWalkNode(m_pRoot, [](TNode* pNode)
+		PostOrderWalkNode(m_pRoot, [](Node* pNode)
 		{
 			TAllocator::Deallocate(pNode);
 			pNode = nullptr;
@@ -319,13 +319,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const
+	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const noexcept
 	{
 		return m_count;
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr bool SortedMap<TKey, TValue, TComparator, TAllocator>::IsEmpty() const
+	constexpr bool SortedMap<TKey, TValue, TComparator, TAllocator>::IsEmpty() const noexcept
 	{
 		return m_count == 0;
 	}
@@ -351,7 +351,7 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TValue& SortedMap<TKey, TValue, TComparator, TAllocator>::operator[](const TKey& key)
 	{
-		TNode* pNode = FindNode(key);
+		Node* pNode = FindNode(key);
 
 		if (pNode == nullptr)
 		{
@@ -365,7 +365,7 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TValue& SortedMap<TKey, TValue, TComparator, TAllocator>::operator[](const TKey& key) const
 	{
-		TNode* pNode = FindNode(key);
+		Node* pNode = FindNode(key);
 		JPT_ASSERT(pNode != nullptr, "Key not found");
 		return pNode->data.second;
 	}
@@ -415,12 +415,12 @@ export namespace jpt
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::BFS(const WalkerFunc& function)
 	{
-		Queue<TNode*> queue;
+		Queue<Node*> queue;
 		queue.Enqueue(m_pRoot);
 
 		while (!queue.IsEmpty())
 		{
-			TNode* pNode = queue.Front();
+			Node* pNode = queue.Front();
 			queue.Dequeue();
 
 			function(pNode->data.first, pNode->data.second);
@@ -437,43 +437,43 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin()
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() noexcept
 	{
 		return Iterator(FindMinNode(m_pRoot));
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::end()
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() noexcept
 	{
 		return Iterator(nullptr);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() const
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() const noexcept
 	{
 		return ConstIterator(FindMinNode(m_pRoot));
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() const
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() const noexcept
 	{
 		return ConstIterator(nullptr);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cbegin() const
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cbegin() const noexcept
 	{
 		return ConstIterator(FindMinNode(m_pRoot));
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cend() const
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cend() const noexcept
 	{
 		return ConstIterator(nullptr);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PreOrderWalk(TNode* pNode, const WalkerFunc& function)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PreOrderWalk(Node* pNode, const WalkerFunc& function)
 	{
 		if (pNode)
 		{
@@ -484,7 +484,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::InOrderWalk(TNode* pNode, const WalkerFunc& function)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::InOrderWalk(Node* pNode, const WalkerFunc& function)
 	{
 		if (pNode)
 		{
@@ -495,7 +495,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalk(TNode* pNode, const WalkerFunc& function)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalk(Node* pNode, const WalkerFunc& function)
 	{
 		if (pNode)
 		{
@@ -506,7 +506,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalkNode(TNode* pNode, const Function<void(TNode*)>& func)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::PostOrderWalkNode(Node* pNode, const Function<void(Node*)>& func)
 	{
 		if (pNode)
 		{
@@ -517,9 +517,9 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindNode(const TKey& key)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindNode(const TKey& key)
 	{
-		TNode* pCurrent = m_pRoot;
+		Node* pCurrent = m_pRoot;
 
 		while (pCurrent != nullptr)
 		{
@@ -542,13 +542,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindNode(const TKey& key) const
+	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindNode(const TKey& key) const
 	{
 		return const_cast<SortedMap*>(this)->FindNode(key);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMinNode(TNode* pNode)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMinNode(Node* pNode)
 	{
 		if (!pNode)
 		{
@@ -564,13 +564,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMinNode(TNode* pNode) const
+	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMinNode(Node* pNode) const
 	{
 		return const_cast<SortedMap*>(this)->FindMinNode(pNode);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMaxNode(TNode* pNode)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMaxNode(Node* pNode)
 	{
 		if (!pNode)
 		{
@@ -586,13 +586,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMaxNode(TNode* pNode) const
+	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindMaxNode(Node* pNode) const
 	{
 		return const_cast<SortedMap*>(this)->FindMaxNode(pNode);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindSuccessor(TNode* pNode)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindSuccessor(Node* pNode)
 	{
 		if (!pNode)
 		{
@@ -604,7 +604,7 @@ export namespace jpt
 			return FindMinNode(pNode->pRightChild);
 		}
 
-		TNode* pParent = pNode->pParent;
+		Node* pParent = pNode->pParent;
 
 		while (pParent != nullptr && pNode == pParent->pRightChild)
 		{
@@ -616,13 +616,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindSuccessor(TNode* pNode) const
+	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindSuccessor(Node* pNode) const
 	{
 		return const_cast<SortedMap*>(this)->FindSuccessor(pNode);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindPredecessor(TNode* pNode)
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindPredecessor(Node* pNode)
 	{
 		if (!pNode)
 		{
@@ -634,7 +634,7 @@ export namespace jpt
 			return FindMaxNode(pNode->pLeftChild);
 		}
 
-		TNode* pParent = pNode->pParent;
+		Node* pParent = pNode->pParent;
 
 		while (pParent != nullptr && pNode == pParent->pLeftChild)
 		{
@@ -646,19 +646,19 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::TNode* SortedMap<TKey, TValue, TComparator, TAllocator>::FindPredecessor(TNode* pNode) const
+	constexpr const SortedMap<TKey, TValue, TComparator, TAllocator>::Node* SortedMap<TKey, TValue, TComparator, TAllocator>::FindPredecessor(Node* pNode) const
 	{
 		return const_cast<SortedMap*>(this)->FindPredecessor(pNode);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixAdd(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixAdd(Node* pNode)
 	{
 		while (pNode->pParent != nullptr && pNode->pParent->color == Color::Red)
 		{
 			if (pNode->pParent == pNode->pParent->pParent->pLeftChild)
 			{
-				TNode* pUncle = pNode->pParent->pParent->pRightChild;
+				Node* pUncle = pNode->pParent->pParent->pRightChild;
 
 				// Case 1: Uncle is red. Recolor parent, uncle and grandparent
 				if (pUncle != nullptr && pUncle->color == Color::Red)
@@ -685,7 +685,7 @@ export namespace jpt
 			}
 			else
 			{
-				TNode* pUncle = pNode->pParent->pParent->pLeftChild;
+				Node* pUncle = pNode->pParent->pParent->pLeftChild;
 
 				if (pUncle != nullptr && pUncle->color == Color::Red)
 				{
@@ -713,13 +713,13 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixErase(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::FixErase(Node* pNode)
 	{
 		while (pNode != m_pRoot && pNode->color == Color::Black)
 		{
 			if (pNode == pNode->pParent->pLeftChild)
 			{
-				TNode* pSibling = pNode->pParent->pRightChild;
+				Node* pSibling = pNode->pParent->pRightChild;
 
 				// Case 1: Sibling is red. Recolor sibling and parent and rotate left
 				if (pSibling->color == Color::Red)
@@ -757,7 +757,7 @@ export namespace jpt
 			}
 			else
 			{
-				TNode* pSibling = pNode->pParent->pLeftChild;
+				Node* pSibling = pNode->pParent->pLeftChild;
 
 				if (pSibling->color == Color::Red)
 				{
@@ -795,9 +795,9 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateLeft(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateLeft(Node* pNode)
 	{
-		TNode* pRightChild = pNode->pRightChild;
+		Node* pRightChild = pNode->pRightChild;
 		pNode->pRightChild = pRightChild->pLeftChild;
 
 		if (pRightChild->pLeftChild != nullptr)
@@ -825,9 +825,9 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateRight(TNode* pNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::RotateRight(Node* pNode)
 	{
-		TNode* pLeftChild = pNode->pLeftChild;
+		Node* pLeftChild = pNode->pLeftChild;
 		pNode->pLeftChild = pLeftChild->pRightChild;
 
 		if (pLeftChild->pRightChild != nullptr)
@@ -855,7 +855,7 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Transplant(TNode* pOldNode, TNode* pNewNode)
+	constexpr void SortedMap<TKey, TValue, TComparator, TAllocator>::Transplant(Node* pOldNode, Node* pNewNode)
 	{
 		if (pOldNode->pParent == nullptr)
 		{

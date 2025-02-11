@@ -50,9 +50,9 @@ export namespace jpt
 		constexpr void Reserve(size_t capacity);
 
 		// Accessing
-		constexpr const TData& Top() const;
-		constexpr size_t Count() const;
-		constexpr bool IsEmpty() const;
+		constexpr const TData& Top() const noexcept;
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 
 		// Erasing
 		constexpr void Pop();
@@ -65,8 +65,8 @@ export namespace jpt
 
 		// Helper functions for calculating the parent, left, and right index
 		constexpr size_t Parent(size_t index) const;
-		constexpr size_t Left(size_t index) const;
-		constexpr size_t Right(size_t index) const;
+		constexpr size_t Left(size_t index)   const;
+		constexpr size_t Right(size_t index)  const;
 	};
 
 	template<typename TData, typename TComparator, typename TAllocator>
@@ -112,13 +112,6 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
-	constexpr const TData& Heap<TData, TComparator, TAllocator>::Top() const
-	{
-		JPT_ASSERT(!IsEmpty());
-		return m_buffer[1];
-	}
-
-	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Pop()
 	{
 		JPT_ASSERT(!IsEmpty());
@@ -134,6 +127,13 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
+	constexpr const TData& Heap<TData, TComparator, TAllocator>::Top() const noexcept
+	{
+		JPT_ASSERT(!IsEmpty());
+		return m_buffer[1];
+	}
+
+	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Clear()
 	{
 		m_buffer.Clear();
@@ -141,13 +141,13 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
-	constexpr size_t Heap<TData, TComparator, TAllocator>::Count() const
+	constexpr size_t Heap<TData, TComparator, TAllocator>::Count() const noexcept
 	{
 		return m_buffer.Count() - 1;
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
-	constexpr bool Heap<TData, TComparator, TAllocator>::IsEmpty() const
+	constexpr bool Heap<TData, TComparator, TAllocator>::IsEmpty() const noexcept
 	{
 		return Count() == 0;
 	}

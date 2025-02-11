@@ -74,8 +74,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
-		constexpr size_t Count() const;
-		constexpr bool IsEmpty() const;
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 		constexpr void ResizeBuckets(size_t capacity);
 		constexpr void SetShouldGrow(bool shouldGrow);
 
@@ -455,13 +455,13 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr size_t HashMap<TKey, TValue, TComparator>::Count() const
+	constexpr size_t HashMap<TKey, TValue, TComparator>::Count() const noexcept
 	{
 		return m_count;
 	}
 
 	template<typename TKey, typename TValue, typename TComparator>
-	constexpr bool HashMap<TKey, TValue, TComparator>::IsEmpty() const
+	constexpr bool HashMap<TKey, TValue, TComparator>::IsEmpty() const noexcept
 	{
 		return m_count == 0;
 	}

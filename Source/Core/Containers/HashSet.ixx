@@ -59,8 +59,8 @@ export namespace jpt
 		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
-		constexpr size_t Count() const { return m_count; }
-		constexpr bool IsEmpty() const { return m_count == 0; }
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
@@ -277,6 +277,18 @@ export namespace jpt
 	constexpr HashSet<TValue, TComparator>::ConstIterator HashSet<TValue, TComparator>::cend() const noexcept
 	{
 		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
+	}
+
+	template<typename TData, typename TComparator>
+	constexpr size_t HashSet<TData, TComparator>::Count() const noexcept
+	{
+		return m_count;
+	}
+
+	template<typename TData, typename TComparator>
+	constexpr bool HashSet<TData, TComparator>::IsEmpty() const noexcept
+	{
+		return m_count == 0;
 	}
 
 	template<typename TValue, typename TComparator>

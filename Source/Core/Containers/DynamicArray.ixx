@@ -46,31 +46,31 @@ export namespace jpt
 		constexpr ~DynamicArray();
 
 		// Element Access
-		constexpr const TData* ConstBuffer() const { return m_pBuffer; }
-		constexpr       TData* Buffer()            { return m_pBuffer; }
-		constexpr       TData& Front()             { return m_pBuffer[0]; }
-		constexpr const TData& Front()       const { return m_pBuffer[0]; }
-		constexpr       TData& Back()              { return m_pBuffer[m_count - 1]; }
-		constexpr const TData& Back()        const { return m_pBuffer[m_count - 1]; }
-		constexpr       TData& operator[](size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
-		constexpr const TData& operator[](size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
-		constexpr       TData& At(size_t index)       { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
-		constexpr const TData& At(size_t index) const { JPT_ASSERT(index < m_count); return m_pBuffer[index]; }
-		constexpr bool Has(const TData& data) const;
+		constexpr const TData* ConstBuffer() const noexcept;
+		constexpr       TData* Buffer() noexcept;
+		constexpr       TData& Front() noexcept;
+		constexpr const TData& Front() const noexcept;
+		constexpr       TData& Back() noexcept;
+		constexpr const TData& Back() const noexcept;
+		constexpr       TData& operator[](size_t index) noexcept;
+		constexpr const TData& operator[](size_t index) const noexcept;
+		constexpr       TData& At(size_t index) noexcept;
+		constexpr const TData& At(size_t index) const noexcept;
+		constexpr bool Has(const TData& data) const noexcept;
 
 		// Iterators
-		constexpr Iterator begin() noexcept { return Iterator(m_pBuffer); }
-		constexpr Iterator end()   noexcept { return Iterator(m_pBuffer + m_count); }
-		constexpr ConstIterator begin()  const noexcept { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator end()    const noexcept { return ConstIterator(m_pBuffer + m_count); }
-		constexpr ConstIterator cbegin() const noexcept { return ConstIterator(m_pBuffer); }
-		constexpr ConstIterator cend()   const noexcept { return ConstIterator(m_pBuffer + m_count); }
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
 
 		// Capacity
-		constexpr size_t Count()    const { return m_count;      }
-		constexpr size_t Size()     const { return m_count * sizeof(TData); }
-		constexpr size_t Capacity() const { return m_capacity;   }
-		constexpr bool   IsEmpty()  const { return m_count == 0; }
+		constexpr size_t Count()    const noexcept;	// How many current elements are in the array
+		constexpr size_t Size()     const noexcept;	// How many bytes this array is
+		constexpr size_t Capacity() const noexcept;	// How many elements can be stored in the array
+		constexpr bool   IsEmpty()  const noexcept;
 		constexpr void Reserve(size_t capacity);
 		constexpr void ShrinkToFit();
 
@@ -195,8 +195,68 @@ export namespace jpt
 		Clear();
 	}
 
-	template<typename _TData, typename TAllocator>
-	constexpr bool DynamicArray<_TData, TAllocator>::Has(const TData& data) const
+	template<typename TData, typename TAllocator>
+	constexpr const TData* DynamicArray<TData, TAllocator>::ConstBuffer() const noexcept
+	{
+		return m_pBuffer;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData* DynamicArray<TData, TAllocator>::Buffer() noexcept
+	{
+		return m_pBuffer;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& DynamicArray<TData, TAllocator>::Front() noexcept
+	{
+		return m_pBuffer[0];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& DynamicArray<TData, TAllocator>::Front() const noexcept
+	{
+		return m_pBuffer[0];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& DynamicArray<TData, TAllocator>::Back() noexcept
+	{
+		return m_pBuffer[m_count - 1];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& DynamicArray<TData, TAllocator>::Back() const noexcept
+	{
+		return m_pBuffer[m_count - 1];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& DynamicArray<TData, TAllocator>::operator[](size_t index) noexcept
+	{
+		JPT_ASSERT(index < m_count); return m_pBuffer[index];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& DynamicArray<TData, TAllocator>::operator[](size_t index) const noexcept
+	{
+		JPT_ASSERT(index < m_count); return m_pBuffer[index];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& DynamicArray<TData, TAllocator>::At(size_t index) noexcept
+	{
+		JPT_ASSERT(index < m_count); return m_pBuffer[index];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& DynamicArray<TData, TAllocator>::At(size_t index) const noexcept
+	{
+		JPT_ASSERT(index < m_count); return m_pBuffer[index];
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr bool DynamicArray<TData, TAllocator>::Has(const TData& data) const noexcept
 	{
 		for (size_t i = 0; i < m_count; ++i)
 		{
@@ -207,6 +267,66 @@ export namespace jpt
 		}
 
 		return false;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::Iterator DynamicArray<TData, TAllocator>::begin() noexcept
+	{
+		return Iterator(m_pBuffer);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::Iterator DynamicArray<TData, TAllocator>::end() noexcept
+	{
+		return Iterator(m_pBuffer + m_count);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::ConstIterator DynamicArray<TData, TAllocator>::begin() const noexcept
+	{
+		return ConstIterator(m_pBuffer);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::ConstIterator DynamicArray<TData, TAllocator>::end() const noexcept
+	{
+		return ConstIterator(m_pBuffer + m_count);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::ConstIterator DynamicArray<TData, TAllocator>::cbegin() const noexcept
+	{
+		return ConstIterator(m_pBuffer);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr DynamicArray<TData, TAllocator>::ConstIterator DynamicArray<TData, TAllocator>::cend() const noexcept
+	{
+		return ConstIterator(m_pBuffer + m_count);
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr size_t DynamicArray<_TData, TAllocator>::Count() const noexcept
+	{
+		return m_count;
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr size_t DynamicArray<_TData, TAllocator>::Size() const noexcept
+	{
+		return m_count * sizeof(TData);
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr size_t DynamicArray<_TData, TAllocator>::Capacity() const noexcept
+	{
+		return m_capacity;
+	}
+
+	template<typename _TData, typename TAllocator>
+	constexpr bool DynamicArray<_TData, TAllocator>::IsEmpty() const noexcept
+	{
+		return m_count == 0;
 	}
 
 	template<typename TData, typename TAllocator>

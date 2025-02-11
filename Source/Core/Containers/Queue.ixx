@@ -20,22 +20,22 @@ export namespace jpt
 
 	public:
 		// Iterators
-		Iterator begin() { return m_container.begin(); }
-		Iterator end() { return m_container.end(); }
-		ConstIterator begin()  const { return m_container.begin(); }
-		ConstIterator end()    const { return m_container.end(); }
-		ConstIterator cbegin() const { return m_container.begin(); }
-		ConstIterator cend()   const { return m_container.end(); }
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end() noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
 
 		// Accessing
-		constexpr       TData& Front();
-		constexpr const TData& Front() const;
-		constexpr       TData& Back();
-		constexpr const TData& Back() const;
+		constexpr       TData& Front() noexcept;
+		constexpr const TData& Front() const noexcept;
+		constexpr       TData& Back() noexcept;
+		constexpr const TData& Back() const noexcept;
 
 		// Capacity
-		constexpr bool IsEmpty() const;
-		constexpr size_t Count() const;
+		constexpr bool IsEmpty() const noexcept;
+		constexpr size_t Count() const noexcept;
 
 		// Adding
 		constexpr void Enqueue(const TData& value);
@@ -47,69 +47,105 @@ export namespace jpt
 		constexpr void Clear();
 	};
 
-	template<typename _TData>
-	constexpr Queue<_TData>::TData& Queue<_TData>::Front()
+	template<typename TData>
+	constexpr Queue<TData>::Iterator Queue<TData>::begin() noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::Iterator Queue<TData>::end() noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::ConstIterator Queue<TData>::begin() const noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::ConstIterator Queue<TData>::end() const noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::ConstIterator Queue<TData>::cbegin() const noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::ConstIterator Queue<TData>::cend() const noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Queue<TData>::TData& Queue<TData>::Front() noexcept
 	{
 		return m_container.Front();
 	}
 
-	template<typename _TData>
-	constexpr const Queue<_TData>::TData& Queue<_TData>::Front() const
+	template<typename TData>
+	constexpr const Queue<TData>::TData& Queue<TData>::Front() const noexcept
 	{
 		return m_container.Front();
 	}
 
-	template<typename _TData>
-	constexpr Queue<_TData>::TData& Queue<_TData>::Back()
+	template<typename TData>
+	constexpr Queue<TData>::TData& Queue<TData>::Back() noexcept
 	{
 		return m_container.Back();
 	}
 
-	template<typename _TData>
-	constexpr const Queue<_TData>::TData& Queue<_TData>::Back() const
+	template<typename TData>
+	constexpr const Queue<TData>::TData& Queue<TData>::Back() const noexcept
 	{
 		return m_container.Back();
 	}
 
-	template<typename _TData>
-	constexpr bool Queue<_TData>::IsEmpty() const
+	template<typename TData>
+	constexpr bool Queue<TData>::IsEmpty() const noexcept
 	{
 		return m_container.IsEmpty();
 	}
 
-	template<typename _TData>
-	constexpr size_t Queue<_TData>::Count() const
+	template<typename TData>
+	constexpr size_t Queue<TData>::Count() const noexcept
 	{
 		return m_container.Count();
 	}
 
-	template<typename _TData>
-	constexpr void Queue<_TData>::Enqueue(const TData& value)
+	template<typename TData>
+	constexpr void Queue<TData>::Enqueue(const TData& value)
 	{
 		m_container.AddBack(value);
 	}
 
-	template<typename _TData>
-	constexpr void Queue<_TData>::Enqueue(TData&& value)
+	template<typename TData>
+	constexpr void Queue<TData>::Enqueue(TData&& value)
 	{
 		m_container.AddBack(Move(value));
 	}
 
-	template<typename _TData>
+	template<typename TData>
 	template<typename ...TArgs>
-	constexpr void Queue<_TData>::Emplace(TArgs && ...args)
+	constexpr void Queue<TData>::Emplace(TArgs && ...args)
 	{
 		m_container.EmplaceBack(Forward<TArgs>(args)...);
 	}
 
-	template<typename _TData>
-	constexpr void Queue<_TData>::Dequeue()
+	template<typename TData>
+	constexpr void Queue<TData>::Dequeue()
 	{
 		m_container.PopFront();
 	}
 
-	template<typename _TData>
-	constexpr void Queue<_TData>::Clear()
+	template<typename TData>
+	constexpr void Queue<TData>::Clear()
 	{
 		m_container.Clear();
 	}

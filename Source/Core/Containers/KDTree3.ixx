@@ -32,8 +32,8 @@ namespace jpt
 		constexpr void Clear();
 
 		// Capacity
-		constexpr size_t Count() const;
-		constexpr bool IsEmpty() const;
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 
 		// Building
 		constexpr void Build(const DynamicArray<Vector3<T>>& points);
@@ -244,13 +244,13 @@ namespace jpt
 	}
 
 	template<Floating T>
-	constexpr size_t KDTree3<T>::Count() const
+	constexpr size_t KDTree3<T>::Count() const noexcept
 	{
 		return m_count;
 	}
 
 	template<Floating T>
-	constexpr bool KDTree3<T>::IsEmpty() const
+	constexpr bool KDTree3<T>::IsEmpty() const noexcept
 	{
 		return m_count == 0;
 	}

@@ -20,21 +20,21 @@ export namespace jpt
 
 	public:
 		// Iterators
-		Iterator begin() { return m_container.begin(); }
-		Iterator end()   { return m_container.end();   }
-		ConstIterator begin()  const { return m_container.begin(); }
-		ConstIterator end()    const { return m_container.end();   }
-		ConstIterator cbegin() const { return m_container.begin(); }
-		ConstIterator cend()   const { return m_container.end();   }
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
 
 		// Accessing
-		constexpr       TData& Peek();
-		constexpr const TData& Peek() const;
+		constexpr       TData& Peek() noexcept;
+		constexpr const TData& Peek() const noexcept;
 
 		// Capacity
-		constexpr bool IsEmpty() const;
-		constexpr size_t Count() const;
-		constexpr size_t Capacity() const;
+		constexpr bool IsEmpty() const noexcept;
+		constexpr size_t Count() const noexcept;
+		constexpr size_t Capacity() const noexcept;
 		constexpr void Reserve(size_t capacity);
 
 		// Adding
@@ -48,31 +48,67 @@ export namespace jpt
 	};
 
 	template<typename TData>
-	constexpr Stack<TData>::TData& Stack<TData>::Peek()
+	constexpr Stack<TData>::Iterator Stack<TData>::begin() noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::Iterator Stack<TData>::end() noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::ConstIterator Stack<TData>::begin() const noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::ConstIterator Stack<TData>::end() const noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::ConstIterator Stack<TData>::cbegin() const noexcept
+	{
+		return m_container.begin();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::ConstIterator Stack<TData>::cend() const noexcept
+	{
+		return m_container.end();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::TData& Stack<TData>::Peek() noexcept
 	{
 		return m_container.Back();
 	}
 
 	template<typename TData>
-	constexpr const Stack<TData>::TData& Stack<TData>::Peek() const
+	constexpr const Stack<TData>::TData& Stack<TData>::Peek() const noexcept
 	{
 		return m_container.Back();
 	}
 
 	template<typename TData>
-	constexpr bool Stack<TData>::IsEmpty() const
+	constexpr bool Stack<TData>::IsEmpty() const noexcept
 	{
 		return m_container.IsEmpty();
 	}
 
 	template<typename TData>
-	constexpr size_t Stack<TData>::Count() const
+	constexpr size_t Stack<TData>::Count() const noexcept
 	{
 		return m_container.Count();
 	}
 
 	template<typename TData>
-	constexpr size_t Stack<TData>::Capacity() const
+	constexpr size_t Stack<TData>::Capacity() const noexcept
 	{
 		return m_container.Capacity();
 	}
