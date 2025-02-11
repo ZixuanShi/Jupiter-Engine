@@ -10,6 +10,7 @@ import jpt.Vector3;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Math;
+import jpt.Constants;
 
 static bool UnitTests_Vec3f_Operations()
 {
@@ -68,10 +69,154 @@ static bool UnitTests_Vec3f_Cross()
     return true;
 }
 
+static bool UnitTests_Vec3f_Angle()
+{
+	Vec3f from;
+	Vec3f to;
+	Precision angle = 0.0f;
+
+	// 90 degrees
+	// x to y
+	from = Vec3::Right();
+	to = Vec3::Up();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+	// y to z
+	from = Vec3::Up();
+	to = Vec3::Forward();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+	// z to x
+	from = Vec3::Forward();
+	to = Vec3::Right();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+	// 45 degrees
+	// x to x + y
+	from = Vec3::Right();
+	to = Vec3::Right() + Vec3::Up();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
+
+	// y to y + z
+	from = Vec3::Up();
+	to = Vec3::Up() + Vec3::Forward();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
+
+	// z to z + x
+	from = Vec3::Forward();
+	to = Vec3::Forward() + Vec3::Right();
+
+	angle = from.Angle(to);
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
+
+	return true;
+}
+
+static bool UnitTests_Vec3f_AngleSigned()
+{
+	Vec3f from;
+	Vec3f to;
+    Precision angle = 0.0f;
+
+	// 90 degrees
+    // x to y
+	from = Vec3::Right();
+	to = Vec3::Up();
+
+    angle = from.AngleSigned(to, Vec3::Right());
+    JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+    // y to z
+	from = Vec3::Up();
+	to = Vec3::Forward();
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Right());
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+	// z to x
+	from = Vec3::Forward();
+	to = Vec3::Right();
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Right());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi));
+
+	// -90 degrees
+	// x to -y
+	from = Vec3::Right();
+	to = -Vec3::Up();
+
+	angle = from.AngleSigned(to, Vec3::Right());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, -HalfPi));
+
+	// y to -z
+	from = Vec3::Up();
+	to = -Vec3::Forward();
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Right());
+	JPT_ENSURE(jpt::AreValuesClose(angle, -HalfPi));
+
+	// z to -x
+	from = Vec3::Forward();
+	to = -Vec3::Right();
+
+	angle = from.AngleSigned(to, Vec3::Forward());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Right());
+	JPT_ENSURE(jpt::AreValuesClose(angle, 0.0f));
+
+	angle = from.AngleSigned(to, Vec3::Up());
+	JPT_ENSURE(jpt::AreValuesClose(angle, -HalfPi));
+
+    return true;
+}
+
 export bool RunUnitTests_Vector3()
 {
     JPT_ENSURE(UnitTests_Vec3f_Operations());
     JPT_ENSURE(UnitTests_Vec3f_Cross());
+	JPT_ENSURE(UnitTests_Vec3f_Angle());
+	JPT_ENSURE(UnitTests_Vec3f_AngleSigned());
 
     return true;
 }

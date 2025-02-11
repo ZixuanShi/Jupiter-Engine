@@ -275,4 +275,10 @@ export namespace jpt
 	{
 		return std::log2(value);
 	}
+
+	template<Floating TFloat = float32>
+	constexpr TFloat Modf(TFloat value, TFloat mod)
+	{
+		return std::fmod(value, mod);
+	}
 }

@@ -6,6 +6,7 @@ module;
 
 export module jpt.Vector3;
 
+import jpt.Constants;
 import jpt.Concepts;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
@@ -99,8 +100,11 @@ export namespace jpt
 		constexpr Vector3 Normalized() const;
 		constexpr void Normalize();
 
-		constexpr static T Angle(const Vector3& left, const Vector3& right);
-		constexpr T Angle(const Vector3& other) const;
+		constexpr static T Angle(const Vector3& from, const Vector3& to); // Unsigned, faster (no atan2)
+		constexpr T Angle(const Vector3& to) const;
+
+		constexpr static T AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis);
+		constexpr T AngleSigned(const Vector3& to, const Vector3& axis) const;
 
 		constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
 		constexpr Vector3 Lerp(const Vector3& other, T t) const;
@@ -111,8 +115,6 @@ export namespace jpt
 		constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
 		constexpr Vector3 Project(const Vector3& to) const;
 
-		constexpr Vector3 RotateAxis(const Vector3& axis, T radians) const;
-		constexpr Vector3 RotatePoint(const Vector3& point, const Vector3& axis, T radians) const;
 		constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
 
 		// Utils
@@ -396,15 +398,59 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Angle(const Vector3& left, const Vector3& right)
+	constexpr T Vector3<T>::Angle(const Vector3& from, const Vector3& to)
 	{
-		return left.Angle(right);
+		// Calculate the angle between two vectors. Right-handed, counter-clockwise.
+		// Formula: angle = acos(a . b / (|a| * |b|))
+
+		const Vector3<T> a = from.Normalized();
+		const Vector3<T> b = to.Normalized();
+
+		const T dot = a.Dot(b);
+		const T angle = Acos(dot / (a.Length() * b.Length()));
+
+		// Round to zero if close to PI
+		if (AreValuesClose(angle, kPi<T>))
+		{
+			return static_cast<T>(0);
+		}
+
+		return angle;
 	}
 
 	template<Numeric T>
-	constexpr T Vector3<T>::Angle(const Vector3& other) const
+	constexpr T Vector3<T>::Angle(const Vector3& to) const
 	{
-		return Acos(Dot(other) / (Length() * other.Length()));
+		return Angle(*this, to);
+	}
+
+	template<Numeric T>
+	constexpr T Vector3<T>::AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis)
+	{
+		// Calculate the angle between two vectors. Right-handed, counter-clockwise.
+		// Formula: angle = atan2((a x b) . c, a . b)
+
+		const Vector3<T> a = from.Normalized();
+		const Vector3<T> b = to.Normalized();
+
+		const Vector3<T> cross = a.Cross(b);
+		const T dot_a_b = a.Dot(b);
+		const T dot_cross_Axis = cross.Dot(axis);
+		const T angle = Atan2(dot_cross_Axis, dot_a_b);
+
+		// Round to zero if close to PI
+		if (AreValuesClose(angle, kPi<T>))
+		{
+			return static_cast<T>(0);
+		}
+
+		return angle;
+	}
+
+	template<Numeric T>
+	constexpr T Vector3<T>::AngleSigned(const Vector3& to, const Vector3& axis) const
+	{
+		return AngleSigned(*this, to, axis);
 	}
 
 	template<Numeric T>
@@ -452,30 +498,6 @@ export namespace jpt
 		const T dot = this->Dot(to);
 		const T scalar = dot / length2;
 		return to * scalar;
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::RotateAxis(const Vector3& axis, T radians) const
-	{
-		// Rotates a position vector around an axis by a given angle
-		// https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
-
-		const T cosTheta = Cos(radians);
-		const T sinTheta = Sin(radians);
-
-		const Vector3<T> cross = axis.Cross(*this);
-		const Vector3<T> crossCross = axis.Cross(cross);
-
-		return *this * cosTheta + cross * sinTheta + crossCross * (static_cast<T>(1) - cosTheta);
-	}
-
-	template<Numeric T>
-	constexpr Vector3<T> Vector3<T>::RotatePoint(const Vector3& point, const Vector3& axis, T radians) const
-	{
-		// Rotates this position vector around a point by a given angle around a specified axis
-		const Vector3<T> offset = *this - point;
-		const Vector3<T> rotated = offset.RotateAxis(axis, radians);
-		return rotated + point;
 	}
 
 	template<Numeric T>

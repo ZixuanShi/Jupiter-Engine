@@ -399,13 +399,13 @@ export namespace jpt
 	{
 		T atan2 = std::atan2(other.y, other.x) - std::atan2(y, x);
 
-		if (atan2 > PI)
+		if (atan2 > Pi)
 		{
-			atan2 -= 2 * PI;
+			atan2 -= 2 * Pi;
 		}
-		else if (atan2 < -PI)
+		else if (atan2 < -Pi)
 		{
-			atan2 += 2 * PI;
+			atan2 += 2 * Pi;
 		}
 
 		return atan2;
