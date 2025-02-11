@@ -367,9 +367,9 @@ namespace jpt::Vulkan
 		const Vec3 translation = Vec3(0.0f, 0.0f, 0.0f);
 		static Precision rotation = 0.0f;
 		rotation += deltaSeconds * ToRadians(30.0f);
-		if (rotation > kTwoPi<Precision>)
+		if (rotation > TwoPi)
 		{
-			rotation -= kTwoPi<Precision>;
+			rotation -= TwoPi;
 		}
 
 		UniformBufferObject ubo = {};

@@ -33,15 +33,16 @@ export namespace jpt
 	/** Grow multiplier for dynamic containers */
 	constexpr size_t kGrowMultiplier = 2;
 
-	template<typename T = float>
+	template<typename T = Precision>
 	constexpr T kPi = static_cast<T>(3.14159265358979323846f);
 
-	template<typename T = float>
+	template<typename T = Precision>
 	constexpr T kTwoPi = static_cast<T>(6.28318530717958647692f);
 
-	template<typename T = float>
+	template<typename T = Precision>
 	constexpr T kHalfPi = static_cast<T>(1.57079632679489661923f);
 }
 
-export constexpr float PI = jpt::kPi<float>;
-export constexpr double PI_D = jpt::kPi<double>;
+export constexpr Precision Pi = jpt::kPi<Precision>;
+export constexpr Precision TwoPi = jpt::kTwoPi<Precision>;
+export constexpr Precision HalfPi = jpt::kHalfPi<Precision>;
