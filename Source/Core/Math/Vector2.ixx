@@ -384,9 +384,8 @@ export namespace jpt
 		const Vector2<T> b = to.Normalized();
 
 		const T dot = a.Dot(b);
-		dot = Clamp(dot, static_cast<T>(-1), static_cast<T>(1));
-
 		const T angle = Acos(dot);
+
 		return angle;
 	}
 

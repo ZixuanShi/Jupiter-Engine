@@ -406,10 +406,9 @@ export namespace jpt
 		const Vector3<T> a = from.Normalized();
 		const Vector3<T> b = to.Normalized();
 
-		const T dot = a.Dot(b);
-		dot = Clamp(dot, static_cast<T>(-1), static_cast<T>(1));
-		
+		const T dot = a.Dot(b);		
 		const T angle = Acos(dot);
+
 		return angle;
 	}
 
@@ -427,18 +426,12 @@ export namespace jpt
 
 		const Vector3<T> a = from.Normalized();
 		const Vector3<T> b = to.Normalized();
-
 		const Vector3<T> cross = a.Cross(b);
+
 		const T dot_a_b = a.Dot(b);
 		const T dot_cross_Axis = cross.Dot(axis);
+
 		const T angle = Atan2(dot_cross_Axis, dot_a_b);
-
-		// Round to zero if close to PI
-		if (AreValuesClose(angle, kPi<T>))
-		{
-			return static_cast<T>(0);
-		}
-
 		return angle;
 	}
 
