@@ -2,9 +2,8 @@
 
 export module jpt.Application;
 
-import jpt.TypeTraits;
-import jpt.Time.TypeDefs;
-
+import jpt.TypeDefs;
+import jpt.Status;
 import jpt.Framework.Enums;
 import jpt.Graphics.Enums;
 
@@ -31,7 +30,7 @@ export namespace jpt
 		Framework_API m_frameworkAPI = Framework_API::Unknown;
 		Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
 
-		bool m_shouldShutdown = false;
+		Status m_status = Status::Pending;
 		TimePrecision m_deltaSeconds = 0.0;
 
 	public:
@@ -59,7 +58,7 @@ export namespace jpt
 		TimePrecision GetDeltaSeconds() const { return m_deltaSeconds; }
 
 		void SetPlatform(Platform* pPlatform) { m_pPlatform = pPlatform; }
-		void SetShouldShutdown();
+		void SetStatus(Status status);
 	};
 
 	Application* GetApplication();

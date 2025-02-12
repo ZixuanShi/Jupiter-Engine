@@ -8,18 +8,17 @@ module;
 export module jpt.Window.Manager;
 
 import jpt.Application;
+
 import jpt.Window;
 import jpt.Window_GLFW;
 import jpt.Window_Win32;
 
 import jpt.Renderer;
-
 import jpt.Framework.Enums;
 
+import jpt.Status;
 import jpt.DynamicArray;
-
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
 
 import jpt.Event.Manager;
 import jpt.Event.Window.Close;
@@ -115,7 +114,7 @@ export namespace jpt
 	{
 		if (pWindowToDestroy == GetMainWindow())
 		{
-			GetApplication()->SetShouldShutdown();
+			GetApplication()->SetStatus(Status::Success);
 			return;
 		}
 

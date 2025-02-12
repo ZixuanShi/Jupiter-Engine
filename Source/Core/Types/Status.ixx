@@ -6,9 +6,11 @@ module;
 
 export module jpt.Status;
 
+import jpt.TypeDefs;
+
 export namespace jpt
 {
-	enum class Status
+	enum class Status : uint8
 	{
 		Pending  = 1 << 0,		// Not started
 		Running  = 1 << 1,		// In progress

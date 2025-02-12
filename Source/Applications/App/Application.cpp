@@ -55,7 +55,7 @@ namespace jpt
 
 		if (CommandLine::GetInstance().Has("no_window"))
 		{
-			m_shouldShutdown = true;
+			m_status = Status::Success;
 			return true;
 		}
 
@@ -83,7 +83,7 @@ namespace jpt
 			{
 				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
 				{
-					m_shouldShutdown = true;
+					m_status = Status::Success;
 				}
 				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N && eventKeyboardKeyPress.GetState() == jpt::Input::KeyState::Pressed)
 				{
@@ -111,6 +111,11 @@ namespace jpt
 		success &= InputManager::GetInstance().Init();
 		success &= SceneManager::GetInstance().Init();
 		success &= AssetManager::GetInstance().Init();
+
+		if (success)
+		{
+			m_status = Status::Running;
+		}
 
 		return success;
 	}
@@ -156,12 +161,12 @@ namespace jpt
 
 	void Application::Run()
 	{
-		while (!m_shouldShutdown)
+		while (m_status == Status::Running)
 		{
 			m_deltaSeconds = locCalculateDeltaSeconds();
 
 			Update(m_deltaSeconds);
-			if (m_shouldShutdown)
+			if (m_status != Status::Running)
 			{
 				break;
 			}
@@ -175,8 +180,8 @@ namespace jpt
 		return m_pWindowManager->GetMainWindow();
 	}
 
-	void Application::SetShouldShutdown()
+	void Application::SetStatus(Status status)
 	{
-		m_shouldShutdown = true;
+		m_status = status;
 	}
 }
