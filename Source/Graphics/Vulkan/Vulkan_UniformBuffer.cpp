@@ -12,12 +12,13 @@ import jpt.Vulkan.Buffer;
 import jpt.Vulkan.LogicalDevice;
 
 import jpt.Matrix44;
+import jpt.Utilities;
 
 namespace jpt::Vulkan
 {
 	bool UniformBuffer::Init()
 	{
-		const VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+		const VkDeviceSize bufferSize = sizeof(Uniform_MVP);
 
 		VkBufferCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -41,5 +42,10 @@ namespace jpt::Vulkan
 	{
 		vkUnmapMemory(LogicalDevice::GetVkDevice(), m_buffer.GetMemory());
 		m_buffer.Shutdown();
+	}
+
+	void UniformBuffer::MapMemory(void* pSource, VkDeviceSize size)
+	{
+		MemCpy(m_mappedMemory, pSource, size);
 	}
 }

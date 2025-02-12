@@ -372,18 +372,18 @@ namespace jpt::Vulkan
 			rotation -= TwoPi;
 		}
 
-		UniformBufferObject ubo = {};
-		ubo.model.Translate(translation);
-		ubo.model.RotateY(rotation);
-		ubo.model.Scale(1.0f);
+		Uniform_MVP mvp = {};
+		mvp.model.Translate(translation);
+		mvp.model.RotateY(rotation);
+		mvp.model.Scale(1.0f);
 
-		ubo.view = GetVkRenderer()->GetCamera().GetMatrix();
+		mvp.view = GetVkRenderer()->GetCamera().GetMatrix();
 
-		ubo.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
-		ubo.proj[1][1] *= -1;
+		mvp.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
+		mvp.proj[1][1] *= -1;
 
 		UniformBuffer& uniformBuffer = m_uniformBuffers[m_currentFrame];
-		memcpy(uniformBuffer.GetMappedMemory(), &ubo, sizeof(ubo));
+		uniformBuffer.MapMemory(&mvp, sizeof(mvp));
 	}
 
 	void WindowResources::CreateColorResources()

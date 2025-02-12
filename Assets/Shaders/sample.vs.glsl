@@ -1,11 +1,11 @@
 #version 450
 
-layout(binding = 0) uniform UniformBufferObject
+layout(binding = 0) uniform MVP
 {
     mat4 model;
     mat4 view;
     mat4 proj;
-} ubo;
+} uniform_mvp;
 
 layout(location = 0) in vec4 inColor;
 layout(location = 1) in vec3 inPosition;
@@ -18,11 +18,11 @@ layout(location = 1) out vec2 outFragTexCoord;
 layout(push_constant) uniform PushConstantObject
 {
     float value;
-} pco;
+} pushconstant;
 
 void main() 
 {
-    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
+    gl_Position = uniform_mvp.proj * uniform_mvp.view * uniform_mvp.model * vec4(inPosition, 1.0);
     outFragColor = inColor;
     outFragTexCoord = inTexCoord;
 }

@@ -16,7 +16,7 @@ import jpt.Matrix44;
 
 export namespace jpt::Vulkan
 {
-	struct alignas(16) UniformBufferObject
+	struct alignas(16) Uniform_MVP
 	{
 	public:
 		Matrix44 model;
@@ -39,8 +39,7 @@ export namespace jpt::Vulkan
 		bool Init();
 		void Shutdown();
 
-	public:
+		void MapMemory(void* pSource, VkDeviceSize size);
 		VkBuffer GetHandle() const { return m_buffer.GetHandle(); }
-		void* GetMappedMemory() const { return m_mappedMemory; }
 	};
 }

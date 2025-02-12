@@ -50,7 +50,7 @@ namespace jpt::Vulkan
 		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = uniformBuffer.GetHandle();
 		bufferInfo.offset = 0;
-		bufferInfo.range = sizeof(UniformBufferObject);
+		bufferInfo.range = sizeof(Uniform_MVP);
 
 		TextureSampler* pTextureSampler = GetApplication()->GetRenderer()->GetTextureSampler();
 		TextureSampler_Vulkan* pTextureSamplerVulkan = static_cast<TextureSampler_Vulkan*>(pTextureSampler);
