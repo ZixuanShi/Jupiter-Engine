@@ -407,14 +407,9 @@ export namespace jpt
 		const Vector3<T> b = to.Normalized();
 
 		const T dot = a.Dot(b);
-		const T angle = Acos(dot / (a.Length() * b.Length()));
-
-		// Round to zero if close to PI
-		if (AreValuesClose(angle, kPi<T>))
-		{
-			return static_cast<T>(0);
-		}
-
+		dot = Clamp(dot, static_cast<T>(-1), static_cast<T>(1));
+		
+		const T angle = Acos(dot);
 		return angle;
 	}
 

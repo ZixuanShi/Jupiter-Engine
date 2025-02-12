@@ -87,8 +87,9 @@ export namespace jpt
 		constexpr void Lerp(Vector2 other, T t);
 
 		constexpr static T Angle(Vector2 lhs, Vector2 rhs);
-		constexpr static T AngleSigned(Vector2 from, Vector2 to);
 		constexpr T Angle(Vector2 other) const;	        // Unsigned Radians. Faster (no atan2
+
+		constexpr static T AngleSigned(Vector2 from, Vector2 to);
 		constexpr T AngleSigned(Vector2 other) const;	// Signed Radians. Slower
 		
 		// Counter-clockwise rotation
@@ -375,23 +376,30 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr T Vector2<T>::Angle(Vector2 lhs, Vector2 rhs)
+	constexpr T Vector2<T>::Angle(Vector2 from, Vector2 to)
 	{
-		return lhs.Angle(rhs);
+		// Formular: dot(a, b) / (|a| * |b|)
+
+		const Vector2<T> a = from.Normalized();
+		const Vector2<T> b = to.Normalized();
+
+		const T dot = a.Dot(b);
+		dot = Clamp(dot, static_cast<T>(-1), static_cast<T>(1));
+
+		const T angle = Acos(dot);
+		return angle;
+	}
+
+	template<Numeric T>
+	constexpr T Vector2<T>::Angle(Vector2 other) const
+	{
+		return Angle(*this, other);
 	}
 
 	template<Numeric T>
 	constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
 	{
 		return from.AngleSigned(to);
-	}
-
-	template<Numeric T>
-	constexpr T Vector2<T>::Angle(Vector2 other) const
-	{
-		const T dot = Dot(other);
-		const T angle = std::acos(dot / (Length() * other.Length()));
-		return angle;
 	}
 
 	template<Numeric T>
