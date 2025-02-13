@@ -607,6 +607,8 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::UpdateBufferForAdd(size_t index)
 	{
+		static constexpr size_t kGrowMultiplier = 2;
+
 		JPT_ASSERT(index <= m_count, "Calling DynamicArray::Insert() with an invalid index");
 
 		if (m_count >= m_capacity)

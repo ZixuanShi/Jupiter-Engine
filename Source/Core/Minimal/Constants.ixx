@@ -30,9 +30,6 @@ export namespace jpt
 	/** Short version of invalid value regarding indexing */
 	constexpr size_t npos = kInvalidValue<size_t>;
 
-	/** Grow multiplier for dynamic containers */
-	constexpr size_t kGrowMultiplier = 2;
-
 	template<typename T = Precision>
 	constexpr T kPi = static_cast<T>(3.14159265358979323846f);
 

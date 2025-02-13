@@ -18,6 +18,7 @@ import jpt.Utilities;
 
 export namespace jpt
 {
+	/** Column-major */
 	template<Numeric T>
 	struct TMatrix33
 	{

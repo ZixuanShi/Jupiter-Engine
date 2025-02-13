@@ -11,6 +11,7 @@ export module jpt.Deque;
 
 import jpt.Allocator;
 import jpt.Utilities;
+import jpt.TypeDefs;
 
 export namespace jpt
 {
@@ -25,9 +26,8 @@ export namespace jpt
 		static constexpr size_t kChunkSize = 16;
 
 	private:
-		TData** m_ppMap = nullptr;	/**< Array to arrays. Contains data map */
-
-
+		TData** m_ppMap = nullptr;  /**< Array to fixed-sized chunks. Where the data is stored on heap. Not contiguous */
+		Index m_begin = 0;  /**< Index of the first element */
 
 	public:
 	};

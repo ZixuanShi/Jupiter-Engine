@@ -21,6 +21,7 @@ import jpt.ToString;
 
 export namespace jpt
 {
+	/** Column-major */
 	template<Numeric T>
 	struct TMatrix44
 	{

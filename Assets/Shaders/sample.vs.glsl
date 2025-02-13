@@ -2,7 +2,7 @@
 
 layout(binding = 0) uniform MVP
 {
-    mat4 model;
+    mat4 model; // TODO: change to push constant for each model
     mat4 view;
     mat4 proj;
 } uniform_mvp;

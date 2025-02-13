@@ -19,7 +19,7 @@ struct EnumData
 {
 	TInt min = jpt::Constants<TInt>::kMax;	/**< The min value of this enum */
 	TInt max = jpt::Constants<TInt>::kMin;	/**< The max value of this enum */
-	jpt::HashMap<TInt, jpt::String> names;	/**< Key by Enum Value, Value is the value's associated string name */
+	jpt::HashMap<TInt, jpt::String, false> names;	/**< Key by Enum Value, Value is the value's associated string name */
 };
 
 /** Generate the shared enum data 
@@ -94,7 +94,7 @@ public:                                                                         
     {                                                                                                                        \
         return static_cast<TSize>(s_data.names.Count());                                                                     \
     }                                                                                                                        \
-    constexpr static const jpt::HashMap<TSize, jpt::String>& Names()                                                         \
+    constexpr static const jpt::HashMap<TSize, jpt::String, false>& Names()                                                  \
     {                                                                                                                        \
         return s_data.names;                                                                                                 \
     }                                                                                                                        \

@@ -85,7 +85,6 @@ EnumData<TInt> GenerateData(const char* pSource)
 	const String source = locGetEnumSourceStr(pSource);
 
 	DynamicArray<String> tokens = source.Split(',');
-	data.names.SetShouldGrow(false);
 	data.names.ResizeBuckets(tokens.Count());
 
 	// Parse each token to extract name and value.

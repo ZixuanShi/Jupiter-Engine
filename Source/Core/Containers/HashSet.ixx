@@ -136,6 +136,8 @@ export namespace jpt
 	template<typename TValue, typename TComparator>
 	constexpr void HashSet<TValue, TComparator>::Add(const TData& data)
 	{
+		static constexpr size_t kGrowMultiplier = 2;
+
 		// Grow if needed
 		if (m_count >= m_buckets.Count() * kGrowMultiplier)
 		{

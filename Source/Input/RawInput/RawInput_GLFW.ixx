@@ -25,14 +25,14 @@ export namespace jpt::Input
 		using Super = RawInput;
 
 	private:
-		HashMap<Key, uint32> m_toGLFWKeys;
-		HashMap<uint32, Key> m_fromGLFWKeys;
+		HashMap<Key, uint32, false> m_toGLFWKeys;
+		HashMap<uint32, Key, false> m_fromGLFWKeys;
 
-		HashMap<Modifier, uint32> m_toGLFWModifiers;
-		HashMap<uint32, Modifier> m_fromGLFWModifiers;
+		HashMap<Modifier, uint32, false> m_toGLFWModifiers;
+		HashMap<uint32, Modifier, false> m_fromGLFWModifiers;
 
-		HashMap<MouseButton, uint32> m_toGLFWMouseButtons;
-		HashMap<uint32, MouseButton> m_fromGLFWMouseButtons;
+		HashMap<MouseButton, uint32, false> m_toGLFWMouseButtons;
+		HashMap<uint32, MouseButton, false> m_fromGLFWMouseButtons;
 
 	public:
 		virtual bool PreInit() override;
@@ -52,22 +52,13 @@ export namespace jpt::Input
 	{
 		JPT_ENSURE(Super::PreInit());
 
-		m_toGLFWKeys.SetShouldGrow(false);
 		m_toGLFWKeys.ResizeBuckets(Key::Count());
-
-		m_fromGLFWKeys.SetShouldGrow(false);
 		m_fromGLFWKeys.ResizeBuckets(Key::Count());
 
-		m_fromGLFWModifiers.SetShouldGrow(false);
 		m_fromGLFWModifiers.ResizeBuckets(Modifier::Count());
-
-		m_toGLFWModifiers.SetShouldGrow(false);
 		m_toGLFWModifiers.ResizeBuckets(Modifier::Count());
 
-		m_toGLFWMouseButtons.SetShouldGrow(false);
 		m_toGLFWMouseButtons.ResizeBuckets(MouseButton::Count());
-
-		m_fromGLFWMouseButtons.SetShouldGrow(false);
 		m_fromGLFWMouseButtons.ResizeBuckets(MouseButton::Count());
 
 		// Mouse
