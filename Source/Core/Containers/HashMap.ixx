@@ -41,6 +41,8 @@ export namespace jpt
 
 	private:
 		static constexpr TComparator kComparator = TComparator();
+		static constexpr float kLoadFactor = 0.75f;
+		static constexpr size_t kGrowMultiplier = 2;
 
 	private:
 		TBuckets m_buckets; 
@@ -259,12 +261,12 @@ export namespace jpt
 	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
 	constexpr TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::Add(const TKey& key, const TValue& value)
 	{
-		// Grow if needed. Grow when the count is 75% of the bucket size
+		// Grow if needed.
 		if constexpr (kShouldGrow)
 		{
-			if (m_count >= (m_buckets.Count() * 3) / 4)
+			if (m_count >= m_buckets.Count() * kLoadFactor)
 			{
-				ResizeBuckets(m_buckets.Count() * 2);
+				ResizeBuckets(m_buckets.Count() * kGrowMultiplier);
 			}
 		}
 
@@ -294,12 +296,12 @@ export namespace jpt
 	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
 	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::Add(TKey&& key, TValue&& value)
 	{
-		// Grow if needed. Grow when the count is 75% of the bucket size
+		// Grow if needed.
 		if constexpr (kShouldGrow)
 		{
-			if (m_count >= (m_buckets.Count() * 3) / 4)
+			if (m_count >= m_buckets.Count() * kLoadFactor)
 			{
-				ResizeBuckets(m_buckets.Count() * 2);
+				ResizeBuckets(m_buckets.Count() * kGrowMultiplier);
 			}
 		}
 
@@ -330,12 +332,12 @@ export namespace jpt
 	template<typename ...TArgs>
 	constexpr TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::Emplace(const TKey& key, TArgs && ...args)
 	{
-		// Grow if needed. Grow when the count is 75% of the bucket size
+		// Grow if needed.
 		if constexpr (kShouldGrow)
 		{
-			if (m_count >= (m_buckets.Count() * 3) / 4)
+			if (m_count >= m_buckets.Count() * kLoadFactor)
 			{
-				ResizeBuckets(m_buckets.Count() * 2);
+				ResizeBuckets(m_buckets.Count() * kGrowMultiplier);
 			}
 		}
 

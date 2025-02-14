@@ -36,6 +36,8 @@ export namespace jpt
 
 	private:
 		static constexpr TComparator kComparator = TComparator();
+		static constexpr float kLoadFactor = 0.75f;
+		static constexpr size_t kGrowMultiplier = 2;
 
 	private:
 		TBuckets m_buckets;
@@ -136,12 +138,10 @@ export namespace jpt
 	template<typename TValue, bool kShouldGrow, typename TComparator>
 	constexpr void HashSet<TValue, kShouldGrow, TComparator>::Add(const TData& data)
 	{
-		static constexpr size_t kGrowMultiplier = 2;
-
 		// Grow if needed
 		if constexpr (kShouldGrow)
 		{
-			if (m_count >= m_buckets.Count() * kGrowMultiplier)
+			if (m_count >= m_buckets.Count() * kLoadFactor)
 			{
 				Reserve(m_count * kGrowMultiplier);
 			}

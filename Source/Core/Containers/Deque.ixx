@@ -23,7 +23,7 @@ export namespace jpt
 		using TData = _TData;
 
 	private:
-		static constexpr size_t kChunkSize = 16;
+		static constexpr Index kChunkSize = 16;
 
 	private:
 		TData** m_ppMap = nullptr;  /**< Array to fixed-sized chunks. Where the data is stored on heap. Not contiguous */
