@@ -27,8 +27,15 @@ export namespace jpt
 
 	private:
 		TData** m_ppMap = nullptr;  /**< Array to fixed-sized chunks. Where the data is stored on heap. Not contiguous */
-		Index m_begin = 0;  /**< Index of the first element */
+
+		Index m_mapSize = 0;  /**< Number of chunks allocated. JPT_ARRAY_COUNT(m_ppMap) */
+		Index m_size = 0;     /**< Number of elements in the deque */
+		Index m_front = 0;    /**< Index of the first element */
 
 	public:
+		constexpr void PushFront(const TData& data);
+
+	private:
+		
 	};
 }

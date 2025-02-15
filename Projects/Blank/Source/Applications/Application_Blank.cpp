@@ -38,6 +38,8 @@ bool Application_Blank::PreInit()
 		{
 		});
 
+	jpt::Deque<int> deque;
+
 	return true;
 }
 
