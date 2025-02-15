@@ -8,6 +8,7 @@ export module jpt.Atomic;
 
 export namespace jpt
 {
+    /** Protects a variable is thread-safe that can be simultaneously read/written */
 	template<typename T>
 	class Atomic
 	{

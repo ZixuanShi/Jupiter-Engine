@@ -11,6 +11,19 @@ import jpt.Mutex;
 
 export namespace jpt
 {
+	/** A synchronization primitive that can be used to block a thread, or multiple threads at the same time, until another thread both modifies a shared variable (the condition), and notifies the condition_variable.
+		@example:
+			jpt::Mutex mutex;
+			jpt::ConditionVariable conditionVariable;
+			void ThreadFunction()
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				conditionVariable.Wait(lock);
+			}
+			void NotifyFunction()
+			{
+				conditionVariable.NotifyOne();
+			} */
 	class ConditionVariable
 	{
 	private:

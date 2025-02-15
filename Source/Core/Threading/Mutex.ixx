@@ -8,6 +8,7 @@ export module jpt.Mutex;
 
 export namespace jpt
 {
+    /** Protects a scope can be only accessed by up-to-one thread at the same time */
     class Mutex 
     {
         friend class ConditionVariable;
