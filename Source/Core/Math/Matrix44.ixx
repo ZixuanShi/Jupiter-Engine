@@ -382,19 +382,19 @@ export namespace jpt
 		const T j = m[2][1];
 		const T k = m[2][2];
 		const T l = m[2][3];
-		const T m = m[3][0];
+		const T q = m[3][0];
 		const T n = m[3][1];
 		const T o = m[3][2];
 		const T p = m[3][3];
 
 		const T det = a * f * k * p + a * g * l * n + a * h * j * o +
 			          b * e * l * p + b * g * i * p + b * h * k * n +
-			          c * e * j * p + c * f * l * m + c * h * i * m +
-			          d * e * k * n + d * f * i * o + d * g * j * m -
-			          a * f * l * o - a * g * j * p - a * h * k * m -
-			          b * e * k * o - b * g * l * m - b * h * i * p -
-			          c * e * l * n - c * f * i * p - c * h * j * m -
-			          d * e * j * n - d * f * k * m - d * g * i * l;
+			          c * e * j * p + c * f * l * q + c * h * i * q +
+			          d * e * k * n + d * f * i * o + d * g * j * q -
+			          a * f * l * o - a * g * j * p - a * h * k * q -
+			          b * e * k * o - b * g * l * q - b * h * i * p -
+			          c * e * l * n - c * f * i * p - c * h * j * q -
+			          d * e * j * n - d * f * k * q - d * g * i * l;
 
 		return det;
 	}
@@ -450,7 +450,7 @@ export namespace jpt
 		const T j = m[2][1];
 		const T k = m[2][2];
 		const T l = m[2][3];
-		const T m = m[3][0];
+		const T q = m[3][0];
 		const T n = m[3][1];
 		const T o = m[3][2];
 		const T p = m[3][3];
@@ -459,18 +459,18 @@ export namespace jpt
 		m[0][1] = (b * l * o + c * j * p + d * k * n - b * k * p - c * l * n - d * j * o) * invDet;
 		m[0][2] = (b * g * p + c * h * n + d * f * o - b * h * o - c * f * p - d * g * n) * invDet;
 		m[0][3] = (b * h * k + c * f * l + d * g * j - b * g * l - c * h * j - d * f * k) * invDet;
-		m[1][0] = (e * l * o + g * i * p + h * k * m - e * k * p - g * l * m - h * i * o) * invDet;
-		m[1][1] = (a * k * p + c * l * m + d * i * o - a * l * o - c * i * p - d * k * m) * invDet;
-		m[1][2] = (a * h * o + c * f * p + d * g * m - a * g * p - c * h * m - d * f * o) * invDet;
-		m[1][3] = (a * g * l + c * h * m + d * f * k - a * h * k - c * f * l - d * g * m) * invDet;
-		m[2][0] = (e * j * p + f * l * m + h * i * n - e * l * n - f * i * p - h * j * m) * invDet;
-		m[2][1] = (a * l * n + b * i * p + d * j * m - a * j * p - b * l * m - d * i * n) * invDet;
-		m[2][2] = (a * f * p + b * h * m + d * e * n - a * h * n - b * e * p - d * f * m) * invDet;
+		m[1][0] = (e * l * o + g * i * p + h * k * q - e * k * p - g * l * q - h * i * o) * invDet;
+		m[1][1] = (a * k * p + c * l * q + d * i * o - a * l * o - c * i * p - d * k * q) * invDet;
+		m[1][2] = (a * h * o + c * f * p + d * g * q - a * g * p - c * h * q - d * f * o) * invDet;
+		m[1][3] = (a * g * l + c * h * q + d * f * k - a * h * k - c * f * l - d * g * q) * invDet;
+		m[2][0] = (e * j * p + f * l * q + h * i * n - e * l * n - f * i * p - h * j * q) * invDet;
+		m[2][1] = (a * l * n + b * i * p + d * j * q - a * j * p - b * l * q - d * i * n) * invDet;
+		m[2][2] = (a * f * p + b * h * q + d * e * n - a * h * n - b * e * p - d * f * q) * invDet;
 		m[2][3] = (a * h * j + b * e * l + d * f * i - a * f * l - b * h * i - d * e * j) * invDet;
-		m[3][0] = (e * k * n + f * i * o + g * j * m - e * j * o - f * k * m - g * i * n) * invDet;
-		m[3][1] = (a * j * o + b * k * m + c * i * n - a * k * n - b * i * o - c * j * m) * invDet;
-		m[3][2] = (a * g * n + b * e * o + c * f * m - a * f * o - b * g * m - c * e * n) * invDet;
-		m[3][3] = (a * f * k + b * g * m + c * e * j - a * g * j - b * e * k - c * f * m) * invDet;
+		m[3][0] = (e * k * n + f * i * o + g * j * q - e * j * o - f * k * q - g * i * n) * invDet;
+		m[3][1] = (a * j * o + b * k * q + c * i * n - a * k * n - b * i * o - c * j * q) * invDet;
+		m[3][2] = (a * g * n + b * e * o + c * f * q - a * f * o - b * g * q - c * e * n) * invDet;
+		m[3][3] = (a * f * k + b * g * q + c * e * j - a * g * j - b * e * k - c * f * q) * invDet;
 	}
 
 	template<Numeric T>
