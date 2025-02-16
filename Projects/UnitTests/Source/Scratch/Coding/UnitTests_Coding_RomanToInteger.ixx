@@ -32,7 +32,7 @@ int32 RomanToInteger(const jpt::String& roman)
 	for (size_t i = 0; i < roman.Count(); ++i)
 	{
 		const int32 current = romanToInteger(i);
-		const int32 next = romanToInteger(i + 1);
+		const int32 next = (i == (roman.Count() - 1) ? 0 : romanToInteger(i + 1));
 
 		if (current < next)
 		{

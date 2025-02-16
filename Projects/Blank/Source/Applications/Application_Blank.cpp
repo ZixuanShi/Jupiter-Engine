@@ -5,8 +5,6 @@ module;
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
 
-#include <Windows.h>
-
 module Application_Blank;
 
 import jpt.CoreModules;
@@ -37,6 +35,18 @@ bool Application_Blank::PreInit()
 	jpt::EventManager::GetInstance().Register<jpt::Event_Key>([]([[maybe_unused]] const jpt::Event_Key& keyPressEvent) 
 		{
 		});
+
+	jpt::Deque<jpt::String> deque;
+
+	deque.PushFront("Hello");
+	deque.PushBack(" ");
+	deque.PushBack("World");
+
+	for (size_t i = 0; i < deque.Count(); ++i)
+	{
+		jpt::String& str = deque[i];
+		JPT_LOG(str);
+	}
 
 	return true;
 }

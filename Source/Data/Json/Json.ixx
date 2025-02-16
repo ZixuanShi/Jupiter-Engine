@@ -44,7 +44,8 @@ namespace jpt
 				// Find the first non-space character
 				size_t i = colonIndex + 1;
 
-				while (line[i] == ' ')
+				while (i < line.Count() &&
+					   line[i] == ' ')
 				{
 					++i;
 				}

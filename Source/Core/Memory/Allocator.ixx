@@ -2,6 +2,8 @@
 
 module;
 
+#include "Core/Validation/Assert.h"
+
 #include <new>
 #include <stdlib.h>
 #include <cstring>
@@ -67,10 +69,7 @@ export namespace jpt
 		}
 
 		// Check for overflow
-		if (count > std::numeric_limits<size_t>::max() / sizeof(T)) 
-		{
-			throw std::bad_array_new_length();
-		}
+		JPT_ASSERT(count <= std::numeric_limits<size_t>::max() / sizeof(T));
 
 		return new T[count];
 	}
