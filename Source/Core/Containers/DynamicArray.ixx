@@ -341,7 +341,7 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Clear()
 	{
-		if constexpr (!std::is_trivially_destructible_v<TData>)
+		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			for (size_t i = 0; i < m_count; ++i)
 			{
@@ -446,7 +446,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_count, "Calling Erase() with an invalid index");
 
-		if constexpr (!std::is_trivially_destructible_v<TData>)
+		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			TAllocator::Destruct(m_pBuffer + index);
 		}
@@ -467,7 +467,7 @@ export namespace jpt
 	template<typename TData, typename TAllocator>
 	constexpr void DynamicArray<TData, TAllocator>::Pop()
 	{
-		if constexpr (!std::is_trivially_destructible_v<TData>)
+		if constexpr (!IsTriviallyDestructible<TData>)
 		{
 			TAllocator::Destruct(m_pBuffer + m_count - 1);
 		}
@@ -537,7 +537,7 @@ export namespace jpt
 
 		if (m_pBuffer)
 		{
-			if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
+			if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 			{
 				MemMove(pNewBuffer, m_pBuffer, m_count * sizeof(TData));
 			}
@@ -573,7 +573,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index <= m_count, "Distance went beyond the bound of this vector. Use reserve first");
 
-		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
+		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 		{
 			MemMove(m_pBuffer + index + distance, m_pBuffer + index, (m_count - index) * sizeof(TData));
 		}
@@ -591,7 +591,7 @@ export namespace jpt
 	{
 		JPT_ASSERT(index - distance >= 0, "Distance went beyond the start of this vector. Use smaller index or distance");
 
-		if constexpr (std::is_trivially_move_assignable_v<TData> && std::is_trivially_move_constructible_v<TData>)
+		if constexpr (IsTriviallyMoveAssignable<TData> && IsTriviallyMoveConstructible<TData>)
 		{
 			MemMove(m_pBuffer + index, m_pBuffer + index + distance, (m_count - index) * sizeof(TData));
 		}
@@ -626,7 +626,7 @@ export namespace jpt
 		m_count = size;
 		UpdateBuffer(m_count);
 
-		if constexpr (std::is_trivially_copyable_v<TData>)
+		if constexpr (IsTriviallyCopyable<TData>)
 		{
 			MemCpy(m_pBuffer, pBegin, m_count * sizeof(TData));
 		}

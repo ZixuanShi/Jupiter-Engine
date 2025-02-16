@@ -101,11 +101,14 @@ export namespace jpt
 
 #pragma region Type Properties
 
-	template<typename T>
-	constexpr bool IsTrivial = std::is_trivial_v<T>;
+	template<typename T>	constexpr bool IsTrivial                    = std::is_trivial_v<T>;
+	template<typename T>	constexpr bool IsTriviallyCopyable          = std::is_trivially_copyable_v<T>;
+	template<typename T>	constexpr bool IsTriviallyDestructible      = std::is_trivially_destructible_v<T>;
+	template<typename T>	constexpr bool IsTriviallyConstructible     = std::is_trivially_constructible_v<T>;
+	template<typename T>	constexpr bool IsTriviallyMoveAssignable    = std::is_trivially_move_assignable_v<T>;
+	template<typename T>	constexpr bool IsTriviallyMoveConstructible = std::is_trivially_move_constructible_v<T>;
 
-	template<typename T>
-	constexpr bool IsSmall = sizeof(T) <= kSmallDataSize;
+	template<typename T>	constexpr bool IsSmall = sizeof(T) <= kSmallDataSize;
 
 #pragma endregion
 

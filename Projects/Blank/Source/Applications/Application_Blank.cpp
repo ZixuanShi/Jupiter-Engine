@@ -36,17 +36,17 @@ bool Application_Blank::PreInit()
 		{
 		});
 
-	jpt::Deque<jpt::String> deque;
+	//jpt::Deque<jpt::String> deque;
 
-	deque.PushFront("Hello");
-	deque.PushBack(" ");
-	deque.PushBack("World");
+	//deque.PushFront("Hello");
+	//deque.PushBack(" ");
+	//deque.PushBack("World");
 
-	for (size_t i = 0; i < deque.Count(); ++i)
-	{
-		jpt::String& str = deque[i];
-		JPT_LOG(str);
-	}
+	//for (size_t i = 0; i < deque.Count(); ++i)
+	//{
+	//	jpt::String& str = deque[i];
+	//	JPT_LOG(str);
+	//}
 
 	return true;
 }

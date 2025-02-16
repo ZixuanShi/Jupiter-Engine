@@ -13,8 +13,8 @@ import jpt.Byte;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.Math;
-import jpt.TypeTraits;
 import jpt.TypeDefs;
+import jpt.TypeTraits;
 import jpt.Utilities;
 import jpt.String;
 
@@ -215,7 +215,7 @@ export namespace jpt
 
 		if (m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
 		{
-			if constexpr (!std::is_trivially_destructible_v<TCurrent>)
+			if constexpr (!IsTriviallyDestructible<TCurrent>)
 			{
 				Allocator<TCurrent>::Destruct(reinterpret_cast<TCurrent*>(&m_buffer));
 			}

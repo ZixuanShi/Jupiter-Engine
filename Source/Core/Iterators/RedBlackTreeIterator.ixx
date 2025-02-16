@@ -1,12 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include <type_traits>
-
 export module jpt_private.RedBlackTreeIterator;
 
 import jpt.TypeDefs;
+import jpt.TypeTraits;
 import jpt.Utilities;
 
 export namespace jpt_private
@@ -35,7 +32,7 @@ export namespace jpt_private
 	template<typename TData>
 	constexpr RedBlackTreeNode<TData>::~RedBlackTreeNode()
 	{
-		if constexpr (!std::is_trivially_destructible_v<TData>)
+		if constexpr (!jpt::IsTriviallyDestructible<TData>)
 		{
 			data.~TData();
 		}
