@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreMacros.h"
+#include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
 #include <vulkan/vulkan.h>
@@ -33,6 +34,7 @@ namespace jpt::Vulkan
 		const DescriptorSetLayout& descriptorSetLayout = pVulkanRenderer->GetDescriptorSetLayout();
 		const DescriptorPool& descriptorPool = pVulkanRenderer->GetDescriptorPool();
 
+		JPT_ASSERT(descriptorPool.GetHandle() != VK_NULL_HANDLE);
 		m_descriptorPool = descriptorPool.GetHandle();
 
 		VkDescriptorSetAllocateInfo descriptorAllocInfo{};

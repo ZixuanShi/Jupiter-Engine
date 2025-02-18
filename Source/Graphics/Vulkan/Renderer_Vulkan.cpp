@@ -57,6 +57,8 @@ namespace jpt
 		success &= m_renderPass.Init(kFormat);
 
 		success &= m_descriptorSetLayout.Init();
+		success &= m_descriptorPool.Init();
+
 		success &= m_pipelineLayout.Init();
 		success &= m_graphicsPipeline.Init();
 
@@ -67,8 +69,6 @@ namespace jpt
 
 		success &= m_vertexBuffer.Init(mesh.GetVertices());
 		success &= m_indexBuffer.Init(mesh.GetIndices());
-
-		success &= m_descriptorPool.Init();
 
 		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_VikingRoom.png")) != nullptr;
 		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Cat.png")) != nullptr;

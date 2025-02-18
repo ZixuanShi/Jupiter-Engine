@@ -8,11 +8,6 @@ module;
 
 #include <vulkan/vulkan.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 module jpt.Vulkan.WindowResources;
 
 import jpt.Application;
@@ -32,8 +27,6 @@ import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
-import jpt.Vulkan.DescriptorSetLayout;
-import jpt.Vulkan.DescriptorPool;
 
 import jpt.Constants;
 import jpt.Matrix44;

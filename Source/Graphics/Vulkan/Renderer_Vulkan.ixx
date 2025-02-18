@@ -56,10 +56,11 @@ export namespace jpt
 
 		CommandPool m_memoryTransferCommandPool;
 
+		RenderPass m_renderPass;
+
 		DescriptorSetLayout m_descriptorSetLayout;
 		DescriptorPool m_descriptorPool;
 
-		RenderPass m_renderPass;
 		PipelineLayout m_pipelineLayout;
 		GraphicsPipeline m_graphicsPipeline;
 
