@@ -7,22 +7,41 @@ layout(binding = 0) uniform MVP
     mat4 proj;
 } uniform_mvp;
 
+layout(push_constant) uniform PushConstantObject
+{
+    float value;
+} push_constants;
+
+
+
+
+
+
 layout(location = 0) in vec4 inColor;
 layout(location = 1) in vec3 inPosition;
 layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec2 inTexCoord;
 
-layout(location = 0) out vec4 outFragColor;
-layout(location = 1) out vec2 outFragTexCoord;
 
-layout(push_constant) uniform PushConstantObject
-{
-    float value;
-} pushconstant;
+
+
+layout(location = 0) out vec4 outFragColor;
+layout(location = 1) out vec3 outNormal;
+layout(location = 2) out vec2 outTexCoord;
+
+
 
 void main() 
 {
-    gl_Position = uniform_mvp.proj * uniform_mvp.view * uniform_mvp.model * vec4(inPosition, 1.0);
+
+
+    vec4 worldPos = uniform_mvp.model * vec4(inPosition, 1.0);
+    vec4 viewPos  = uniform_mvp.view * worldPos;
+    gl_Position   = uniform_mvp.proj * viewPos;
+    
     outFragColor = inColor;
-    outFragTexCoord = inTexCoord;
+    outNormal    = inNormal;
+    outTexCoord  = inTexCoord;
+
+
 }
