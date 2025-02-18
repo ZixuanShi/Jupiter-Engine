@@ -1,6 +1,6 @@
 #version 450
 
-layout(binding = 1) uniform sampler2D texSampler;
+layout(binding = 1) uniform sampler2D uniform_textureSampler;
 
 layout(location = 0) in vec4 inFragColor;
 layout(location = 1) in vec2 inFragTexCoord;
@@ -14,5 +14,5 @@ layout(push_constant) uniform PushConstantObject
 
 void main() 
 {
-    outColor = texture(texSampler, inFragTexCoord);
+    outColor = texture(uniform_textureSampler, inFragTexCoord);
 }
