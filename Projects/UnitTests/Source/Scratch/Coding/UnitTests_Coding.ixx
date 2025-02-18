@@ -25,6 +25,7 @@ import UnitTests_Coding_MinUniqueSubArray;
 import UnitTests_Coding_BestSeat;
 import UnitTests_Coding_KeyValueHistoryStore;
 import UnitTests_Coding_RotateBits;
+import UnitTests_Coding_PrimeFactors;
 
 export bool RunUnitTests_Coding()
 {
@@ -44,6 +45,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_BestSeat());
 	JPT_ENSURE(UnitTests_Coding_KeyValueHistoryStore());
 	JPT_ENSURE(UnitTests_Coding_RotateBits());
+	JPT_ENSURE(UnitTests_Coding_PrimeFactors());
 
 	return true;
 }

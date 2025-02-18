@@ -36,21 +36,6 @@ bool Application_Blank::PreInit()
 		{
 		});
 
-	jpt::Deque<jpt::String, 4> deque;
-
-	deque.AddFront("Hello");
-	deque.AddFront(", ");
-	deque.AddFront("World");
-	deque.AddFront("!");
-
-	deque.PopBack();
-	deque.PopBack();
-	deque.PopBack();
-	deque.PopBack();
-
-	deque.AddFront("!");
-	JPT_LOG(deque);
-
 	return true;
 }
 
