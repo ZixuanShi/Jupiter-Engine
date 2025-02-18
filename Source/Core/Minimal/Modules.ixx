@@ -12,6 +12,7 @@ export import jpt.LinearFind;
 export import jpt.Sort;
 
 // Containers
+export import jpt.Deque;
 export import jpt.StaticArray;
 export import jpt.DynamicArray;
 export import jpt.LinkedList;
@@ -57,6 +58,7 @@ export import jpt.Allocator;
 export import jpt.SharedPtr;
 export import jpt.UniquePtr;
 export import jpt.WeakPtr;
+export import jpt.MemoryPool;
 
 // Strings
 export import jpt.String;

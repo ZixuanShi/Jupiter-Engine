@@ -18,6 +18,7 @@ import UnitTests_Sorting;
 import UnitTests_Searching;
 
 // Containers
+import UnitTests_Deque;
 import UnitTests_KDTree3;
 import UnitTests_Queue;
 import UnitTests_Stack;
@@ -97,6 +98,7 @@ export bool RunUnitTests_Core()
 	JPT_ENSURE(RunUnitTests_Searching());
 
 	// Containers
+	JPT_ENSURE(RunUnitTests_Deque());
 	JPT_ENSURE(RunUnitTests_KDTree3());
 	JPT_ENSURE(RunUnitTests_Queue());
 	JPT_ENSURE(RunUnitTests_Stack());
