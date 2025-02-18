@@ -26,6 +26,7 @@ namespace jpt
 		constexpr KDTree3(const DynamicArray<Vector3<T>>& points);
 		constexpr ~KDTree3();
 
+	public:
 		// Modifiers
 		constexpr void Add(const Vector3<T>& point);
 		constexpr void Erase(const Vector3<T>& point);

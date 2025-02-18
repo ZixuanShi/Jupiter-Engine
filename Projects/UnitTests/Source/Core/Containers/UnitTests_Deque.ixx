@@ -130,6 +130,7 @@ bool UnitTests_Deque_NonTrivial()
 
 	JPT_ENSURE(deque.IsFull());
 
+	// Copy
 	jpt::Deque<jpt::String, 8> deque2;
 	deque2 = deque;
 

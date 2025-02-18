@@ -19,24 +19,6 @@ export namespace jpt
 		DynamicArray<TData> m_container;
 
 	public:
-		// Iterators
-		constexpr Iterator begin() noexcept;
-		constexpr Iterator end()   noexcept;
-		constexpr ConstIterator begin()  const noexcept;
-		constexpr ConstIterator end()    const noexcept;
-		constexpr ConstIterator cbegin() const noexcept;
-		constexpr ConstIterator cend()   const noexcept;
-
-		// Accessing
-		constexpr       TData& Peek() noexcept;
-		constexpr const TData& Peek() const noexcept;
-
-		// Capacity
-		constexpr bool IsEmpty() const noexcept;
-		constexpr size_t Count() const noexcept;
-		constexpr size_t Capacity() const noexcept;
-		constexpr void Reserve(size_t capacity);
-
 		// Adding
 		constexpr void Push(const TData& value);
 		constexpr void Push(TData&& value);
@@ -45,7 +27,70 @@ export namespace jpt
 		// Erasing
 		constexpr void Pop();
 		constexpr void Clear();
+
+		// Accessing
+		constexpr       TData& Peek() noexcept;
+		constexpr const TData& Peek() const noexcept;
+
+		// Iterators
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
+
+		// Capacity
+		constexpr bool IsEmpty() const noexcept;
+		constexpr size_t Count() const noexcept;
+		constexpr size_t Capacity() const noexcept;
+
+		// Modifiers
+		constexpr void Reserve(size_t capacity);
 	};
+
+	template<typename TData>
+	constexpr void Stack<TData>::Push(const TData& value)
+	{
+		m_container.Add(value);
+	}
+
+	template<typename TData>
+	constexpr void Stack<TData>::Push(TData&& value)
+	{
+		m_container.Add(Move(value));
+	}
+
+	template<typename TData>
+	template<typename ...TArgs>
+	constexpr void Stack<TData>::Emplace(TArgs && ...args)
+	{
+		m_container.EmplaceBack(Forward<TArgs>(args)...);
+	}
+
+	template<typename TData>
+	constexpr void Stack<TData>::Pop()
+	{
+		m_container.Pop();
+	}
+
+	template<typename TData>
+	constexpr void Stack<TData>::Clear()
+	{
+		m_container.Clear();
+	}
+
+	template<typename TData>
+	constexpr Stack<TData>::TData& Stack<TData>::Peek() noexcept
+	{
+		return m_container.Back();
+	}
+
+	template<typename TData>
+	constexpr const Stack<TData>::TData& Stack<TData>::Peek() const noexcept
+	{
+		return m_container.Back();
+	}
 
 	template<typename TData>
 	constexpr Stack<TData>::Iterator Stack<TData>::begin() noexcept
@@ -84,18 +129,6 @@ export namespace jpt
 	}
 
 	template<typename TData>
-	constexpr Stack<TData>::TData& Stack<TData>::Peek() noexcept
-	{
-		return m_container.Back();
-	}
-
-	template<typename TData>
-	constexpr const Stack<TData>::TData& Stack<TData>::Peek() const noexcept
-	{
-		return m_container.Back();
-	}
-
-	template<typename TData>
 	constexpr bool Stack<TData>::IsEmpty() const noexcept
 	{
 		return m_container.IsEmpty();
@@ -119,34 +152,4 @@ export namespace jpt
 		m_container.Reserve(capacity);
 	}
 
-	template<typename TData>
-	constexpr void Stack<TData>::Push(const TData& value)
-	{
-		m_container.Add(value);
-	}
-
-	template<typename TData>
-	constexpr void Stack<TData>::Push(TData&& value)
-	{
-		m_container.Add(Move(value));
-	}
-
-	template<typename TData>
-	template<typename ...TArgs>
-	constexpr void Stack<TData>::Emplace(TArgs && ...args)
-	{
-		m_container.EmplaceBack(Forward<TArgs>(args)...);
-	}
-
-	template<typename TData>
-	constexpr void Stack<TData>::Pop()
-	{
-		m_container.Pop();
-	}
-
-	template<typename TData>
-	constexpr void Stack<TData>::Clear()
-	{
-		m_container.Clear();
-	}
 }

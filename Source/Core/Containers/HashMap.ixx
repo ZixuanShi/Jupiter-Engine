@@ -57,7 +57,20 @@ export namespace jpt
 		constexpr HashMap& operator=(HashMap&& other) noexcept;
 		constexpr ~HashMap();
 		
-		// Element access
+	public:
+		// Adding
+		constexpr TValue& Add(const TKey& key, const TValue& value);
+		constexpr TValue& Add(const TData& element);
+		constexpr TValue& Add(TKey&& key, TValue&& value);
+		constexpr TValue& Add(TData&& element);
+		template<typename ...TArgs> constexpr TValue& Emplace(const TKey& key, TArgs&&... args);
+
+		// Erasing
+		constexpr Iterator Erase(const TKey& key);
+		constexpr Iterator Erase(const Iterator& iterator);
+		constexpr void Clear();
+
+		// Accessing
 		/** If key exists, return reference to it's associated value, caller may update it outside
 			If key doesn't exist, Add a default value, return the inserted value too */
 		constexpr       TValue& operator[](const TKey& key);
@@ -77,25 +90,16 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Count() const noexcept;
 		constexpr bool IsEmpty() const noexcept;
+
+		// Modifiers
 		constexpr void ResizeBuckets(size_t capacity);
-
-		// Adding
-		constexpr TValue& Add(const TKey& key, const TValue& value);
-		constexpr TValue& Add(const TData& element);
-		constexpr TValue& Add(TKey&& key, TValue&& value);
-		constexpr TValue& Add(TData&& element);
-		template<typename ...TArgs> constexpr TValue& Emplace(const TKey& key, TArgs&&... args);
-
-		// Erasing
-		constexpr Iterator Erase(const TKey& key);
-		constexpr Iterator Erase(const Iterator& iterator);
-		constexpr void Clear();
 
 		// Searching
 		constexpr Iterator      Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Has(const TKey& key) const;
 
+		// Serialization
 		void Serialize(Serializer& serializer) const;
 		void Deserialize(Serializer& serializer);
 
@@ -184,81 +188,6 @@ export namespace jpt
 	}
 
 	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::operator[](const TKey& key)
-	{
-		Iterator itr = Find(key);
-		if (itr == end())
-		{
-			return Add(key, TValue());
-		}
-
-		return itr->second;
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr const HashMap<TKey, TValue, kShouldGrow, TComparator>::TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::operator[](const TKey& key) const
-	{
-		ConstIterator itr = Find(key);
-		JPT_ASSERT(itr != cend());
-		return itr->second;
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::Iterator HashMap<TKey, TValue, kShouldGrow, TComparator>::begin() noexcept
-	{
-		if (IsEmpty())
-		{
-			return end();
-		}
-		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::Iterator HashMap<TKey, TValue, kShouldGrow, TComparator>::end() noexcept
-	{
-		return Iterator(&m_buckets, m_buckets.Count(), nullptr);
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::begin() const noexcept
-	{
-		if (IsEmpty())
-		{
-			return end();
-		}
-		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::end() const noexcept
-	{
-		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::cbegin() const noexcept
-	{
-		if (IsEmpty())
-		{
-			return cend();
-		}
-		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::cend() const noexcept
-	{
-		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr void HashMap<TKey, TValue, kShouldGrow, TComparator>::Clear()
-	{
-		m_buckets.Clear(); 
-		m_count = 0;
-	}
-
-	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
 	constexpr TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::Add(const TKey& key, const TValue& value)
 	{
 		// Grow if needed.
@@ -327,7 +256,7 @@ export namespace jpt
 	{
 		return Emplace(Move(element.first), Move(element.second));
 	}
-	
+
 	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
 	template<typename ...TArgs>
 	constexpr TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::Emplace(const TKey& key, TArgs && ...args)
@@ -370,7 +299,7 @@ export namespace jpt
 			--m_count;
 
 			return nextItr;
-		}		
+		}
 
 		return end();
 	}
@@ -379,6 +308,81 @@ export namespace jpt
 	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::Iterator HashMap<TKey, TValue, kShouldGrow, TComparator>::Erase(const Iterator& iterator)
 	{
 		return Erase(iterator->first);
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr void HashMap<TKey, TValue, kShouldGrow, TComparator>::Clear()
+	{
+		m_buckets.Clear();
+		m_count = 0;
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::operator[](const TKey& key)
+	{
+		Iterator itr = Find(key);
+		if (itr == end())
+		{
+			return Add(key, TValue());
+		}
+
+		return itr->second;
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr const HashMap<TKey, TValue, kShouldGrow, TComparator>::TValue& HashMap<TKey, TValue, kShouldGrow, TComparator>::operator[](const TKey& key) const
+	{
+		ConstIterator itr = Find(key);
+		JPT_ASSERT(itr != cend());
+		return itr->second;
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::Iterator HashMap<TKey, TValue, kShouldGrow, TComparator>::begin() noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return Iterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::Iterator HashMap<TKey, TValue, kShouldGrow, TComparator>::end() noexcept
+	{
+		return Iterator(&m_buckets, m_buckets.Count(), nullptr);
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::begin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return end();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().begin());
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::end() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::cbegin() const noexcept
+	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+		return ConstIterator(&m_buckets, 0, m_buckets.Front().cbegin());
+	}
+
+	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashMap<TKey, TValue, kShouldGrow, TComparator>::ConstIterator HashMap<TKey, TValue, kShouldGrow, TComparator>::cend() const noexcept
+	{
+		return ConstIterator(&m_buckets, m_buckets.Count(), nullptr);
 	}
 
 	template<typename TKey, typename TValue, bool kShouldGrow, typename TComparator>

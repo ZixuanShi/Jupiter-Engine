@@ -36,7 +36,8 @@ export namespace jpt
 		StaticArray& operator=(StaticArray&& other) noexcept;
 		constexpr ~StaticArray();
 
-		// Element Access
+	public:
+		// Accessing
 		constexpr const TData* ConstBuffer() const noexcept;
 		constexpr       TData* Buffer() noexcept;
 		constexpr       TData& Front()  noexcept;

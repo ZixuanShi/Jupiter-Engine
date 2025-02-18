@@ -50,15 +50,14 @@ export namespace jpt
 		constexpr SortedSet& operator=(SortedSet&& other) noexcept;
 		constexpr ~SortedSet();
 
-		// Modifying
+	public:
+		// Adding
 		constexpr void Add(const TData& data);
+
+		// Erasing
 		constexpr void Erase(const TData& data);
 		constexpr void Erase(Iterator iterator);
 		constexpr void Clear();
-
-		// Searching
-		constexpr size_t Count() const noexcept;
-		constexpr bool IsEmpty() const noexcept;
 
 		// Iterators
 		constexpr      Iterator begin() noexcept;
@@ -67,6 +66,10 @@ export namespace jpt
 		constexpr ConstIterator end()    const noexcept;
 		constexpr ConstIterator cbegin() const noexcept;
 		constexpr ConstIterator cend()   const noexcept;
+
+		// Capacity
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
 
 		// Traverse
 		constexpr void PreOrderWalk(const WalkerFunc& func);
@@ -274,18 +277,6 @@ export namespace jpt
 	}
 
 	template<Comparable TData, typename Comparator, typename TAllocator>
-	constexpr size_t SortedSet<TData, Comparator, TAllocator>::Count() const noexcept
-	{
-		return m_count;
-	}
-
-	template<Comparable TData, typename Comparator, typename TAllocator>
-	constexpr bool SortedSet<TData, Comparator, TAllocator>::IsEmpty() const noexcept
-	{
-		return m_count == 0;
-	}
-
-	template<Comparable TData, typename Comparator, typename TAllocator>
 	constexpr SortedSet<TData, Comparator, TAllocator>::Iterator SortedSet<TData, Comparator, TAllocator>::begin() noexcept
 	{
 		return Iterator(FindMinNode(m_pRoot));
@@ -319,6 +310,18 @@ export namespace jpt
 	constexpr SortedSet<TData, Comparator, TAllocator>::ConstIterator SortedSet<TData, Comparator, TAllocator>::cend() const noexcept
 	{
 		return ConstIterator(nullptr);
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr size_t SortedSet<TData, Comparator, TAllocator>::Count() const noexcept
+	{
+		return m_count;
+	}
+
+	template<Comparable TData, typename Comparator, typename TAllocator>
+	constexpr bool SortedSet<TData, Comparator, TAllocator>::IsEmpty() const noexcept
+	{
+		return m_count == 0;
 	}
 
 	template<Comparable TData, typename Comparator, typename TAllocator>

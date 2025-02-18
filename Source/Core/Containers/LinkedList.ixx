@@ -44,28 +44,7 @@ export namespace jpt
 		constexpr LinkedList& operator=(LinkedList&& other) noexcept;
 		constexpr ~LinkedList();
 
-		// Element Access
-		constexpr       TData& Front() noexcept;
-		constexpr const TData& Front() const noexcept;
-		constexpr       TData& Back() noexcept;
-		constexpr const TData& Back()  const noexcept;
-
-		// Iterators
-		constexpr Iterator begin() noexcept;
-		constexpr Iterator end()   noexcept;
-		constexpr ConstIterator begin()  const noexcept;
-		constexpr ConstIterator end()    const noexcept;
-		constexpr ConstIterator cbegin() const noexcept;
-		constexpr ConstIterator cend()   const noexcept;
-
-		// Capacity
-		constexpr size_t Count() const noexcept;
-		constexpr bool IsEmpty() const noexcept;
-
-		// Modifier
-		constexpr void Clear();
-		constexpr void Reverse();
-
+	public:
 		// Adding
 		constexpr void AddBefore(Iterator iterator, const TData& value);
 		constexpr void AddBefore(Iterator iterator, TData&& value);
@@ -91,6 +70,28 @@ export namespace jpt
 		constexpr void Erase(Iterator iterator);
 		constexpr void PopBack();
 		constexpr void PopFront();
+		constexpr void Clear();
+
+		// Accessing
+		constexpr       TData& Front() noexcept;
+		constexpr const TData& Front() const noexcept;
+		constexpr       TData& Back() noexcept;
+		constexpr const TData& Back()  const noexcept;
+
+		// Iterators
+		constexpr Iterator begin() noexcept;
+		constexpr Iterator end()   noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
+
+		// Capacity
+		constexpr size_t Count() const noexcept;
+		constexpr bool IsEmpty() const noexcept;
+
+		// Modifier
+		constexpr void Reverse();
 
 	private:
 		template<Iterable TContainer>
@@ -168,114 +169,6 @@ export namespace jpt
 	constexpr LinkedList<TData, TAllocator>::~LinkedList()
 	{
 		Clear();
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr TData& LinkedList<TData, TAllocator>::Front() noexcept
-	{
-		return m_pHead->data;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr const TData& LinkedList<TData, TAllocator>::Front() const noexcept
-	{
-		return m_pHead->data;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr TData& LinkedList<TData, TAllocator>::Back() noexcept
-	{
-		return m_pTail->data;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr const TData& LinkedList<TData, TAllocator>::Back() const noexcept
-	{
-		return m_pTail->data;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::Iterator LinkedList<TData, TAllocator>::begin() noexcept
-	{
-		return Iterator(m_pHead);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::Iterator LinkedList<TData, TAllocator>::end() noexcept
-	{
-		return Iterator(nullptr);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::begin() const noexcept
-	{
-		return ConstIterator(m_pHead);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::end() const noexcept
-	{
-		return ConstIterator(nullptr);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::cbegin() const noexcept
-	{
-		return ConstIterator(m_pHead);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::cend() const noexcept
-	{
-		return ConstIterator(nullptr);
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr size_t LinkedList<TData, TAllocator>::Count() const noexcept
-	{
-		return m_count;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr bool LinkedList<TData, TAllocator>::IsEmpty() const noexcept
-	{
-		return m_count == 0;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr void LinkedList<TData, TAllocator>::Clear()
-	{
-		while (m_pHead)
-		{
-			Node* pToDelete = m_pHead;
-			m_pHead = m_pHead->pNext;
-			TAllocator::Deallocate(pToDelete);
-		}
-
-		m_pHead = nullptr;
-		m_pTail = nullptr;
-		m_count = 0;
-	}
-
-	template<typename TData, typename TAllocator>
-	constexpr void LinkedList<TData, TAllocator>::Reverse()
-	{
-		Node* pCurrent = m_pHead;
-
-		while (pCurrent)
-		{
-			Node* pOriginalPrevious = pCurrent->pPrevious;
-			Node* pOriginalNext = pCurrent->pNext;
-
-			// Modify linkages
-			pCurrent->pPrevious = pOriginalNext;
-			pCurrent->pNext = pOriginalPrevious;
-
-			// Move to the next node
-			pCurrent = pOriginalNext;
-		}
-
-		Swap(m_pHead, m_pTail);
 	}
 
 	template<typename TData, typename TAllocator>
@@ -404,6 +297,114 @@ export namespace jpt
 	constexpr void LinkedList<TData, TAllocator>::PopFront()
 	{
 		Erase(m_pHead);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr void LinkedList<TData, TAllocator>::Clear()
+	{
+		while (m_pHead)
+		{
+			Node* pToDelete = m_pHead;
+			m_pHead = m_pHead->pNext;
+			TAllocator::Deallocate(pToDelete);
+		}
+
+		m_pHead = nullptr;
+		m_pTail = nullptr;
+		m_count = 0;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& LinkedList<TData, TAllocator>::Front() noexcept
+	{
+		return m_pHead->data;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& LinkedList<TData, TAllocator>::Front() const noexcept
+	{
+		return m_pHead->data;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr TData& LinkedList<TData, TAllocator>::Back() noexcept
+	{
+		return m_pTail->data;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr const TData& LinkedList<TData, TAllocator>::Back() const noexcept
+	{
+		return m_pTail->data;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::Iterator LinkedList<TData, TAllocator>::begin() noexcept
+	{
+		return Iterator(m_pHead);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::Iterator LinkedList<TData, TAllocator>::end() noexcept
+	{
+		return Iterator(nullptr);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::begin() const noexcept
+	{
+		return ConstIterator(m_pHead);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::end() const noexcept
+	{
+		return ConstIterator(nullptr);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::cbegin() const noexcept
+	{
+		return ConstIterator(m_pHead);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr LinkedList<TData, TAllocator>::ConstIterator LinkedList<TData, TAllocator>::cend() const noexcept
+	{
+		return ConstIterator(nullptr);
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr size_t LinkedList<TData, TAllocator>::Count() const noexcept
+	{
+		return m_count;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr bool LinkedList<TData, TAllocator>::IsEmpty() const noexcept
+	{
+		return m_count == 0;
+	}
+
+	template<typename TData, typename TAllocator>
+	constexpr void LinkedList<TData, TAllocator>::Reverse()
+	{
+		Node* pCurrent = m_pHead;
+
+		while (pCurrent)
+		{
+			Node* pOriginalPrevious = pCurrent->pPrevious;
+			Node* pOriginalNext = pCurrent->pNext;
+
+			// Modify linkages
+			pCurrent->pPrevious = pOriginalNext;
+			pCurrent->pNext = pOriginalPrevious;
+
+			// Move to the next node
+			pCurrent = pOriginalNext;
+		}
+
+		Swap(m_pHead, m_pTail);
 	}
 
 	template<typename TData, typename TAllocator>

@@ -54,16 +54,29 @@ export namespace jpt
 		constexpr SortedMap& operator=(SortedMap&& other) noexcept;
 		constexpr ~SortedMap();
 
-		// Modifying
+	public:
+		// Adding
 		constexpr void Add(const TKey& key, const TValue& value);
 		constexpr void Add(const TData& data);
+
+		// Erasing
 		constexpr void Erase(const TKey& key);
 		constexpr void Erase(Iterator iterator);
 		constexpr void Clear();
 
-		// Searching
+		// Iterators
+		constexpr      Iterator begin() noexcept;
+		constexpr      Iterator end() noexcept;
+		constexpr ConstIterator begin()  const noexcept;
+		constexpr ConstIterator end()    const noexcept;
+		constexpr ConstIterator cbegin() const noexcept;
+		constexpr ConstIterator cend()   const noexcept;
+
+		// Capacity
 		constexpr size_t Count() const noexcept;
 		constexpr bool IsEmpty() const noexcept;
+
+		// Searching
 		constexpr      Iterator Find(const TKey& key);
 		constexpr ConstIterator Find(const TKey& key) const;
 		constexpr bool Has(const TKey& key);
@@ -98,14 +111,6 @@ export namespace jpt
 
 		/** Breadth First Search. A, B, C, D, E, F, G, H, I, J, K, L, M, N, O. */
 		constexpr void BFS(const WalkerFunc& function);
-
-		// Iterators
-		constexpr      Iterator begin() noexcept;
-		constexpr      Iterator end() noexcept;
-		constexpr ConstIterator begin()  const noexcept;
-		constexpr ConstIterator end()    const noexcept;
-		constexpr ConstIterator cbegin() const noexcept;
-		constexpr ConstIterator cend()   const noexcept;
 
 	private:
 		constexpr void PreOrderWalk(Node* pNode, const WalkerFunc& function);
@@ -319,6 +324,42 @@ export namespace jpt
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() noexcept
+	{
+		return Iterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() noexcept
+	{
+		return Iterator(nullptr);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() const noexcept
+	{
+		return ConstIterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() const noexcept
+	{
+		return ConstIterator(nullptr);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cbegin() const noexcept
+	{
+		return ConstIterator(FindMinNode(m_pRoot));
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
+	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cend() const noexcept
+	{
+		return ConstIterator(nullptr);
+	}
+
+	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
 	constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const noexcept
 	{
 		return m_count;
@@ -434,42 +475,6 @@ export namespace jpt
 				queue.Enqueue(pNode->pRightChild);
 			}
 		}
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() noexcept
-	{
-		return Iterator(FindMinNode(m_pRoot));
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::Iterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() noexcept
-	{
-		return Iterator(nullptr);
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::begin() const noexcept
-	{
-		return ConstIterator(FindMinNode(m_pRoot));
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::end() const noexcept
-	{
-		return ConstIterator(nullptr);
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cbegin() const noexcept
-	{
-		return ConstIterator(FindMinNode(m_pRoot));
-	}
-
-	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-	constexpr SortedMap<TKey, TValue, TComparator, TAllocator>::ConstIterator SortedMap<TKey, TValue, TComparator, TAllocator>::cend() const noexcept
-	{
-		return ConstIterator(nullptr);
 	}
 
 	template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>

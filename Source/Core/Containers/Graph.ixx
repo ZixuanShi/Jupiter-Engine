@@ -52,7 +52,8 @@ export namespace jpt
 	private:
 		DynamicArray<Node> m_nodes;
 
-	public:		
+	public:
+		// Adding
 		constexpr Index AddNode(const TData& data);
 
 		constexpr void AddEdge(Index from, Index to, Weight weight = 0.0f);
@@ -62,10 +63,12 @@ export namespace jpt
 		constexpr void EraseNode(Index index);
 
 		// Accessing
+		constexpr       TData& operator[](Index index)       noexcept;
+		constexpr const TData& operator[](Index index) const noexcept;
+
+		// Capacity
 		constexpr bool Count() const noexcept;
 		constexpr bool IsEmpty() const noexcept;
-		constexpr TData& operator[](Index index) noexcept;
-		constexpr const TData& operator[](Index index) const noexcept;
 
 		// Searching
 		constexpr DynamicArray<Index> FindIndices(const TData& data) const;
@@ -134,18 +137,6 @@ export namespace jpt
 	}
 
 	template<typename _TData, bool kAllowDuplicates>
-	constexpr bool Graph<_TData, kAllowDuplicates>::Count() const noexcept
-	{
-		return m_nodes.Count();
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
-	constexpr bool Graph<_TData, kAllowDuplicates>::IsEmpty() const noexcept
-	{
-		return m_nodes.IsEmpty();
-	}
-
-	template<typename _TData, bool kAllowDuplicates>
 	constexpr Graph<_TData, kAllowDuplicates>::TData& Graph<_TData, kAllowDuplicates>::operator[](Index index) noexcept
 	{
 		return m_nodes[index].GetData();
@@ -155,6 +146,18 @@ export namespace jpt
 	constexpr const Graph<_TData, kAllowDuplicates>::TData& Graph<_TData, kAllowDuplicates>::operator[](Index index) const noexcept
 	{
 		return m_nodes[index].GetData();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr bool Graph<_TData, kAllowDuplicates>::Count() const noexcept
+	{
+		return m_nodes.Count();
+	}
+
+	template<typename _TData, bool kAllowDuplicates>
+	constexpr bool Graph<_TData, kAllowDuplicates>::IsEmpty() const noexcept
+	{
+		return m_nodes.IsEmpty();
 	}
 
 	template<typename _TData, bool kAllowDuplicates>

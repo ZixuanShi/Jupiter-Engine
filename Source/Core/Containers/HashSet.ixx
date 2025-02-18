@@ -52,6 +52,15 @@ export namespace jpt
 		constexpr HashSet& operator=(HashSet&& other) noexcept;
 		constexpr ~HashSet();
 
+	public:
+		// Adding
+		constexpr void Add(const TData& data);
+
+		// Erasing
+		constexpr Iterator Erase(const TData& data);
+		constexpr Iterator Erase(const Iterator& iterator);
+		constexpr void Clear();
+
 		// Iterators
 		constexpr Iterator begin() noexcept;
 		constexpr Iterator end()   noexcept;
@@ -63,13 +72,9 @@ export namespace jpt
 		// Capacity
 		constexpr size_t Count() const noexcept;
 		constexpr bool IsEmpty() const noexcept;
-		constexpr void Reserve(size_t capacity);
 
 		// Modifiers
-		constexpr void Add(const TData& data);
-		constexpr Iterator Erase(const TData& data);
-		constexpr Iterator Erase(const Iterator& iterator);
-		constexpr void Clear();
+		constexpr void Reserve(size_t capacity);
 
 		// Searching
 		constexpr Iterator      Find(const TData& key);
@@ -187,53 +192,10 @@ export namespace jpt
 	}
 
 	template<typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashSet<TValue, kShouldGrow, TComparator>::Iterator HashSet<TValue, kShouldGrow, TComparator>::Find(const TData& key)
+	constexpr void HashSet<TValue, kShouldGrow, TComparator>::Clear()
 	{
-		if (IsEmpty())
-		{
-			return end();
-		}
-
-		const size_t index = GetBucketIndex(key);
-		TBucket& bucket = m_buckets[index];
-
-		for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
-		{
-			if (kComparator(*itr, key))
-			{
-				return Iterator(&m_buckets, index, itr);
-			}
-		}
-
-		return end();
-	}
-
-	template<typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr HashSet<TValue, kShouldGrow, TComparator>::ConstIterator HashSet<TValue, kShouldGrow, TComparator>::Find(const TData& key) const
-	{
-		if (IsEmpty())
-		{
-			return cend();
-		}
-
-		const size_t index = GetBucketIndex(key);
-		const TBucket& bucket = m_buckets[index];
-
-		for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
-		{
-			if (kComparator(*itr, key))
-			{
-				return ConstIterator(&m_buckets, index, itr);
-			}
-		}
-
-		return cend();
-	}
-
-	template<typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr bool HashSet<TValue, kShouldGrow, TComparator>::Has(const TData& key) const
-	{
-		return Find(key) != end();
+		m_buckets.Clear();
+		m_count = 0;
 	}
 
 	template<typename TValue, bool kShouldGrow, typename TComparator>
@@ -316,10 +278,53 @@ export namespace jpt
 	}
 
 	template<typename TValue, bool kShouldGrow, typename TComparator>
-	constexpr void HashSet<TValue, kShouldGrow, TComparator>::Clear()
+	constexpr HashSet<TValue, kShouldGrow, TComparator>::Iterator HashSet<TValue, kShouldGrow, TComparator>::Find(const TData& key)
 	{
-		m_buckets.Clear();
-		m_count = 0;
+		if (IsEmpty())
+		{
+			return end();
+		}
+
+		const size_t index = GetBucketIndex(key);
+		TBucket& bucket = m_buckets[index];
+
+		for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
+		{
+			if (kComparator(*itr, key))
+			{
+				return Iterator(&m_buckets, index, itr);
+			}
+		}
+
+		return end();
+	}
+
+	template<typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr HashSet<TValue, kShouldGrow, TComparator>::ConstIterator HashSet<TValue, kShouldGrow, TComparator>::Find(const TData& key) const
+	{
+		if (IsEmpty())
+		{
+			return cend();
+		}
+
+		const size_t index = GetBucketIndex(key);
+		const TBucket& bucket = m_buckets[index];
+
+		for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
+		{
+			if (kComparator(*itr, key))
+			{
+				return ConstIterator(&m_buckets, index, itr);
+			}
+		}
+
+		return cend();
+	}
+
+	template<typename TValue, bool kShouldGrow, typename TComparator>
+	constexpr bool HashSet<TValue, kShouldGrow, TComparator>::Has(const TData& key) const
+	{
+		return Find(key) != end();
 	}
 
 	template<typename TValue, bool kShouldGrow, typename TComparator>

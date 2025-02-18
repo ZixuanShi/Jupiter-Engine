@@ -40,23 +40,26 @@ export namespace jpt
 		constexpr Heap();
 		constexpr Heap(const TComparator& comparator);
 
+	public:
 		// Adding
 		template<typename ...TArgs>
 		constexpr void Emplace(TArgs&&... args);
 		constexpr void Add(const TData& data);
 		constexpr void Add(TData&& data);
 
-		// Capacity
+		// Erasing
+		constexpr void Pop();
+		constexpr void Clear();
+
+		// Modifiers
 		constexpr void Reserve(size_t capacity);
 
 		// Accessing
 		constexpr const TData& Top() const noexcept;
+
+		// Capacity
 		constexpr size_t Count() const noexcept;
 		constexpr bool IsEmpty() const noexcept;
-
-		// Erasing
-		constexpr void Pop();
-		constexpr void Clear();
 
 	private:
 		// Called after modifying the heap to keep the heap property
@@ -105,17 +108,11 @@ export namespace jpt
 		FixAdd();
 	}
 
-	template<typename _TData, typename _TComparator, typename _TAllocator>
-	constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(size_t capacity)
-	{
-		m_buffer.Reserve(capacity + 1);
-	}
-
 	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Pop()
 	{
 		JPT_ASSERT(!IsEmpty());
-		
+
 		// Swap the root with the last element then pop. Better performance
 		Swap(m_buffer[1], m_buffer[Count()]);
 		m_buffer.Pop();
@@ -127,17 +124,23 @@ export namespace jpt
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
-	constexpr const TData& Heap<TData, TComparator, TAllocator>::Top() const noexcept
-	{
-		JPT_ASSERT(!IsEmpty());
-		return m_buffer[1];
-	}
-
-	template<typename TData, typename TComparator, typename TAllocator>
 	constexpr void Heap<TData, TComparator, TAllocator>::Clear()
 	{
 		m_buffer.Clear();
 		m_buffer.EmplaceBack();
+	}
+
+	template<typename _TData, typename _TComparator, typename _TAllocator>
+	constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(size_t capacity)
+	{
+		m_buffer.Reserve(capacity + 1);
+	}
+
+	template<typename TData, typename TComparator, typename TAllocator>
+	constexpr const TData& Heap<TData, TComparator, TAllocator>::Top() const noexcept
+	{
+		JPT_ASSERT(!IsEmpty());
+		return m_buffer[1];
 	}
 
 	template<typename TData, typename TComparator, typename TAllocator>
