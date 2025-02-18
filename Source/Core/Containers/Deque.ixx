@@ -48,7 +48,7 @@ export namespace jpt
 		constexpr void AddFront(const TData& data);
 		constexpr void AddBack(const TData& data);
 
-		// Removing
+		// Erasing
 		constexpr void PopFront();
 		constexpr void PopBack();
 		constexpr void Clear() noexcept;
@@ -111,7 +111,7 @@ export namespace jpt
 		if (this != &other)
 		{
 			Clear();
-			MoveData(jpt::Move(other));
+			MoveData(Move(other));
 		}
 
 		return *this;
@@ -236,11 +236,23 @@ export namespace jpt
 	template<typename TData, Index kCapacity, typename TAllocator>
 	constexpr void Deque<TData, kCapacity, TAllocator>::Clear() noexcept
 	{
+		if (IsEmpty())
+		{
+			JPT_ASSERT(m_frontIndex == kInvalidValue<int64> && m_backIndex == kInvalidValue<int64>, "Invalid front/back index");
+			return;
+		}
+
 		if constexpr (!IsTriviallyDestructible<TData>)
 		{
-			for (Index i = 0; i < kCapacity; ++i)
+			int64 index = m_frontIndex;
+			while (true)
 			{
-				TAllocator::Destruct(m_buffer + i);
+				TAllocator::Destruct(m_buffer + index);
+				if (index == m_backIndex)
+				{
+					break;
+				}
+				index = GetNextIndex(index);
 			}
 		}
 
@@ -362,16 +374,22 @@ export namespace jpt
 		m_frontIndex = other.m_frontIndex;
 		m_backIndex = other.m_backIndex;
 
-		if constexpr (IsTriviallyCopyable<TData>)
+		if (IsEmpty())
 		{
-			MemCpy(m_buffer, other.m_buffer, kCapacity * sizeof(TData));
+			return;
 		}
-		else
+
+		int64 index = m_frontIndex;
+		while (true)
 		{
-			for (Index i = 0; i < kCapacity; ++i)
+			m_buffer[index] = other.m_buffer[index];
+
+			if (index == m_backIndex)
 			{
-				m_buffer[i] = other.m_buffer[i];
+				break;
 			}
+
+			index = GetNextIndex(index);
 		}
 	}
 
@@ -382,29 +400,27 @@ export namespace jpt
 		m_frontIndex = other.m_frontIndex;
 		m_backIndex = other.m_backIndex;
 
-		if constexpr (IsTriviallyCopyable<TData>)
-		{
-			MemMove(m_buffer, other.m_buffer, kCapacity * sizeof(TData));
-		}
-		else
-		{
-			for (Index i = 0; i < kCapacity; ++i)
-			{
-				m_buffer[i] = Move(other.m_buffer[i]);
-			}
-		}
-
-		// Reset the other deque
+		// Reset other
 		other.m_count = 0;
 		other.m_frontIndex = kInvalidValue<int64>;
 		other.m_backIndex = kInvalidValue<int64>;
 
-		if constexpr (!IsTriviallyDestructible<TData>)
+		if (IsEmpty())
 		{
-			for (Index i = 0; i < kCapacity; ++i)
+			return;
+		}
+
+		int64 index = m_frontIndex;
+		while (true)
+		{
+			m_buffer[index] = Move(other.m_buffer[index]);
+
+			if (index == m_backIndex)
 			{
-				TAllocator::Destruct(other.m_buffer + i);
+				break;
 			}
+
+			index = GetNextIndex(index);
 		}
 	}
 
