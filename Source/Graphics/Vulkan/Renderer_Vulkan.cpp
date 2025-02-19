@@ -64,12 +64,13 @@ namespace jpt
 
 		Mesh mesh;
 		success &= mesh.Load(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_VikingRoom.obj"));
-		//success &= LoadMesh(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_Cat.obj"));
-		//success &= LoadMesh(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_SecurityRoom.obj"));
+		//success &= mesh.Load(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_Cat.obj"));
+		//success &= mesh.Load(File::FixDependencies("Assets/Jupiter_Common/Meshes/Mesh_SecurityRoom.obj"));
 
 		success &= m_vertexBuffer.Init(mesh.GetVertices());
 		success &= m_indexBuffer.Init(mesh.GetIndices());
 
+		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Default.jpg")) != nullptr;
 		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_VikingRoom.png")) != nullptr;
 		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Cat.png")) != nullptr;
 		success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_SecurityRoom.png")) != nullptr;

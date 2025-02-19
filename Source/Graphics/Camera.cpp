@@ -10,10 +10,6 @@ import jpt.Window;
 import jpt.Framework;
 
 import jpt.Event.Manager;
-import jpt.Event.Key;
-import jpt.Event.MouseButton;
-import jpt.Event.MouseScroll;
-import jpt.Event.MouseMove;
 
 import jpt.Input.Enums;
 import jpt.Math;
@@ -21,6 +17,7 @@ import jpt.Math;
 namespace jpt
 {
 	static constexpr Precision kMoveSpeed   = 2.5f;		// Camera movement speed
+	static constexpr Precision kScrollSpeed = 0.08f;	// Camera movement speed
 	static constexpr Precision kSensitivity = 0.001f;	// Camera rotation sensitivity
 	static constexpr Precision kPitchLimit  = ToRadians(89.0f);  // Prevent camera flipping
 
@@ -30,6 +27,7 @@ namespace jpt
 		EventManager::GetInstance().Register<Event_Key>(this, &Camera::OnKey);
 		EventManager::GetInstance().Register<Event_Mouse_Button>(this, &Camera::OnMouseButton);
 		EventManager::GetInstance().Register<Event_Mouse_Move>(this, &Camera::OnMouseMove);
+		EventManager::GetInstance().Register<Event_Mouse_Scroll>(this, &Camera::OnMouseScroll);
 
 		// Init position and rotation
 		m_forward = (Vec3(0.0f) - m_position).Normalized();
@@ -90,6 +88,20 @@ namespace jpt
 			{
 				m_lockMousePos = Vec2i(Constants<int32>::kMax);
 				m_pWindow->SetCursorVisible(true);
+				m_pWindow = nullptr;
+			}
+		}
+		else if (button == Input::MouseButton::Wheel)
+		{
+			if (state == Input::KeyState::Pressed)
+			{
+				m_pWindow = eventMouseButton.GetWindow();
+				m_pWindow->SetCursorVisible(false);
+			}
+			else if (state == Input::KeyState::Released)
+			{
+				m_pWindow->SetCursorVisible(true);
+				m_pWindow = nullptr;
 			}
 		}
 	}
@@ -124,5 +136,12 @@ namespace jpt
 
 		// Update the last mouse position
 		m_pWindow->SetMousePosition(m_lockMousePos);
+	}
+
+	void Camera::OnMouseScroll(const Event_Mouse_Scroll& eventMouseScroll)
+	{
+		const double y = eventMouseScroll.GetY();
+
+		m_position += m_forward * static_cast<Precision>(y) * kScrollSpeed;
 	}
 }

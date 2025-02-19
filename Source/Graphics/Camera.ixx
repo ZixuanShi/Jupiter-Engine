@@ -5,6 +5,7 @@ export module jpt.Camera;
 import jpt.Event.Key;
 import jpt.Event.MouseButton;
 import jpt.Event.MouseMove;
+import jpt.Event.MouseScroll;
 
 import jpt.Constants;
 import jpt.TypeDefs;
@@ -38,6 +39,7 @@ export namespace jpt
 		void OnKey(const Event_Key& eventKey);
 		void OnMouseButton(const Event_Mouse_Button& eventMouseButton);
 		void OnMouseMove(const Event_Mouse_Move& eventMouseMove);
+		void OnMouseScroll(const Event_Mouse_Scroll& eventMouseScroll);
 
 	public:
 		const auto& GetMatrix() const { return m_matrix; }
