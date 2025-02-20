@@ -142,7 +142,7 @@ namespace jpt
 			case MouseMode::XY:
 			{
 				// Move the camera up/down and left/right
-				m_position += Vec3::Cross(m_forward, Vec3::Up()) * dx * kSensitivity;
+				m_position += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
 				m_position += Vec3::Up() * dy * kSensitivity;
 
 				break;
