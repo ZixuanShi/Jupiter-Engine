@@ -21,16 +21,25 @@ export namespace jpt
 	class Camera
 	{
 	private:
+		enum class MouseMode
+		{
+			PitchYaw,
+			XY,
+		};
+
+	private:
 		Matrix44 m_matrix;
 		Vec3 m_move;
 
 		Vec3 m_position = Vec3(2.0f, 2.0f, 2.0f);
 		Vec3 m_forward;
 
+		// Mouse control
 		Window* m_pWindow = nullptr;
 		Vec2i m_lockMousePos = Vec2i(Constants<int32>::kMax);
-		float m_yaw = 0.0f;
+		MouseMode m_mouseMode = MouseMode::XY;
 		float m_pitch = 0.0f;
+		float m_yaw = 0.0f;
 
 	public:
 		bool Init();
@@ -43,5 +52,8 @@ export namespace jpt
 
 	public:
 		const auto& GetMatrix() const { return m_matrix; }
+
+	private:
+		
 	};
 }

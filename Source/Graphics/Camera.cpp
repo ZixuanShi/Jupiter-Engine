@@ -16,9 +16,9 @@ import jpt.Math;
 
 namespace jpt
 {
-	static constexpr Precision kMoveSpeed   = 2.5f;		// Camera movement speed
-	static constexpr Precision kScrollSpeed = 0.08f;	// Camera movement speed
-	static constexpr Precision kSensitivity = 0.001f;	// Camera rotation sensitivity
+	static constexpr Precision kMoveSpeed   = 2.5f;     // Camera movement speed
+	static constexpr Precision kScrollSpeed = 0.1f;     // Camera movement speed
+	static constexpr Precision kSensitivity = 0.001f;   // Camera rotation sensitivity
 	static constexpr Precision kPitchLimit  = ToRadians(89.0f);  // Prevent camera flipping
 
 	bool Camera::Init()
@@ -31,8 +31,8 @@ namespace jpt
 
 		// Init position and rotation
 		m_forward = (Vec3(0.0f) - m_position).Normalized();
-		m_yaw   = Atan2(m_forward.x, m_forward.z);
 		m_pitch = Asin(m_forward.y);
+		m_yaw   = Atan2(m_forward.x, m_forward.z);
 
 		return true;
 	}
@@ -69,40 +69,39 @@ namespace jpt
 
 	void Camera::OnMouseButton(const Event_Mouse_Button& eventMouseButton)
 	{
-		Input::MouseButton button = eventMouseButton.GetButton();
-		Input::KeyState state = eventMouseButton.GetState();
+		const Input::MouseButton button = eventMouseButton.GetButton();
+		const Input::KeyState state     = eventMouseButton.GetState();
 
+		// Right mouse button. FPS camera rotation
 		if (button == Input::MouseButton::Right)
 		{
-			if (state == Input::KeyState::Pressed)
-			{
-				m_pWindow = eventMouseButton.GetWindow();
-
-				const double x = eventMouseButton.GetX();
-				const double y = eventMouseButton.GetY();
-				m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
-
-				m_pWindow->SetCursorVisible(false);
-			}
-			else if (state == Input::KeyState::Released)
-			{
-				m_lockMousePos = Vec2i(Constants<int32>::kMax);
-				m_pWindow->SetCursorVisible(true);
-				m_pWindow = nullptr;
-			}
+			m_mouseMode = MouseMode::PitchYaw;
 		}
+		// Wheel button. Move camera up/down and left/right
 		else if (button == Input::MouseButton::Wheel)
 		{
-			if (state == Input::KeyState::Pressed)
-			{
-				m_pWindow = eventMouseButton.GetWindow();
-				m_pWindow->SetCursorVisible(false);
-			}
-			else if (state == Input::KeyState::Released)
-			{
-				m_pWindow->SetCursorVisible(true);
-				m_pWindow = nullptr;
-			}
+			m_mouseMode = MouseMode::XY;
+		}
+		else
+		{
+			return;
+		}
+
+		if (state == Input::KeyState::Pressed)
+		{
+			const double x = eventMouseButton.GetX();
+			const double y = eventMouseButton.GetY();
+			m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
+
+			m_pWindow = eventMouseButton.GetWindow();
+			m_pWindow->SetCursorVisible(false);
+		}
+		else if (state == Input::KeyState::Released)
+		{
+			m_lockMousePos = Vec2i(Constants<int32>::kMax);
+
+			m_pWindow->SetCursorVisible(true);
+			m_pWindow = nullptr;
 		}
 	}
 
@@ -120,19 +119,40 @@ namespace jpt
 		const Precision dx = static_cast<Precision>(m_lockMousePos.x) - static_cast<Precision>(x);
 		const Precision dy = static_cast<Precision>(m_lockMousePos.y) - static_cast<Precision>(y);
 
-		// Update the yaw and pitch relative to the mouse movement
-		m_yaw   += dx * kSensitivity;
-		m_pitch += dy * kSensitivity;
+		switch (m_mouseMode)
+		{
+			case MouseMode::PitchYaw:
+			{
+				// Update the yaw and pitch relative to the mouse movement
+				m_pitch += dy * kSensitivity;
+				m_yaw   += dx * kSensitivity;
 
-		// Clamp the pitch and yaw
-		m_yaw = Modf(m_yaw, TwoPi);
-		m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
+				// Clamp the pitch and yaw
+				m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
+				m_yaw   = Modf(m_yaw, TwoPi);
 
-		// Calculate the new forward vector
-		m_forward.x = Cos(m_pitch) * Sin(m_yaw);
-		m_forward.y = Sin(m_pitch);
-		m_forward.z = Cos(m_pitch) * Cos(m_yaw);
-		m_forward.Normalize();
+				// Calculate the new forward vector
+				m_forward.x = Cos(m_pitch) * Sin(m_yaw);
+				m_forward.y = Sin(m_pitch);
+				m_forward.z = Cos(m_pitch) * Cos(m_yaw);
+				m_forward.Normalize();
+
+				break;
+			}
+			case MouseMode::XY:
+			{
+				// Move the camera up/down and left/right
+				m_position += Vec3::Cross(m_forward, Vec3::Up()) * dx * kSensitivity;
+				m_position += Vec3::Up() * dy * kSensitivity;
+
+				break;
+			}
+			default:
+			{
+				JPT_ERROR("Unknown mouse mode");
+				break;
+			}
+		}
 
 		// Update the last mouse position
 		m_pWindow->SetMousePosition(m_lockMousePos);
