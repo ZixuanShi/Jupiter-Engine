@@ -89,6 +89,23 @@ bool UnitTests_Floor()
 	return true;
 }
 
+bool UnitTests_FloorCeil()
+{
+	JPT_ENSURE(jpt::FloorCeil(-1.0) == -1);
+	JPT_ENSURE(jpt::FloorCeil(-0.8) == -1);
+	JPT_ENSURE(jpt::FloorCeil(-0.7) == -1);
+	JPT_ENSURE(jpt::FloorCeil(-0.5) == -1);
+	JPT_ENSURE(jpt::FloorCeil(-0.3) == -1);
+
+	JPT_ENSURE(jpt::FloorCeil(0.3) == 1);
+	JPT_ENSURE(jpt::FloorCeil(0.5) == 1);
+	JPT_ENSURE(jpt::FloorCeil(0.7) == 1);
+	JPT_ENSURE(jpt::FloorCeil(0.8) == 1);
+	JPT_ENSURE(jpt::FloorCeil(1.0) == 1);
+
+	return true;
+}
+
 export bool RunUnitTests_Math()
 {
 	JPT_ENSURE(UnitTests_Clamping());
@@ -96,6 +113,7 @@ export bool RunUnitTests_Math()
 	JPT_ENSURE(UnitTests_AreValuesClose());
 	JPT_ENSURE(UnitTests_MinMax());
 	JPT_ENSURE(UnitTests_Floor());
+	JPT_ENSURE(UnitTests_FloorCeil());
 
 	return true;
 }

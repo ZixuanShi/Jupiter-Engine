@@ -259,16 +259,36 @@ export namespace jpt
 		return (value & 1) == 0;
 	}
 
-	template<Integral TInt = int32, Floating TFloat = float32>
-	constexpr TInt Round(TFloat value)
+	template<Numeric T = int32, Floating TFloat = float32>
+	constexpr T Round(TFloat value)
 	{
-		return static_cast<TInt>(std::round(value));
+		return static_cast<T>(std::round(value));
 	}
 
-	template<Integral TInt = int32, Floating TFloat = float32>
-	constexpr TInt Floor(TFloat value)
+	template<Numeric T = int32, Floating TFloat = float32>
+	constexpr T Floor(TFloat value)
 	{
-		return static_cast<TInt>(std::floor(value));
+		return static_cast<T>(std::floor(value));
+	}
+
+	template<Numeric T = int32, Floating TFloat = float32>
+	constexpr T Ceil(TFloat value)
+	{
+		return static_cast<T>(std::ceil(value));
+	}
+
+	/** @return The floor of the value if it's negative, otherwise the ceil */
+	template<Numeric T = int32, Floating TFloat = float32>
+	constexpr T FloorCeil(TFloat value)
+	{
+		if (value < static_cast<TFloat>(0))
+		{
+			return Floor<T>(value);
+		}
+		else
+		{
+			return Ceil<T>(value);
+		}
 	}
 
 	constexpr auto Log2(auto value)
