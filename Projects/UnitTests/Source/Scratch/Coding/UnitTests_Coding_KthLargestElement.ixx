@@ -59,6 +59,8 @@ int32 FindKthLargestElement(const jpt::DynamicArray<int32>& input, size_t k)
 
 export bool UnitTests_Coding_KthLargestElement()
 {
+	// https://www.geeksforgeeks.org/kth-largest-element-in-an-array/
+
 	const jpt::DynamicArray<int32> input = { 5,6,4,1,2,3 };
 
 	JPT_ENSURE(FindKthLargestElement(input, 3) == 4);
