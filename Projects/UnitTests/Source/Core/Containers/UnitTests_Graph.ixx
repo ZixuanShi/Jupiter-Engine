@@ -30,7 +30,7 @@ constexpr bool operator==(const Foo& lhs, const Foo& rhs)
 }
 
 // Projects/UnitTests/Assets/UnitTests_Graph_0.jpg
-jpt::Graph<Foo> GetGraph0()
+export jpt::Graph<Foo> GetGraph0()
 {
 	jpt::Graph<Foo> graph;
 
@@ -92,7 +92,7 @@ jpt::Graph<Foo> GetGraph0()
 }
 
 // Projects/UnitTests/Assets/UnitTests_Graph_1.jpg
-jpt::Graph<Foo> GetGraph1()
+export jpt::Graph<Foo> GetGraph1()
 {
 	jpt::Graph<Foo> graph;
 
@@ -133,7 +133,7 @@ jpt::Graph<Foo> GetGraph1()
 }
 
 // Projects/UnitTests/Assets/UnitTests_Graph_1.jpg
-jpt::Graph<Foo> GetGraph2()
+export jpt::Graph<Foo> GetGraph2()
 {
 	jpt::Graph<Foo> graph;
 
@@ -187,7 +187,7 @@ jpt::Graph<Foo> GetGraph2()
 	return graph;
 }
 
-bool DFS(const jpt::Graph<Foo>& graph, const Foo& start)
+export bool DFS(const jpt::Graph<Foo>& graph, const Foo& start)
 {
 	const Index i = graph.FindIndex(start);
 
@@ -199,7 +199,7 @@ bool DFS(const jpt::Graph<Foo>& graph, const Foo& start)
 	return true;
 }
 
-bool BFS(const jpt::Graph<Foo>& graph, const Foo& start)
+export bool BFS(const jpt::Graph<Foo>& graph, const Foo& start)
 {
 	const Index i = graph.FindIndex(start);
 
@@ -211,7 +211,7 @@ bool BFS(const jpt::Graph<Foo>& graph, const Foo& start)
 	return true;
 }
 
-bool Dijkstra(const jpt::Graph<Foo>& graph, const Foo& start, const Foo& end)
+export bool Dijkstra(const jpt::Graph<Foo>& graph, const Foo& start, const Foo& end)
 {
 	const Index handleStart = graph.FindIndex(start);
 	const Index handleEnd = graph.FindIndex(end);

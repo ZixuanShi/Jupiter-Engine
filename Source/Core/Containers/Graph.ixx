@@ -55,6 +55,7 @@ export namespace jpt
 	public:
 		// Adding
 		constexpr Index AddNode(const TData& data);
+		constexpr Index AddNode(TData&& data);
 
 		constexpr void AddEdge(Index from, Index to, Weight weight = 0.0f);
 		constexpr void AddEdgeBoth(Index from, Index to, Weight weight = 0.0f);
@@ -99,6 +100,25 @@ export namespace jpt
 		}
 
 		m_nodes.EmplaceBack(data);
+		return m_nodes.Count() - 1;
+	}
+
+	template<typename TData, bool kAllowDuplicates>
+	constexpr Index Graph<TData, kAllowDuplicates>::AddNode(TData&& data)
+	{
+		if constexpr (!kAllowDuplicates)
+		{
+			for (size_t i = 0; i < m_nodes.Count(); ++i)
+			{
+				if (m_nodes[i].GetData() == data)
+				{
+					JPT_ASSERT(false, "Duplicate data not allowed");
+					return i;
+				}
+			}
+		}
+
+		m_nodes.EmplaceBack(Move(data));
 		return m_nodes.Count() - 1;
 	}
 
