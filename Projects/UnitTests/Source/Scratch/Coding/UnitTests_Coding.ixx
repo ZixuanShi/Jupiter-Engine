@@ -26,6 +26,7 @@ import UnitTests_Coding_BestSeat;
 import UnitTests_Coding_KeyValueHistoryStore;
 import UnitTests_Coding_RotateBits;
 import UnitTests_Coding_PrimeFactors;
+import UnitTests_Coding_KthLargestElement;
 
 export bool RunUnitTests_Coding()
 {
@@ -46,6 +47,7 @@ export bool RunUnitTests_Coding()
 	JPT_ENSURE(UnitTests_Coding_KeyValueHistoryStore());
 	JPT_ENSURE(UnitTests_Coding_RotateBits());
 	JPT_ENSURE(UnitTests_Coding_PrimeFactors());
+	JPT_ENSURE(UnitTests_Coding_KthLargestElement());
 
 	return true;
 }
