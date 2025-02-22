@@ -14,7 +14,6 @@ import jpt.Renderer;
 import jpt.Graphics.Constants;
 
 import jpt.Vertex;
-import jpt.Vulkan.Data;
 import jpt.Vulkan.Utils;
 
 import jpt.Vulkan.Constants;
@@ -32,8 +31,6 @@ import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.GraphicsPipeline;
 import jpt.Vulkan.VertexBuffer;
 import jpt.Vulkan.IndexBuffer;
-import jpt.Vulkan.Texture;
-import jpt.Vulkan.Texture.Sampler;
 
 import jpt.DynamicArray;
 import jpt.Matrix44;

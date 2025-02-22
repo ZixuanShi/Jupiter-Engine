@@ -20,7 +20,6 @@ import jpt.Vulkan.Utils;
 import jpt.Vulkan.Constants;
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.Data;
 import jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.RenderPass;
 import jpt.Vulkan.PipelineLayout;

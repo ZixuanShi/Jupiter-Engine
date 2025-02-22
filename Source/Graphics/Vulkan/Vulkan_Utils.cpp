@@ -12,7 +12,6 @@ module jpt.Vulkan.Utils;
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Data;
 import jpt.Vulkan.LogicalDevice;
 import jpt.Vulkan.PhysicalDevice;
 

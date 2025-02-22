@@ -10,6 +10,9 @@ module;
 
 module jpt.Renderer_Vulkan;
 
+import jpt.Vulkan.Texture;
+import jpt.Vulkan.Texture.Sampler;
+
 import jpt.Asset.Manager;
 import jpt.Mesh;
 

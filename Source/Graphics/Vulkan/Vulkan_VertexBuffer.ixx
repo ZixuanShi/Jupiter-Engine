@@ -10,7 +10,6 @@ module;
 export module jpt.Vulkan.VertexBuffer;
 
 import jpt.Vulkan.Buffer;
-import jpt.Vulkan.Data;
 
 import jpt.DynamicArray;
 import jpt.Vertex;

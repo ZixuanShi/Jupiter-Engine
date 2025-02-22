@@ -10,8 +10,6 @@ export module jpt.Vulkan.IndexBuffer;
 
 import jpt.Vulkan.Buffer;
 
-import jpt.Vulkan.Data;
-
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 import jpt.Utilities;
