@@ -18,9 +18,17 @@ import jpt.Pair;
 // Find the best meeting node that minimizes the total distance traveled by all people.
 // The graph is directed and weighted.
 
+struct Node
+{
+};
+
+jpt::DynamicArray<Node> g_nodes;
+
 using Edge           = jpt::Pair<Index, float32>;
 using Neighbors      = jpt::DynamicArray<Edge>;
 using AdjencencyList = jpt::DynamicArray<Neighbors>;
+
+
 
 export bool UnitTests_Coding_BestMeetingNode()
 {

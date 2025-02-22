@@ -162,13 +162,13 @@ export namespace jpt
 	}
 
 	template<typename TObject>
-	ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index)
+	typename ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index)
 	{
 		return m_objects[index].instance;
 	}
 
 	template<typename TObject>
-	const ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index) const
+	const typename ObjectPool<TObject>::TRaw* ObjectPool<TObject>::operator[](Index index) const
 	{
 		return m_objects[index].instance;
 	}
