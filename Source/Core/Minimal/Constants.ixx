@@ -26,7 +26,6 @@ export namespace jpt
 	/**< If the value is not supported, you need to specialize template it in the corresponding file */
 	template<typename T> 
 	constexpr T kInvalidValue = Constants<T>::kMax;
-	constexpr Index kInvalidIndex = kInvalidValue<Index>;
 
 	/** Short version of invalid value regarding indexing */
 	constexpr size_t npos = kInvalidValue<size_t>;
@@ -44,3 +43,4 @@ export namespace jpt
 export constexpr Precision Pi = jpt::kPi<Precision>;
 export constexpr Precision TwoPi = jpt::kTwoPi<Precision>;
 export constexpr Precision HalfPi = jpt::kHalfPi<Precision>;
+export constexpr Index kInvalidIndex = jpt::kInvalidValue<Index>;
