@@ -410,6 +410,8 @@ JPT_ENUM_UINT8(EWeapon,
     Hammer,
     Axe = 5,
     Spear);
+JPT_ENUM_HASH(EWeapon);
+
 bool UnitTests_HashMap_Enum()
 {
     jpt::HashMap<EWeapon, int32> hashMap

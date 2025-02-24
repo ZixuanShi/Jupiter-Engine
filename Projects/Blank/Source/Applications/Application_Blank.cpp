@@ -23,8 +23,6 @@ import jpt.Renderer;
 import jpt.Event.Manager;
 import jpt.Event.Key;
 
-import jpt.Deque;
-
 bool Application_Blank::PreInit()
 {
 	JPT_ENSURE(Super::PreInit());

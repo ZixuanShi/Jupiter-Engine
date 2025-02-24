@@ -249,10 +249,18 @@ public:                                                                         
                                                                                                                              \
     /** String value access */                                                                                               \
     constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }                                          \
-                                                                                                                             \
-    /** Hash value */                                                                                                        \
-    constexpr uint64 Hash() const { return jpt::Hash(m_value); }                                                             \
 };
+
+/** Enables jpt::Hash() for Enum */
+#define JPT_ENUM_HASH(EnumName)                               \
+export template<>                                             \
+struct jpt::Hasher<EnumName>                                  \
+{											                  \
+    constexpr uint64 operator()(const EnumName& e) const      \
+    {                                                         \
+        return jpt::Hasher<decltype(e.Value())>()(e.Value()); \
+    }                                                         \
+}
 
 #define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)
 #define JPT_ENUM_UINT16(EnumName, ...) JPT_ENUM(EnumName, uint16, __VA_ARGS__)

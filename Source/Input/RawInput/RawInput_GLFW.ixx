@@ -17,6 +17,7 @@ import jpt.Constants;
 import jpt.HashMap;
 import jpt.ToString;
 import jpt.TypeDefs;
+import jpt.Hash;
 
 export namespace jpt::Input
 {

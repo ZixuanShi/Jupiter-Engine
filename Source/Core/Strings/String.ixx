@@ -153,9 +153,6 @@ export namespace jpt
 		constexpr void MoveString(TChar* inCString);
 		constexpr void MoveString(String_Base<TChar>&& otherString);
 
-		/** @return A hash value of this string */
-		constexpr uint64 Hash() const;
-
 		void Serialize(Serializer& serializer) const;
 		void Deserialize(Serializer& serializer);
 
@@ -166,8 +163,9 @@ export namespace jpt
 		constexpr void AppendImpl(const TChar* CString, size_t size);
 	};
 
-	// Non member functions -------------------------------------------------------------------------------------------------------------------
-	
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<StringLiteral TChar, class TAllocator>
 	constexpr String_Base<TChar, TAllocator> operator+(const String_Base<TChar, TAllocator>& string, const TChar* CString)
 	{
@@ -253,8 +251,15 @@ export namespace jpt
 		return AreStringsSame(lhs.ConstBuffer(), rhs.ConstBuffer(), lhs.Count(), rhs.Count());
 	}
 
-	// Member Functions Definitions ---------------------------------------------------------------------------------------
-	
+	template<StringLiteral TChar, class TAllocator>
+	constexpr uint64 Hash(const String_Base<TChar, TAllocator>& str)
+	{
+		return StringHash64(str.ConstBuffer());
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<StringLiteral TChar, class TAllocator>
 	constexpr String_Base<TChar, TAllocator>::String_Base(const TChar* CString, size_t size)
 	{
@@ -1074,12 +1079,6 @@ export namespace jpt
 		otherString.m_pBuffer  = nullptr;
 		otherString.m_count     = 0;
 		otherString.m_capacity = 0;
-	}
-
-	template<StringLiteral TChar, class TAllocator>
-	constexpr uint64 String_Base<TChar, TAllocator>::Hash() const
-	{
-		return StringHash64(m_pBuffer);
 	}
 
 	template<StringLiteral TChar, class TAllocator>

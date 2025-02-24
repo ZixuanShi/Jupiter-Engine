@@ -119,15 +119,42 @@ export namespace jpt
 
 		// Utils
 		constexpr String ToString() const;
-		constexpr uint64 Hash() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr bool operator==(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
 	{
 		return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
 			   AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05)) &&
 			   AreValuesClose(lhs.z, rhs.z, static_cast<T>(0.05));
+	}
+
+	template<Numeric T>
+	constexpr uint64 Hash(const Vector3<T>& vector3)
+	{
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			const T epsilon = static_cast<T>(1e-6);
+			auto round = [epsilon](T value) -> T
+				{
+					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
+				};
+
+			uint64 hash = jpt::Hash(round(vector3.x));
+			hash ^= jpt::Hash(round(vector3.y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(round(vector3.z)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+		else
+		{
+			uint64 hash = jpt::Hash(vector3.x);
+			hash ^= jpt::Hash(vector3.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			hash ^= jpt::Hash(vector3.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -505,31 +532,6 @@ export namespace jpt
 	constexpr String Vector3<T>::ToString() const
 	{
 		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", x, y, z);
-	}
-
-	template<Numeric T>
-	constexpr uint64 Vector3<T>::Hash() const
-	{
-		if constexpr (std::is_floating_point_v<T>)
-		{
-			const T epsilon = static_cast<T>(1e-6);
-			auto round = [epsilon](T value) -> T
-				{
-					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
-				};
-
-			uint64 hash = jpt::Hash(round(x));
-			hash ^= jpt::Hash(round(y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			hash ^= jpt::Hash(round(z)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			return hash;
-		}
-		else
-		{
-			uint64 hash = jpt::Hash(x);
-			hash ^= jpt::Hash(y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			hash ^= jpt::Hash(z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			return hash;
-		}
 	}
 }
 

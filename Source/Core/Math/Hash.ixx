@@ -13,27 +13,18 @@ import jpt.TypeDefs;
 export namespace jpt
 {
 	template<typename T>
-	concept Hashable = requires(T t)
+	struct Hasher
 	{
-		{ t.Hash() } -> std::convertible_to<uint64>; 
+		constexpr uint64 operator()(const T& object) const
+		{
+			return std::hash<T>()(object);
+		}
 	};
 
-	template<Hashable T> requires NonTrivial<T>
+	template<typename T>
 	constexpr uint64 Hash(const T& object)
 	{
-		return object.Hash();
-	}
-
-	template<Hashable T> requires Trivial<T>
-	constexpr uint64 Hash(T object)
-	{
-		return object.Hash();
-	}
-
-	template<Primitive T>
-	constexpr uint64 Hash(T object)
-	{
-		return std::hash<T>()(object);
+		return Hasher<T>()(object);
 	}
 
 	/** constexpr compile time hash functions, 32 and 64 bit
@@ -47,6 +38,7 @@ export namespace jpt
 	{
 		return StringHash64(cStr);
 	}
+
 	constexpr uint64 Hash(const wchar_t* wcStr)
 	{
 		return StringHash64(wcStr);

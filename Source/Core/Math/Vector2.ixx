@@ -99,10 +99,12 @@ export namespace jpt
 		constexpr void RotateAround(Vector2 pivot, T radians);
 
 		// Utils
-		constexpr jpt::String ToString() const;
-		constexpr uint64 Hash() const;
+		constexpr String ToString() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs)
 	{
@@ -134,6 +136,32 @@ export namespace jpt
 		return vector2 / scaler;
 	}
 
+	template<Numeric T>
+	constexpr uint64 Hash(const Vector2<T>& vector2)
+	{
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			const T epsilon = static_cast<T>(1e-6);
+			auto round = [epsilon](T value) -> T
+				{
+					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
+				};
+
+			uint64 hash = jpt::Hash(round(vector2.x));
+			hash ^= jpt::Hash(round(vector2.y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+		else
+		{
+			uint64 hash = jpt::Hash(vector2.x);
+			hash ^= jpt::Hash(vector2.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+			return hash;
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr Vector2<T>::Vector2(T val)
 		: x(val)
@@ -458,37 +486,9 @@ export namespace jpt
 	}
 
 	template<Numeric T>
-	constexpr jpt::String Vector2<T>::ToString() const
+	constexpr String Vector2<T>::ToString() const
 	{
-		jpt::String result;
-		result += "x: ";
-		result += jpt::ToString(x);
-		result += ", y:";
-		result += jpt::ToString(y);
-		return result;
-	}
-
-	template<Numeric T>
-	constexpr uint64 Vector2<T>::Hash() const
-	{
-		if constexpr (std::is_floating_point_v<T>)
-		{
-			const T epsilon = static_cast<T>(1e-6);
-			auto round = [epsilon](T value) -> T
-				{
-					return (value < epsilon && value > -epsilon) ? static_cast<T>(0) : value;
-				};
-
-			uint64 hash = jpt::Hash(round(x));
-			hash ^= jpt::Hash(round(y)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			return hash;
-		}
-		else
-		{
-			uint64 hash = jpt::Hash(x);
-			hash ^= jpt::Hash(y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-			return hash;
-		}
+		return String::Format<64>("x: %.3f, y: %.3f", x, y);
 	}
 }
 

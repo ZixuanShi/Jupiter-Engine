@@ -8,10 +8,10 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Hash;
 
-namespace jpt
+export namespace jpt
 {
 	/** 16 bytes floating-point RGBA color. Each component ranged [0.0f - 1.0f] */
-	export struct LinearColor
+	struct LinearColor
 	{
 #pragma region Presets
 	public:
@@ -73,9 +73,6 @@ namespace jpt
 		constexpr void FromRGBA(uint32 rgba) noexcept;
 		constexpr uint32 ToRGBA() const noexcept;
 		constexpr String ToString() const noexcept;
-
-		constexpr bool operator==(LinearColor other) const noexcept;
-		constexpr uint64 Hash() const noexcept;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -89,6 +86,29 @@ namespace jpt
 	export constexpr LinearColor operator/(float32 scalar, LinearColor color) noexcept
 	{
 		return color / scalar;
+	}
+
+	constexpr bool operator==(const LinearColor& lhs, const LinearColor& rhs) noexcept
+	{
+		return AreValuesClose(lhs.r, rhs.r) &&
+			   AreValuesClose(lhs.g, rhs.g) &&
+			   AreValuesClose(lhs.b, rhs.b) &&
+			   AreValuesClose(lhs.a, rhs.a);
+	}
+
+	constexpr uint64 Hash(const LinearColor& color) noexcept
+	{
+		const float32 epsilon = static_cast<float32>(1e-6);
+		auto round = [epsilon](float32 value) -> float32
+			{
+				return (value < epsilon && value > -epsilon) ? static_cast<float32>(0) : value;
+			};
+
+		uint64 hash = jpt::Hash(round(color.r));
+		hash ^= jpt::Hash(round(color.g)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(round(color.b)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(round(color.a)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		return hash;
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -198,29 +218,6 @@ namespace jpt
 	constexpr String LinearColor::ToString() const noexcept
 	{
 		return String::Format<32>("r: %f, g: %f, b: %f, a: %f", r, g, b, a);
-	}
-
-	constexpr bool LinearColor::operator==(LinearColor other) const noexcept
-	{
-		return AreValuesClose(r, other.r) &&
-			   AreValuesClose(g, other.g) &&
-			   AreValuesClose(b, other.b) &&
-			   AreValuesClose(a, other.a);
-	}
-
-	constexpr uint64 LinearColor::Hash() const noexcept
-	{
-		const float32 epsilon = static_cast<float32>(1e-6);
-		auto round = [epsilon](float32 value) -> float32
-			{
-				return (value < epsilon && value > -epsilon) ? static_cast<float32>(0) : value;
-			};
-
-		uint64 hash = jpt::Hash(round(r));
-		hash ^= jpt::Hash(round(g)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-		hash ^= jpt::Hash(round(b)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-		hash ^= jpt::Hash(round(a)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-		return hash;
 	}
 }
 

@@ -9,7 +9,9 @@ export module jpt.File.Path;
 
 import jpt.String;
 import jpt.ToString;
+import jpt.TypeDefs;
 import jpt.Utilities;
+
 import jpt.File.Enums;
 import jpt.File.Path.Helpers;
 
@@ -50,8 +52,6 @@ export namespace jpt
 			constexpr Path SubPath(size_t index, size_t count = npos) const;
 
 		public:
-			constexpr uint64 Hash() const { return m_path.Hash(); }
-
 			String ToCString() const;
 			constexpr const WString& ToWString() const { return m_path; }
 			constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
@@ -59,8 +59,9 @@ export namespace jpt
 			constexpr bool IsEmpty() const { return m_path.IsEmpty(); }
 		};
 
-		// Non member functions -----------------------------------------------------------------------------------------------
-
+		// ------------------------------------------------------------------------------------------------
+		// Non member functions
+		// ------------------------------------------------------------------------------------------------
 		constexpr bool operator==(const Path& filePath, const typename Path::TChar* CString)
 		{
 			return filePath.ToWString() == CString;
@@ -77,8 +78,14 @@ export namespace jpt
 			return result;
 		}
 
-		// Member Functions Definitions ---------------------------------------------------------------------------------------
+		constexpr uint64 Hash(const Path& path)
+		{
+			return Hash(path.ToWString());
+		}
 
+		// ------------------------------------------------------------------------------------------------
+		// Member Functions
+		// ------------------------------------------------------------------------------------------------
 		constexpr Path::Path(char path)
 			: m_path(Move(jpt::ToWString(jpt::String(path))))
 		{

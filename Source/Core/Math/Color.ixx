@@ -8,10 +8,10 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 
-namespace jpt
+export namespace jpt
 {
 	/** 32-bit RGBA integer */
-	export struct Color
+	struct Color
 	{
 #pragma region Presets
 	public:
@@ -76,21 +76,27 @@ namespace jpt
 
 		constexpr uint32 ToRGBA() const noexcept;
 		constexpr String ToString() const noexcept;
-
-		constexpr bool operator==(Color other) const noexcept;
 	};
 
 	// ------------------------------------------------------------------------------------------------
 	// Non-member functions
 	// ------------------------------------------------------------------------------------------------
-	export constexpr Color operator*(float32 scalar, Color color) noexcept
+	constexpr Color operator*(float32 scalar, Color color) noexcept
 	{
 		return color * scalar;
 	}
 
-	export constexpr Color operator/(float32 scalar, Color color) noexcept
+	constexpr Color operator/(float32 scalar, Color color) noexcept
 	{
 		return color / scalar;
+	}
+
+	constexpr bool operator==(const Color& lhs, const Color& rhs) noexcept
+	{
+		return lhs.r == rhs.r &&
+			   lhs.g == rhs.g &&
+			   lhs.b == rhs.b &&
+			   lhs.a == rhs.a;
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -201,14 +207,6 @@ namespace jpt
 	constexpr String Color::ToString() const noexcept
 	{
 		return String::Format<32>("r: %u, g: %u, b: %u, a: %u", r, g, b, a);
-	}
-
-	constexpr bool Color::operator==(Color other) const noexcept
-	{
-		return r == other.r &&
-			   g == other.g &&
-			   b == other.b &&
-			   a == other.a;
 	}
 }
 

@@ -5,7 +5,14 @@ module;
 #include "Core/Types/Enum.h"
 #include "Core/Validation/Assert.h"
 
+#include <string>
+
 export module jpt.Input.Enums;
+
+import jpt.TypeDefs;
+import jpt.Hash;
+import jpt.String;
+import jpt.ToString;
 
 export namespace jpt::Input
 {
@@ -167,3 +174,8 @@ export namespace jpt::Input
 		Invalid = 0,
 		);
 }
+
+JPT_ENUM_HASH(jpt::Input::Key);
+JPT_ENUM_HASH(jpt::Input::KeyState);
+JPT_ENUM_HASH(jpt::Input::MouseButton);
+JPT_ENUM_HASH(jpt::Input::Modifier);

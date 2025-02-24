@@ -31,12 +31,18 @@ struct TrivialStruct
 {
     int32 a;
     int32 b;
-
-    uint64 Hash() const
-    {
-        return jpt::Hash(a) ^ jpt::Hash(b);
-    }
 };
+
+namespace jpt
+{
+    template<>
+    constexpr uint64 Hash<TrivialStruct>(const TrivialStruct& object)
+    {
+        // Combine the hash values of the struct members
+        return jpt::Hash(object.a) ^ jpt::Hash(object.b);
+    }
+}
+
 //template<>
 //constexpr bool jpt::IsTrivial<TrivialStruct> = false;
 
@@ -56,13 +62,18 @@ struct NonTrivialStruct
     float c;
     double d;
     const char* e;
+};
 
-    uint64 Hash() const
+namespace jpt
+{
+    template<>
+    constexpr uint64 Hash<NonTrivialStruct>(const NonTrivialStruct& object)
     {
         // Combine the hash values of the struct members
-        return jpt::Hash(a) ^ jpt::Hash(b) ^ jpt::Hash(c) ^ jpt::Hash(d) ^ jpt::Hash(e);
+        return jpt::Hash(object.a) ^ jpt::Hash(object.b) ^ jpt::Hash(object.c) ^ jpt::Hash(object.d) ^ jpt::Hash(object.e);
     }
-};
+}
+
 //template<> constexpr bool jpt::IsTrivial<NonTrivialStruct> = true;
 //template<> constexpr bool jpt::IsSmall<NonTrivialStruct> = true;
 bool UnitTests_Hash_NonTrivialStruct()
