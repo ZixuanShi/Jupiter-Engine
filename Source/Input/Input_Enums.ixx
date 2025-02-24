@@ -175,7 +175,7 @@ export namespace jpt::Input
 		);
 }
 
-JPT_ENUM_HASH(jpt::Input::Key);
-JPT_ENUM_HASH(jpt::Input::KeyState);
-JPT_ENUM_HASH(jpt::Input::MouseButton);
-JPT_ENUM_HASH(jpt::Input::Modifier);
+export JPT_ENUM_HASH(jpt::Input::Key);
+export JPT_ENUM_HASH(jpt::Input::KeyState);
+export JPT_ENUM_HASH(jpt::Input::MouseButton);
+export JPT_ENUM_HASH(jpt::Input::Modifier);

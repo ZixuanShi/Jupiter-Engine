@@ -253,7 +253,7 @@ public:                                                                         
 
 /** Enables jpt::Hash() for Enum */
 #define JPT_ENUM_HASH(EnumName)                               \
-export template<>                                             \
+template<>                                                    \
 struct jpt::Hasher<EnumName>                                  \
 {											                  \
     constexpr uint64 operator()(const EnumName& e) const      \
