@@ -4,10 +4,6 @@ module;
 
 #include <vulkan/vulkan.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/mat4x4.hpp>
-
 export module jpt.Vulkan.UniformBuffer;
 
 import jpt.Vulkan.Buffer;
@@ -22,10 +18,6 @@ export namespace jpt::Vulkan
 		Matrix44 model;
 		Matrix44 view;
 		Matrix44 proj;
-
-		//glm::mat4 model;
-		//glm::mat4 view;
-		//glm::mat4 proj;
 	};
 
 	/** Holds constant across all shaders. Think of it like a global configuration that all our shaders can read from */
