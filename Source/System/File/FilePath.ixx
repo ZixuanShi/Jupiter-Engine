@@ -52,7 +52,6 @@ export namespace jpt
 			constexpr Path SubPath(size_t index, size_t count = npos) const;
 
 		public:
-			String ToCString() const;
 			constexpr const WString& ToWString() const { return m_path; }
 			constexpr const wchar_t* ConstBuffer() const { return m_path.ConstBuffer(); }
 			constexpr size_t Count() const { return m_path.Count(); }
@@ -83,16 +82,21 @@ export namespace jpt
 			return Hash(path.ToWString());
 		}
 
+		String ToString(const Path& path)
+		{
+			return WStrToStr(path.ToWString());
+		}
+
 		// ------------------------------------------------------------------------------------------------
 		// Member Functions
 		// ------------------------------------------------------------------------------------------------
 		constexpr Path::Path(char path)
-			: m_path(Move(jpt::ToWString(jpt::String(path))))
+			: m_path(Move(jpt::StrToWStr(jpt::String(path))))
 		{
 		}
 
 		constexpr Path::Path(const char* path)
-			: m_path(Move(jpt::ToWString(path)))
+			: m_path(Move(jpt::CStrToWStr(path)))
 		{
 			FixSeparators(m_path);
 		}
@@ -159,11 +163,6 @@ export namespace jpt
 		constexpr Path Path::SubPath(size_t index, size_t count) const
 		{
 			return m_path.SubStr(index, count);
-		}
-
-		String Path::ToCString() const
-		{
-			return jpt::ToString(m_path);
 		}
 	}
 }

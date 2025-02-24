@@ -16,14 +16,14 @@ namespace jpt
 {
 	bool Mesh::Load(const File::Path& meshPath)
 	{
-		JPT_LOG("Loading mesh: %s", meshPath.ToCString().ConstBuffer());
+		JPT_LOG("Loading mesh: %s", ToString(meshPath).ConstBuffer());
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 		std::string warn, err;
 
-		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, meshPath.ToCString().ConstBuffer()))
+		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, ToString(meshPath).ConstBuffer()))
 		{
 			JPT_ERROR("Failed to load mesh: %s", err.c_str());
 			return false;

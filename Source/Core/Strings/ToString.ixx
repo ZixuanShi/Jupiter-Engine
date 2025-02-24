@@ -149,7 +149,7 @@ export namespace jpt
 	}
 
 	// String to WString
-	WString ToWString(const String& str)
+	WString StrToWStr(const String& str)
 	{
 		if (str.Count() == 0)
 		{
@@ -162,7 +162,7 @@ export namespace jpt
 		wstr.MoveString(pBuffer, str.Count());
 		return wstr;
 	}
-	WString ToWString(const char* pCStr, size_t count = npos)
+	WString CStrToWStr(const char* pCStr, size_t count = npos)
 	{
 		if (count == npos)
 		{
@@ -175,11 +175,11 @@ export namespace jpt
 		}
 
 		String str(pCStr, count);
-		return ToWString(str);
+		return StrToWStr(str);
 	}
 
 	// WString to String
-	String ToString(const WString& wstr)
+	String WStrToStr(const WString& wstr)
 	{
 		if (wstr.Count() == 0)
 		{
@@ -192,7 +192,7 @@ export namespace jpt
 		str.MoveString(pBuffer, wstr.Count());
 		return str;
 	}
-	String ToString(const wchar_t* pWStr, size_t count = npos)
+	String WCStrToStr(const wchar_t* pWStr, size_t count = npos)
 	{
 		if (count == npos)
 		{
@@ -205,6 +205,6 @@ export namespace jpt
 		}
 
 		WString wstr(pWStr, count);
-		return ToString(wstr);
+		return WStrToStr(wstr);
 	}
 }

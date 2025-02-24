@@ -32,7 +32,7 @@ namespace jpt::Vulkan
 		const CommandPool& memTransferCommandPool = pRendererVulkan->GetMemoryTransferCommandPool();
 
 		int32 texChannels = 0;
-		unsigned char* pixels = stbi_load(fullPath.ToCString().ConstBuffer(), &m_width, &m_height, &texChannels, STBI_rgb_alpha);
+		unsigned char* pixels = stbi_load(ToString(fullPath).ConstBuffer(), &m_width, &m_height, &texChannels, STBI_rgb_alpha);
 		JPT_ASSERT(pixels, "Failed to load texture image");
 		m_mipLevels = static_cast<uint32>(Floor(Log2(Max(m_width, m_height)))) + 1;
 
