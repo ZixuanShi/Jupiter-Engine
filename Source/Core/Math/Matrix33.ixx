@@ -13,7 +13,6 @@ import jpt.Math;
 import jpt.Vector2;
 import jpt.Vector3;
 import jpt.String;
-import jpt.ToString;
 import jpt.Utilities;
 
 export namespace jpt
@@ -72,11 +71,11 @@ export namespace jpt
 
 		/** @return true if matrix is orthogonal. Validates that a matrix only contains rotation (no scaling/shearing) */
 		constexpr bool IsOrthogonal() const;
-
-		// Utils
-		constexpr String ToString() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr bool operator==(const TMatrix33<T>& lhs, const TMatrix33<T>& rhs)
 	{
@@ -84,7 +83,18 @@ export namespace jpt
 			   lhs.m[1] == rhs.m[1] &&
 			   lhs.m[2] == rhs.m[2];
 	}
+	
+	template<Numeric T>
+	constexpr String ToString(const TMatrix33<T>& m)
+	{
+		return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
+			                                                                                 m[1][0], m[1][1], m[1][2],
+			                                                                                 m[2][0], m[2][1], m[2][2]);
+	}
 
+	// ------------------------------------------------------------------------------------------------
+	// Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr TMatrix33<T>::TMatrix33()
 		: m{ { 1, 0, 0 },
@@ -277,14 +287,6 @@ export namespace jpt
 		const TMatrix33<T> inverse = Inverse(*this);
 		const TMatrix33<T> transposed = Transposed(*this);
 		return inverse == transposed;
-	}
-
-	template<Numeric T>
-	constexpr String TMatrix33<T>::ToString() const
-	{
-		return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
-			                                                                                 m[1][0], m[1][1], m[1][2],
-			                                                                                 m[2][0], m[2][1], m[2][2]);
 	}
 }
 

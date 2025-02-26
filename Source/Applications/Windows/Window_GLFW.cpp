@@ -106,7 +106,7 @@ namespace jpt
 			return glfwCreateWindowSurface(instance, m_pGLFWWindow, nullptr, pSurface) == VK_SUCCESS;
 		}
 		default:
-			JPT_ASSERT(false, "Un-implemented Graphics API: %s", api.ToString().ConstBuffer());
+			JPT_ASSERT(false, "Un-implemented Graphics API: %s", ToString(api).ConstBuffer());
 			return false;
 		};
 	}

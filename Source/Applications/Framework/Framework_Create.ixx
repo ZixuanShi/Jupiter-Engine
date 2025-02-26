@@ -54,7 +54,7 @@ export namespace jpt
 			return new Framework_Win32();
 
 		default:
-			JPT_ASSERT(false, "Un-implemented Framework API: %s", api.ToString().ConstBuffer());
+			JPT_ASSERT(false, "Un-implemented Framework API: %s", ToString(api).ConstBuffer());
 			return nullptr;
 		}
 	}

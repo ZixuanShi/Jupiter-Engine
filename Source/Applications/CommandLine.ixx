@@ -19,10 +19,10 @@ import jpt.Utilities;
 import jpt.Json;
 import jpt.Json.Data;
 
-namespace jpt
+export namespace jpt
 {
 	/** Launch Arguments parser and access */
-	export class CommandLine
+	class CommandLine
 	{
 	private:
 		JsonMap m_arguments; /**< Key-Value pairs of arguments. Value could be empty if key is a flag */
@@ -52,9 +52,6 @@ namespace jpt
 
 		/** Removes a key from the arguments map */
 		void Erase(const String& key);
-
-		/** @return		All arguments in a string format */
-		const String ToString() const;
 
 		/** @return		All arguments in a map format */
 		const JsonMap& GetArgs() const { return m_arguments; }
@@ -121,11 +118,6 @@ namespace jpt
 	{
 		JPT_ASSERT(m_arguments.Has(key), "CommandLine doesn't exist \"%s\"", key.ConstBuffer());
 		m_arguments.Erase(key);
-	}
-
-	const String CommandLine::ToString() const
-	{
-		return jpt::ToString(m_arguments);
 	}
 
 	void CommandLine::Parse(String&& argument)

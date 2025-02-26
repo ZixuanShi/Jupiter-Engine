@@ -31,7 +31,6 @@ export namespace jpt
 		constexpr const Row& operator[](Index index) const;
 
 		constexpr Index RowsCount() const;
-		constexpr String ToString() const;
 	};
 
 	constexpr void CSVData::AddRow(const Row& row)
@@ -64,22 +63,22 @@ export namespace jpt
 		return m_rows.Count();
 	}
 
-	constexpr String CSVData::ToString() const
+	constexpr String ToString(const CSVData& csvData)
 	{
 		String content;
 		
-		for (Index row = 0; row < RowsCount(); ++row)
+		for (Index row = 0; row < csvData.RowsCount(); ++row)
 		{
-			for (Index col = 0; col < m_rows[row].Count(); ++col)
+			for (Index col = 0; col < csvData[row].Count(); ++col)
 			{
-				String cell = m_rows[row][col];
+				String cell = csvData[row][col];
 				if (cell.Find(',') != npos)
 				{
 					cell = "\"" + cell + "\"";
 				}
 
 				content += cell;
-				if (col < m_rows[row].Count() - 1)
+				if (col < csvData[row].Count() - 1)
 				{
 					content += ",";
 				}

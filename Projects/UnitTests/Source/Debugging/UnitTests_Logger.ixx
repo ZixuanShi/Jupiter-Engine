@@ -10,6 +10,19 @@ import jpt.ToString;
 import jpt.String;
 import jpt.Utilities;
 
+class Foo
+{
+public:
+};
+
+namespace jpt
+{
+	String ToString(const Foo&)
+	{
+		return jpt::String("I am a Foo object");
+	}
+}
+
 bool UnitTests_Logger_Data()
 {
 	JPT_LOG("%d", 1);
@@ -24,20 +37,11 @@ bool UnitTests_Logger_Data()
 	JPT_LOG('a');
 	JPT_LOG("I'm genius");
 
-	class Foo
-	{
-	public:
-		jpt::String ToString() const
-		{
-			return jpt::String("I am a Foo object");
-		}
-	};
-
 	Foo foo;
 	JPT_LOG(foo);
-	JPT_LOG(foo.ToString());
-	JPT_LOG(foo.ToString().ConstBuffer());
-	JPT_LOG("%s", foo.ToString().ConstBuffer());
+	JPT_LOG(jpt::ToString(foo));
+	JPT_LOG(jpt::ToString(foo).ConstBuffer());
+	JPT_LOG("%s", jpt::ToString(foo).ConstBuffer());
 
 	JPT_ENSURE(jpt::ToString(foo) == "I am a Foo object");
 

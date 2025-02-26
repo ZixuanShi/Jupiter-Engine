@@ -235,7 +235,7 @@ public:                                                                         
     /** == */                                                                                                                \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr bool operator==(TInt value)            const { return m_value == static_cast<TSize>(value); }                  \
-    constexpr bool operator==(const char* str)       const { return ToString() == str; }                                     \
+    constexpr bool operator==(const char* str)       const { return s_data.names[m_value] == str; }                          \
     constexpr bool operator==(const EnumName& other) const { return m_value == other.m_value; }                              \
                                                                                                                              \
     /** Other Enum class instance */                                                                                         \
@@ -246,9 +246,6 @@ public:                                                                         
                                                                                                                              \
     /** Numeric value access */                                                                                              \
     constexpr TSize Value()    const { return m_value; }                                                                     \
-                                                                                                                             \
-    /** String value access */                                                                                               \
-    constexpr const jpt::String& ToString() const { return s_data.names[m_value]; }                                          \
 };
 
 /** Enables jpt::Hash() for Enum */
@@ -260,6 +257,16 @@ struct jpt::Hasher<EnumName>                                  \
     {                                                         \
         return jpt::Hasher<decltype(e.Value())>()(e.Value()); \
     }                                                         \
+};
+
+/** Enables jpt::ToString() for Enum */
+#define JPT_ENUM_TO_STRING(EnumName)						  \
+namespace jpt                                                 \
+{                                                             \
+    const String& ToString(const EnumName& e)			      \
+    {														  \
+        return EnumName::Name(e.Value());                     \
+    }														  \
 }
 
 #define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)

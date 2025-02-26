@@ -117,6 +117,8 @@ JPT_ENUM_UINT32(ETest2,
     Four = (1 << 8),
     Five,
     Six);
+JPT_ENUM_TO_STRING(ETest2);
+
 bool UnitTests_LinkedList_Enum()
 {
 	jpt::LinkedList<ETest2> list{ ETest2::Zero, ETest2::Two, ETest2::Four };
@@ -125,19 +127,19 @@ bool UnitTests_LinkedList_Enum()
     list.PopFront();
     JPT_ENSURE(test == ETest2::Zero);
     JPT_ENSURE(test.Value() == 12);
-    JPT_ENSURE(test.ToString() == "Zero");
+    JPT_ENSURE(jpt::ToString(test) == "Zero");
 
     test = list.Front();
     list.PopFront();
     JPT_ENSURE(test == ETest2::Two);
     JPT_ENSURE(test.Value() == 14);
-    JPT_ENSURE(test.ToString() == "Two");
+    JPT_ENSURE(jpt::ToString(test) == "Two");
 
     test = list.Front();
     list.PopFront();
     JPT_ENSURE(test == ETest2::Four);
     JPT_ENSURE(test.Value() == 256);
-    JPT_ENSURE(test.ToString() == "Four");
+    JPT_ENSURE(jpt::ToString(test) == "Four");
 
 	return true;
 }

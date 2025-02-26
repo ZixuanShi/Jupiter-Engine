@@ -13,7 +13,6 @@ import jpt.Constants;
 import jpt.Math;
 import jpt.Math.Settings;
 import jpt.String;
-import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Vector3;
 
@@ -74,11 +73,11 @@ export namespace jpt
 		constexpr static TQuaternion Rotation(const Vector3<T>& eulerAngles);
 		constexpr void Rotate(const Vector3<T>& axisAngle, T radians);
 		constexpr void Rotate(const Vector3<T>& eulerAngles);
-
-		// Utils
-		constexpr String ToString() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr bool operator==(const TQuaternion<T>& lhs, const TQuaternion<T>& rhs)
 	{
@@ -88,6 +87,15 @@ export namespace jpt
 			   AreValuesClose(lhs.w, rhs.w, static_cast<T>(0.001));
 	}
 
+	template<Numeric T>
+	constexpr String ToString(const TQuaternion<T>& quaternion)
+	{
+		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f, w: %.3f", quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr TQuaternion<T>::TQuaternion(T x, T y, T z, T w)
 		: x(x)
@@ -343,12 +351,6 @@ export namespace jpt
 	constexpr void TQuaternion<T>::Rotate(const Vector3<T>& eulerAngles)
 	{
 		*this *= Rotation(eulerAngles);
-	}
-
-	template<Numeric T>
-	constexpr String TQuaternion<T>::ToString() const
-	{
-		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f, w: %.3f", x, y, z, w);
 	}
 }
 

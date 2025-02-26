@@ -14,7 +14,6 @@ import jpt.TypeTraits;
 import jpt.Math;
 import jpt.Hash;
 import jpt.String;
-import jpt.ToString;
 
 export namespace jpt
 {
@@ -97,9 +96,6 @@ export namespace jpt
 		constexpr static Vector2 RotateAround(Vector2 vec2, Vector2 pivot, T radians);
 		constexpr void Rotate(T radians);
 		constexpr void RotateAround(Vector2 pivot, T radians);
-
-		// Utils
-		constexpr String ToString() const;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -157,6 +153,12 @@ export namespace jpt
 			hash ^= jpt::Hash(vector2.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 			return hash;
 		}
+	}
+
+	template<Numeric T>
+	constexpr String ToString(const Vector2<T>& vector2)
+	{
+		return String::Format<32>("x: %.3f, y: %.3f", vector2.x, vector2.y);
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -483,12 +485,6 @@ export namespace jpt
 
 		x = temp.x * cos - temp.y * sin + pivot.x;
 		y = temp.x * sin + temp.y * cos + pivot.y;
-	}
-
-	template<Numeric T>
-	constexpr String Vector2<T>::ToString() const
-	{
-		return String::Format<64>("x: %.3f, y: %.3f", x, y);
 	}
 }
 

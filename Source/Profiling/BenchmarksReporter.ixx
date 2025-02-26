@@ -54,13 +54,13 @@ export namespace jpt
 			result = StopWatch::GetMsFrom(now);
 		}
 		BenchmarkUnit unit{ topic, context, result };
-		m_results.AddRow(unit.ToString());
+		m_results.AddRow(ToString(unit));
 	}
 
 	void BenchmarksReporter::Finalize()
 	{
 		const DateTime now = Clock::GetCurrentDateTime();
-		const String fileName = "/Benchmarks_" + now.ToFileString() + ".csv";
+		const String fileName = "/Benchmarks_" + ToFileString(now) + ".csv";
 		const File::Path outputPath = System::Paths::GetInstance().GetSavedDir() + fileName.ConstBuffer();
 		WriteCSV(outputPath, m_results);
 	}

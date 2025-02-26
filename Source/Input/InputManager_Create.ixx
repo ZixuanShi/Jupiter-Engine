@@ -26,7 +26,7 @@ export namespace jpt::Input
 			return new RawInput_Win32();
 
 		default:
-			JPT_WARN("Unsupported framework API: " + frameworkAPI.ToString());
+			JPT_WARN("Unsupported framework API: " + ToString(frameworkAPI));
 			return nullptr;
 		}
 	}

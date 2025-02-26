@@ -276,26 +276,28 @@ JPT_ENUM_UINT32(ETest,
     Four = (1 << 8),
     Five, 
     Six);
+JPT_ENUM_TO_STRING(ETest);
+
 bool UnitTests_DynamicArray_Enum()
 {
     jpt::DynamicArray<ETest> dynamicArray{ ETest::Zero, ETest::Two, ETest::Four };
     
     JPT_ENSURE(dynamicArray[0] == ETest::Zero);
     JPT_ENSURE(dynamicArray[0].Value() == 12);
-    JPT_ENSURE(dynamicArray[0].ToString() == "Zero");
+    JPT_ENSURE(jpt::ToString(dynamicArray[0]) == "Zero");
 
     JPT_ENSURE(dynamicArray[1] == ETest::Two);
     JPT_ENSURE(dynamicArray[1].Value() == 14);
-    JPT_ENSURE(dynamicArray[1].ToString() == "Two");
+    JPT_ENSURE(jpt::ToString(dynamicArray[1]) == "Two");
 
     JPT_ENSURE(dynamicArray[2] == ETest::Four);
     JPT_ENSURE(dynamicArray[2].Value() == 256);
-    JPT_ENSURE(dynamicArray[2].ToString() == "Four");
+    JPT_ENSURE(jpt::ToString(dynamicArray[2]) == "Four");
 
     dynamicArray[1] = ETest::Six;
     JPT_ENSURE(dynamicArray[1] == ETest::Six);
     JPT_ENSURE(dynamicArray[1].Value() == 258);
-    JPT_ENSURE(dynamicArray[1].ToString() == "Six");
+    JPT_ENSURE(jpt::ToString(dynamicArray[1]) == "Six");
 
     return true;
 }

@@ -9,24 +9,26 @@ export module jpt.Json.Data;
 import jpt.Concepts;
 import jpt.DynamicArray;
 import jpt.HashMap;
+
 import jpt.String;
 import jpt.String.Helpers;
 import jpt.ToString;
+
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Variant;
 
-namespace jpt
+export namespace jpt
 {
 	class JsonData;
-	export using JsonArray = DynamicArray<JsonData>;
-	export using JsonMap = HashMap<String, JsonData>;
+	using JsonArray = DynamicArray<JsonData>;
+	using JsonMap   = HashMap<String, JsonData>;
 
-	export template<typename T>
+	template<typename T>
 	concept ValidJsonType = IsAnyOf<T, int32, float32, bool, String, JsonArray, JsonMap>;
 
 	/** Represents a single data in Json file */
-	export class JsonData
+	class JsonData
 	{
 		using TData = Variant<int32,
 			                  float32,
@@ -52,81 +54,79 @@ namespace jpt
 		template<ValidJsonType T> constexpr          const T& As() const { return m_data.As<T>(); }
 		template<ValidJsonType T> constexpr operator       T& ()         { return m_data.As<T>(); }
 		template<ValidJsonType T> constexpr operator const T& ()   const { return m_data.As<T>(); }
-
-		template<ValidJsonType T>
-		constexpr bool operator==(const T& other) const;
-
-		constexpr bool operator==(const JsonData& other) const;
-
-		constexpr String ToString() const;
 	};
 
-	constexpr JsonData::JsonData()
-		: m_data(String("null"))
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
+	String ToString(const JsonArray& array);
+
+	String ToString(const JsonData& jsonData)
 	{
+		if (jsonData.Is<int32>())
+		{
+			return jpt::ToString<String, int32>(jsonData.As<int32>());
+		}
+		else if (jsonData.Is<float32>())
+		{
+			return jpt::ToString<String, float32>(jsonData.As<float32>());
+		}
+		else if (jsonData.Is<bool>())
+		{
+			return jpt::ToString(jsonData.As<bool>());
+		}
+		else if (jsonData.Is<String>())
+		{
+			const String& str = jsonData.As<String>();
+			if (str == "null")
+			{
+				return "null";
+			}
+			else
+			{
+				return "\"" + str + "\"";
+			}
+		}
+		else if (jsonData.Is<JsonArray>())
+		{
+			return ToString(jsonData.As<JsonArray>());
+		}
+
+		JPT_ASSERT(false, "Unsupported data type in json file");
+		return String();
 	}
 
-	template<ValidJsonType T>
-	constexpr JsonData::JsonData(const T& value)
-		: m_data(value)
+	String ToString(const JsonArray& array)
 	{
+		String content("[");
+
+		for (size_t i = 0; i < array.Count(); ++i)
+		{
+			const JsonData& value = array[i];
+			const String& str = ToString(value);
+
+			content.Append(str);
+
+			if (i < array.Count() - 1)
+			{
+				content.Append(", ");
+			}
+		}
+
+		content.Append("]");
+		return content;
 	}
 
-	template<ValidJsonType T>
-	constexpr JsonData& JsonData::operator=(const T& value)
-	{
-		m_data = value;
-		return *this;
-	}
-
-	template<ValidJsonType T>
-	constexpr bool JsonData::operator==(const T& data) const
-	{
-		JPT_ASSERT(Is<T>());
-		return m_data.As<T>() == data;
-	}
-
-	constexpr bool JsonData::operator==(const JsonData& other) const
-	{
-		if (Is<int32>())
-		{
-			return As<int32>() == other.As<int32>();
-		}
-		else if (Is<float32>())
-		{
-			return As<float32>() == other.As<float32>();
-		}
-		else if (Is<bool>())
-		{
-			return As<bool>() == other.As<bool>();
-		}
-		else if (Is<String>())
-		{
-			return As<String>() == other.As<String>();
-		}
-		else if (Is<JsonArray>())
-		{
-			return As<JsonArray>() == other.As<JsonArray>();
-		}
-		else if (Is<JsonMap>())
-		{
-			return As<JsonMap>() == other.As<JsonMap>();
-		}
-
-		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
-		return false;
-	}
-
-	constexpr void Recur_JsonMapToString(const JsonMap& map, String& content, uint8 depth)
+	void Recur_JsonMapToString(const JsonMap& map, String& content, uint8 depth)
 	{
 		// Helper function to add tabs by depth
 		auto addTabs = [&content, depth]()
-		{
-			for (uint8 i = 0; i < depth; ++i)
 			{
-				content.Append("\t");
-			}
-		};
+				for (uint8 i = 0; i < depth; ++i)
+				{
+					content.Append("\t");
+				}
+			};
 
 		// Iterate through the map
 		size_t count = 0;
@@ -154,7 +154,7 @@ namespace jpt
 			// Standard data will be added as is after the key
 			else
 			{
-				content.Append(value.ToString());
+				content.Append(ToString(value));
 			}
 
 			// Add comma if it's not the last element
@@ -169,7 +169,7 @@ namespace jpt
 			}
 		}
 	}
-	export constexpr String ToString(const JsonMap& map)
+	String ToString(const JsonMap& map)
 	{
 		String content("{\n");
 		Recur_JsonMapToString(map, content, 1);
@@ -177,38 +177,62 @@ namespace jpt
 		return content;
 	}
 
-	constexpr String JsonData::ToString() const
+	template<ValidJsonType T>
+	constexpr bool operator==(const JsonData& lhs, const T& rhs)
 	{
-		if (m_data.Is<int32>())
+		JPT_ASSERT(lhs.Is<T>());
+		return lhs.As<T>() == rhs;
+	}
+
+	constexpr bool operator==(const JsonData& lhs, const JsonData& rhs)
+	{
+		if (lhs.Is<int32>())
 		{
-			return jpt::ToString(m_data.As<int32>());
+			return lhs.As<int32>() == rhs.As<int32>();
 		}
-		else if (m_data.Is<float32>())
+		else if (lhs.Is<float32>())
 		{
-			return jpt::ToString(m_data.As<float32>());
+			return lhs.As<float32>() == rhs.As<float32>();
 		}
-		else if (m_data.Is<bool>())
+		else if (lhs.Is<bool>())
 		{
-			return jpt::ToString(m_data.As<bool>());
+			return lhs.As<bool>() == rhs.As<bool>();
 		}
-		else if (m_data.Is<String>())
+		else if (lhs.Is<String>())
 		{
-			const String& str = m_data.As<String>();
-			if (str == "null")
-			{
-				return "null";
-			}
-			else
-			{
-				return "\"" + str + "\"";
-			}
+			return lhs.As<String>() == rhs.As<String>();
 		}
-		else if (m_data.Is<JsonArray>())
+		else if (lhs.Is<JsonArray>())
 		{
-			return jpt::ToString(m_data.As<JsonArray>());
+			return lhs.As<JsonArray>() == rhs.As<JsonArray>();
+		}
+		else if (lhs.Is<JsonMap>())
+		{
+			return lhs.As<JsonMap>() == rhs.As<JsonMap>();
 		}
 
-		JPT_ASSERT(false, "Unsupported data type in json file");
-		return String();
+		JPT_ASSERT(false, "Unsupported data type for JsonData operator==");
+		return false;
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// Member functions
+	// ------------------------------------------------------------------------------------------------
+	constexpr JsonData::JsonData()
+		: m_data(String("null"))
+	{
+	}
+
+	template<ValidJsonType T>
+	constexpr JsonData::JsonData(const T& value)
+		: m_data(value)
+	{
+	}
+
+	template<ValidJsonType T>
+	constexpr JsonData& JsonData::operator=(const T& value)
+	{
+		m_data = value;
+		return *this;
 	}
 }

@@ -54,7 +54,7 @@ export namespace jpt
 			return new Renderer_DX12();
 
 		default:
-			JPT_ERROR("Un-implemented Graphics API: " + api.ToString());
+			JPT_ERROR("Un-implemented Graphics API: " + ToString(api));
 			return nullptr;
 		}
 	}

@@ -78,7 +78,7 @@ namespace jpt
 	String Logger::GetTimeStamp()
 	{
 		const DateTime now = Clock::GetCurrentDateTime();
-		const String nowStr = now.ToString() + " - ";
+		const String nowStr = ToString(now) + " - ";
 		return nowStr;
 	}
 
@@ -102,7 +102,7 @@ namespace jpt
 	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
 	{
 		const String contentToLog = GetInfoStamp(type, line, file);
-		WString ContentToLogW = ToWString(contentToLog);
+		WString ContentToLogW = StrToWStr(contentToLog);
 
 		ContentToLogW += pMessage;
 		ContentToLogW += L"\n";
@@ -114,7 +114,7 @@ namespace jpt
 
 		if (System::Paths::GetInstance().IsInitialized())
 		{
-			File::AppendTextFile(locLogFilePath, GetTimeStamp() + ToString(ContentToLogW));
+			File::AppendTextFile(locLogFilePath, GetTimeStamp() + WStrToStr(ContentToLogW));
 		}
 	}
 

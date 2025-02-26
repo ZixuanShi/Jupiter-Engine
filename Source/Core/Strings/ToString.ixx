@@ -2,11 +2,15 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Strings/StringMacros.h"
 #include "Core/Validation/Assert.h"
 
+#include <string>
+
 export module jpt.ToString;
 
+import jpt.Pair;
 import jpt.String;
 import jpt.String.Helpers;
 import jpt.Concepts;
@@ -16,30 +20,7 @@ import jpt.Utilities;
 
 export namespace jpt
 {
-	template<typename T>
-	concept EnabledToString = requires(T object) { object.ToString(); };
-
-	template<typename T>
-	concept EnabledToWString = requires(T object) { object.ToWString(); };
-
-	// Add any additional primitive types if implemented later
-	template<typename T>
-	concept NoBuiltInToStringPrimitive = Integral<T> || Floating<T> || AreSameType<T, bool> || StringLiteral<T>;
-
-	// Any non-primitive object that has ToString() implemented
-	template<EnabledToString T>
-	constexpr String ToString(const T& object)
-	{
-		return object.ToString();
-	}
-
-	template<EnabledToString T>
-	constexpr WString ToWString(const T& object)
-	{
-		return object.ToWString();
-	}
-
-	// int, uint
+	// integer
 	template<StringType TString = jpt::String, Integral TInt = int32>
 	constexpr TString ToString(TInt integer)
 	{
@@ -51,7 +32,7 @@ export namespace jpt
 		return integerString;
 	}
 
-	// float, double
+	// floating
 	template<StringType TString = jpt::String, Floating TFloat = float32>
 	constexpr TString ToString(TFloat value)
 	{
@@ -63,7 +44,7 @@ export namespace jpt
 		return floatString;
 	}
 
-	// bool
+	// Boolean
 	template<StringType TString = jpt::String>
 	constexpr TString ToString(bool value)
 	{
@@ -88,66 +69,79 @@ export namespace jpt
 		return TString(c);
 	}
 
+	// String
+	template<StringType TString = jpt::String>
+	constexpr TString ToString(const TString& str)
+	{
+		return str;
+	}
+
+	// Pair
+	template<typename TFirst, typename TSecond>
+	constexpr String ToString(const Pair<TFirst, TSecond>& pair)
+	{
+		String str;
+
+		str.Append("{ ");
+		str += jpt::ToString(pair.first);
+		str += ": ";
+		str += jpt::ToString(pair.second);
+		str.Append(" }");
+
+		return str;
+	}
+
 	// Containers
 	template<Containable TContainer>
+		requires (!StringType<TContainer>)
 	constexpr String ToString(const TContainer& container)
 	{
-		if constexpr (AreSameType<TContainer, String>)
-		{
-			return container;
-		}
-		else
-		{
-			String str("[");
+		String str("[");
 
-			for (auto itr = container.begin(); itr != container.end(); ++itr)
+		for (auto itr = container.begin(); itr != container.end(); ++itr)
+		{
+			// Elements need to provide ToString() implementation to make this work
+			const auto& value = *itr;
+			str += jpt::ToString(value);
+
+			// Append ", " suffix if it's not the last element
+			const bool isLastElement = ((itr + 1) == container.end());
+			if (!isLastElement)
 			{
-				// Elements need to provide ToString() implementation to make this work
-				str += jpt::ToString(*itr);
-
-				// Append ", " suffix if it's not the last element
-				const bool isLastElement = ((itr + 1) == container.end());
-				if (!isLastElement)
-				{
-					str.Append(", ", 2);
-				}
+				str.Append(", ", 2);
 			}
-
-			str.Append("]");
-
-			return str;
 		}
+
+		str.Append("]");
+
+		return str;
 	}
+
 	template<Containable TContainer>
+		requires (!StringType<TContainer>)
 	constexpr WString ToWString(const TContainer& container)
 	{
-		if constexpr (AreSameType<TContainer, WString>)
-		{
-			return container;
-		}
-		else
-		{
-			WString wstr(L"{ ", 2);
+		WString wstr(L"{ ", 2);
 
-			for (auto itr = container.begin(); itr != container.end(); ++itr)
+		for (auto itr = container.begin(); itr != container.end(); ++itr)
+		{
+			// Elements need to provide ToWString() implementation to make this work
+			wstr += jpt::ToString<jpt::WString>(*itr);
+
+			// Append ", " suffix if it's not the last element
+			const bool isLastElement = ((itr + 1) == container.end());
+			if (!isLastElement)
 			{
-				// Elements need to provide ToWString() implementation to make this work
-				wstr += jpt::ToString<jpt::WString>(*itr);
-
-				// Append ", " suffix if it's not the last element
-				const bool isLastElement = ((itr + 1) == container.end());
-				if (!isLastElement)
-				{
-					wstr.Append(L", ", 2);
-				}
+				wstr.Append(L", ", 2);
 			}
-
-			wstr.Append(L" }", 2);
-
-			return wstr;
 		}
+
+		wstr.Append(L" }", 2);
+
+		return wstr;
 	}
 
+	//------------------------------------------------------------------------------------------------
 	// String to WString
 	WString StrToWStr(const String& str)
 	{

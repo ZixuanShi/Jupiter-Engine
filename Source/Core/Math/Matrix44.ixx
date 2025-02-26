@@ -17,7 +17,6 @@ import jpt.Vector3;
 import jpt.Vector4;
 import jpt.Utilities;
 import jpt.String;
-import jpt.ToString;
 
 export namespace jpt
 {
@@ -101,11 +100,11 @@ export namespace jpt
 
 		/** Converts 3D coordinates into 2D screen coordinates */
 		constexpr static TMatrix44<T> Perspective(T fov, T aspect, T near, T far);
-
-		// Utils
-		constexpr String ToString() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr bool operator==(const TMatrix44<T>& lhs, const TMatrix44<T>& rhs)
 	{
@@ -114,7 +113,19 @@ export namespace jpt
 			   lhs.m[2] == rhs.m[2] &&
 			   lhs.m[3] == rhs.m[3];
 	}
+	
+	template<Numeric T>
+	constexpr String ToString(const TMatrix44<T>& m)
+	{
+		return String::Format<256>("\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2], m[0][3],
+			                                                                                                                           m[1][0], m[1][1], m[1][2], m[1][3],
+			                                                                                                                           m[2][0], m[2][1], m[2][2], m[2][3],
+			                                                                                                                           m[3][0], m[3][1], m[3][2], m[3][3]);
+	}
 
+	// ------------------------------------------------------------------------------------------------
+	// Member Functions
+	// ------------------------------------------------------------------------------------------------
 	template<Numeric T>
 	constexpr TMatrix44<T>::TMatrix44()
 		: m{ { 1, 0, 0, 0 }, 
@@ -546,15 +557,6 @@ export namespace jpt
 		result.m[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
 
 		return result;
-	}
-
-	template<Numeric T>
-	constexpr String TMatrix44<T>::ToString() const
-	{
-		return String::Format<256>("\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2], m[0][3],
-			                                                                                                                           m[1][0], m[1][1], m[1][2], m[1][3],
-			                                                                                                                           m[2][0], m[2][1], m[2][2], m[2][3],
-			                                                                                                                           m[3][0], m[3][1], m[3][2], m[3][3]);
 	}
 }
 

@@ -531,7 +531,10 @@ bool UnitTests_WString_Iterator()
 	{
 		//JPT_LOG(c);
 
-		jpt::WString s = jpt::ToString<jpt::WString>(i);
+		wchar_t* wStr = jpt::IntegerToCStr<wchar_t, int32>(i);
+
+		jpt::WString s;
+		s.MoveString(wStr);
 		JPT_ENSURE(s[0] == c);
 
 		++i;
@@ -620,19 +623,19 @@ bool UnitTests_WString_MakeLower()
 
 bool UnitTests_String_ToString()
 {
-	JPT_ENSURE(jpt::ToString(L"") == "");
-	JPT_ENSURE(jpt::ToString(L"Hello") == "Hello");
-	JPT_ENSURE(jpt::ToString(L"World") == "World");
-	JPT_ENSURE(jpt::ToString(L"Hello World") == "Hello World");
+	JPT_ENSURE(jpt::WCStrToStr(L"") == "");
+	JPT_ENSURE(jpt::WCStrToStr(L"Hello") == "Hello");
+	JPT_ENSURE(jpt::WCStrToStr(L"World") == "World");
+	JPT_ENSURE(jpt::WCStrToStr(L"Hello World") == "Hello World");
 
 	return true;
 }
 bool UnitTests_String_ToWString()
 {
-	JPT_ENSURE(jpt::ToWString("") == L"");
-	JPT_ENSURE(jpt::ToWString("Hello") == L"Hello");
-	JPT_ENSURE(jpt::ToWString("World") == L"World");
-	JPT_ENSURE(jpt::ToWString("Hello World") == L"Hello World");
+	JPT_ENSURE(jpt::CStrToWStr("") == L"");
+	JPT_ENSURE(jpt::CStrToWStr("Hello") == L"Hello");
+	JPT_ENSURE(jpt::CStrToWStr("World") == L"World");
+	JPT_ENSURE(jpt::CStrToWStr("Hello World") == L"Hello World");
 
 	return true;
 }

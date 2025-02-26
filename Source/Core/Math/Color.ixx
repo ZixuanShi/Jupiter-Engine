@@ -7,6 +7,7 @@ import jpt.Math;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
+import jpt.Hash;
 
 export namespace jpt
 {
@@ -75,11 +76,10 @@ export namespace jpt
 		constexpr void FromLinearColor(LinearColor linearColor) noexcept;
 
 		constexpr uint32 ToRGBA() const noexcept;
-		constexpr String ToString() const noexcept;
 	};
 
 	// ------------------------------------------------------------------------------------------------
-	// Non-member functions
+	// Non-Member functions
 	// ------------------------------------------------------------------------------------------------
 	constexpr Color operator*(float32 scalar, Color color) noexcept
 	{
@@ -97,6 +97,20 @@ export namespace jpt
 			   lhs.g == rhs.g &&
 			   lhs.b == rhs.b &&
 			   lhs.a == rhs.a;
+	}
+
+	constexpr uint64 Hash(const Color& color) noexcept
+	{
+		uint64 hash = jpt::Hash(color.r);
+		hash ^= jpt::Hash(color.g) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(color.b) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		hash ^= jpt::Hash(color.a) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+		return hash;
+	}
+
+	constexpr String ToString(const Color& color) noexcept
+	{
+		return String::Format<32>("r: %u, g: %u, b: %u, a: %u", color.r, color.g, color.b, color.a);
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -202,11 +216,6 @@ export namespace jpt
 		rgba |= static_cast<uint32>(a);
 
 		return rgba;
-	}
-
-	constexpr String Color::ToString() const noexcept
-	{
-		return String::Format<32>("r: %u, g: %u, b: %u, a: %u", r, g, b, a);
 	}
 }
 

@@ -9,6 +9,7 @@ export module Entity.Foo;
 
 import jpt.Entity;
 import jpt.Event.Manager;
+import jpt.Input.Enums;
 
 import jpt.Event.Key;
 import jpt.Event.MouseButton;
@@ -40,14 +41,14 @@ void Entity_Foo::OnKeyPress(const jpt::Event_Key& eventKeyboardKeyPress)
 {
 	const bool hasCtrlMod = eventKeyboardKeyPress.HasModifier(jpt::Input::Modifier::Ctrl);
 	const jpt::String hasCtrlModStr = hasCtrlMod ? "true" : "false";
-	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKeyPress.GetWindow(), eventKeyboardKeyPress.GetKey().ToString().ConstBuffer(), hasCtrlModStr.ConstBuffer());
+	JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKeyPress.GetWindow(), jpt::ToString(eventKeyboardKeyPress.GetKey()).ConstBuffer(), hasCtrlModStr.ConstBuffer());
 }
 
 void Entity_Foo::OnMouseButtonPress(const jpt::Event_Mouse_Button& eventMouseButtonPress)
 {
 	const bool hasShiftMod = eventMouseButtonPress.HasModifier(jpt::Input::Modifier::Shift);
 	const jpt::String hasShiftModStr = hasShiftMod ? "true" : "false";
-	JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButtonPress.GetWindow(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), eventMouseButtonPress.GetButton().ToString().ConstBuffer(), hasShiftModStr.ConstBuffer());
+	JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButtonPress.GetWindow(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY(), jpt::ToString(eventMouseButtonPress.GetButton()).ConstBuffer(), hasShiftModStr.ConstBuffer());
 }
 
 void Entity_Foo::OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize)

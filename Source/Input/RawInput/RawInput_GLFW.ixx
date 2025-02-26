@@ -213,7 +213,7 @@ export namespace jpt::Input
 			return m_toGLFWKeys[key];
 		}
 
-		JPT_ERROR("Unknown key code: " + key.ToString());
+		JPT_ERROR("Unknown key code: " + jpt::ToString(key));
 		return kInvalidValue<uint32>;
 	}
 
@@ -278,7 +278,7 @@ export namespace jpt::Input
 			return m_toGLFWMouseButtons[mouseButton];
 		}
 
-		JPT_ERROR("Unknown mouse button: " + mouseButton.ToString());
+		JPT_ERROR("Unknown mouse button: " + ToString(mouseButton));
 		return kInvalidValue<uint32>;
 	}
 

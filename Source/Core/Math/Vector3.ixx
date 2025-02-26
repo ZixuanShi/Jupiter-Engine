@@ -12,7 +12,6 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Math;
 import jpt.String;
-import jpt.ToString;
 import jpt.Hash;
 import jpt.Vector2;
 
@@ -116,9 +115,6 @@ export namespace jpt
 		constexpr Vector3 Project(const Vector3& to) const;
 
 		constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
-
-		// Utils
-		constexpr String ToString() const;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -155,6 +151,12 @@ export namespace jpt
 			hash ^= jpt::Hash(vector3.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 			return hash;
 		}
+	}
+	
+	template<Numeric T>
+	constexpr String ToString(const Vector3<T>& vector3)
+	{
+		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", vector3.x, vector3.y, vector3.z);
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -526,12 +528,6 @@ export namespace jpt
 
 		// If the cross product is pointing up, the point is to the left of the view
 		return cross.y > static_cast<T>(0);
-	}
-
-	template<Numeric T>
-	constexpr String Vector3<T>::ToString() const
-	{
-		return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", x, y, z);
 	}
 }
 

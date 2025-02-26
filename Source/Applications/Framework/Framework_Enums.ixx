@@ -6,6 +6,9 @@ module;
 
 export module jpt.Framework.Enums;
 
+import jpt.String;
+import jpt.ToString;
+
 export namespace jpt
 {
 	JPT_ENUM_UINT8(Framework_API, 
@@ -13,3 +16,5 @@ export namespace jpt
 		GLFW,
 		Win32)
 }
+
+export JPT_ENUM_TO_STRING(jpt::Framework_API);

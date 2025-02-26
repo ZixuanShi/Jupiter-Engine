@@ -13,3 +13,5 @@ export namespace jpt
 		Vulkan,
 		DX12)
 }
+
+export JPT_ENUM_TO_STRING(jpt::Graphics_API);

@@ -14,8 +14,11 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.SharedPtr;
 import jpt.Math;
-import jpt.HashMap;
+
+import jpt.String;
 import jpt.DynamicArray;
+import jpt.Pair;
+import jpt.HashMap;
 import jpt.Serializer;
 import jpt.Optional;
 

@@ -14,10 +14,10 @@ export namespace jpt
 		String topic;
 		String context;
 		TimePrecision resultMS;
-
-		String ToString() const
-		{
-			return String::Format<256>("%s,%s,%f", topic.ConstBuffer(), context.ConstBuffer(), resultMS);			
-		}
 	};
+
+	String ToString(const BenchmarkUnit& unit)
+	{
+		return String::Format<256>("%s,%s,%f", unit.topic.ConstBuffer(), unit.context.ConstBuffer(), unit.resultMS);
+	}
 }

@@ -179,3 +179,8 @@ export JPT_ENUM_HASH(jpt::Input::Key);
 export JPT_ENUM_HASH(jpt::Input::KeyState);
 export JPT_ENUM_HASH(jpt::Input::MouseButton);
 export JPT_ENUM_HASH(jpt::Input::Modifier);
+
+export JPT_ENUM_TO_STRING(jpt::Input::Key);
+export JPT_ENUM_TO_STRING(jpt::Input::KeyState);
+export JPT_ENUM_TO_STRING(jpt::Input::MouseButton);
+export JPT_ENUM_TO_STRING(jpt::Input::Modifier);

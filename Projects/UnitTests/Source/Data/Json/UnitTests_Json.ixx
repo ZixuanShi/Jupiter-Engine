@@ -128,7 +128,7 @@ static bool Engine_Write()
     engineJson.Add("engine_version", 0);
 
     jpt::Graphics_API graphicsAPI = jpt::Graphics_API::Vulkan;
-    engineJson.Add("graphics_API", graphicsAPI.ToString());
+    engineJson.Add("graphics_API", ToString(graphicsAPI));
 
     jpt::WriteJsonFile(engineJsonPath, engineJson);
 

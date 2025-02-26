@@ -72,7 +72,6 @@ export namespace jpt
 
 		constexpr void FromRGBA(uint32 rgba) noexcept;
 		constexpr uint32 ToRGBA() const noexcept;
-		constexpr String ToString() const noexcept;
 	};
 
 	// ------------------------------------------------------------------------------------------------
@@ -109,6 +108,11 @@ export namespace jpt
 		hash ^= jpt::Hash(round(color.b)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 		hash ^= jpt::Hash(round(color.a)) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 		return hash;
+	}
+
+	constexpr String ToString(const LinearColor& linearColor) noexcept
+	{
+		return String::Format<64>("r: %.3f, g: %.3f, b: %.3f, a: %.3f", linearColor.r, linearColor.g, linearColor.b, linearColor.a);
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -213,11 +217,6 @@ export namespace jpt
 		rgba |= (_b << 8);
 		rgba |= _a;
 		return rgba;
-	}
-
-	constexpr String LinearColor::ToString() const noexcept
-	{
-		return String::Format<32>("r: %f, g: %f, b: %f, a: %f", r, g, b, a);
 	}
 }
 

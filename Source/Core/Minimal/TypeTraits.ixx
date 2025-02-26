@@ -97,6 +97,7 @@ export namespace jpt
 	template<typename T>           constexpr bool IsArray       = false;
 	template<typename T>           constexpr bool IsArray<T[]>  = true;
 	template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
+
 #pragma endregion
 
 #pragma region Type Properties

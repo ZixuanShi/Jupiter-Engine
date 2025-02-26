@@ -65,10 +65,26 @@ export namespace jpt
 
 		/** Utilities */
 		bool IsValid() const;
-		String ToString() const;
-		String ToFileString() const;
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
+	String ToString(const DateTime& dateTime)
+	{
+		// MM/DD/YYYY. HH:MM:SS
+		return String::Format<32>("%d/%d/%d. %d:%d:%d", dateTime.month, dateTime.day, dateTime.year, dateTime.hour, dateTime.minute, dateTime.second);
+	}
+
+	String ToFileString(const DateTime& dateTime)
+	{
+		// MM_DD_YYYY_HH_MM_SS
+		return String::Format<32>("%d_%d_%d_%d_%d_%d", dateTime.month, dateTime.day, dateTime.year, dateTime.hour, dateTime.minute, dateTime.second);
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// Member functions
+	// ------------------------------------------------------------------------------------------------
 	DateTime::DateTime(uint32 _year, uint32 _month, uint32 _day, uint32 _hour, uint32 _minute, uint32 _second)
 		: year(_year)
 		, month(_month)
@@ -300,17 +316,5 @@ export namespace jpt
 
 		return validYear && validMonth && validDay &&
 			validHour && validMinute && validSecond;
-	}
-
-	String DateTime::ToString() const
-	{
-		// MM/DD/YYYY. HH:MM:SS
-		return String::Format<32>("%d/%d/%d. %d:%d:%d", month, day, year, hour, minute, second);
-	}
-
-	String DateTime::ToFileString() const
-	{
-		// MM_DD_YYYY_HH_MM_SS
-		return String::Format<32>("%d_%d_%d_%d_%d_%d", month, day, year, hour, minute, second);
 	}
 }

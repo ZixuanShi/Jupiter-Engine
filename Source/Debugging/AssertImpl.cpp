@@ -26,7 +26,7 @@ namespace jpt
 			messageStr += message;
 		}
 
-		Logger::GetInstance().Log(Logger::ELogType::Error, line, file, messageStr);
+		Logger::GetInstance().Log(Logger::ELogType::Error, line, file, messageStr.ConstBuffer());
 
 #if IS_PLATFORM_WIN64
 		MessageBoxA(nullptr, messageStr.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);

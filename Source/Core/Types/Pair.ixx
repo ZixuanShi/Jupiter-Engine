@@ -7,8 +7,6 @@ module;
 export module jpt.Pair;
 
 import jpt.Utilities;
-import jpt.ToString;
-import jpt.String;
 import jpt.Serializer;
 
 export namespace jpt 
@@ -27,17 +25,23 @@ export namespace jpt
 		constexpr Pair(TFirst&& inFirst, const TSecond& inSecond);
 		constexpr Pair(TFirst&& inFirst, TSecond&& inSecond);
 
-		constexpr String ToString() const;
 		void Serialize(Serializer& serializer) const;
 		void Deserialize(Serializer& serializer);
 	};
 
+	// ------------------------------------------------------------------------------------------------
+	// Non-Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<typename TFirst, typename TSecond>
 	constexpr bool operator==(const Pair<TFirst, TSecond>& a, const Pair<TFirst, TSecond>& b)
 	{
 		return a.first == b.first && a.second == b.second;
 	}
 
+
+	// ------------------------------------------------------------------------------------------------
+	// Member functions
+	// ------------------------------------------------------------------------------------------------
 	template<typename TFirst, typename TSecond>
 	constexpr Pair<TFirst, TSecond>::Pair(const TFirst& inFirst, const TSecond& inSecond)
 		: first(inFirst)
@@ -64,20 +68,6 @@ export namespace jpt
 		: first(Move(inFirst))
 		, second(Move(inSecond))
 	{
-	}
-
-	template<typename TFirst, typename TSecond>
-	constexpr String Pair<TFirst, TSecond>::ToString() const
-	{
-		String str;
-
-		str.Append("{ ");
-		str += jpt::ToString(first);
-		str += ": ";
-		str += jpt::ToString(second);
-		str.Append(" }");
-
-		return str;
 	}
 
 	template<typename TFirst, typename TSecond>

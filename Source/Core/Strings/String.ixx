@@ -1134,4 +1134,10 @@ export namespace jpt
 
 	template<typename T>
 	concept StringType = AreSameType<T, String> || AreSameType<T, WString>;
+
+	template<typename T> constexpr bool IsStringLiteral = false;
+	template<size_t N>   constexpr bool IsStringLiteral<char[N]>          = true;
+	template<size_t N>   constexpr bool IsStringLiteral<wchar_t[N]>       = true;
+	template<size_t N>   constexpr bool IsStringLiteral<const char[N]>    = true;
+	template<size_t N>   constexpr bool IsStringLiteral<const wchar_t[N]> = true;
 }

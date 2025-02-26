@@ -47,7 +47,7 @@ namespace jpt
 	{
 		System::Paths::GetInstance().PreInit();
 		Debugger::GetInstance().PreInit();
-		JPT_LOG("Application Launched with Args: " + CommandLine::GetInstance().ToString());
+		JPT_LOG("Application Launched with Args: " + ToString(CommandLine::GetInstance().GetArgs()));
 
 		HardwareManager::GetInstance().PreInit();
 
