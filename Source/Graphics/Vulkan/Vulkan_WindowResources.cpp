@@ -321,11 +321,11 @@ namespace jpt::Vulkan
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		VkSemaphore signalSemaphores[] = { m_syncObjects[m_currentFrame].GetRenderFinishedSemaphore() };
+		VkSemaphore signalSemaphores[] = { syncObjects.GetRenderFinishedSemaphore() };
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		if (const VkResult result = vkQueueSubmit(m_presentQueue, 1, &submitInfo, m_syncObjects[m_currentFrame].GetInFlightFence()); result != VK_SUCCESS)
+		if (const VkResult result = vkQueueSubmit(m_presentQueue, 1, &submitInfo, syncObjects.GetInFlightFence()); result != VK_SUCCESS)
 		{
 			JPT_ERROR("Failed to submit draw command buffer: %d", result);
 		}
