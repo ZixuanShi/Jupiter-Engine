@@ -111,11 +111,7 @@ function CreateEngineWorkspace()
         }
         files 
         {
-            (jupiter_dir .. "Source/**.h"),
-            (jupiter_dir .. "Source/**.cpp"),
-            (jupiter_dir .. "Source/**.c"),
-            (jupiter_dir .. "Source/**.ixx"),
-            (jupiter_dir .. "Source/**.natvis"),
+            (jupiter_dir .. "Source/**"),
         }
 end
 
@@ -137,9 +133,7 @@ function CreateClientProject()
         }
         files
         {
-            (context.project_dir .. "Source/**.h"),
-            (context.project_dir .. "Source/**.cpp"),
-            (context.project_dir .. "Source/**.ixx"),
+            (context.project_dir .. "Source/**"),
         }
 
         libdirs
