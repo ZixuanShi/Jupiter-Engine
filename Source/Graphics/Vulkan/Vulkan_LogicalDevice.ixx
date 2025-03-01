@@ -15,6 +15,7 @@ export namespace jpt::Vulkan
 	private:
 		VkDevice m_device = VK_NULL_HANDLE;
 		VkQueue m_graphicsQueue = VK_NULL_HANDLE;
+		VkQueue m_computeQueue = VK_NULL_HANDLE;
 
 	public:
 		bool Init();
@@ -23,6 +24,7 @@ export namespace jpt::Vulkan
 
 		VkDevice GetHandle() const { return m_device; }
 		VkQueue GetGraphicsQueue() const { return m_graphicsQueue; }
+		VkQueue GetComputeQueue() const { return m_computeQueue; }
 
 		static LogicalDevice& Get();
 		static VkDevice GetVkDevice();

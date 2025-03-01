@@ -29,7 +29,7 @@ namespace jpt::Vulkan
 		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
 		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
-		const SwapChainSupportDetails supportDetails = physicalDevice.QuerySwapChainSupport(surface);
+		const SwapChainSupportDetails supportDetails = physicalDevice.GetSwapChainSupport(surface);
 
 		const VkSurfaceFormatKHR surfaceFormat = supportDetails.ChooseSwapSurfaceFormat();
 		const VkPresentModeKHR presentMode = supportDetails.ChooseSwapPresentMode();

@@ -141,19 +141,37 @@ namespace jpt::Vulkan
 		DynamicArray<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueFamilyCount, queueFamilies.Buffer());
 
+		// Find graphics queue family
 		for (uint32 i = 0; i < queueFamilyCount; ++i)
 		{
-			// VK_QUEUE_GRAPHICS_BIT or VK_QUEUE_COMPUTE_BIT implicitly support VK_QUEUE_TRANSFER_BIT
-			if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			const bool supportsGraphics = queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT;
+			if (supportsGraphics)
 			{
 				m_grahicsFamilyIndex = i;
+				break;
+			}
+		}
+		// Find compute queue family
+		for (uint32 i = 0; i < queueFamilyCount; ++i)
+		{
+			const bool supportsGraphics = queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT;
+			const bool supportsCompute  = queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT;
+			const bool dedicatedCompute = supportsCompute && !supportsGraphics;
+			if (dedicatedCompute)
+			{
+				m_computeFamilyIndex = i;
 				break;
 			}
 		}
 
 		if (m_grahicsFamilyIndex == UINT32_MAX)
 		{
-			JPT_ERROR("Failed to find a queue family that supports graphics!");
+			JPT_ERROR("Failed to find a queue family that supports graphics");
+			return false;
+		}
+		if (m_computeFamilyIndex == UINT32_MAX)
+		{
+			JPT_ERROR("Failed to find a queue family that supports compute");
 			return false;
 		}
 
@@ -182,7 +200,7 @@ namespace jpt::Vulkan
 		return UINT32_MAX;
 	}
 
-	SwapChainSupportDetails PhysicalDevice::QuerySwapChainSupport(VkSurfaceKHR surface) const
+	SwapChainSupportDetails PhysicalDevice::GetSwapChainSupport(VkSurfaceKHR surface) const
 	{
 		SwapChainSupportDetails result;
 

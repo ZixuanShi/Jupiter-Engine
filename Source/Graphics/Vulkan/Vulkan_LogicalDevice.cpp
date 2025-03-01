@@ -57,6 +57,7 @@ namespace jpt::Vulkan
 		}
 
 		vkGetDeviceQueue(m_device, physicalDevice.GetGraphicsFamilyIndex(), 0, &m_graphicsQueue);
+		vkGetDeviceQueue(m_device, physicalDevice.GetComputeFamilyIndex(), 0, &m_computeQueue);
 		return true;
 	}
 
