@@ -67,7 +67,8 @@ namespace jpt
 
 #define JPT_LOG(message, ...)                                                                                                                 \
 {                                                                                                                                             \
-	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>>)                                                             \
+	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
+                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
 	{                                                                                                                                         \
 		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log,  __LINE__, __FILE__, message, __VA_ARGS__);                                \
 	}                                                                                                                                         \
@@ -79,7 +80,8 @@ namespace jpt
 																																			  
 #define JPT_INFO(message, ...)                                                                                                                \
 {                                                                                                                                             \
-	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>>)                                                             \
+	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
+                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
 	{                                                                                                                                         \
 		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Info,  __LINE__, __FILE__, message, __VA_ARGS__);                               \
 	}                                                                                                                                         \
@@ -91,7 +93,8 @@ namespace jpt
 																																			  
 #define JPT_WARN(message, ...)                                                                                                                \
 {                                                                                                                                             \
-	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>>)                                                             \
+	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
+                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
 	{                                                                                                                                         \
 		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Warn,  __LINE__, __FILE__, message, __VA_ARGS__);                               \
 	}                                                                                                                                         \
@@ -103,7 +106,8 @@ namespace jpt
 
 #define JPT_ERROR(message, ...)                                                                                                               \
 {                                                                                                                                             \
-	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>>)                                                             \
+	if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
+                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
 	{                                                                                                                                         \
 		jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Error,  __LINE__, __FILE__, message, __VA_ARGS__);                              \
 	}                                                                                                                                         \
