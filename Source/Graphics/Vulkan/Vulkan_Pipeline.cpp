@@ -14,10 +14,12 @@ import jpt.Renderer_Vulkan;
 
 import jpt.Vulkan.PhysicalDevice;
 import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.Shader.Vertex;
-import jpt.Vulkan.Shader.Pixel;
 import jpt.Vulkan.PipelineLayout;
 import jpt.Vulkan.RenderPass;
+
+import jpt.Vulkan.Shader.Vertex;
+import jpt.Vulkan.Shader.Pixel;
+import jpt.Vulkan.Shader.Compute;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
@@ -31,14 +33,14 @@ namespace jpt::Vulkan
 		const RenderPass& renderPass = pVulkanRenderer->GetRenderPass();
 
 		// Shaders. Programmable stages of the pipeline.
-		VertexShader vertexShader;
-		PixelShader pixelShader;
+		VertexShader  vertexShader;
+		PixelShader   pixelShader;
 
 		JPT_ASSERT(vertexShader.Load("_Baked/Jupiter_Common/Shaders/sample_vert_glsl.spv"));
 		JPT_ASSERT(pixelShader.Load("_Baked/Jupiter_Common/Shaders/sample_frag_glsl.spv"));
 
-		VkPipelineShaderStageCreateInfo vertexShaderStageInfo = vertexShader.GetStageCreateInfo();
-		VkPipelineShaderStageCreateInfo pixelShaderStageInfo = pixelShader.GetStageCreateInfo();
+		VkPipelineShaderStageCreateInfo vertexShaderStageInfo  = vertexShader.GetStageCreateInfo();
+		VkPipelineShaderStageCreateInfo pixelShaderStageInfo   = pixelShader.GetStageCreateInfo();
 
 		VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 

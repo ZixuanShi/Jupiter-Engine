@@ -64,6 +64,7 @@ export namespace jpt
 		VertexBuffer m_vertexBuffer;
 		IndexBuffer m_indexBuffer;
 
+
 		DynamicArray<WindowResources> m_windowResources;
 
 	public:

@@ -154,10 +154,8 @@ namespace jpt::Vulkan
 		// Find compute queue family
 		for (uint32 i = 0; i < queueFamilyCount; ++i)
 		{
-			const bool supportsGraphics = queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT;
 			const bool supportsCompute  = queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT;
-			const bool dedicatedCompute = supportsCompute && !supportsGraphics;
-			if (dedicatedCompute)
+			if (supportsCompute)
 			{
 				m_computeFamilyIndex = i;
 				break;
