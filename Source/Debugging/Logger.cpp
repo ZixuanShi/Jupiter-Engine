@@ -34,33 +34,33 @@ namespace jpt
 	static constexpr size_t kMaxMessageSize = 1024;
 	static File::Path locLogFilePath = File::Combine(File::Source::Saved, "Log.txt");
 
-	static const char* locGetLogStr(Logger::ELogType type)
+	static const char* locGetLogStr(Logger::Type type)
 	{
 		switch (type)
 		{
-			case Logger::ELogType::Log:			return "Log";
-			case Logger::ELogType::Info:		return "Info";
-			case Logger::ELogType::Warn:		return "Warn";
-			case Logger::ELogType::Error:		return "Error";
+			case Logger::Type::Log:			return "Log";
+			case Logger::Type::Info:		return "Info";
+			case Logger::Type::Warn:		return "Warn";
+			case Logger::Type::Error:		return "Error";
 			default:  JPT_ASSERT(false, "Unrecognized Log category"); return nullptr;
 		}
 	}
 
-	void Logger::Log(ELogType type, int32 line, const char* file, const char* format, ...)
+	void Logger::Log(Type type, int32 line, const char* file, const char* format, ...)
 	{
 		char messageBuffer[kMaxMessageSize];
 		JPT_FORMAT_STRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
-	void Logger::Log(ELogType type, int32 line, const char* file, const wchar_t* format, ...)
+	void Logger::Log(Type type, int32 line, const char* file, const wchar_t* format, ...)
 	{
 		wchar_t messageBuffer[kMaxMessageSize];
 		JPT_FORMAT_WSTRING(messageBuffer, format, ...);
 		ProcessMessage(type, line, file, messageBuffer);
 	}
 
-	String Logger::GetInfoStamp(ELogType type, int32 line, const char* file)
+	String Logger::GetInfoStamp(Type type, int32 line, const char* file)
 	{
 		String stamp;
 		stamp.Reserve(kMaxMessageSize);
@@ -82,7 +82,7 @@ namespace jpt
 		return nowStr;
 	}
 
-	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const char* pMessage)
+	void Logger::ProcessMessage(Type type, int32 line, const char* file, const char* pMessage)
 	{
 		String contentToLog = GetInfoStamp(type, line, file);
 		contentToLog += pMessage;
@@ -99,7 +99,7 @@ namespace jpt
 		}
 	}
 
-	void Logger::ProcessMessage(ELogType type, int32 line, const char* file, const wchar_t* pMessage)
+	void Logger::ProcessMessage(Type type, int32 line, const char* file, const wchar_t* pMessage)
 	{
 		const String contentToLog = GetInfoStamp(type, line, file);
 		WString ContentToLogW = StrToWStr(contentToLog);

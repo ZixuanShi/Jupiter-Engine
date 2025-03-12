@@ -23,7 +23,7 @@ ScopedTimingProfiler::~ScopedTimingProfiler()
 {
 	const TimePrecision milliseconds = StopWatch::GetMsFrom(m_start);
 	const jpt::String message = jpt::String::Format<256>("TimingProfiler: %s took %f ms", m_label, milliseconds);
-	jpt::Logger::GetInstance().Log(jpt::Logger::ELogType::Log, m_line, m_file, message.ConstBuffer());
+	jpt::Logger::GetInstance().Log(jpt::Logger::Type::Log, m_line, m_file, message.ConstBuffer());
 }
 
 #endif // !IS_RELEASE
