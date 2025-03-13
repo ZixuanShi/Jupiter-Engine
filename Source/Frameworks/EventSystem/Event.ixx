@@ -4,10 +4,10 @@ export module jpt.Event;
 
 export namespace jpt
 {
-	/** Base class for all events */
-	class Event
-	{
-	public:
-		virtual ~Event() = default;
-	};
+    /** Base class for all events */
+    class Event
+    {
+    public:
+        virtual ~Event() = default;
+    };
 }

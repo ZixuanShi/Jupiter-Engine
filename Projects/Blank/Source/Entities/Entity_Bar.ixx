@@ -19,11 +19,11 @@ import jpt.Event.Window.Resize;
 export class Entity_Bar final : public jpt::Entity
 {
 public:
-	virtual bool PreInit() override;
+    virtual bool PreInit() override;
 };
 
 bool Entity_Bar::PreInit()
 {
-	JPT_ENSURE(jpt::Entity::PreInit());
-	return true;
+    JPT_ENSURE(jpt::Entity::PreInit());
+    return true;
 }

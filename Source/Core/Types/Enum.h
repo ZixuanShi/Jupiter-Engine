@@ -17,54 +17,54 @@ import jpt.DynamicArray;
 template<jpt::Integral TInt>
 struct EnumData
 {
-	TInt min = jpt::Constants<TInt>::kMax;	/**< The min value of this enum */
-	TInt max = jpt::Constants<TInt>::kMin;	/**< The max value of this enum */
-	jpt::HashMap<TInt, jpt::String, false> names;	/**< Key by Enum Value, Value is the value's associated string name */
+    TInt min = jpt::Constants<TInt>::kMax;    /**< The min value of this enum */
+    TInt max = jpt::Constants<TInt>::kMin;    /**< The max value of this enum */
+    jpt::HashMap<TInt, jpt::String, false> names;    /**< Key by Enum Value, Value is the value's associated string name */
 };
 
 /** Generate the shared enum data 
-	@param pSource		A string Has all the enum values, separated by ',' accepts value assignment too */
+    @param pSource        A string Has all the enum values, separated by ',' accepts value assignment too */
 template<jpt::Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource);
 
 /** Enum wrapper supports the followings:
-	- Static global API for shared EnumData
-	- Comparing with numeric and string
-	- Conversion to numeric and string
-	- Common Math operators
-	- Iteration through all values. Range-based is also supported
+    - Static global API for shared EnumData
+    - Comparing with numeric and string
+    - Conversion to numeric and string
+    - Common Math operators
+    - Iteration through all values. Range-based is also supported
 
-	@param EnumName		The name of the enum. Like Fruit, Weapon, etc
-	@param TSize		The size of the enum. uint8, uint16, uint32, uint64. 
-						Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
-	@examples: 	
-		// Local Enum for current file
-		JPT_ENUM_UINT8(ELocal, 
-		A, 
-		B = 2, 
-		C = 5);
+    @param EnumName        The name of the enum. Like Fruit, Weapon, etc
+    @param TSize        The size of the enum. uint8, uint16, uint32, uint64. 
+                        Make sure you choose the right size for optimization and Explicit template instantiations at the bottom Enum.cpp
+    @examples:     
+        // Local Enum for current file
+        JPT_ENUM_UINT8(ELocal, 
+        A, 
+        B = 2, 
+        C = 5);
 
-		// Local Enum flag
-		JPT_ENUM_UINT8(ELocalFlag,
-		A = (1 << 0),
-		B = (1 << 1),
-		C = (1 << 2));
-		
-		// Global Enum for all files as module
-		export JPT_ENUM_UINT8(EGlobal, 
-		A, 
-		B = 2, 
-		C = 5);
-		
-		// Nested Enum in class
-		export class GlobalEnumContainer
-		{
-		public:
-			JPT_ENUM_UINT64(ENested, 
-			A, 
-			B = 2, 
-			C = 5);
-		}; */
+        // Local Enum flag
+        JPT_ENUM_UINT8(ELocalFlag,
+        A = (1 << 0),
+        B = (1 << 1),
+        C = (1 << 2));
+        
+        // Global Enum for all files as module
+        export JPT_ENUM_UINT8(EGlobal, 
+        A, 
+        B = 2, 
+        C = 5);
+        
+        // Nested Enum in class
+        export class GlobalEnumContainer
+        {
+        public:
+            JPT_ENUM_UINT64(ENested, 
+            A, 
+            B = 2, 
+            C = 5);
+        }; */
 #define JPT_ENUM(EnumName, TSize, ...)                                                                                       \
 class EnumName                                                                                                               \
 {                                                                                                                            \
@@ -76,11 +76,11 @@ public:                                                                         
                                                                                                                              \
 private:                                                                                                                     \
     inline static const EnumData<TSize> s_data = GenerateData<TSize>(#__VA_ARGS__);                                          \
-    TSize m_value = 0;	/**< The actual enum value of one instance */                                                        \
+    TSize m_value = 0;    /**< The actual enum value of one instance */                                                        \
                                                                                                                              \
 public:                                                                                                                      \
     /** Static global API. See EnumData for more details at Enum.h */                                                        \
-    /**	@example: EFoo::Count() */                                                                                           \
+    /**    @example: EFoo::Count() */                                                                                           \
                                                                                                                              \
     constexpr static TSize Min()                                                                                             \
     {                                                                                                                        \
@@ -105,15 +105,15 @@ public:                                                                         
     }                                                                                                                        \
     constexpr static TSize FromName(const jpt::String& name)                                                                 \
     {                                                                                                                        \
-		for (const auto& [key, value] : s_data.names)                                                                        \
-		{                                                                                                                    \
-			if (value == name)                                                                                               \
-			{                                                                                                                \
-				return key;                                                                                                  \
-			}                                                                                                                \
-		}                                                                                                                    \
-		JPT_ASSERT(false, "Couldn't find associated enum value with given name \"%s\"", name.ConstBuffer());                 \
-		return 0;                                                                                                            \
+        for (const auto& [key, value] : s_data.names)                                                                        \
+        {                                                                                                                    \
+            if (value == name)                                                                                               \
+            {                                                                                                                \
+                return key;                                                                                                  \
+            }                                                                                                                \
+        }                                                                                                                    \
+        JPT_ASSERT(false, "Couldn't find associated enum value with given name \"%s\"", name.ConstBuffer());                 \
+        return 0;                                                                                                            \
     }                                                                                                                        \
                                                                                                                              \
 public:                                                                                                                      \
@@ -122,7 +122,7 @@ public:                                                                         
                                                                                                                              \
     /** Integer ctor & operator= */                                                                                          \
                                                                                                                              \
-    constexpr EnumName(EnumName::Values value)	                                                                             \
+    constexpr EnumName(EnumName::Values value)                                                                                 \
         : m_value(value)                                                                                                     \
     {                                                                                                                        \
     }                                                                                                                        \
@@ -135,30 +135,30 @@ public:                                                                         
                                                                                                                              \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName(TInt integer)                                                                                         \
-    	: m_value(static_cast<TSize>(integer))                                                                               \
+        : m_value(static_cast<TSize>(integer))                                                                               \
     {                                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator=(TInt integer)                                                                              \
     {                                                                                                                        \
-    	m_value = static_cast<TSize>(integer);                                                                               \
-    	return *this;                                                                                                        \
+        m_value = static_cast<TSize>(integer);                                                                               \
+        return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
     /** String ctor & operator= */                                                                                           \
                                                                                                                              \
     constexpr EnumName(const jpt::String& name)                                                                              \
     {                                                                                                                        \
-		m_value = FromName(name);                                                                                            \
-	}                                                                                                                        \
-																															 \
+        m_value = FromName(name);                                                                                            \
+    }                                                                                                                        \
+                                                                                                                             \
     constexpr EnumName& operator=(const jpt::String& name)                                                                   \
-	{                                                                                                                        \
-		m_value = FromName(name);                                                                                            \
-		return *this;                                                                                                        \
-	}                                                                                                                        \
-																															 \
+    {                                                                                                                        \
+        m_value = FromName(name);                                                                                            \
+        return *this;                                                                                                        \
+    }                                                                                                                        \
+                                                                                                                             \
     /** Math operators */                                                                                                    \
     /** If you are using math operators. Make sure you exactly know the result is a valid JPT_ENUM(YourEnum)'s value */      \
     /** JPT_ENUM's values are not guaranteed linear and contigous, you will have assertion failed if that's the case */      \
@@ -167,16 +167,16 @@ public:                                                                         
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator+=(TInt offset)                                                                              \
     {                                                                                                                        \
-    	m_value += static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
-    	return *this;                                                                                                        \
+        m_value += static_cast<TSize>(offset);                                                                               \
+        JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
+        return *this;                                                                                                        \
     }                                                                                                                        \
     template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator-=(TInt offset)                                                                              \
     {                                                                                                                        \
-    	m_value -= static_cast<TSize>(offset);                                                                               \
-    	JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
-    	return *this;                                                                                                        \
+        m_value -= static_cast<TSize>(offset);                                                                               \
+        JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
+        return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
     /** ++, -- */                                                                                                            \
@@ -186,13 +186,13 @@ public:                                                                         
     /** +, - */                                                                                                              \
     template<jpt::Integral TInt>                                                                                             \
     constexpr EnumName operator+(TInt offset)                                                                                \
-    {	                                                                                                                     \
+    {                                                                                                                         \
         EnumName copy = *this;                                                                                               \
         return copy += offset;                                                                                               \
     }                                                                                                                        \
     template<jpt::Integral TInt>                                                                                             \
     constexpr EnumName operator-(TInt offset)                                                                                \
-    {	                                                                                                                     \
+    {                                                                                                                         \
         EnumName copy = *this;                                                                                               \
         return copy -= offset;                                                                                               \
     }                                                                                                                        \
@@ -252,7 +252,7 @@ public:                                                                         
 #define JPT_ENUM_HASH(EnumName)                               \
 template<>                                                    \
 struct jpt::Hasher<EnumName>                                  \
-{											                  \
+{                                                              \
     constexpr uint64 operator()(const EnumName& e) const      \
     {                                                         \
         return jpt::Hasher<decltype(e.Value())>()(e.Value()); \
@@ -260,13 +260,13 @@ struct jpt::Hasher<EnumName>                                  \
 };
 
 /** Enables jpt::ToString() for Enum */
-#define JPT_ENUM_TO_STRING(EnumName)						  \
+#define JPT_ENUM_TO_STRING(EnumName)                          \
 namespace jpt                                                 \
 {                                                             \
-    const String& ToString(const EnumName& e)			      \
-    {														  \
+    const String& ToString(const EnumName& e)                  \
+    {                                                          \
         return EnumName::Name(e.Value());                     \
-    }														  \
+    }                                                          \
 }
 
 #define JPT_ENUM_UINT8( EnumName, ...) JPT_ENUM(EnumName, uint8,  __VA_ARGS__)

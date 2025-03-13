@@ -72,10 +72,10 @@ void ParameterPackLambda(TArgs&&... args)
 template<typename T>
 void InitializerList(const std::initializer_list<T>& list)
 {
-	for (const T& item : list)
-	{
-		JPT_LOG(item);
-	}
+    for (const T& item : list)
+    {
+        JPT_LOG(item);
+    }
 }
 
 bool UnitTests_Macro_VA_ARGS()

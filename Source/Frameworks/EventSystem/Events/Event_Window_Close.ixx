@@ -7,17 +7,17 @@ import jpt.Window;
 
 export namespace jpt
 {
-	class Event_Window_Close : public Event
-	{
-	private:
-		const Window* m_pWindow;
+    class Event_Window_Close : public Event
+    {
+    private:
+        const Window* m_pWindow;
 
-	public:
-		Event_Window_Close(const Window* pWindow)
-			: m_pWindow(pWindow)
-		{
-		}
+    public:
+        Event_Window_Close(const Window* pWindow)
+            : m_pWindow(pWindow)
+        {
+        }
 
-		const Window* GetWindow() const { return m_pWindow; }
-	};
+        const Window* GetWindow() const { return m_pWindow; }
+    };
 }

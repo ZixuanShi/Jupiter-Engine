@@ -20,14 +20,14 @@ layout(push_constant) uniform PushConstantObject
 layout(location = 0) in vec4 inColor;
 layout(location = 1) in vec3 inPosition;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec2 inTexCoord;
+layout(location = 3) in vec2 inUV;
 
 
 
 
 layout(location = 0) out vec4 outFragColor;
 layout(location = 1) out vec3 outNormal;
-layout(location = 2) out vec2 outTexCoord;
+layout(location = 2) out vec2 outUV;
 
 
 
@@ -41,7 +41,7 @@ void main()
     
     outFragColor = inColor;
     outNormal    = inNormal;
-    outTexCoord  = inTexCoord;
+    outUV        = inUV;
 
 
 }

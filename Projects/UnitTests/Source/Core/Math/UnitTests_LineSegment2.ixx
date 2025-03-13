@@ -14,20 +14,20 @@ import jpt.Utilities;
 
 bool UnitTests_LineSegment2_DistanceToPoint()
 {
-	Vec2f point = Vec2f(0.0f, 0.0f);
-	LineSegment2f line = LineSegment2f(Vec2f(1.0f, 0.0f), Vec2f(1.0f, 1.0f));
+    Vec2f point = Vec2f(0.0f, 0.0f);
+    LineSegment2f line = LineSegment2f(Vec2f(1.0f, 0.0f), Vec2f(1.0f, 1.0f));
 
-	JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 1.0f));
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 1.0f));
 
-	point = Vec2f(-3.0f, 0.0f);
-	JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 4.0f));
+    point = Vec2f(-3.0f, 0.0f);
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 4.0f));
 
-	point = Vec2f(3.0f, 0.0f);
-	JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 2.0f));
+    point = Vec2f(3.0f, 0.0f);
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 2.0f));
 
-	point = Vec2f(0.0f, 0.0f);
-	line = LineSegment2f(Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
-	JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 0.707106769f));
+    point = Vec2f(0.0f, 0.0f);
+    line = LineSegment2f(Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(point), 0.707106769f));
 
     return true;
 }

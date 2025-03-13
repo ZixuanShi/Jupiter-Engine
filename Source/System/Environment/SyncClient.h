@@ -8,17 +8,17 @@ import jpt.System.Paths;
 #define JPT_SYNC_CLIENT(ApplicationName)                                             \
 namespace jpt                                                                        \
 {                                                                                    \
-	Application* GetApplication()                                                    \
-	{																				 \
-		static Application_##ApplicationName app;									 \
-		return &app;																 \
-	}                                                                                \
+    Application* GetApplication()                                                    \
+    {                                                                                 \
+        static Application_##ApplicationName app;                                     \
+        return &app;                                                                 \
+    }                                                                                \
                                                                                      \
-	const char* Application::GetName() const { return #ApplicationName; }            \
+    const char* Application::GetName() const { return #ApplicationName; }            \
                                                                                      \
-	const wchar_t* System::Paths::GetClientDirW() const                              \
-    { 																				 \
-	    return JPT_CLIENT_DIR_W;                                                     \
+    const wchar_t* System::Paths::GetClientDirW() const                              \
+    {                                                                                  \
+        return JPT_CLIENT_DIR_W;                                                     \
     }                                                                                \
 }
 

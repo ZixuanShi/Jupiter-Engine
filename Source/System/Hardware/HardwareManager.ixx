@@ -11,36 +11,36 @@ import jpt.CPU;
 
 export namespace jpt
 {
-	class HardwareManager
-	{
-		JPT_DECLARE_SINGLETON(HardwareManager);
+    class HardwareManager
+    {
+        JPT_DECLARE_SINGLETON(HardwareManager);
 
-	private:
-		CPU m_cpu;
+    private:
+        CPU m_cpu;
 
-	public:
-		bool PreInit();
+    public:
+        bool PreInit();
 
-	public:
-		const CPU& GetCPU() const { return m_cpu; }
-	};
+    public:
+        const CPU& GetCPU() const { return m_cpu; }
+    };
 
-	bool HardwareManager::PreInit()
-	{
-		JPT_ENSURE(m_cpu.PreInit());
+    bool HardwareManager::PreInit()
+    {
+        JPT_ENSURE(m_cpu.PreInit());
 
-		JPT_INFO("CPU: " + m_cpu.GetName());
+        JPT_INFO("CPU: " + m_cpu.GetName());
 
-		return true;
-	}
+        return true;
+    }
 
-	uint32 GetLogicalProcessorsCount()
-	{
-		return HardwareManager::GetInstance().GetCPU().GetLogicalProcessorsCount();
-	}
+    uint32 GetLogicalProcessorsCount()
+    {
+        return HardwareManager::GetInstance().GetCPU().GetLogicalProcessorsCount();
+    }
 
-	uint32 GetCoresCount()
-	{
-		return HardwareManager::GetInstance().GetCPU().GetCoresCount();
-	}
+    uint32 GetCoresCount()
+    {
+        return HardwareManager::GetInstance().GetCPU().GetCoresCount();
+    }
 }

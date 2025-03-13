@@ -46,11 +46,11 @@ static bool RawThreads()
     protected:
         void Init() override 
         {
-			jpt::LockGuard lock(rawThreadsMutex);
+            jpt::LockGuard lock(rawThreadsMutex);
 
             static size_t s_id = 0;
-			m_name += jpt::ToString(s_id);
-			++s_id;
+            m_name += jpt::ToString(s_id);
+            ++s_id;
 
             JPT_LOG("Initializing thread " + m_name);
         }
@@ -63,15 +63,15 @@ static bool RawThreads()
         }
     };
 
-	const uint32 numLogicalProcessors = jpt::GetLogicalProcessorsCount();
+    const uint32 numLogicalProcessors = jpt::GetLogicalProcessorsCount();
     jpt::DynamicArray<TestThread> threads;
     threads.Reserve(numLogicalProcessors);
 
     for (uint32 i = 0; i < numLogicalProcessors; ++i)
-	{
-		threads.EmplaceBack();
-		threads.Back().Start();
-	}
+    {
+        threads.EmplaceBack();
+        threads.Back().Start();
+    }
 
     jpt::Sleep(2);
 
@@ -212,7 +212,7 @@ static bool NotBlockingMain()
     jpt::EventManager::GetInstance().Queue(eventShutdownThread, 5.0f);
 
     Event_ShutdownThread eventShutdownThread2(&thread2);
-	jpt::EventManager::GetInstance().Queue(eventShutdownThread2, 10.0f);
+    jpt::EventManager::GetInstance().Queue(eventShutdownThread2, 10.0f);
 
     jpt::EventManager::GetInstance().Register<Event_ShutdownThread>([](const Event_ShutdownThread& event)
         {
@@ -220,45 +220,45 @@ static bool NotBlockingMain()
             JPT_LOG("Stopped Thread: %s", event.GetThread()->GetName().ConstBuffer());
         });
 
-	return true;
+    return true;
 }
 
 
 std::mutex g_mutex;
 bool MutexVsAtomic(size_t threadsCount)
 {
-	jpt::DynamicArray<uint32> data(1024, 1);
+    jpt::DynamicArray<uint32> data(1024, 1);
 
-	jpt::Atomic<uint32> sum = 0;
+    jpt::Atomic<uint32> sum = 0;
 
     {
-		JPT_SCOPED_TIMING_PROFILER("MutexVsAtomic");
+        JPT_SCOPED_TIMING_PROFILER("MutexVsAtomic");
 
-		jpt::DynamicArray<std::thread> threads;
-		threads.Reserve(threadsCount);
+        jpt::DynamicArray<std::thread> threads;
+        threads.Reserve(threadsCount);
 
-		const size_t chunkSize = data.Count() / threadsCount;
+        const size_t chunkSize = data.Count() / threadsCount;
 
         for (size_t i = 0; i < threadsCount; ++i)
         {
-			const size_t startIndex = i * chunkSize;
-			const size_t endIndex = startIndex + chunkSize;
+            const size_t startIndex = i * chunkSize;
+            const size_t endIndex = startIndex + chunkSize;
 
             threads.EmplaceBack([startIndex, endIndex, &data, &sum]() 
                 {
-					//std::lock_guard<std::mutex> lock(g_mutex); // Mutex is slow because it locks the entire data structure. Use atomic for counter or flag
+                    //std::lock_guard<std::mutex> lock(g_mutex); // Mutex is slow because it locks the entire data structure. Use atomic for counter or flag
 
-					for (size_t j = startIndex; j < endIndex; ++j)
-					{
+                    for (size_t j = startIndex; j < endIndex; ++j)
+                    {
                         sum += data[j];
-					}
+                    }
                 });
         }
 
-		for (size_t i = 0; i < threadsCount; ++i)
-		{
-			threads[i].join();
-		}
+        for (size_t i = 0; i < threadsCount; ++i)
+        {
+            threads[i].join();
+        }
     }
 
     return sum == data.Count();
@@ -266,9 +266,9 @@ bool MutexVsAtomic(size_t threadsCount)
 
 export bool RunUnitTests_Threading()
 {
-	JPT_ENSURE(MutexVsAtomic(2));
-	JPT_ENSURE(MutexVsAtomic(4));
-	JPT_ENSURE(MutexVsAtomic(16));
+    JPT_ENSURE(MutexVsAtomic(2));
+    JPT_ENSURE(MutexVsAtomic(4));
+    JPT_ENSURE(MutexVsAtomic(16));
 
     JPT_ENSURE(RawThreads());
     JPT_ENSURE(ThreadSafeQueue());

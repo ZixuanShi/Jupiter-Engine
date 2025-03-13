@@ -17,64 +17,64 @@ jpt::RNG rng(1);
 
 static bool Add_Less()
 {
-	jpt::SortedSet<int32> sortedSet;
-	for (int32 i = 0; i < 10; ++i)
-	{
-		int32 value = rng.MaxInt(100);
-		sortedSet.Add(value);
-	}
+    jpt::SortedSet<int32> sortedSet;
+    for (int32 i = 0; i < 10; ++i)
+    {
+        int32 value = rng.MaxInt(100);
+        sortedSet.Add(value);
+    }
 
-	JPT_ENSURE(sortedSet.Count() == 10);
+    JPT_ENSURE(sortedSet.Count() == 10);
 
-	int32 previous = jpt::kInvalidValue<int32>;
-	for (auto itr = sortedSet.begin(); itr != sortedSet.end(); ++itr)
-	{
-		if (previous == jpt::kInvalidValue<int32>)
-		{
-			previous = *itr;
-		}
-		else
-		{
-			JPT_ENSURE(previous <= *itr);
-			previous = *itr;
-		}
-	}
+    int32 previous = jpt::kInvalidValue<int32>;
+    for (auto itr = sortedSet.begin(); itr != sortedSet.end(); ++itr)
+    {
+        if (previous == jpt::kInvalidValue<int32>)
+        {
+            previous = *itr;
+        }
+        else
+        {
+            JPT_ENSURE(previous <= *itr);
+            previous = *itr;
+        }
+    }
 
-	return true;
+    return true;
 }
 
 static bool Add_Greater()
 {
-	jpt::SortedSet<int32, jpt::Comparator_Greater<int32>> sortedSet;
-	for (int32 i = 0; i < 10; ++i)
-	{
-		int32 value = rng.MaxInt(100);
-		sortedSet.Add(value);
-	}
+    jpt::SortedSet<int32, jpt::Comparator_Greater<int32>> sortedSet;
+    for (int32 i = 0; i < 10; ++i)
+    {
+        int32 value = rng.MaxInt(100);
+        sortedSet.Add(value);
+    }
 
-	JPT_ENSURE(sortedSet.Count() == 10);
+    JPT_ENSURE(sortedSet.Count() == 10);
 
-	int32 previous = jpt::kInvalidValue<int32>;
-	for (auto itr = sortedSet.begin(); itr != sortedSet.end(); ++itr)
-	{
-		if (previous == jpt::kInvalidValue<int32>)
-		{
-			previous = *itr;
-		}
-		else
-		{
-			JPT_ENSURE(previous >= *itr);
-			previous = *itr;
-		}
-	}
+    int32 previous = jpt::kInvalidValue<int32>;
+    for (auto itr = sortedSet.begin(); itr != sortedSet.end(); ++itr)
+    {
+        if (previous == jpt::kInvalidValue<int32>)
+        {
+            previous = *itr;
+        }
+        else
+        {
+            JPT_ENSURE(previous >= *itr);
+            previous = *itr;
+        }
+    }
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_SortedSet()
 {
-	JPT_ENSURE(Add_Less());
-	JPT_ENSURE(Add_Greater());
+    JPT_ENSURE(Add_Less());
+    JPT_ENSURE(Add_Greater());
 
-	return true;
+    return true;
 }

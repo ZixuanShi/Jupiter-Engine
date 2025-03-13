@@ -9,18 +9,18 @@ import jpt.Time.TypeDefs;
 
 export namespace jpt
 {
-	/** Manages all entity components in current scene */
-	class EntityComponentManager
-	{
-	private:
+    /** Manages all entity components in current scene */
+    class EntityComponentManager
+    {
+    private:
 
 
-	public:
-		void Update(TimePrecision deltaSeconds);
-	};
+    public:
+        void Update(TimePrecision deltaSeconds);
+    };
 
-	void EntityComponentManager::Update(TimePrecision)
-	{
+    void EntityComponentManager::Update(TimePrecision)
+    {
 
-	}
+    }
 }

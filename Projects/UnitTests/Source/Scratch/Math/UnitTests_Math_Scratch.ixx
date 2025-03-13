@@ -10,6 +10,6 @@ import jpt.Utilities;
 
 export bool UnitTests_Math_Scratch()
 {
-	
-	return true;
+    
+    return true;
 }

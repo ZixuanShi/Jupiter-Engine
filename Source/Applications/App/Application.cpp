@@ -43,145 +43,145 @@ import jpt.Event.Key;
 
 namespace jpt
 {
-	bool jpt::Application::PreInit()
-	{
-		System::Paths::GetInstance().PreInit();
-		Debugger::GetInstance().PreInit();
-		JPT_LOG("Application Launched with Args: " + ToString(CommandLine::GetInstance().GetArgs()));
+    bool jpt::Application::PreInit()
+    {
+        System::Paths::GetInstance().PreInit();
+        Debugger::GetInstance().PreInit();
+        JPT_LOG("Application Launched with Args: " + ToString(CommandLine::GetInstance().GetArgs()));
 
-		HardwareManager::GetInstance().PreInit();
+        HardwareManager::GetInstance().PreInit();
 
-		ProjectSettings::GetInstance().Load();
+        ProjectSettings::GetInstance().Load();
 
-		if (CommandLine::GetInstance().Has("no_window"))
-		{
-			m_status = Status::Success;
-			return true;
-		}
+        if (CommandLine::GetInstance().Has("no_window"))
+        {
+            m_status = Status::Success;
+            return true;
+        }
 
-		// Pick APIs
-		m_frameworkAPI = FindFrameworkAPI();
-		m_graphicsAPI  = FindGraphicsAPI();
+        // Pick APIs
+        m_frameworkAPI = FindFrameworkAPI();
+        m_graphicsAPI  = FindGraphicsAPI();
 
-		// Initialize core systems
-		JPT_ASSERT(m_pPlatform, "Platform is not set");
-		m_pFramework     = Framework_Create(m_frameworkAPI);
-		m_pWindowManager = new WindowManager();
-		m_pRenderer      = Renderer_Create(m_graphicsAPI);
+        // Initialize core systems
+        JPT_ASSERT(m_pPlatform, "Platform is not set");
+        m_pFramework     = Framework_Create(m_frameworkAPI);
+        m_pWindowManager = new WindowManager();
+        m_pRenderer      = Renderer_Create(m_graphicsAPI);
 
-		bool success = true;
-		success &= m_pPlatform->PreInit();
-		success &= m_pFramework->PreInit();
-		success &= m_pWindowManager->PreInit();
-		success &= m_pRenderer->PreInit();
-		success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
-		success &= SceneManager::GetInstance().PreInit();
-		success &= AssetManager::GetInstance().PreInit();
+        bool success = true;
+        success &= m_pPlatform->PreInit();
+        success &= m_pFramework->PreInit();
+        success &= m_pWindowManager->PreInit();
+        success &= m_pRenderer->PreInit();
+        success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
+        success &= SceneManager::GetInstance().PreInit();
+        success &= AssetManager::GetInstance().PreInit();
 
-		// Register for events
-		jpt::EventManager::GetInstance().Register<jpt::Event_Key>([this](const jpt::Event_Key& eventKeyboardKeyPress)
-			{
-				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
-				{
-					m_status = Status::Success;
-				}
-				if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N && eventKeyboardKeyPress.GetState() == jpt::Input::KeyState::Pressed)
-				{
-					jpt::Window* pWindow = m_pWindowManager->Create();
-					GetRenderer()->RegisterWindow(pWindow);
-				}
-			});
+        // Register for events
+        jpt::EventManager::GetInstance().Register<jpt::Event_Key>([this](const jpt::Event_Key& eventKeyboardKeyPress)
+            {
+                if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::Escape)
+                {
+                    m_status = Status::Success;
+                }
+                if (eventKeyboardKeyPress.GetKey() == jpt::Input::Key::N && eventKeyboardKeyPress.GetState() == jpt::Input::KeyState::Pressed)
+                {
+                    jpt::Window* pWindow = m_pWindowManager->Create();
+                    GetRenderer()->RegisterWindow(pWindow);
+                }
+            });
 
-		return success;
-	}
+        return success;
+    }
 
-	bool Application::Init()
-	{
-		if (CommandLine::GetInstance().Has("no_window"))
-		{
-			return true;
-		}
+    bool Application::Init()
+    {
+        if (CommandLine::GetInstance().Has("no_window"))
+        {
+            return true;
+        }
 
-		// Initialize systems
-		bool success = true;
-		success &= m_pPlatform->Init();
-		success &= m_pFramework->Init();
-		success &= m_pWindowManager->Init(GetName());
-		success &= m_pRenderer->Init();
-		success &= InputManager::GetInstance().Init();
-		success &= SceneManager::GetInstance().Init();
-		success &= AssetManager::GetInstance().Init();
+        // Initialize systems
+        bool success = true;
+        success &= m_pPlatform->Init();
+        success &= m_pFramework->Init();
+        success &= m_pWindowManager->Init(GetName());
+        success &= m_pRenderer->Init();
+        success &= InputManager::GetInstance().Init();
+        success &= SceneManager::GetInstance().Init();
+        success &= AssetManager::GetInstance().Init();
 
-		if (success)
-		{
-			m_status = Status::Running;
-		}
+        if (success)
+        {
+            m_status = Status::Running;
+        }
 
-		return success;
-	}
+        return success;
+    }
 
-	void Application::Update(TimePrecision deltaSeconds)
-	{
-		EventManager::GetInstance().Update(deltaSeconds);
-		m_pPlatform->Update(deltaSeconds);
-		m_pFramework->Update(deltaSeconds);
-		m_pWindowManager->Update(deltaSeconds);
-		m_pRenderer->Update(deltaSeconds);
-		InputManager::GetInstance().Update(deltaSeconds);
-		SceneManager::GetInstance().Update(deltaSeconds);
-	}
+    void Application::Update(TimePrecision deltaSeconds)
+    {
+        EventManager::GetInstance().Update(deltaSeconds);
+        m_pPlatform->Update(deltaSeconds);
+        m_pFramework->Update(deltaSeconds);
+        m_pWindowManager->Update(deltaSeconds);
+        m_pRenderer->Update(deltaSeconds);
+        InputManager::GetInstance().Update(deltaSeconds);
+        SceneManager::GetInstance().Update(deltaSeconds);
+    }
 
-	void Application::Shutdown()
-	{
-		ProjectSettings::GetInstance().Save();
+    void Application::Shutdown()
+    {
+        ProjectSettings::GetInstance().Save();
 
-		AssetManager::GetInstance().Shutdown();
-		SceneManager::GetInstance().Shutdown();
-		InputManager::GetInstance().Shutdown();
-		EventManager::GetInstance().Shutdown();
+        AssetManager::GetInstance().Shutdown();
+        SceneManager::GetInstance().Shutdown();
+        InputManager::GetInstance().Shutdown();
+        EventManager::GetInstance().Shutdown();
 
-		if (!CommandLine::GetInstance().Has("no_window"))
-		{
-			JPT_SHUTDOWN(m_pRenderer);
-			JPT_SHUTDOWN(m_pWindowManager);
-			JPT_SHUTDOWN(m_pFramework);
-		}
+        if (!CommandLine::GetInstance().Has("no_window"))
+        {
+            JPT_SHUTDOWN(m_pRenderer);
+            JPT_SHUTDOWN(m_pWindowManager);
+            JPT_SHUTDOWN(m_pFramework);
+        }
 
-		JPT_SHUTDOWN(m_pPlatform);
-	}
+        JPT_SHUTDOWN(m_pPlatform);
+    }
 
-	static TimePrecision locCalculateDeltaSeconds()
-	{
-		static StopWatch::Point previous = StopWatch::Now();
-		const StopWatch::Point current = StopWatch::Now();
-		const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
-		previous = current;
-		return deltaSeconds;
-	}
+    static TimePrecision locCalculateDeltaSeconds()
+    {
+        static StopWatch::Point previous = StopWatch::Now();
+        const StopWatch::Point current = StopWatch::Now();
+        const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
+        previous = current;
+        return deltaSeconds;
+    }
 
-	void Application::Run()
-	{
-		while (m_status == Status::Running)
-		{
-			m_deltaSeconds = locCalculateDeltaSeconds();
+    void Application::Run()
+    {
+        while (m_status == Status::Running)
+        {
+            m_deltaSeconds = locCalculateDeltaSeconds();
 
-			Update(m_deltaSeconds);
-			if (m_status != Status::Running)
-			{
-				break;
-			}
+            Update(m_deltaSeconds);
+            if (m_status != Status::Running)
+            {
+                break;
+            }
 
-			m_pRenderer->DrawFrame();
-		}
-	}
+            m_pRenderer->DrawFrame();
+        }
+    }
 
-	Window* Application::GetMainWindow() const
-	{
-		return m_pWindowManager->GetMainWindow();
-	}
+    Window* Application::GetMainWindow() const
+    {
+        return m_pWindowManager->GetMainWindow();
+    }
 
-	void Application::SetStatus(Status status)
-	{
-		m_status = status;
-	}
+    void Application::SetStatus(Status status)
+    {
+        m_status = status;
+    }
 }

@@ -8,13 +8,13 @@ import jpt.File.Path;
 
 export namespace jpt
 {
-	/** Base class for assets */
-	class Asset
-	{
-	public:
-		virtual ~Asset() = default;
+    /** Base class for assets */
+    class Asset
+    {
+    public:
+        virtual ~Asset() = default;
 
-		virtual bool Load(const File::Path&) { return false; } 
-		virtual void Unload() {}
-	};
+        virtual bool Load(const File::Path&) { return false; } 
+        virtual void Unload() {}
+    };
 }

@@ -115,9 +115,9 @@ bool UnitTests_Sorting_Random()
     local.SetSeed(79726);
 
     for (size_t i = 0; i < kArraySize; ++i)
-	{
+    {
         arr[i] = local.MaxInt(100);
-	}
+    }
 
     jpt::Sort(arr, [](int32 a, int32 b) { return a > b; });
 
@@ -156,11 +156,11 @@ bool UnitTests_Sorting_StackArray()
 
     jpt::Sort(arr, [](int32 a, int32 b) { return a > b; });
     JPT_ENSURE((arr[0] == 6 &&
-				arr[1] == 5 &&
-				arr[2] == 4 &&
-				arr[3] == 3 &&
-				arr[4] == 2 &&
-				arr[5] == 1));
+                arr[1] == 5 &&
+                arr[2] == 4 &&
+                arr[3] == 3 &&
+                arr[4] == 2 &&
+                arr[5] == 1));
 
     jpt::Function<bool(int32, int32)> compare = [](int32 a, int32 b) { return a < b; };
     jpt::Sort(arr, compare);
@@ -174,28 +174,28 @@ bool UnitTests_Sorting_StackArray()
     compare = [](int32 a, int32 b) { return a > b; };
     jpt::Sort(arr, compare);
     JPT_ENSURE((arr[0] == 6 &&
-		        arr[1] == 5 &&
-		        arr[2] == 4 &&
-		        arr[3] == 3 &&
-		        arr[4] == 2 &&
-		        arr[5] == 1));
+                arr[1] == 5 &&
+                arr[2] == 4 &&
+                arr[3] == 3 &&
+                arr[4] == 2 &&
+                arr[5] == 1));
 
     compare = [](int32 a, int32 b) { return a < b; };
     jpt::Sort(arr, 3, compare);
     JPT_ENSURE((arr[0] == 4 &&
-		        arr[1] == 5 &&
-		        arr[2] == 6 &&
-		        arr[3] == 3 &&
-		        arr[4] == 2 &&
-		        arr[5] == 1));
+                arr[1] == 5 &&
+                arr[2] == 6 &&
+                arr[3] == 3 &&
+                arr[4] == 2 &&
+                arr[5] == 1));
     
     jpt::Sort(arr, 3, 5, [](int32 a, int32 b) { return a < b; });
     JPT_ENSURE((arr[0] == 4 &&
-		        arr[1] == 5 &&
-		        arr[2] == 6 &&
-		        arr[3] == 1 &&
-		        arr[4] == 2 &&
-		        arr[5] == 3));
+                arr[1] == 5 &&
+                arr[2] == 6 &&
+                arr[3] == 1 &&
+                arr[4] == 2 &&
+                arr[5] == 3));
 
     return true;
 }
@@ -213,44 +213,44 @@ struct NonTrivialStruct
 
 bool UnitTests_Sorting_NonTrivialStruct()
 {
-	jpt::DynamicArray<NonTrivialStruct> arr;
-	arr.EmplaceBack(2, "two");
-	arr.EmplaceBack(3, "three");
-	arr.EmplaceBack(1, "one");
-	arr.EmplaceBack(0, "zero");
-	arr.EmplaceBack(4, "four");
+    jpt::DynamicArray<NonTrivialStruct> arr;
+    arr.EmplaceBack(2, "two");
+    arr.EmplaceBack(3, "three");
+    arr.EmplaceBack(1, "one");
+    arr.EmplaceBack(0, "zero");
+    arr.EmplaceBack(4, "four");
 
-	jpt::Sort(arr);
-	JPT_ENSURE((arr[0].m_int == 0 && arr[0].m_string == "zero" &&
-        		arr[1].m_int == 1 && arr[1].m_string == "one" &&
-        		arr[2].m_int == 2 && arr[2].m_string == "two" &&
-        		arr[3].m_int == 3 && arr[3].m_string == "three" &&
-        		arr[4].m_int == 4 && arr[4].m_string == "four"));
+    jpt::Sort(arr);
+    JPT_ENSURE((arr[0].m_int == 0 && arr[0].m_string == "zero" &&
+                arr[1].m_int == 1 && arr[1].m_string == "one" &&
+                arr[2].m_int == 2 && arr[2].m_string == "two" &&
+                arr[3].m_int == 3 && arr[3].m_string == "three" &&
+                arr[4].m_int == 4 && arr[4].m_string == "four"));
 
     jpt::Sort(arr, [](const NonTrivialStruct& a, const NonTrivialStruct& b) { return a > b; });
     JPT_ENSURE((arr[0].m_int == 4 && arr[0].m_string == "four" &&
-        		arr[1].m_int == 3 && arr[1].m_string == "three" &&
-        		arr[2].m_int == 2 && arr[2].m_string == "two" &&
-        		arr[3].m_int == 1 && arr[3].m_string == "one" &&
-        		arr[4].m_int == 0 && arr[4].m_string == "zero"));
+                arr[1].m_int == 3 && arr[1].m_string == "three" &&
+                arr[2].m_int == 2 && arr[2].m_string == "two" &&
+                arr[3].m_int == 1 && arr[3].m_string == "one" &&
+                arr[4].m_int == 0 && arr[4].m_string == "zero"));
 
     jpt::Function<bool(const NonTrivialStruct&, const NonTrivialStruct&)> compare = [](const NonTrivialStruct& a, const NonTrivialStruct& b) { return a < b; };
     jpt::Sort(arr, compare);
     JPT_ENSURE((arr[0].m_int == 0 && arr[0].m_string == "zero" &&
-        		arr[1].m_int == 1 && arr[1].m_string == "one" &&
-        		arr[2].m_int == 2 && arr[2].m_string == "two" &&
-        		arr[3].m_int == 3 && arr[3].m_string == "three" &&
-        		arr[4].m_int == 4 && arr[4].m_string == "four"));
+                arr[1].m_int == 1 && arr[1].m_string == "one" &&
+                arr[2].m_int == 2 && arr[2].m_string == "two" &&
+                arr[3].m_int == 3 && arr[3].m_string == "three" &&
+                arr[4].m_int == 4 && arr[4].m_string == "four"));
 
     compare = [](const NonTrivialStruct& a, const NonTrivialStruct& b) { return a > b; };
     jpt::Sort(arr, compare);
     JPT_ENSURE((arr[0].m_int == 4 && arr[0].m_string == "four" &&
-        		arr[1].m_int == 3 && arr[1].m_string == "three" &&
-        		arr[2].m_int == 2 && arr[2].m_string == "two" &&
-        		arr[3].m_int == 1 && arr[3].m_string == "one" &&
-        		arr[4].m_int == 0 && arr[4].m_string == "zero"));
+                arr[1].m_int == 3 && arr[1].m_string == "three" &&
+                arr[2].m_int == 2 && arr[2].m_string == "two" &&
+                arr[3].m_int == 1 && arr[3].m_string == "one" &&
+                arr[4].m_int == 0 && arr[4].m_string == "zero"));
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_Sorting()

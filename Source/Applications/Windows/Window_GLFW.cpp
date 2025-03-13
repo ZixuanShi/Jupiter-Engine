@@ -40,169 +40,169 @@ import jpt.Event.Key;
 
 namespace jpt
 {
-	namespace Callbacks
-	{
-		void OnWindowClose(GLFWwindow* pGLFWWindow);
-		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
+    namespace Callbacks
+    {
+        void OnWindowClose(GLFWwindow* pGLFWWindow);
+        void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height);
 
-		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
-		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y);
-		void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset);
-		void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
-	}
+        void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods);
+        void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y);
+        void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset);
+        void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
+    }
 
-	bool Window_GLFW::Init(const char* title, int32 width, int32 height)
-	{
-		JPT_ENSURE(Super::Init(title, width, height));
+    bool Window_GLFW::Init(const char* title, int32 width, int32 height)
+    {
+        JPT_ENSURE(Super::Init(title, width, height));
 
-		// Create GLFW window
-		m_pGLFWWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
-		if (!m_pGLFWWindow)
-		{
-			JPT_ERROR("Failed to create GLFW window");
-			EventManager::GetInstance().Send(Event_Window_Close{ this });
-			return false;
-		}
+        // Create GLFW window
+        m_pGLFWWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+        if (!m_pGLFWWindow)
+        {
+            JPT_ERROR("Failed to create GLFW window");
+            EventManager::GetInstance().Send(Event_Window_Close{ this });
+            return false;
+        }
 
-		// Set current window callbacks
-		glfwSetWindowUserPointer(m_pGLFWWindow, this);
+        // Set current window callbacks
+        glfwSetWindowUserPointer(m_pGLFWWindow, this);
 
-		// Window
-		glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
-		glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
+        // Window
+        glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
+        glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
 
-		// Input
-		glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
-		glfwSetCursorPosCallback(m_pGLFWWindow, Callbacks::OnMouseMove);
-		glfwSetScrollCallback(m_pGLFWWindow, Callbacks::OnMouseScroll);
-		glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
+        // Input
+        glfwSetMouseButtonCallback(m_pGLFWWindow, Callbacks::OnMouseButton);
+        glfwSetCursorPosCallback(m_pGLFWWindow, Callbacks::OnMouseMove);
+        glfwSetScrollCallback(m_pGLFWWindow, Callbacks::OnMouseScroll);
+        glfwSetKeyCallback(m_pGLFWWindow, Callbacks::OnKey);
 
-		return true;
-	}
+        return true;
+    }
 
-	void Window_GLFW::Update(TimePrecision deltaSeconds)
-	{
-		Super::Update(deltaSeconds);
-	}
+    void Window_GLFW::Update(TimePrecision deltaSeconds)
+    {
+        Super::Update(deltaSeconds);
+    }
 
-	void Window_GLFW::Shutdown()
-	{
-		glfwDestroyWindow(m_pGLFWWindow);
-		m_pGLFWWindow = nullptr;
+    void Window_GLFW::Shutdown()
+    {
+        glfwDestroyWindow(m_pGLFWWindow);
+        m_pGLFWWindow = nullptr;
 
-		Super::Shutdown();
-	}
+        Super::Shutdown();
+    }
 
-	bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)
-	{
-		const Graphics_API api = GetApplication()->GetGraphicsAPI();
+    bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)
+    {
+        const Graphics_API api = GetApplication()->GetGraphicsAPI();
 
-		switch (api.Value())
-		{
-		case Graphics_API::Vulkan:
-		{
-			VkInstance instance = context[0].As<VkInstance>();
-			VkSurfaceKHR* pSurface = context[1].As<VkSurfaceKHR*>();
-			return glfwCreateWindowSurface(instance, m_pGLFWWindow, nullptr, pSurface) == VK_SUCCESS;
-		}
-		default:
-			JPT_ASSERT(false, "Un-implemented Graphics API: %s", ToString(api).ConstBuffer());
-			return false;
-		};
-	}
+        switch (api.Value())
+        {
+        case Graphics_API::Vulkan:
+        {
+            VkInstance instance = context[0].As<VkInstance>();
+            VkSurfaceKHR* pSurface = context[1].As<VkSurfaceKHR*>();
+            return glfwCreateWindowSurface(instance, m_pGLFWWindow, nullptr, pSurface) == VK_SUCCESS;
+        }
+        default:
+            JPT_ASSERT(false, "Un-implemented Graphics API: %s", ToString(api).ConstBuffer());
+            return false;
+        };
+    }
 
-	void Window_GLFW::SetMousePosition(Vec2i position)
-	{
-		glfwSetCursorPos(m_pGLFWWindow, position.x, position.y);
-	}
+    void Window_GLFW::SetMousePosition(Vec2i position)
+    {
+        glfwSetCursorPos(m_pGLFWWindow, position.x, position.y);
+    }
 
-	void Window_GLFW::SetCursorVisible(bool isVisible)
-	{
-		glfwSetInputMode(m_pGLFWWindow, GLFW_CURSOR, isVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-	}
+    void Window_GLFW::SetCursorVisible(bool isVisible)
+    {
+        glfwSetInputMode(m_pGLFWWindow, GLFW_CURSOR, isVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    }
 
-	bool Window_GLFW::ShouldClose() const
-	{
-		return glfwWindowShouldClose(m_pGLFWWindow);
-	}
+    bool Window_GLFW::ShouldClose() const
+    {
+        return glfwWindowShouldClose(m_pGLFWWindow);
+    }
 
-	namespace Callbacks
-	{
-		void OnWindowClose(GLFWwindow* pGLFWWindow)
-		{
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
+    namespace Callbacks
+    {
+        void OnWindowClose(GLFWwindow* pGLFWWindow)
+        {
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
 
-			Event_Window_Close eventWindowClose = { pWindow };
-			EventManager::GetInstance().Send(eventWindowClose);
-		}
+            Event_Window_Close eventWindowClose = { pWindow };
+            EventManager::GetInstance().Send(eventWindowClose);
+        }
 
-		void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height)
-		{
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
+        void OnWindowResize(GLFWwindow* pGLFWWindow, int32 width, int32 height)
+        {
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
 
-			pWindow->ResizeFrame(Vec2i(width, height));
+            pWindow->ResizeFrame(Vec2i(width, height));
 
-			Event_Window_Resize eventWindowResize = { pWindow, width, height };
-			EventManager::GetInstance().Send(eventWindowResize);
-		}
+            Event_Window_Resize eventWindowResize = { pWindow, width, height };
+            EventManager::GetInstance().Send(eventWindowResize);
+        }
 
-		void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods)
-		{
-			const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
-			const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
-			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
+        void OnMouseButton(GLFWwindow* pGLFWWindow, int32 button, int32 action, int32 mods)
+        {
+            const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
+            const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
+            JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
 
-			const Input::MouseButton mouseButton = pRawInputGLFW->ToMouseButton(button);
-			const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
-			const Input::KeyState state = pRawInputGLFW->ParseKeyState(action);
+            const Input::MouseButton mouseButton = pRawInputGLFW->ToMouseButton(button);
+            const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
+            const Input::KeyState state = pRawInputGLFW->ParseKeyState(action);
 
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
 
-			double x, y;
-			glfwGetCursorPos(pGLFWWindow, &x, &y);
+            double x, y;
+            glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-			const Event_Mouse_Button eventMouseButtonPress = { pWindow,
-															   x,
-															   y,
-															   mouseButton,
-															   state,
-															   modifiers };
+            const Event_Mouse_Button eventMouseButtonPress = { pWindow,
+                                                               x,
+                                                               y,
+                                                               mouseButton,
+                                                               state,
+                                                               modifiers };
 
-			EventManager::GetInstance().Send(eventMouseButtonPress);
-		}
+            EventManager::GetInstance().Send(eventMouseButtonPress);
+        }
 
-		void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
-		{
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			const Event_Mouse_Move eventMouseMove = { pWindow, x, y };
+        void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
+        {
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            const Event_Mouse_Move eventMouseMove = { pWindow, x, y };
 
-			EventManager::GetInstance().Send(eventMouseMove);
-		}
+            EventManager::GetInstance().Send(eventMouseMove);
+        }
 
-		void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset)
-		{
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			const Event_Mouse_Scroll eventMouseScroll = { pWindow, xOffset, yOffset };
+        void OnMouseScroll(GLFWwindow* pGLFWWindow, double xOffset, double yOffset)
+        {
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            const Event_Mouse_Scroll eventMouseScroll = { pWindow, xOffset, yOffset };
 
-			EventManager::GetInstance().Send(eventMouseScroll);
-		}
+            EventManager::GetInstance().Send(eventMouseScroll);
+        }
 
-		void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
-		{
-			const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
-			const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
-			JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
+        void OnKey(GLFWwindow* pGLFWWindow, int32 key, [[maybe_unused]] int32 scancode, int32 action, int32 mods)
+        {
+            const Input::RawInput* pRawInput = InputManager::GetInstance().GetRawInput();
+            const Input::RawInput_GLFW* pRawInputGLFW = static_cast<const Input::RawInput_GLFW*>(pRawInput);
+            JPT_ASSERT(pRawInputGLFW, "Couldn't cast raw input to jpt::Input::RawInput_GLFW");
 
-			const Input::Key keyCode = pRawInputGLFW->ToKey(key);
-			const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
-			const Input::KeyState keyState = pRawInputGLFW->ParseKeyState(action);
+            const Input::Key keyCode = pRawInputGLFW->ToKey(key);
+            const Input::Modifier modifiers = pRawInputGLFW->ParseModifiers(mods);
+            const Input::KeyState keyState = pRawInputGLFW->ParseKeyState(action);
 
-			Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-			const Event_Key eventKeyboardKeyPress = { pWindow, keyCode, keyState, modifiers };
+            Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
+            const Event_Key eventKeyboardKeyPress = { pWindow, keyCode, keyState, modifiers };
 
-			EventManager::GetInstance().Send(eventKeyboardKeyPress);
-		}
-	}
+            EventManager::GetInstance().Send(eventKeyboardKeyPress);
+        }
+    }
 }

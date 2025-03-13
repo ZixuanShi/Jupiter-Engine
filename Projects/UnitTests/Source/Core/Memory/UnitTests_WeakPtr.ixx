@@ -17,78 +17,78 @@ import jpt.Utilities;
 
 bool UnitTests_WeakPtr_Class()
 {
-	struct Foo
-	{
-		int32 m_left = 0;
-		char m_right = '0';
+    struct Foo
+    {
+        int32 m_left = 0;
+        char m_right = '0';
 
-		Foo() = default;
-		Foo(int32 left, char right) : m_left(left), m_right(right) {}
-		~Foo() 
-		{ 
-			//JPT_LOG("Destroyed a Foo %s", ToString().ConstBuffer()); 
-		}
+        Foo() = default;
+        Foo(int32 left, char right) : m_left(left), m_right(right) {}
+        ~Foo() 
+        { 
+            //JPT_LOG("Destroyed a Foo %s", ToString().ConstBuffer()); 
+        }
 
-		jpt::String ToString() const
-		{
-			jpt::String result;
-			result += jpt::ToString(m_left);
-			result += ' ';
-			result += jpt::ToString(m_right);
-			return result;
-		}
-	};
+        jpt::String ToString() const
+        {
+            jpt::String result;
+            result += jpt::ToString(m_left);
+            result += ' ';
+            result += jpt::ToString(m_right);
+            return result;
+        }
+    };
 
-	//std::weak_ptr<Foo> fooWeak;
-	//JPT_ENSURE(fooWeak.expired());
+    //std::weak_ptr<Foo> fooWeak;
+    //JPT_ENSURE(fooWeak.expired());
 
-	//{
-	//	std::shared_ptr<Foo> fooShared1 = std::make_shared<Foo>(42, 'C');
-	//	fooWeak = fooShared1;
+    //{
+    //    std::shared_ptr<Foo> fooShared1 = std::make_shared<Foo>(42, 'C');
+    //    fooWeak = fooShared1;
 
-	//	JPT_ENSURE(fooWeak.expired());
-	//	JPT_ENSURE(fooWeak.use_count() == 1);
+    //    JPT_ENSURE(fooWeak.expired());
+    //    JPT_ENSURE(fooWeak.use_count() == 1);
 
-	//	std::shared_ptr<Foo> fooShared2 = fooWeak.lock();
-	//	JPT_ENSURE(fooWeak.expired());
-	//	JPT_ENSURE(fooWeak.use_count() == 2);
-	//	JPT_ENSURE(fooShared2.use_count() == 2);
+    //    std::shared_ptr<Foo> fooShared2 = fooWeak.lock();
+    //    JPT_ENSURE(fooWeak.expired());
+    //    JPT_ENSURE(fooWeak.use_count() == 2);
+    //    JPT_ENSURE(fooShared2.use_count() == 2);
 
-	//	JPT_ENSURE(fooShared1->m_left == 42);
-	//	JPT_ENSURE(fooShared1->m_right == 'C');
-	//	JPT_ENSURE(fooShared2->m_left == 42);
-	//	JPT_ENSURE(fooShared2->m_right == 'C');
-	//}
+    //    JPT_ENSURE(fooShared1->m_left == 42);
+    //    JPT_ENSURE(fooShared1->m_right == 'C');
+    //    JPT_ENSURE(fooShared2->m_left == 42);
+    //    JPT_ENSURE(fooShared2->m_right == 'C');
+    //}
 
-	//JPT_ENSURE(fooWeak.expired());
-	//JPT_ENSURE(fooWeak.use_count() == 0);
+    //JPT_ENSURE(fooWeak.expired());
+    //JPT_ENSURE(fooWeak.use_count() == 0);
 
-	jpt::WeakPtr<Foo> fooWeak;
-	JPT_ENSURE(fooWeak.IsExpired());
-	JPT_ENSURE(fooWeak.GetRefCount() == 0);
+    jpt::WeakPtr<Foo> fooWeak;
+    JPT_ENSURE(fooWeak.IsExpired());
+    JPT_ENSURE(fooWeak.GetRefCount() == 0);
 
-	{
-		jpt::SharedPtr<Foo> fooShared1 = jpt::MakeStrong<Foo>(42, 'C');
-		fooWeak = fooShared1;
+    {
+        jpt::SharedPtr<Foo> fooShared1 = jpt::MakeStrong<Foo>(42, 'C');
+        fooWeak = fooShared1;
 
-		JPT_ENSURE(!fooWeak.IsExpired());
-		JPT_ENSURE(fooWeak.GetRefCount() == 1);
+        JPT_ENSURE(!fooWeak.IsExpired());
+        JPT_ENSURE(fooWeak.GetRefCount() == 1);
 
-		jpt::SharedPtr<Foo> fooShared2 = fooWeak;
-		JPT_ENSURE(!fooWeak.IsExpired());
-		JPT_ENSURE(fooWeak.GetRefCount() == 2);
-		JPT_ENSURE(fooShared2.GetRefCount() == 2);
+        jpt::SharedPtr<Foo> fooShared2 = fooWeak;
+        JPT_ENSURE(!fooWeak.IsExpired());
+        JPT_ENSURE(fooWeak.GetRefCount() == 2);
+        JPT_ENSURE(fooShared2.GetRefCount() == 2);
 
-		JPT_ENSURE(fooShared1->m_left == 42);
-		JPT_ENSURE(fooShared1->m_right == 'C');
-		JPT_ENSURE(fooShared2->m_left == 42);
-		JPT_ENSURE(fooShared2->m_right == 'C');
-	}
+        JPT_ENSURE(fooShared1->m_left == 42);
+        JPT_ENSURE(fooShared1->m_right == 'C');
+        JPT_ENSURE(fooShared2->m_left == 42);
+        JPT_ENSURE(fooShared2->m_right == 'C');
+    }
 
-	JPT_ENSURE(fooWeak.IsExpired());
-	JPT_ENSURE(fooWeak.GetRefCount() == 0);
+    JPT_ENSURE(fooWeak.IsExpired());
+    JPT_ENSURE(fooWeak.GetRefCount() == 0);
 
-	return true;
+    return true;
 }
 
 jpt::WeakPtr<jpt::String> weakStringPtr1;
@@ -96,64 +96,64 @@ jpt::WeakPtr<jpt::String> weakStringPtr2;
 jpt::WeakPtr<jpt::String> weakStringPtr3;
 bool UnitTests_WeakPtr_Referencing()
 {
-	jpt::SharedPtr<jpt::String> strongStringPtr1 = jpt::MakeStrong<jpt::String>("Jupiter Engine");
-	JPT_ENSURE(*strongStringPtr1 == "Jupiter Engine");
+    jpt::SharedPtr<jpt::String> strongStringPtr1 = jpt::MakeStrong<jpt::String>("Jupiter Engine");
+    JPT_ENSURE(*strongStringPtr1 == "Jupiter Engine");
 
-	weakStringPtr1 = strongStringPtr1;
-	weakStringPtr2 = strongStringPtr1;
-	weakStringPtr3 = strongStringPtr1;
+    weakStringPtr1 = strongStringPtr1;
+    weakStringPtr2 = strongStringPtr1;
+    weakStringPtr3 = strongStringPtr1;
 
-	JPT_ENSURE(*weakStringPtr1 == "Jupiter Engine");
-	JPT_ENSURE(*weakStringPtr2 == "Jupiter Engine");
-	JPT_ENSURE(*weakStringPtr3 == "Jupiter Engine");
-	JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
-	JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
-	JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
+    JPT_ENSURE(*weakStringPtr1 == "Jupiter Engine");
+    JPT_ENSURE(*weakStringPtr2 == "Jupiter Engine");
+    JPT_ENSURE(*weakStringPtr3 == "Jupiter Engine");
+    JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
+    JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
+    JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
 
-	{
-		jpt::SharedPtr<jpt::String> strongStringPtr2 = jpt::MakeStrong<jpt::String>("Zixuan Shi");
-		JPT_ENSURE(*strongStringPtr2 == "Zixuan Shi");
+    {
+        jpt::SharedPtr<jpt::String> strongStringPtr2 = jpt::MakeStrong<jpt::String>("Zixuan Shi");
+        JPT_ENSURE(*strongStringPtr2 == "Zixuan Shi");
 
-		weakStringPtr1 = strongStringPtr2;
-		weakStringPtr2 = strongStringPtr2;
-		weakStringPtr3 = strongStringPtr2;
+        weakStringPtr1 = strongStringPtr2;
+        weakStringPtr2 = strongStringPtr2;
+        weakStringPtr3 = strongStringPtr2;
 
-		JPT_ENSURE(*weakStringPtr1 == "Zixuan Shi");
-		JPT_ENSURE(*weakStringPtr2 == "Zixuan Shi");
-		JPT_ENSURE(*weakStringPtr3 == "Zixuan Shi");
-		JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
-		JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
-		JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
-	}
+        JPT_ENSURE(*weakStringPtr1 == "Zixuan Shi");
+        JPT_ENSURE(*weakStringPtr2 == "Zixuan Shi");
+        JPT_ENSURE(*weakStringPtr3 == "Zixuan Shi");
+        JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
+        JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
+        JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
+    }
 
-	JPT_ENSURE(weakStringPtr1.IsExpired());
-	JPT_ENSURE(weakStringPtr2.IsExpired());
-	JPT_ENSURE(weakStringPtr3.IsExpired());
+    JPT_ENSURE(weakStringPtr1.IsExpired());
+    JPT_ENSURE(weakStringPtr2.IsExpired());
+    JPT_ENSURE(weakStringPtr3.IsExpired());
 
-	weakStringPtr1 = strongStringPtr1;
-	weakStringPtr2 = strongStringPtr1;
-	weakStringPtr3 = strongStringPtr1;
-	JPT_ENSURE(*weakStringPtr1 == "Jupiter Engine");
-	JPT_ENSURE(*weakStringPtr2 == "Jupiter Engine");
-	JPT_ENSURE(*weakStringPtr3 == "Jupiter Engine");
-	JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
-	JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
-	JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
+    weakStringPtr1 = strongStringPtr1;
+    weakStringPtr2 = strongStringPtr1;
+    weakStringPtr3 = strongStringPtr1;
+    JPT_ENSURE(*weakStringPtr1 == "Jupiter Engine");
+    JPT_ENSURE(*weakStringPtr2 == "Jupiter Engine");
+    JPT_ENSURE(*weakStringPtr3 == "Jupiter Engine");
+    JPT_ENSURE(weakStringPtr1.GetRefCount() == 1);
+    JPT_ENSURE(weakStringPtr2.GetRefCount() == 1);
+    JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_WeakPtr()
 {
-	JPT_ENSURE(UnitTests_WeakPtr_Class());
+    JPT_ENSURE(UnitTests_WeakPtr_Class());
 
-	JPT_ENSURE(weakStringPtr1.IsExpired());
-	JPT_ENSURE(weakStringPtr2.IsExpired());
-	JPT_ENSURE(weakStringPtr3.IsExpired());
-	JPT_ENSURE(UnitTests_WeakPtr_Referencing());
-	JPT_ENSURE(weakStringPtr1.IsExpired());
-	JPT_ENSURE(weakStringPtr2.IsExpired());
-	JPT_ENSURE(weakStringPtr3.IsExpired());
+    JPT_ENSURE(weakStringPtr1.IsExpired());
+    JPT_ENSURE(weakStringPtr2.IsExpired());
+    JPT_ENSURE(weakStringPtr3.IsExpired());
+    JPT_ENSURE(UnitTests_WeakPtr_Referencing());
+    JPT_ENSURE(weakStringPtr1.IsExpired());
+    JPT_ENSURE(weakStringPtr2.IsExpired());
+    JPT_ENSURE(weakStringPtr3.IsExpired());
 
-	return true;
+    return true;
 }

@@ -20,44 +20,44 @@ import jpt.Utilities;
 
 namespace jpt
 {
-	/** Singleton thread-safe logger for different platforms */ 
-	class Logger
-	{
-	public:
-		enum class Type : uint8
-		{
-			Log,     // From Client project
-			Info,    // From Engine
-			Warn,
-			Error
-		};
+    /** Singleton thread-safe logger for different platforms */ 
+    class Logger
+    {
+    public:
+        enum class Type : uint8
+        {
+            Log,     // From Client project
+            Info,    // From Engine
+            Warn,
+            Error
+        };
 
-	public:
-		void Log(Type type, int32 line, const char* file, const char* format, ...);
-		void Log(Type type, int32 line, const char* file, const wchar_t* format, ...);
+    public:
+        void Log(Type type, int32 line, const char* file, const char* format, ...);
+        void Log(Type type, int32 line, const char* file, const wchar_t* format, ...);
 
-		template<typename T>
-		void Log(Type, int32, const char*, const T&, ...)
-		{
-			JPT_ASSERT(false, "Unsupported type");
-		}
+        template<typename T>
+        void Log(Type, int32, const char*, const T&, ...)
+        {
+            JPT_ASSERT(false, "Unsupported type");
+        }
 
-		static Logger& GetInstance();
+        static Logger& GetInstance();
 
-	private:
-		Logger() = default;
+    private:
+        Logger() = default;
 
-		String GetInfoStamp(Type type, int32 line, const char* file);
-		String GetTimeStamp();
+        String GetInfoStamp(Type type, int32 line, const char* file);
+        String GetTimeStamp();
 
-		/** Combines stamp, message, line break, then pass to output console */
-		void ProcessMessage(Type type, int32 line, const char* file, const char* pMessage);
-		void ProcessMessage(Type type, int32 line, const char* file, const wchar_t* pMessage);
+        /** Combines stamp, message, line break, then pass to output console */
+        void ProcessMessage(Type type, int32 line, const char* file, const char* pMessage);
+        void ProcessMessage(Type type, int32 line, const char* file, const wchar_t* pMessage);
 
-		/** Impl of printing message to output console */
-		void SendToOutputWindow(const char* string);
-		void SendToOutputWindow(const wchar_t* wideString);
-	};
+        /** Impl of printing message to output console */
+        void SendToOutputWindow(const char* string);
+        void SendToOutputWindow(const wchar_t* wideString);
+    };
 }
 
 #define JPT_LOG(message, ...)                                                                                                                 \
@@ -113,10 +113,10 @@ namespace jpt
 }
 
 /** Log only once,
-	if the message is the same as the last time, it will not log again
-	if the message is different, it will log again
-	@param type    The type of log (Log, Info, Warning, Error)
-	@param message Expects single object or formatted string */
+    if the message is the same as the last time, it will not log again
+    if the message is different, it will log again
+    @param type    The type of log (Log, Info, Warning, Error)
+    @param message Expects single object or formatted string */
 #define JPT_LOG_ONCE_IMPL(type, message)        \
 {                                               \
     static auto s_copy = message;               \
@@ -136,19 +136,19 @@ namespace jpt
 #define JPT_ERROR_ONCE(message)   JPT_LOG_ONCE_IMPL(jpt::Logger::Type::Error, message)
 
 #else 
-	template<typename... TArgs>
-	void DummyLogFunction(TArgs&&...)
-	{
-		static_cast<void>(0);
-	}
+    template<typename... TArgs>
+    void DummyLogFunction(TArgs&&...)
+    {
+        static_cast<void>(0);
+    }
 
-	#define JPT_LOG(message, ...)         DummyLogFunction(message, __VA_ARGS__);
-	#define JPT_INFO(message, ...)   	  DummyLogFunction(message, __VA_ARGS__);
-	#define JPT_WARNING(message, ...)	  DummyLogFunction(message, __VA_ARGS__);
-	#define JPT_ERROR(message, ...)  	  DummyLogFunction(message, __VA_ARGS__);
+    #define JPT_LOG(message, ...)         DummyLogFunction(message, __VA_ARGS__);
+    #define JPT_INFO(message, ...)         DummyLogFunction(message, __VA_ARGS__);
+    #define JPT_WARNING(message, ...)      DummyLogFunction(message, __VA_ARGS__);
+    #define JPT_ERROR(message, ...)        DummyLogFunction(message, __VA_ARGS__);
 
-	#define JPT_LOG_ONCE(message)         DummyLogFunction(message);
-	#define JPT_INFO_ONCE(message)        DummyLogFunction(message);
-	#define JPT_WARNING_ONCE(message)     DummyLogFunction(message);
-	#define JPT_ERROR_ONCE(message)       DummyLogFunction(message);
+    #define JPT_LOG_ONCE(message)         DummyLogFunction(message);
+    #define JPT_INFO_ONCE(message)        DummyLogFunction(message);
+    #define JPT_WARNING_ONCE(message)     DummyLogFunction(message);
+    #define JPT_ERROR_ONCE(message)       DummyLogFunction(message);
 #endif

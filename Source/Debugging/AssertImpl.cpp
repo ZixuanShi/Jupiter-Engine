@@ -6,8 +6,8 @@ module;
 #include "Debugging/Logger.h"
 
 #if IS_PLATFORM_WIN64
-	#define WIN32_LEAN_AND_MEAN
-	#include <windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
 #endif
 
 module jpt.AssertImpl;
@@ -17,28 +17,28 @@ import jpt.String;
 namespace jpt
 {
 #if ASSERT_ENABLED
-	void locAssertCallback(int line, const char* file, const char* expression, const char* message)
-	{
-		String messageStr(expression);
-		if (message)
-		{
-			messageStr += " - ";
-			messageStr += message;
-		}
+    void locAssertCallback(int line, const char* file, const char* expression, const char* message)
+    {
+        String messageStr(expression);
+        if (message)
+        {
+            messageStr += " - ";
+            messageStr += message;
+        }
 
-		Logger::GetInstance().Log(Logger::Type::Error, line, file, messageStr.ConstBuffer());
+        Logger::GetInstance().Log(Logger::Type::Error, line, file, messageStr.ConstBuffer());
 
 #if IS_PLATFORM_WIN64
-		MessageBoxA(nullptr, messageStr.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
+        MessageBoxA(nullptr, messageStr.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
 #endif
-	}
+    }
 #endif
 
-	bool AssertImpl::PreInit()
-	{
+    bool AssertImpl::PreInit()
+    {
 #if ASSERT_ENABLED
-		g_AssertCallback = locAssertCallback;
+        g_AssertCallback = locAssertCallback;
 #endif
-		return true;
-	}
+        return true;
+    }
 }

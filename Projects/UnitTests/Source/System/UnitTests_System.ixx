@@ -25,18 +25,18 @@ import UnitTests_StopWatch;
 
 export bool RunUnitTests_System()
 {
-	/** Unit Test Functions */
+    /** Unit Test Functions */
 
-	// FileIO
-	JPT_ENSURE(RunUnitTests_FileIO());
+    // FileIO
+    JPT_ENSURE(RunUnitTests_FileIO());
 
-	// FilePath
-	JPT_ENSURE(RunUnitTests_FilePath());
-	JPT_ENSURE(RunUnitTests_FilePathUtils());
+    // FilePath
+    JPT_ENSURE(RunUnitTests_FilePath());
+    JPT_ENSURE(RunUnitTests_FilePathUtils());
 
-	// Time
-	JPT_ENSURE(RunUnitTests_Clock());
-	JPT_ENSURE(RunUnitTests_StopWatch());
+    // Time
+    JPT_ENSURE(RunUnitTests_Clock());
+    JPT_ENSURE(RunUnitTests_StopWatch());
 
-	return true;
+    return true;
 }

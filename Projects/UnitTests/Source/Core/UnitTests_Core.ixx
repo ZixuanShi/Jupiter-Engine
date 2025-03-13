@@ -89,84 +89,84 @@ import UnitTests_Threading;
 
 export bool RunUnitTests_Core()
 {
-	/** Unit Test Functions */
-	
-	// Algorithms
-	JPT_ENSURE(RunUnitTests_BinarySearch());
-	JPT_ENSURE(RunUnitTests_Comparators());
-	JPT_ENSURE(RunUnitTests_Sorting());
-	JPT_ENSURE(RunUnitTests_Searching());
+    /** Unit Test Functions */
+    
+    // Algorithms
+    JPT_ENSURE(RunUnitTests_BinarySearch());
+    JPT_ENSURE(RunUnitTests_Comparators());
+    JPT_ENSURE(RunUnitTests_Sorting());
+    JPT_ENSURE(RunUnitTests_Searching());
 
-	// Containers
-	JPT_ENSURE(RunUnitTests_Deque());
-	JPT_ENSURE(RunUnitTests_KDTree3());
-	JPT_ENSURE(RunUnitTests_Queue());
-	JPT_ENSURE(RunUnitTests_Stack());
-	JPT_ENSURE(RunUnitTests_SortedMap());
-	JPT_ENSURE(RunUnitTests_SortedSet());
-	JPT_ENSURE(RunUnitTests_StaticArray());
-	JPT_ENSURE(RunUnitTests_DynamicArray());
-	JPT_ENSURE(RunUnitTests_LinkedList());
-	JPT_ENSURE(RunUnitTests_HashMap());
-	JPT_ENSURE(RunUnitTests_HashSet());
-	JPT_ENSURE(RunUnitTests_Heap());
-	JPT_ENSURE(RunUnitTests_Graph());
+    // Containers
+    JPT_ENSURE(RunUnitTests_Deque());
+    JPT_ENSURE(RunUnitTests_KDTree3());
+    JPT_ENSURE(RunUnitTests_Queue());
+    JPT_ENSURE(RunUnitTests_Stack());
+    JPT_ENSURE(RunUnitTests_SortedMap());
+    JPT_ENSURE(RunUnitTests_SortedSet());
+    JPT_ENSURE(RunUnitTests_StaticArray());
+    JPT_ENSURE(RunUnitTests_DynamicArray());
+    JPT_ENSURE(RunUnitTests_LinkedList());
+    JPT_ENSURE(RunUnitTests_HashMap());
+    JPT_ENSURE(RunUnitTests_HashSet());
+    JPT_ENSURE(RunUnitTests_Heap());
+    JPT_ENSURE(RunUnitTests_Graph());
 
-	// Functional
-	JPT_ENSURE(RunUnitTests_Slot());
-	JPT_ENSURE(RunUnitTests_Function());
+    // Functional
+    JPT_ENSURE(RunUnitTests_Slot());
+    JPT_ENSURE(RunUnitTests_Function());
 
-	// Minimal
-	JPT_ENSURE(RunUnitTests_Concepts());
-	JPT_ENSURE(RunUnitTests_Utilities());
-	JPT_ENSURE(RunUnitTests_TypeTraits());
-	JPT_ENSURE(RunUnitTests_Macros());
+    // Minimal
+    JPT_ENSURE(RunUnitTests_Concepts());
+    JPT_ENSURE(RunUnitTests_Utilities());
+    JPT_ENSURE(RunUnitTests_TypeTraits());
+    JPT_ENSURE(RunUnitTests_Macros());
 
-	// Math
-	JPT_ENSURE(RunUnitTests_Vector4());
-	JPT_ENSURE(RunUnitTests_Color());
-	JPT_ENSURE(RunUnitTests_Box3());
-	JPT_ENSURE(RunUnitTests_Box2());
-	JPT_ENSURE(RunUnitTests_Ray2());
-	JPT_ENSURE(RunUnitTests_LineSegment2());
-	JPT_ENSURE(RunUnitTests_Line2());
-	JPT_ENSURE(RunUnitTests_Line3());
-	JPT_ENSURE(RunUnitTests_Triangle3());
-	JPT_ENSURE(RunUnitTests_Triangle2());
-	JPT_ENSURE(RunUnitTests_Hash());
-	JPT_ENSURE(RunUnitTests_Vector3());
-	JPT_ENSURE(RunUnitTests_Vector2());
-	JPT_ENSURE(RunUnitTests_Math());
-	JPT_ENSURE(RunUnitTests_Rand());
-	JPT_ENSURE(RunUnitTests_Matrix33());
-	JPT_ENSURE(RunUnitTests_Matrix44());
-	JPT_ENSURE(RunUnitTests_Quaternion());
+    // Math
+    JPT_ENSURE(RunUnitTests_Vector4());
+    JPT_ENSURE(RunUnitTests_Color());
+    JPT_ENSURE(RunUnitTests_Box3());
+    JPT_ENSURE(RunUnitTests_Box2());
+    JPT_ENSURE(RunUnitTests_Ray2());
+    JPT_ENSURE(RunUnitTests_LineSegment2());
+    JPT_ENSURE(RunUnitTests_Line2());
+    JPT_ENSURE(RunUnitTests_Line3());
+    JPT_ENSURE(RunUnitTests_Triangle3());
+    JPT_ENSURE(RunUnitTests_Triangle2());
+    JPT_ENSURE(RunUnitTests_Hash());
+    JPT_ENSURE(RunUnitTests_Vector3());
+    JPT_ENSURE(RunUnitTests_Vector2());
+    JPT_ENSURE(RunUnitTests_Math());
+    JPT_ENSURE(RunUnitTests_Rand());
+    JPT_ENSURE(RunUnitTests_Matrix33());
+    JPT_ENSURE(RunUnitTests_Matrix44());
+    JPT_ENSURE(RunUnitTests_Quaternion());
 
-	// Memory Managing
-	JPT_ENSURE(RunUnitTests_Allocator());
-	JPT_ENSURE(RunUnitTests_SharedPtr());
-	JPT_ENSURE(RunUnitTests_UniquePtr());
-	JPT_ENSURE(RunUnitTests_WeakPtr());
+    // Memory Managing
+    JPT_ENSURE(RunUnitTests_Allocator());
+    JPT_ENSURE(RunUnitTests_SharedPtr());
+    JPT_ENSURE(RunUnitTests_UniquePtr());
+    JPT_ENSURE(RunUnitTests_WeakPtr());
 
-	// Strings
-	JPT_ENSURE(RunUnitTests_String());
-	JPT_ENSURE(RunUnitTests_StringUtils());
-	JPT_ENSURE(RunUnitTests_StringView());
+    // Strings
+    JPT_ENSURE(RunUnitTests_String());
+    JPT_ENSURE(RunUnitTests_StringUtils());
+    JPT_ENSURE(RunUnitTests_StringView());
 
-	// Types
-	JPT_ENSURE(RunUnitTests_Any());
-	JPT_ENSURE(RunUnitTests_Byte());
-	JPT_ENSURE(RunUnitTests_Variant());
-	JPT_ENSURE(RunUnitTests_Optional());
-	JPT_ENSURE(RunUnitTests_Enum());
-	JPT_ENSURE(RunUnitTests_Tuple());
-	JPT_ENSURE(RunUnitTests_Pair());
+    // Types
+    JPT_ENSURE(RunUnitTests_Any());
+    JPT_ENSURE(RunUnitTests_Byte());
+    JPT_ENSURE(RunUnitTests_Variant());
+    JPT_ENSURE(RunUnitTests_Optional());
+    JPT_ENSURE(RunUnitTests_Enum());
+    JPT_ENSURE(RunUnitTests_Tuple());
+    JPT_ENSURE(RunUnitTests_Pair());
 
-	// Threading
-	if (!jpt::CommandLine::GetInstance().Has("no_threading"))
-	{
-		JPT_ENSURE(RunUnitTests_Threading());
-	}
+    // Threading
+    if (!jpt::CommandLine::GetInstance().Has("no_threading"))
+    {
+        JPT_ENSURE(RunUnitTests_Threading());
+    }
 
-	return true;
+    return true;
 }

@@ -263,9 +263,9 @@ bool UnitTests_HashMap_Grow()
     jpt::HashMap<int32, int32> hashMap;
 
     for (int32 i = 0; i < 1000; ++i)
-	{
-		hashMap.Add(i, i * 2);
-	}
+    {
+        hashMap.Add(i, i * 2);
+    }
     JPT_ENSURE(hashMap.Count() == 1000);
 
     for (int32 i = 0; i < 1000; ++i)
@@ -298,16 +298,16 @@ bool UnitTests_HashMap_Iterate_Erase()
     JPT_ENSURE(hashMap.Find('e')->second == 4);
 
     for (auto itr = hashMap.begin(); itr != hashMap.end();)
-	{
+    {
         if (itr->first == 'e' || itr->first == 'b')
         {
             itr = hashMap.Erase(itr);
-		}
-		else
-		{
-			++itr;
         }
-	}
+        else
+        {
+            ++itr;
+        }
+    }
 
     JPT_ENSURE(hashMap.Count() == 3);
     JPT_ENSURE(hashMap.Find('a')->second == 0);
@@ -326,8 +326,8 @@ bool UnitTests_HashMap_Iterate_Erase_String()
         { "Engine", "Jupiter" },
         { "Client", "UnitTests" },
         { "Platform", "Windows" },
-		{ "Language", "C++" },
-		{ "Version", "1.0" }
+        { "Language", "C++" },
+        { "Version", "1.0" }
     };
 
     JPT_ENSURE(hashMap.Count() == 5);
@@ -339,16 +339,16 @@ bool UnitTests_HashMap_Iterate_Erase_String()
     JPT_ENSURE(hashMap.Find("Version")->second == "1.0");
 
     for (auto itr = hashMap.begin(); itr != hashMap.end();)
-	{
-		if (itr->first == "Client" || itr->first == "Language")
-		{
-			itr = hashMap.Erase(itr);
-		}
-		else
-		{
-			++itr;
-		}
-	}
+    {
+        if (itr->first == "Client" || itr->first == "Language")
+        {
+            itr = hashMap.Erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
 
     JPT_ENSURE(hashMap.Count() == 3);
 
@@ -380,16 +380,16 @@ bool UnitTests_HashMap_Iterate_Erase_Container()
     JPT_ENSURE(hashMap.Find("Tools")->second         == (jpt::DynamicArray<jpt::String>{ "Premake", "Doxygen" }));
 
     for (auto itr = hashMap.begin(); itr != hashMap.end();)
-	{
-		if (itr->first == "Languages" || itr->first == "Platforms")
-		{
-			itr = hashMap.Erase(itr);
-		}
-		else
-		{
-			++itr;
-		}
-	}
+    {
+        if (itr->first == "Languages" || itr->first == "Platforms")
+        {
+            itr = hashMap.Erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
 
     JPT_ENSURE(hashMap.Count() == 2);
 
@@ -415,12 +415,12 @@ JPT_ENUM_HASH(EWeapon);
 bool UnitTests_HashMap_Enum()
 {
     jpt::HashMap<EWeapon, int32> hashMap
-	{
-		{ EWeapon::Sword,  5  },
-		{ EWeapon::Hammer, 1  },
-		{ EWeapon::Axe,    3  },
-		{ EWeapon::Spear,  2  }
-	};
+    {
+        { EWeapon::Sword,  5  },
+        { EWeapon::Hammer, 1  },
+        { EWeapon::Axe,    3  },
+        { EWeapon::Spear,  2  }
+    };
 
     JPT_ENSURE(hashMap.Count() == 4);
     JPT_ENSURE(hashMap[EWeapon::Sword]  == 5);
@@ -540,9 +540,9 @@ bool UnitTests_HashMap_Any()
     JPT_ENSURE(hashMap[EWeapon::Hammer].Is<jpt::DynamicArray<int32>>());
     JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>().Count() == 5);
     for (int32 i = 0; i < 5; ++i)
-	{
-		JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[i] == i);
-	}
+    {
+        JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[i] == i);
+    }
 
     hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[3] = 10;
     JPT_ENSURE(hashMap[EWeapon::Hammer].As<jpt::DynamicArray<int32>>()[3] == 10);
@@ -554,17 +554,17 @@ bool UnitTests_HashMap_CStrKey()
 {
     jpt::HashMap<const char*, int32> hashMap;
 
-	hashMap.Add("One", 1);
-	hashMap.Add("Two", 2);
-	hashMap.Add("Three", 3);
+    hashMap.Add("One", 1);
+    hashMap.Add("Two", 2);
+    hashMap.Add("Three", 3);
 
-	JPT_ENSURE(hashMap.Count() == 3);
+    JPT_ENSURE(hashMap.Count() == 3);
 
-	JPT_ENSURE(hashMap["One"] == 1);
-	JPT_ENSURE(hashMap["Two"] == 2);
-	JPT_ENSURE(hashMap["Three"] == 3);
+    JPT_ENSURE(hashMap["One"] == 1);
+    JPT_ENSURE(hashMap["Two"] == 2);
+    JPT_ENSURE(hashMap["Three"] == 3);
 
-	return true;
+    return true;
 }
 
 bool UnitTests_HashMap_Emplace()
@@ -572,44 +572,44 @@ bool UnitTests_HashMap_Emplace()
     struct Foo
     {
         jpt::String name;
-		float64 height;
-		int32 age;
-		jpt::DynamicArray<jpt::String> neighbors;
+        float64 height;
+        int32 age;
+        jpt::DynamicArray<jpt::String> neighbors;
         jpt::String info;
 
-		Foo() = default;
+        Foo() = default;
         Foo(const jpt::String& _name, float64 _height, int32 _age, const jpt::DynamicArray<jpt::String>& _neighbors)
-			: name(_name)
+            : name(_name)
             , height(_height)
             , age(_age)
             , neighbors(_neighbors)
         {
             const jpt::String heightStr = jpt::ToString(height);
-			const jpt::String ageStr = jpt::ToString(age);
-			const jpt::String neighborsStr = jpt::ToString(neighbors);
+            const jpt::String ageStr = jpt::ToString(age);
+            const jpt::String neighborsStr = jpt::ToString(neighbors);
 
             info.Append({ name, heightStr , ageStr, neighborsStr }, "-|");
         }
 
-		jpt::String ToString() const
-		{
-			return info;
-		}
+        jpt::String ToString() const
+        {
+            return info;
+        }
     };
 
-	jpt::HashMap<jpt::String, Foo> hashMap;
+    jpt::HashMap<jpt::String, Foo> hashMap;
 
-	hashMap.Emplace("Alice", "Alice", 5.5f, 25, jpt::DynamicArray<jpt::String>{});
+    hashMap.Emplace("Alice", "Alice", 5.5f, 25, jpt::DynamicArray<jpt::String>{});
     hashMap.Emplace("Bob", "Bob", 6.0f, 30, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name });
-	hashMap.Emplace("Charlie", "Charlie", 5.8f, 28, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name });
-	hashMap.Emplace("David", "David", 5.9f, 27, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name, hashMap["Charlie"].name });
+    hashMap.Emplace("Charlie", "Charlie", 5.8f, 28, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name });
+    hashMap.Emplace("David", "David", 5.9f, 27, jpt::DynamicArray<jpt::String>{ hashMap["Alice"].name, hashMap["Bob"].name, hashMap["Charlie"].name });
 
-	JPT_ENSURE(hashMap.Count() == 4);
+    JPT_ENSURE(hashMap.Count() == 4);
 
-	JPT_ENSURE(hashMap["Alice"].ToString() == "Alice-|5.500-|25-|[]");
-	JPT_ENSURE(hashMap["Bob"].ToString() == "Bob-|6.000-|30-|[Alice]");
-	JPT_ENSURE(hashMap["Charlie"].ToString() == "Charlie-|5.800-|28-|[Alice, Bob]");
-	JPT_ENSURE(hashMap["David"].ToString() == "David-|5.900-|27-|[Alice, Bob, Charlie]");
+    JPT_ENSURE(hashMap["Alice"].ToString() == "Alice-|5.500-|25-|[]");
+    JPT_ENSURE(hashMap["Bob"].ToString() == "Bob-|6.000-|30-|[Alice]");
+    JPT_ENSURE(hashMap["Charlie"].ToString() == "Charlie-|5.800-|28-|[Alice, Bob]");
+    JPT_ENSURE(hashMap["David"].ToString() == "David-|5.900-|27-|[Alice, Bob, Charlie]");
 
     return true;
 }
@@ -638,7 +638,7 @@ export bool RunUnitTests_HashMap()
     JPT_ENSURE(UnitTests_HashMap_Any());
     JPT_ENSURE(UnitTests_HashMap_CStrKey());
 
-	JPT_ENSURE(UnitTests_HashMap_Emplace());
+    JPT_ENSURE(UnitTests_HashMap_Emplace());
 
     return true;
 }

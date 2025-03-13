@@ -11,13 +11,13 @@ import Entity.Bar;
 
 export class Application_Blank final : public jpt::Application
 {
-	using Super = jpt::Application;
+    using Super = jpt::Application;
 
 private:
-	Entity_Foo* m_pFoo;
+    Entity_Foo* m_pFoo;
 
 public:
-	virtual bool PreInit() override;
-	virtual void Update(TimePrecision deltaSeconds) override;
-	virtual void Shutdown() override;
+    virtual bool PreInit() override;
+    virtual void Update(TimePrecision deltaSeconds) override;
+    virtual void Shutdown() override;
 };

@@ -4,9 +4,9 @@ export module jpt.AssertImpl;
 
 export namespace jpt
 {
-	class AssertImpl
-	{
-	public:
-		bool PreInit();
-	};
+    class AssertImpl
+    {
+    public:
+        bool PreInit();
+    };
 }

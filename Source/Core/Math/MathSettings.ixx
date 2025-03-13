@@ -4,46 +4,46 @@ export module jpt.Math.Settings;
 
 export namespace jpt
 {
-	enum class RotationOrder
-	{
-		XYZ,
-		XZY,
-		YXZ,	// Default
-		YZX,
-		ZXY,
-		ZYX,
-	};
+    enum class RotationOrder
+    {
+        XYZ,
+        XZY,
+        YXZ,    // Default
+        YZX,
+        ZXY,
+        ZYX,
+    };
 
-	enum class AngleUnit
-	{
-		Degrees,
-		Radians,
-	};
+    enum class AngleUnit
+    {
+        Degrees,
+        Radians,
+    };
 
-	enum class LengthUnit
-	{
-		Meters,
-		Centimeters,
-		Millimeters,
-		Inches,
-		Feet,
-		Yards,
-		Miles,
-		Kilometers,
-	};
+    enum class LengthUnit
+    {
+        Meters,
+        Centimeters,
+        Millimeters,
+        Inches,
+        Feet,
+        Yards,
+        Miles,
+        Kilometers,
+    };
 
-	enum class MassUnit
-	{
-		Kilograms,
-		Grams,
-		Milligrams,
-		Pounds,
-	};
+    enum class MassUnit
+    {
+        Kilograms,
+        Grams,
+        Milligrams,
+        Pounds,
+    };
 
-	class MathSettings
-	{
-	public:
-		inline static RotationOrder RotationOrder = RotationOrder::YXZ;
-		inline static AngleUnit     AngleUnit     = AngleUnit::Degrees;
-	};
+    class MathSettings
+    {
+    public:
+        inline static RotationOrder RotationOrder = RotationOrder::YXZ;
+        inline static AngleUnit     AngleUnit     = AngleUnit::Degrees;
+    };
 }

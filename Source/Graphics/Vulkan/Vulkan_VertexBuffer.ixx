@@ -17,63 +17,63 @@ import jpt.Utilities;
 
 export namespace jpt::Vulkan
 {
-	class VertexBuffer
-	{
-	private:
-		Buffer m_buffer;
+    class VertexBuffer
+    {
+    private:
+        Buffer m_buffer;
 
-	public:
-		bool Init(const DynamicArray<Vertex>& vertices);
+    public:
+        bool Init(const DynamicArray<Vertex>& vertices);
 
-		void Shutdown();
+        void Shutdown();
 
-	public:
-		VkBuffer GetBuffer() { return m_buffer.GetHandle(); }
-	};
+    public:
+        VkBuffer GetBuffer() { return m_buffer.GetHandle(); }
+    };
 
-	bool VertexBuffer::Init(const DynamicArray<Vertex>& vertices)
-	{
-		// Staging buffer
-		VkBufferCreateInfo stagingBufferInfo{};
-		stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stagingBufferInfo.size = vertices.Size();
-		stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-		stagingBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bool VertexBuffer::Init(const DynamicArray<Vertex>& vertices)
+    {
+        // Staging buffer
+        VkBufferCreateInfo stagingBufferInfo{};
+        stagingBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        stagingBufferInfo.size = vertices.Size();
+        stagingBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        stagingBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		VkMemoryPropertyFlags stagingMemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+        VkMemoryPropertyFlags stagingMemoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-		Buffer stagingBuffer;
-		if (const VkResult result = stagingBuffer.Create(stagingBufferInfo, stagingMemoryProperties); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create staging buffer: %d", result);
-			return false;
-		}
+        Buffer stagingBuffer;
+        if (const VkResult result = stagingBuffer.Create(stagingBufferInfo, stagingMemoryProperties); result != VK_SUCCESS)
+        {
+            JPT_ERROR("Failed to create staging buffer: %d", result);
+            return false;
+        }
 
-		stagingBuffer.MapMemory(vertices.ConstBuffer(), vertices.Size());
+        stagingBuffer.MapMemory(vertices.ConstBuffer(), vertices.Size());
 
-		// Vertex buffer
-		VkBufferCreateInfo vertexBufferInfo{};
-		vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		vertexBufferInfo.size = vertices.Size();
-		vertexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-		vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        // Vertex buffer
+        VkBufferCreateInfo vertexBufferInfo{};
+        vertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        vertexBufferInfo.size = vertices.Size();
+        vertexBufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        vertexBufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+        VkMemoryPropertyFlags memoryProperties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-		if (const VkResult result = m_buffer.Create(vertexBufferInfo, memoryProperties); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create vertex buffer: %d", result);
-			return false;
-		}
+        if (const VkResult result = m_buffer.Create(vertexBufferInfo, memoryProperties); result != VK_SUCCESS)
+        {
+            JPT_ERROR("Failed to create vertex buffer: %d", result);
+            return false;
+        }
 
-		m_buffer.Copy(stagingBuffer.GetHandle(), vertices.Size());
-		stagingBuffer.Shutdown();
+        m_buffer.Copy(stagingBuffer.GetHandle(), vertices.Size());
+        stagingBuffer.Shutdown();
 
-		return true;
-	}
+        return true;
+    }
 
-	void VertexBuffer::Shutdown()
-	{
-		m_buffer.Shutdown();
-	}
+    void VertexBuffer::Shutdown()
+    {
+        m_buffer.Shutdown();
+    }
 }

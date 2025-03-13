@@ -16,9 +16,9 @@ bool UnitTests_Stack()
     jpt::Stack<int32> stack;
 
     for (int32 i = 0; i < 10; ++i)
-	{
-		stack.Push(i);
-	}
+    {
+        stack.Push(i);
+    }
 
     JPT_ENSURE(stack.Count() == 10);
 

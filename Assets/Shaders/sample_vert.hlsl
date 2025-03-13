@@ -20,7 +20,7 @@ struct VSInput
     float4 color : COLOR0;
     float3 position : POSITION0;
     float3 normal : NORMAL0;
-    float2 texCoord : TEXCOORD0;
+    float2 uv : TEXCOORD0;
 };
 
 struct VSOutput 
@@ -28,7 +28,7 @@ struct VSOutput
     float4 position : SV_POSITION;
     float4 fragColor : COLOR0;
     float3 normal : NORMAL0;
-    float2 texCoord : TEXCOORD0;
+    float2 uv : TEXCOORD0;
 };
 
 VSOutput main(VSInput input)
@@ -41,7 +41,7 @@ VSOutput main(VSInput input)
     
     output.fragColor = input.color;
     output.normal    = input.normal;
-    output.texCoord  = input.texCoord;
+    output.uv        = input.uv;
 
     return output;
 }

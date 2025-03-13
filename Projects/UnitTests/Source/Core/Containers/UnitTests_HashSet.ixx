@@ -83,10 +83,10 @@ bool UnitTests_HashSet_Copy()
     jpt::HashSet<int32> copy = hashSet;
 
     for (int32 i = 0; i < 6; ++i)
-	{
-		JPT_ENSURE(hashSet.Has(i));
-		JPT_ENSURE(copy.Has(i));
-	}
+    {
+        JPT_ENSURE(hashSet.Has(i));
+        JPT_ENSURE(copy.Has(i));
+    }
 
     copy.Erase(0);
     copy.Erase(1);
@@ -111,40 +111,40 @@ bool UnitTests_HashSet_Copy_String()
 {
     jpt::HashSet<jpt::String> hashSet{ "Hello", "World", "Jupiter" };
 
-	hashSet.Add("Engine");
-	hashSet.Add("Game");
+    hashSet.Add("Engine");
+    hashSet.Add("Game");
 
-	jpt::HashSet<jpt::String> copy = hashSet;
+    jpt::HashSet<jpt::String> copy = hashSet;
 
-	JPT_ENSURE(hashSet.Has("Hello"));
-	JPT_ENSURE(hashSet.Has("World"));
-	JPT_ENSURE(hashSet.Has("Jupiter"));
-	JPT_ENSURE(hashSet.Has("Engine"));
-	JPT_ENSURE(hashSet.Has("Game"));
+    JPT_ENSURE(hashSet.Has("Hello"));
+    JPT_ENSURE(hashSet.Has("World"));
+    JPT_ENSURE(hashSet.Has("Jupiter"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(hashSet.Has("Game"));
 
-	JPT_ENSURE(copy.Has("Hello"));
-	JPT_ENSURE(copy.Has("World"));
-	JPT_ENSURE(copy.Has("Jupiter"));
-	JPT_ENSURE(copy.Has("Engine"));
-	JPT_ENSURE(copy.Has("Game"));
+    JPT_ENSURE(copy.Has("Hello"));
+    JPT_ENSURE(copy.Has("World"));
+    JPT_ENSURE(copy.Has("Jupiter"));
+    JPT_ENSURE(copy.Has("Engine"));
+    JPT_ENSURE(copy.Has("Game"));
 
-	copy.Erase("Hello");
-	copy.Erase("World");
+    copy.Erase("Hello");
+    copy.Erase("World");
 
-	JPT_ENSURE(!copy.Has("Hello"));
-	JPT_ENSURE(!copy.Has("World"));
+    JPT_ENSURE(!copy.Has("Hello"));
+    JPT_ENSURE(!copy.Has("World"));
 
-	JPT_ENSURE(copy.Has("Jupiter"));
-	JPT_ENSURE(copy.Has("Engine"));
-	JPT_ENSURE(copy.Has("Game"));
+    JPT_ENSURE(copy.Has("Jupiter"));
+    JPT_ENSURE(copy.Has("Engine"));
+    JPT_ENSURE(copy.Has("Game"));
 
-	JPT_ENSURE(hashSet.Has("Hello"));
-	JPT_ENSURE(hashSet.Has("World"));
-	JPT_ENSURE(hashSet.Has("Jupiter"));
-	JPT_ENSURE(hashSet.Has("Engine"));
-	JPT_ENSURE(hashSet.Has("Game"));
+    JPT_ENSURE(hashSet.Has("Hello"));
+    JPT_ENSURE(hashSet.Has("World"));
+    JPT_ENSURE(hashSet.Has("Jupiter"));
+    JPT_ENSURE(hashSet.Has("Engine"));
+    JPT_ENSURE(hashSet.Has("Game"));
 
-	return true;
+    return true;
 }
 
 bool UnitTests_HashSet_CopyAssign()
@@ -157,7 +157,7 @@ bool UnitTests_HashSet_CopyAssign()
     for (int32 i = 0; i < 4; ++i)
     {
         JPT_ENSURE(hashSet.Has(i));
-		JPT_ENSURE(copy.Has(i));
+        JPT_ENSURE(copy.Has(i));
     }
 
     return true;
@@ -195,9 +195,9 @@ bool UnitTests_HashSet_Move()
     jpt::HashSet<int32> moved = jpt::Move(hashSet);
 
     for (int32 i = 0; i < 6; ++i)
-	{
-		JPT_ENSURE(moved.Has(i));
-	}
+    {
+        JPT_ENSURE(moved.Has(i));
+    }
 
     JPT_ENSURE(hashSet.IsEmpty());
 
@@ -206,9 +206,9 @@ bool UnitTests_HashSet_Move()
     JPT_ENSURE(!moved.Has(0));
 
     for (int32 i = 1; i < 6; ++i)
-	{
-		JPT_ENSURE(moved.Has(i));
-	}
+    {
+        JPT_ENSURE(moved.Has(i));
+    }
 
     return true;
 }
@@ -370,13 +370,13 @@ bool UnitTests_HashSet_Iterate_Erase_String()
 bool UnitTests_HashSet_CStr()
 {
     jpt::HashSet<const char*> hashSet
-	{
-		"Engine",
-		"Client",
-		"Platform",
-		"Language",
-		"Version",
-	};
+    {
+        "Engine",
+        "Client",
+        "Platform",
+        "Language",
+        "Version",
+    };
 
     JPT_ENSURE(hashSet.Count() == 5);
 
@@ -387,16 +387,16 @@ bool UnitTests_HashSet_CStr()
     JPT_ENSURE(hashSet.Has("Version"));
 
     for (auto itr = hashSet.begin(); itr != hashSet.end();)
-	{
-		if (jpt::String(*itr) == "Client" || jpt::String(*itr) == "Language")
-		{
-			itr = hashSet.Erase(itr);
-		}
-		else
-		{
-			++itr;
-		}
-	}
+    {
+        if (jpt::String(*itr) == "Client" || jpt::String(*itr) == "Language")
+        {
+            itr = hashSet.Erase(itr);
+        }
+        else
+        {
+            ++itr;
+        }
+    }
 
     JPT_ENSURE(hashSet.Count() == 3);
 

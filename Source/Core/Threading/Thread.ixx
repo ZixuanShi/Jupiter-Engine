@@ -18,9 +18,9 @@ import jpt.Utilities;
 
 export namespace jpt
 {
-	/** Base class for all threads
-		@example:
-		    class TestThread final : public jpt::Thread
+    /** Base class for all threads
+        @example:
+            class TestThread final : public jpt::Thread
             {
             protected:
                 void Init() override 

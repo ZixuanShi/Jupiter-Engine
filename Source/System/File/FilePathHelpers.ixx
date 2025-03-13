@@ -11,28 +11,28 @@ import jpt.TypeTraits;
 
 export namespace jpt::File
 {
-	/** Replaces directory slashes to platform-correct version */
-	template<typename TString>
-	constexpr void FixSeparators(TString& path)
-	{
-		using TChar = typename TString::TChar;
+    /** Replaces directory slashes to platform-correct version */
+    template<typename TString>
+    constexpr void FixSeparators(TString& path)
+    {
+        using TChar = typename TString::TChar;
 
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		path.Replace(JPT_GET_PROPER_STRING(TChar, / ), JPT_GET_PROPER_STRING(TChar, \\));
+        path.Replace(JPT_GET_PROPER_STRING(TChar, / ), JPT_GET_PROPER_STRING(TChar, \\));
 #else
-		path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
+        path.Replace(JPT_GET_PROPER_STRING(TChar, \\), JPT_GET_PROPER_STRING(TChar, / ));
 #endif
-	}
+    }
 
-	template<typename TString>
-	constexpr TString GetSeparator()
-	{
-		using TChar = typename TString::TChar;
+    template<typename TString>
+    constexpr TString GetSeparator()
+    {
+        using TChar = typename TString::TChar;
 
 #if IS_PLATFORM_WIN64 || IS_PLATFORM_XBOX
-		return JPT_GET_PROPER_STRING(TChar, \\);
+        return JPT_GET_PROPER_STRING(TChar, \\);
 #else
-		return JPT_GET_PROPER_STRING(TChar, / );
+        return JPT_GET_PROPER_STRING(TChar, / );
 #endif
-	}
+    }
 }

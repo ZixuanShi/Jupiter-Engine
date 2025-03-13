@@ -9,104 +9,104 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	template<Numeric T>
-	struct TBox3
-	{
-	public:
-		Vector3<T> min;
-		Vector3<T> max;
+    template<Numeric T>
+    struct TBox3
+    {
+    public:
+        Vector3<T> min;
+        Vector3<T> max;
 
-	public:
-		constexpr TBox3() noexcept = default;
-		constexpr TBox3(const Vector3<T>& min, const Vector3<T>& max) noexcept;
+    public:
+        constexpr TBox3() noexcept = default;
+        constexpr TBox3(const Vector3<T>& min, const Vector3<T>& max) noexcept;
 
-		constexpr Vector3<T> Center() const noexcept;
-		constexpr Vector3<T> Size() const noexcept;
-		constexpr Vector3<T> HalfSize() const noexcept;
-		constexpr T Volume() const noexcept;
+        constexpr Vector3<T> Center() const noexcept;
+        constexpr Vector3<T> Size() const noexcept;
+        constexpr Vector3<T> HalfSize() const noexcept;
+        constexpr T Volume() const noexcept;
 
-		constexpr bool Inside(const Vector3<T>& point) const noexcept;
-		constexpr bool Intersects(const TBox3<T>& other) const noexcept;
+        constexpr bool Inside(const Vector3<T>& point) const noexcept;
+        constexpr bool Intersects(const TBox3<T>& other) const noexcept;
 
-		constexpr bool operator==(const TBox3<T>& other) const noexcept;
-	};
+        constexpr bool operator==(const TBox3<T>& other) const noexcept;
+    };
 
-	template<Numeric T>
-	constexpr TBox3<T>::TBox3(const Vector3<T>& min, const Vector3<T>& max) noexcept
-		: min(min)
-		, max(max)
-	{
-	}
+    template<Numeric T>
+    constexpr TBox3<T>::TBox3(const Vector3<T>& min, const Vector3<T>& max) noexcept
+        : min(min)
+        , max(max)
+    {
+    }
 
-	template<Numeric T>
-	constexpr Vector3<T> TBox3<T>::Center() const noexcept
-	{
-		return (min + max) / static_cast<T>(2);
-	}
+    template<Numeric T>
+    constexpr Vector3<T> TBox3<T>::Center() const noexcept
+    {
+        return (min + max) / static_cast<T>(2);
+    }
 
-	template<Numeric T>
-	constexpr Vector3<T> TBox3<T>::Size() const noexcept
-	{
-		return max - min;
-	}
+    template<Numeric T>
+    constexpr Vector3<T> TBox3<T>::Size() const noexcept
+    {
+        return max - min;
+    }
 
-	template<Numeric T>
-	constexpr Vector3<T> TBox3<T>::HalfSize() const noexcept
-	{
-		return Size() / 2;
-	}
+    template<Numeric T>
+    constexpr Vector3<T> TBox3<T>::HalfSize() const noexcept
+    {
+        return Size() / 2;
+    }
 
-	template<Numeric T>
-	constexpr T TBox3<T>::Volume() const noexcept
-	{
-		const Vector3<T> size = Size();
-		return size.x * size.y * size.z;
-	}
+    template<Numeric T>
+    constexpr T TBox3<T>::Volume() const noexcept
+    {
+        const Vector3<T> size = Size();
+        return size.x * size.y * size.z;
+    }
 
-	template<Numeric T>
-	constexpr bool TBox3<T>::Inside(const Vector3<T>& point) const noexcept
-	{
-		return (point.x >= min.x && point.x <= max.x) &&
-			   (point.y >= min.y && point.y <= max.y) &&
-			   (point.z >= min.z && point.z <= max.z);
-	}
+    template<Numeric T>
+    constexpr bool TBox3<T>::Inside(const Vector3<T>& point) const noexcept
+    {
+        return (point.x >= min.x && point.x <= max.x) &&
+               (point.y >= min.y && point.y <= max.y) &&
+               (point.z >= min.z && point.z <= max.z);
+    }
 
-	template<Numeric T>
-	constexpr bool TBox3<T>::Intersects(const TBox3<T>& other) const noexcept
-	{
-		if (min.x > other.max.x)
-		{
-			return false;
-		}
-		if (max.x < other.min.x)
-		{
-			return false;
-		}
-		if (min.y > other.max.y)
-		{
-			return false;
-		}
-		if (max.y < other.min.y)
-		{
-			return false;
-		}
-		if (min.z > other.max.z)
-		{
-			return false;
-		}
-		if (max.z < other.min.z)
-		{
-			return false;
-		}
+    template<Numeric T>
+    constexpr bool TBox3<T>::Intersects(const TBox3<T>& other) const noexcept
+    {
+        if (min.x > other.max.x)
+        {
+            return false;
+        }
+        if (max.x < other.min.x)
+        {
+            return false;
+        }
+        if (min.y > other.max.y)
+        {
+            return false;
+        }
+        if (max.y < other.min.y)
+        {
+            return false;
+        }
+        if (min.z > other.max.z)
+        {
+            return false;
+        }
+        if (max.z < other.min.z)
+        {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	template<Numeric T>
-	constexpr bool TBox3<T>::operator==(const TBox3<T>& other) const noexcept
-	{
-		return min == other.min && max == other.max;
-	}
+    template<Numeric T>
+    constexpr bool TBox3<T>::operator==(const TBox3<T>& other) const noexcept
+    {
+        return min == other.min && max == other.max;
+    }
 }
 
 export using Box3  = jpt::TBox3<Precision>;

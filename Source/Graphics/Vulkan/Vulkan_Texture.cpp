@@ -23,41 +23,41 @@ import jpt.File.IO;
 
 namespace jpt::Vulkan
 {
-	bool Texture_Vulkan::Load(const File::Path& fullPath)
-	{
-		if (m_imageView != VK_NULL_HANDLE)
-		{
-			Unload();
-		}
+    bool Texture_Vulkan::Load(const File::Path& fullPath)
+    {
+        if (m_imageView != VK_NULL_HANDLE)
+        {
+            Unload();
+        }
 
-		JPT_ASSERT(File::Exists(fullPath));
+        JPT_ASSERT(File::Exists(fullPath));
 
-		if (!m_image.Load(fullPath))
-		{
-			return false;
-		}
+        if (!m_image.Load(fullPath))
+        {
+            return false;
+        }
 
-		if (!CreateImageView())
-		{
-			return false;
-		}
+        if (!CreateImageView())
+        {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	void Texture_Vulkan::Unload()
-	{
-		m_image.Shutdown();
+    void Texture_Vulkan::Unload()
+    {
+        m_image.Shutdown();
 
-		LogicalDevice::Get().WaitIdle();
-		vkDestroyImageView(LogicalDevice::GetVkDevice(), m_imageView, nullptr);
-		m_imageView   = VK_NULL_HANDLE;
-	}
+        LogicalDevice::Get().WaitIdle();
+        vkDestroyImageView(LogicalDevice::GetVkDevice(), m_imageView, nullptr);
+        m_imageView   = VK_NULL_HANDLE;
+    }
 
-	bool Texture_Vulkan::CreateImageView()
-	{
-		m_imageView = jpt::Vulkan::CreateImageView(m_image.GetHandle(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_image.GetMipLevels());
+    bool Texture_Vulkan::CreateImageView()
+    {
+        m_imageView = jpt::Vulkan::CreateImageView(m_image.GetHandle(), VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, m_image.GetMipLevels());
 
-		return m_imageView != VK_NULL_HANDLE;
-	}
+        return m_imageView != VK_NULL_HANDLE;
+    }
 }

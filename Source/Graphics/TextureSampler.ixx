@@ -7,13 +7,13 @@ import jpt.DynamicArray;
 
 export namespace jpt
 {
-	class TextureSampler
-	{
-	public:
-		virtual ~TextureSampler() = default;
+    class TextureSampler
+    {
+    public:
+        virtual ~TextureSampler() = default;
 
-	public:
-		virtual bool Init() { return true; }
-		virtual void Shutdown() {}
-	};
+    public:
+        virtual bool Init() { return true; }
+        virtual void Shutdown() {}
+    };
 }

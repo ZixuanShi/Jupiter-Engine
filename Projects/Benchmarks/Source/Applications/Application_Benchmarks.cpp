@@ -17,25 +17,25 @@ import Benchmarks_Core;
 
 bool Application_Benchmarks::PreInit()
 {
-	jpt::CommandLine::GetInstance().Set("no_window");
+    jpt::CommandLine::GetInstance().Set("no_window");
 
-	JPT_ENSURE(Super::PreInit());
+    JPT_ENSURE(Super::PreInit());
 
-	return true;
+    return true;
 }
 
 bool Application_Benchmarks::Init()
 {
-	JPT_ENSURE(Super::Init());
+    JPT_ENSURE(Super::Init());
 
-	jpt::BenchmarksReporter reporter;
-	
-	RunBenchmarks_Core(reporter);
-	
-	reporter.Finalize();
-	reporter.LogResults();
+    jpt::BenchmarksReporter reporter;
+    
+    RunBenchmarks_Core(reporter);
+    
+    reporter.Finalize();
+    reporter.LogResults();
 
-	return true;
+    return true;
 }
 
 JPT_SYNC_CLIENT(Benchmarks)

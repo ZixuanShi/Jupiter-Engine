@@ -6,15 +6,15 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	class Platform
-	{
-	public:
-		virtual ~Platform() = default;
+    class Platform
+    {
+    public:
+        virtual ~Platform() = default;
 
-	public:
-		virtual bool PreInit() { return true; }
-		virtual bool Init() { return true; }
-		virtual void Update([[maybe_unused]] TimePrecision deltaSeconds) {}
-		virtual void Shutdown() {}
-	};
+    public:
+        virtual bool PreInit() { return true; }
+        virtual bool Init() { return true; }
+        virtual void Update([[maybe_unused]] TimePrecision deltaSeconds) {}
+        virtual void Shutdown() {}
+    };
 }

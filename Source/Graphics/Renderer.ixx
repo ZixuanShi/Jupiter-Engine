@@ -18,33 +18,33 @@ import jpt.Event.Window.Close;
 
 export namespace jpt
 {
-	class Renderer
-	{
-	protected:
-		TextureSampler* m_pTextureSampler = nullptr;
+    class Renderer
+    {
+    protected:
+        TextureSampler* m_pTextureSampler = nullptr;
 
-		Camera m_camera;
+        Camera m_camera;
 
-	public:
-		virtual ~Renderer() = default;
+    public:
+        virtual ~Renderer() = default;
 
-		virtual bool PreInit();
-		virtual bool Init();
+        virtual bool PreInit();
+        virtual bool Init();
 
-		virtual void Update(TimePrecision deltaSeconds);
-		virtual void Render() { }
-		virtual void Shutdown() {}
+        virtual void Update(TimePrecision deltaSeconds);
+        virtual void Render() { }
+        virtual void Shutdown() {}
 
-		virtual void DrawFrame() { }
+        virtual void DrawFrame() { }
 
-		virtual void RegisterWindow([[maybe_unused]] Window* pWindow) {}
-		virtual void OnWindowResize([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
-		virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
+        virtual void RegisterWindow([[maybe_unused]] Window* pWindow) {}
+        virtual void OnWindowResize([[maybe_unused]] const Event_Window_Resize& eventWindowResize) {}
+        virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
 
-	public:
-		TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
-		
-		Camera& GetCamera() { return m_camera; }
-		const Camera& GetCamera() const { return m_camera; }
-	};
+    public:
+        TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
+        
+        Camera& GetCamera() { return m_camera; }
+        const Camera& GetCamera() const { return m_camera; }
+    };
 }

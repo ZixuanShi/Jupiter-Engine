@@ -10,17 +10,17 @@ import jpt.AssertImpl;
 
 export namespace jpt
 {
-	class Debugger
-	{
-		JPT_DECLARE_SINGLETON(Debugger);
+    class Debugger
+    {
+        JPT_DECLARE_SINGLETON(Debugger);
 
-	private:
-		AssertImpl m_assertImpl;
+    private:
+        AssertImpl m_assertImpl;
 
-	public:
-		bool PreInit();
+    public:
+        bool PreInit();
 
-	public:
-		bool IsDebuggerPresent() const;
-	};
+    public:
+        bool IsDebuggerPresent() const;
+    };
 }

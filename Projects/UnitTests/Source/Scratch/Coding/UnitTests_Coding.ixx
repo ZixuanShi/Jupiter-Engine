@@ -31,25 +31,25 @@ import UnitTests_Coding_BestMeetingNode;
 
 export bool RunUnitTests_Coding()
 {
-	JPT_ENSURE(UnitTests_Coding_Scratch());
-	JPT_ENSURE(UnitTests_Coding_FindMedianSortedArrays());
-	JPT_ENSURE(UnitTests_Coding_SubArraySum());
-	JPT_ENSURE(UnitTests_Coding_IsPalindrome());
-	JPT_ENSURE(UnitTests_Coding_TwoSum());
-	JPT_ENSURE(UnitTests_Coding_RomanToInteger());
-	JPT_ENSURE(UnitTests_Coding_MaxSubArray());
-	JPT_ENSURE(UnitTests_Coding_DeleteDuplicatesFromList());
-	JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
-	JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
-	JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
-	JPT_ENSURE(UnitTests_Coding_SearchSuggestions());
-	JPT_ENSURE(UnitTests_Coding_MinUniqueSubArray());
-	JPT_ENSURE(UnitTests_Coding_BestSeat());
-	JPT_ENSURE(UnitTests_Coding_KeyValueHistoryStore());
-	JPT_ENSURE(UnitTests_Coding_RotateBits());
-	JPT_ENSURE(UnitTests_Coding_PrimeFactors());
-	JPT_ENSURE(UnitTests_Coding_KthLargestElement());
-	JPT_ENSURE(UnitTests_Coding_BestMeetingNode());
+    JPT_ENSURE(UnitTests_Coding_Scratch());
+    JPT_ENSURE(UnitTests_Coding_FindMedianSortedArrays());
+    JPT_ENSURE(UnitTests_Coding_SubArraySum());
+    JPT_ENSURE(UnitTests_Coding_IsPalindrome());
+    JPT_ENSURE(UnitTests_Coding_TwoSum());
+    JPT_ENSURE(UnitTests_Coding_RomanToInteger());
+    JPT_ENSURE(UnitTests_Coding_MaxSubArray());
+    JPT_ENSURE(UnitTests_Coding_DeleteDuplicatesFromList());
+    JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
+    JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
+    JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
+    JPT_ENSURE(UnitTests_Coding_SearchSuggestions());
+    JPT_ENSURE(UnitTests_Coding_MinUniqueSubArray());
+    JPT_ENSURE(UnitTests_Coding_BestSeat());
+    JPT_ENSURE(UnitTests_Coding_KeyValueHistoryStore());
+    JPT_ENSURE(UnitTests_Coding_RotateBits());
+    JPT_ENSURE(UnitTests_Coding_PrimeFactors());
+    JPT_ENSURE(UnitTests_Coding_KthLargestElement());
+    JPT_ENSURE(UnitTests_Coding_BestMeetingNode());
 
-	return true;
+    return true;
 }

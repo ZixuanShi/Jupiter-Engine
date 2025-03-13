@@ -12,25 +12,25 @@ import jpt.Vector2;
 
 namespace jpt
 {
-	export class Window_GLFW final : public Window
-	{
-		using Super = Window;
+    export class Window_GLFW final : public Window
+    {
+        using Super = Window;
 
-	private:
-		GLFWwindow* m_pGLFWWindow = nullptr;
+    private:
+        GLFWwindow* m_pGLFWWindow = nullptr;
 
-	public:
-		virtual bool Init(const char* title, int32 width, int32 height) override;
-		virtual void Update(TimePrecision deltaSeconds) override;
-		virtual void Shutdown() override;
+    public:
+        virtual bool Init(const char* title, int32 width, int32 height) override;
+        virtual void Update(TimePrecision deltaSeconds) override;
+        virtual void Shutdown() override;
 
-		virtual bool CreateSurface(const DynamicArray<Any>& context) override;
-		virtual void SetMousePosition(Vec2i position) override;
-		virtual void SetCursorVisible(bool isVisible) override;
+        virtual bool CreateSurface(const DynamicArray<Any>& context) override;
+        virtual void SetMousePosition(Vec2i position) override;
+        virtual void SetCursorVisible(bool isVisible) override;
 
-	public:
-		virtual bool ShouldClose() const override;
+    public:
+        virtual bool ShouldClose() const override;
 
-		GLFWwindow* GetGLFWWindow() const { return m_pGLFWWindow; }
-	};
+        GLFWwindow* GetGLFWWindow() const { return m_pGLFWWindow; }
+    };
 }

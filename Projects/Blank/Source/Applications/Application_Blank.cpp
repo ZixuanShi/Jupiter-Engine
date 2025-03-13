@@ -25,30 +25,30 @@ import jpt.Event.Key;
 
 bool Application_Blank::PreInit()
 {
-	JPT_ENSURE(Super::PreInit());
+    JPT_ENSURE(Super::PreInit());
 
-	m_pFoo = new Entity_Foo();
-	m_pFoo->PreInit();
+    m_pFoo = new Entity_Foo();
+    m_pFoo->PreInit();
 
-	jpt::EventManager::GetInstance().Register<jpt::Event_Key>([]([[maybe_unused]] const jpt::Event_Key& keyPressEvent) 
-		{
-		});
+    jpt::EventManager::GetInstance().Register<jpt::Event_Key>([]([[maybe_unused]] const jpt::Event_Key& keyPressEvent) 
+        {
+        });
 
-	return true;
+    return true;
 }
 
 void Application_Blank::Update(TimePrecision deltaSeconds)
 {
-	Super::Update(deltaSeconds);
+    Super::Update(deltaSeconds);
 
-	m_pFoo->Update(deltaSeconds);
+    m_pFoo->Update(deltaSeconds);
 }
 
 void Application_Blank::Shutdown()
 {
-	JPT_SHUTDOWN(m_pFoo);
+    JPT_SHUTDOWN(m_pFoo);
 
-	Super::Shutdown();
+    Super::Shutdown();
 }
 
 JPT_SYNC_CLIENT(Blank)

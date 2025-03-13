@@ -30,8 +30,8 @@ export using uintptr = uintptr_t;
 
 export enum class EIntBase : uint8
 {
-	Decimal = 10,
-	Hex     = 16,
-	Binary  = 2,
-	Octal   = 8
+    Decimal = 10,
+    Hex     = 16,
+    Binary  = 2,
+    Octal   = 8
 };

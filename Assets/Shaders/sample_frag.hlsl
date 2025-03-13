@@ -15,7 +15,7 @@ struct PSInput
 {
     float4 fragColor : COLOR0;
     float3 normal : NORMAL0;
-    float2 texCoord : TEXCOORD0;
+    float2 uv : TEXCOORD0;
 };
 
 struct PSOutput 
@@ -26,6 +26,6 @@ struct PSOutput
 PSOutput main(PSInput input)
 {
     PSOutput output;
-    output.color = textureSampler.Sample(samplerState, input.texCoord);
+    output.color = textureSampler.Sample(samplerState, input.uv);
     return output;
 }

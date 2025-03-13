@@ -26,10 +26,10 @@ bool UnitTests_SortedMap_Copy()
     jpt::SortedMap<int32, jpt::DynamicArray<jpt::String>> sortedMapCopy(sortedMap);
 
     for (const auto& [key, value] : sortedMap)
-	{
-		JPT_ENSURE(sortedMapCopy.Has(key));
-		JPT_ENSURE(sortedMapCopy[key] == value);
-	}
+    {
+        JPT_ENSURE(sortedMapCopy.Has(key));
+        JPT_ENSURE(sortedMapCopy[key] == value);
+    }
     
     return true;
 }
@@ -44,7 +44,7 @@ bool UnitTests_SortedMap_Move()
 
     jpt::SortedMap<int32, jpt::DynamicArray<jpt::String>> sortedMapMove(jpt::Move(sortedMap));
 
-	JPT_ENSURE(sortedMap.Count() == 0);
+    JPT_ENSURE(sortedMap.Count() == 0);
 
     JPT_ENSURE(sortedMapMove.Count() == 4);
     JPT_ENSURE((sortedMapMove[1] == (jpt::DynamicArray<jpt::String>{"C++", "Python", "Lua"})));
@@ -79,11 +79,11 @@ bool UnitTests_SortedMap_Add()
 
     size_t i = 0;
     sortedMap.InOrderWalk([&dynamicArray, &i](int32 key, char value)
-	{
+    {
         JPT_ENSURE((dynamicArray[i] == jpt::Pair<int32, char>(key, value)));
-		++i;
+        ++i;
         return true;
-	});
+    });
 
     return true;
 }
@@ -98,8 +98,8 @@ bool UnitTests_SortedMap_Erase()
     sortedMap[3] = '3';
     sortedMap[5] = '5';
     sortedMap[7] = '7';
-	sortedMap[8] = '8';
-	sortedMap[9] = '9';
+    sortedMap[8] = '8';
+    sortedMap[9] = '9';
 
     sortedMap.Erase(1);
     sortedMap.Erase(2);
@@ -126,7 +126,7 @@ bool UnitTests_SortedMap_Erase()
 
 bool UnitTests_SortedMap_Walk()
 {
-	jpt::SortedMap<int32, char> sortedMap;
+    jpt::SortedMap<int32, char> sortedMap;
     /** Traverse
                A
             /    \
@@ -135,7 +135,7 @@ bool UnitTests_SortedMap_Walk()
        /  \       /  \
       D    E     F    G
      / \  / \   / \  / \
-    H  I  J  K  L  M N  O 			*/
+    H  I  J  K  L  M N  O             */
 
     sortedMap.Add(8, 'A');
     sortedMap.Add(4, 'B');
@@ -156,25 +156,25 @@ bool UnitTests_SortedMap_Walk()
     JPT_LOG("-------------------------------------------------\nPre Order");
     sortedMap.PreOrderWalk([](int32 key, char value)
         {
-			JPT_LOG("Key: %i, Value: %c", key, value);
+            JPT_LOG("Key: %i, Value: %c", key, value);
         });
     JPT_LOG("-------------------------------------------------\nIn Order");
-	sortedMap.InOrderWalk([](int32 key, char value)
-		{
-			JPT_LOG("Key: %i, Value: %c", key, value);
-		});
+    sortedMap.InOrderWalk([](int32 key, char value)
+        {
+            JPT_LOG("Key: %i, Value: %c", key, value);
+        });
     JPT_LOG("-------------------------------------------------\nPost Order");
     sortedMap.PostOrderWalk([](int32 key, char value)
-		{
-			JPT_LOG("Key: %i, Value: %c", key, value);
-		});
-	JPT_LOG("-------------------------------------------------\nBFS");
-	sortedMap.BFS([](int32 key, char value)
-		{
-			JPT_LOG("Key: %i, Value: %c", key, value);
-		});
+        {
+            JPT_LOG("Key: %i, Value: %c", key, value);
+        });
+    JPT_LOG("-------------------------------------------------\nBFS");
+    sortedMap.BFS([](int32 key, char value)
+        {
+            JPT_LOG("Key: %i, Value: %c", key, value);
+        });
 
-	return true;
+    return true;
 }
 
 bool UnitTests_SortedMap_Iterators()
@@ -190,36 +190,36 @@ bool UnitTests_SortedMap_Iterators()
 
     int32 i = 1;
     for (const auto& [key, value] : sortedMap)
-	{
+    {
         JPT_ENSURE(value == (key + '0'));
         JPT_ENSURE(key == i);
         ++i;
-	}
+    }
 
     return true;
 }
 
 bool UnitTests_SortedMap_Unique()
 {
-	jpt::SortedMap<int32, jpt::String> sortedMap;
+    jpt::SortedMap<int32, jpt::String> sortedMap;
     sortedMap[1] = "one";
-	sortedMap[2] = "two";
-	sortedMap[3] = "three";
+    sortedMap[2] = "two";
+    sortedMap[3] = "three";
 
-	JPT_ENSURE(sortedMap.Count() == 3);
-	JPT_ENSURE(sortedMap[1] == "one");
-	JPT_ENSURE(sortedMap[2] == "two");
-	JPT_ENSURE(sortedMap[3] == "three");
+    JPT_ENSURE(sortedMap.Count() == 3);
+    JPT_ENSURE(sortedMap[1] == "one");
+    JPT_ENSURE(sortedMap[2] == "two");
+    JPT_ENSURE(sortedMap[3] == "three");
 
-	sortedMap.Add(1, "four");
-	sortedMap[2] = "five";
+    sortedMap.Add(1, "four");
+    sortedMap[2] = "five";
 
-	JPT_ENSURE(sortedMap.Count() == 3);
-	JPT_ENSURE(sortedMap[1] == "four");
-	JPT_ENSURE(sortedMap[2] == "five");
-	JPT_ENSURE(sortedMap[3] == "three");
+    JPT_ENSURE(sortedMap.Count() == 3);
+    JPT_ENSURE(sortedMap[1] == "four");
+    JPT_ENSURE(sortedMap[2] == "five");
+    JPT_ENSURE(sortedMap[3] == "three");
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_SortedMap()

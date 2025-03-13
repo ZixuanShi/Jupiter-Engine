@@ -78,11 +78,11 @@ namespace jpt
 //template<> constexpr bool jpt::IsSmall<NonTrivialStruct> = true;
 bool UnitTests_Hash_NonTrivialStruct()
 {
-	NonTrivialStruct testStruct = { 42, 41, 42.0415f, 42.0415, "Hello" };
+    NonTrivialStruct testStruct = { 42, 41, 42.0415f, 42.0415, "Hello" };
 
-	jpt::Hash(testStruct);
+    jpt::Hash(testStruct);
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_Hash()

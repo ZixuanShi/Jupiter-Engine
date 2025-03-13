@@ -91,16 +91,16 @@ bool UnitTests_Vec2f_Functionalities()
 
 bool RunUnitTests_Vector2_Angle()
 {
-	Vec2f source(0.0f, 1.0f);
-	Vec2f target(1.0f, 1.0f);
+    Vec2f source(0.0f, 1.0f);
+    Vec2f target(1.0f, 1.0f);
 
-	JPT_ENSURE(jpt::AreValuesClose(Vec2f::Angle(source, target), jpt::ToRadians(45.0f)));
-	JPT_ENSURE(jpt::AreValuesClose(Vec2f::AngleSigned(source, target), jpt::ToRadians(-45.0f)));
+    JPT_ENSURE(jpt::AreValuesClose(Vec2f::Angle(source, target), jpt::ToRadians(45.0f)));
+    JPT_ENSURE(jpt::AreValuesClose(Vec2f::AngleSigned(source, target), jpt::ToRadians(-45.0f)));
 
-	Vec2 vector1(1.0f, 0.0f);
-	Vec2 vector2(1.0f, 0.0f);
-	vector1.Rotate(jpt::ToRadians(45.0f));
-	JPT_ENSURE(jpt::AreValuesClose(vector1.Angle(vector2), jpt::ToRadians(45.0f)));
+    Vec2 vector1(1.0f, 0.0f);
+    Vec2 vector2(1.0f, 0.0f);
+    vector1.Rotate(jpt::ToRadians(45.0f));
+    JPT_ENSURE(jpt::AreValuesClose(vector1.Angle(vector2), jpt::ToRadians(45.0f)));
 
     return true;
 }
@@ -129,7 +129,7 @@ bool RunUnitTests_Vector2_Rotation()
     JPT_ENSURE(v2 == Vec2f(1.4f, 0.1f));
     JPT_ENSURE(v3 == Vec2f(0.1f, -1.4f));
 
-    v3 = Vec2f(10.0f, 10.0f);	// pivot
+    v3 = Vec2f(10.0f, 10.0f);    // pivot
     v1 = Vec2f(0.0f, 0.0f);
     v2 = Vec2f(0.0f, 0.0f);
     v1.RotateAround(v3, jpt::ToRadians(45.0f));

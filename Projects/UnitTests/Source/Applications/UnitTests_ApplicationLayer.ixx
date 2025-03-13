@@ -17,11 +17,11 @@ import UnitTests_CommandLine;
 
 export bool RunUnitTests_Applications()
 {
-	/** Unit Test Functions */
+    /** Unit Test Functions */
 
-	// Applications
-	JPT_ENSURE(RunUnitTests_CommandLine());
+    // Applications
+    JPT_ENSURE(RunUnitTests_CommandLine());
     
 
-	return true;
+    return true;
 }

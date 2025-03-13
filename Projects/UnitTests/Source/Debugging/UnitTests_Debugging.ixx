@@ -14,11 +14,11 @@ import jpt.Utilities;
 
 export bool RunUnitTests_Debugging()
 {
-	/** Unit Test Functions */
+    /** Unit Test Functions */
 
-	// Timing
-	JPT_ENSURE(RunUnitTests_Logger());
+    // Timing
+    JPT_ENSURE(RunUnitTests_Logger());
     
 
-	return true;
+    return true;
 }

@@ -18,25 +18,25 @@ import jpt.TypeDefs;
 
 export namespace jpt::Input
 {
-	class RawInput_Win32 : public RawInput
-	{
-		using Super = RawInput;
+    class RawInput_Win32 : public RawInput
+    {
+        using Super = RawInput;
 
-	private:
-		HashMap<Key, uint32> m_toWin32Keys;
-		HashMap<uint32, Key> m_fromWin32Keys;
+    private:
+        HashMap<Key, uint32> m_toWin32Keys;
+        HashMap<uint32, Key> m_fromWin32Keys;
 
-		HashMap<MouseButton, uint32> m_toWin32MouseButtons;
-		HashMap<uint32, MouseButton> m_fromWin32MouseButtons;
+        HashMap<MouseButton, uint32> m_toWin32MouseButtons;
+        HashMap<uint32, MouseButton> m_fromWin32MouseButtons;
 
-	public:
-		virtual bool PreInit() override;
-	};
+    public:
+        virtual bool PreInit() override;
+    };
 
-	bool RawInput_Win32::PreInit()
-	{
-		JPT_ENSURE(Super::PreInit());
+    bool RawInput_Win32::PreInit()
+    {
+        JPT_ENSURE(Super::PreInit());
 
-		return true;
-	}
+        return true;
+    }
 }

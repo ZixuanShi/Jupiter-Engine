@@ -16,32 +16,32 @@ import jpt.Vulkan.LogicalDevice;
 
 namespace jpt::Vulkan
 {
-	bool CommandPool::Init()
-	{
-		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
-		const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
+    bool CommandPool::Init()
+    {
+        const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
+        const PhysicalDevice& physicalDevice = pVulkanRenderer->GetPhysicalDevice();
+        const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
-		VkCommandPoolCreateInfo poolInfo = {};
-		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-		poolInfo.queueFamilyIndex = physicalDevice.GetGraphicsFamilyIndex();
+        VkCommandPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        poolInfo.queueFamilyIndex = physicalDevice.GetGraphicsFamilyIndex();
 
-		if (const VkResult result = vkCreateCommandPool(logicalDevice.GetHandle(), &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
-		{
-			JPT_ERROR("Failed to create command pool: %d", result);
-			return false;
-		}
+        if (const VkResult result = vkCreateCommandPool(logicalDevice.GetHandle(), &poolInfo, nullptr, &m_commandPool); result != VK_SUCCESS)
+        {
+            JPT_ERROR("Failed to create command pool: %d", result);
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	void CommandPool::Shutdown()
-	{
-		const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
-		const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
+    void CommandPool::Shutdown()
+    {
+        const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
+        const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();
 
-		vkDestroyCommandPool(logicalDevice.GetHandle(), m_commandPool, nullptr);
-		m_commandPool = VK_NULL_HANDLE;
-	}
+        vkDestroyCommandPool(logicalDevice.GetHandle(), m_commandPool, nullptr);
+        m_commandPool = VK_NULL_HANDLE;
+    }
 }

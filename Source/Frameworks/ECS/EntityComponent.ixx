@@ -4,10 +4,10 @@ export module jpt.Entity.Component;
 
 export namespace jpt
 {
-	class Entity;
+    class Entity;
 
-	/** Represents a component of an entity */
-	class EntityComponent
-	{
-	};
+    /** Represents a component of an entity */
+    class EntityComponent
+    {
+    };
 }

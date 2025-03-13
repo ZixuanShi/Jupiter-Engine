@@ -6,7 +6,7 @@ import jpt.Asset;
 
 export namespace jpt
 {
-	class Texture : public Asset
-	{
-	};
+    class Texture : public Asset
+    {
+    };
 }

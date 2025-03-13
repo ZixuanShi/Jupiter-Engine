@@ -13,40 +13,40 @@ import jpt.String;
 
 bool UnitTests_Optional()
 {
-	jpt::Optional<int32> intOptional;
-	JPT_ENSURE(!intOptional.HasValue());
+    jpt::Optional<int32> intOptional;
+    JPT_ENSURE(!intOptional.HasValue());
 
-	intOptional = 42;
-	JPT_ENSURE(intOptional.HasValue());
-	JPT_ENSURE(intOptional.Value() == 42);
+    intOptional = 42;
+    JPT_ENSURE(intOptional.HasValue());
+    JPT_ENSURE(intOptional.Value() == 42);
 
-	int32 num = 12;
-	intOptional = num;
-	JPT_ENSURE(intOptional.Value() == 12);
+    int32 num = 12;
+    intOptional = num;
+    JPT_ENSURE(intOptional.Value() == 12);
 
-	intOptional.Reset();
-	JPT_ENSURE(!intOptional.HasValue());
+    intOptional.Reset();
+    JPT_ENSURE(!intOptional.HasValue());
 
-	jpt::Optional<jpt::String> stringOptional;
-	JPT_ENSURE(!stringOptional.HasValue());
+    jpt::Optional<jpt::String> stringOptional;
+    JPT_ENSURE(!stringOptional.HasValue());
 
-	stringOptional = "42";
-	JPT_ENSURE(stringOptional.HasValue());
-	JPT_ENSURE(stringOptional.Value() == "42");
+    stringOptional = "42";
+    JPT_ENSURE(stringOptional.HasValue());
+    JPT_ENSURE(stringOptional.Value() == "42");
 
-	jpt::String str("Jupiter Engine");
-	stringOptional = jpt::Move(str);
-	JPT_ENSURE(stringOptional.Value() == "Jupiter Engine");
+    jpt::String str("Jupiter Engine");
+    stringOptional = jpt::Move(str);
+    JPT_ENSURE(stringOptional.Value() == "Jupiter Engine");
 
-	stringOptional.Reset();
-	JPT_ENSURE(!stringOptional.HasValue());
+    stringOptional.Reset();
+    JPT_ENSURE(!stringOptional.HasValue());
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_Optional()
 {
-	JPT_ENSURE(UnitTests_Optional());
+    JPT_ENSURE(UnitTests_Optional());
 
-	return true;
+    return true;
 }

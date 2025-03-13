@@ -103,15 +103,15 @@ bool UnitTests_Searching_LinkedList()
 
 bool UnitTests_Searching_RawArray()
 {
-	int32 rawArray[] = { 1, 2, 3, 4, 5 };
+    int32 rawArray[] = { 1, 2, 3, 4, 5 };
 
-	JPT_ENSURE(jpt::Find(rawArray, 1) == 0);
-	JPT_ENSURE(jpt::Find(rawArray, 2) == 1);
-	JPT_ENSURE(jpt::Find(rawArray, 3) == 2);
-	JPT_ENSURE(jpt::Find(rawArray, 4) == 3);
-	JPT_ENSURE(jpt::Find(rawArray, 5) == 4);
-	JPT_ENSURE(jpt::Find(rawArray, 6) == jpt::kInvalidValue<size_t>);
-	JPT_ENSURE(jpt::Find(rawArray, 0) == jpt::kInvalidValue<size_t>);
+    JPT_ENSURE(jpt::Find(rawArray, 1) == 0);
+    JPT_ENSURE(jpt::Find(rawArray, 2) == 1);
+    JPT_ENSURE(jpt::Find(rawArray, 3) == 2);
+    JPT_ENSURE(jpt::Find(rawArray, 4) == 3);
+    JPT_ENSURE(jpt::Find(rawArray, 5) == 4);
+    JPT_ENSURE(jpt::Find(rawArray, 6) == jpt::kInvalidValue<size_t>);
+    JPT_ENSURE(jpt::Find(rawArray, 0) == jpt::kInvalidValue<size_t>);
 
     return true;
 }

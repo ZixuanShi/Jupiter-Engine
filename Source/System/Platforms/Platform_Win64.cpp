@@ -14,13 +14,13 @@ module jpt.Platform.Win64;
 
 namespace jpt
 {
-	bool Platform_Win64::PreInit()
-	{
-		JPT_ENSURE(Super::PreInit());
-		JPT_ENSURE(m_hInstance != nullptr);
+    bool Platform_Win64::PreInit()
+    {
+        JPT_ENSURE(Super::PreInit());
+        JPT_ENSURE(m_hInstance != nullptr);
 
-		return true;
-	}
+        return true;
+    }
 }
 
 #endif // IS_PLATFORM_WIN64

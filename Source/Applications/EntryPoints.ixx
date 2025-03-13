@@ -3,8 +3,8 @@
 module;
 
 #if IS_PLATFORM_WIN64
-	#define WIN32_LEAN_AND_MEAN
-	#include <Windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <Windows.h>
 #endif
 
 export module jpt.EntryPoints;
@@ -13,32 +13,32 @@ import jpt.Application;
 import jpt.CommandLine;
 
 #if IS_DEBUG
-	import jpt.MemoryLeakDetector;
+    import jpt.MemoryLeakDetector;
 #endif
 
 #if IS_PLATFORM_WIN64
-	import jpt.Platform.Win64;
+    import jpt.Platform.Win64;
 #endif
 
 namespace jpt
 {
-	// Called by platform-specific entry points
-	int MainImpl()
-	{
+    // Called by platform-specific entry points
+    int MainImpl()
+    {
 #if IS_DEBUG
-		MemoryLeakDetector::Init();
+        MemoryLeakDetector::Init();
 #endif
 
-		Application* pApp = GetApplication();
-		if (pApp->PreInit() && pApp->Init())
-		{
-			pApp->Run();
-		}
+        Application* pApp = GetApplication();
+        if (pApp->PreInit() && pApp->Init())
+        {
+            pApp->Run();
+        }
 
-		pApp->Shutdown();
+        pApp->Shutdown();
 
-		return 0;
-	}
+        return 0;
+    }
 }
 
 // Platform-specific entry points
@@ -48,24 +48,24 @@ namespace jpt
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
 {
-	using namespace jpt;
+    using namespace jpt;
 
-	CommandLine::GetInstance().Parse(launchArgs);
+    CommandLine::GetInstance().Parse(launchArgs);
 
-	Platform_Win64* pWin64 = new Platform_Win64();
-	pWin64->SetHINSTANCE(hInstance);
-	pWin64->SetnCmdShow(nCmdShow);
+    Platform_Win64* pWin64 = new Platform_Win64();
+    pWin64->SetHINSTANCE(hInstance);
+    pWin64->SetnCmdShow(nCmdShow);
 
-	GetApplication()->SetPlatform(pWin64);
+    GetApplication()->SetPlatform(pWin64);
 
-	return MainImpl();
+    return MainImpl();
 }
 #else
 int main(int argc, char* argv[])
 {
-	using namespace jpt;
+    using namespace jpt;
 
-	CommandLine::GetInstance().Parse(argc, argv);
-	return jpt::MainImpl();
+    CommandLine::GetInstance().Parse(argc, argv);
+    return jpt::MainImpl();
 }
 #endif

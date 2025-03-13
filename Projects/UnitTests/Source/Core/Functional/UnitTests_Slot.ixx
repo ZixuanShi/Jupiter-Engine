@@ -16,134 +16,134 @@ import jpt.TypeTraits;
 
 int32 Add(int32 a, int32 b)
 {
-	return a + b;
+    return a + b;
 }
 
 struct Test
 {
-	int32 Subtract(int32 a, int32 b)
-	{
-		return a - b;
-	}
+    int32 Subtract(int32 a, int32 b)
+    {
+        return a - b;
+    }
 };
 
 bool UnitTests_Slot()
 {
-	jpt::Slot<int32(int32, int32)> slot;
+    jpt::Slot<int32(int32, int32)> slot;
 
-	// Adding
-	// global function
-	size_t addIndex = slot.Add(&Add);
+    // Adding
+    // global function
+    size_t addIndex = slot.Add(&Add);
 
-	// member function
-	Test test;
-	size_t subIndex = slot.Add(&test, &Test::Subtract);
+    // member function
+    Test test;
+    size_t subIndex = slot.Add(&test, &Test::Subtract);
 
-	// Lambda
-	slot.Add([](int32 a, int32 b)
-		{
-			return a * b;
-		});
+    // Lambda
+    slot.Add([](int32 a, int32 b)
+        {
+            return a * b;
+        });
 
-	auto division = [](int32 a, int32 b)
-		{
-		return a / b;
-	};
-	slot.Add(division);
+    auto division = [](int32 a, int32 b)
+        {
+        return a / b;
+    };
+    slot.Add(division);
 
-	// Erasing
-	slot.Erase(addIndex);
-	addIndex = slot.Add(&Add);
-	JPT_ENSURE(addIndex == 0);
+    // Erasing
+    slot.Erase(addIndex);
+    addIndex = slot.Add(&Add);
+    JPT_ENSURE(addIndex == 0);
 
-	slot.Erase(subIndex);
-	subIndex = slot.Add(&test, &Test::Subtract);
-	JPT_ENSURE(subIndex == 1);
+    slot.Erase(subIndex);
+    subIndex = slot.Add(&test, &Test::Subtract);
+    JPT_ENSURE(subIndex == 1);
 
-	// Calling
-	slot(1, 2);
-	jpt::DynamicArray<int32> results = slot.ReturnAll(6, 2);
-	JPT_ENSURE(results[0] == 8);
-	JPT_ENSURE(results[1] == 4);
-	JPT_ENSURE(results[2] == 12);
-	JPT_ENSURE(results[3] == 3);
+    // Calling
+    slot(1, 2);
+    jpt::DynamicArray<int32> results = slot.ReturnAll(6, 2);
+    JPT_ENSURE(results[0] == 8);
+    JPT_ENSURE(results[1] == 4);
+    JPT_ENSURE(results[2] == 12);
+    JPT_ENSURE(results[3] == 3);
 
-	slot.Erase(addIndex);
-	slot.Erase(subIndex);
+    slot.Erase(addIndex);
+    slot.Erase(subIndex);
 
-	size_t i = slot.Add([](int32 a, int32 b) { return a * 2 + b; });
-	JPT_ENSURE(i == 0);
-	slot.Erase(i);
+    size_t i = slot.Add([](int32 a, int32 b) { return a * 2 + b; });
+    JPT_ENSURE(i == 0);
+    slot.Erase(i);
 
-	results = slot.ReturnAll(6, 2);
-	JPT_ENSURE(results[0] == 0);
-	JPT_ENSURE(results[1] == 0);
-	JPT_ENSURE(results[2] == 12);
-	JPT_ENSURE(results[3] == 3);
+    results = slot.ReturnAll(6, 2);
+    JPT_ENSURE(results[0] == 0);
+    JPT_ENSURE(results[1] == 0);
+    JPT_ENSURE(results[2] == 12);
+    JPT_ENSURE(results[3] == 3);
 
-	return true;
+    return true;
 }
 
 void VoidFunction(int32& i)
 {
-	i *= 2;
+    i *= 2;
 }
 
 bool UnitTests_Slot_Void()
 {
-	jpt::Slot<void(int32&)> voidSlots;
+    jpt::Slot<void(int32&)> voidSlots;
 
-	voidSlots.Add([](int32& i)
-		{
-			i *= 2;
-		});
+    voidSlots.Add([](int32& i)
+        {
+            i *= 2;
+        });
 
-	voidSlots.Add(&VoidFunction);
+    voidSlots.Add(&VoidFunction);
 
-	int32 i = 2;
-	voidSlots(i);
-	JPT_ENSURE(i == 8);
+    int32 i = 2;
+    voidSlots(i);
+    JPT_ENSURE(i == 8);
 
-	return true;
+    return true;
 }
 
 bool UnitTests_Slot_Function()
 {
-	jpt::Slot<void(int32&)> slot;
+    jpt::Slot<void(int32&)> slot;
 
-	jpt::Function<void(int32&)> adder        = [](int32& i) { i += 2; };
-	jpt::Function<void(int32&)> subbstracter = [](int32& i) { i -= 2; };
-	jpt::Function<void(int32&)> multiplier   = [](int32& i) { i *= 2; };
-	jpt::Function<void(int32&)> divider      = [](int32& i) { i /= 2; };
+    jpt::Function<void(int32&)> adder        = [](int32& i) { i += 2; };
+    jpt::Function<void(int32&)> subbstracter = [](int32& i) { i -= 2; };
+    jpt::Function<void(int32&)> multiplier   = [](int32& i) { i *= 2; };
+    jpt::Function<void(int32&)> divider      = [](int32& i) { i /= 2; };
 
-	slot.Add(adder);
-	slot.Add(multiplier);
-	slot.Add(subbstracter);
-	slot.Add(divider);
+    slot.Add(adder);
+    slot.Add(multiplier);
+    slot.Add(subbstracter);
+    slot.Add(divider);
 
-	int32 i = 2;
-	slot(i);
-	JPT_ENSURE(i == 3);
+    int32 i = 2;
+    slot(i);
+    JPT_ENSURE(i == 3);
 
-	slot.Erase(2);	// Erase subbstracter
+    slot.Erase(2);    // Erase subbstracter
 
-	i = 2;
-	slot(i);
-	JPT_ENSURE(i == 4);
+    i = 2;
+    slot(i);
+    JPT_ENSURE(i == 4);
 
-	JPT_ENSURE(slot.Add(subbstracter) == 2);
-	i = 2;
-	slot(i);
-	JPT_ENSURE(i == 3);
+    JPT_ENSURE(slot.Add(subbstracter) == 2);
+    i = 2;
+    slot(i);
+    JPT_ENSURE(i == 3);
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_Slot()
 {
-	JPT_ENSURE(UnitTests_Slot());
-	JPT_ENSURE(UnitTests_Slot_Void());
-	JPT_ENSURE(UnitTests_Slot_Function());
+    JPT_ENSURE(UnitTests_Slot());
+    JPT_ENSURE(UnitTests_Slot_Void());
+    JPT_ENSURE(UnitTests_Slot_Function());
 
     return true;
 }

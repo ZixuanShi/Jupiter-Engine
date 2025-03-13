@@ -18,15 +18,15 @@ import Benchmarks_Math;
 
 export void RunBenchmarks_Core(jpt::BenchmarksReporter& reporter)
 {
-	/** Benchmark Functions */
+    /** Benchmark Functions */
 
-	// Containers
-	//RunBenchmarks_DynamicArray(reporter);
-	//RunBenchmarks_HashMap(reporter);
+    // Containers
+    //RunBenchmarks_DynamicArray(reporter);
+    //RunBenchmarks_HashMap(reporter);
 
-	// Strings
-	RunBenchmarks_String(reporter);
+    // Strings
+    RunBenchmarks_String(reporter);
 
-	// Math
-	//RunBenchmarks_Math(reporter);
+    // Math
+    //RunBenchmarks_Math(reporter);
 }

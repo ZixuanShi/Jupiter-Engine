@@ -4,5 +4,5 @@ export module jpt.Graphics.Constants;
 
 export namespace jpt
 {
-	constexpr size_t kMaxFramesInFlight = 2;
+    constexpr size_t kMaxFramesInFlight = 2;
 }

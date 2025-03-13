@@ -16,9 +16,9 @@ bool UnitTests_Queue()
     jpt::Queue<int32> queue;
 
     for (int32 i = 0; i < 10; ++i)
-	{
-		queue.Enqueue(i);
-	}
+    {
+        queue.Enqueue(i);
+    }
 
     JPT_ENSURE(queue.Count() == 10);
 

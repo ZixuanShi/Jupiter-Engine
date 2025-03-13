@@ -16,13 +16,13 @@ import UnitTests_MathPractice;
 
 export bool RunUnitTests_Scratch()
 {
-	/** Unit Test Functions */
+    /** Unit Test Functions */
 
-	// Coding
-	RunUnitTests_Coding();
+    // Coding
+    RunUnitTests_Coding();
 
-	// MathPractice
-	RunUnitTests_MathPractice();
+    // MathPractice
+    RunUnitTests_MathPractice();
 
-	return true;
+    return true;
 }

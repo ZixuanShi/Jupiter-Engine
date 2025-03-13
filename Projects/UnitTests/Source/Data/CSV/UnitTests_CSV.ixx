@@ -45,12 +45,12 @@ static bool Read()
 
     // Iterate
     for (Index row = 0; row < data.RowsCount(); ++row)
-	{
-		for (Index col = 0; col < data[row].Count(); ++col)
-		{
+    {
+        for (Index col = 0; col < data[row].Count(); ++col)
+        {
             JPT_IGNORE(data[row][col]);
-		}
-	}
+        }
+    }
 
     // Single access
     JPT_ENSURE(data[0][0] == "Name");

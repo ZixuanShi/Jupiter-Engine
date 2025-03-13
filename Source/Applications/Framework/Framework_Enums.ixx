@@ -11,10 +11,10 @@ import jpt.ToString;
 
 export namespace jpt
 {
-	JPT_ENUM_UINT8(Framework_API, 
-		Unknown,
-		GLFW,
-		Win32)
+    JPT_ENUM_UINT8(Framework_API, 
+        Unknown,
+        GLFW,
+        Win32)
 }
 
 export JPT_ENUM_TO_STRING(jpt::Framework_API);

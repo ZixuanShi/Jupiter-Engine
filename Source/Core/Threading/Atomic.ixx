@@ -9,13 +9,13 @@ export module jpt.Atomic;
 export namespace jpt
 {
     /** Protects a variable is thread-safe that can be simultaneously read/written */
-	template<typename T>
-	class Atomic
-	{
-	private:
-		std::atomic<T> m_value;
+    template<typename T>
+    class Atomic
+    {
+    private:
+        std::atomic<T> m_value;
 
-	public:
+    public:
         Atomic();
         Atomic(T value);
         Atomic(const Atomic&) = delete;
@@ -29,13 +29,13 @@ export namespace jpt
         bool CompareExchangeWeak(T& expected, T desired);
         bool CompareExchangeStrong(T& expected, T desired);
 
-	public:
+    public:
         operator T() const;
         Atomic& operator=(T value);
-		Atomic& operator++();
-		Atomic& operator+=(T value);
-		Atomic& operator--();
-	};
+        Atomic& operator++();
+        Atomic& operator+=(T value);
+        Atomic& operator--();
+    };
 
     template<typename T>
     Atomic<T>::Atomic()
@@ -89,27 +89,27 @@ export namespace jpt
     Atomic<T>& Atomic<T>::operator=(T value)
     {
         Store(value);
-		return *this;
+        return *this;
     }
 
     template<typename T>
     Atomic<T>& Atomic<T>::operator++()
     {
-		++m_value;
-		return *this;
+        ++m_value;
+        return *this;
     }
 
     template<typename T>
     Atomic<T>& Atomic<T>::operator+=(T value)
     {
-		m_value += value;
-		return *this;
+        m_value += value;
+        return *this;
     }
 
     template<typename T>
     Atomic<T>& Atomic<T>::operator--()
     {
-		--m_value;
-		return *this;
+        --m_value;
+        return *this;
     }
 }

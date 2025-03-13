@@ -3,8 +3,8 @@
 module;
 
 #if IS_PLATFORM_WIN64
-	#define WIN32_LEAN_AND_MEAN
-	#include <Windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <Windows.h>
 #endif
 
 #include <thread>
@@ -29,7 +29,7 @@ export namespace jpt
         bool PreInit();
 
     public:
-		const String& GetName() const { return m_name; }
+        const String& GetName() const { return m_name; }
         uint32 GetLogicalProcessorsCount() const { return m_logicalProcessorsCount; }
         uint32 GetCoresCount() const { return m_coresCount; };
     };
@@ -79,6 +79,6 @@ export namespace jpt
         // Free resources
         free(buffer);
 
-		return true;
+        return true;
     }
 }

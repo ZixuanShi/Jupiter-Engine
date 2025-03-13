@@ -10,15 +10,15 @@ import jpt.Texture.Sampler;
 
 export namespace jpt::Vulkan
 {
-	class TextureSampler_Vulkan final : public TextureSampler
-	{
-	private:
-		VkSampler m_sampler = VK_NULL_HANDLE;
+    class TextureSampler_Vulkan final : public TextureSampler
+    {
+    private:
+        VkSampler m_sampler = VK_NULL_HANDLE;
 
-	public:
-		virtual bool Init() override;
-		virtual void Shutdown() override;
+    public:
+        virtual bool Init() override;
+        virtual void Shutdown() override;
 
-		VkSampler GetHandle() const { return m_sampler; }
-	};
+        VkSampler GetHandle() const { return m_sampler; }
+    };
 }

@@ -14,12 +14,12 @@ import jpt.Utilities;
 
 int32 Add(int32 a, int32 b)
 {
-	return a + b;
+    return a + b;
 }
 
 int32 Subtract(int32 a, int32 b)
 {
-	return a - b;
+    return a - b;
 }
 
 bool UnitTests_Function_Global()
@@ -38,7 +38,7 @@ bool UnitTests_Function_Global()
     func = &Subtract;
     JPT_ENSURE(func(2, 3) == -1);
 
-	JPT_ENSURE(func.IsMemberFunction() == false);
+    JPT_ENSURE(func.IsMemberFunction() == false);
 
     return true;
 }
@@ -101,7 +101,7 @@ bool UnitTests_Function_MemberFunction()
     JPT_ENSURE(test.m_func(4) == true);
 
     Test* pCaller = test.m_func.GetCaller<Test>();
-	JPT_ENSURE(pCaller == &test);
+    JPT_ENSURE(pCaller == &test);
 
     return true;
 }
@@ -222,8 +222,8 @@ bool UnitTests_Function_LambdaCapturesLocalVar()
 
 bool UnitTests_Function_LambdaCapturesThis()
 {
-	Test test(13);
-	JPT_ENSURE(test.m_func2(2) == 15);
+    Test test(13);
+    JPT_ENSURE(test.m_func2(2) == 15);
     JPT_ENSURE(test.m_value == 15);
 
     JPT_ENSURE(test.m_func2(3) == 18);
@@ -232,7 +232,7 @@ bool UnitTests_Function_LambdaCapturesThis()
     JPT_ENSURE(test.m_func2(4) == 22);
     JPT_ENSURE(test.m_value == 22);
 
-	return true;
+    return true;
 }
 
 void VoidFunction()

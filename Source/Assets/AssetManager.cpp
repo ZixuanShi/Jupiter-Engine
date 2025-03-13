@@ -11,35 +11,35 @@ import jpt.Asset;
 
 namespace jpt
 {
-	bool AssetManager::PreInit()
-	{
-		return true;
-	}
+    bool AssetManager::PreInit()
+    {
+        return true;
+    }
 
-	bool AssetManager::Init()
-	{
-		return true;
-	}
+    bool AssetManager::Init()
+    {
+        return true;
+    }
 
-	void AssetManager::Shutdown()
-	{
-		for (auto& [path, pAsset] : m_assets)
-		{
-			pAsset->Unload();
-			delete pAsset;
-			pAsset = nullptr;
-		}
+    void AssetManager::Shutdown()
+    {
+        for (auto& [path, pAsset] : m_assets)
+        {
+            pAsset->Unload();
+            delete pAsset;
+            pAsset = nullptr;
+        }
 
-		m_assets.Clear();
-	}
+        m_assets.Clear();
+    }
 
-	void AssetManager::Unload(const File::Path& path)
-	{
-		auto itr = m_assets.Find(path);
-		JPT_ASSERT(itr != m_assets.end());
+    void AssetManager::Unload(const File::Path& path)
+    {
+        auto itr = m_assets.Find(path);
+        JPT_ASSERT(itr != m_assets.end());
 
-		itr->second->Unload();
-		delete itr->second;
-		m_assets.Erase(path);
-	}
+        itr->second->Unload();
+        delete itr->second;
+        m_assets.Erase(path);
+    }
 }

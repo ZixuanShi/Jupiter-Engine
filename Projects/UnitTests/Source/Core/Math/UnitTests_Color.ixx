@@ -33,11 +33,11 @@ static bool UnitTests_Color()
 static bool UnitTests_Color_Lerp()
 {
     Color color1(0x000000FF);
-	Color color2(0x00FF00FF);
-	Color color3 = Lerp(color1, color2, 0.5f);
+    Color color2(0x00FF00FF);
+    Color color3 = Lerp(color1, color2, 0.5f);
     JPT_ENSURE(color3 == Color(0x007F00FF));
 
-	return true;
+    return true;
 }
 
 static bool UnitTests_Color_FromRGBA()
@@ -84,55 +84,55 @@ static bool UnitTests_Color_FromLinearColor()
 
 static bool UnitTests_LinearColor()
 {
-	LinearColor linearColor(1.0f, 0.0f, 1.0f);
-	JPT_ENSURE(linearColor.r == 1.0f);
-	JPT_ENSURE(linearColor.g == 0.0f);
-	JPT_ENSURE(linearColor.b == 1.0f);
-	JPT_ENSURE(linearColor.a == 1.0f);
-	JPT_ENSURE(linearColor.ToRGBA() == 0xFF00FFFF);
-	JPT_ENSURE(linearColor == LinearColor::Magenta());
+    LinearColor linearColor(1.0f, 0.0f, 1.0f);
+    JPT_ENSURE(linearColor.r == 1.0f);
+    JPT_ENSURE(linearColor.g == 0.0f);
+    JPT_ENSURE(linearColor.b == 1.0f);
+    JPT_ENSURE(linearColor.a == 1.0f);
+    JPT_ENSURE(linearColor.ToRGBA() == 0xFF00FFFF);
+    JPT_ENSURE(linearColor == LinearColor::Magenta());
 
-	linearColor.r = 0.0f;
-	JPT_ENSURE(linearColor.r == 0.0f);
-	JPT_ENSURE(linearColor.ToRGBA() == 0x0000FFFF);
-	JPT_ENSURE(linearColor == LinearColor::Blue());
+    linearColor.r = 0.0f;
+    JPT_ENSURE(linearColor.r == 0.0f);
+    JPT_ENSURE(linearColor.ToRGBA() == 0x0000FFFF);
+    JPT_ENSURE(linearColor == LinearColor::Blue());
 
-	return true;
+    return true;
 }
 
 static bool UnitTests_LinearColor_Lerp()
 {
-	LinearColor linearColor1(0.0f, 0.0f, 0.0f);
-	LinearColor linearColor2(1.0f, 1.0f, 1.0f);
-	LinearColor linearColor3 = Lerp(linearColor1, linearColor2, 0.5f);
-	JPT_ENSURE(linearColor3 == LinearColor(0.5f, 0.5f, 0.5f));
+    LinearColor linearColor1(0.0f, 0.0f, 0.0f);
+    LinearColor linearColor2(1.0f, 1.0f, 1.0f);
+    LinearColor linearColor3 = Lerp(linearColor1, linearColor2, 0.5f);
+    JPT_ENSURE(linearColor3 == LinearColor(0.5f, 0.5f, 0.5f));
     JPT_ENSURE(linearColor3.ToRGBA() == 0x7F7F7FFF);
     JPT_ENSURE(linearColor3 == LinearColor::Gray());
 
-	return true;
+    return true;
 }
 
 static bool UnitTests_LinearColor_FromRGBA()
 {
-	LinearColor linearColor;
+    LinearColor linearColor;
 
-	linearColor.FromRGBA(0xFFFFFFFF);
-	JPT_ENSURE(linearColor.r == 1.0f);
-	JPT_ENSURE(linearColor.g == 1.0f);
-	JPT_ENSURE(linearColor.b == 1.0f);
-	JPT_ENSURE(linearColor.a == 1.0f);
-	JPT_ENSURE(linearColor.ToRGBA() == 0xFFFFFFFF);
+    linearColor.FromRGBA(0xFFFFFFFF);
+    JPT_ENSURE(linearColor.r == 1.0f);
+    JPT_ENSURE(linearColor.g == 1.0f);
+    JPT_ENSURE(linearColor.b == 1.0f);
+    JPT_ENSURE(linearColor.a == 1.0f);
+    JPT_ENSURE(linearColor.ToRGBA() == 0xFFFFFFFF);
     JPT_ENSURE(linearColor == LinearColor::White());
 
-	linearColor.FromRGBA(0x000000FF);
-	JPT_ENSURE(linearColor.r == 0.0f);
-	JPT_ENSURE(linearColor.g == 0.0f);
-	JPT_ENSURE(linearColor.b == 0.0f);
-	JPT_ENSURE(linearColor.a == 1.0f);
-	JPT_ENSURE(linearColor.ToRGBA() == 0x000000FF);
+    linearColor.FromRGBA(0x000000FF);
+    JPT_ENSURE(linearColor.r == 0.0f);
+    JPT_ENSURE(linearColor.g == 0.0f);
+    JPT_ENSURE(linearColor.b == 0.0f);
+    JPT_ENSURE(linearColor.a == 1.0f);
+    JPT_ENSURE(linearColor.ToRGBA() == 0x000000FF);
     JPT_ENSURE(linearColor == LinearColor::Black());
 
-	return true;
+    return true;
 }
 
 export bool RunUnitTests_Color()

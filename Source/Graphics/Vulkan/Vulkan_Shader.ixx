@@ -11,17 +11,17 @@ import jpt.File.Path;
 
 export namespace jpt::Vulkan
 {
-	/** Base class for shaders */
-	class Shader : public Asset
-	{
-	protected:
-		VkShaderModule m_shaderModule = VK_NULL_HANDLE;
+    /** Base class for shaders */
+    class Shader : public Asset
+    {
+    protected:
+        VkShaderModule m_shaderModule = VK_NULL_HANDLE;
 
-	public:
-		virtual bool Load(const File::Path& path) override;
-		virtual void Unload() override;
+    public:
+        virtual bool Load(const File::Path& path) override;
+        virtual void Unload() override;
 
-	protected:
-		virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo();
-	};
+    protected:
+        virtual VkPipelineShaderStageCreateInfo GetStageCreateInfo();
+    };
 }

@@ -14,8 +14,8 @@ import UnitTests_EventSystem;
 
 export bool RunUnitTests_Frameworks()
 {
-	JPT_ENSURE(RunUnitTests_ECS());
-	JPT_ENSURE(RunUnitTests_EventSystem());
+    JPT_ENSURE(RunUnitTests_ECS());
+    JPT_ENSURE(RunUnitTests_EventSystem());
 
-	return true;
+    return true;
 }

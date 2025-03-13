@@ -13,22 +13,22 @@ import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
-	DynamicArray<const char*> GetRequiredExtensions()
-	{
-		uint32 extensionCount = 0;
-		const char** extensions = GetApplication()->GetFramework()->GetRequiredExtensions(extensionCount);
+    DynamicArray<const char*> GetRequiredExtensions()
+    {
+        uint32 extensionCount = 0;
+        const char** extensions = GetApplication()->GetFramework()->GetRequiredExtensions(extensionCount);
 
-		DynamicArray<const char*> result(extensions, extensions + extensionCount);
+        DynamicArray<const char*> result(extensions, extensions + extensionCount);
 
 #if !IS_RELEASE
-		result.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        result.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 #endif
 
-		return result;
-	}
+        return result;
+    }
 
-	const DynamicArray<const char*> g_deviceExtensions = 
-	{
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
-	};
+    const DynamicArray<const char*> g_deviceExtensions = 
+    {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    };
 }

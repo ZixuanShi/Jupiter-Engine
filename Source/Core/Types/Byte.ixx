@@ -4,5 +4,5 @@ export module jpt.Byte;
 
 export namespace jpt
 {
-	enum class Byte : unsigned char {};
+    enum class Byte : unsigned char {};
 }

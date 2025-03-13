@@ -10,13 +10,13 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-	void Sleep(int32 seconds)
-	{
-		std::this_thread::sleep_for(std::chrono::seconds(seconds));
-	}
+    void Sleep(int32 seconds)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(seconds));
+    }
 
-	void SleepMs(int32 milliseconds)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
-	}
+    void SleepMs(int32 milliseconds)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+    }
 }

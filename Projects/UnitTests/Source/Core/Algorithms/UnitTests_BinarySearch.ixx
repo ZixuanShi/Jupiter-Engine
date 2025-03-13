@@ -14,11 +14,11 @@ import jpt.Utilities;
 
 bool UnitTests_BinarySearch_Fixed()
 {
-	jpt::StaticArray<int32, 10> data = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    jpt::StaticArray<int32, 10> data = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-	JPT_ENSURE(jpt::BinarySearch(data, 5) != data.end());
-	JPT_ENSURE(jpt::BinarySearch(data, 6) != data.end());
-	JPT_ENSURE(jpt::BinarySearch(data, 12) == data.end());
+    JPT_ENSURE(jpt::BinarySearch(data, 5) != data.end());
+    JPT_ENSURE(jpt::BinarySearch(data, 6) != data.end());
+    JPT_ENSURE(jpt::BinarySearch(data, 12) == data.end());
 
     return true;
 }

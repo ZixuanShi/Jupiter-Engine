@@ -11,13 +11,13 @@ import jpt.TypeDefs;
 
 export namespace jpt::File
 {
-	enum class Source : uint8
-	{
-		Engine,		// Engine development folder
-		Client,		// Client development folder
-		Output,		// Build output folder. This could be anywhere if Release build
-		Saved,		// Output/_Saved
+    enum class Source : uint8
+    {
+        Engine,        // Engine development folder
+        Client,        // Client development folder
+        Output,        // Build output folder. This could be anywhere if Release build
+        Saved,        // Output/_Saved
 
-		Baked,		// Release: Output/Baked. Non-Release: Engine/Baked or Client/Baked
-	};
+        Baked,        // Release: Output/Baked. Non-Release: Engine/Baked or Client/Baked
+    };
 }

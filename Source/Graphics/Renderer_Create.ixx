@@ -17,45 +17,45 @@ import jpt.ProjectSettings;
 
 export namespace jpt
 {
-	Graphics_API FindGraphicsAPI()
-	{
-		Graphics_API api = Graphics_API::Unknown;
+    Graphics_API FindGraphicsAPI()
+    {
+        Graphics_API api = Graphics_API::Unknown;
 
-		// Check CommandLine for graphics_api
-		if (CommandLine::GetInstance().Has("graphics_api"))
-		{
-			api = CommandLine::GetInstance().Get<String>("graphics_api");
-		}
-		// Check Assets/Config/ProjectSettings.json project settings
-		else if (String graphicsApi; ProjectSettings::GetInstance().TryGet("graphics_api", graphicsApi))
-		{
-			api = graphicsApi;
-		}
-		// Default based on platform
-		else
-		{
+        // Check CommandLine for graphics_api
+        if (CommandLine::GetInstance().Has("graphics_api"))
+        {
+            api = CommandLine::GetInstance().Get<String>("graphics_api");
+        }
+        // Check Assets/Config/ProjectSettings.json project settings
+        else if (String graphicsApi; ProjectSettings::GetInstance().TryGet("graphics_api", graphicsApi))
+        {
+            api = graphicsApi;
+        }
+        // Default based on platform
+        else
+        {
 #if IS_PLATFORM_WIN64
-			api = Graphics_API::Vulkan;
+            api = Graphics_API::Vulkan;
 #endif
-		}
+        }
 
-		JPT_ASSERT(api != Graphics_API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
-		return api;
-	}
+        JPT_ASSERT(api != Graphics_API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
+        return api;
+    }
 
-	Renderer* Renderer_Create(Graphics_API api)
-	{
-		switch (api.Value())
-		{
-		case Graphics_API::Vulkan:
-			return new Renderer_Vulkan();
+    Renderer* Renderer_Create(Graphics_API api)
+    {
+        switch (api.Value())
+        {
+        case Graphics_API::Vulkan:
+            return new Renderer_Vulkan();
 
-		case Graphics_API::DX12:
-			return new Renderer_DX12();
+        case Graphics_API::DX12:
+            return new Renderer_DX12();
 
-		default:
-			JPT_ERROR("Un-implemented Graphics API: " + ToString(api));
-			return nullptr;
-		}
-	}
+        default:
+            JPT_ERROR("Un-implemented Graphics API: " + ToString(api));
+            return nullptr;
+        }
+    }
 }

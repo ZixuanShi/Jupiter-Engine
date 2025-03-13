@@ -9,15 +9,15 @@ import jpt.Function;
 
 export namespace jpt
 {
-	struct BenchmarkUnit
-	{
-		String topic;
-		String context;
-		TimePrecision resultMS;
-	};
+    struct BenchmarkUnit
+    {
+        String topic;
+        String context;
+        TimePrecision resultMS;
+    };
 
-	String ToString(const BenchmarkUnit& unit)
-	{
-		return String::Format<256>("%s,%s,%f", unit.topic.ConstBuffer(), unit.context.ConstBuffer(), unit.resultMS);
-	}
+    String ToString(const BenchmarkUnit& unit)
+    {
+        return String::Format<256>("%s,%s,%f", unit.topic.ConstBuffer(), unit.context.ConstBuffer(), unit.resultMS);
+    }
 }

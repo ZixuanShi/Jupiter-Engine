@@ -60,9 +60,9 @@ bool UnitTests_Comparators_Equal()
         int32 data = 10;
 
         bool operator==(Foo other) const
-		{
-			return data == other.data;
-		}
+        {
+            return data == other.data;
+        }
     };
 
     Foo foo1;

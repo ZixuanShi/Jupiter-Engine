@@ -25,68 +25,68 @@ import jpt.Time.TypeDefs;
 
 namespace jpt
 {
-	namespace Callbacks
-	{
-		void OnError(int32 error, const char* description);
-	}
+    namespace Callbacks
+    {
+        void OnError(int32 error, const char* description);
+    }
 
-	export class Framework_GLFW final : public Framework
-	{
-		using Super = Framework;
+    export class Framework_GLFW final : public Framework
+    {
+        using Super = Framework;
 
-	public:
-		virtual bool PreInit() override;
-		virtual bool Init() override;
-		virtual void Update(TimePrecision deltaSeconds) override;
-		virtual void Shutdown() override;
+    public:
+        virtual bool PreInit() override;
+        virtual bool Init() override;
+        virtual void Update(TimePrecision deltaSeconds) override;
+        virtual void Shutdown() override;
 
-		virtual const char** GetRequiredExtensions(uint32& extensionCount) override;
-	};
+        virtual const char** GetRequiredExtensions(uint32& extensionCount) override;
+    };
 
-	bool Framework_GLFW::PreInit()
-	{
-		JPT_ENSURE(Super::PreInit());
+    bool Framework_GLFW::PreInit()
+    {
+        JPT_ENSURE(Super::PreInit());
 
-		JPT_ENSURE(glfwInit());
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+        JPT_ENSURE(glfwInit());
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		glfwSetErrorCallback(Callbacks::OnError);
+        glfwSetErrorCallback(Callbacks::OnError);
 
-		return true;
-	}
+        return true;
+    }
 
-	bool Framework_GLFW::Init()
-	{
-		JPT_ENSURE(Super::Init());
+    bool Framework_GLFW::Init()
+    {
+        JPT_ENSURE(Super::Init());
 
-		return true;
-	}
+        return true;
+    }
 
-	void Framework_GLFW::Update(TimePrecision deltaSeconds)
-	{
-		Super::Update(deltaSeconds);
+    void Framework_GLFW::Update(TimePrecision deltaSeconds)
+    {
+        Super::Update(deltaSeconds);
 
-		glfwPollEvents();
-	}
+        glfwPollEvents();
+    }
 
-	void Framework_GLFW::Shutdown()
-	{
-		glfwTerminate();
+    void Framework_GLFW::Shutdown()
+    {
+        glfwTerminate();
 
-		Super::Shutdown();
-	}
+        Super::Shutdown();
+    }
 
-	const char** Framework_GLFW::GetRequiredExtensions(uint32& extensionCount)
-	{
-		return glfwGetRequiredInstanceExtensions(&extensionCount);
-	}
+    const char** Framework_GLFW::GetRequiredExtensions(uint32& extensionCount)
+    {
+        return glfwGetRequiredInstanceExtensions(&extensionCount);
+    }
 
-	namespace Callbacks
-	{
-		void OnError(int32 error, const char* description)
-		{
-			JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
-		}
-	}
+    namespace Callbacks
+    {
+        void OnError(int32 error, const char* description)
+        {
+            JPT_ERROR("GLFW Error: " + ToString(error) + " - " + description);
+        }
+    }
 }

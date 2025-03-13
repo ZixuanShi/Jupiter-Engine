@@ -10,17 +10,17 @@ import jpt.TypeDefs;
 
 export namespace jpt::Vulkan
 {
-	/** A command pool is a memory pool that holds command buffers */
-	class CommandPool
-	{
-	private:
-		VkCommandPool m_commandPool = VK_NULL_HANDLE;
+    /** A command pool is a memory pool that holds command buffers */
+    class CommandPool
+    {
+    private:
+        VkCommandPool m_commandPool = VK_NULL_HANDLE;
 
-	public:
-		bool Init();
-		void Shutdown();
+    public:
+        bool Init();
+        void Shutdown();
 
-	public:
-		VkCommandPool GetHandle() const { return m_commandPool; }
-	};
+    public:
+        VkCommandPool GetHandle() const { return m_commandPool; }
+    };
 }

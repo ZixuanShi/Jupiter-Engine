@@ -12,14 +12,14 @@ import jpt.Utilities;
 
 bool UnitTests_Triangle2_PointInsideTriangle()
 {
-	Triangle2f triangle2(Vec2f(0.0f, 0.0f), Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
-	Vec2f point(0.5f, 0.5f);
+    Triangle2f triangle2(Vec2f(0.0f, 0.0f), Vec2f(1.0f, 0.0f), Vec2f(0.0f, 1.0f));
+    Vec2f point(0.5f, 0.5f);
 
-	JPT_ENSURE(triangle2.Inside(point));
+    JPT_ENSURE(triangle2.Inside(point));
 
-	triangle2 = Triangle2f(Vec2f(10.0f, 10.0f), Vec2f(11.0f, 10.0f), Vec2f(10.0f, 11.0f));
+    triangle2 = Triangle2f(Vec2f(10.0f, 10.0f), Vec2f(11.0f, 10.0f), Vec2f(10.0f, 11.0f));
 
-	JPT_ENSURE(!triangle2.Inside(point));
+    JPT_ENSURE(!triangle2.Inside(point));
 
     return true;
 }
