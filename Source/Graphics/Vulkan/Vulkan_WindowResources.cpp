@@ -32,7 +32,6 @@ import jpt.Constants;
 import jpt.Matrix44;
 import jpt.Math;
 import jpt.Utilities;
-import jpt.Rand;
 
 namespace jpt::Vulkan
 {
@@ -98,24 +97,6 @@ namespace jpt::Vulkan
             {
                 return false;
             }
-        }
-
-        RNG rng(0);
-
-        // Compute shader and particles
-        DynamicArray<Particle2> particles;
-        particles.Resize(m_particlesCount);
-
-        for (Particle2& particle : particles)
-        {
-            const float32 r = 0.25f * Sqrt(rng.Float());
-            const float32 theta = rng.Float() * 2.0f * Pi;
-            const float32 x = r * Cos(theta) * m_pOwner->GetAspectRatio();
-            const float32 y = r * Sin(theta);
-
-            particle.position = Vector2(x, y);
-            particle.velocity = Vector2(x, y).Normalized() * 0.00025f;
-            particle.color = LinearColor(rng.Float(), rng.Float(), rng.Float(), 1.0f);
         }
 
         return true;
