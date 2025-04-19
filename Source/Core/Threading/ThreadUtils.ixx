@@ -19,4 +19,9 @@ export namespace jpt
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
     }
+
+    Index GetThreadId()
+    {
+        return static_cast<Index>(std::hash<std::thread::id>{}(std::this_thread::get_id()));
+    }
 }
