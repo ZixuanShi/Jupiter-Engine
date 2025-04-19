@@ -79,6 +79,9 @@ bool UnitTests_MinMax()
 
 bool UnitTests_Floor()
 {
+    JPT_ENSURE(jpt::Floor(0.0) == 0);
+
+    JPT_ENSURE(jpt::Floor(1.0) == 1);
     JPT_ENSURE(jpt::Floor(1.3) == 1);
     JPT_ENSURE(jpt::Floor(1.5) == 1);
     JPT_ENSURE(jpt::Floor(1.7) == 1);
@@ -86,11 +89,65 @@ bool UnitTests_Floor()
     JPT_ENSURE(jpt::Floor(1.5f) == 1);
     JPT_ENSURE(jpt::Floor(1.7f) == 1);
 
+    JPT_ENSURE(jpt::Floor(-1.0) == -1);
+    JPT_ENSURE(jpt::Floor(-1.3) == -2);
+    JPT_ENSURE(jpt::Floor(-1.5) == -2);
+    JPT_ENSURE(jpt::Floor(-1.7) == -2);
+    JPT_ENSURE(jpt::Floor(-1.3f) == -2);
+    JPT_ENSURE(jpt::Floor(-1.5f) == -2);
+    JPT_ENSURE(jpt::Floor(-1.7f) == -2);
+
+    return true;
+}
+
+bool UnitTests_Ceil()
+{
+    JPT_ENSURE(jpt::Ceil(0.0) == 0);
+
+    JPT_ENSURE(jpt::Ceil(1.0) == 1);
+    JPT_ENSURE(jpt::Ceil(1.3) == 2);
+    JPT_ENSURE(jpt::Ceil(1.5) == 2);
+    JPT_ENSURE(jpt::Ceil(1.7) == 2);
+    JPT_ENSURE(jpt::Ceil(1.3f) == 2);
+    JPT_ENSURE(jpt::Ceil(1.5f) == 2);
+    JPT_ENSURE(jpt::Ceil(1.7f) == 2);
+
+    JPT_ENSURE(jpt::Ceil(-1.3) == -1);
+    JPT_ENSURE(jpt::Ceil(-1.5) == -1);
+    JPT_ENSURE(jpt::Ceil(-1.7) == -1);
+    JPT_ENSURE(jpt::Ceil(-1.3f) == -1);
+    JPT_ENSURE(jpt::Ceil(-1.5f) == -1);
+    JPT_ENSURE(jpt::Ceil(-1.7f) == -1);
+
+    return true;
+}
+
+bool UnitTests_Round()
+{
+    JPT_ENSURE(jpt::Round(0.0) == 0);
+
+    JPT_ENSURE(jpt::Round(1.0) == 1);
+    JPT_ENSURE(jpt::Round(1.3) == 1);
+    JPT_ENSURE(jpt::Round(1.5) == 2);
+    JPT_ENSURE(jpt::Round(1.7) == 2);
+    JPT_ENSURE(jpt::Round(1.3f) == 1);
+    JPT_ENSURE(jpt::Round(1.5f) == 2);
+    JPT_ENSURE(jpt::Round(1.7f) == 2);
+
+    JPT_ENSURE(jpt::Round(-1.3) == -1);
+    JPT_ENSURE(jpt::Round(-1.5) == -1);
+    JPT_ENSURE(jpt::Round(-1.7) == -2);
+    JPT_ENSURE(jpt::Round(-1.3f) == -1);
+    JPT_ENSURE(jpt::Round(-1.5f) == -1);
+    JPT_ENSURE(jpt::Round(-1.7f) == -2);
+
     return true;
 }
 
 bool UnitTests_FloorCeil()
 {
+    JPT_ENSURE(jpt::FloorCeil(0.0) == 0);
+
     JPT_ENSURE(jpt::FloorCeil(-1.0) == -1);
     JPT_ENSURE(jpt::FloorCeil(-0.8) == -1);
     JPT_ENSURE(jpt::FloorCeil(-0.7) == -1);
@@ -112,7 +169,10 @@ export bool RunUnitTests_Math()
     JPT_ENSURE(UnitTests_Abs());
     JPT_ENSURE(UnitTests_AreValuesClose());
     JPT_ENSURE(UnitTests_MinMax());
+
     JPT_ENSURE(UnitTests_Floor());
+    JPT_ENSURE(UnitTests_Ceil());
+    JPT_ENSURE(UnitTests_Round());
     JPT_ENSURE(UnitTests_FloorCeil());
 
     return true;

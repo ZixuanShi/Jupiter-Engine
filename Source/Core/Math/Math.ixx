@@ -259,22 +259,48 @@ export namespace jpt
         return (value & 1) == 0;
     }
 
-    template<Numeric T = int32, Floating TFloat = float32>
-    constexpr T Round(TFloat value)
-    {
-        return static_cast<T>(std::round(value));
-    }
-
+    /** @return Rount down integer */
     template<Numeric T = int32, Floating TFloat = float32>
     constexpr T Floor(TFloat value)
     {
-        return static_cast<T>(std::floor(value));
+        const T integer = static_cast<T>(value);
+        if (value >= integer)
+        {
+            return integer;
+        }
+        else
+        {
+            return integer - 1;
+        }
     }
 
     template<Numeric T = int32, Floating TFloat = float32>
     constexpr T Ceil(TFloat value)
     {
-        return static_cast<T>(std::ceil(value));
+        const T integer = static_cast<T>(value);
+        if (value <= integer)
+        {
+            return integer;
+        }
+        else
+        {
+            return integer + 1;
+        }
+    }
+
+    /** @return The nearest integer */
+    template<Numeric T = int32, Floating TFloat = float32>
+    constexpr T Round(TFloat value)
+    {
+        const TFloat fraction = value - Floor<T>(value);
+        if (fraction >= static_cast<TFloat>(0.5))
+        {
+            return Ceil<T>(value);
+        }
+        else
+        {
+            return Floor<T>(value);
+        }
     }
 
     /** @return The floor of the value if it's negative, otherwise the ceil */

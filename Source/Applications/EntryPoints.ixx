@@ -2,6 +2,11 @@
 
 module;
 
+#if IS_PLATFORM_WIN64
+    #define WIN32_LEAN_AND_MEAN
+    #include <Windows.h>
+#endif
+
 export module jpt.EntryPoints;
 
 import jpt.Application;
@@ -35,9 +40,6 @@ namespace jpt
 // Platform-specific entry points
 // Should handle command line arguments and call MainImpl_Final
 #if IS_PLATFORM_WIN64
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 
 import jpt.Platform.Win64;
 
