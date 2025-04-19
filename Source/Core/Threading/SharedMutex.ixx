@@ -22,7 +22,10 @@ export namespace jpt
         void Unlock();
         bool TryLock();
 
+        /** Only one thread can write */
         std::unique_lock<std::shared_mutex> CreateUniqueLock();
+
+        /** Multiple threads can read */
         std::shared_lock<std::shared_mutex> CreateSharedLock();
     };
 
