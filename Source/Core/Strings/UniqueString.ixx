@@ -13,19 +13,22 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-    /** Unique string through out application. Unreal's FName equivalent */
+    /** Unique string through out application. Unreal's FName equivalent
+        @example:
+            UniqueString uniqueStr("Hello");    // Allocates a new string
+            UniqueString uniqueStr2("Hello");   // Reuses the same string */
     class UniqueString
     {
     private:
         // Todo. Replace with ThreadSafeHashMap when available
         static inline HashMap<uint64, String> s_uniqueStrings;  /**< Hash map to store unique strings */
 
-        uint64 m_hash = 0;    /**< Hash value of this string */
+        uint64 m_hash = 0;    /**< Unique Identifier, key in the map to retreive the unique string */
 
     public:
         UniqueString(const char* str);
 
-        const String& GetString() const;
+        const String& operator*() const;
         uint64 GetHash() const;
 
     public:
@@ -43,7 +46,7 @@ export namespace jpt
 
     String ToString(const UniqueString& uniqueStr)
     {
-        return uniqueStr.GetString();
+        return *uniqueStr;
     }
     
     // ------------------------------------------------------------------------------------------------
@@ -58,7 +61,7 @@ export namespace jpt
         }
     }
 
-    const String& UniqueString::GetString() const
+    const String& UniqueString::operator*() const
     {
         JPT_ASSERT(s_uniqueStrings.Has(m_hash), "UniqueString not found in the map");
         return s_uniqueStrings[m_hash];
@@ -69,6 +72,9 @@ export namespace jpt
         return m_hash;
     }
 
+    // ------------------------------------------------------------------------------------------------
+    // Static Member Functions
+    // ------------------------------------------------------------------------------------------------
     void UniqueString::Clear()
     {
         s_uniqueStrings.Clear();

@@ -8,6 +8,9 @@ export module jpt.SharedMutex;
 
 export namespace jpt
 {
+    using UniqueLock = std::unique_lock<std::shared_mutex>;
+    using SharedLock = std::shared_lock<std::shared_mutex>;
+
     /** Protects a scope can be accessed by multiple readers or one writer at the same time */
     class SharedMutex
     {
@@ -15,42 +18,20 @@ export namespace jpt
         std::shared_mutex m_mutex;
 
     public:
-        SharedMutex() = default;
-        ~SharedMutex() = default;
-
-        void Lock();
-        void Unlock();
-        bool TryLock();
-
         /** Only one thread can write */
-        std::unique_lock<std::shared_mutex> CreateUniqueLock();
+        [[nodiscard]] UniqueLock CreateUniqueLock();
 
         /** Multiple threads can read */
-        std::shared_lock<std::shared_mutex> CreateSharedLock();
+        [[nodiscard]] SharedLock CreateSharedLock();
     };
 
-    void SharedMutex::Lock()
+    [[nodiscard]] UniqueLock SharedMutex::CreateUniqueLock()
     {
-        m_mutex.lock();
+        return UniqueLock(m_mutex);
     }
 
-    void SharedMutex::Unlock()
+    [[nodiscard]] SharedLock SharedMutex::CreateSharedLock()
     {
-        m_mutex.unlock();
-    }
-
-    bool SharedMutex::TryLock()
-    {
-        return m_mutex.try_lock();
-    }
-
-    std::unique_lock<std::shared_mutex> SharedMutex::CreateUniqueLock()
-    {
-        return std::unique_lock<std::shared_mutex>(m_mutex);
-    }
-
-    std::shared_lock<std::shared_mutex> SharedMutex::CreateSharedLock()
-    {
-        return std::shared_lock<std::shared_mutex>(m_mutex);
+        return SharedLock(m_mutex);
     }
 }
