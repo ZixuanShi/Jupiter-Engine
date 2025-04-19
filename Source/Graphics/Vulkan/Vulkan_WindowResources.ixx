@@ -33,15 +33,14 @@ export namespace jpt
         private:
             VkSurfaceKHR m_surface = VK_NULL_HANDLE;
             VkQueue m_presentQueue = VK_NULL_HANDLE;
+
             SwapChain m_swapChain;
             CommandPool m_commandPool;
+
             StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
             StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
             StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
             StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
-
-            uint32 m_particlesCount = 8192;
-            StaticArray<Buffer, kMaxFramesInFlight> m_shaderStorage;
 
             // Multisampling anti-aliasing
             VkImage m_colorImage;
