@@ -2,11 +2,6 @@
 
 module;
 
-#if IS_PLATFORM_WIN64
-    #define WIN32_LEAN_AND_MEAN
-    #include <Windows.h>
-#endif
-
 export module jpt.EntryPoints;
 
 import jpt.Application;
@@ -14,10 +9,6 @@ import jpt.CommandLine;
 
 #if IS_DEBUG
     import jpt.MemoryLeakDetector;
-#endif
-
-#if IS_PLATFORM_WIN64
-    import jpt.Platform.Win64;
 #endif
 
 namespace jpt
@@ -44,6 +35,11 @@ namespace jpt
 // Platform-specific entry points
 // Should handle command line arguments and call MainImpl_Final
 #if IS_PLATFORM_WIN64
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+import jpt.Platform.Win64;
 
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
