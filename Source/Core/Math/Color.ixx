@@ -17,37 +17,37 @@ export namespace jpt
 #pragma region Presets
     public:
         static consteval Color Black()        { return {   0,   0,   0 }; }
-        static consteval Color White()           { return { 255, 255, 255 }; }
-        static consteval Color Red()           { return { 255,   0,   0 }; }
-        static consteval Color Green()           { return {   0, 255,   0 }; }
-        static consteval Color Blue()           { return {   0,   0, 255 }; }
+        static consteval Color White()        { return { 255, 255, 255 }; }
+        static consteval Color Red()          { return { 255,   0,   0 }; }
+        static consteval Color Green()        { return {   0, 255,   0 }; }
+        static consteval Color Blue()         { return {   0,   0, 255 }; }
         static consteval Color Yellow()       { return { 255, 255,   0 }; }
-        static consteval Color Magenta()       { return { 255,   0, 255 }; }
-        static consteval Color Cyan()           { return {   0, 255, 255 }; }
-        static consteval Color Gray()           { return { 128, 128, 128 }; }
-        static consteval Color LightGray()       { return { 192, 192, 192 }; }
-        static consteval Color DarkGray()       { return {  64,  64,  64 }; }
-        static consteval Color LightRed()       { return { 255, 128, 128 }; }
+        static consteval Color Magenta()      { return { 255,   0, 255 }; }
+        static consteval Color Cyan()         { return {   0, 255, 255 }; }
+        static consteval Color Gray()         { return { 128, 128, 128 }; }
+        static consteval Color LightGray()    { return { 192, 192, 192 }; }
+        static consteval Color DarkGray()     { return {  64,  64,  64 }; }
+        static consteval Color LightRed()     { return { 255, 128, 128 }; }
         static consteval Color LightGreen()   { return { 128, 255, 128 }; }
-        static consteval Color LightBlue()       { return { 128, 128, 255 }; }
+        static consteval Color LightBlue()    { return { 128, 128, 255 }; }
         static consteval Color LightYellow()  { return { 255, 255, 128 }; }
         static consteval Color LightMagenta() { return { 255, 128, 255 }; }
-        static consteval Color LightCyan()       { return { 128, 255, 255 }; }
-        static consteval Color DarkRed()       { return { 128,   0,   0 }; }
-        static consteval Color DarkGreen()       { return {   0, 128,   0 }; }
-        static consteval Color DarkBlue()       { return {   0,   0, 128 }; }
+        static consteval Color LightCyan()    { return { 128, 255, 255 }; }
+        static consteval Color DarkRed()      { return { 128,   0,   0 }; }
+        static consteval Color DarkGreen()    { return {   0, 128,   0 }; }
+        static consteval Color DarkBlue()     { return {   0,   0, 128 }; }
         static consteval Color DarkYellow()   { return { 128, 128,   0 }; }
         static consteval Color DarkMagenta()  { return { 128,   0, 128 }; }
-        static consteval Color DarkCyan()       { return {   0, 128, 128 }; }
+        static consteval Color DarkCyan()     { return {   0, 128, 128 }; }
         static consteval Color Orange()       { return { 255, 165,   0 }; }
-        static consteval Color Brown()           { return { 165,  42,  42 }; }
-        static consteval Color Pink()           { return { 255, 192, 203 }; }
+        static consteval Color Brown()        { return { 165,  42,  42 }; }
+        static consteval Color Pink()         { return { 255, 192, 203 }; }
         static consteval Color Purple()       { return { 128,   0, 128 }; }
         static consteval Color Violet()       { return { 238, 130, 238 }; }
-        static consteval Color Gold()           { return { 255, 215,   0 }; }
+        static consteval Color Gold()         { return { 255, 215,   0 }; }
         static consteval Color Silver()       { return { 192, 192, 192 }; }
         static consteval Color Bronze()       { return { 205, 127,  50 }; }
-        static consteval Color Transparent()  { return { 0,   0,   0,   0 }; }
+        static consteval Color Transparent()  { return {   0,   0,   0,   0 }; }
 #pragma endregion Presets
 
     public:

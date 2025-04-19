@@ -11,10 +11,10 @@ export namespace jpt
     struct GraphEdge
     {
         Index m_destination = kInvalidValue<Index>;       /**< The destination node index */
-        Weight m_weight = static_cast<Weight>(0);      /**< 0 means no weight */
+        Precision m_weight = static_cast<Precision>(0);      /**< 0 means no weight */
 
         constexpr GraphEdge() = default;
-        constexpr GraphEdge(Index destination, Weight weight)
+        constexpr GraphEdge(Index destination, Precision weight)
             : m_destination(destination)
             , m_weight(weight)
         {

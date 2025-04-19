@@ -20,7 +20,7 @@ export namespace jpt
         constexpr GraphNode() = default;
         constexpr GraphNode(const TData& data);
 
-        constexpr void AddEdge(Index destination, Weight weight);
+        constexpr void AddEdge(Index destination, Precision weight);
         constexpr void OnEraseEdge(Index destination);
 
         TData& GetData();
@@ -44,7 +44,7 @@ export namespace jpt
     }
 
     template<typename TData>
-    constexpr void GraphNode<TData>::AddEdge(Index destination, Weight weight)
+    constexpr void GraphNode<TData>::AddEdge(Index destination, Precision weight)
     {
         m_edges.EmplaceBack(destination, weight);
     }

@@ -17,36 +17,36 @@ export namespace jpt
     public:
         static consteval LinearColor Black()        { return {  0.0f,  0.0f,  0.0f }; }
         static consteval LinearColor White()        { return {  1.0f,  1.0f,  1.0f }; }
-        static consteval LinearColor Red()            { return {  1.0f,  0.0f,  0.0f }; }
+        static consteval LinearColor Red()          { return {  1.0f,  0.0f,  0.0f }; }
         static consteval LinearColor Green()        { return {  0.0f,  1.0f,  0.0f }; }
-        static consteval LinearColor Blue()            { return {  0.0f,  0.0f,  1.0f }; }
-        static consteval LinearColor Yellow()        { return {  1.0f,  1.0f,  0.0f }; }
-        static consteval LinearColor Magenta()        { return {  1.0f,  0.0f,  1.0f }; }
-        static consteval LinearColor Cyan()            { return {  0.0f,  1.0f,  1.0f }; }
-        static consteval LinearColor Gray()            { return {  0.5f,  0.5f,  0.5f }; }
+        static consteval LinearColor Blue()         { return {  0.0f,  0.0f,  1.0f }; }
+        static consteval LinearColor Yellow()       { return {  1.0f,  1.0f,  0.0f }; }
+        static consteval LinearColor Magenta()      { return {  1.0f,  0.0f,  1.0f }; }
+        static consteval LinearColor Cyan()         { return {  0.0f,  1.0f,  1.0f }; }
+        static consteval LinearColor Gray()         { return {  0.5f,  0.5f,  0.5f }; }
         static consteval LinearColor LightGray()    { return { 0.75f, 0.75f, 0.75f }; }
-        static consteval LinearColor DarkGray()        { return { 0.25f, 0.25f, 0.25f }; }
-        static consteval LinearColor LightRed()        { return {  1.0f,  0.5f,  0.5f }; }
+        static consteval LinearColor DarkGray()     { return { 0.25f, 0.25f, 0.25f }; }
+        static consteval LinearColor LightRed()     { return {  1.0f,  0.5f,  0.5f }; }
         static consteval LinearColor LightGreen()   { return {  0.5f,  1.0f,  0.5f }; }
         static consteval LinearColor LightBlue()    { return {  0.5f,  0.5f,  1.0f }; }
         static consteval LinearColor LightYellow()  { return {  1.0f,  1.0f,  0.5f }; }
         static consteval LinearColor LightMagenta() { return {  1.0f,  0.5f,  1.0f }; }
         static consteval LinearColor LightCyan()    { return {  0.5f,  1.0f,  1.0f }; }
-        static consteval LinearColor DarkRed()        { return {  0.5f,  0.0f,  0.0f }; }
+        static consteval LinearColor DarkRed()      { return {  0.5f,  0.0f,  0.0f }; }
         static consteval LinearColor DarkGreen()    { return {  0.0f,  0.5f,  0.0f }; }
-        static consteval LinearColor DarkBlue()        { return {  0.0f,  0.0f,  0.5f }; }
+        static consteval LinearColor DarkBlue()     { return {  0.0f,  0.0f,  0.5f }; }
         static consteval LinearColor DarkYellow()   { return {  0.5f,  0.5f,  0.0f }; }
         static consteval LinearColor DarkMagenta()  { return {  0.5f,  0.0f,  0.5f }; }
-        static consteval LinearColor DarkCyan()        { return {  0.0f,  0.5f,  0.5f }; }
-        static consteval LinearColor Orange()        { return {  1.0f,  0.5f,  0.0f }; }
+        static consteval LinearColor DarkCyan()     { return {  0.0f,  0.5f,  0.5f }; }
+        static consteval LinearColor Orange()       { return {  1.0f,  0.5f,  0.0f }; }
         static consteval LinearColor Brown()        { return {  0.6f,  0.4f,  0.2f }; }
-        static consteval LinearColor Pink()            { return {  1.0f, 0.75f,  0.8f }; }
-        static consteval LinearColor Purple()        { return {  0.5f,  0.0f,  0.5f }; }
-        static consteval LinearColor Violet()        { return {  0.5f,  0.0f,  1.0f }; }
-        static consteval LinearColor Gold()            { return {  1.0f, 0.84f,  0.0f }; }
-        static consteval LinearColor Silver()        { return { 0.75f, 0.75f, 0.75f }; }
-        static consteval LinearColor Bronze()        { return {  0.8f,  0.5f,  0.2f }; }
-        static consteval LinearColor Transparent()  { return { 0.0f,  0.0f,  0.0f,  0.0f }; }
+        static consteval LinearColor Pink()         { return {  1.0f, 0.75f,  0.8f }; }
+        static consteval LinearColor Purple()       { return {  0.5f,  0.0f,  0.5f }; }
+        static consteval LinearColor Violet()       { return {  0.5f,  0.0f,  1.0f }; }
+        static consteval LinearColor Gold()         { return {  1.0f, 0.84f,  0.0f }; }
+        static consteval LinearColor Silver()       { return { 0.75f, 0.75f, 0.75f }; }
+        static consteval LinearColor Bronze()       { return {  0.8f,  0.5f,  0.2f }; }
+        static consteval LinearColor Transparent()  { return {  0.0f,  0.0f,  0.0f,  0.0f }; }
 #pragma endregion Presets
 
     public:
