@@ -66,7 +66,7 @@ namespace jpt
 
         // Set current window callbacks
         glfwSetWindowUserPointer(m_pGLFWWindow, this);
-
+        
         // Window
         glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
         glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);

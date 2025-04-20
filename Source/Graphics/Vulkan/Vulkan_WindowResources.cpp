@@ -355,20 +355,9 @@ namespace jpt::Vulkan
         }
     }
 
-    void WindowResources::UpdateUniformBuffer(TimePrecision deltaSeconds)
+    void WindowResources::UpdateUniformBuffer(TimePrecision /*deltaSeconds*/)
     {
-        const Vec3 translation = Vec3(0.0f, 0.0f, 0.0f);
-        static Precision rotation = 0.0f;
-        rotation += deltaSeconds * ToRadians(30.0f);
-        if (rotation > TwoPi)
-        {
-            rotation -= TwoPi;
-        }
-
         Uniform_MVP mvp = {};
-        mvp.model.Translate(translation);
-        mvp.model.RotateY(rotation);
-        mvp.model.Scale(1.0f);
 
         mvp.view = GetVkRenderer()->GetCamera().GetMatrix();
 
