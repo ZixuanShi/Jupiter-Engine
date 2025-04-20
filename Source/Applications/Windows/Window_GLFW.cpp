@@ -51,8 +51,10 @@ namespace jpt
         void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
     }
 
-    bool Window_GLFW::Internal_Init(const char* title, int32 width, int32 height)
+    bool Window_GLFW::Init(const char* title, int32 width, int32 height)
     {
+        Super::Init(title, width, height);
+
         // Create GLFW window
         m_pGLFWWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
         if (!m_pGLFWWindow)
@@ -64,7 +66,7 @@ namespace jpt
 
         // Set current window callbacks
         glfwSetWindowUserPointer(m_pGLFWWindow, this);
-        
+
         // Window
         glfwSetWindowCloseCallback(m_pGLFWWindow, Callbacks::OnWindowClose);
         glfwSetFramebufferSizeCallback(m_pGLFWWindow, Callbacks::OnWindowResize);
@@ -78,10 +80,12 @@ namespace jpt
         return true;
     }
 
-    void Window_GLFW::Internal_Shutdown()
+    void Window_GLFW::Shutdown()
     {
         glfwDestroyWindow(m_pGLFWWindow);
         m_pGLFWWindow = nullptr;
+
+        Super::Shutdown();
     }
 
     bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)

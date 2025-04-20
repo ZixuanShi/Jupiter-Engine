@@ -41,7 +41,7 @@ export namespace jpt
         void Shutdown();
 
     public:
-        Window* Create(const char* title = "New Window", int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
+        Window* Create(const char* title = Window::kDefaultTitle, int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
         void Destroy(const Window* pWindowToDestroy);
 
     public:
@@ -85,7 +85,7 @@ export namespace jpt
         m_windows.Clear();
     }
 
-    Window* WindowManager::Create(const char* title /* = "New Window"*/, int32 width /*= Window::kDefaultWidth*/, int32 height /*= Window::kDefaultHeight*/)
+    Window* WindowManager::Create(const char* title /* = Window::kDefaultTitle*/, int32 width /*= Window::kDefaultWidth*/, int32 height /*= Window::kDefaultHeight*/)
     {
         JPT_ASSERT(m_windows.Count() < kMaxWindows, "Maximum number of windows reached");
         

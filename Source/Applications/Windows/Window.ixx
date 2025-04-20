@@ -1,15 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Validation/Assert.h"
-
 export module jpt.Window;
 
 import jpt.Vector2;
 import jpt.Any;
 import jpt.DynamicArray;
-
 import jpt.TypeDefs;
 import jpt.Time.TypeDefs;
 
@@ -18,86 +13,40 @@ export namespace jpt
     class Window
     {
     public:
+        static constexpr const char* kDefaultTitle = "Unnamed"; /**< Default window title */
         static constexpr int32 kDefaultWidth  = 800;
         static constexpr int32 kDefaultHeight = 600;
 
     protected:
+        const char* m_title = kDefaultTitle; /**< Window title */
         Vec2i m_frameSize;    /**< xy are window's screen lengths in pixels */
+
+        // FPS
         uint32 m_fps = 0;
+        uint32 m_frameCount = 0;
+        TimePrecision m_accumulator = 0.0f;
 
     public:
         virtual ~Window() = default;
 
-        bool Init(const char* title, int32 width, int32 height);
-        void Update(TimePrecision deltaSeconds);
-        void Shutdown();
+        virtual bool Init(const char* title, int32 width, int32 height);
+        virtual void Update(TimePrecision deltaSeconds);
+        virtual void Shutdown();
 
     public:
-        virtual bool CreateSurface([[maybe_unused]] const DynamicArray<Any>& context) { JPT_ASSERT(false); return true; }
-        virtual bool ShouldClose() const { JPT_ASSERT(false); return false; }
-
-        virtual void SetMousePosition(Vec2i) { JPT_ASSERT(false); }
-        virtual void SetCursorVisible(bool) { JPT_ASSERT(false); }
+        virtual bool CreateSurface([[maybe_unused]] const DynamicArray<Any>& context);
+        virtual bool ShouldClose() const;
+        virtual void SetMousePosition(Vec2i);
+        virtual void SetCursorVisible(bool);
 
     public:
         Vec2i GetFrameSize() const;
         void ResizeFrame(Vec2i frameSize);
-        
+
         float GetAspectRatio() const;
         bool IsMinimized() const;
 
-    protected:
-        virtual bool Internal_Init(const char* /*title*/, int32 /*width*/, int32 /*height*/) { return true; }
-        virtual void Internal_Update(TimePrecision /*deltaSeconds*/) {}
-        virtual void Internal_Shutdown() {}
+    private:
+        void CalcFPS(TimePrecision deltaSeconds);
     };
-
-    bool Window::Init(const char* title, int32 width, int32 height)
-    {
-        m_frameSize = Vec2i(width, height);
-        return Internal_Init(title, width, height);
-    }
-
-    void Window::Update(TimePrecision deltaSeconds)
-    {
-        static uint32 frameCount = 0;
-        static TimePrecision accumulator = 0.0;
-
-        ++frameCount;
-        accumulator += deltaSeconds;
-
-        if (accumulator >= 1.0)
-        {
-            m_fps = frameCount;
-            frameCount = 0;
-            accumulator = 0.0;
-        }
-
-        Internal_Update(deltaSeconds);
-    }
-
-    void Window::Shutdown()
-    {
-        Internal_Shutdown();
-    }
-
-    Vec2i Window::GetFrameSize() const
-    {
-        return m_frameSize;
-    }
-
-    void Window::ResizeFrame(Vec2i frameSize)
-    {
-        m_frameSize = frameSize;
-    }
-
-    float Window::GetAspectRatio() const
-    {
-        return static_cast<float>(m_frameSize.x) / static_cast<float>(m_frameSize.y);
-    }
-
-    bool Window::IsMinimized() const
-    {
-        return m_frameSize.x == 0 || m_frameSize.y == 0;
-    }
 }
