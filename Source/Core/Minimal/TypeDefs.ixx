@@ -19,8 +19,8 @@ export using int64    = int64_t;
 export using float32  = float;
 export using float64  = double;
 
-export using Id            = size_t;
-export using Index         = size_t;
+export using Id            = size_t;    // Unique ID for objects
+export using Index         = size_t;    // Index for containers
 export using Precision     = float32;
 export using TimePrecision = float32;
 

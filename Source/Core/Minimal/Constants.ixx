@@ -43,4 +43,6 @@ export namespace jpt
 export constexpr Precision Pi = jpt::kPi<Precision>;
 export constexpr Precision TwoPi = jpt::kTwoPi<Precision>;
 export constexpr Precision HalfPi = jpt::kHalfPi<Precision>;
+
+export constexpr Id    kInvalidId    = jpt::kInvalidValue<Id>;
 export constexpr Index kInvalidIndex = jpt::kInvalidValue<Index>;
