@@ -19,11 +19,11 @@ namespace jpt
     private:
         GLFWwindow* m_pGLFWWindow = nullptr;
 
-    public:
-        virtual bool Init(const char* title, int32 width, int32 height) override;
-        virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+    protected:
+        virtual bool Internal_Init(const char* title, int32 width, int32 height) override;
+        virtual void Internal_Shutdown() override;
 
+    public:
         virtual bool CreateSurface(const DynamicArray<Any>& context) override;
         virtual void SetMousePosition(Vec2i position) override;
         virtual void SetCursorVisible(bool isVisible) override;

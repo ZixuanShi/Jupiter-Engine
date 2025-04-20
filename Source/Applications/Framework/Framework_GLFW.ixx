@@ -36,7 +36,6 @@ namespace jpt
 
     public:
         virtual bool PreInit() override;
-        virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
         virtual void Shutdown() override;
 
@@ -52,13 +51,6 @@ namespace jpt
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         glfwSetErrorCallback(Callbacks::OnError);
-
-        return true;
-    }
-
-    bool Framework_GLFW::Init()
-    {
-        JPT_ENSURE(Super::Init());
 
         return true;
     }

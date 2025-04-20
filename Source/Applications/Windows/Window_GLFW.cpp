@@ -51,10 +51,8 @@ namespace jpt
         void OnKey(GLFWwindow* pGLFWWindow, int32 key, int32 scancode, int32 action, int32 mods);
     }
 
-    bool Window_GLFW::Init(const char* title, int32 width, int32 height)
+    bool Window_GLFW::Internal_Init(const char* title, int32 width, int32 height)
     {
-        JPT_ENSURE(Super::Init(title, width, height));
-
         // Create GLFW window
         m_pGLFWWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
         if (!m_pGLFWWindow)
@@ -80,17 +78,10 @@ namespace jpt
         return true;
     }
 
-    void Window_GLFW::Update(TimePrecision deltaSeconds)
-    {
-        Super::Update(deltaSeconds);
-    }
-
-    void Window_GLFW::Shutdown()
+    void Window_GLFW::Internal_Shutdown()
     {
         glfwDestroyWindow(m_pGLFWWindow);
         m_pGLFWWindow = nullptr;
-
-        Super::Shutdown();
     }
 
     bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)

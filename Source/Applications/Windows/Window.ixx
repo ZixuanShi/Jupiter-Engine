@@ -28,11 +28,11 @@ export namespace jpt
     public:
         virtual ~Window() = default;
 
-        virtual bool PreInit() { return true; }
-        virtual bool Init(const char* title, int32 width, int32 height);
-        virtual void Update(TimePrecision deltaSeconds);
-        virtual void Shutdown() {}
+        bool Init(const char* title, int32 width, int32 height);
+        void Update(TimePrecision deltaSeconds);
+        void Shutdown();
 
+    public:
         virtual bool CreateSurface([[maybe_unused]] const DynamicArray<Any>& context) { JPT_ASSERT(false); return true; }
         virtual bool ShouldClose() const { JPT_ASSERT(false); return false; }
 
@@ -45,12 +45,17 @@ export namespace jpt
         
         float GetAspectRatio() const;
         bool IsMinimized() const;
+
+    protected:
+        virtual bool Internal_Init(const char* /*title*/, int32 /*width*/, int32 /*height*/) { return true; }
+        virtual void Internal_Update(TimePrecision /*deltaSeconds*/) {}
+        virtual void Internal_Shutdown() {}
     };
 
-    bool Window::Init(const char*, int32 width, int32 height)
+    bool Window::Init(const char* title, int32 width, int32 height)
     {
         m_frameSize = Vec2i(width, height);
-        return true;
+        return Internal_Init(title, width, height);
     }
 
     void Window::Update(TimePrecision deltaSeconds)
@@ -67,6 +72,13 @@ export namespace jpt
             frameCount = 0;
             accumulator = 0.0;
         }
+
+        Internal_Update(deltaSeconds);
+    }
+
+    void Window::Shutdown()
+    {
+        Internal_Shutdown();
     }
 
     Vec2i Window::GetFrameSize() const

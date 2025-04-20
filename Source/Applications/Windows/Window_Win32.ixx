@@ -31,18 +31,15 @@ namespace jpt
         HWND m_hwnd = nullptr;
 
     public:
-        virtual bool Init(const char* title, int32 width, int32 height) override;
-        virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+        virtual bool Internal_Init(const char* title, int32 width, int32 height) override;
+        virtual void Internal_Shutdown() override;
 
     public:
         HWND GetHWND() const { return m_hwnd; }
     };
 
-    bool Window_Win32::Init(const char* title, int32 width, int32 height)
+    bool Window_Win32::Internal_Init(const char* title, int32 width, int32 height)
     {
-        JPT_ENSURE(Super::Init(title, width, height));
-
         RECT windowRect = { 0,0, static_cast<LONG>(width), static_cast<LONG>(height) };
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -72,15 +69,8 @@ namespace jpt
         return true;
     }
 
-    void Window_Win32::Update(TimePrecision deltaSeconds)
-    {
-        Super::Update(deltaSeconds);
-    }
-
-    void Window_Win32::Shutdown()
+    void Window_Win32::Internal_Shutdown()
     {
         DestroyWindow(m_hwnd);
-
-        Super::Shutdown();
     }
 }
