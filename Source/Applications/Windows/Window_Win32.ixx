@@ -45,7 +45,7 @@ namespace jpt
         RECT windowRect = { 0,0, static_cast<LONG>(width), static_cast<LONG>(height) };
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-        Platform_Win64* pPlatformWin64 = static_cast<Platform_Win64*>(GetApplication()->GetPlatform());
+        const Platform_Win64* pPlatformWin64 = dynamic_cast<Platform_Win64*>(GetApplication()->GetPlatform());
         JPT_ASSERT(pPlatformWin64, "Platform is not set to win64");
 
         LPCWSTR titleW = ToWChars(title);
