@@ -19,14 +19,21 @@ namespace jpt::Vulkan
 {
     bool DescriptorPool::Init()
     {
-        VkDescriptorPoolSize poolSize{};
-        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32>(kMaxFramesInFlight);
+        // Create pool sizes for both descriptor types
+        VkDescriptorPoolSize poolSizes[2];
+
+        // Uniform buffer descriptors
+        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[0].descriptorCount = static_cast<uint32>(kMaxFramesInFlight * WindowManager::kMaxWindows);
+
+        // Combined image sampler descriptors
+        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSizes[1].descriptorCount = static_cast<uint32>(kMaxFramesInFlight * WindowManager::kMaxWindows);
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = 1;
-        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.poolSizeCount = 2;  // Changed from 1 to 2
+        poolInfo.pPoolSizes = poolSizes;  // Point to array
         poolInfo.maxSets = static_cast<uint32>(kMaxFramesInFlight * WindowManager::kMaxWindows);
         poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
