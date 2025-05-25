@@ -63,8 +63,17 @@ export namespace jpt
     }
 
     /** @return Heap allocated Buffer with content of input string. Caller needs to take ownership of buffer. i.e. Memory Managing, deleting */
-    wchar_t* ToWChars(const char* pCStr, size_t count)
+    wchar_t* ToWChars(const char* pCStr, size_t count = npos)
     {
+        if (!pCStr || count == 0)
+        {
+            return nullptr;
+        }
+        if (count == npos)
+        {
+            count = FindCharsCount(pCStr);
+        }
+
         ++count;    // For null terminator
 
         wchar_t* pBuffer = new wchar_t[count];
@@ -72,12 +81,17 @@ export namespace jpt
 
         return pBuffer;
     }
-    wchar_t* ToWChars(const char* pCStr)
+    char* ToChars(const wchar_t* pWStr, size_t count = npos)
     {
-        return ToWChars(pCStr, FindCharsCount(pCStr));
-    }
-    char* ToChars(const wchar_t* pWStr, size_t count)
-    {
+        if (!pWStr || count == 0)
+        {
+            return nullptr;
+        }
+        if (count == npos)
+        {
+            count = FindCharsCount(pWStr);
+        }
+
         ++count;    // For null terminator
 
         char* pBuffer = new char[count];

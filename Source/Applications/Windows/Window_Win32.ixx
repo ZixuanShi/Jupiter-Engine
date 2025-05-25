@@ -48,7 +48,7 @@ namespace jpt
         const Platform_Win64* pPlatformWin64 = dynamic_cast<Platform_Win64*>(GetApplication()->GetPlatform());
         JPT_ASSERT(pPlatformWin64, "Platform is not set to win64");
 
-        LPCWSTR titleW = ToWChars(title);
+        const LPCWSTR titleW = ToWChars(title);
 
         // Create the window and store a handle to it
         m_hwnd = CreateWindow(
@@ -64,7 +64,7 @@ namespace jpt
             pPlatformWin64->GetHINSTANCE(),
             this);
 
-        delete titleW;
+        delete[] titleW;
 
         ShowWindow(m_hwnd, pPlatformWin64->GetnCmdShow());
 
