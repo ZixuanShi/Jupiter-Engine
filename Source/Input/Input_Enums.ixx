@@ -28,11 +28,11 @@ export namespace jpt::Input
         Pressed,    // Newly pressed in last frame
         Released,   // Newly released in last frame
 
-        Down,       // Currently down. No matter if it's newly pressed in last frame
-        Up,         // Currently up. No matter if it's newly released in last frame
+        //Down,       // Currently down. No matter if it's newly pressed in last frame
+        //Up,         // Currently up. No matter if it's newly released in last frame
 
         Held,       // Pressed for more than one frame
-        Smashed,    // Repeatedly pressed within a short time
+        //Smashed,    // Repeatedly pressed within a short time
 
         ItemCount,
     );

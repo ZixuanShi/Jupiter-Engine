@@ -35,8 +35,8 @@ export namespace jpt
         using TComparator   = _TComparator;
         using TData         = Pair<TKey, TValue>;
         using TBucket       = LinkedList<TData>;
-        using TBuckets         = DynamicArray<TBucket>;
-        using Iterator        = jpt_private::HashTableIterator<TData>;
+        using TBuckets      = DynamicArray<TBucket>;
+        using Iterator      = jpt_private::HashTableIterator<TData>;
         using ConstIterator = jpt_private::ConstHashTableIterator<TData>;
 
     private:
