@@ -64,7 +64,6 @@ export namespace jpt
         VertexBuffer m_vertexBuffer;
         IndexBuffer m_indexBuffer;
 
-
         DynamicArray<WindowResources> m_windowResources;
 
     public:
@@ -76,6 +75,9 @@ export namespace jpt
 
         virtual void RegisterWindow(Window* pWindow) override;
         virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
+
+    public:
+        virtual void SetShouldRecreateSwapChains() override;
 
     public:
         VkInstance GetVkInstance()                    { return m_instance;                  }

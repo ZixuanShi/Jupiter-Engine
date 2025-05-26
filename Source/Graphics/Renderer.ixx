@@ -44,6 +44,11 @@ export namespace jpt
         virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
 
     public:
+        /** Sets shouldRecreateSwapChain for all window resources */
+        virtual void SetShouldRecreateSwapChains() {}
+
+    public:
+        GraphicsSettings& GetSettings();
         const GraphicsSettings& GetSettings() const;
 
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
@@ -52,5 +57,5 @@ export namespace jpt
         const Camera& GetCamera() const { return m_camera; }
     };
 
-    const GraphicsSettings& GetGraphicsSettings();
+    GraphicsSettings& GetGraphicsSettings();
 }

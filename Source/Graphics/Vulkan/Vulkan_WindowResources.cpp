@@ -183,6 +183,20 @@ namespace jpt::Vulkan
         return m_pOwner;
     }
 
+    bool WindowResources::CanDraw() const
+    {
+        bool canDraw = true;
+
+        canDraw &= !m_pOwner->IsMinimized();
+
+        return canDraw;
+    }
+
+    void WindowResources::SetShouldRecreateSwapChain()
+    {
+        m_shouldRecreateSwapChain = true;
+    }
+
     void WindowResources::RecreateSwapChain()
     {
         LogicalDevice::Get().WaitIdle();
@@ -411,14 +425,5 @@ namespace jpt::Vulkan
         vkDestroyImageView(LogicalDevice::GetVkDevice(), m_depthImageView, nullptr);
         vkDestroyImage(LogicalDevice::GetVkDevice(), m_depthImage, nullptr);
         vkFreeMemory(LogicalDevice::GetVkDevice(), m_depthImageMemory, nullptr);
-    }
-
-    bool WindowResources::CanDraw() const
-    {
-        bool canDraw = true;
-
-        canDraw &= !m_pOwner->IsMinimized();
-
-        return canDraw;
     }
 }

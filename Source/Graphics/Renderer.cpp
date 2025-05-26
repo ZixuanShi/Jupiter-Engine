@@ -34,12 +34,17 @@ namespace jpt
         m_camera.Update(deltaSeconds);
     }
 
+    GraphicsSettings& Renderer::GetSettings()
+    {
+        return m_settings;
+    }
+
     const GraphicsSettings& Renderer::GetSettings() const
     {
         return m_settings;
     }
 
-    const GraphicsSettings& GetGraphicsSettings()
+    GraphicsSettings& GetGraphicsSettings()
     {
         return GetApplication()->GetRenderer()->GetSettings();
     }

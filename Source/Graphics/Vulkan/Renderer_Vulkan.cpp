@@ -173,6 +173,14 @@ namespace jpt
         JPT_INFO("Window unregistered with Vulkan renderer: %lu", pWindow);
     }
 
+    void Renderer_Vulkan::SetShouldRecreateSwapChains()
+    {
+        for (WindowResources& resources : m_windowResources)
+        {
+            resources.SetShouldRecreateSwapChain();
+        }
+    }
+
     bool Renderer_Vulkan::CreateInstance()
     {
 #if !IS_RELEASE

@@ -40,6 +40,8 @@ export namespace jpt
         const T& Get(const String& key, const T& defaultValue) const;
 
         void Set(const String& key, const JsonData& value = JsonData());
+
+        void Erase(const String& key);
     };
 
     bool ProjectSettings::Load()
@@ -76,6 +78,12 @@ export namespace jpt
     void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
     {
         m_settings[key] = value;
+    }
+
+    void ProjectSettings::Erase(const String& key)
+    {
+        JPT_ASSERT(m_settings.Has(key), "ProjectSettings doesn't exist \"%s\"", key.ConstBuffer());
+        m_settings.Erase(key);
     }
 
     template<typename T>

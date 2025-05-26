@@ -14,5 +14,6 @@ export namespace jpt
 
     public:
         bool IsVSyncOn() const;
+        void SetVSyncOn(bool vSyncOn);
     };
 }

@@ -38,19 +38,19 @@ export namespace jpt
             CommandPool m_commandPool;
 
             StaticArray<VkCommandBuffer, kMaxFramesInFlight> m_commandBuffers;
-            StaticArray<SyncObjects, kMaxFramesInFlight> m_syncObjects;
-            StaticArray<UniformBuffer, kMaxFramesInFlight> m_uniformBuffers;
-            StaticArray<DescriptorSet, kMaxFramesInFlight> m_descriptorSets;
+            StaticArray<SyncObjects,     kMaxFramesInFlight> m_syncObjects;
+            StaticArray<UniformBuffer,   kMaxFramesInFlight> m_uniformBuffers;
+            StaticArray<DescriptorSet,   kMaxFramesInFlight> m_descriptorSets;
 
             // Multisampling anti-aliasing
-            VkImage m_colorImage;
+            VkImage        m_colorImage;
             VkDeviceMemory m_colorImageMemory;
-            VkImageView m_colorImageView;
+            VkImageView    m_colorImageView;
 
             // Depth Buffer
-            VkImage m_depthImage;
+            VkImage        m_depthImage;
             VkDeviceMemory m_depthImageMemory;
-            VkImageView m_depthImageView;
+            VkImageView    m_depthImageView;
 
             uint32 m_currentFrame = 0;
             bool m_shouldRecreateSwapChain = false;
@@ -65,15 +65,16 @@ export namespace jpt
             void DrawFrame();
 
             void Shutdown();
-            
-            void RecreateSwapChain();
 
         public:
             Window* GetOwner() const;
-
             bool CanDraw() const;
 
+            void SetShouldRecreateSwapChain();
+
         private:
+            void RecreateSwapChain();
+
             Optional<uint32> AcquireNextImage();
             void Record(uint32 imageIndex);
             void Submit() const;
