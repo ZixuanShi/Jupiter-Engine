@@ -219,8 +219,16 @@ namespace jpt::Vulkan
         vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, surface, &presentModeCount, nullptr);
         if (presentModeCount != 0)
         {
-            result.presentModes.Resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, surface, &presentModeCount, result.presentModes.Buffer());
+            DynamicArray<VkPresentModeKHR> presentModes(presentModeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(m_physicalDevice, surface, &presentModeCount, presentModes.Buffer());
+
+            for (VkPresentModeKHR presentMode : presentModes)
+            {
+                if (presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+                {
+                    result.supportsMailbox = true;
+                }
+            }
         }
 
         JPT_ASSERT(result.IsValid(), "Swap chain support details are invalid");

@@ -2,11 +2,16 @@
 
 module;
 
+#include "Core/Validation/Assert.h"
+
 #include <vulkan/vulkan.h>
 
 export module jpt.Vulkan.SwapChain.SupportDetails;
 
 import jpt.Vulkan.Constants;
+
+import jpt.Application;
+import jpt.Renderer;
 
 import jpt.Window;
 import jpt.Constants;
@@ -21,7 +26,8 @@ export namespace jpt::Vulkan
     {
         VkSurfaceCapabilitiesKHR capabilities;
         DynamicArray<VkSurfaceFormatKHR> formats;
-        DynamicArray<VkPresentModeKHR> presentModes;
+
+        bool supportsMailbox = false;
 
     public:
         VkSurfaceFormatKHR ChooseSwapSurfaceFormat() const;
@@ -47,14 +53,14 @@ export namespace jpt::Vulkan
 
     VkPresentModeKHR SwapChainSupportDetails::ChooseSwapPresentMode() const
     {
-        for (const VkPresentModeKHR& presentMode : presentModes)
+        // VSync off
+        if (!GetApplication()->GetRenderer()->GetSettings().VSyncOn)
         {
-            if (presentMode == VK_PRESENT_MODE_MAILBOX_KHR)
-            {
-                return presentMode;
-            }
+            JPT_ASSERT(supportsMailbox, "Current GPU doesn't support VK_PRESENT_MODE_MAILBOX_KHR, can't turn off VSync");
+            return VK_PRESENT_MODE_MAILBOX_KHR;
         }
 
+        // VSync on
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
@@ -83,6 +89,6 @@ export namespace jpt::Vulkan
 
     bool jpt::Vulkan::SwapChainSupportDetails::IsValid() const
     {
-        return !formats.IsEmpty() && !presentModes.IsEmpty();
+        return !formats.IsEmpty();
     }
 }

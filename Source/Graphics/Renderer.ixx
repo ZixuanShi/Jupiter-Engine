@@ -6,6 +6,8 @@ module;
 
 export module jpt.Renderer;
 
+import jpt.Graphics.Settings;
+
 import jpt.Texture.Sampler;
 import jpt.Camera;
 
@@ -21,8 +23,8 @@ export namespace jpt
     class Renderer
     {
     protected:
+        GraphicsSettings m_settings;
         TextureSampler* m_pTextureSampler = nullptr;
-
         Camera m_camera;
 
     public:
@@ -42,6 +44,8 @@ export namespace jpt
         virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
 
     public:
+        const GraphicsSettings& GetSettings() const;
+
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
         
         Camera& GetCamera() { return m_camera; }

@@ -11,7 +11,10 @@ namespace jpt
         EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResize);
         EventManager::GetInstance().Register<Event_Window_Close>(this, &Renderer::OnWindowClose);
 
-        return true;
+        bool success = true;
+        success &= m_settings.PreInit();
+
+        return success;
     }
 
     bool Renderer::Init()
@@ -27,5 +30,10 @@ namespace jpt
     void Renderer::Update(TimePrecision deltaSeconds)
     {
         m_camera.Update(deltaSeconds);
+    }
+
+    const GraphicsSettings& Renderer::GetSettings() const
+    {
+        return m_settings;
     }
 }
