@@ -51,4 +51,6 @@ export namespace jpt
         Camera& GetCamera() { return m_camera; }
         const Camera& GetCamera() const { return m_camera; }
     };
+
+    const GraphicsSettings& GetGraphicsSettings();
 }

@@ -4,11 +4,15 @@ export module jpt.Graphics.Settings;
 
 export namespace jpt
 {
-    struct GraphicsSettings
+    class GraphicsSettings
     {
-        bool VSyncOn;
+    private:
+        bool m_VSyncOn;
 
     public:
         bool PreInit();
+
+    public:
+        bool IsVSyncOn() const;
     };
 }

@@ -4,6 +4,8 @@ module;
 
 module jpt.Renderer;
 
+import jpt.Application;
+
 namespace jpt
 {
     bool Renderer::PreInit()
@@ -35,5 +37,10 @@ namespace jpt
     const GraphicsSettings& Renderer::GetSettings() const
     {
         return m_settings;
+    }
+
+    const GraphicsSettings& GetGraphicsSettings()
+    {
+        return GetApplication()->GetRenderer()->GetSettings();
     }
 }

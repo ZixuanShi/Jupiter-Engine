@@ -10,8 +10,13 @@ namespace jpt
 {
     bool GraphicsSettings::PreInit()
     {
-        VSyncOn = ProjectSettings::GetInstance().Get("VSyncOn", true);
+        m_VSyncOn = ProjectSettings::GetInstance().Get("VSyncOn", true);
 
         return true;
+    }
+
+    bool GraphicsSettings::IsVSyncOn() const
+    {
+        return m_VSyncOn;
     }
 }

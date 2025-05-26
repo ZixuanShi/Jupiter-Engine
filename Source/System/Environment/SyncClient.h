@@ -9,15 +9,15 @@ import jpt.System.Paths;
 namespace jpt                                                                        \
 {                                                                                    \
     Application* GetApplication()                                                    \
-    {                                                                                 \
-        static Application_##ApplicationName app;                                     \
+    {                                                                                \
+        static Application_##ApplicationName app;                                    \
         return &app;                                                                 \
     }                                                                                \
                                                                                      \
     const char* Application::GetName() const { return #ApplicationName; }            \
                                                                                      \
     const wchar_t* System::Paths::GetClientDirW() const                              \
-    {                                                                                  \
+    {                                                                                \
         return JPT_CLIENT_DIR_W;                                                     \
     }                                                                                \
 }
