@@ -353,6 +353,10 @@ namespace jpt::Vulkan
             m_shouldRecreateSwapChain = true;
             return;
         }
+
+        // Need to wait for current frame's presentation before next frame can be drawn
+        // Otherwise, will crash "vkQueueSubmit(): pSubmits[0].pSignalSemaphores[0] is being signaled by VkQueue, but it may still be in use by VkSwapchainKHR
+        vkQueueWaitIdle(m_presentQueue);
     }
 
     void WindowResources::UpdateUniformBuffer(TimePrecision /*deltaSeconds*/)
