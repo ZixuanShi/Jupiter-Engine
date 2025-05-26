@@ -14,7 +14,7 @@ I design, plan, write, test everything from scratch by myself
 - Vulkan and DX12 renderer
 - Core Systems. Input, Event System, Debugging, File IO, and more.
 - GLFW and WIN32 frameworks
-![Screenshot](Docs/ReadMe/Demo.png)
+![Alt Text](Docs/ReadMe/Demo.gif)
 
 # Install and Run Jupiter on Windows
 - Have Visual Studio 2022, and Vulkan 1.3.296.0 installed on your machine
