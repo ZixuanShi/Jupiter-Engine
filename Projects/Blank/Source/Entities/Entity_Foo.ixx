@@ -54,6 +54,14 @@ void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
         const bool isVSyncOn = jpt::GetGraphicsSettings().IsVSyncOn();
         jpt::GetGraphicsSettings().SetVSyncOn(!isVSyncOn);
     }
+
+    // Resize
+    if (eventKeyboardKey.GetKey() == jpt::Input::Key::R &&
+        hasCtrlMod && 
+        eventKeyboardKey.GetState() == jpt::Input::KeyState::Pressed)
+    {
+        jpt::GetApplication()->GetMainWindow()->Resize(Vec2i(480, 480));
+    }
 }
 
 void Entity_Foo::OnMouseButton(const jpt::Event_Mouse_Button& eventMouseButton)

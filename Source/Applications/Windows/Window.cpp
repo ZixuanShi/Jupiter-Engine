@@ -7,6 +7,9 @@ module;
 
 module jpt.Window;
 
+import jpt.Event.Manager;
+import jpt.Event.Window.Resize;
+
 namespace jpt
 {
     bool Window::Init(const char* title, int32 width, int32 height)
@@ -55,14 +58,24 @@ namespace jpt
         JPT_ASSERT(false); 
     }
 
+    void Window::Resize(Vec2i size)
+    {
+        SetFrameSize(size);
+
+        Resize_Impl(size);
+
+        Event_Window_Resize resizeEvent(this, size.x, size.y);
+        EventManager::GetInstance().Queue<Event_Window_Resize>(resizeEvent);
+    }
+
     Vec2i Window::GetFrameSize() const
     {
         return m_frameSize;
     }
 
-    void Window::ResizeFrame(Vec2i frameSize)
+    void Window::SetFrameSize(Vec2i size)
     {
-        m_frameSize = frameSize;
+        m_frameSize = size;
     }
 
     float Window::GetAspectRatio() const
@@ -88,5 +101,10 @@ namespace jpt
             m_frameCount = 0;
             m_accumulator = 0.0f;
         }
+    }
+
+    void Window::Resize_Impl(Vec2i)
+    {
+        JPT_ASSERT(false, "Resize_Impl() not overridden");
     }
 }

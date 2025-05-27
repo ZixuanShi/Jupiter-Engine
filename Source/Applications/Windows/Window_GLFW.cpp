@@ -116,6 +116,11 @@ namespace jpt
         glfwSetInputMode(m_pGLFWWindow, GLFW_CURSOR, isVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
 
+    void Window_GLFW::Resize_Impl(Vec2i size)
+    {
+        glfwSetWindowSize(m_pGLFWWindow, size.x, size.y);
+    }
+
     bool Window_GLFW::ShouldClose() const
     {
         return glfwWindowShouldClose(m_pGLFWWindow);
@@ -137,7 +142,7 @@ namespace jpt
             Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
             JPT_ASSERT(pWindow, "Couldn't cast window user pointer to jpt::Window");
 
-            pWindow->ResizeFrame(Vec2i(width, height));
+            pWindow->SetFrameSize(Vec2i(width, height));
 
             Event_Window_Resize eventWindowResize = { pWindow, width, height };
             EventManager::GetInstance().Send(eventWindowResize);

@@ -38,15 +38,21 @@ export namespace jpt
         virtual bool ShouldClose() const;
         virtual void SetMousePosition(Vec2i);
         virtual void SetCursorVisible(bool);
+        void Resize(Vec2i size);
 
     public:
         Vec2i GetFrameSize() const;
-        void ResizeFrame(Vec2i frameSize);
+
+        /** This only sets the frame size property, not doing actual window resizing. Use Resize() for resizing */
+        void SetFrameSize(Vec2i size);  
 
         float GetAspectRatio() const;
         bool IsMinimized() const;
 
     private:
         void CalcFPS(TimePrecision deltaSeconds);
+
+    protected:
+        virtual void Resize_Impl(Vec2i size);
     };
 }

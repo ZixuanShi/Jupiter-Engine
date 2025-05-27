@@ -113,7 +113,7 @@ namespace jpt
             {
                 if (pWindow)
                 {
-                    pWindow->ResizeFrame(Vec2i(LOWORD(lParam), HIWORD(lParam)));
+                    pWindow->SetFrameSize(Vec2i(LOWORD(lParam), HIWORD(lParam)));
                 }
                 return 0;
             }
