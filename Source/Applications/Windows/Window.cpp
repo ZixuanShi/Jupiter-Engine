@@ -62,10 +62,7 @@ namespace jpt
     {
         SetFrameSize(size);
 
-        Resize_Impl(size);
-
-        Event_Window_Resize resizeEvent(this, size.x, size.y);
-        EventManager::GetInstance().Queue<Event_Window_Resize>(resizeEvent);
+        // Inherited class handles the rest
     }
 
     Vec2i Window::GetFrameSize() const
@@ -101,10 +98,5 @@ namespace jpt
             m_frameCount = 0;
             m_accumulator = 0.0f;
         }
-    }
-
-    void Window::Resize_Impl(Vec2i)
-    {
-        JPT_ASSERT(false, "Resize_Impl() not overridden");
     }
 }

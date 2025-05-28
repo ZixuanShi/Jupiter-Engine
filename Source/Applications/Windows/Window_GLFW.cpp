@@ -116,8 +116,10 @@ namespace jpt
         glfwSetInputMode(m_pGLFWWindow, GLFW_CURSOR, isVisible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
 
-    void Window_GLFW::Resize_Impl(Vec2i size)
+    void Window_GLFW::Resize(Vec2i size)
     {
+        Super::Resize(size);
+
         glfwSetWindowSize(m_pGLFWWindow, size.x, size.y);
     }
 

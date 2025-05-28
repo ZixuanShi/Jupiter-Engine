@@ -11,6 +11,7 @@ module jpt.Application;
 import jpt.CommandLine;
 import jpt.Debugger;
 
+import jpt.Math;
 import jpt.ToString;
 
 import jpt.Hardware.Manager;
@@ -29,9 +30,8 @@ import jpt.Renderer.Create;
 import jpt.Input.Enums;
 import jpt.Input.Manager;
 
-import jpt.Scene.Manager;
-
 import jpt.Asset.Manager;
+import jpt.Scene.Manager;
 
 import jpt.System.Paths;
 import jpt.StopWatch;
@@ -155,8 +155,10 @@ namespace jpt
         static StopWatch::Point previous = StopWatch::Now();
         const StopWatch::Point current = StopWatch::Now();
         const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
+
         previous = current;
-        return deltaSeconds;
+
+        return Clamp(deltaSeconds, 0.0001f, 0.1f);
     }
 
     void Application::Run()

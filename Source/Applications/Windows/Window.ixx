@@ -38,7 +38,7 @@ export namespace jpt
         virtual bool ShouldClose() const;
         virtual void SetMousePosition(Vec2i);
         virtual void SetCursorVisible(bool);
-        void Resize(Vec2i size);
+        virtual void Resize(Vec2i size);
 
     public:
         Vec2i GetFrameSize() const;
@@ -51,8 +51,5 @@ export namespace jpt
 
     private:
         void CalcFPS(TimePrecision deltaSeconds);
-
-    protected:
-        virtual void Resize_Impl(Vec2i size);
     };
 }
