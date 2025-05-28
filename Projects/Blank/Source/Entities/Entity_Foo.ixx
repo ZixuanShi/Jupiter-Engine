@@ -51,7 +51,7 @@ void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
         hasCtrlMod && 
         eventKeyboardKey.GetState() == jpt::Input::KeyState::Pressed)
     {
-        const bool isVSyncOn = jpt::GetGraphicsSettings().IsVSyncOn();
+        const bool isVSyncOn = jpt::GetGraphicsSettings().GetVSyncOn();
         jpt::GetGraphicsSettings().SetVSyncOn(!isVSyncOn);
     }
 

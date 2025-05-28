@@ -9,16 +9,20 @@ import jpt.Renderer;
 
 import jpt.ProjectSettings;
 
+import jpt.UniqueString;
+
 namespace jpt
 {
+    static const UniqueString kVSyncOnKey = "VSyncOn";
+
     bool GraphicsSettings::PreInit()
     {
-        m_VSyncOn = ProjectSettings::GetInstance().Get("VSyncOn", true);
+        m_VSyncOn = ProjectSettings::GetInstance().Get(*kVSyncOnKey, true);
 
         return true;
     }
 
-    bool GraphicsSettings::IsVSyncOn() const
+    bool GraphicsSettings::GetVSyncOn() const
     {
         return m_VSyncOn;
     }
@@ -36,11 +40,11 @@ namespace jpt
 
         if (vSyncOn)
         {
-            ProjectSettings::GetInstance().Erase("VSyncOn");
+            ProjectSettings::GetInstance().Erase(*kVSyncOnKey);
         }
         else
         {
-            ProjectSettings::GetInstance().Set("VSyncOn", false);
+            ProjectSettings::GetInstance().Set(*kVSyncOnKey, false);
         }
     }
 }

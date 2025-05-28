@@ -35,7 +35,7 @@ namespace jpt::Vulkan
     VkPresentModeKHR SwapChainSupportDetails::ChooseSwapPresentMode() const
     {
         // VSync off
-        if (!GetGraphicsSettings().IsVSyncOn())
+        if (!GetGraphicsSettings().GetVSyncOn())
         {
             JPT_ASSERT(supportsMailbox, "Current GPU doesn't support VK_PRESENT_MODE_MAILBOX_KHR, can't turn off VSync");
             return VK_PRESENT_MODE_MAILBOX_KHR;

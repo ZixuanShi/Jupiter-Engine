@@ -13,7 +13,7 @@ export namespace jpt
         bool PreInit();
 
     public:
-        bool IsVSyncOn() const;
+        bool GetVSyncOn() const;
         void SetVSyncOn(bool vSyncOn);
     };
 }
