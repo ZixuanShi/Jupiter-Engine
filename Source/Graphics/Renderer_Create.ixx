@@ -17,17 +17,18 @@ import jpt.ProjectSettings;
 
 export namespace jpt
 {
-    Graphics_API FindGraphicsAPI()
+    GraphicsAPI FindGraphicsAPI()
     {
-        Graphics_API api = Graphics_API::Unknown;
+        GraphicsAPI api = GraphicsAPI::Unknown;
+        const String graphicsApiKey = "graphicsAPI";
 
-        // Check CommandLine for graphics_api
-        if (CommandLine::GetInstance().Has("graphics_api"))
+        // Check CommandLine for GraphicsAPI
+        if (CommandLine::GetInstance().Has(graphicsApiKey))
         {
-            api = CommandLine::GetInstance().Get<String>("graphics_api");
+            api = CommandLine::GetInstance().Get<String>(graphicsApiKey);
         }
         // Check Assets/Config/ProjectSettings.json project settings
-        else if (String graphicsApi; ProjectSettings::GetInstance().TryGet("graphics_api", graphicsApi))
+        else if (String graphicsApi; ProjectSettings::GetInstance().TryGet(graphicsApiKey, graphicsApi))
         {
             api = graphicsApi;
         }
@@ -35,22 +36,22 @@ export namespace jpt
         else
         {
 #if IS_PLATFORM_WIN64
-            api = Graphics_API::Vulkan;
+            api = GraphicsAPI::Vulkan;
 #endif
         }
 
-        JPT_ASSERT(api != Graphics_API::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
+        JPT_ASSERT(api != GraphicsAPI::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");
         return api;
     }
 
-    Renderer* Renderer_Create(Graphics_API api)
+    Renderer* Renderer_Create(GraphicsAPI api)
     {
         switch (api.Value())
         {
-        case Graphics_API::Vulkan:
+        case GraphicsAPI::Vulkan:
             return new Renderer_Vulkan();
 
-        case Graphics_API::DX12:
+        case GraphicsAPI::DX12:
             return new Renderer_DX12();
 
         default:

@@ -17,17 +17,18 @@ import jpt.ProjectSettings;
 
 export namespace jpt
 {
-    Framework_API FindFrameworkAPI()
+    FrameworkAPI FindFrameworkAPI()
     {
-        Framework_API api = Framework_API::Unknown;
+        FrameworkAPI api = FrameworkAPI::Unknown;
+        const String frameworkApiKey = "frameworkAPI";
 
-        // Check CommandLine for framework_api
-        if (CommandLine::GetInstance().Has("framework_api"))
+        // Check CommandLine for FrameworkAPI
+        if (CommandLine::GetInstance().Has(frameworkApiKey))
         {
-            api = CommandLine::GetInstance().Get<String>("framework_api");
+            api = CommandLine::GetInstance().Get<String>(frameworkApiKey);
         }
         // Check Assets/Config/ProjectSettings.json project settings
-        else if (String frameworkApi; ProjectSettings::GetInstance().TryGet("framework_api", frameworkApi))
+        else if (String frameworkApi; ProjectSettings::GetInstance().TryGet(frameworkApiKey, frameworkApi))
         {
             api = frameworkApi;
         }
@@ -35,22 +36,22 @@ export namespace jpt
         else
         {
 #if IS_PLATFORM_WIN64
-            api = Framework_API::GLFW;
+            api = FrameworkAPI::GLFW;
 #endif
         }
 
-        JPT_ASSERT(api != Framework_API::Unknown, "No Framework API specified in CommandLine or ProjectSettings.json.");
+        JPT_ASSERT(api != FrameworkAPI::Unknown, "No Framework API specified in CommandLine or ProjectSettings.json.");
         return api;
     }
 
-    Framework* Framework_Create(Framework_API api)
+    Framework* Framework_Create(FrameworkAPI api)
     {
         switch (api.Value())
         {
-        case Framework_API::GLFW:
+        case FrameworkAPI::GLFW:
             return new Framework_GLFW();
 
-        case Framework_API::Win32:
+        case FrameworkAPI::Win32:
             return new Framework_Win32();
 
         default:

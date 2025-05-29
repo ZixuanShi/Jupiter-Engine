@@ -23,15 +23,12 @@ def get_info():
 def create_config():
 	os.makedirs(project_directory + "/Assets/Config")
 
-	content_settings = """{
-	"window_width": 600,
-    "window_height": 400,
-    "window_title": "<ProjectName>"
+	project_settings = """{
 }"""
 
-	content_settings = content_settings.replace("<ProjectName>", project_name)
+	project_settings = project_settings.replace("<ProjectName>", project_name)
 	with open(project_directory + "/Assets/Config/ProjectSettings.json", "w") as file:
-	    file.write(content_settings)
+	    file.write(project_settings)
 
 def create_assets():
 	os.makedirs(project_directory + "/Assets")

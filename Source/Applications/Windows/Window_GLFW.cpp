@@ -90,11 +90,11 @@ namespace jpt
 
     bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)
     {
-        const Graphics_API api = GetApplication()->GetGraphicsAPI();
+        const GraphicsAPI api = GetApplication()->GetGraphicsAPI();
 
         switch (api.Value())
         {
-        case Graphics_API::Vulkan:
+        case GraphicsAPI::Vulkan:
         {
             VkInstance instance = context[0].As<VkInstance>();
             VkSurfaceKHR* pSurface = context[1].As<VkSurfaceKHR*>();

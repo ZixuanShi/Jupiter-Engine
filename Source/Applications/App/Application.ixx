@@ -27,8 +27,8 @@ export namespace jpt
         WindowManager* m_pWindowManager = nullptr;
         Renderer*      m_pRenderer      = nullptr;
 
-        Framework_API m_frameworkAPI = Framework_API::Unknown;
-        Graphics_API m_graphicsAPI   = Graphics_API::Unknown;
+        FrameworkAPI m_frameworkAPI = FrameworkAPI::Unknown;
+        GraphicsAPI m_graphicsAPI   = GraphicsAPI::Unknown;
 
         Status m_status = Status::Pending;
 
@@ -49,8 +49,8 @@ export namespace jpt
         WindowManager* GetWindowManager() const { return m_pWindowManager; }
         Renderer*      GetRenderer()      const { return m_pRenderer;      }
 
-        Framework_API GetFrameworkAPI() const { return m_frameworkAPI; }
-        Graphics_API  GetGraphicsAPI()  const { return m_graphicsAPI;  }
+        FrameworkAPI GetFrameworkAPI() const { return m_frameworkAPI; }
+        GraphicsAPI  GetGraphicsAPI()  const { return m_graphicsAPI;  }
 
         Window* GetMainWindow() const;
         const char* GetName() const;

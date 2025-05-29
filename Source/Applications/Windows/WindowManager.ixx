@@ -89,14 +89,14 @@ export namespace jpt
     {
         JPT_ASSERT(m_windows.Count() < kMaxWindows, "Maximum number of windows reached");
         
-        const Framework_API api = GetApplication()->GetFrameworkAPI();
+        const FrameworkAPI api = GetApplication()->GetFrameworkAPI();
         switch (api.Value())
         {
-        case Framework_API::GLFW:
+        case FrameworkAPI::GLFW:
             m_windows.EmplaceBack(new Window_GLFW());
             break;
 
-        case Framework_API::Win32:
+        case FrameworkAPI::Win32:
             m_windows.EmplaceBack(new Window_Win32());
             break;
 

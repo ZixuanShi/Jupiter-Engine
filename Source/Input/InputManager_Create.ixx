@@ -15,14 +15,14 @@ import jpt.Framework.Enums;
 
 export namespace jpt::Input
 {
-    RawInput* RawInput_Create(Framework_API frameworkAPI)
+    RawInput* RawInput_Create(FrameworkAPI frameworkAPI)
     {
         switch (frameworkAPI.Value())
         {
-        case Framework_API::GLFW:
+        case FrameworkAPI::GLFW:
             return new RawInput_GLFW();
 
-        case Framework_API::Win32:
+        case FrameworkAPI::Win32:
             return new RawInput_Win32();
 
         default:

@@ -24,7 +24,7 @@ export namespace jpt
         Input::RawInput* m_pRawInput = nullptr;
 
     public:
-        bool PreInit(Framework_API api);
+        bool PreInit(FrameworkAPI api);
         bool Init();
         void Update(TimePrecision deltaSeconds);
         void Shutdown();
@@ -33,7 +33,7 @@ export namespace jpt
         Input::RawInput* GetRawInput() const { return m_pRawInput; }
     };
 
-    bool InputManager::PreInit(Framework_API api)
+    bool InputManager::PreInit(FrameworkAPI api)
     {
         m_pRawInput  = Input::RawInput_Create(api);
 
