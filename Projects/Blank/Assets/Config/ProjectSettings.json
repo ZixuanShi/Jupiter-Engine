@@ -1,3 +1,4 @@
 {
+    "targetFPS": 30.000,
     "VSyncOn": false
 }

@@ -41,6 +41,8 @@ import jpt.Event.Manager;
 import jpt.Event.Window.Close;
 import jpt.Event.Key;
 
+import jpt.Thread.Utils;
+
 namespace jpt
 {
     bool jpt::Application::PreInit()
@@ -153,16 +155,31 @@ namespace jpt
     void Application::Run()
     {
         StopWatch::Point lastTime = StopWatch::Now();
+        const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
 
         while (m_status == Status::Running)
         {
-            const StopWatch::Point currentTime = StopWatch::Now();
-            const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(lastTime, currentTime);
+            const StopWatch::Point frameStartTime = StopWatch::Now();
+            const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(lastTime, frameStartTime);
 
             Update(deltaSeconds);
             m_pRenderer->DrawFrame();
 
-            lastTime = currentTime;
+            // Cap FPS if necessary
+            if (graphicsSettings.ShouldCapFPS() && !graphicsSettings.GetVSyncOn())
+            {
+                const StopWatch::Point frameEndTime = StopWatch::Now();
+                const TimePrecision actualFrameTime = StopWatch::GetSecondsBetween(frameStartTime, frameEndTime);
+                const TimePrecision targetFrameTime = 1.0f / graphicsSettings.GetTargetFPS();
+
+                if (actualFrameTime < targetFrameTime)
+                {
+                    const TimePrecision sleepTime = targetFrameTime - actualFrameTime;
+                    SleepMs(static_cast<int32>(sleepTime * 1000.0f));
+                }
+            }
+
+            lastTime = frameStartTime;
         }
     }
 
