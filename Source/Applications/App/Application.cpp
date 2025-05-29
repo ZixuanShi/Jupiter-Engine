@@ -8,21 +8,24 @@ module;
 
 module jpt.Application;
 
+import jpt.Framework;
+import jpt.Framework.Create;
+import jpt.Window;
+import jpt.Window.Manager;
 import jpt.CommandLine;
-import jpt.Debugger;
+import jpt.FrameTimer;
+
+import jpt.Asset.Manager;
+import jpt.Scene.Manager;
 
 import jpt.Math;
 import jpt.ToString;
 
-import jpt.Hardware.Manager;
+import jpt.Debugger;
 
-import jpt.Platform;
-
-import jpt.Framework;
-import jpt.Framework.Create;
-
-import jpt.Window;
-import jpt.Window.Manager;
+import jpt.Event.Manager;
+import jpt.Event.Window.Close;
+import jpt.Event.Key;
 
 import jpt.Renderer;
 import jpt.Renderer.Create;
@@ -30,18 +33,10 @@ import jpt.Renderer.Create;
 import jpt.Input.Enums;
 import jpt.Input.Manager;
 
-import jpt.Asset.Manager;
-import jpt.Scene.Manager;
-
-import jpt.System.Paths;
-import jpt.StopWatch;
+import jpt.Platform;
 import jpt.ProjectSettings;
-
-import jpt.Event.Manager;
-import jpt.Event.Window.Close;
-import jpt.Event.Key;
-
-import jpt.Thread.Utils;
+import jpt.System.Paths;
+import jpt.Hardware.Manager;
 
 namespace jpt
 {
@@ -154,32 +149,16 @@ namespace jpt
 
     void Application::Run()
     {
-        StopWatch::Point lastTime = StopWatch::Now();
-        const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
+        FrameTimer frameTimer;
 
         while (m_status == Status::Running)
         {
-            const StopWatch::Point frameStartTime = StopWatch::Now();
-            const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(lastTime, frameStartTime);
+            const TimePrecision deltaSeconds = frameTimer.CalcDeltaSeconds();
 
             Update(deltaSeconds);
             m_pRenderer->DrawFrame();
 
-            // Cap FPS if necessary
-            if (graphicsSettings.ShouldCapFPS() && !graphicsSettings.GetVSyncOn())
-            {
-                const StopWatch::Point frameEndTime = StopWatch::Now();
-                const TimePrecision actualFrameTime = StopWatch::GetSecondsBetween(frameStartTime, frameEndTime);
-                const TimePrecision targetFrameTime = 1.0f / graphicsSettings.GetTargetFPS();
-
-                if (actualFrameTime < targetFrameTime)
-                {
-                    const TimePrecision sleepTime = targetFrameTime - actualFrameTime;
-                    SleepMs(static_cast<int32>(sleepTime * 1000.0f));
-                }
-            }
-
-            lastTime = frameStartTime;
+            frameTimer.EndFrame();
         }
     }
 
