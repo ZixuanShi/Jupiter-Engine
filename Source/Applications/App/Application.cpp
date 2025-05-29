@@ -150,30 +150,19 @@ namespace jpt
         JPT_SHUTDOWN(m_pPlatform);
     }
 
-    static TimePrecision locCalculateDeltaSeconds()
-    {
-        static StopWatch::Point previous = StopWatch::Now();
-        const StopWatch::Point current = StopWatch::Now();
-        const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(previous, current);
-
-        previous = current;
-
-        return Clamp(deltaSeconds, 0.0001f, 0.1f);
-    }
-
     void Application::Run()
     {
+        StopWatch::Point lastTime = StopWatch::Now();
+
         while (m_status == Status::Running)
         {
-            m_deltaSeconds = locCalculateDeltaSeconds();
+            const StopWatch::Point currentTime = StopWatch::Now();
+            const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(lastTime, currentTime);
 
-            Update(m_deltaSeconds);
-            if (m_status != Status::Running)
-            {
-                break;
-            }
-
+            Update(deltaSeconds);
             m_pRenderer->DrawFrame();
+
+            lastTime = currentTime;
         }
     }
 
