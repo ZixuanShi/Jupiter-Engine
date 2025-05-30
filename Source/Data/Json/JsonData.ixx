@@ -50,7 +50,7 @@ export namespace jpt
         constexpr JsonData& operator=(const T& value);
 
         template<ValidJsonType T> constexpr              bool Is() const { return m_data.Is<T>(); }
-        template<ValidJsonType T> constexpr                T& As()          { return m_data.As<T>(); }
+        template<ValidJsonType T> constexpr                T& As()       { return m_data.As<T>(); }
         template<ValidJsonType T> constexpr          const T& As() const { return m_data.As<T>(); }
         template<ValidJsonType T> constexpr operator       T& ()         { return m_data.As<T>(); }
         template<ValidJsonType T> constexpr operator const T& ()   const { return m_data.As<T>(); }

@@ -1,7 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
 module jpt.Graphics.Settings;
 
 import jpt.Application;
@@ -10,18 +8,22 @@ import jpt.Renderer;
 import jpt.ProjectSettings;
 
 import jpt.String;
+import jpt.ToString;
 import jpt.Math;
 
 namespace jpt
 {
     static const String kTargetFPS  = "targetFPS";
-    static const String kVSyncOnKey = "VSyncOn";
+    static const String kVSyncOnKey = "VSyncMode";
 
     bool GraphicsSettings::PreInit()
     {
-        m_targetFPS = ProjectSettings::GetInstance().Get(kTargetFPS, -1.0f);
-        m_VSyncOn   = ProjectSettings::GetInstance().Get(kVSyncOnKey, true);
+        const ProjectSettings& projSettings = ProjectSettings::GetInstance();
 
+        m_targetFPS = projSettings.Get(kTargetFPS, -1.0f);
+        m_VSyncMode = projSettings.Get(kVSyncOnKey, "On");
+        //m_VSyncMode = projSettings.Get(kVSyncOnKey, VSyncMode::On);
+        
         return true;
     }
 
@@ -44,24 +46,24 @@ namespace jpt
         }
     }
 
-    void GraphicsSettings::SetVSyncOn(bool vSyncOn)
+    void GraphicsSettings::SetVSyncMode(VSyncMode VSyncMode)
     {
-        if (m_VSyncOn == vSyncOn)
+        if (m_VSyncMode == VSyncMode)
         {
             return;
         }
 
-        m_VSyncOn = vSyncOn;
+        m_VSyncMode = VSyncMode;
 
         GetApplication()->GetRenderer()->SetShouldRecreateSwapChains();
 
-        if (vSyncOn)
+        if (m_VSyncMode == VSyncMode::On)
         {
             ProjectSettings::GetInstance().Erase(kVSyncOnKey);
         }
         else
         {
-            ProjectSettings::GetInstance().Set(kVSyncOnKey, false);
+            ProjectSettings::GetInstance().Set(kVSyncOnKey, ToString(m_VSyncMode));
         }
     }
 }

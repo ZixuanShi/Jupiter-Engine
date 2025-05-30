@@ -1,3 +1,4 @@
 {
-    "VSyncOn": false
+    "targetFPS": 65.000,
+    "VSyncMode": "Off"
 }

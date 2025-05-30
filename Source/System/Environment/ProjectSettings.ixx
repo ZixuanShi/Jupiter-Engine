@@ -12,8 +12,11 @@ import jpt.Json;
 import jpt.Json.Data;
 import jpt.File.Path;
 import jpt.File.Path.Utils;
-import jpt.Optional;
+
 import jpt.CommandLine;
+
+import jpt.Optional;
+import jpt.TypeTraits;
 
 export namespace jpt
 {
@@ -36,8 +39,13 @@ export namespace jpt
         template<typename T>
         const T& Get(const String& key) const;
 
-        template<typename T>
+        /** requires (!IsCharArray<T>) for not mixing raw char array with Strings for default value */
+        template<typename T> requires (!IsCharArray<T>)
         const T& Get(const String& key, const T& defaultValue) const;
+
+        /** Specialized for Strings input & output. 
+            Work around for preventing compiler recognizing "foo" as const char[4] and wants to return it as const char[4] as well */
+        const String& Get(const String& key, const String& defaultStr) const;
 
         void Set(const String& key, const JsonData& value = JsonData());
 
@@ -75,17 +83,6 @@ export namespace jpt
         WriteJsonFile(projectSettingsJson, m_settings);
     }
 
-    void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
-    {
-        m_settings[key] = value;
-    }
-
-    void ProjectSettings::Erase(const String& key)
-    {
-        JPT_ASSERT(m_settings.Has(key), "ProjectSettings doesn't exist \"%s\"", key.ConstBuffer());
-        m_settings.Erase(key);
-    }
-
     template<typename T>
     bool ProjectSettings::TryGet(const String& key, T& value) const
     {
@@ -105,7 +102,7 @@ export namespace jpt
         return m_settings[key].As<T>();
     }
 
-    template<typename T>
+    template<typename T> requires (!IsCharArray<T>)
     const T& ProjectSettings::Get(const String& key, const T& defaultValue) const
     {
         if (m_settings.Has(key))
@@ -114,5 +111,21 @@ export namespace jpt
         }
 
         return defaultValue;
+    }
+
+    const String& ProjectSettings::Get(const String& key, const String& defaultStr) const
+    {
+        return Get<String>(key, defaultStr);
+    }
+
+    void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
+    {
+        m_settings[key] = value;
+    }
+
+    void ProjectSettings::Erase(const String& key)
+    {
+        JPT_ASSERT(m_settings.Has(key), "ProjectSettings doesn't exist \"%s\"", key.ConstBuffer());
+        m_settings.Erase(key);
     }
 }

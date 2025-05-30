@@ -8,7 +8,9 @@ module;
 export module Entity.Foo;
 
 import jpt.Application;
+
 import jpt.Renderer;
+import jpt.Graphics.Enums;
 
 import jpt.Entity;
 import jpt.Event.Manager;
@@ -51,8 +53,8 @@ void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
         hasCtrlMod && 
         eventKeyboardKey.GetState() == jpt::Input::KeyState::Pressed)
     {
-        const bool isVSyncOn = jpt::GetGraphicsSettings().GetVSyncOn();
-        jpt::GetGraphicsSettings().SetVSyncOn(!isVSyncOn);
+        const jpt::VSyncMode vsyncMode = jpt::GetGraphicsSettings().GetVSyncMode();
+        jpt::GetGraphicsSettings().SetVSyncMode(vsyncMode == jpt::VSyncMode::On ? jpt::VSyncMode::Off : jpt::VSyncMode::On);
     }
 
     // Resize

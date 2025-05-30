@@ -98,6 +98,10 @@ export namespace jpt
     template<typename T>           constexpr bool IsArray<T[]>  = true;
     template<typename T, size_t N> constexpr bool IsArray<T[N]> = true;
 
+    template<typename T> constexpr bool IsCharArray                = false;
+    template<size_t N>   constexpr bool IsCharArray<char[N]>       = true;
+    template<size_t N>   constexpr bool IsCharArray<const char[N]> = true;
+
 #pragma endregion
 
 #pragma region Type Properties
@@ -111,11 +115,5 @@ export namespace jpt
 
     template<typename T>    constexpr bool IsSmall = sizeof(T) <= kSmallDataSize;
 
-#pragma endregion
-
-#pragma region EnableIf
-    template<bool kCondition, typename ReturnType = void> struct EnableIf {};
-    template<typename _ReturnType>                        struct EnableIf<true, _ReturnType> { using ReturnType = _ReturnType; };
-    template<bool kCondition, typename ReturnType = void> using  TEnableIf = EnableIf<kCondition, ReturnType>::ReturnType;
 #pragma endregion
 }

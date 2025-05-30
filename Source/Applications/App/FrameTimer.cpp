@@ -21,7 +21,7 @@ namespace jpt
     {
         // Cap FPS if necessary
         const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
-        if (graphicsSettings.ShouldCapFPS() && !graphicsSettings.GetVSyncOn())
+        if (graphicsSettings.ShouldCapFPS())
         {
             const StopWatch::Point frameEndTime = StopWatch::Now();
             const TimePrecision actualFrameTime = StopWatch::GetSecondsBetween(m_frameStartTime, frameEndTime);

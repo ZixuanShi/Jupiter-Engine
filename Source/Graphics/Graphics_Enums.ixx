@@ -12,6 +12,13 @@ export namespace jpt
         Unknown,
         Vulkan,
         DX12);
+
+    JPT_ENUM_UINT8(VSyncMode,
+        On,
+        Fast,     // Fast sync is a feature that allows the GPU to render frames as quickly as possible without waiting for the monitor's refresh rate, reducing input lag.
+        Adaptive, // Adaptive VSync dynamically enables or disables VSync based on the frame rate, reducing stutter and tearing.
+        Off);
 }
 
 export JPT_ENUM_TO_STRING(jpt::GraphicsAPI);
+export JPT_ENUM_TO_STRING(jpt::VSyncMode);

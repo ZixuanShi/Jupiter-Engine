@@ -33,9 +33,34 @@ bool UnitTests_Trivial()
     return true;
 }
 
+JPT_ENUM_UINT8(EAxis, X, Y, Z);
+
+template<jpt::Enumerated T>
+bool IsEnumerated()
+{
+    return true;
+}
+
+template<typename T> requires (!jpt::Enumerated<T>)
+bool IsEnumerated()
+{
+    return false;
+}
+
+bool UnitTests_Enumerated()
+{
+    JPT_ENSURE(IsEnumerated<EAxis>());
+
+    JPT_ENSURE(!IsEnumerated<uint32>());
+    JPT_ENSURE(!IsEnumerated<jpt::String>());
+
+    return true;
+}
+
 export bool RunUnitTests_Concepts()
 {
     JPT_ENSURE(UnitTests_Trivial());
+    JPT_ENSURE(UnitTests_Enumerated());
 
     return true;
 }

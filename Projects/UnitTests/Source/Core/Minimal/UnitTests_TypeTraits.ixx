@@ -246,13 +246,41 @@ bool UnitTests_IsArray()
     int32 numArray2[2] = { 0,1 };
     JPT_ENSURE(jpt::IsArray<decltype(numArray2)>);
 
+    const int32 numArray3[3] = { 0,1,2 };
+    JPT_ENSURE(jpt::IsArray<decltype(numArray3)>);
+
     int32* num2 = new int;
     JPT_ENSURE(!jpt::IsArray<decltype(num2)>);
     JPT_DELETE(num2);
 
-    int32* numArray3 = new int[2];
-    JPT_ENSURE(!jpt::IsArray<decltype(numArray3)>);
-    JPT_DELETE(numArray3);
+    int32* numArray4 = new int[2];
+    JPT_ENSURE(!jpt::IsArray<decltype(numArray4)>);
+    JPT_DELETE(numArray4);
+
+    return true;
+}
+
+bool UnitTests_IsCharArray()
+{
+    char c = 'a';
+    JPT_ENSURE(!jpt::IsCharArray<decltype(c)>);
+
+    char cArray[] = { 'a', 'b' };
+    JPT_ENSURE(jpt::IsCharArray<decltype(cArray)>);
+
+    char cArray2[2] = { 'a', 'b' };
+    JPT_ENSURE(jpt::IsCharArray<decltype(cArray2)>);
+
+    const char cArray3[3] = { 'a', 'b', 'c'};
+    JPT_ENSURE(jpt::IsCharArray<decltype(cArray3)>);
+
+    char* cPtr = new char;
+    JPT_ENSURE(!jpt::IsCharArray<decltype(cPtr)>);
+    JPT_DELETE(cPtr);
+
+    char* cArray4 = new char[2];
+    JPT_ENSURE(!jpt::IsCharArray<decltype(cArray4)>);
+    JPT_DELETE(cArray4);
 
     return true;
 }
@@ -323,6 +351,7 @@ export bool RunUnitTests_TypeTraits()
     JPT_ENSURE(UnitTests_AreSameType());
     JPT_ENSURE(UnitTests_IsAnyOf());
     JPT_ENSURE(UnitTests_IsArray());
+    JPT_ENSURE(UnitTests_IsCharArray());
     JPT_ENSURE(UnitTests_IsTrivial());
 
     return true;

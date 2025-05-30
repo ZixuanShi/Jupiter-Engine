@@ -9,6 +9,8 @@ module jpt.Vulkan.SwapChain.SupportDetails;
 import jpt.Vulkan.Constants;
 
 import jpt.Renderer;
+import jpt.Graphics.Settings;
+import jpt.Graphics.Enums;
 
 import jpt.Window;
 import jpt.Constants;
@@ -18,7 +20,7 @@ import jpt.Vector2;
 
 namespace jpt::Vulkan
 {
-    VkSurfaceFormatKHR SwapChainSupportDetails::ChooseSwapSurfaceFormat() const
+    VkSurfaceFormatKHR SwapChainSupportDetails::GetSwapSurfaceFormat() const
     {
         for (const VkSurfaceFormatKHR& format : formats)
         {
@@ -32,20 +34,29 @@ namespace jpt::Vulkan
         return formats[0];
     }
 
-    VkPresentModeKHR SwapChainSupportDetails::ChooseSwapPresentMode() const
+    VkPresentModeKHR SwapChainSupportDetails::GetSwapPresentMode() const
     {
-        // VSync off
-        if (!GetGraphicsSettings().GetVSyncOn())
+        const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
+        const VSyncMode vsyncMode = graphicsSettings.GetVSyncMode();
+
+        if (vsyncMode == VSyncMode::Fast && supportsMailbox)
         {
-            JPT_ASSERT(supportsMailbox, "Current GPU doesn't support VK_PRESENT_MODE_MAILBOX_KHR, can't turn off VSync");
             return VK_PRESENT_MODE_MAILBOX_KHR;
         }
+        else if (vsyncMode == VSyncMode::Adaptive && supportsFifoRelaxed)
+        {
+            return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+        }
+        else if (vsyncMode == VSyncMode::Off && supportsImmediate)
+        {
+            return VK_PRESENT_MODE_IMMEDIATE_KHR;
+        }
 
-        // VSync on
-        return VK_PRESENT_MODE_FIFO_KHR;
+        JPT_ASSERT(vsyncMode == VSyncMode::On, "VSync mode \"%s\" is not supported on current machine", ToString(vsyncMode).ConstBuffer());
+        return VK_PRESENT_MODE_FIFO_KHR; // Always supported
     }
 
-    VkExtent2D SwapChainSupportDetails::ChooseSwapExtent(Window* pWindow) const
+    VkExtent2D SwapChainSupportDetails::GetSwapExtent(Window* pWindow) const
     {
         if (capabilities.currentExtent.width != Constants<uint32>::kMax)
         {

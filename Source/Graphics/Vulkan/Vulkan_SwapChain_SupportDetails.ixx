@@ -19,12 +19,14 @@ export namespace jpt
             VkSurfaceCapabilitiesKHR capabilities;
             DynamicArray<VkSurfaceFormatKHR> formats;
 
-            bool supportsMailbox = false;
+            bool supportsMailbox     : 1 = false;
+            bool supportsImmediate   : 1 = false;
+            bool supportsFifoRelaxed : 1 = false;
 
         public:
-            VkSurfaceFormatKHR ChooseSwapSurfaceFormat() const;
-            VkPresentModeKHR ChooseSwapPresentMode() const;
-            VkExtent2D ChooseSwapExtent(Window* pWindow) const;
+            VkSurfaceFormatKHR GetSwapSurfaceFormat()         const;
+            VkPresentModeKHR   GetSwapPresentMode()           const;
+            VkExtent2D         GetSwapExtent(Window* pWindow) const;
 
             bool IsValid() const;
         };

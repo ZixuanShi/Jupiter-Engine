@@ -228,6 +228,14 @@ namespace jpt::Vulkan
                 {
                     result.supportsMailbox = true;
                 }
+                else if (presentMode == VK_PRESENT_MODE_FIFO_RELAXED_KHR)
+                {
+                    result.supportsFifoRelaxed = true;
+                }
+                else if (presentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
+                {
+                    result.supportsImmediate = true;
+                }
             }
         }
 

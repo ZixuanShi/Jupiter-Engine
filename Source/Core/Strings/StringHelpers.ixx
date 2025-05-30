@@ -99,10 +99,6 @@ export namespace jpt
 
         return pBuffer;
     }
-    char* ToChars(const wchar_t* pWStr)
-    {
-        return ToChars(pWStr, FindCharsCount(pWStr));
-    }
 
     /**    Copies data from destination to source with the given size */
     template<StringLiteral TChar>
