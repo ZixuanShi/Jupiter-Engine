@@ -12,9 +12,11 @@ export namespace jpt
     private:
         StopWatch::Point m_lastTime = StopWatch::Now();
         StopWatch::Point m_frameStartTime = StopWatch::Now();
+        TimePrecision m_deltaSeconds = 0.0f;
 
     public:
-        TimePrecision CalcDeltaSeconds();
+        void BeginFrame();
         void EndFrame();
+        TimePrecision GetDeltaSeconds() const { return m_deltaSeconds; }
     };
 }

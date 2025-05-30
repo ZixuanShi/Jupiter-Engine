@@ -153,9 +153,9 @@ namespace jpt
 
         while (m_status == Status::Running)
         {
-            const TimePrecision deltaSeconds = frameTimer.CalcDeltaSeconds();
+            frameTimer.BeginFrame();
 
-            Update(deltaSeconds);
+            Update(frameTimer.GetDeltaSeconds());
             m_pRenderer->DrawFrame();
 
             frameTimer.EndFrame();
@@ -165,10 +165,5 @@ namespace jpt
     Window* Application::GetMainWindow() const
     {
         return m_pWindowManager->GetMainWindow();
-    }
-
-    void Application::SetStatus(Status status)
-    {
-        m_status = status;
     }
 }

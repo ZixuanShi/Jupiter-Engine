@@ -11,11 +11,10 @@ import jpt.ProjectSettings;
 
 namespace jpt
 {
-    TimePrecision FrameTimer::CalcDeltaSeconds()
+    void FrameTimer::BeginFrame()
     {
         m_frameStartTime = StopWatch::Now();
-        const TimePrecision deltaSeconds = StopWatch::GetSecondsBetween(m_lastTime, m_frameStartTime);
-        return deltaSeconds;
+        m_deltaSeconds = StopWatch::GetSecondsBetween(m_lastTime, m_frameStartTime);
     }
 
     void FrameTimer::EndFrame()

@@ -11,7 +11,7 @@ export namespace jpt
     JPT_ENUM_UINT8(GraphicsAPI, 
         Unknown,
         Vulkan,
-        DX12)
+        DX12);
 }
 
 export JPT_ENUM_TO_STRING(jpt::GraphicsAPI);

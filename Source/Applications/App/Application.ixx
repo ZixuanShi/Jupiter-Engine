@@ -56,7 +56,7 @@ export namespace jpt
         const char* GetName() const;
 
         void SetPlatform(Platform* pPlatform) { m_pPlatform = pPlatform; }
-        void SetStatus(Status status);
+        void SetStatus(Status status) { m_status = status; }
     };
 
     Application* GetApplication();
