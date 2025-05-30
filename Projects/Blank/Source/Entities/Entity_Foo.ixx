@@ -44,23 +44,27 @@ bool Entity_Foo::PreInit()
 
 void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
 {
+    const jpt::Input::Key key = eventKeyboardKey.GetKey();
+    const jpt::Input::KeyState keyState = eventKeyboardKey.GetState();
+
     const bool hasCtrlMod = eventKeyboardKey.HasModifier(jpt::Input::Modifier::Ctrl);
     const jpt::String hasCtrlModStr = hasCtrlMod ? "true" : "false";
+
     JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKey.GetWindow(), jpt::ToString(eventKeyboardKey.GetKey()).ConstBuffer(), hasCtrlModStr.ConstBuffer());
 
     // toggle VSync on Ctrl + V
-    if (eventKeyboardKey.GetKey() == jpt::Input::Key::V &&
+    if (key == jpt::Input::Key::V &&
         hasCtrlMod && 
-        eventKeyboardKey.GetState() == jpt::Input::KeyState::Pressed)
+        keyState == jpt::Input::KeyState::Pressed)
     {
         const jpt::VSyncMode vsyncMode = jpt::GetGraphicsSettings().GetVSyncMode();
         jpt::GetGraphicsSettings().SetVSyncMode(vsyncMode == jpt::VSyncMode::On ? jpt::VSyncMode::Off : jpt::VSyncMode::On);
     }
 
     // Resize
-    if (eventKeyboardKey.GetKey() == jpt::Input::Key::R &&
+    if (key == jpt::Input::Key::R &&
         hasCtrlMod && 
-        eventKeyboardKey.GetState() == jpt::Input::KeyState::Pressed)
+        keyState == jpt::Input::KeyState::Pressed)
     {
         jpt::GetApplication()->GetMainWindow()->Resize(Vec2i(480, 480));
     }

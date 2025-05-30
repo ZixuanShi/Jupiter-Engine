@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Validation/Assert.h"
+#include "Debugging/Logger.h"
 
 module jpt.Vulkan.SwapChain.SupportDetails;
 
@@ -36,7 +37,7 @@ namespace jpt::Vulkan
 
     VkPresentModeKHR SwapChainSupportDetails::GetSwapPresentMode() const
     {
-        const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
+        GraphicsSettings& graphicsSettings = GetGraphicsSettings();
         const VSyncMode vsyncMode = graphicsSettings.GetVSyncMode();
 
         if (vsyncMode == VSyncMode::Fast && supportsMailbox)
@@ -52,8 +53,14 @@ namespace jpt::Vulkan
             return VK_PRESENT_MODE_IMMEDIATE_KHR;
         }
 
-        JPT_ASSERT(vsyncMode == VSyncMode::On, "VSync mode \"%s\" is not supported on current machine", ToString(vsyncMode).ConstBuffer());
-        return VK_PRESENT_MODE_FIFO_KHR; // Always supported
+        if (vsyncMode != VSyncMode::On)
+        {
+            JPT_ERROR("VSync mode \"%i\" is not supported on current machine. Changing to VSyncMode::On now", vsyncMode);
+            graphicsSettings.SetVSyncMode(VSyncMode::On);
+        }
+
+        // Always supported
+        return VK_PRESENT_MODE_FIFO_KHR; 
     }
 
     VkExtent2D SwapChainSupportDetails::GetSwapExtent(Window* pWindow) const

@@ -21,8 +21,7 @@ namespace jpt
         const ProjectSettings& projSettings = ProjectSettings::GetInstance();
 
         m_targetFPS = projSettings.Get(kTargetFPS, -1.0f);
-        m_VSyncMode = projSettings.Get(kVSyncOnKey, "On");
-        //m_VSyncMode = projSettings.Get(kVSyncOnKey, VSyncMode::On);
+        m_VSyncMode = static_cast<VSyncMode>(projSettings.Get(kVSyncOnKey, static_cast<int32>(VSyncMode::On)));
         
         return true;
     }
@@ -63,7 +62,7 @@ namespace jpt
         }
         else
         {
-            ProjectSettings::GetInstance().Set(kVSyncOnKey, ToString(m_VSyncMode));
+            ProjectSettings::GetInstance().Set(kVSyncOnKey, static_cast<int32>(m_VSyncMode));
         }
     }
 }
