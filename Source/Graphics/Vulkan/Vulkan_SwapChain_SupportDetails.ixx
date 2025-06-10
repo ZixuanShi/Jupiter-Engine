@@ -24,9 +24,9 @@ export namespace jpt
             bool supportsFifoRelaxed : 1 = false;
 
         public:
-            VkSurfaceFormatKHR GetSwapSurfaceFormat()         const;
-            VkPresentModeKHR   GetSwapPresentMode()           const;
-            VkExtent2D         GetSwapExtent(Window* pWindow) const;
+            VkSurfaceFormatKHR GetSurfaceFormat()         const;
+            VkPresentModeKHR   GetPresentMode()           const;
+            VkExtent2D         GetExtent(Window* pWindow) const;
 
             bool IsValid() const;
         };
