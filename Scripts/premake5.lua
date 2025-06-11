@@ -25,8 +25,8 @@ context.configurations =
     "Debug_Editor",
 
     -- Develop the project. Use Engine's editors and tools 
-    "Development",
-    "Development_Editor",
+    "Dev",
+    "Dev_Editor",
 
     -- Relese/Shipping
     "Release",
@@ -74,8 +74,8 @@ function CreateEngineWorkspace()
             optimize "Off"
             symbols "On"
 
-        filter "configurations:Development or Development_Editor"
-            defines { "IS_DEVELOPMENT" }
+        filter "configurations:Dev or Dev_Editor"
+            defines { "IS_DEV" }
             optimize "Speed"
             symbols "On"
 
@@ -84,7 +84,7 @@ function CreateEngineWorkspace()
             optimize "Speed"
             symbols "off"
 
-        filter "configurations:Debug_Editor or Development_Editor"
+        filter "configurations:Debug_Editor or Dev_Editor"
             defines { "IS_EDITOR" }
 
         -- Global filters for platforms
@@ -92,10 +92,6 @@ function CreateEngineWorkspace()
             defines { "IS_PLATFORM_WIN64" }
             system "Windows"
             architecture "x86_64"
-
-        -- Only windows platform supports editor
-        filter "platforms:not Win64_Client"
-            removedefines { "IS_EDITOR" }
 
     -- Jupiter Engine
     project "Engine"
@@ -159,7 +155,7 @@ function CreateClientProject()
             {
                 "glfw3_Debug",
             }
-        filter "configurations:Development or Development_Editor or Release"
+        filter "configurations:Dev or Dev_Editor or Release"
             links
             {
                 "glfw3_Release",
