@@ -50,10 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
     CommandLine::GetInstance().Parse(launchArgs);
 
-    Platform_Win64* pWin64 = new Platform_Win64();
-    pWin64->SetHINSTANCE(hInstance);
-    pWin64->SetnCmdShow(nCmdShow);
-
+    Platform_Win64* pWin64 = new Platform_Win64(hInstance, nCmdShow);
     GetApplication()->SetPlatform(pWin64);
 
     return MainImpl();

@@ -31,9 +31,9 @@ namespace jpt::Vulkan
 
         const SwapChainSupportDetails supportDetails = physicalDevice.GetSwapChainSupport(surface);
 
-        const VkSurfaceFormatKHR surfaceFormat = supportDetails.GetSwapSurfaceFormat();
-        const VkPresentModeKHR presentMode = supportDetails.GetSwapPresentMode();
-        const VkExtent2D extent = supportDetails.GetSwapExtent(pWindow);
+        const VkSurfaceFormatKHR surfaceFormat = supportDetails.GetSurfaceFormat();
+        const VkPresentModeKHR presentMode = supportDetails.GetPresentMode();
+        const VkExtent2D extent = supportDetails.GetExtent(pWindow);
 
         uint32 imageCount = supportDetails.capabilities.minImageCount + 1;
         if (supportDetails.capabilities.maxImageCount > 0 && imageCount > supportDetails.capabilities.maxImageCount)

@@ -14,6 +14,12 @@ module jpt.Platform.Win64;
 
 namespace jpt
 {
+    Platform_Win64::Platform_Win64(HINSTANCE hInstance, int nCmdShow)
+        : m_hInstance(hInstance)
+        , m_nCmdShow(nCmdShow)
+    {
+    }
+
     bool Platform_Win64::PreInit()
     {
         JPT_ENSURE(Super::PreInit());

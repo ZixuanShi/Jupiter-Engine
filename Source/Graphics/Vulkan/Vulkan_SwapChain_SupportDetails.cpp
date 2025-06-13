@@ -21,7 +21,7 @@ import jpt.Vector2;
 
 namespace jpt::Vulkan
 {
-    VkSurfaceFormatKHR SwapChainSupportDetails::GetSwapSurfaceFormat() const
+    VkSurfaceFormatKHR SwapChainSupportDetails::GetSurfaceFormat() const
     {
         for (const VkSurfaceFormatKHR& format : formats)
         {
@@ -35,7 +35,7 @@ namespace jpt::Vulkan
         return formats[0];
     }
 
-    VkPresentModeKHR SwapChainSupportDetails::GetSwapPresentMode() const
+    VkPresentModeKHR SwapChainSupportDetails::GetPresentMode() const
     {
         GraphicsSettings& graphicsSettings = GetGraphicsSettings();
         const VSyncMode vsyncMode = graphicsSettings.GetVSyncMode();
@@ -63,7 +63,7 @@ namespace jpt::Vulkan
         return VK_PRESENT_MODE_FIFO_KHR; 
     }
 
-    VkExtent2D SwapChainSupportDetails::GetSwapExtent(Window* pWindow) const
+    VkExtent2D SwapChainSupportDetails::GetExtent(Window* pWindow) const
     {
         if (capabilities.currentExtent.width != Constants<uint32>::kMax)
         {
@@ -79,7 +79,7 @@ namespace jpt::Vulkan
                 static_cast<uint32>(frameSize.y)
             };
 
-            actualExtent.width = Clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+            actualExtent.width  = Clamp(actualExtent.width,  capabilities.minImageExtent.width,  capabilities.maxImageExtent.width);
             actualExtent.height = Clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
             return actualExtent;

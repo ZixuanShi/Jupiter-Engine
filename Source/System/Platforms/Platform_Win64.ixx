@@ -27,12 +27,12 @@ export namespace jpt
         int32 m_nCmdShow = 0;
 
     public:
+		Platform_Win64() = default;
+        Platform_Win64(HINSTANCE hInstance, int nCmdShow);
+
         virtual bool PreInit() override;
 
     public:
-        void SetHINSTANCE(HINSTANCE hInstance) { m_hInstance = hInstance; }
-        void SetnCmdShow(int32 nCmdShow) { m_nCmdShow = nCmdShow; }
-
         HINSTANCE GetHINSTANCE() const { return m_hInstance; }
         int32 GetnCmdShow() const { return m_nCmdShow; }
     };
