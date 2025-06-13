@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Platform.Win64;
+export module jpt.Platform.Windows;
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
 
 import jpt.Platform;
 import jpt.TypeDefs;
@@ -12,7 +12,7 @@ using HINSTANCE = struct HINSTANCE__*;
 
 export namespace jpt
 {
-    class Platform_Win64 : public Platform
+    class Platform_Windows : public Platform
     {
     private:
         using Super = Platform;
@@ -27,8 +27,8 @@ export namespace jpt
         int32 m_nCmdShow = 0;
 
     public:
-		Platform_Win64() = default;
-        Platform_Win64(HINSTANCE hInstance, int nCmdShow);
+        Platform_Windows() = default;
+        Platform_Windows(HINSTANCE hInstance, int nCmdShow);
 
         virtual bool PreInit() override;
 
@@ -38,4 +38,4 @@ export namespace jpt
     };
 }
 
-#endif // IS_PLATFORM_WIN64
+#endif // IS_PLATFORM_WINDOWS

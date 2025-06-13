@@ -7,7 +7,7 @@ module;
 #include <time.h>
 #include <chrono>
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif
 
@@ -20,7 +20,7 @@ import jpt.Math;
 
 bool UnitTests_StopWatch()
 {
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     const jpt::StopWatch::Point start = jpt::StopWatch::Now();
 
     Sleep(1000);
@@ -38,7 +38,7 @@ bool UnitTests_StopWatch()
 
 bool UnitTests_Timer()
 {
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     jpt::StopWatch timer;
     timer.Start();
 

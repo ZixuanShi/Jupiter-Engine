@@ -27,8 +27,8 @@ context.configurations =
 context.platforms =
 {
     -- Client, Server, Editor
-    "Win64_Client",
-    "Win64_Editor",
+    "Windows_Client",
+    "Windows_Editor",
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -78,17 +78,17 @@ function CreateEngineWorkspace()
             flags{ "FatalCompileWarnings" }
 
         -- Global filters for windows
-        filter "platforms:Win64_Client or Win64_Editor"
-            defines { "IS_PLATFORM_WIN64" }
+        filter "platforms:Windows_Client or Windows_Editor"
+            defines { "IS_PLATFORM_WINDOWS" }
             system "Windows"
             architecture "x86_64"
 
         -- Global filters for clients
-        filter "platforms:Win64_Client"
+        filter "platforms:Windows_Client"
             defines { "IS_CLIENT" }
 
         -- Global filters for editors
-        filter "platforms:Win64_Editor"
+        filter "platforms:Windows_Editor"
             defines { "IS_EDITOR" }
 
     -- Jupiter Engine
@@ -111,7 +111,7 @@ end
 
 function CreateClientProject()
     project (context.project_name)
-        filter "platforms:Win64_Client or Win64_Editor"
+        filter "platforms:Windows_Client or Windows_Editor"
             kind "WindowedApp"
 
         defines

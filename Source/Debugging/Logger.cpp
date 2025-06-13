@@ -11,7 +11,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
 #endif
@@ -120,14 +120,14 @@ namespace jpt
 
     void Logger::SendToOutputWindow(const char* string)
     {
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
         ::OutputDebugStringA(string);
 #endif
     }
 
     void Logger::SendToOutputWindow(const wchar_t* wideString)
     {
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
         ::OutputDebugStringW(wideString);
 #endif
     }

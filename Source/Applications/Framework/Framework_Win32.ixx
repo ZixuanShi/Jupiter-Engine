@@ -18,7 +18,7 @@ import jpt.Window;
 import jpt.Window.Manager;
 import jpt.Window_Win32;
 
-import jpt.Platform.Win64;
+import jpt.Platform.Windows;
 
 namespace jpt
 {
@@ -38,7 +38,7 @@ namespace jpt
     public:
         static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-        Platform_Win64* GetPlatformWin64() const;
+        Platform_Windows* GetPlatform_Windows() const;
         const WNDCLASSEX& GetWindowClass() const { return m_windowClass; }
     };
 
@@ -50,7 +50,7 @@ namespace jpt
         m_windowClass.cbSize = sizeof(WNDCLASSEX);
         m_windowClass.style = CS_HREDRAW | CS_VREDRAW;
         m_windowClass.lpfnWndProc = &Framework_Win32::WindowProc;
-        m_windowClass.hInstance = GetPlatformWin64()->GetHINSTANCE();
+        m_windowClass.hInstance = GetPlatform_Windows()->GetHINSTANCE();
         m_windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
         m_windowClass.lpszClassName = Window_Win32::kClassName;
         RegisterClassEx(&m_windowClass);
@@ -79,7 +79,7 @@ namespace jpt
 
     void Framework_Win32::Shutdown()
     {
-        UnregisterClass(m_windowClass.lpszClassName, GetPlatformWin64()->GetHINSTANCE());
+        UnregisterClass(m_windowClass.lpszClassName, GetPlatform_Windows()->GetHINSTANCE());
 
         Super::Shutdown();
     }
@@ -124,10 +124,10 @@ namespace jpt
         }
     }
 
-    Platform_Win64* Framework_Win32::GetPlatformWin64() const
+    Platform_Windows* Framework_Win32::GetPlatform_Windows() const
     {
-        Platform_Win64* pPlatformWin64 = static_cast<Platform_Win64*>(GetApplication()->GetPlatform());
-        JPT_ASSERT(pPlatformWin64, "Platform is not set to win64");
-        return pPlatformWin64;
+        Platform_Windows* pPlatform_Windows = static_cast<Platform_Windows*>(GetApplication()->GetPlatform());
+        JPT_ASSERT(pPlatform_Windows, "Platform is not set to windows");
+        return pPlatform_Windows;
     }
 }

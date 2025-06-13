@@ -21,7 +21,7 @@ namespace jpt
     void OnAssertionFailed(int line, const char* file, const char* expression);
 
     /** Breaks the debugger if attached */
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define JPT_DEBUG_BREAK() __debugbreak()
 #else
     #error "DebugBreak not implemented for this platform"

@@ -8,19 +8,19 @@ module;
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-module jpt.Platform.Win64;
+module jpt.Platform.Windows;
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
 
 namespace jpt
 {
-    Platform_Win64::Platform_Win64(HINSTANCE hInstance, int nCmdShow)
+    Platform_Windows::Platform_Windows(HINSTANCE hInstance, int nCmdShow)
         : m_hInstance(hInstance)
         , m_nCmdShow(nCmdShow)
     {
     }
 
-    bool Platform_Win64::PreInit()
+    bool Platform_Windows::PreInit()
     {
         JPT_ENSURE(Super::PreInit());
         JPT_ENSURE(m_hInstance != nullptr);
@@ -29,4 +29,4 @@ namespace jpt
     }
 }
 
-#endif // IS_PLATFORM_WIN64
+#endif // IS_PLATFORM_WINDOWS

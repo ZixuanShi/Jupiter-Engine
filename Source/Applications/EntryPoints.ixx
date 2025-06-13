@@ -2,7 +2,7 @@
 
 module;
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
 #endif
@@ -39,9 +39,9 @@ namespace jpt
 
 // Platform-specific entry points
 // Should handle command line arguments and call MainImpl_Final
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
 
-import jpt.Platform.Win64;
+import jpt.Platform.Windows;
 
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)
@@ -50,8 +50,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
     CommandLine::GetInstance().Parse(launchArgs);
 
-    Platform_Win64* pWin64 = new Platform_Win64(hInstance, nCmdShow);
-    GetApplication()->SetPlatform(pWin64);
+    Platform_Windows* pPlatform_Windows = new Platform_Windows(hInstance, nCmdShow);
+    GetApplication()->SetPlatform(pPlatform_Windows);
 
     return MainImpl();
 }

@@ -35,7 +35,7 @@ export namespace jpt
         // Default based on platform
         else
         {
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
             api = FrameworkAPI::GLFW;
 #endif
         }

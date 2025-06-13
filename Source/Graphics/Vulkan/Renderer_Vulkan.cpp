@@ -231,9 +231,9 @@ namespace jpt
         Renderer* pRenderer = GetApplication()->GetRenderer();
         JPT_ASSERT(pRenderer != nullptr);
 
-        Renderer_Vulkan* pVkRenderer = static_cast<Renderer_Vulkan*>(pRenderer);
-        JPT_ASSERT(pVkRenderer != nullptr);
+        Renderer_Vulkan* pRenderer_Vulkan = static_cast<Renderer_Vulkan*>(pRenderer);
+        JPT_ASSERT(pRenderer_Vulkan != nullptr);
 
-        return pVkRenderer;
+        return pRenderer_Vulkan;
     }
 }

@@ -15,7 +15,7 @@ import jpt.Application;
 import jpt.Window;
 
 import jpt.Time.TypeDefs;
-import jpt.Platform.Win64;
+import jpt.Platform.Windows;
 import jpt.String.Helpers;
 
 namespace jpt
@@ -45,8 +45,8 @@ namespace jpt
         RECT windowRect = { 0,0, static_cast<LONG>(width), static_cast<LONG>(height) };
         AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-        const Platform_Win64* pPlatformWin64 = dynamic_cast<Platform_Win64*>(GetApplication()->GetPlatform());
-        JPT_ASSERT(pPlatformWin64, "Platform is not set to win64");
+        const Platform_Windows* pPlatform_Windows = dynamic_cast<Platform_Windows*>(GetApplication()->GetPlatform());
+        JPT_ASSERT(pPlatform_Windows, "Platform is not set to windows");
 
         const LPCWSTR titleW = ToWChars(title);
 
@@ -61,12 +61,12 @@ namespace jpt
             windowRect.bottom - windowRect.top,
             nullptr,        // We have no parent window.
             nullptr,        // We aren't using menus.
-            pPlatformWin64->GetHINSTANCE(),
+            pPlatform_Windows->GetHINSTANCE(),
             this);
 
         delete[] titleW;
 
-        ShowWindow(m_hwnd, pPlatformWin64->GetnCmdShow());
+        ShowWindow(m_hwnd, pPlatform_Windows->GetnCmdShow());
 
         return true;
     }

@@ -2,7 +2,7 @@
 
 module;
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
 #endif

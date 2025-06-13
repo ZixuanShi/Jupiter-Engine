@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
 #endif
@@ -56,7 +56,7 @@ export namespace jpt::System
         m_engineDir = JPT_ENGINE_DIR_W;
         m_clientDir = GetClientDirW();
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
         wchar_t buffer[MAX_PATH];
         GetModuleFileNameW(nullptr, buffer, MAX_PATH);
         m_executablePath = buffer;

@@ -6,8 +6,8 @@ export namespace jpt
 {
     consteval const char* GetPlatformName()
     {
-#if IS_PLATFORM_WIN64
-        return "Win64";
+#if IS_PLATFORM_WINDOWS
+        return "Windows";
 #elif IS_PLATFORM_LINUX
         return "Linux";
 #elif IS_PLATFORM_MAC

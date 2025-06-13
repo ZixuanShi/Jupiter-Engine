@@ -5,7 +5,7 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
 #endif
@@ -28,7 +28,7 @@ namespace jpt
 
         Logger::GetInstance().Log(Logger::Type::Error, line, file, messageStr.ConstBuffer());
 
-#if IS_PLATFORM_WIN64
+#if IS_PLATFORM_WINDOWS
         MessageBoxA(nullptr, messageStr.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
 #endif
     }
