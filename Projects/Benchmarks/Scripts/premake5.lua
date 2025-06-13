@@ -19,6 +19,6 @@ include (FindJupiterRootDir() .. "Scripts/premake5.lua")
 
 context.project_name = "Benchmarks"
 context.project_dir  = GetProjectDir()
-context.configurations = { "Debug", "Development" }
+context.configurations = { "Debug", "Dev" }
 
 GenerateProjectFiles()

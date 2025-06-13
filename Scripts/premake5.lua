@@ -20,20 +20,15 @@ output_path = "%{cfg.platform}_%{cfg.buildcfg}"
 context = {}
 context.configurations =
 {
-    -- Debugging. No optimization will be performed
-    "Debug",
-    "Debug_Editor",
-
-    -- Develop the project. Use Engine's editors and tools 
-    "Development",
-    "Development_Editor",
-
-    -- Relese/Shipping
-    "Release",
+    "Debug",   -- Debugging. No optimization will be performed
+    "Dev",     -- Development. Use Engine's editors and tools. Also use for profiling
+    "Release", -- Release the project. Use for final builds to users. Optimized for performance
 }
 context.platforms =
 {
+    -- Client, Server, Editor
     "Win64_Client",
+    "Win64_Editor",
 }
 
 ---------------------------------------------------------------------------------------------------
@@ -66,16 +61,13 @@ function CreateEngineWorkspace()
         }
 
         -- Global filters for configurations
-        filter "configurations:Release"
-            flags{ "FatalCompileWarnings" }
-
-        filter "configurations:Debug or Debug_Editor"
+        filter "configurations:Debug"
             defines { "IS_DEBUG" }
             optimize "Off"
             symbols "On"
 
-        filter "configurations:Development or Development_Editor"
-            defines { "IS_DEVELOPMENT" }
+        filter "configurations:Dev"
+            defines { "IS_DEV" }
             optimize "Speed"
             symbols "On"
 
@@ -83,19 +75,21 @@ function CreateEngineWorkspace()
             defines { "IS_RELEASE" }
             optimize "Speed"
             symbols "off"
+            flags{ "FatalCompileWarnings" }
 
-        filter "configurations:Debug_Editor or Development_Editor"
-            defines { "IS_EDITOR" }
-
-        -- Global filters for platforms
-        filter "platforms:Win64_Client"
+        -- Global filters for windows
+        filter "platforms:Win64_Client or Win64_Editor"
             defines { "IS_PLATFORM_WIN64" }
             system "Windows"
             architecture "x86_64"
 
-        -- Only windows platform supports editor
-        filter "platforms:not Win64_Client"
-            removedefines { "IS_EDITOR" }
+        -- Global filters for clients
+        filter "platforms:Win64_Client"
+            defines { "IS_CLIENT" }
+
+        -- Global filters for editors
+        filter "platforms:Win64_Editor"
+            defines { "IS_EDITOR" }
 
     -- Jupiter Engine
     project "Engine"
@@ -117,7 +111,7 @@ end
 
 function CreateClientProject()
     project (context.project_name)
-        filter "platforms:Win64_Client"
+        filter "platforms:Win64_Client or Win64_Editor"
             kind "WindowedApp"
 
         defines
@@ -154,12 +148,12 @@ function CreateClientProject()
             "d3dcompiler",
         }
 
-        filter "configurations:Debug or Debug_Editor"
+        filter "configurations:Debug"
             links
             {
                 "glfw3_Debug",
             }
-        filter "configurations:Development or Development_Editor or Release"
+        filter "configurations:Dev or Release"
             links
             {
                 "glfw3_Release",
