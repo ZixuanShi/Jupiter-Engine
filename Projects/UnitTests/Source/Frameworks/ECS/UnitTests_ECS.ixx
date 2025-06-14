@@ -8,13 +8,13 @@ module;
 
 export module UnitTests_ECS;
 
-import jpt.Scene.Graph;
+import jpt.SceneGraph;
 import jpt.Entity;
 
 import jpt.Vector3;
 import jpt.Matrix44;
 import jpt.Rand;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 import jpt.Math;
 
 export bool RunUnitTests_ECS()

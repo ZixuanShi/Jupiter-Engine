@@ -4,7 +4,7 @@ module;
 
 export module jpt.Asset;
 
-import jpt.File.Path;
+import jpt.FilePath;
 
 export namespace jpt
 {

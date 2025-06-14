@@ -13,7 +13,7 @@ import jpt.DynamicArray;
 import jpt.Math;
 import jpt.Rand;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.StringView;
 import jpt.ToString;
 import jpt.TypeDefs;

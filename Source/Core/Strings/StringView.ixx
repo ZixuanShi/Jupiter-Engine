@@ -11,7 +11,7 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.Math;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.TypeDefs;
 
 export namespace jpt

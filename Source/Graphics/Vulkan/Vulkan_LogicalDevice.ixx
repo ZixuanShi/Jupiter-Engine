@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.LogicalDevice;
+export module jpt.Vulkan_LogicalDevice;
 
 export namespace jpt::Vulkan
 {

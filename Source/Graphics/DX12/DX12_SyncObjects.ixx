@@ -9,11 +9,11 @@ module;
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-export module jpt.DX12.SyncObjects;
+export module jpt.DX12_SyncObjects;
 
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
-import jpt.DX12.SwapChain;
+import jpt.DX12_SwapChain;
 
 import jpt.TypeDefs;
 

@@ -7,9 +7,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.DescriptorSetLayout;
+module jpt.Vulkan_DescriptorSetLayout;
 
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_LogicalDevice;
 
 namespace jpt::Vulkan
 {

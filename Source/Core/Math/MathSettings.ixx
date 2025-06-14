@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Math.Settings;
+export module jpt.Math_Settings;
 
 export namespace jpt
 {

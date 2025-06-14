@@ -4,10 +4,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.ValidationLayers;
+export module jpt.Vulkan_ValidationLayers;
 
 import jpt.Application;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 

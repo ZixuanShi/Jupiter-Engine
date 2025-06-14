@@ -6,14 +6,14 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.Texture.Sampler;
+module jpt.Vulkan_Texture_Sampler;
 
 import jpt.Application;
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
 
 namespace jpt::Vulkan
 {

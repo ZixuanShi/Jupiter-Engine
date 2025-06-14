@@ -1,14 +1,15 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Event.MouseScroll;
+export module jpt.Event_Mouse_Scroll;
 
 import jpt.Event;
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 import jpt.TypeDefs;
-import jpt.Window;
 
 export namespace jpt
 {
+    class Window;
+
     class Event_Mouse_Scroll : public Event
     {
     private:

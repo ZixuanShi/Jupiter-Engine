@@ -12,7 +12,7 @@ export module jpt.ToString;
 
 import jpt.Pair;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Concepts;
 import jpt.TypeTraits;
 import jpt.TypeDefs;

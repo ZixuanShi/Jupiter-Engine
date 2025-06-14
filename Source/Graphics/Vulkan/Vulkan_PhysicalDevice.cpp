@@ -7,13 +7,13 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.PhysicalDevice;
+module jpt.Vulkan_PhysicalDevice;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Extensions;
-import jpt.Vulkan.SwapChain.SupportDetails;
+import jpt.Vulkan_Extensions;
+import jpt.Vulkan_SwapChain_SupportDetails;
 
 import jpt.HashSet;
 import jpt.Optional;

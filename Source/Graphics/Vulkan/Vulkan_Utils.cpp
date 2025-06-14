@@ -7,13 +7,13 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.Utils;
+module jpt.Vulkan_Utils;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_PhysicalDevice;
 
 import jpt.Vector2;
 import jpt.LinearColor;

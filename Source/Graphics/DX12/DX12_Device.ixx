@@ -10,11 +10,11 @@ module;
 
 #include <d3dx12/d3dx12_root_signature.h>
 
-export module jpt.DX12.Device;
+export module jpt.DX12_Device;
 
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
-import jpt.DX12.RTVHeap;
+import jpt.DX12_RTVHeap;
 
 export namespace jpt::DX12
 {

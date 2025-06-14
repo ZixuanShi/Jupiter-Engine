@@ -6,7 +6,7 @@ import jpt.Vector2;
 import jpt.Any;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

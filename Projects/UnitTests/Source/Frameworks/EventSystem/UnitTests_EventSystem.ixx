@@ -10,11 +10,11 @@ export module UnitTests_EventSystem;
 
 import jpt.TypeDefs;
 import jpt.Event;
-import jpt.Event.Manager;
+import jpt.EventManager;
 
-import jpt.Event.MouseButton;
-import jpt.Event.MouseScroll;
-import jpt.Event.Key;
+import jpt.Event_Mouse_Button;
+import jpt.Event_Mouse_Scroll;
+import jpt.Event_Key;
 
 //------------------------------------------------------------------------
 // Test data

@@ -5,12 +5,12 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.Asset.Manager;
+export module jpt.AssetManager;
 
 import jpt.TypeDefs;
 import jpt.String;
 import jpt.HashMap;
-import jpt.File.Path;
+import jpt.FilePath;
 
 export namespace jpt
 {

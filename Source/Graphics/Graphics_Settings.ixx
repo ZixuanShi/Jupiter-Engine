@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Graphics.Settings;
+export module jpt.Graphics_Settings;
 
-import jpt.Graphics.Enums;
+import jpt.Graphics_Enums;
 import jpt.TypeDefs;
 
 export namespace jpt

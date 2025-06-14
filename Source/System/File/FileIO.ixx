@@ -9,15 +9,15 @@ module;
 #include <filesystem>
 #include <fstream>
 
-export module jpt.File.IO;
+export module jpt.FileIO;
 
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Optional;
 import jpt.Serializer;
 
-import jpt.File.Enums;
-import jpt.File.Path;
+import jpt.File_Enums;
+import jpt.FilePath;
 
 import jpt.DynamicArray;
 

@@ -3,9 +3,9 @@
 module; 
 
 
-export module jpt.Vulkan.Shader.Pixel;
+export module jpt.Vulkan_Shader_Pixel;
 
-import jpt.Vulkan.Shader;
+import jpt.Vulkan_Shader;
 
 export namespace jpt::Vulkan
 {

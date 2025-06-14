@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.CommandPool;
+export module jpt.Vulkan_CommandPool;
 
 import jpt.TypeDefs;
 

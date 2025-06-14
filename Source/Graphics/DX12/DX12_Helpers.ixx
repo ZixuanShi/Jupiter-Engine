@@ -4,7 +4,7 @@ module;
 
 
 
-export module jpt.DX12.Helpers;
+export module jpt.DX12_Helpers;
 
 export namespace jpt::DX12
 {

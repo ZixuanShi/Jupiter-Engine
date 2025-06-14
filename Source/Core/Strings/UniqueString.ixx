@@ -10,7 +10,7 @@ import jpt.Hash;
 import jpt.HashMap;
 import jpt.String;
 import jpt.TypeDefs;
-import jpt.Thread.Utils;
+import jpt.ThreadUtils;
 
 export namespace jpt
 {

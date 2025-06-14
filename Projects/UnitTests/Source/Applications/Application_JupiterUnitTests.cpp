@@ -10,7 +10,7 @@ module Application_JupiterUnitTests;
 import jpt.CoreModules;
 import jpt.CommandLine;
 import jpt.Utilities;
-import jpt.File.Path.Helpers;
+import jpt.FilePathHelpers;
 
 import UnitTests_Applications;
 import UnitTests_Core;

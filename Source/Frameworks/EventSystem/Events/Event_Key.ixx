@@ -1,9 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Event.Key;
+export module jpt.Event_Key;
 
 import jpt.Event;
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 import jpt.TypeDefs;
 import jpt.Window;
 

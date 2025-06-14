@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-// This file includes the core minimal utilities non-macro code to run the application. Like typedefs, essential math, jpt.STL, etc. 
+// This file includes the core minimal utilities non-macro code to run the application. Like typedefs, essential math, jpt.STL, etc_ 
 // This replaces the Precompiled Header (PCH) since C++ 20
 // @see https://learn.microsoft.com/en-us/cpp/build/compare-inclusion-methods?view=msvc-170
 // quote: "Modules. This is the fastest and most robust way to import functionality." as C++ 23
@@ -62,7 +62,7 @@ export import jpt.MemoryPool;
 
 // Strings
 export import jpt.String;
-export import jpt.String.Helpers;
+export import jpt.StringHelpers;
 export import jpt.StringView;
 export import jpt.ToString;
 

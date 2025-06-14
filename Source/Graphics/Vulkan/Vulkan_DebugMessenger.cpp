@@ -6,7 +6,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.DebugMessenger;
+module jpt.Vulkan_DebugMessenger;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;

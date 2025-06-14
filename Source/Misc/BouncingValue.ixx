@@ -4,14 +4,14 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-export module jpt.BouncingValue_1D;
+export module jpt.BouncingValue;
 
 import jpt.TypeDefs;
 
 export namespace jpt
 {
     template<typename T>
-    struct BouncingValue_1D
+    struct BouncingValue
     {
     public:
         T min = static_cast<T>(0);
@@ -21,10 +21,10 @@ export namespace jpt
         bool increasing = true;
 
     public:
-        constexpr BouncingValue_1D() = default;
-        constexpr BouncingValue_1D(T _min, T _max);
-        constexpr BouncingValue_1D(T _min, T _max, T _current);
-        constexpr BouncingValue_1D(T _min, T _max, T _current, T _speed);
+        constexpr BouncingValue() = default;
+        constexpr BouncingValue(T _min, T _max);
+        constexpr BouncingValue(T _min, T _max, T _current);
+        constexpr BouncingValue(T _min, T _max, T _current, T _speed);
 
         constexpr void Update(TimePrecision deltaSeconds);
 
@@ -32,7 +32,7 @@ export namespace jpt
     };
 
     template<typename T>
-    constexpr BouncingValue_1D<T>::BouncingValue_1D(T _min, T _max)
+    constexpr BouncingValue<T>::BouncingValue(T _min, T _max)
         : min(_min)
         , max(_max)
         , current(_min)
@@ -42,7 +42,7 @@ export namespace jpt
     }
 
     template<typename T>
-    constexpr BouncingValue_1D<T>::BouncingValue_1D(T _min, T _max, T _current)
+    constexpr BouncingValue<T>::BouncingValue(T _min, T _max, T _current)
         : min(_min)
         , max(_max)
         , current(_current)
@@ -52,7 +52,7 @@ export namespace jpt
     }
 
     template<typename T>
-    constexpr BouncingValue_1D<T>::BouncingValue_1D(T _min, T _max, T _current, T _speed)
+    constexpr BouncingValue<T>::BouncingValue(T _min, T _max, T _current, T _speed)
         : min(_min)
         , max(_max)
         , current(_current)
@@ -63,7 +63,7 @@ export namespace jpt
     }
 
     template<typename T>
-    constexpr void BouncingValue_1D<T>::Update(TimePrecision deltaSeconds)
+    constexpr void BouncingValue<T>::Update(TimePrecision deltaSeconds)
     {
         if (increasing)
         {

@@ -6,9 +6,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Utils;
+export module jpt.Vulkan_Utils;
 
-import jpt.Vulkan.CommandPool;
+import jpt.Vulkan_CommandPool;
 import jpt.Vector3;
 import jpt.TypeDefs;
 

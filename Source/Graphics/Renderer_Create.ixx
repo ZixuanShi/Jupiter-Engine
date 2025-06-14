@@ -5,10 +5,10 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.Renderer.Create;
+export module jpt.Renderer_Create;
 
 import jpt.Renderer;
-import jpt.Graphics.Enums;
+import jpt.Graphics_Enums;
 import jpt.Renderer_Vulkan;
 import jpt.Renderer_DX12;
 

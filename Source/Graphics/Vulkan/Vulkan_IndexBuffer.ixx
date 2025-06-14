@@ -6,9 +6,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.IndexBuffer;
+export module jpt.Vulkan_IndexBuffer;
 
-import jpt.Vulkan.Buffer;
+import jpt.Vulkan_Buffer;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;

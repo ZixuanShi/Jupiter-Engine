@@ -5,12 +5,12 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.Scene.Manager;
+export module jpt.SceneManager;
 
-import jpt.Scene.Graph;
+import jpt.SceneGraph;
 
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

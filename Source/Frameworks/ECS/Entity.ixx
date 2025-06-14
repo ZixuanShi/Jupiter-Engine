@@ -5,7 +5,7 @@ export module jpt.Entity;
 import jpt.String;
 import jpt.Constants;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

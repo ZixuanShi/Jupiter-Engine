@@ -1,13 +1,13 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Scene.Graph;
+export module jpt.SceneGraph;
 
-import jpt.Object.Pool;
+import jpt.ObjectPool;
 
 import jpt.Entity;
-import jpt.Entity.Component.Manager;
+import jpt.EntityComponentManager;
 
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 import jpt.DynamicArray;
 import jpt.String;

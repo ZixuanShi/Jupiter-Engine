@@ -7,7 +7,7 @@ module;
 
 #include <corecrt.h>
 
-export module jpt.Time.TypeDefs;
+export module jpt.TimeTypeDefs;
 
 export namespace jpt
 {

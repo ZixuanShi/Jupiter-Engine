@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.SwapChain.SupportDetails;
+export module jpt.Vulkan_SwapChain_SupportDetails;
 
 import jpt.DynamicArray;
 

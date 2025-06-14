@@ -6,7 +6,7 @@ module;
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-export module jpt.DX12.DebugLayer;
+export module jpt.DX12_DebugLayer;
 
 #if !IS_RELEASE
 

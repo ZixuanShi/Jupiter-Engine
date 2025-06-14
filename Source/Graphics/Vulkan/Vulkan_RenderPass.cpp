@@ -8,10 +8,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.RenderPass;
+module jpt.Vulkan_RenderPass;
 
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_PhysicalDevice;
 
 namespace jpt::Vulkan
 {

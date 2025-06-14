@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Texture.Sampler;
+export module jpt.TextureSampler;
 
 import jpt.Any;
 import jpt.DynamicArray;

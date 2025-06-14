@@ -4,9 +4,9 @@ module;
 
 module jpt.FrameTimer;
 
-import jpt.Thread.Utils;
+import jpt.ThreadUtils;
 import jpt.Renderer;
-import jpt.Graphics.Settings;
+import jpt.Graphics_Settings;
 import jpt.ProjectSettings;
 
 namespace jpt

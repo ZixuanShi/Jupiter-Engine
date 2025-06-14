@@ -6,14 +6,14 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.PipelineLayout;
+module jpt.Vulkan_PipelineLayout;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Constants;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.DescriptorSetLayout;
+import jpt.Vulkan_Constants;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_DescriptorSetLayout;
 
 namespace jpt::Vulkan
 {

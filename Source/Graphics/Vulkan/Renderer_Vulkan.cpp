@@ -10,10 +10,10 @@ module;
 
 module jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Texture;
-import jpt.Vulkan.Texture.Sampler;
+import jpt.Vulkan_Texture;
+import jpt.Vulkan_Texture_Sampler;
 
-import jpt.Asset.Manager;
+import jpt.AssetManager;
 import jpt.Mesh;
 
 import jpt.Math;
@@ -24,19 +24,19 @@ import jpt.Vector3;
 
 import jpt.Window;
 import jpt.Framework;
-import jpt.Event.Manager;
-import jpt.Event.Window.Resize;
-import jpt.Event.Window.Close;
-import jpt.Event.Key;
-import jpt.Event.MouseButton;
-import jpt.Event.MouseMove;
+import jpt.EventManager;
+import jpt.Event_Window_Resize;
+import jpt.Event_Window_Close;
+import jpt.Event_Key;
+import jpt.Event_Mouse_Button;
+import jpt.Event_Mouse_Move;
 
-import jpt.Input.Enums;
-import jpt.Input.Manager;
+import jpt.Input_Enums;
+import jpt.InputManager;
 
-import jpt.File.IO;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
+import jpt.FileIO;
+import jpt.FilePath;
+import jpt.FilePathUtils;
 
 using namespace jpt::Vulkan;
 

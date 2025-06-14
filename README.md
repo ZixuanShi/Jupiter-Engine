@@ -17,11 +17,11 @@ I design, plan, write, test everything from scratch by myself
 ![Alt Text](Docs/ReadMe/Demo.gif)
 
 # Install and Run Jupiter on Windows
-- Have Visual Studio 2022, and Vulkan 1.3.296.0 installed on your machine
+- Have Visual Studio 2022, and Vulkan installed on your windows
 - Clone this despository to any location on your PC.
-- Add an Environment Variable. Set the name to JUPITER_ENGINE_DIR, and the value to Jupiter Engine's Root. Note it should end with '\\'. Example:
-    - Correct: C:\Program Files\Jupiter Technologies\Jupiter-Engine\
-    - Wrong:   C:\Program Files\Jupiter Technologies\Jupiter-Engine
-- Compile shaders. Navigate to Jupiter-Engine/Scripts, run CompileShaders - GLSL.bat
+- Add an Environment Variable. Set the name to JUPITER_ENGINE_ROOT, and the value to Jupiter Engine's Root Directory. Note it should NOT end with '\\'. Example:
+    - Correct: C:\Program Files\Jupiter Technologies\Jupiter-Engine
+    - Wrong:   C:\Program Files\Jupiter Technologies\Jupiter-Engine\
+- Compile shaders. Navigate to Jupiter-Engine/Scripts, run CompileShaders.py
 - Build Visual Studio Solution and Projects. Navigate to Jupiter-Engine/Projects/Blank/Scripts, run GenerateProjectFiles_vs2022.bat. You will have Blank/_ProjectFiles, it contains the VS solution file
 - You can build Jupiter Engine and Blank project now, enjoy

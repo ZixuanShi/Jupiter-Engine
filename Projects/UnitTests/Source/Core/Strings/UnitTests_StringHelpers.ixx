@@ -8,7 +8,7 @@ module;
 export module UnitTests_StringUtils;
 
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Math;
 import jpt.Utilities;
 

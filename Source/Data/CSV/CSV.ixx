@@ -10,10 +10,10 @@ export module jpt.CSV;
 import jpt.TypeDefs;
 import jpt.Optional;
 
-import jpt.File.Path;
-import jpt.File.IO;
+import jpt.FilePath;
+import jpt.FileIO;
 
-import jpt.CSV.Data;
+import jpt.CSVData;
 
 using namespace jpt::File;
 

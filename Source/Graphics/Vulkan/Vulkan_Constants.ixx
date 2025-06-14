@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Constants;
+export module jpt.Vulkan_Constants;
 
 import jpt.Vector2;
 import jpt.Vector3;

@@ -13,16 +13,16 @@ export module jpt.Json;
 import jpt.Constants;
 import jpt.DynamicArray;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Optional;
 import jpt.Pair;
 import jpt.Stack;
 import jpt.Utilities;
 
-import jpt.Json.Data;
+import jpt.JsonData;
 
-import jpt.File.Path;
-import jpt.File.IO;
+import jpt.FilePath;
+import jpt.FileIO;
 
 namespace jpt
 {

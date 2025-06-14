@@ -8,9 +8,9 @@ module;
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-export module jpt.DX12.SwapChain;
+export module jpt.DX12_SwapChain;
 
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
 import jpt.Vector2;
 import jpt.TypeDefs;

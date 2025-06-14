@@ -9,34 +9,34 @@ module;
 module jpt.Application;
 
 import jpt.Framework;
-import jpt.Framework.Create;
+import jpt.Framework_Create;
 import jpt.Window;
-import jpt.Window.Manager;
+import jpt.WindowManager;
 import jpt.CommandLine;
 import jpt.FrameTimer;
 
-import jpt.Asset.Manager;
-import jpt.Scene.Manager;
+import jpt.AssetManager;
+import jpt.SceneManager;
 
 import jpt.Math;
 import jpt.ToString;
 
 import jpt.Debugger;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Close;
-import jpt.Event.Key;
+import jpt.EventManager;
+import jpt.Event_Window_Close;
+import jpt.Event_Key;
 
 import jpt.Renderer;
-import jpt.Renderer.Create;
+import jpt.Renderer_Create;
 
-import jpt.Input.Enums;
-import jpt.Input.Manager;
+import jpt.Input_Enums;
+import jpt.InputManager;
 
 import jpt.Platform;
 import jpt.ProjectSettings;
-import jpt.System.Paths;
-import jpt.Hardware.Manager;
+import jpt.SystemPaths;
+import jpt.HardwareManager;
 
 namespace jpt
 {

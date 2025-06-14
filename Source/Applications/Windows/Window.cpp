@@ -7,8 +7,8 @@ module;
 
 module jpt.Window;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Resize;
+import jpt.EventManager;
+import jpt.Event_Window_Resize;
 
 namespace jpt
 {

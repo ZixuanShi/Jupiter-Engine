@@ -5,10 +5,10 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.Framework.Create;
+export module jpt.Framework_Create;
 
 import jpt.Framework;
-import jpt.Framework.Enums;
+import jpt.Framework_Enums;
 import jpt.Framework_GLFW;
 import jpt.Framework_Win32;
 

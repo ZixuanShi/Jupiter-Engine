@@ -4,12 +4,12 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-export module jpt.File.Path.Utils;
+export module jpt.FilePathUtils;
 
 import jpt.Debugger;
-import jpt.File.Enums;
-import jpt.File.Path;
-import jpt.System.Paths;
+import jpt.File_Enums;
+import jpt.FilePath;
+import jpt.SystemPaths;
 
 export namespace jpt::File
 {

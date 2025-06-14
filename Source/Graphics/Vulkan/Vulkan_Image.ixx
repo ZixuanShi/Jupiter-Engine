@@ -4,10 +4,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Image;
+export module jpt.Vulkan_Image;
 
 import jpt.TypeDefs;
-import jpt.File.Path;
+import jpt.FilePath;
 
 export namespace jpt::Vulkan
 {

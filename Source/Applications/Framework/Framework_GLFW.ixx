@@ -15,13 +15,13 @@ import jpt.Framework;
 
 import jpt.Window;
 import jpt.Window_GLFW;
-import jpt.Window.Manager;
+import jpt.WindowManager;
 
 import jpt.String;
 import jpt.ToString;
 
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 namespace jpt
 {

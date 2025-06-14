@@ -4,9 +4,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.DescriptorSet;
+export module jpt.Vulkan_DescriptorSet;
 
-import jpt.Vulkan.UniformBuffer;
+import jpt.Vulkan_UniformBuffer;
 
 export namespace jpt::Vulkan
 {

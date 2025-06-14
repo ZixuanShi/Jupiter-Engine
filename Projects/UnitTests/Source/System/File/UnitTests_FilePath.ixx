@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_FilePath;
 
-import jpt.File.Path;
+import jpt.FilePath;
 import jpt.TypeDefs;
 import jpt.Utilities;
 

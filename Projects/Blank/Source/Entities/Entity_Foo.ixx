@@ -10,16 +10,16 @@ export module Entity.Foo;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics.Enums;
+import jpt.Graphics_Enums;
 
 import jpt.Entity;
-import jpt.Event.Manager;
-import jpt.Input.Enums;
+import jpt.EventManager;
+import jpt.Input_Enums;
 
-import jpt.Event.Key;
-import jpt.Event.MouseButton;
-import jpt.Event.Window.Close;
-import jpt.Event.Window.Resize;
+import jpt.Event_Key;
+import jpt.Event_Mouse_Button;
+import jpt.Event_Window_Close;
+import jpt.Event_Window_Resize;
 
 export class Entity_Foo final : public jpt::Entity
 {

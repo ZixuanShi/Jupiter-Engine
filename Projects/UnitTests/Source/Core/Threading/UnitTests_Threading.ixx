@@ -13,15 +13,15 @@ module;
 export module UnitTests_Threading;
 
 import jpt.Thread;
-import jpt.Thread.Utils;
+import jpt.ThreadUtils;
 import jpt.ThreadSafeQueue;
 import jpt.Mutex;
 import jpt.LockGuard;
 
 import jpt.Event;
-import jpt.Event.Manager;
+import jpt.EventManager;
 
-import jpt.Hardware.Manager;
+import jpt.HardwareManager;
 
 import jpt.TypeDefs;
 import jpt.String;

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Types/Enum.h"
 
-export module jpt.Framework.Enums;
+export module jpt.Framework_Enums;
 
 import jpt.String;
 import jpt.ToString;

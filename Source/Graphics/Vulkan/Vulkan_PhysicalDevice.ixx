@@ -4,10 +4,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.PhysicalDevice;
+export module jpt.Vulkan_PhysicalDevice;
 
-import jpt.Vulkan.Extensions;
-import jpt.Vulkan.SwapChain.SupportDetails;
+import jpt.Vulkan_Extensions;
+import jpt.Vulkan_SwapChain_SupportDetails;
 
 import jpt.TypeDefs;
 import jpt.DynamicArray;

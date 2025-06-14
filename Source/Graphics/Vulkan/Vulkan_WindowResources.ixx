@@ -4,15 +4,15 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.WindowResources;
+export module jpt.Vulkan_WindowResources;
 
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
-import jpt.Vulkan.SwapChain;
-import jpt.Vulkan.DescriptorSet;
-import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.SyncObjects;
-import jpt.Vulkan.UniformBuffer;
+import jpt.Vulkan_SwapChain;
+import jpt.Vulkan_DescriptorSet;
+import jpt.Vulkan_CommandPool;
+import jpt.Vulkan_SyncObjects;
+import jpt.Vulkan_UniformBuffer;
 
 import jpt.StaticArray;
 import jpt.Optional;

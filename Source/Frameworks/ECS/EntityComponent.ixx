@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Entity.Component;
+export module jpt.EntityComponent;
 
 export namespace jpt
 {

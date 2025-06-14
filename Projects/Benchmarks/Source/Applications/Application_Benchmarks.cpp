@@ -10,7 +10,7 @@ module Application_Benchmarks;
 
 import jpt.CoreModules;
 import jpt.BenchmarksReporter;
-import jpt.File.Path.Helpers;
+import jpt.FilePathHelpers;
 import jpt.CommandLine;
 
 import Benchmarks_Core;

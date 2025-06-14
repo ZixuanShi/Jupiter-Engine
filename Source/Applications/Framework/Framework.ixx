@@ -3,7 +3,7 @@
 export module jpt.Framework;
 
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

@@ -7,15 +7,15 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.Shader;
+module jpt.Vulkan_Shader;
 
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_LogicalDevice;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 
-import jpt.File.IO;
-import jpt.File.Path.Utils;
+import jpt.FileIO;
+import jpt.FilePathUtils;
 
 namespace jpt::Vulkan
 {

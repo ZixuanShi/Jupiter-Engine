@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.SyncObjects;
+export module jpt.Vulkan_SyncObjects;
 
 export namespace jpt::Vulkan
 {

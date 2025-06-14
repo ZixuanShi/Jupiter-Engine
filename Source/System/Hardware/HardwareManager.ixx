@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
-export module jpt.Hardware.Manager;
+export module jpt.HardwareManager;
 
 import jpt.CPU;
 

@@ -4,9 +4,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Texture.Sampler;
+export module jpt.Vulkan_Texture_Sampler;
 
-import jpt.Texture.Sampler;
+import jpt.TextureSampler;
 
 export namespace jpt::Vulkan
 {

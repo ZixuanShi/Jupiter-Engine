@@ -4,12 +4,12 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Texture;
+export module jpt.Vulkan_Texture;
 
 import jpt.Texture;
 import jpt.TypeDefs;
 
-import jpt.Vulkan.Image;
+import jpt.Vulkan_Image;
 
 export namespace jpt::Vulkan
 {

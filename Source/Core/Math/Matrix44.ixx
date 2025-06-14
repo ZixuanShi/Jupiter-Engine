@@ -12,7 +12,7 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.TypeDefs;
 import jpt.Math;
-import jpt.Math.Settings;
+import jpt.Math_Settings;
 import jpt.Vector3;
 import jpt.Vector4;
 import jpt.Utilities;

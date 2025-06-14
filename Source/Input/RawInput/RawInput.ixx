@@ -2,11 +2,11 @@
 
 export module jpt.RawInput;
 
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 
 import jpt.Constants;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 import jpt.StaticArray;
 

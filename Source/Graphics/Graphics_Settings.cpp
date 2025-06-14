@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module jpt.Graphics.Settings;
+module jpt.Graphics_Settings;
 
 import jpt.Application;
 import jpt.Renderer;

@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Extensions;
+export module jpt.Vulkan_Extensions;
 
 import jpt.Application;
 import jpt.DynamicArray;

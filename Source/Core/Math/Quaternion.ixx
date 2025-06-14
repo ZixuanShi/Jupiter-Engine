@@ -11,7 +11,7 @@ export module jpt.Quaternion;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.Math;
-import jpt.Math.Settings;
+import jpt.Math_Settings;
 import jpt.String;
 import jpt.TypeDefs;
 import jpt.Vector3;

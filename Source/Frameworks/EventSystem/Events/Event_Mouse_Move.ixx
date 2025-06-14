@@ -1,13 +1,14 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Event.MouseMove;
+export module jpt.Event_Mouse_Move;
 
 import jpt.Event;
 import jpt.TypeDefs;
-import jpt.Window;
 
 export namespace jpt
 {
+    class Window;
+
     class Event_Mouse_Move : public Event
     {
     private:

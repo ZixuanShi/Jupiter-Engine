@@ -7,7 +7,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.GraphicsPipeline;
+export module jpt.Vulkan_GraphicsPipeline;
 
 import jpt.Vertex;
 

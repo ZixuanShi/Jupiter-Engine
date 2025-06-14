@@ -7,16 +7,16 @@ module;
 export module UnitTests_CSV;
 
 import jpt.CSV;
-import jpt.CSV.Data;
+import jpt.CSVData;
 
 import jpt.TypeDefs;
 import jpt.Optional;
 import jpt.Utilities;
 
-import jpt.File.Path;
-import jpt.File.Path.Utils;
-import jpt.File.IO;
-import jpt.File.Enums;
+import jpt.FilePath;
+import jpt.FilePathUtils;
+import jpt.FileIO;
+import jpt.File_Enums;
 
 const jpt::File::Path kCSVPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/Test.csv");
 

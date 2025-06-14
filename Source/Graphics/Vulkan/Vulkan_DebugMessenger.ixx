@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.DebugMessenger;
+export module jpt.Vulkan_DebugMessenger;
 
 export namespace jpt::Vulkan
 {

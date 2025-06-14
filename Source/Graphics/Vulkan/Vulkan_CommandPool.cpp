@@ -6,13 +6,13 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.CommandPool;
+module jpt.Vulkan_CommandPool;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
 
 namespace jpt::Vulkan
 {

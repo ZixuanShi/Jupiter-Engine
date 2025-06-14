@@ -9,9 +9,9 @@ module jpt.Camera;
 import jpt.Window;
 import jpt.Framework;
 
-import jpt.Event.Manager;
+import jpt.EventManager;
 
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 import jpt.Math;
 
 namespace jpt

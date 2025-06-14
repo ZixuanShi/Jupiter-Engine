@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Graph.Node;
+export module jpt.Graph_Node;
 
-import jpt.Graph.Edge;
+import jpt.Graph_Edge;
 import jpt.TypeDefs;
 
 export namespace jpt

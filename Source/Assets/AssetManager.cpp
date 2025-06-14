@@ -4,7 +4,7 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-module jpt.Asset.Manager;
+module jpt.AssetManager;
 
 import jpt.Application;
 import jpt.Asset;

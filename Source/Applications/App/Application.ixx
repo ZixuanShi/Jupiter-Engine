@@ -4,8 +4,8 @@ export module jpt.Application;
 
 import jpt.TypeDefs;
 import jpt.Status;
-import jpt.Framework.Enums;
-import jpt.Graphics.Enums;
+import jpt.Framework_Enums;
+import jpt.Graphics_Enums;
 
 export namespace jpt
 {

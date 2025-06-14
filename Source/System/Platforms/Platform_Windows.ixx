@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Platform.Windows;
+export module jpt.Platform_Windows;
 
 #if IS_PLATFORM_WINDOWS
 

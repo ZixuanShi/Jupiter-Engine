@@ -7,7 +7,7 @@ module;
 
 #include <string>
 
-export module jpt.Input.Enums;
+export module jpt.Input_Enums;
 
 import jpt.TypeDefs;
 import jpt.Hash;

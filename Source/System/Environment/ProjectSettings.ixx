@@ -9,9 +9,9 @@ module;
 export module jpt.ProjectSettings;
 
 import jpt.Json;
-import jpt.Json.Data;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
+import jpt.JsonData;
+import jpt.FilePath;
+import jpt.FilePathUtils;
 
 import jpt.CommandLine;
 

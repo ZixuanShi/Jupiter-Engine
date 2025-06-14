@@ -6,7 +6,7 @@ module;
 #include <dxgi1_6.h>
 #include <wrl.h>
 
-export module jpt.DX12.RTVHeap;
+export module jpt.DX12_RTVHeap;
 
 export namespace jpt::DX12
 {

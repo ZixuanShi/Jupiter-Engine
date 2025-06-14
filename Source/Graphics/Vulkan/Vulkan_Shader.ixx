@@ -4,10 +4,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Shader;
+export module jpt.Vulkan_Shader;
 
 import jpt.Asset;
-import jpt.File.Path;
+import jpt.FilePath;
 
 export namespace jpt::Vulkan
 {

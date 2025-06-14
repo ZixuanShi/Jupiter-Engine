@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.DescriptorSetLayout;
+export module jpt.Vulkan_DescriptorSetLayout;
 
 export namespace jpt::Vulkan
 {

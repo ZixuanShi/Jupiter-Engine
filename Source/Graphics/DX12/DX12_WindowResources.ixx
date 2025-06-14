@@ -11,18 +11,18 @@ module;
 #include <d3dx12/d3dx12_root_signature.h>
 #include <d3dx12/d3dx12_core.h>
 
-export module jpt.DX12.WindowResources;
+export module jpt.DX12_WindowResources;
 
 import jpt.Window;
 import jpt.Window_Win32;
 
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
-import jpt.DX12.SwapChain;
-import jpt.DX12.RTVHeap;
-import jpt.DX12.SyncObjects;
+import jpt.DX12_SwapChain;
+import jpt.DX12_RTVHeap;
+import jpt.DX12_SyncObjects;
 
-import jpt.DX12.Device;
+import jpt.DX12_Device;
 
 import jpt.Vector2;
 

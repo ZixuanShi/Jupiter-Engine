@@ -8,7 +8,7 @@ import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Hash;
 import jpt.HashMap;
 import jpt.DynamicArray;

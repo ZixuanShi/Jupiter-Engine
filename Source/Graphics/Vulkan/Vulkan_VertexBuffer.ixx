@@ -7,9 +7,9 @@ module;
 #include <vulkan/vulkan.h>
 #include <memory>
 
-export module jpt.Vulkan.VertexBuffer;
+export module jpt.Vulkan_VertexBuffer;
 
-import jpt.Vulkan.Buffer;
+import jpt.Vulkan_Buffer;
 
 import jpt.DynamicArray;
 import jpt.Vertex;

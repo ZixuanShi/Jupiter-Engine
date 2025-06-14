@@ -9,7 +9,7 @@ import jpt.Vertex;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 
-import jpt.File.Path;
+import jpt.FilePath;
 
 export namespace jpt
 {

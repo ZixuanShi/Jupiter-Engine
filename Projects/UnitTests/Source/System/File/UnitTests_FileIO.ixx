@@ -22,11 +22,11 @@ import jpt.HashMap;
 import jpt.Serializer;
 import jpt.Optional;
 
-import jpt.File.Enums;
-import jpt.File.IO;
-import jpt.File.Path;
-import jpt.File.Path.Utils;  
-import jpt.System.Paths;
+import jpt.File_Enums;
+import jpt.FileIO;
+import jpt.FilePath;
+import jpt.FilePathUtils;  
+import jpt.SystemPaths;
 
 using namespace jpt::File;
 

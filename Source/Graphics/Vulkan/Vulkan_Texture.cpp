@@ -8,18 +8,18 @@ module;
 
 #include <cmath>
 
-module jpt.Vulkan.Texture;
+module jpt.Vulkan_Texture;
 
-import jpt.Vulkan.Constants;
-import jpt.Vulkan.Buffer;
-import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.Utils;
+import jpt.Vulkan_Constants;
+import jpt.Vulkan_Buffer;
+import jpt.Vulkan_CommandPool;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_Utils;
 
 import jpt.Math;
 
-import jpt.File.IO;
+import jpt.FileIO;
 
 namespace jpt::Vulkan
 {

@@ -4,7 +4,7 @@ module;
 
 #include <thread>
 
-export module jpt.Thread.Utils;
+export module jpt.ThreadUtils;
 
 import jpt.TypeDefs;
 

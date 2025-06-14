@@ -1,3 +1,5 @@
+-- Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
 ---------------------------------------------------------------------------------------------------
 -- Helper functions
 ---------------------------------------------------------------------------------------------------
@@ -13,18 +15,18 @@ end
 ---------------------------------------------------------------------------------------------------
 -- Data
 ---------------------------------------------------------------------------------------------------
-jupiter_dir = GetJupiterDir()
-output_path = "%{cfg.platform}_%{cfg.buildcfg}"
+g_jupiterDir = GetJupiterDir()
+g_outputPath = "%{cfg.platform}_%{cfg.buildcfg}"
 
 -- Client can override context variables to modify build settings
-context = {}
-context.configurations =
+g_context = {}
+g_context.configurations =
 {
     "Debug",   -- Debugging. No optimization will be performed
     "Dev",     -- Development. Use Engine's editors and tools. Also use for profiling
     "Release", -- Release the project. Use for final builds to users. No editors
 }
-context.platforms =
+g_context.platforms =
 {
     -- Client, Server, Editor
     "Windows_Client",
@@ -35,15 +37,15 @@ context.platforms =
 -- Jupiter workspace
 ---------------------------------------------------------------------------------------------------
 function CreateEngineWorkspace()
-    workspace (context.project_name)
-        configurations(context.configurations)
-        platforms(context.platforms)
-        startproject (context.project_name)
+    workspace (g_context.project_name)
+        configurations(g_context.configurations)
+        platforms(g_context.platforms)
+        startproject (g_context.project_name)
 
         -- Path
-        location  (context.project_dir .. "_ProjectFiles")
-        targetdir (context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output")
-        objdir    (context.project_dir .. "_Output/%{prj.name}_" .. output_path .. "_Intermediate")
+        location  (g_context.project_dir .. "_ProjectFiles")
+        targetdir (g_context.project_dir .. "_Output/%{prj.name}_" .. g_outputPath .. "_Output")
+        objdir    (g_context.project_dir .. "_Output/%{prj.name}_" .. g_outputPath .. "_Intermediate")
 
         -- Programming
         language   "C++"
@@ -55,7 +57,7 @@ function CreateEngineWorkspace()
         -- Macro defines
         defines
         {
-            ("JPT_ENGINE_DIR_W=L\"" .. jupiter_dir .."\""),
+            ("JPT_ENGINE_DIR_W=L\"" .. g_jupiterDir .."\""),
             ("NOMINMAX"),   -- To get rid of built-in min/max macros
             ("GLFW_STATIC"), -- To use GLFW as a static library
         }
@@ -97,47 +99,47 @@ function CreateEngineWorkspace()
 
     -- Jupiter Engine
     project "Engine"
-        location  (jupiter_dir .. "_ProjectFiles")
-        targetdir (jupiter_dir .. "_Output/%{prj.name}_" .. output_path .. "_Output")
-        objdir    (jupiter_dir .. "_Output/%{prj.name}_" .. output_path .. "_Intermediate")
+        location  (g_jupiterDir .. "_ProjectFiles")
+        targetdir (g_jupiterDir .. "_Output/%{prj.name}_" .. g_outputPath .. "_Output")
+        objdir    (g_jupiterDir .. "_Output/%{prj.name}_" .. g_outputPath .. "_Intermediate")
         kind "StaticLib"
 
         includedirs
         {
-            (jupiter_dir .. "Source"),
-            (jupiter_dir .. "Dependencies/*/Include"),
+            (g_jupiterDir .. "Source"),
+            (g_jupiterDir .. "Dependencies/*/Include"),
         }
         files 
         {
-            (jupiter_dir .. "Source/**"),
+            (g_jupiterDir .. "Source/**"),
         }
 end
 
 function CreateClientProject()
-    project (context.project_name)
+    project (g_context.project_name)
         filter "platforms:Windows_Client or Windows_Editor"
             kind "WindowedApp"
 
         defines
         {
-            ("JPT_CLIENT_DIR_W=L\"" .. context.project_dir .."\""),
+            ("JPT_CLIENT_DIR_W=L\"" .. g_context.project_dir .."\""),
         }
 
         includedirs
         {
-            (jupiter_dir .. "Source"),
-            (jupiter_dir .. "Dependencies/*/Include"),
-            (context.project_dir .. "Source"),
+            (g_jupiterDir .. "Source"),
+            (g_jupiterDir .. "Dependencies/*/Include"),
+            (g_context.project_dir .. "Source"),
         }
         files
         {
-            (context.project_dir .. "Source/**"),
+            (g_context.project_dir .. "Source/**"),
         }
 
         libdirs
         {
-            (jupiter_dir .. "_Output/Engine_" .. output_path .. "_Output"),
-            (jupiter_dir .. "Dependencies/*/Libs"),
+            (g_jupiterDir .. "_Output/Engine_" .. g_outputPath .. "_Output"),
+            (g_jupiterDir .. "Dependencies/*/Libs"),
         }
         links
         {
@@ -167,11 +169,11 @@ function CreateClientProject()
             {
                 -- Assets
                 "xcopy \"$(SolutionDir)..\\Assets\"" .. " \"$(OutDir)Assets\"  /e /s /h /i /y",  -- Game Assets
-                "xcopy \"" .. jupiter_dir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
+                "xcopy \"" .. g_jupiterDir .."Assets\\Jupiter_Common\"" .. " \"$(OutDir)Assets\\Jupiter_Common\"  /e /s /h /i /y",    -- Engine Common Assets
 
                 -- _Baked
                 "xcopy \"$(SolutionDir)..\\_Baked\"" .. " \"$(OutDir)_Baked\"  /e /s /h /i /y",
-                "xcopy \"" .. jupiter_dir .."_Baked\\Jupiter_Common\"" .. " \"$(OutDir)_Baked\\Jupiter_Common\"  /e /s /h /i /y",
+                "xcopy \"" .. g_jupiterDir .."_Baked\\Jupiter_Common\"" .. " \"$(OutDir)_Baked\\Jupiter_Common\"  /e /s /h /i /y",
             }
 end
 
@@ -184,17 +186,17 @@ function ParseContext()
         -- Key-value paired arguments
         if arg:find("=") then
             local key, value = arg:match("([^=]+)=([^=]+)")
-            context[key] = value
+            g_context[key] = value
         else
-            context[arg] = true
+            g_context[arg] = true
         end
     end
 
-    assert(context.project_name, "Project name is not provided")
-    assert(context.project_dir, "Project directory is not provided")
+    assert(g_context.project_name, "Project name is not provided")
+    assert(g_context.project_dir, "Project directory is not provided")
 
     -- Log context variables
-    for key, value in pairs(context) do
+    for key, value in pairs(g_context) do
         local valueStr = ""
 
         if type(value) == "table" then

@@ -12,7 +12,7 @@ import jpt.DynamicArray;
 import jpt.HashMap;
 
 import jpt.Json;
-import jpt.Json.Data;
+import jpt.JsonData;
 
 // Paste this to command line to run this unit test
 // -flag -keyStr="string" -keyStr2="Hello World" -keyFloat=50.55 -keyBool=false -keyInt=42 -keyArray=[1, 2, 3, 4, 5] -keyMap={ "key1": 42, "key2": 2.5, "key3": true, "key4": "mapValue" }

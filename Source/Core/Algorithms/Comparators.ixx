@@ -3,7 +3,7 @@
 export module jpt.Comparators;
 
 import jpt.Concepts;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 
 export namespace jpt
 {

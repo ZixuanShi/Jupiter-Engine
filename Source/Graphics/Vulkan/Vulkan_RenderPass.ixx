@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.RenderPass;
+export module jpt.Vulkan_RenderPass;
 
 export namespace jpt::Vulkan
 {

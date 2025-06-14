@@ -10,7 +10,7 @@ module;
 #include <stdlib.h>
 #include <type_traits>
 
-export module jpt.String.Helpers;
+export module jpt.StringHelpers;
 
 import jpt.TypeDefs;
 import jpt.Constants;

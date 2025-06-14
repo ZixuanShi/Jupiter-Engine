@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.DescriptorPool;
+export module jpt.Vulkan_DescriptorPool;
 
 export namespace jpt::Vulkan
 {

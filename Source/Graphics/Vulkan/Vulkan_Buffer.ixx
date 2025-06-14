@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.Buffer;
+export module jpt.Vulkan_Buffer;
 
 export namespace jpt::Vulkan
 {

@@ -4,9 +4,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.UniformBuffer;
+export module jpt.Vulkan_UniformBuffer;
 
-import jpt.Vulkan.Buffer;
+import jpt.Vulkan_Buffer;
 
 import jpt.Matrix44;
 

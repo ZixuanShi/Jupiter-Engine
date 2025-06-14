@@ -11,7 +11,7 @@ module;
 
 export module UnitTests_Macros;
 
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.Utilities;
 
 #pragma region String Formatting

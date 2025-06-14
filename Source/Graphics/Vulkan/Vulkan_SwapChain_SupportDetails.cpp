@@ -5,13 +5,13 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-module jpt.Vulkan.SwapChain.SupportDetails;
+module jpt.Vulkan_SwapChain_SupportDetails;
 
-import jpt.Vulkan.Constants;
+import jpt.Vulkan_Constants;
 
 import jpt.Renderer;
-import jpt.Graphics.Settings;
-import jpt.Graphics.Enums;
+import jpt.Graphics_Settings;
+import jpt.Graphics_Enums;
 
 import jpt.Window;
 import jpt.Constants;

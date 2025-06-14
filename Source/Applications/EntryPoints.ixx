@@ -41,7 +41,7 @@ namespace jpt
 // Should handle command line arguments and call MainImpl_Final
 #if IS_PLATFORM_WINDOWS
 
-import jpt.Platform.Windows;
+import jpt.Platform_Windows;
 
 _Use_decl_annotations_
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdShow)

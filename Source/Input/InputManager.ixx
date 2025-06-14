@@ -4,15 +4,15 @@ module;
 
 #include "Core/Minimal/CoreMacros.h"
 
-export module jpt.Input.Manager;
+export module jpt.InputManager;
 
 import jpt.TypeDefs;
 
 import jpt.RawInput;
 
-import jpt.Input.Create;
+import jpt.InputManager_Create;
 
-import jpt.Framework.Enums;
+import jpt.Framework_Enums;
 
 export namespace jpt
 {

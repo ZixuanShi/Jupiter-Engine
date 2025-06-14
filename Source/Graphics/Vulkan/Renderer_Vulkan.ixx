@@ -11,26 +11,26 @@ export module jpt.Renderer_Vulkan;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 
 import jpt.Vertex;
-import jpt.Vulkan.Utils;
+import jpt.Vulkan_Utils;
 
-import jpt.Vulkan.Constants;
-import jpt.Vulkan.WindowResources;
-import jpt.Vulkan.Extensions;
-import jpt.Vulkan.ValidationLayers;
-import jpt.Vulkan.DebugMessenger;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.RenderPass;
-import jpt.Vulkan.DescriptorSetLayout;
-import jpt.Vulkan.DescriptorPool;
-import jpt.Vulkan.PipelineLayout;
-import jpt.Vulkan.GraphicsPipeline;
-import jpt.Vulkan.VertexBuffer;
-import jpt.Vulkan.IndexBuffer;
+import jpt.Vulkan_Constants;
+import jpt.Vulkan_WindowResources;
+import jpt.Vulkan_Extensions;
+import jpt.Vulkan_ValidationLayers;
+import jpt.Vulkan_DebugMessenger;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_CommandPool;
+import jpt.Vulkan_RenderPass;
+import jpt.Vulkan_DescriptorSetLayout;
+import jpt.Vulkan_DescriptorPool;
+import jpt.Vulkan_PipelineLayout;
+import jpt.Vulkan_GraphicsPipeline;
+import jpt.Vulkan_VertexBuffer;
+import jpt.Vulkan_IndexBuffer;
 
 import jpt.DynamicArray;
 import jpt.Matrix44;

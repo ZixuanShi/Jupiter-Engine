@@ -9,20 +9,20 @@ module;
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-module jpt.Vulkan.Image;
+module jpt.Vulkan_Image;
 
 import jpt.Application;
 import jpt.Renderer;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Buffer;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.Utils;
+import jpt.Vulkan_Buffer;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_CommandPool;
+import jpt.Vulkan_Utils;
 
 import jpt.Math;
 
-import jpt.File.IO;
+import jpt.FileIO;
 
 namespace jpt::Vulkan
 {

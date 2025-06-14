@@ -6,7 +6,7 @@ module;
 
 #include <type_traits>
 
-export module jpt.Object.Pool;
+export module jpt.ObjectPool;
 
 import jpt.Allocator;
 import jpt.Constants;

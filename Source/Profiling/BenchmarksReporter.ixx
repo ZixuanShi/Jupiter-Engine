@@ -10,11 +10,11 @@ export import jpt.BenchmarkUnit;
 export import jpt.StopWatch;
 
 import jpt.CSV;
-import jpt.CSV.Data;
+import jpt.CSVData;
 import jpt.Clock;
 import jpt.DateTime;
-import jpt.File.Path;
-import jpt.System.Paths;
+import jpt.FilePath;
+import jpt.SystemPaths;
 import jpt.Function;
 
 export namespace jpt

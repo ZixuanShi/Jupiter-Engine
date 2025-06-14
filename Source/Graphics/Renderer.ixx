@@ -6,17 +6,17 @@ module;
 
 export module jpt.Renderer;
 
-import jpt.Graphics.Settings;
+import jpt.Graphics_Settings;
 
-import jpt.Texture.Sampler;
+import jpt.TextureSampler;
 import jpt.Camera;
 
 import jpt.Window;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Resize;
-import jpt.Event.Window.Close;
+import jpt.EventManager;
+import jpt.Event_Window_Resize;
+import jpt.Event_Window_Close;
 
 export namespace jpt
 {

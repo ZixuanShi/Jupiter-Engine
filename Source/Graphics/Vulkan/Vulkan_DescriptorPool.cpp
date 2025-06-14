@@ -6,14 +6,14 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.DescriptorPool;
+module jpt.Vulkan_DescriptorPool;
 
 import jpt.Application;
 
-import jpt.Graphics.Constants;
-import jpt.Vulkan.LogicalDevice;
+import jpt.Graphics_Constants;
+import jpt.Vulkan_LogicalDevice;
 
-import jpt.Window.Manager;
+import jpt.WindowManager;
 
 namespace jpt::Vulkan
 {

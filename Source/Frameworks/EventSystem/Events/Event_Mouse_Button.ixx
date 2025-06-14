@@ -1,14 +1,15 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Event.MouseButton;
+export module jpt.Event_Mouse_Button;
 
 import jpt.Event;
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 import jpt.TypeDefs;
-import jpt.Window;
 
 export namespace jpt
 {
+    class Window;
+
     class Event_Mouse_Button : public Event
     {
     private:

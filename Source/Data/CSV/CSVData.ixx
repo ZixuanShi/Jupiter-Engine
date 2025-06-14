@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.CSV.Data;
+export module jpt.CSVData;
 
 import jpt.DynamicArray;
 import jpt.String;

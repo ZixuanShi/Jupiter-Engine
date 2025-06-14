@@ -4,7 +4,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-export module jpt.Vulkan.PipelineLayout;
+export module jpt.Vulkan_PipelineLayout;
 
 export namespace jpt::Vulkan
 {

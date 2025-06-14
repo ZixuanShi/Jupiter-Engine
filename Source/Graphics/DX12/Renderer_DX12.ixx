@@ -27,26 +27,26 @@ export module jpt.Renderer_DX12;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics.Constants;
+import jpt.Graphics_Constants;
 import jpt.Vertex;
 
 import jpt.CommandLine;
 
-import jpt.DX12.DebugLayer;
-import jpt.DX12.Device;
-import jpt.DX12.WindowResources;
+import jpt.DX12_DebugLayer;
+import jpt.DX12_Device;
+import jpt.DX12_WindowResources;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
-import jpt.File.IO;
-import jpt.File.Path;
-import jpt.File.Path.Utils;
+import jpt.FileIO;
+import jpt.FilePath;
+import jpt.FilePathUtils;
 
 import jpt.Window;
-import jpt.Event.Window.Resize;
-import jpt.Event.Window.Close;
+import jpt.Event_Window_Resize;
+import jpt.Event_Window_Close;
 
 using namespace jpt::DX12;
 

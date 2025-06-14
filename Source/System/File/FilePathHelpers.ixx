@@ -5,7 +5,7 @@ module;
 #include "Core/Strings/StringMacros.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.File.Path.Helpers;
+export module jpt.FilePathHelpers;
 
 import jpt.TypeTraits;
 

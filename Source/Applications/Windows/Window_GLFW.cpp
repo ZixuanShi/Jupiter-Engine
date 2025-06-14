@@ -21,22 +21,22 @@ import jpt.Utilities;
 import jpt.Any;
 import jpt.DynamicArray;
 
-import jpt.Input.Manager;
-import jpt.Input.Enums;
+import jpt.InputManager;
+import jpt.Input_Enums;
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
 
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
-import jpt.Graphics.Enums;
+import jpt.Graphics_Enums;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Resize;
-import jpt.Event.Window.Close;
-import jpt.Event.MouseButton;
-import jpt.Event.MouseScroll;
-import jpt.Event.MouseMove;
-import jpt.Event.Key;
+import jpt.EventManager;
+import jpt.Event_Window_Resize;
+import jpt.Event_Window_Close;
+import jpt.Event_Mouse_Button;
+import jpt.Event_Mouse_Scroll;
+import jpt.Event_Mouse_Move;
+import jpt.Event_Key;
 
 namespace jpt
 {

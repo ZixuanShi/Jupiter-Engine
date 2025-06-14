@@ -10,18 +10,18 @@ module Application_Blank;
 import jpt.CoreModules;
 
 import jpt.CommandLine;
-import jpt.System.Paths;
+import jpt.SystemPaths;
 
 import jpt.RawInput;
-import jpt.Input.Enums;
+import jpt.Input_Enums;
 
 import jpt.Window;
-import jpt.Window.Manager;
+import jpt.WindowManager;
 
 import jpt.Renderer;
 
-import jpt.Event.Manager;
-import jpt.Event.Key;
+import jpt.EventManager;
+import jpt.Event_Key;
 
 bool Application_Blank::PreInit()
 {

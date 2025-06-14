@@ -4,7 +4,7 @@ export module jpt.BenchmarkUnit;
 
 import jpt.String;
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 import jpt.Function;
 
 export namespace jpt

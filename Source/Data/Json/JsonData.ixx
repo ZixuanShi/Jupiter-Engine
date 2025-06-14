@@ -4,14 +4,14 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-export module jpt.Json.Data;
+export module jpt.JsonData;
 
 import jpt.Concepts;
 import jpt.DynamicArray;
 import jpt.HashMap;
 
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.ToString;
 
 import jpt.TypeDefs;

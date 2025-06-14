@@ -8,7 +8,7 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.WindowResources;
+module jpt.Vulkan_WindowResources;
 
 import jpt.Application;
 import jpt.Window;
@@ -17,16 +17,16 @@ import jpt.Renderer_Vulkan;
 import jpt.Camera;
 import jpt.Particle;
 
-import jpt.Vulkan.Utils;
-import jpt.Vulkan.Constants;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.SwapChain.SupportDetails;
-import jpt.Vulkan.RenderPass;
-import jpt.Vulkan.PipelineLayout;
-import jpt.Vulkan.GraphicsPipeline;
-import jpt.Vulkan.VertexBuffer;
-import jpt.Vulkan.IndexBuffer;
+import jpt.Vulkan_Utils;
+import jpt.Vulkan_Constants;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_SwapChain_SupportDetails;
+import jpt.Vulkan_RenderPass;
+import jpt.Vulkan_PipelineLayout;
+import jpt.Vulkan_GraphicsPipeline;
+import jpt.Vulkan_VertexBuffer;
+import jpt.Vulkan_IndexBuffer;
 
 import jpt.Constants;
 import jpt.Matrix44;

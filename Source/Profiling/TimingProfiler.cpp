@@ -6,7 +6,7 @@
 
 #include "Debugging/Logger.h"
 
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 import jpt.StopWatch;
 
 using namespace jpt;

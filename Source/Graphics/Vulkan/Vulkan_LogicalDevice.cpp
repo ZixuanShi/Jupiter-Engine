@@ -6,14 +6,14 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.LogicalDevice;
+module jpt.Vulkan_LogicalDevice;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.ValidationLayers;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.Extensions;
+import jpt.Vulkan_ValidationLayers;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_Extensions;
 
 namespace jpt::Vulkan
 {

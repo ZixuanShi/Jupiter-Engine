@@ -10,10 +10,10 @@ module;
     #include <Windows.h>
 #endif
 
-export module jpt.System.Paths;
+export module jpt.SystemPaths;
 
-import jpt.File.Path;
-import jpt.File.Path.Helpers;
+import jpt.FilePath;
+import jpt.FilePathHelpers;
 
 using namespace jpt::File;
 

@@ -11,14 +11,14 @@ import jpt.Utilities;
 import jpt.Math;
 
 import jpt.Json;
-import jpt.Json.Data;
+import jpt.JsonData;
 
-import jpt.File.Path;
-import jpt.File.Path.Utils;
-import jpt.File.IO;
-import jpt.File.Enums;
+import jpt.FilePath;
+import jpt.FilePathUtils;
+import jpt.FileIO;
+import jpt.File_Enums;
 
-import jpt.Graphics.Enums;
+import jpt.Graphics_Enums;
 
 static const jpt::File::Path path = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
 static const jpt::File::Path engineJsonPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");

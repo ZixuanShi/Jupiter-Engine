@@ -8,7 +8,7 @@ module;
 #include <type_traits>
 #include <memory>
 
-export module jpt.Event.Manager;
+export module jpt.EventManager;
 
 import jpt.Constants;
 import jpt.TypeTraits;
@@ -21,7 +21,7 @@ import jpt.HashMap;
 import jpt.Function;
 import jpt.Event;
 
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

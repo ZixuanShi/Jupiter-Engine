@@ -10,8 +10,8 @@ import jpt.String;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-import jpt.File.Path;
-import jpt.File.Path.Helpers;
+import jpt.FilePath;
+import jpt.FilePathHelpers;
 
 bool UnitTests_FilePathHelpers_Getters()
 {

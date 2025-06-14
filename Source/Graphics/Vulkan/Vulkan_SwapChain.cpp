@@ -7,16 +7,16 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.SwapChain;
+module jpt.Vulkan_SwapChain;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.Utils;
-import jpt.Vulkan.SwapChain.SupportDetails;
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.RenderPass;
+import jpt.Vulkan_Utils;
+import jpt.Vulkan_SwapChain_SupportDetails;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_RenderPass;
 
 import jpt.Window;
 import jpt.TypeDefs;

@@ -5,7 +5,7 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.Window.Manager;
+export module jpt.WindowManager;
 
 import jpt.Application;
 
@@ -14,14 +14,14 @@ import jpt.Window_GLFW;
 import jpt.Window_Win32;
 
 import jpt.Renderer;
-import jpt.Framework.Enums;
+import jpt.Framework_Enums;
 
 import jpt.Status;
 import jpt.DynamicArray;
 import jpt.TypeDefs;
 
-import jpt.Event.Manager;
-import jpt.Event.Window.Close;
+import jpt.EventManager;
+import jpt.Event_Window_Close;
 
 export namespace jpt
 {

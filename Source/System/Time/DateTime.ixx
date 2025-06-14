@@ -9,7 +9,7 @@ module;
 
 export module jpt.DateTime;
 
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 import jpt.TypeDefs;
 import jpt.String;
 

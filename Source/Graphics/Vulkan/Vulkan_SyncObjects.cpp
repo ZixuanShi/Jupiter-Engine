@@ -6,9 +6,9 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.SyncObjects;
+module jpt.Vulkan_SyncObjects;
 
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_LogicalDevice;
 
 namespace jpt::Vulkan
 {

@@ -7,19 +7,19 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.GraphicsPipeline;
+module jpt.Vulkan_GraphicsPipeline;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.PipelineLayout;
-import jpt.Vulkan.RenderPass;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_PipelineLayout;
+import jpt.Vulkan_RenderPass;
 
-import jpt.Vulkan.Shader.Vertex;
-import jpt.Vulkan.Shader.Pixel;
-import jpt.Vulkan.Shader.Compute;
+import jpt.Vulkan_Shader_Vertex;
+import jpt.Vulkan_Shader_Pixel;
+import jpt.Vulkan_Shader_Compute;
 
 import jpt.DynamicArray;
 import jpt.TypeDefs;
@@ -36,8 +36,8 @@ namespace jpt::Vulkan
         VertexShader  vertexShader;
         PixelShader   pixelShader;
 
-        JPT_ASSERT(vertexShader.Load("_Baked/Jupiter_Common/Shaders/sample_vert_glsl.spv"));
-        JPT_ASSERT(pixelShader.Load("_Baked/Jupiter_Common/Shaders/sample_frag_glsl.spv"));
+        JPT_ASSERT(vertexShader.Load("_Baked/Jupiter_Common/Shaders/Sample_Vert.glsl.spv"));
+        JPT_ASSERT(pixelShader.Load("_Baked/Jupiter_Common/Shaders/Sample_Frag.glsl.spv"));
 
         VkPipelineShaderStageCreateInfo vertexShaderStageInfo  = vertexShader.GetStageCreateInfo();
         VkPipelineShaderStageCreateInfo pixelShaderStageInfo   = pixelShader.GetStageCreateInfo();

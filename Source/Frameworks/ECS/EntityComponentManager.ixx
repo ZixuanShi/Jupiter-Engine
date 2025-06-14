@@ -1,11 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Entity.Component.Manager;
+export module jpt.EntityComponentManager;
 
-import jpt.Entity.Component;
+import jpt.EntityComponent;
 
 import jpt.TypeDefs;
-import jpt.Time.TypeDefs;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

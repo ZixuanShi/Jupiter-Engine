@@ -5,15 +5,15 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.File.Path;
+export module jpt.FilePath;
 
 import jpt.String;
 import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-import jpt.File.Enums;
-import jpt.File.Path.Helpers;
+import jpt.File_Enums;
+import jpt.FilePathHelpers;
 
 export namespace jpt
 {

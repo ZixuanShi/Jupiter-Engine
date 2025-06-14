@@ -8,22 +8,22 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.DescriptorSet;
+module jpt.Vulkan_DescriptorSet;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
-import jpt.Asset.Manager;
+import jpt.AssetManager;
 
-import jpt.Graphics.Constants;
-import jpt.Texture.Sampler;
+import jpt.Graphics_Constants;
+import jpt.TextureSampler;
 
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.DescriptorSetLayout;
-import jpt.Vulkan.DescriptorPool;
-import jpt.Vulkan.Texture;
-import jpt.Vulkan.Texture.Sampler;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_DescriptorSetLayout;
+import jpt.Vulkan_DescriptorPool;
+import jpt.Vulkan_Texture;
+import jpt.Vulkan_Texture_Sampler;
 
-import jpt.File.Path.Utils;
+import jpt.FilePathUtils;
 
 namespace jpt::Vulkan
 {

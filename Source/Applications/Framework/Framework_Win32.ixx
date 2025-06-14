@@ -15,10 +15,10 @@ import jpt.Application;
 import jpt.Framework;
 
 import jpt.Window;
-import jpt.Window.Manager;
+import jpt.WindowManager;
 import jpt.Window_Win32;
 
-import jpt.Platform.Windows;
+import jpt.Platform_Windows;
 
 namespace jpt
 {

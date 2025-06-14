@@ -2,10 +2,10 @@
 
 export module jpt.Camera;
 
-import jpt.Event.Key;
-import jpt.Event.MouseButton;
-import jpt.Event.MouseMove;
-import jpt.Event.MouseScroll;
+import jpt.Event_Key;
+import jpt.Event_Mouse_Button;
+import jpt.Event_Mouse_Move;
+import jpt.Event_Mouse_Scroll;
 
 import jpt.Constants;
 import jpt.TypeDefs;

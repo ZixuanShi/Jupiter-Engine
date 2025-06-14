@@ -2,9 +2,9 @@
 
 module;
 
-export module jpt.Vulkan.Shader.Compute;
+export module jpt.Vulkan_Shader_Compute;
 
-import jpt.Vulkan.Shader;
+import jpt.Vulkan_Shader;
 
 export namespace jpt::Vulkan
 {

@@ -11,13 +11,13 @@ export module jpt.CommandLine;
 import jpt.DynamicArray;
 import jpt.HashMap;
 import jpt.String;
-import jpt.String.Helpers;
+import jpt.StringHelpers;
 import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
 import jpt.Json;
-import jpt.Json.Data;
+import jpt.JsonData;
 
 export namespace jpt
 {

@@ -14,9 +14,9 @@ export module jpt.Window_Win32;
 import jpt.Application;
 import jpt.Window;
 
-import jpt.Time.TypeDefs;
-import jpt.Platform.Windows;
-import jpt.String.Helpers;
+import jpt.TimeTypeDefs;
+import jpt.Platform_Windows;
+import jpt.StringHelpers;
 
 namespace jpt
 {

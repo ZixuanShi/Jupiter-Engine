@@ -7,15 +7,15 @@ module;
 #include <vulkan/vulkan.h>
 #include <memory>
 
-module jpt.Vulkan.Buffer;
+module jpt.Vulkan_Buffer;
 
 import jpt.Application;
 import jpt.Renderer_Vulkan;
 
-import jpt.Vulkan.PhysicalDevice;
-import jpt.Vulkan.LogicalDevice;
-import jpt.Vulkan.CommandPool;
-import jpt.Vulkan.Utils;
+import jpt.Vulkan_PhysicalDevice;
+import jpt.Vulkan_LogicalDevice;
+import jpt.Vulkan_CommandPool;
+import jpt.Vulkan_Utils;
 
 namespace jpt::Vulkan
 {

@@ -6,8 +6,8 @@ module;
 
 export module jpt.Graph;
 
-import jpt.Graph.Edge;
-import jpt.Graph.Node;
+import jpt.Graph_Edge;
+import jpt.Graph_Node;
 
 import jpt.Allocator;
 import jpt.Constants;

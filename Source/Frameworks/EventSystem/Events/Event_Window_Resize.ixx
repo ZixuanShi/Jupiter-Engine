@@ -1,13 +1,14 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Event.Window.Resize;
+export module jpt.Event_Window_Resize;
 
 import jpt.Event;
 import jpt.TypeDefs;
-import jpt.Window;
 
 export namespace jpt
 {
+    class Window;
+
     class Event_Window_Resize : public Event
     {
     private:

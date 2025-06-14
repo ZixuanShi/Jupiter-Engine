@@ -6,10 +6,10 @@ module;
 
 #include <vulkan/vulkan.h>
 
-module jpt.Vulkan.UniformBuffer;
+module jpt.Vulkan_UniformBuffer;
 
-import jpt.Vulkan.Buffer;
-import jpt.Vulkan.LogicalDevice;
+import jpt.Vulkan_Buffer;
+import jpt.Vulkan_LogicalDevice;
 
 import jpt.Matrix44;
 import jpt.Utilities;
