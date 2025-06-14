@@ -22,7 +22,7 @@ context.configurations =
 {
     "Debug",   -- Debugging. No optimization will be performed
     "Dev",     -- Development. Use Engine's editors and tools. Also use for profiling
-    "Release", -- Release the project. Use for final builds to users. Optimized for performance
+    "Release", -- Release the project. Use for final builds to users. No editors
 }
 context.platforms =
 {
@@ -76,6 +76,10 @@ function CreateEngineWorkspace()
             optimize "Speed"
             symbols "off"
             flags{ "FatalCompileWarnings" }
+
+        -- Release shouldn't use editors
+        filter { "configurations:Release", "platforms:Windows_Editor" }
+            flags { "ExcludeFromBuild" } 
 
         -- Global filters for windows
         filter "platforms:Windows_Client or Windows_Editor"

@@ -1,6 +1,5 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-
 export module Application_Blank;
 
 import jpt.TypeDefs;
