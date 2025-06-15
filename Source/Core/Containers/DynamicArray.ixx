@@ -341,25 +341,29 @@ export namespace jpt
     template<typename TData, typename TAllocator>
     constexpr TData& DynamicArray<TData, TAllocator>::operator[](size_t index) noexcept
     {
-        JPT_ASSERT(index < m_count); return m_pBuffer[index];
+        JPT_ASSERT(index < m_count); 
+        return m_pBuffer[index];
     }
 
     template<typename TData, typename TAllocator>
     constexpr const TData& DynamicArray<TData, TAllocator>::operator[](size_t index) const noexcept
     {
-        JPT_ASSERT(index < m_count); return m_pBuffer[index];
+        JPT_ASSERT(index < m_count); 
+        return m_pBuffer[index];
     }
 
     template<typename TData, typename TAllocator>
     constexpr TData& DynamicArray<TData, TAllocator>::At(size_t index) noexcept
     {
-        JPT_ASSERT(index < m_count); return m_pBuffer[index];
+        JPT_ASSERT(index < m_count); 
+        return m_pBuffer[index];
     }
 
     template<typename TData, typename TAllocator>
     constexpr const TData& DynamicArray<TData, TAllocator>::At(size_t index) const noexcept
     {
-        JPT_ASSERT(index < m_count); return m_pBuffer[index];
+        JPT_ASSERT(index < m_count); 
+        return m_pBuffer[index];
     }
 
     template<typename TData, typename TAllocator>
@@ -398,26 +402,26 @@ export namespace jpt
         return ConstIterator(m_pBuffer + m_count);
     }
 
-    template<typename _TData, typename TAllocator>
-    constexpr size_t DynamicArray<_TData, TAllocator>::Count() const noexcept
+    template<typename TData, typename TAllocator>
+    constexpr size_t DynamicArray<TData, TAllocator>::Count() const noexcept
     {
         return m_count;
     }
 
-    template<typename _TData, typename TAllocator>
-    constexpr size_t DynamicArray<_TData, TAllocator>::Size() const noexcept
+    template<typename TData, typename TAllocator>
+    constexpr size_t DynamicArray<TData, TAllocator>::Size() const noexcept
     {
         return m_count * sizeof(TData);
     }
 
-    template<typename _TData, typename TAllocator>
-    constexpr size_t DynamicArray<_TData, TAllocator>::Capacity() const noexcept
+    template<typename TData, typename TAllocator>
+    constexpr size_t DynamicArray<TData, TAllocator>::Capacity() const noexcept
     {
         return m_capacity;
     }
 
-    template<typename _TData, typename TAllocator>
-    constexpr bool DynamicArray<_TData, TAllocator>::IsEmpty() const noexcept
+    template<typename TData, typename TAllocator>
+    constexpr bool DynamicArray<TData, TAllocator>::IsEmpty() const noexcept
     {
         return m_count == 0;
     }
@@ -446,8 +450,8 @@ export namespace jpt
         m_count = count;
     }
 
-    template<typename _TData, typename TAllocator>
-    constexpr void DynamicArray<_TData, TAllocator>::Reverse()
+    template<typename TData, typename TAllocator>
+    constexpr void DynamicArray<TData, TAllocator>::Reverse()
     {
         for (size_t i = 0; i < Count() / 2; ++i)
         {

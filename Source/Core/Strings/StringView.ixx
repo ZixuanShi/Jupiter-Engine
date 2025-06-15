@@ -22,7 +22,9 @@ export namespace jpt
     class StringView_Base
     {
     public:
-        using TChar = _TChar;
+        using TChar         = _TChar;
+        using Iterator      = TChar*;
+        using ConstIterator = const TChar*;
 
     private:
         const TChar* m_pBuffer = nullptr;
@@ -48,6 +50,14 @@ export namespace jpt
         constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1]; }
         constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
 
+        // Iterators
+        constexpr Iterator begin() noexcept;
+        constexpr Iterator end() noexcept;
+        constexpr ConstIterator begin()  const noexcept;
+        constexpr ConstIterator cbegin() const noexcept;
+        constexpr ConstIterator end()    const noexcept;
+        constexpr ConstIterator cend()   const noexcept;
+
         // Capacity
         constexpr size_t Count() const { return m_count; }
         constexpr bool IsEmpty() const { return m_count == 0; }
@@ -71,7 +81,9 @@ export namespace jpt
         constexpr bool   Has(const TChar* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
     };
 
-    // Non member functions -------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------
+    // Non member functions
+    // ------------------------------------------------------------------------------------------------
     template<StringLiteral TChar>
     constexpr bool operator==(const StringView_Base<TChar>& a, const StringView_Base<TChar>& b)
     {
@@ -88,7 +100,15 @@ export namespace jpt
         return AreStringsSame(a.ConstBuffer(), b.ConstBuffer(), a.Count(), b.Count());
     }
 
-    // Member Functions Definitions --------------------------------------------------------------------------------------------------------
+    template<StringLiteral TChar>
+    constexpr String ToString(const StringView_Base<TChar>& stringView)
+    {
+        return String(stringView.ConstBuffer(), stringView.Count());
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Member Functions Definitions
+    // ------------------------------------------------------------------------------------------------
     template<StringLiteral TChar>
     constexpr StringView_Base<TChar>::StringView_Base(const TChar* CString, size_t size)
         : m_pBuffer(CString)
@@ -150,6 +170,42 @@ export namespace jpt
         }
 
         return *this;
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::Iterator StringView_Base<TChar>::begin() noexcept
+    {
+        return Iterator(m_pBuffer);
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::Iterator StringView_Base<TChar>::end() noexcept
+    {
+        return Iterator(m_pBuffer + m_count);
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::ConstIterator StringView_Base<TChar>::begin() const noexcept
+    {
+        return ConstIterator(m_pBuffer);
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::ConstIterator StringView_Base<TChar>::cbegin() const noexcept
+    {
+        return ConstIterator(m_pBuffer);
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::ConstIterator StringView_Base<TChar>::end() const noexcept
+    {
+        return ConstIterator(m_pBuffer + m_count);
+    }
+
+    template<StringLiteral TChar>
+    constexpr StringView_Base<TChar>::ConstIterator StringView_Base<TChar>::cend() const noexcept
+    {
+        return ConstIterator(m_pBuffer + m_count);
     }
 
     template<StringLiteral TChar>
@@ -285,4 +341,7 @@ export namespace jpt
 
     using StringView = StringView_Base<char>;
     using WStringView = StringView_Base<wchar_t>;
+
+    template<typename T>
+    concept StringViewType = AreSameType<T, StringView> || AreSameType<T, WStringView>;
 }

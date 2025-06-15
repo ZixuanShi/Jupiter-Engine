@@ -12,6 +12,7 @@ export import jpt.LinearFind;
 export import jpt.Sort;
 
 // Containers
+export import jpt.ArrayView;
 export import jpt.Deque;
 export import jpt.StaticArray;
 export import jpt.DynamicArray;

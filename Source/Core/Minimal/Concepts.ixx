@@ -92,16 +92,10 @@ export namespace jpt
     };
 
     template<typename T>
-    concept Countable = requires(T obj)
-    {
-        obj.Count();
-    };
+    concept Countable = requires (T obj) { obj.Count(); } || requires (T obj) { obj.size(); };
 
     template<typename T>
-    concept Containable = Iterable<T> && Countable<T> && requires(T t)
-    {
-        typename T::TData;
-    };
+    concept Containable = Iterable<T> && Countable<T>;
 
     template<typename TContainer>
     concept IndexableTrivial = Indexable<TContainer> && Trivial<typename TContainer::TData>;
