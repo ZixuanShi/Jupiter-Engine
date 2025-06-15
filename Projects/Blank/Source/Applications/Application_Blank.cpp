@@ -23,9 +23,24 @@ import jpt.Renderer;
 import jpt.EventManager;
 import jpt.Event_Key;
 
+enum class TestEnum
+{
+    A, B, C
+};
+
+template<typename T> requires jpt::Enumerated<T> || jpt::Integral<T>
+void Test(T foo)
+{
+    JPT_LOG(static_cast<int32>(foo));
+}
+
 bool Application_Blank::PreInit()
 {
     JPT_ENSURE(Super::PreInit());
+
+    TestEnum e = TestEnum::C;
+    Test(e);
+    Test(32);
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();

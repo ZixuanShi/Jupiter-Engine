@@ -39,15 +39,23 @@ export namespace jpt
         template<typename T>
         const T& Get(const String& key) const;
 
-        /** requires (!IsCharArray<T>) for not mixing raw char array with Strings for default value */
-        template<typename T> requires (!IsCharArray<T>)
+        /** requires !IsCharArray<T> for not mixing raw char array with Strings for default value
+            !jpt::Enumerated<T> for not mixing enum class with integers */
+        template<typename T> requires (!IsCharArray<T> && !Enumerated<T>)
         const T& Get(const String& key, const T& defaultValue) const;
+
+        /** Specialized for enum class */
+        template<Enumerated TEnum>
+        TEnum Get(const String& key, TEnum defaultValue) const;
 
         /** Specialized for Strings input & output. 
             Work around for preventing compiler recognizing "foo" as const char[4] and wants to return it as const char[4] as well */
         const String& Get(const String& key, const String& defaultStr) const;
 
         void Set(const String& key, const JsonData& value = JsonData());
+        void Set(const String& key, const char* value);
+        template<Enumerated TEnum>
+        void Set(const String& key, TEnum value);
 
         void Erase(const String& key);
     };
@@ -102,12 +110,23 @@ export namespace jpt
         return m_settings[key].As<T>();
     }
 
-    template<typename T> requires (!IsCharArray<T>)
+    template<typename T> requires (!IsCharArray<T> && !Enumerated<T>)
     const T& ProjectSettings::Get(const String& key, const T& defaultValue) const
     {
         if (m_settings.Has(key))
         {
             return m_settings[key].As<T>();
+        }
+
+        return defaultValue;
+    }
+
+    template<Enumerated TEnum>
+    TEnum ProjectSettings::Get(const String& key, TEnum defaultValue) const
+    {
+        if (m_settings.Has(key))
+        {
+            return static_cast<TEnum>(m_settings[key].As<int32>());
         }
 
         return defaultValue;
@@ -121,6 +140,17 @@ export namespace jpt
     void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
     {
         m_settings[key] = value;
+    }
+
+    void ProjectSettings::Set(const String& key, const char* value)
+    {
+        m_settings[key] = String(value);
+    }
+
+    template<Enumerated TEnum>
+    void ProjectSettings::Set(const String& key, TEnum value)
+    {
+        m_settings[key] = static_cast<int32>(value);
     }
 
     void ProjectSettings::Erase(const String& key)

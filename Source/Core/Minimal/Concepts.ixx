@@ -110,12 +110,17 @@ export namespace jpt
     concept IndexableNonTrivial = Indexable<TContainer> && NonTrivial<typename TContainer::TData>;
 #pragma endregion Container
 
+#pragma region Enum
     template<typename T>
-    concept Enumerated = requires(T)
+    concept JptEnumerated = requires(T)
     {
         T::Min();
         T::Max();
         T::Count();
         T::Name(0);
     };
+
+    template<typename T>
+    concept Enumerated = std::is_enum_v<T>;
+#pragma endregion Enum
 }
