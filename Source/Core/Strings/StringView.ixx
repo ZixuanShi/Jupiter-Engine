@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Validation/Assert.h"
+#include "Debugging/Logger.h"
 
 export module jpt.StringView;
 
@@ -103,6 +104,7 @@ export namespace jpt
     template<StringLiteral TChar>
     constexpr String ToString(const StringView_Base<TChar>& stringView)
     {
+        JPT_WARN("Converting StringView \"%s\" to a string. This allocates duplicated memory.", stringView.ConstBuffer());
         return String(stringView.ConstBuffer(), stringView.Count());
     }
 
