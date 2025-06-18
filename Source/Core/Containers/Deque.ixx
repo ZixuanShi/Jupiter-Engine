@@ -15,7 +15,7 @@ import jpt.Utilities;
 import jpt.TypeDefs;
 import jpt.TypeTraits;
 
-import jpt_private.CircularArrayIterator;
+import jpt_private.IteratorCircularArray;
 
 export namespace jpt
 {
@@ -26,8 +26,8 @@ export namespace jpt
     {
     public:
         using TData         = _TData;
-        using Iterator      = jpt_private::CircularArrayIterator<TData, kCapacity>;
-        using ConstIterator = jpt_private::ConstCircularArrayIterator<TData, kCapacity>;
+        using Iterator      = jpt_private::IteratorCircularArray<TData, kCapacity>;
+        using ConstIterator = jpt_private::ConstIteratorCircularArray<TData, kCapacity>;
 
     private:
         TData m_buffer[kCapacity];                   /**< Circular buffer */

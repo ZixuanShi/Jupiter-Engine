@@ -1,51 +1,51 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.HashTableIterator;
+export module jpt_private.IteratorHashTable;
 
 import jpt.TypeDefs;
 import jpt.Pair;
 import jpt.DynamicArray;
 import jpt.LinkedList;
 
-import jpt_private.LinearNodeIterator;
+import jpt_private.IteratorLinearNode;
 
 // Serves both HashSet and HashMap
 
 export namespace jpt_private
 {
     template<typename TData>
-    class HashTableIterator
+    class IteratorHashTable
     {
     public:
         using TBucket  = jpt::LinkedList<TData>;
         using TBuckets = jpt::DynamicArray<TBucket>;
 
     private:
-        LinearNodeIterator<TData> m_iterator;
+        IteratorLinearNode<TData> m_iterator;
         TBuckets* m_pBuckets = nullptr;
         size_t m_index = 0;
 
     public:
-        constexpr HashTableIterator() = default;
-        constexpr HashTableIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator);
+        constexpr IteratorHashTable() = default;
+        constexpr IteratorHashTable(TBuckets* pBuckets, size_t index, IteratorLinearNode<TData> iterator);
 
-        constexpr HashTableIterator& operator++();
-        constexpr HashTableIterator operator++(int32);
+        constexpr IteratorHashTable& operator++();
+        constexpr IteratorHashTable operator++(int32);
 
-        constexpr HashTableIterator& operator+=(size_t offset);
-        constexpr HashTableIterator operator+(size_t offset);
+        constexpr IteratorHashTable& operator+=(size_t offset);
+        constexpr IteratorHashTable operator+(size_t offset);
 
         constexpr       TData* operator->()       { return &m_iterator; }
         constexpr const TData* operator->() const { return &m_iterator; }
         constexpr       TData& operator*()        { return *m_iterator; }
         constexpr const TData& operator*()  const { return *m_iterator; }
 
-        constexpr       LinearNodeIterator<TData>& GetIterator()       { return m_iterator; }
-        constexpr const LinearNodeIterator<TData>& GetIterator() const { return m_iterator; }
+        constexpr       IteratorLinearNode<TData>& GetIterator()       { return m_iterator; }
+        constexpr const IteratorLinearNode<TData>& GetIterator() const { return m_iterator; }
 
         constexpr size_t GetIndex() const { return m_index; }
 
-        constexpr bool operator==(const HashTableIterator& other) const;
+        constexpr bool operator==(const IteratorHashTable& other) const;
 
     private:
         constexpr bool HasReachedEnd() const;
@@ -53,7 +53,7 @@ export namespace jpt_private
     };
 
     template<typename TData>
-    constexpr HashTableIterator<TData>::HashTableIterator(TBuckets* pBuckets, size_t index, LinearNodeIterator<TData> iterator)
+    constexpr IteratorHashTable<TData>::IteratorHashTable(TBuckets* pBuckets, size_t index, IteratorLinearNode<TData> iterator)
         : m_pBuckets(pBuckets)
         , m_index(index)
         , m_iterator(iterator)
@@ -62,7 +62,7 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr HashTableIterator<TData>& HashTableIterator<TData>::operator++()
+    constexpr IteratorHashTable<TData>& IteratorHashTable<TData>::operator++()
     {
         ++m_iterator;
         FindNextValidIterator();
@@ -70,16 +70,16 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr HashTableIterator<TData> HashTableIterator<TData>::operator++(int32)
+    constexpr IteratorHashTable<TData> IteratorHashTable<TData>::operator++(int32)
     {
-        HashTableIterator iterator = *this;
+        IteratorHashTable iterator = *this;
         ++m_iterator;
         FindNextValidIterator();
         return iterator;
     }
 
     template<typename TData>
-    constexpr HashTableIterator<TData>& HashTableIterator<TData>::operator+=(size_t offset)
+    constexpr IteratorHashTable<TData>& IteratorHashTable<TData>::operator+=(size_t offset)
     {
         for (size_t i = 0; i < offset; ++i)
         {
@@ -90,14 +90,14 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr HashTableIterator<TData> HashTableIterator<TData>::operator+(size_t offset)
+    constexpr IteratorHashTable<TData> IteratorHashTable<TData>::operator+(size_t offset)
     {
-        HashTableIterator iterator = *this;
+        IteratorHashTable iterator = *this;
         return iterator += offset;
     }
 
     template<typename TData>
-    constexpr bool HashTableIterator<TData>::operator==(const HashTableIterator& other) const
+    constexpr bool IteratorHashTable<TData>::operator==(const IteratorHashTable& other) const
     {
         return m_pBuckets == other.m_pBuckets &&
                m_index    == other.m_index    &&
@@ -105,13 +105,13 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr bool HashTableIterator<TData>::HasReachedEnd() const
+    constexpr bool IteratorHashTable<TData>::HasReachedEnd() const
     {
         return m_index == m_pBuckets->Count();
     }
 
     template<typename TData>
-    constexpr void HashTableIterator<TData>::FindNextValidIterator()
+    constexpr void IteratorHashTable<TData>::FindNextValidIterator()
     {
         while (!m_iterator.GetNode() && !HasReachedEnd())
         {
@@ -119,7 +119,7 @@ export namespace jpt_private
 
             if (HasReachedEnd())
             {
-                m_iterator = LinearNodeIterator<TData>(nullptr);
+                m_iterator = IteratorLinearNode<TData>(nullptr);
                 return;
             }
 
@@ -129,30 +129,30 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    class ConstHashTableIterator
+    class ConstIteratorHashTable
     {
         using TBucket = jpt::LinkedList<TData>;
         using TBuckets = jpt::DynamicArray<TBucket>;
 
     private:
-        ConstLinearNodeIterator<TData> m_iterator;
+        ConstIteratorLinearNode<TData> m_iterator;
         const TBuckets* m_pBuckets = nullptr;
         size_t m_index = 0;
 
     public:
-        constexpr ConstHashTableIterator() = default;
-        constexpr ConstHashTableIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator);
+        constexpr ConstIteratorHashTable() = default;
+        constexpr ConstIteratorHashTable(const TBuckets* pBuckets, size_t index, ConstIteratorLinearNode<TData> iterator);
 
-        constexpr ConstHashTableIterator& operator++();
-        constexpr ConstHashTableIterator operator++(int32);
+        constexpr ConstIteratorHashTable& operator++();
+        constexpr ConstIteratorHashTable operator++(int32);
 
-        constexpr ConstHashTableIterator& operator+=(size_t offset);
-        constexpr ConstHashTableIterator operator+(size_t offset);
+        constexpr ConstIteratorHashTable& operator+=(size_t offset);
+        constexpr ConstIteratorHashTable operator+(size_t offset);
 
         constexpr const TData* operator->() const { return &m_iterator; }
         constexpr const TData& operator*()  const { return *m_iterator; }
 
-        constexpr bool operator==(const ConstHashTableIterator& other) const;
+        constexpr bool operator==(const ConstIteratorHashTable& other) const;
 
     private:
         constexpr bool HasReachedEnd() const;
@@ -160,7 +160,7 @@ export namespace jpt_private
     };
 
     template<typename TData>
-    constexpr ConstHashTableIterator<TData>::ConstHashTableIterator(const TBuckets* pBuckets, size_t index, ConstLinearNodeIterator<TData> iterator)
+    constexpr ConstIteratorHashTable<TData>::ConstIteratorHashTable(const TBuckets* pBuckets, size_t index, ConstIteratorLinearNode<TData> iterator)
         : m_pBuckets(pBuckets)
         , m_index(index)
         , m_iterator(iterator)
@@ -169,7 +169,7 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr ConstHashTableIterator<TData>& ConstHashTableIterator<TData>::operator++()
+    constexpr ConstIteratorHashTable<TData>& ConstIteratorHashTable<TData>::operator++()
     {
         ++m_iterator;
         FindNextValidIterator();
@@ -177,16 +177,16 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr ConstHashTableIterator<TData> ConstHashTableIterator<TData>::operator++(int32)
+    constexpr ConstIteratorHashTable<TData> ConstIteratorHashTable<TData>::operator++(int32)
     {
-        ConstHashTableIterator iterator = *this;
+        ConstIteratorHashTable iterator = *this;
         ++m_iterator;
         FindNextValidIterator();
         return iterator;
     }
 
     template<typename TData>
-    constexpr ConstHashTableIterator<TData>& ConstHashTableIterator<TData>::operator+=(size_t offset)
+    constexpr ConstIteratorHashTable<TData>& ConstIteratorHashTable<TData>::operator+=(size_t offset)
     {
         for (size_t i = 0; i < offset; ++i)
         {
@@ -197,14 +197,14 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr ConstHashTableIterator<TData> ConstHashTableIterator<TData>::operator+(size_t offset)
+    constexpr ConstIteratorHashTable<TData> ConstIteratorHashTable<TData>::operator+(size_t offset)
     {
-        ConstHashTableIterator iterator = *this;
+        ConstIteratorHashTable iterator = *this;
         return iterator += offset;
     }
 
     template<typename TData>
-    constexpr bool ConstHashTableIterator<TData>::operator==(const ConstHashTableIterator& other) const
+    constexpr bool ConstIteratorHashTable<TData>::operator==(const ConstIteratorHashTable& other) const
     {
         return m_pBuckets == other.m_pBuckets &&
                m_index    == other.m_index    &&
@@ -212,13 +212,13 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr bool ConstHashTableIterator<TData>::HasReachedEnd() const
+    constexpr bool ConstIteratorHashTable<TData>::HasReachedEnd() const
     {
         return m_index == m_pBuckets->Count();
     }
 
     template<typename TData>
-    constexpr void ConstHashTableIterator<TData>::FindNextValidIterator()
+    constexpr void ConstIteratorHashTable<TData>::FindNextValidIterator()
     {
         while (!m_iterator.GetNode() && !HasReachedEnd())
         {
@@ -226,7 +226,7 @@ export namespace jpt_private
 
             if (HasReachedEnd())
             {
-                m_iterator = ConstLinearNodeIterator<TData>(nullptr);
+                m_iterator = ConstIteratorLinearNode<TData>(nullptr);
                 return;
             }
 
