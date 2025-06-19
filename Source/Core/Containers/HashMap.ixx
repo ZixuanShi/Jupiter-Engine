@@ -33,7 +33,7 @@ export namespace jpt
         using TKey          = _TKey;
         using TValue        = _TValue;
         using TComparator   = _TComparator;
-        using TData         = Pair<TKey, TValue>;
+        using TData         = Pair<const TKey, TValue>;
         using TBucket       = LinkedList<TData>;
         using TBuckets      = DynamicArray<TBucket>;
         using Iterator      = jpt_private::IteratorHashTable<TData>;
@@ -212,7 +212,7 @@ export namespace jpt
 
         // If the key does not exist, add and return it
         ++m_count;
-        TData& inserted = bucket.EmplaceBack(Pair{ key, value });
+        TData& inserted = bucket.EmplaceBack(TData{ key, value });
         return inserted.second;
     }
 
@@ -247,7 +247,7 @@ export namespace jpt
 
         // If the key does not exist, add and return it
         ++m_count;
-        TData& inserted = bucket.EmplaceBack(Pair{ Move(key), Move(value) });
+        TData& inserted = bucket.EmplaceBack(TData{ Move(key), Move(value) });
         return inserted.second;
     }
 
@@ -283,7 +283,7 @@ export namespace jpt
 
         // If the key does not exist, add and return it
         ++m_count;
-        TData& inserted = bucket.EmplaceBack(Pair{ key, TValue(Forward<TArgs>(args)...) });
+        TData& inserted = bucket.EmplaceBack(TData{ key, TValue(Forward<TArgs>(args)...) });
         return inserted.second;
     }
 
