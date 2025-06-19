@@ -18,7 +18,7 @@ import jpt.LinkedList;
 import jpt.Math;
 import jpt.Utilities;
 
-import jpt_private.IteratorHashTable;
+import jpt_private.IteratorHashTable_Chaining;
 
 export namespace jpt
 {
@@ -31,8 +31,8 @@ export namespace jpt
         using TComparator   = _Comparator;
         using TBucket       = LinkedList<TData>;
         using TBuckets      = DynamicArray<TBucket>;
-        using Iterator      = jpt_private::IteratorHashTable<TData>;
-        using ConstIterator = jpt_private::ConstIteratorHashTable<TData>;
+        using Iterator      = jpt_private::IteratorHashTable_Chaining<TData>;
+        using ConstIterator = jpt_private::ConstIteratorHashTable_Chaining<TData>;
 
     private:
         static constexpr TComparator kComparator = TComparator();

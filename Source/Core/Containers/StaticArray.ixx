@@ -67,6 +67,9 @@ export namespace jpt
         constexpr void MoveData(StaticArray&& other);
     };
 
+    //----------------------------------------------------------------------------------------------
+    // Non-member functions
+    //----------------------------------------------------------------------------------------------
     template<typename TData, size_t kCount>
     constexpr bool operator==(const StaticArray<TData, kCount>& a, const StaticArray<TData, kCount>& b) noexcept
     {
@@ -81,6 +84,9 @@ export namespace jpt
         return true;
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Member function definitions
+    //----------------------------------------------------------------------------------------------
     template<typename TData, size_t kCount>
     constexpr StaticArray<TData, kCount>::StaticArray(const std::initializer_list<TData>& initializerList)
     {

@@ -14,10 +14,12 @@ import jpt.RawInput;
 import jpt.Input_Enums;
 
 import jpt.Constants;
+import jpt.Hash;
+import jpt.StaticArray;
 import jpt.HashMap;
+import jpt.StaticHashMap;
 import jpt.ToString;
 import jpt.TypeDefs;
-import jpt.Hash;
 
 export namespace jpt::Input
 {
@@ -26,14 +28,14 @@ export namespace jpt::Input
         using Super = RawInput;
 
     private:
-        HashMap<Key, uint32, false> m_toGLFWKeys;
-        HashMap<uint32, Key, false> m_fromGLFWKeys;
+        HashMap<Key, uint32> m_toGLFWKeys;
+        HashMap<uint32, Key> m_fromGLFWKeys;
 
-        HashMap<Modifier, uint32, false> m_toGLFWModifiers;
-        HashMap<uint32, Modifier, false> m_fromGLFWModifiers;
+        HashMap<Modifier, uint32> m_toGLFWModifiers;
+        HashMap<uint32, Modifier> m_fromGLFWModifiers;
 
-        HashMap<MouseButton, uint32, false> m_toGLFWMouseButtons;
-        HashMap<uint32, MouseButton, false> m_fromGLFWMouseButtons;
+        HashMap<MouseButton, uint32> m_toGLFWMouseButtons;
+        HashMap<uint32, MouseButton> m_fromGLFWMouseButtons;
 
     public:
         virtual bool PreInit() override;
@@ -53,8 +55,8 @@ export namespace jpt::Input
     {
         JPT_ENSURE(Super::PreInit());
 
-        m_toGLFWKeys.ResizeBuckets(Key::Count());
         m_fromGLFWKeys.ResizeBuckets(Key::Count());
+        m_toGLFWKeys.ResizeBuckets(Key::Count());
 
         m_fromGLFWModifiers.ResizeBuckets(Modifier::Count());
         m_toGLFWModifiers.ResizeBuckets(Modifier::Count());
@@ -190,9 +192,10 @@ export namespace jpt::Input
         m_toGLFWKeys[Key::Numpad_Decimal] = GLFW_KEY_KP_DECIMAL;
         m_toGLFWKeys[Key::Numpad_Enter] = GLFW_KEY_KP_ENTER;
 
-        for (const auto& pair : m_toGLFWKeys)
+        for (Index i = 0; i < m_toGLFWKeys.Count(); ++i)
         {
-            m_fromGLFWKeys[pair.second] = pair.first;
+            const uint32 glfwKey = m_toGLFWKeys[i];
+            m_fromGLFWKeys[glfwKey] = i;
         }
         for (const auto& pair : m_toGLFWModifiers)
         {
@@ -208,9 +211,9 @@ export namespace jpt::Input
 
     uint32 RawInput_GLFW::FromKey(Key key) const
     {
-        if (m_toGLFWKeys.Has(key))
+        if (key < Key::Invalid)
         {
-            return m_toGLFWKeys[key];
+            return m_toGLFWKeys[key.Value()];
         }
 
         JPT_ERROR("Unknown key code: " + jpt::ToString(key));
