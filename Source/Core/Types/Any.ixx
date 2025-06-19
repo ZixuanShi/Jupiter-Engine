@@ -5,7 +5,6 @@ module;
 #include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
-#include <typeinfo>
 #include <cstring>
 
 export module jpt.Any;
