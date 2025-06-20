@@ -5,6 +5,9 @@ module;
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
 
+#include <unordered_map>
+#include <typeinfo>
+
 module Application_Blank;
 
 import jpt.CoreModules;
@@ -23,9 +26,34 @@ import jpt.Renderer;
 import jpt.EventManager;
 import jpt.Event_Key;
 
+import jpt.StaticHashMap;
+
+class Foo
+{
+    const int m = 0;
+
+public:
+
+    Foo() = default;
+    Foo(int n)
+    {
+        *const_cast<int*>(&m) = n;
+    }
+};
+
 bool Application_Blank::PreInit()
 {
     JPT_ENSURE(Super::PreInit());
+
+    Foo foo(5);
+
+    jpt::StaticHashMap<int32, jpt::String, 5> map;
+
+    map.Add(1, "One");
+    map.Add(2, "Two");
+    map.Add(3, "Three");
+    map.Add(4, "Four");
+    map.Add(5, "Five");
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();
