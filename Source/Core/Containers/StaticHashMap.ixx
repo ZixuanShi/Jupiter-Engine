@@ -74,6 +74,12 @@ export namespace jpt
     private:
         /** linearly probing starting from the hashed index of the key
             @return     An Index where
+                            1. The slot with the same key provided
+                            2. kInvalidIndex if the key is not found. O(n) operation */
+        constexpr Index FindEqualIndex(const TKey& key) const noexcept;
+
+        /** linearly probing starting from the hashed index of the key
+            @return     An Index where
                             1. Empty slot
                             2. The slot with the same key provided
                             3. kInvalidIndex if the map is full and the key is not found. O(n) operation */
@@ -218,32 +224,8 @@ export namespace jpt
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) noexcept
     {
-        if (IsEmpty())
-        {
-            return end();
-        }
-
-        Index index = Hash(key) % kCapacity;
-        const Index startIndex = index;
-        while (!kComparator(m_array[index].data.first, key))
-        {
-            ++index;
-
-            // Wrap around to the start
-            if (index >= kCapacity)
-            {
-                index = 0;  
-            }
-
-            // If we circled back to the start index, it means the map is full or the key is not found
-            if (index == startIndex)
-            {
-                return end();            
-            }
-        }
-
-        // If the slot is not occupied, means we erased it before, key shouldn't be found
-        if (!m_array[index].isOccupied)
+        const Index index = FindEqualIndex(key);
+        if (index == kInvalidIndex)
         {
             return end();
         }
@@ -254,9 +236,21 @@ export namespace jpt
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) const noexcept
     {
-        if (IsEmpty())
+        const Index index = FindEqualIndex(key);
+        if (index == kInvalidIndex)
         {
             return cend();
+        }
+
+        return ConstIterator(m_array.ConstBuffer(), index);
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr Index StaticHashMap<TKey, TValue, kCapacity, TComparator>::FindEqualIndex(const TKey& key) const noexcept
+    {
+        if (IsEmpty())
+        {
+            return kInvalidIndex;
         }
 
         Index index = Hash(key) % kCapacity;
@@ -274,17 +268,17 @@ export namespace jpt
             // If we circled back to the start index, it means the map is full or the key is not found
             if (index == startIndex)
             {
-                return cend();
+                return kInvalidIndex;
             }
         }
 
         // If the slot is not occupied, means we erased it before, key shouldn't be found
         if (!m_array[index].isOccupied)
         {
-            return cend();
+            return kInvalidIndex;
         }
 
-        return ConstIterator(m_array.ConstBuffer(), index);
+        return index;
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
