@@ -47,6 +47,11 @@ export namespace jpt
         constexpr TValue& Add(const TKey& key, const TValue& value);
         template<typename ...TArgs> constexpr TValue& Emplace(const TKey& key, TArgs&&... args);
 
+        // Erasing
+        constexpr Iterator Erase(const TKey& key) noexcept;
+        constexpr Iterator Erase(const Iterator& iterator) noexcept;
+        constexpr void Clear();
+
         // Accessing
         //constexpr TValue& operator[](const TKey& key) noexcept;
 
@@ -113,11 +118,39 @@ export namespace jpt
         return m_array[index].data.second;
     }
 
-    //template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
-    //constexpr TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::operator[](const TKey& key) noexcept
-    //{
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Erase(const TKey& key) noexcept
+    {
+        if (Iterator itr = Find(key); itr != end())
+        {
+            Iterator nextItr = itr + 1;
 
-    //}
+            const Index index = itr.GetIndex();
+            m_array[index].isOccupied = false;
+            --m_count;
+
+            return nextItr;
+        }
+
+        return end();
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Erase(const Iterator& iterator) noexcept
+    {
+        return Erase(iterator->first);
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr void StaticHashMap<TKey, TValue, kCapacity, TComparator>::Clear()
+    {
+        for (Index i = 0; i < kCapacity; ++i)
+        {
+            m_array[i].isOccupied = false;
+        }
+
+        m_count = 0;
+    }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::begin() noexcept

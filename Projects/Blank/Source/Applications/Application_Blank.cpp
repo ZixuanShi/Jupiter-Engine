@@ -55,9 +55,15 @@ bool Application_Blank::PreInit()
     map.Emplace(489, "Four");
     map.Emplace(-55, "Five");
 
-    JPT_LOG(*map.Find(489));
-    map.Find(489)->second = "Four - Updated";
-    for (auto itr = map.cbegin(); itr != map.cend(); ++itr)
+    //JPT_LOG(*map.Find(489));
+
+    map.Erase(489);
+    map.Clear();
+
+    map.Emplace(489, "Four - New");
+
+    //map.Find(489)->second = "Four - Updated";
+    for (auto itr = map.begin(); itr != map.end(); ++itr)
     {
         JPT_LOG(*itr);
     }

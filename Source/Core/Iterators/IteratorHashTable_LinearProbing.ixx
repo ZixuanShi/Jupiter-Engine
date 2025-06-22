@@ -38,6 +38,8 @@ export namespace jpt_private
         constexpr       Entry<TKey, TValue>::TData& operator*()        { return  m_pArray[m_index].data; }
         constexpr const Entry<TKey, TValue>::TData& operator*()  const { return  m_pArray[m_index].data; }
 
+        constexpr Index GetIndex() const { return m_index; }
+
         constexpr bool operator==(const IteratorHashTable_LinearProbing& other) const;
 
     private:
@@ -63,6 +65,8 @@ export namespace jpt_private
 
         constexpr const Entry<TKey, TValue>::TData* operator->() const { return &m_pArray[m_index].data; }
         constexpr const Entry<TKey, TValue>::TData& operator*()  const { return  m_pArray[m_index].data; }
+
+        constexpr Index GetIndex() const { return m_index; }
 
         constexpr bool operator==(const ConstIteratorHashTable_LinearProbing& other) const;
 
@@ -135,6 +139,7 @@ export namespace jpt_private
         : m_pArray(pArray)
         , m_index(index)
     {
+        FindNextValidIndex();
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
