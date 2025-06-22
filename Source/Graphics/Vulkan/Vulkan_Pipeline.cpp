@@ -198,8 +198,8 @@ namespace jpt::Vulkan
     {
         /** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer.
             This transformation is known as color blending and there are two ways to do it:
-            - Mix the old and new value to produce a final color
-            - Combine the old and new value using a bitwise operation
+            - Mix the previous and current value to produce a final color
+            - Combine the previous and current value using a bitwise operation
         */
 
         static VkPipelineColorBlendAttachmentState colorBlendAttachment{};

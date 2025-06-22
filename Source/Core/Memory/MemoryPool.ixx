@@ -117,7 +117,7 @@ export namespace jpt
     {
         LockGuard lock(m_mutex);
 
-        // If no free blocks, allocate a new chunk
+        // If no free blocks, allocate one
         if (!m_pFreeList)
         {
             if (!AllocateChunk())

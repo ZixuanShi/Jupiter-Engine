@@ -96,7 +96,7 @@ export namespace jpt
         /* Deallocate the memory that this string holds */
         constexpr void Clear();
 
-        /* Replace the some content of this string with the new given one within optional range
+        /* Replace some content of this string with the given one within optional range
             @param StringToFind:    The string we want to remove and replace
             @param StringToReplace:    The string to replace the original data
             @param startIndex:        [optional] The start index to start searching. Default to 0
@@ -117,14 +117,14 @@ export namespace jpt
         constexpr void TrimRight(size_t index = npos);
 
         /** Insert a string at the index
-            @param CString:        Content of new string to insert
+            @param CString:      String to insert
             @param index:        Where to insert in this string
             @param size:        [optional] Length of the string to insert */
         constexpr void Insert(TChar c, size_t index);
         constexpr void Insert(const TChar* CString, size_t index);
         constexpr void Insert(const TChar* CString, size_t index, size_t size);
 
-        /** Appends a new string to the end of buffer */
+        /** Appends a string to the end of buffer */
         constexpr void Append(const TChar* CString, size_t newStringSize);
         constexpr void Append(const TChar* CString);
         constexpr void Append(const String_Base<TChar>& otherString);
@@ -143,7 +143,7 @@ export namespace jpt
         template<size_t kCount>
         static constexpr String_Base Format(const TChar* format, ...);
 
-        /* Copy the content of string. Will assign the current m_pBuffer with the new copied data in memory */
+        /* Copy the content of string. Will assign the current m_pBuffer with the copied data in memory */
         constexpr void CopyString(const TChar* inCString, size_t size);
         constexpr void CopyString(const TChar* inCString);
         constexpr void CopyString(const String_Base<TChar>& otherString);
@@ -639,13 +639,13 @@ export namespace jpt
                 break;
             }
 
-            // Move the suffix to the new position
+            // Move the suffix to the destination
             void* pDestinationToMove  = m_pBuffer + foundPos + stringToReplaceSize;
             const void* pSourceToMove = m_pBuffer + foundPos + stringToFindSize;
             const size_t sizeToMove   = (m_count - foundPos - stringToFindSize + 1) * sizeof(TChar);
             memmove(pDestinationToMove, pSourceToMove, sizeToMove);
 
-            // Insert the new string
+            // Insert the string
             void* pDestinationToInsert = m_pBuffer + foundPos;
             const size_t sizeToInsert  = stringToReplaceSize * sizeof(TChar);
             memcpy(pDestinationToInsert, pStringToReplace, sizeToInsert);
@@ -811,13 +811,13 @@ export namespace jpt
 
         Reserve(m_count + size);
 
-        // Move the suffix to the new position
+        // Move the suffix to the destination
         void* pDestinationToMove  = m_pBuffer + index + size;
         const void* pSourceToMove = m_pBuffer + index;
         const size_t sizeToMove   = (m_count - index + 1) * sizeof(TChar);
         memmove(pDestinationToMove, pSourceToMove, sizeToMove);
 
-        // Insert the new string
+        // Insert the string
         void* pDestinationToInsert = m_pBuffer + index;
         const size_t sizeToInsert  = size * sizeof(TChar);
         memcpy(pDestinationToInsert, CString, sizeToInsert);
@@ -918,7 +918,7 @@ export namespace jpt
         {
             TChar* pNewBuffer = TAllocator::AllocateArray(capacity + 1);
 
-            // Copy the old buffer to the new one
+            // Copy the old buffer to the current one
             if (m_pBuffer)
             {
                 StrCpy(pNewBuffer, m_count + 1, m_pBuffer);

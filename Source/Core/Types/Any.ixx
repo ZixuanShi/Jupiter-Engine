@@ -85,7 +85,7 @@ export namespace jpt
         requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
         constexpr void ConstructType(T&& value);
 
-        /** Adapt to new Type, the new type is guaranteed not the same as current type */
+        /** Adapt to another Type, that type is guaranteed not the same as current type */
         template<typename T> 
         requires (!AreSameType<T, Any>)
         constexpr void Adapt();

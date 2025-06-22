@@ -27,7 +27,7 @@ export namespace jpt
         constexpr UniquePtr(const UniquePtr&) = delete;
         UniquePtr& operator=(const UniquePtr&) = delete;
 
-        /** Replaces the managed object with the new pPtr */
+        /** Replaces the managed object with the given pPtr */
         constexpr void Reset(TData* pPtr = nullptr);
 
         /** Releases the ownership of the managed object, if any
@@ -150,7 +150,7 @@ export namespace jpt
         constexpr UniquePtr(const UniquePtr&) = delete;
         UniquePtr& operator=(const UniquePtr&) = delete;
 
-        /** Replaces the managed object with the new pPtr */
+        /** Replaces the managed object with the given pPtr */
         constexpr void Reset(TData* pPtr = nullptr)
         {
             // If the old pointer was non-empty, deletes the previously managed object

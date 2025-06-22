@@ -139,7 +139,7 @@ export namespace jpt
             content.Append(key);
             content.Append("\": ");
 
-            // If the value is a map, add a new line and recurse to next depth
+            // If the value is a map, append a line and recurse to next depth
             if (value.Is<JsonMap>())
             {
                 content.Append("\n");

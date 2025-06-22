@@ -131,7 +131,7 @@ namespace jpt
                 m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
                 m_yaw   = Modf(m_yaw, TwoPi);
 
-                // Calculate the new forward vector
+                // Calculate the updated forward vector
                 m_forward.x = Cos(m_pitch) * Sin(m_yaw);
                 m_forward.y = Sin(m_pitch);
                 m_forward.z = Cos(m_pitch) * Cos(m_yaw);

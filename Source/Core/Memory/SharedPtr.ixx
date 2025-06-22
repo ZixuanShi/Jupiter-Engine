@@ -40,7 +40,7 @@ namespace jpt
         template <typename TOther>
         SharedPtr(const SharedPtr<TOther>& other) = delete;
 
-        /** Replaces the managed object with the new pPtr */
+        /** Replaces the managed object with the given pPtr */
         template<typename TDeleter = jpt_private::DefaultDelete<TData>>
         constexpr void Reset(TData* pPtr = nullptr, const TDeleter& deleter = TDeleter());
 
