@@ -68,6 +68,13 @@ export namespace jpt
         constexpr Index GetBucketIndex(const TKey& key) const noexcept;
     };
 
+    //----------------------------------------------------------------------------------------------
+    // Non-member functions
+    //----------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------
+    // Member function definitions
+    //----------------------------------------------------------------------------------------------
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::Add(const TKey& key, const TValue& value)
     {
@@ -114,13 +121,13 @@ export namespace jpt
             return end();
         }
 
-        return Iterator(m_buckets.Buffer(), 0);
+        return ConstIterator(m_buckets.ConstBuffer(), 0);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::end() const noexcept
     {
-        return Iterator(m_buckets.Buffer(), kCapacity);
+        return ConstIterator(m_buckets.ConstBuffer(), kCapacity);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -128,16 +135,16 @@ export namespace jpt
     {
         if (IsEmpty())
         {
-            return end();
+            return cend();
         }
 
-        return ConstIterator(m_buckets.Buffer(), 0);
+        return ConstIterator(m_buckets.ConstBuffer(), 0);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::cend() const noexcept
     {
-        return ConstIterator(m_buckets.Buffer(), kCapacity);
+        return ConstIterator(m_buckets.ConstBuffer(), kCapacity);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>

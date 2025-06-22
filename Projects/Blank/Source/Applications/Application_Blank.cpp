@@ -51,17 +51,11 @@ bool Application_Blank::PreInit()
 
     map.Add(10, "One");
     map.Add(22, "Two");
-    map.Add(36, "Three");
+    map.Add(-36, "Three");
     map.Add(489, "Four");
-    map.Add(-5, "Five");
+    map.Add(-55, "Five");
 
-    auto itr = map.begin();
-    JPT_LOG(*itr);
-
-    //for (const auto& pair : map)
-    //{
-    //    JPT_LOG("Key: " + jpt::ToString(pair.first) + ", Value: " + pair.second);
-    //}
+    JPT_LOG(map);
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();
