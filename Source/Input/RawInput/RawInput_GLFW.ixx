@@ -17,7 +17,7 @@ import jpt.Constants;
 import jpt.Hash;
 import jpt.StaticArray;
 import jpt.HashMap;
-import jpt.StaticHashMap;
+//import jpt.StaticHashMap;
 import jpt.ToString;
 import jpt.TypeDefs;
 
