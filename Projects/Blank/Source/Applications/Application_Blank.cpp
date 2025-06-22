@@ -41,6 +41,15 @@ public:
     }
 };
 
+void W(const jpt::StaticHashMap<int32, jpt::String, 5>& map)
+{
+    auto citr = map.Find(489);
+    if (citr != map.cend())
+    {
+        JPT_LOG(*citr);
+    }
+}
+
 bool Application_Blank::PreInit()
 {
     JPT_ENSURE(Super::PreInit());
@@ -67,6 +76,8 @@ bool Application_Blank::PreInit()
     {
         JPT_LOG(*itr);
     }
+
+    W(map);
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();

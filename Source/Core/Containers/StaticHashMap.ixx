@@ -242,6 +242,12 @@ export namespace jpt
             }
         }
 
+        // If the slot is not occupied, means we erased it before, key shouldn't be found
+        if (!m_array[index].isOccupied)
+        {
+            return end();
+        }
+
         return Iterator(m_array.Buffer(), index);
     }
 
@@ -268,11 +274,17 @@ export namespace jpt
             // If we circled back to the start index, it means the map is full or the key is not found
             if (index == startIndex)
             {
-                return end();
+                return cend();
             }
         }
 
-        return ConstIterator(m_array.Buffer(), index);
+        // If the slot is not occupied, means we erased it before, key shouldn't be found
+        if (!m_array[index].isOccupied)
+        {
+            return cend();
+        }
+
+        return ConstIterator(m_array.ConstBuffer(), index);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
