@@ -26,7 +26,7 @@ export namespace jpt
         using TKey          = _TKey;
         using TValue        = _TValue;
         using TComparator   = _TComparator;
-        using TBuckets      = StaticArray<jpt_private::Entry<TKey, TValue>, kCapacity>;
+        using TStorage      = StaticArray<jpt_private::Entry<TKey, TValue>, kCapacity>;
         using TData         = jpt_private::Entry<TKey, TValue>::TData;
         using Iterator      = jpt_private::IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>;
         using ConstIterator = jpt_private::ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>;
@@ -35,7 +35,7 @@ export namespace jpt
         static constexpr TComparator kComparator = TComparator();
 
     private:
-        TBuckets m_buckets;
+        TStorage m_array;
         Index m_count = 0;  /**< Count of actual elements in the map */
 
     public:
@@ -61,11 +61,16 @@ export namespace jpt
         constexpr bool IsEmpty() const noexcept;
 
         // Searching
-        //constexpr Iterator      Find(const TKey& key) noexcept;
-        //constexpr ConstIterator Find(const TKey& key) const noexcept;
+        constexpr Iterator      Find(const TKey& key) noexcept;
+        constexpr ConstIterator Find(const TKey& key) const noexcept;
 
     private:
-        constexpr Index GetBucketIndex(const TKey& key) const noexcept;
+        /** linearly probing starting from the hashed index of the key
+            @return     An Index where
+                            1. Empty slot
+                            2. The slot with the same key provided
+                            3. kInvalidIndex if the map is full and the key is not found. O(n) operation */
+        constexpr Index FindEqualOrEmptyIndex(const TKey& key) const noexcept;
     };
 
     //----------------------------------------------------------------------------------------------
@@ -80,14 +85,14 @@ export namespace jpt
     {
         JPT_ASSERT(m_count < kCapacity, "StaticHashMap is full");
 
-        const Index index = GetBucketIndex(key);
+        const Index index = FindEqualOrEmptyIndex(key);
         JPT_ASSERT(index != kInvalidIndex);
 
-        m_buckets[index].data = TData(key, value);
-        m_buckets[index].isOccupied = true;
+        m_array[index].data = TData(key, value);
+        m_array[index].isOccupied = true;
         ++m_count;
 
-        return m_buckets[index].data.second;
+        return m_array[index].data.second;
     }
 
     //template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -104,13 +109,13 @@ export namespace jpt
             return end();
         }
 
-        return Iterator(m_buckets.Buffer(), 0);
+        return Iterator(m_array.Buffer(), 0);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::end() noexcept
     {
-        return Iterator(m_buckets.Buffer(), kCapacity);
+        return Iterator(m_array.Buffer(), kCapacity);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -121,13 +126,13 @@ export namespace jpt
             return end();
         }
 
-        return ConstIterator(m_buckets.ConstBuffer(), 0);
+        return ConstIterator(m_array.ConstBuffer(), 0);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::end() const noexcept
     {
-        return ConstIterator(m_buckets.ConstBuffer(), kCapacity);
+        return ConstIterator(m_array.ConstBuffer(), kCapacity);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -138,13 +143,13 @@ export namespace jpt
             return cend();
         }
 
-        return ConstIterator(m_buckets.ConstBuffer(), 0);
+        return ConstIterator(m_array.ConstBuffer(), 0);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::cend() const noexcept
     {
-        return ConstIterator(m_buckets.ConstBuffer(), kCapacity);
+        return ConstIterator(m_array.ConstBuffer(), kCapacity);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -159,23 +164,33 @@ export namespace jpt
         return m_count == 0;
     }
 
-    //template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
-    //constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) noexcept
-    //{
-    //    
-    //}
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::Iterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) noexcept
+    {
+        if (IsEmpty())
+        {
+            return end();
+        }
+
+    }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
-    constexpr Index StaticHashMap<TKey, TValue, kCapacity, TComparator>::GetBucketIndex(const TKey& key) const noexcept
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) const noexcept
+    {
+
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr Index StaticHashMap<TKey, TValue, kCapacity, TComparator>::FindEqualOrEmptyIndex(const TKey& key) const noexcept
     {
         Index index = Hash(key) % kCapacity;
 
-        // Linear probing to find the next available bucket
+        // Linear probing to find the next available slot
         const Index startIndex = index;
-        while (m_buckets[index].isOccupied)
+        while (m_array[index].isOccupied)
         {
             // If the key is same, return the index
-            if (kComparator(m_buckets[index].data.first, key))
+            if (kComparator(m_array[index].data.first, key))
             {
                 break;
             }

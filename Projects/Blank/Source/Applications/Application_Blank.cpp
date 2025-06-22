@@ -55,6 +55,7 @@ bool Application_Blank::PreInit()
     map.Add(489, "Four");
     map.Add(-55, "Five");
 
+    //JPT_LOG(*map.Find(22));
     JPT_LOG(map);
 
     m_pFoo = new Entity_Foo();
