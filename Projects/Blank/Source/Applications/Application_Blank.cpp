@@ -49,14 +49,18 @@ bool Application_Blank::PreInit()
 
     jpt::StaticHashMap<int32, jpt::String, 5> map;
 
-    map.Add(10, "One");
-    map.Add(22, "Two");
-    map.Add(-36, "Three");
-    map.Add(489, "Four");
-    map.Add(-55, "Five");
+    map.Emplace(10, "One");
+    map.Emplace(22, "Two");
+    map.Emplace(-36, "Three");
+    map.Emplace(489, "Four");
+    map.Emplace(-55, "Five");
 
-    //JPT_LOG(*map.Find(22));
-    JPT_LOG(map);
+    JPT_LOG(*map.Find(489));
+    map.Find(489)->second = "Four - Updated";
+    for (auto itr = map.cbegin(); itr != map.cend(); ++itr)
+    {
+        JPT_LOG(*itr);
+    }
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();

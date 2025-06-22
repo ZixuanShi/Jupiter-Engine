@@ -12,6 +12,7 @@ import jpt.Hash;
 import jpt.Pair;
 import jpt.StaticArray;
 import jpt.TypeDefs;
+import jpt.Utilities;
 
 import jpt_private.IteratorHashTable_LinearProbing;
 
@@ -44,6 +45,7 @@ export namespace jpt
     public:
         // Adding
         constexpr TValue& Add(const TKey& key, const TValue& value);
+        template<typename ...TArgs> constexpr TValue& Emplace(const TKey& key, TArgs&&... args);
 
         // Accessing
         //constexpr TValue& operator[](const TKey& key) noexcept;
@@ -89,6 +91,22 @@ export namespace jpt
         JPT_ASSERT(index != kInvalidIndex);
 
         m_array[index].data = TData(key, value);
+        m_array[index].isOccupied = true;
+        ++m_count;
+
+        return m_array[index].data.second;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    template<typename ...TArgs>
+    constexpr TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::Emplace(const TKey& key, TArgs&&... args)
+    {
+        JPT_ASSERT(m_count < kCapacity, "StaticHashMap is full");
+
+        const Index index = FindEqualOrEmptyIndex(key);
+        JPT_ASSERT(index != kInvalidIndex);
+
+        m_array[index].data = TData{ key, TValue(Forward<TArgs>(args)...) };
         m_array[index].isOccupied = true;
         ++m_count;
 
@@ -172,12 +190,56 @@ export namespace jpt
             return end();
         }
 
+        Index index = Hash(key) % kCapacity;
+        const Index startIndex = index;
+        while (!kComparator(m_array[index].data.first, key))
+        {
+            ++index;
+
+            // Wrap around to the start
+            if (index >= kCapacity)
+            {
+                index = 0;  
+            }
+
+            // If we circled back to the start index, it means the map is full or the key is not found
+            if (index == startIndex)
+            {
+                return end();            
+            }
+        }
+
+        return Iterator(m_array.Buffer(), index);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::ConstIterator StaticHashMap<TKey, TValue, kCapacity, TComparator>::Find(const TKey& key) const noexcept
     {
+        if (IsEmpty())
+        {
+            return cend();
+        }
 
+        Index index = Hash(key) % kCapacity;
+        const Index startIndex = index;
+        while (!kComparator(m_array[index].data.first, key))
+        {
+            ++index;
+
+            // Wrap around to the start
+            if (index >= kCapacity)
+            {
+                index = 0;
+            }
+
+            // If we circled back to the start index, it means the map is full or the key is not found
+            if (index == startIndex)
+            {
+                return end();
+            }
+        }
+
+        return ConstIterator(m_array.Buffer(), index);
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
