@@ -4,8 +4,11 @@ module;
 
 #include "Core/Validation/Assert.h"
 
+#include <initializer_list>
+
 export module jpt.StaticHashMap;
 
+import jpt.Concepts;
 import jpt.Constants;
 import jpt.Comparators;
 import jpt.Hash;
@@ -41,6 +44,12 @@ export namespace jpt
 
     public:
         constexpr StaticHashMap() = default;
+        constexpr StaticHashMap(const std::initializer_list<TData>& list);
+        constexpr StaticHashMap(const StaticHashMap& other);
+        constexpr StaticHashMap(StaticHashMap&& other) noexcept;
+        constexpr StaticHashMap& operator=(const StaticHashMap& other);
+        constexpr StaticHashMap& operator=(StaticHashMap&& other) noexcept;
+        constexpr ~StaticHashMap();
 
     public:
         // Adding
@@ -53,7 +62,13 @@ export namespace jpt
         constexpr void Clear();
 
         // Accessing
-        //constexpr TValue& operator[](const TKey& key) noexcept;
+        /** If key exists, return reference to it's associated value, caller may update it outside
+            If key doesn't exist, Add a default value, return the inserted value too */
+        constexpr TValue& operator[](const TKey& key);
+
+        /** If key exists, return reference to it's associated value, caller can't update it outside
+            If key doesn't exist, assertion fails */
+        constexpr const TValue& operator[](const TKey& key) const;
 
         // Iterators    
         constexpr Iterator begin() noexcept;
@@ -70,8 +85,13 @@ export namespace jpt
         // Searching
         constexpr Iterator      Find(const TKey& key) noexcept;
         constexpr ConstIterator Find(const TKey& key) const noexcept;
+        constexpr bool Has(const TKey& key) const noexcept;
 
     private:
+        template<Iterable TContainer>
+        constexpr void CopyData(const TContainer& container);
+        constexpr void MoveMap(StaticHashMap&& other) noexcept;
+
         /** linearly probing starting from the hashed index of the key
             @return     An Index where
                             1. The slot with the same key provided
@@ -89,10 +109,76 @@ export namespace jpt
     //----------------------------------------------------------------------------------------------
     // Non-member functions
     //----------------------------------------------------------------------------------------------
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr bool operator==(const StaticHashMap<TKey, TValue, kCapacity, TComparator>& lhs, const StaticHashMap<TKey, TValue, kCapacity, TComparator>& rhs) noexcept
+    {
+        if (lhs.Count() != rhs.Count())
+        {
+            return false;
+        }
+
+        for (const auto& [key, value] : lhs)
+        {
+            if (rhs.Find(key) == rhs.end() || rhs.Find(key)->second != value)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     //----------------------------------------------------------------------------------------------
     // Member function definitions
     //----------------------------------------------------------------------------------------------
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::StaticHashMap(const std::initializer_list<TData>& list)
+    {
+        CopyData(list);
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::StaticHashMap(const StaticHashMap& other)
+    {
+        CopyData(other);
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::StaticHashMap(StaticHashMap&& other) noexcept
+    {
+        MoveMap(Move(other));
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr  StaticHashMap<TKey, TValue, kCapacity, TComparator>& StaticHashMap<TKey, TValue, kCapacity, TComparator>::operator=(const StaticHashMap& other)
+    {
+        if (this != &other)
+        {
+            Clear();
+            CopyData(other);
+        }
+
+        return *this;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr  StaticHashMap<TKey, TValue, kCapacity, TComparator>& StaticHashMap<TKey, TValue, kCapacity, TComparator>::operator=(StaticHashMap&& other) noexcept
+    {
+        if (this != &other)
+        {
+            Clear();
+            MoveMap(Move(other));
+        }
+
+        return *this;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::~StaticHashMap()
+    {
+        Clear();
+    }
+
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
     constexpr TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::Add(const TKey& key, const TValue& value)
     {
@@ -156,6 +242,26 @@ export namespace jpt
         }
 
         m_count = 0;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr StaticHashMap<TKey, TValue, kCapacity, TComparator>::TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::operator[](const TKey& key)
+    {
+        Iterator itr = Find(key);
+        if (itr == end())
+        {
+            return Emplace(key, {});
+        }
+
+        return itr->second;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr const StaticHashMap<TKey, TValue, kCapacity, TComparator>::TValue& StaticHashMap<TKey, TValue, kCapacity, TComparator>::operator[](const TKey& key) const
+    {
+        ConstIterator itr = Find(key);
+        JPT_ASSERT(itr != cend());
+        return itr->second;
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
@@ -243,6 +349,31 @@ export namespace jpt
         }
 
         return ConstIterator(m_array.ConstBuffer(), index);
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr bool StaticHashMap<TKey, TValue, kCapacity, TComparator>::Has(const TKey& key) const noexcept
+    {
+        return Find(key) != cend();
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    template<Iterable TContainer>
+    constexpr void StaticHashMap<TKey, TValue, kCapacity, TComparator>::CopyData(const TContainer& container)
+    {
+        for (const TData& data : container)
+        {
+            Emplace(data.first, data.second);
+        }
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr void StaticHashMap<TKey, TValue, kCapacity, TComparator>::MoveMap(StaticHashMap&& other) noexcept
+    {
+        m_array = Move(other.m_array);
+        m_count = other.m_count;
+
+        other.m_count = 0;
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>

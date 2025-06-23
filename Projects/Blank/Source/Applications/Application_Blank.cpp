@@ -43,7 +43,7 @@ public:
 
 void W(const jpt::StaticHashMap<int32, jpt::String, 5>& map)
 {
-    auto citr = map.Find(489);
+    auto citr = map.Find(-55);
     if (citr != map.cend())
     {
         JPT_LOG(*citr);
@@ -67,14 +67,13 @@ bool Application_Blank::PreInit()
     //JPT_LOG(*map.Find(489));
 
     map.Erase(489);
-    map.Clear();
 
     map.Emplace(489, "Four - New");
 
     //map.Find(489)->second = "Four - Updated";
-    for (auto itr = map.begin(); itr != map.end(); ++itr)
+    for (const auto& [k, v] : map)
     {
-        JPT_LOG(*itr);
+        JPT_LOG("Key: %d, Value: %s", k, v.ConstBuffer());
     }
 
     W(map);
