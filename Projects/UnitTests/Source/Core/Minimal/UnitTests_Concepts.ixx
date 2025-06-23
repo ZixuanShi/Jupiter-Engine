@@ -35,13 +35,13 @@ bool UnitTests_Trivial()
 
 JPT_ENUM_UINT8(EAxis, X, Y, Z);
 
-template<jpt::Enumerated T>
+template<jpt::JptEnumerated T>
 bool IsEnumerated()
 {
     return true;
 }
 
-template<typename T> requires (!jpt::Enumerated<T>)
+template<typename T> requires (!jpt::JptEnumerated<T>)
 bool IsEnumerated()
 {
     return false;
