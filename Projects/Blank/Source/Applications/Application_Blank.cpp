@@ -26,57 +26,9 @@ import jpt.Renderer;
 import jpt.EventManager;
 import jpt.Event_Key;
 
-import jpt.StaticHashMap;
-
-class Foo
-{
-    const int m = 0;
-
-public:
-
-    Foo() = default;
-    Foo(int n)
-    {
-        *const_cast<int*>(&m) = n;
-    }
-};
-
-void W(const jpt::StaticHashMap<int32, jpt::String, 5>& map)
-{
-    auto citr = map.Find(-55);
-    if (citr != map.cend())
-    {
-        JPT_LOG(*citr);
-    }
-}
-
 bool Application_Blank::PreInit()
 {
     JPT_ENSURE(Super::PreInit());
-
-    Foo foo(5);
-
-    jpt::StaticHashMap<int32, jpt::String, 5> map;
-
-    map.Emplace(10, "One");
-    map.Emplace(22, "Two");
-    map.Emplace(-36, "Three");
-    map.Emplace(489, "Four");
-    map.Emplace(-55, "Five");
-
-    //JPT_LOG(*map.Find(489));
-
-    map.Erase(489);
-
-    map.Emplace(489, "Four - New");
-
-    //map.Find(489)->second = "Four - Updated";
-    for (const auto& [k, v] : map)
-    {
-        JPT_LOG("Key: %d, Value: %s", k, v.ConstBuffer());
-    }
-
-    W(map);
 
     m_pFoo = new Entity_Foo();
     m_pFoo->PreInit();

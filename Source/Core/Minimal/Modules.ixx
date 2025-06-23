@@ -14,16 +14,14 @@ export import jpt.Sort;
 // Containers
 export import jpt.ArrayView;
 export import jpt.Deque;
-export import jpt.StaticArray;
 export import jpt.DynamicArray;
-export import jpt.LinkedList;
-export import jpt.Stack;
-export import jpt.Queue;
 export import jpt.HashMap;
-export import jpt.HashSet;
-export import jpt.SortedMap;
-export import jpt.SortedSet;
 export import jpt.Heap;
+export import jpt.LinkedList;
+export import jpt.Queue;
+export import jpt.Stack;
+export import jpt.SortedMap;
+export import jpt.StaticArray;
 
 // Functional
 export import jpt.Function;
