@@ -5,9 +5,6 @@ module;
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
 
-#include <unordered_map>
-#include <typeinfo>
-
 module Application_Blank;
 
 import jpt.CoreModules;
