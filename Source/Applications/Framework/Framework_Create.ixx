@@ -27,7 +27,7 @@ export namespace jpt
         {
             api = CommandLine::GetInstance().Get<String>(frameworkApiKey);
         }
-        // Check Assets/Config/ProjectSettings.json project settings
+        // Check Config/ProjectSettings.json project settings
         else if (String frameworkApi; ProjectSettings::GetInstance().TryGet(frameworkApiKey, frameworkApi))
         {
             api = frameworkApi;

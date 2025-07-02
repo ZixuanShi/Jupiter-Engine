@@ -54,14 +54,14 @@ static bool IsSerializeOverridden()
 bool UnitTests_FileIO_Exists()
 {
     // Engine
-    jpt::File::WriteTextFile(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt"), "Hello, World!");
+    jpt::File::WriteTextFile(jpt::File::Combine(Source::Engine, "Config/TextTxt.txt"), "Hello, World!");
     jpt::File::WriteTextFile(jpt::File::Combine(Source::Engine, L"Assets/中文测试/中文文本.txt"), "中文测试");
 
-    JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt")));
-    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Engine, "Assets/Config/NotExist.txt")));
+    JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, "Config/TextTxt.txt")));
+    JPT_ENSURE(!Exists(jpt::File::Combine(Source::Engine, "Config/NotExist.txt")));
     JPT_ENSURE(Exists(jpt::File::Combine(Source::Engine, L"Assets/中文测试/中文文本.txt")));
 
-    jpt::File::Delete(jpt::File::Combine(Source::Engine, "Assets/Config/TextTxt.txt"));
+    jpt::File::Delete(jpt::File::Combine(Source::Engine, "Config/TextTxt.txt"));
     jpt::File::Delete(jpt::File::Combine(Source::Engine, L"Assets/中文测试"));
 
     // Client
@@ -101,7 +101,7 @@ bool UnitTests_FileIO_TextFile()
 {
     // Load existing file
     //jpt::String text;
-    //jpt::File::ReadTextFile({ ESource::Client, "Assets/Configs/TestJson.json"), text);
+    //jpt::File::ReadTextFile({ ESource::Client, "Configs/TestJson.json"), text);
     //JPT_LOG(text);
 
     const Path path = jpt::File::Combine(Source::Client, "Assets/NewTextFile_UnitTest.txt");

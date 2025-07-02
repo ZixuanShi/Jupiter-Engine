@@ -27,7 +27,7 @@ export namespace jpt
         {
             api = CommandLine::GetInstance().Get<String>(graphicsApiKey);
         }
-        // Check Assets/Config/ProjectSettings.json project settings
+        // Check Config/ProjectSettings.json project settings
         else if (String graphicsApi; ProjectSettings::GetInstance().TryGet(graphicsApiKey, graphicsApi))
         {
             api = graphicsApi;

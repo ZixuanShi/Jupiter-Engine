@@ -1,5 +1,5 @@
 Config override priorities:
-    - CommandLine > Assets/Config/Settings > System Default
+    - CommandLine > Config/Settings > System Default
 
 Object Life Cycle:
     - PreInit

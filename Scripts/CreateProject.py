@@ -19,20 +19,24 @@ def GetInfo():
 # -----------------------------------------------------------------------------------------------------
 # Assets folder
 # -----------------------------------------------------------------------------------------------------
-def CreateConfig():
-	os.makedirs(g_projectDirectory + "/Assets/Config")
+def CreateAssets():
+	os.makedirs(g_projectDirectory + "/Assets")
 
+# -----------------------------------------------------------------------------------------------------
+# Config folder
+# -----------------------------------------------------------------------------------------------------
+def CreateProjectSettingsJson():
 	projectSettings = """{
 }"""
 
 	projectSettings = projectSettings.replace("<ProjectName>", g_projectName)
-	with open(g_projectDirectory + "/Assets/Config/ProjectSettings.json", "w") as file:
+	with open(g_projectDirectory + "/Config/ProjectSettings.json", "w") as file:
 	    file.write(projectSettings)
 
-def CreateAssets():
-	os.makedirs(g_projectDirectory + "/Assets")
+def CreateConfig():
+	os.makedirs(g_projectDirectory + "/Config")
 
-	CreateConfig()
+	CreateProjectSettingsJson()
 
 # -----------------------------------------------------------------------------------------------------
 # Scripts folder
@@ -154,6 +158,7 @@ if __name__ == "__main__":
 	GetInfo()
 
 	CreateAssets()
+	CreateConfig()
 	CreateScripts()
 	CreateSource()
 

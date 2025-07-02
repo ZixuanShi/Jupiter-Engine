@@ -20,7 +20,7 @@ import jpt.TypeTraits;
 
 export namespace jpt
 {
-    /** Get & Set config at File::FixDependencies("Assets/Config/ProjectSettings.json")
+    /** Get & Set config at File::FixDependencies("Config/ProjectSettings.json")
         Source of truth. Runtime should use this instead of command line */
     class ProjectSettings
     {
@@ -62,7 +62,7 @@ export namespace jpt
 
     bool ProjectSettings::Load()
     {
-        const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
+        const File::Path projectSettingsJson = File::FixDependencies("Config/ProjectSettings.json");
         Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson);
         if (!settings)
         {
@@ -87,7 +87,7 @@ export namespace jpt
 
     void ProjectSettings::Save()
     {
-        const File::Path projectSettingsJson = File::FixDependencies("Assets/Config/ProjectSettings.json");
+        const File::Path projectSettingsJson = File::FixDependencies("Config/ProjectSettings.json");
         WriteJsonFile(projectSettingsJson, m_settings);
     }
 
