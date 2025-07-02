@@ -20,7 +20,7 @@ export namespace jpt::Vulkan
 
         DynamicArray<const char*> result(extensions, extensions + extensionCount);
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         result.EmplaceBack(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 #endif
 

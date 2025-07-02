@@ -45,7 +45,7 @@ export namespace jpt
 
     private:
         VkInstance m_instance = VK_NULL_HANDLE;
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         DebugMessenger m_debugMessenger;
 #endif
         PhysicalDevice m_physicalDevice;

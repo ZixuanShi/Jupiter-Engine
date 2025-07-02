@@ -14,7 +14,7 @@ module;
 #include <DirectXMath.h>
 #include <wrl.h>
 #include <shellapi.h>
-#if IS_DEBUG
+#if !IS_CONFIG_RELEASE
     #include <dxgidebug.h>
 #endif
 
@@ -98,7 +98,7 @@ export namespace jpt
         Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
         CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory));
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         success &= InitDebugLayer(dxgiFactoryFlags);
 #endif
         success &= m_device.Init(factory, m_useWarpDevice);
@@ -217,7 +217,7 @@ export namespace jpt
         Microsoft::WRL::ComPtr<ID3DBlob> pixelShader;
         const File::Path shadersPath = File::FixDependencies("Assets/Jupiter_Common/Shaders/shaders.hlsl");
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         // Enable better shader debugging with the graphics debugging tools.
         UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #else

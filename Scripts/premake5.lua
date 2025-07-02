@@ -64,17 +64,17 @@ function CreateEngineWorkspace()
 
         -- Global filters for configurations
         filter "configurations:Debug"
-            defines { "IS_DEBUG" }
+            defines { "IS_CONFIG_DEBUG" }
             optimize "Off"
             symbols "On"
 
         filter "configurations:Dev"
-            defines { "IS_DEV" }
+            defines { "IS_CONFIG_DEV" }
             optimize "Speed"
             symbols "On"
 
         filter "configurations:Release"
-            defines { "IS_RELEASE" }
+            defines { "IS_CONFIG_RELEASE" }
             optimize "Speed"
             symbols "off"
             flags{ "FatalCompileWarnings" }

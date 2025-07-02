@@ -34,7 +34,7 @@ export namespace jpt::File
             break;
 
         case Source::Baked:
-#if IS_RELEASE
+#if IS_CONFIG_RELEASE
             path.Append(paths.GetOutputDir());
 #else
             if (relativePath.Has("Jupiter_Common"))
@@ -63,7 +63,7 @@ export namespace jpt::File
         @param relativePath        Expected in client's folder. Not engine */
     Path FixDependencies(const Path& relativePath)
     {
-#if IS_RELEASE
+#if IS_CONFIG_RELEASE
         // If ran from VS debugger, use absolute path to Client as it's using Visual Studio's working directory
         if (Debugger::GetInstance().IsDebuggerPresent())
         {

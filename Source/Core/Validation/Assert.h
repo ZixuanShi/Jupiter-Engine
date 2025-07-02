@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define ASSERT_ENABLED (IS_DEBUG || IS_DEV)
+#define ASSERT_ENABLED (IS_CONFIG_DEBUG || IS_CONFIG_DEV)
 
 #if ASSERT_ENABLED
 

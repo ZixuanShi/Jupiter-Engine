@@ -49,7 +49,7 @@ namespace jpt
         bool success = true;
 
         success &= CreateInstance();
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         success &= m_debugMessenger.Init();
 #endif
         success &= m_physicalDevice.Init();
@@ -128,7 +128,7 @@ namespace jpt
 
         m_logicalDevice.Shutdown();
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         m_debugMessenger.Shutdown();
 #endif
 
@@ -183,7 +183,7 @@ namespace jpt
 
     bool Renderer_Vulkan::CreateInstance()
     {
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         if (!CheckValidationLayerSupport())
         {
             JPT_ERROR("Validation layers requested, but not available!");
@@ -206,7 +206,7 @@ namespace jpt
         createInfo.enabledExtensionCount = static_cast<uint32>(extensions.Count());
         createInfo.ppEnabledExtensionNames = extensions.ConstBuffer();
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         createInfo.enabledLayerCount = static_cast<uint32>(g_validationLayers.Count());
         createInfo.ppEnabledLayerNames = g_validationLayers.ConstBuffer();
 

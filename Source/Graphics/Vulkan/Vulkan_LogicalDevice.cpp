@@ -43,7 +43,7 @@ namespace jpt::Vulkan
         createInfo.enabledExtensionCount = static_cast<uint32>(g_deviceExtensions.Count());
         createInfo.ppEnabledExtensionNames = g_deviceExtensions.ConstBuffer();
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
         createInfo.enabledLayerCount = static_cast<uint32>(g_validationLayers.Count());
         createInfo.ppEnabledLayerNames = g_validationLayers.ConstBuffer();
 #else

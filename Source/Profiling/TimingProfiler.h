@@ -4,7 +4,7 @@
 
 #include <chrono>
 
-#if !IS_RELEASE
+#if !IS_CONFIG_RELEASE
 
 namespace jpt
 {

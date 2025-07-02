@@ -2,7 +2,7 @@
 
 module;
 
-#if IS_DEBUG
+#if IS_CONFIG_DEBUG
 
     #if IS_PLATFORM_WINDOWS
         #define _CRTDBG_MAP_ALLOC
@@ -10,11 +10,11 @@ module;
         #include <crtdbg.h>
     #endif
 
-#endif // IS_DEBUG
+#endif // IS_CONFIG_DEBUG
 
 export module jpt.MemoryLeakDetector;
 
-#if IS_DEBUG
+#if IS_CONFIG_DEBUG
 
 namespace jpt::MemoryLeakDetector
 {
@@ -27,4 +27,4 @@ namespace jpt::MemoryLeakDetector
     }
 }
 
-#endif // IS_DEBUG
+#endif // IS_CONFIG_DEBUG

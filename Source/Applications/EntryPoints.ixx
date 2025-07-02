@@ -12,7 +12,7 @@ export module jpt.EntryPoints;
 import jpt.Application;
 import jpt.CommandLine;
 
-#if IS_DEBUG
+#if IS_CONFIG_DEBUG
     import jpt.MemoryLeakDetector;
 #endif
 
@@ -21,7 +21,7 @@ namespace jpt
     // Called by platform-specific entry points
     int MainImpl()
     {
-#if IS_DEBUG
+#if IS_CONFIG_DEBUG
         MemoryLeakDetector::Init();
 #endif
 
