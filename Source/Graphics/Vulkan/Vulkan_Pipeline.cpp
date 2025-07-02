@@ -21,7 +21,7 @@ import jpt.Vulkan_Shader_Vertex;
 import jpt.Vulkan_Shader_Pixel;
 import jpt.Vulkan_Shader_Compute;
 
-import jpt.DynamicArray;
+import jpt.StaticArray;
 import jpt.TypeDefs;
 
 namespace jpt::Vulkan
@@ -39,14 +39,30 @@ namespace jpt::Vulkan
         JPT_ASSERT(vertexShader.Load("_Baked/Jupiter_Common/Shaders/Default_Vert.glsl.spv"));
         JPT_ASSERT(pixelShader.Load("_Baked/Jupiter_Common/Shaders/Default_Frag.glsl.spv"));
 
-        VkPipelineShaderStageCreateInfo vertexShaderStageInfo  = vertexShader.GetStageCreateInfo();
-        VkPipelineShaderStageCreateInfo pixelShaderStageInfo   = pixelShader.GetStageCreateInfo();
-
+        VkPipelineShaderStageCreateInfo vertexShaderStageInfo = vertexShader.GetStageCreateInfo();
+        VkPipelineShaderStageCreateInfo pixelShaderStageInfo  = pixelShader.GetStageCreateInfo();
         VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo, pixelShaderStageInfo };
 
         // Fixed-function stages
+       
+#pragma region Vertex Input Stage
+         VkVertexInputBindingDescription bindingDescription{};
+         bindingDescription.binding = 0;
+         bindingDescription.stride = sizeof(Vertex);
+         bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+         StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions
+         {
+             // location, binding, format,                     offset
+             { 0,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)    }, // Color
+             { 1,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) }, // Position
+             { 2,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)   }, // Normal
+             { 3,         0,       VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, uv)       }, // uv
+         };
+#pragma endregion
+
+        auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
         auto inputAssembly   = GetInputAssembly();
-        auto vertexInputInfo = GetVertexInput();
         auto viewportState   = GetViewportState();
         auto rasterizer      = GetRasterization();
         auto multisampling   = GetMultisampling();
@@ -87,25 +103,11 @@ namespace jpt::Vulkan
         vkDestroyPipeline(LogicalDevice::GetVkDevice(), m_graphicsPipeline, nullptr);
     }
 
-    VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput() const
+    VkPipelineVertexInputStateCreateInfo GraphicsPipeline::GetVertexInput(const VkVertexInputBindingDescription& bindingDescription, ArrayView<VkVertexInputAttributeDescription> attributeDescriptions) const
     {
         // how to interpret vertex data from your vertex buffers
         // Binding Description: spacing between data and whether the data is per-vertex or per-instance
         // Attribute Descriptions: type of the attributes passed to the vertex shader, which binding to load them from and at which offset
-
-        static VkVertexInputBindingDescription bindingDescription{};
-        bindingDescription.binding = 0;
-        bindingDescription.stride = sizeof(Vertex);
-        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-        static StaticArray<VkVertexInputAttributeDescription, 4> attributeDescriptions
-        {
-            // location, binding, format,                     offset
-            { 0,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color)    }, // Color
-            { 1,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) }, // Position
-            { 2,         0,       VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)   }, // Normal
-            { 3,         0,       VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, uv)       }, // uv
-        };
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

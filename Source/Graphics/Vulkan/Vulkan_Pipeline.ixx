@@ -10,8 +10,7 @@ module;
 export module jpt.Vulkan_GraphicsPipeline;
 
 import jpt.Vertex;
-
-import jpt.StaticArray;
+import jpt.ArrayView;
 
 export namespace jpt::Vulkan
 {
@@ -30,7 +29,7 @@ export namespace jpt::Vulkan
 
     private:
         // 1. Input stage - defines vertex data format
-        VkPipelineVertexInputStateCreateInfo   GetVertexInput() const;
+        VkPipelineVertexInputStateCreateInfo   GetVertexInput(const VkVertexInputBindingDescription& bindingDescription, ArrayView<VkVertexInputAttributeDescription> attributeDescriptions) const;
 
         // 2. Input Assembly - how to interpret vertices (triangles, lines, etc)
         VkPipelineInputAssemblyStateCreateInfo GetInputAssembly() const;

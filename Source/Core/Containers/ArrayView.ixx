@@ -35,6 +35,7 @@ export namespace jpt
         constexpr ArrayView(const DynamicArray<TData>& arr) noexcept;
         template<Index N> constexpr ArrayView(const StaticArray<TData, N>& arr) noexcept;
         template<Index N> constexpr ArrayView(TData (&arr)[N]) noexcept;
+
         ArrayView& operator=(const std::initializer_list<TData>& initializerList) noexcept;
         ArrayView& operator=(const DynamicArray<TData>& arr) noexcept;
         template<Index N> ArrayView& operator=(const StaticArray<TData, N>& arr) noexcept;
@@ -50,6 +51,8 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Accessing
+        constexpr const TData* ConstBuffer() const noexcept;
+        constexpr       TData* Buffer() noexcept;
         constexpr       TData& operator[](Index index)       noexcept;
         constexpr const TData& operator[](Index index) const noexcept;
 
@@ -172,6 +175,18 @@ export namespace jpt
     constexpr ArrayView<TData>::ConstIterator ArrayView<TData>::cend() const noexcept
     {
         return ConstIterator(m_pBuffer + m_count);
+    }
+
+    template<typename TData>
+    constexpr const TData* ArrayView<TData>::ConstBuffer() const noexcept
+    {
+        return m_pBuffer;
+    }
+
+    template<typename TData>
+    constexpr TData* ArrayView<TData>::Buffer() noexcept
+    {
+        return m_pBuffer;
     }
 
     template<typename TData>
