@@ -47,7 +47,7 @@ export namespace jpt::Vulkan
         VkPipelineDepthStencilStateCreateInfo  GetDepthStencil() const;
 
         // 7. Color blending - how to combine with render target
-        VkPipelineColorBlendStateCreateInfo    GetColorBlending() const;
+        VkPipelineColorBlendStateCreateInfo    GetColorBlending(const VkPipelineColorBlendAttachmentState& colorBlendAttachment) const;
 
         // Unordered. Dynamic state - allows changing some settings without recreating the pipeline
         VkPipelineDynamicStateCreateInfo       GetDynamicState() const;

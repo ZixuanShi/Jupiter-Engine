@@ -45,7 +45,7 @@ namespace jpt::Vulkan
 
         // Fixed-function stages
        
-#pragma region Vertex Input Stage
+#pragma region Vertex Input
          VkVertexInputBindingDescription bindingDescription{};
          bindingDescription.binding = 0;
          bindingDescription.stride = sizeof(Vertex);
@@ -60,6 +60,11 @@ namespace jpt::Vulkan
              { 3,         0,       VK_FORMAT_R32G32_SFLOAT,    offsetof(Vertex, uv)       }, // uv
          };
 #pragma endregion
+#pragma region Color Blending
+         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+         colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+         colorBlendAttachment.blendEnable = VK_FALSE;
+#pragma endregion
 
         auto vertexInputInfo = GetVertexInput(bindingDescription, attributeDescriptions);
         auto inputAssembly   = GetInputAssembly();
@@ -67,7 +72,7 @@ namespace jpt::Vulkan
         auto rasterizer      = GetRasterization();
         auto multisampling   = GetMultisampling();
         auto depthStencil    = GetDepthStencil();
-        auto colorBlending   = GetColorBlending();
+        auto colorBlending   = GetColorBlending(colorBlendAttachment);
         auto dynamicState    = GetDynamicState();
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -196,17 +201,13 @@ namespace jpt::Vulkan
         return depthStencil;
     }
 
-    VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending() const
+    VkPipelineColorBlendStateCreateInfo GraphicsPipeline::GetColorBlending(const VkPipelineColorBlendAttachmentState& colorBlendAttachment) const
     {
         /** After a fragment shader has returned a color, it needs to be combined with the color that is already in the framebuffer.
             This transformation is known as color blending and there are two ways to do it:
             - Mix the previous and current value to produce a final color
             - Combine the previous and current value using a bitwise operation
         */
-
-        static VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-        colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-        colorBlendAttachment.blendEnable = VK_FALSE;
 
         VkPipelineColorBlendStateCreateInfo colorBlending{};
         colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
