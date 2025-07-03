@@ -8,9 +8,9 @@ if __name__ == "__main__":
     # Clean up old project files
     subprocess.run(["python", "Scripts/Clean.py"], cwd=jupiterEngineRoot)
 
-    # Regenerate project files
+    # Bake assets
     subprocess.run(["python", "Scripts/CompileShaders.py"], cwd=jupiterEngineRoot)
 
-    # Generate projects files
+    # Generate project files
     subprocess.run(["python", "Projects/Blank/Scripts/GenerateProjectFiles_vs2022.py"], cwd=jupiterEngineRoot)
     subprocess.run(["python", "Projects/UnitTests/Scripts/GenerateProjectFiles_vs2022.py"], cwd=jupiterEngineRoot)
