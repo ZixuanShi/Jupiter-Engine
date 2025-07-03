@@ -26,7 +26,7 @@ export namespace jpt
     public:
         bool PreInit();
         bool Init();
-        void Shutdown();
+        void Terminate();
 
     public:
         template<typename TAsset>

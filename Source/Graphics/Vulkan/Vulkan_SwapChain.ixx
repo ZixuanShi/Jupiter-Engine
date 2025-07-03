@@ -33,7 +33,7 @@ export namespace jpt
             bool CreateImageViews();
             bool CreateFramebuffers(VkImageView colorImageView, VkImageView depthImageView);
 
-            void Shutdown();
+            void Terminate();
 
         public:
             VkSwapchainKHR GetHandle() const { return m_swapChain; }

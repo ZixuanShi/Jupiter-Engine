@@ -17,7 +17,7 @@ export namespace jpt::Vulkan
 
     public:
         virtual bool Init() override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
         VkSampler GetHandle() const { return m_sampler; }
     };

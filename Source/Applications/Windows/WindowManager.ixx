@@ -38,7 +38,7 @@ export namespace jpt
         bool Init(const char* mainWindowTitle);
 
         void Update(TimePrecision deltaSeconds);
-        void Shutdown();
+        void Terminate();
 
     public:
         Window* Create(const char* title = Window::kDefaultTitle, int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
@@ -76,11 +76,11 @@ export namespace jpt
         }
     }
 
-    void WindowManager::Shutdown()
+    void WindowManager::Terminate()
     {
         for (Window* window : m_windows)
         {
-            JPT_SHUTDOWN(window);
+            JPT_TERMINATE(window);
         }
         m_windows.Clear();
     }
@@ -123,7 +123,7 @@ export namespace jpt
             Window* pWindow = *itr;
             if (pWindow == pWindowToDestroy)
             {
-                JPT_SHUTDOWN(pWindow);
+                JPT_TERMINATE(pWindow);
                 m_windows.Erase(itr);
                 break;
             }

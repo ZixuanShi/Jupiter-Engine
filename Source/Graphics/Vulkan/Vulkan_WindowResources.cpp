@@ -140,7 +140,7 @@ namespace jpt::Vulkan
         }
     }
 
-    void WindowResources::Shutdown()
+    void WindowResources::Terminate()
     {
         const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
         const VkInstance instance = pVulkanRenderer->GetVkInstance();
@@ -153,17 +153,17 @@ namespace jpt::Vulkan
 
         for (DescriptorSet& descriptorSet : m_descriptorSets)
         {
-            descriptorSet.Shutdown();
+            descriptorSet.Terminate();
         }
 
         for (uint32 i = 0; i < kMaxFramesInFlight; ++i)
         {
-            m_uniformBuffers[i].Shutdown();
+            m_uniformBuffers[i].Terminate();
         }
 
         for (SyncObjects& syncObjects : m_syncObjects)
         {
-            syncObjects.Shutdown();
+            syncObjects.Terminate();
         }
 
         for (VkCommandBuffer commandBuffer : m_commandBuffers)
@@ -171,8 +171,8 @@ namespace jpt::Vulkan
             vkFreeCommandBuffers(logicalDevice.GetHandle(), m_commandPool.GetHandle(), 1, &commandBuffer);
         }
 
-        m_commandPool.Shutdown();
-        m_swapChain.Shutdown();
+        m_commandPool.Terminate();
+        m_swapChain.Terminate();
 
         vkDestroySurfaceKHR(instance, m_surface, nullptr);
         m_surface = VK_NULL_HANDLE;
@@ -201,7 +201,7 @@ namespace jpt::Vulkan
     {
         LogicalDevice::Get().WaitIdle();
 
-        m_swapChain.Shutdown();
+        m_swapChain.Terminate();
         DestroyColorResources();
         DestroyDepthResources();
 

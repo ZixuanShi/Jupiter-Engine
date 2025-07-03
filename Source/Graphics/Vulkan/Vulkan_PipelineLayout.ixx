@@ -15,7 +15,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init();
-        void Shutdown();
+        void Terminate();
 
     public:
         VkPipelineLayout GetHandle() const { return m_pipelineLayout; }

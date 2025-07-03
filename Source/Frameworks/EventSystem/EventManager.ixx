@@ -85,7 +85,7 @@ export namespace jpt
         void Update(TimePrecision deltaSeconds);
 
         /** Clears all remaining events */
-        void Shutdown();
+        void Terminate();
 
     private:
         template<typename TEvent>       Handlers& GetHandlers();
@@ -192,7 +192,7 @@ export namespace jpt
         }
     }
 
-    void EventManager::Shutdown()
+    void EventManager::Terminate()
     {
         for (QueueItem& item : m_eventQueue)
         {

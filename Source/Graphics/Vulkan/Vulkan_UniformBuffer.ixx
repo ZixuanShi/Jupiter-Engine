@@ -29,7 +29,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init();
-        void Shutdown();
+        void Terminate();
 
         void MapMemory(void* pSource, VkDeviceSize size);
         VkBuffer GetHandle() const { return m_buffer.GetHandle(); }

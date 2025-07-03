@@ -31,7 +31,7 @@ export namespace jpt
 
         virtual bool Init(const char* title, int32 width, int32 height);
         virtual void Update(TimePrecision deltaSeconds);
-        virtual void Shutdown();
+        virtual void Terminate();
 
     public:
         virtual bool CreateSurface([[maybe_unused]] const DynamicArray<Any>& context);

@@ -37,7 +37,7 @@ namespace jpt
     public:
         virtual bool PreInit() override;
         virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
         virtual const char** GetRequiredExtensions(uint32& extensionCount) override;
     };
@@ -62,11 +62,11 @@ namespace jpt
         glfwPollEvents();
     }
 
-    void Framework_GLFW::Shutdown()
+    void Framework_GLFW::Terminate()
     {
         glfwTerminate();
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 
     const char** Framework_GLFW::GetRequiredExtensions(uint32& extensionCount)

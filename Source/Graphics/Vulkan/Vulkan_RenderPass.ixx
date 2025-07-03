@@ -18,7 +18,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init(VkFormat imageFormat);
-        void Shutdown();
+        void Terminate();
 
     public:
         VkRenderPass GetHandle() const { return m_renderPass; }

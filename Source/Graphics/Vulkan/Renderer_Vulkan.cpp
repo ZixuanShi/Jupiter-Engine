@@ -103,38 +103,38 @@ namespace jpt
         }
     }
 
-    void Renderer_Vulkan::Shutdown()
+    void Renderer_Vulkan::Terminate()
     {
         m_logicalDevice.WaitIdle();
 
         for (WindowResources& resources : m_windowResources)
         {
-            resources.Shutdown();
+            resources.Terminate();
         }
 
-        JPT_SHUTDOWN(m_pTextureSampler);
+        JPT_TERMINATE(m_pTextureSampler);
 
-        m_descriptorPool.Shutdown();
-        m_descriptorSetLayout.Shutdown();
+        m_descriptorPool.Terminate();
+        m_descriptorSetLayout.Terminate();
 
-        m_vertexBuffer.Shutdown();
-        m_indexBuffer.Shutdown();
+        m_vertexBuffer.Terminate();
+        m_indexBuffer.Terminate();
 
-        m_graphicsPipeline.Shutdown();
-        m_pipelineLayout.Shutdown();
-        m_renderPass.Shutdown();
+        m_graphicsPipeline.Terminate();
+        m_pipelineLayout.Terminate();
+        m_renderPass.Terminate();
 
-        m_memoryTransferCommandPool.Shutdown();
+        m_memoryTransferCommandPool.Terminate();
 
-        m_logicalDevice.Shutdown();
+        m_logicalDevice.Terminate();
 
 #if !IS_CONFIG_RELEASE
-        m_debugMessenger.Shutdown();
+        m_debugMessenger.Terminate();
 #endif
 
         vkDestroyInstance(m_instance, nullptr);
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 
     void Renderer_Vulkan::DrawFrame()
@@ -164,7 +164,7 @@ namespace jpt
         {
             if (itr->GetOwner() == pWindow)
             {
-                itr->Shutdown();
+                itr->Terminate();
                 m_windowResources.Erase(itr);
                 break;
             }

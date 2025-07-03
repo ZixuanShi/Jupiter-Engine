@@ -31,7 +31,7 @@ namespace jpt
             pApp->Run();
         }
 
-        pApp->Shutdown();
+        pApp->Terminate();
 
         return 0;
     }

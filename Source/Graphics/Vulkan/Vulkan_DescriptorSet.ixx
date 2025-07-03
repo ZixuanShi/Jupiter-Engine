@@ -22,7 +22,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init(const UniformBuffer& uniformBuffer);
-        void Shutdown();
+        void Terminate();
 
     public:
         VkDescriptorSet GetHandle() const { return m_descriptorSet; }

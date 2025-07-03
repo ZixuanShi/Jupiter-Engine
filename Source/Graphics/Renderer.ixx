@@ -35,7 +35,7 @@ export namespace jpt
 
         virtual void Update(TimePrecision deltaSeconds);
         virtual void Render() { }
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
 
         virtual void DrawFrame() { }
 

@@ -25,7 +25,7 @@ export namespace jpt::Vulkan
     public:
         bool Init(const DynamicArray<Vertex>& vertices);
 
-        void Shutdown();
+        void Terminate();
 
     public:
         VkBuffer GetBuffer() { return m_buffer.GetHandle(); }
@@ -67,13 +67,13 @@ export namespace jpt::Vulkan
         }
 
         m_buffer.Copy(stagingBuffer.GetHandle(), vertices.Size());
-        stagingBuffer.Shutdown();
+        stagingBuffer.Terminate();
 
         return true;
     }
 
-    void VertexBuffer::Shutdown()
+    void VertexBuffer::Terminate()
     {
-        m_buffer.Shutdown();
+        m_buffer.Terminate();
     }
 }

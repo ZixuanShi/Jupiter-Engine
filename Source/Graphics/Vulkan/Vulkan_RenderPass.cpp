@@ -99,7 +99,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void RenderPass::Shutdown()
+    void RenderPass::Terminate()
     {
         vkDestroyRenderPass(LogicalDevice::GetVkDevice(), m_renderPass, nullptr);
     }

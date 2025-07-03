@@ -64,7 +64,7 @@ export namespace jpt
             /** GPU. Handles rendering commands for drawing a frame */
             void DrawFrame();
 
-            void Shutdown();
+            void Terminate();
 
         public:
             Window* GetOwner() const;

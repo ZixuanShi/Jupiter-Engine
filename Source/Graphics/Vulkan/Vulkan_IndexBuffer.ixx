@@ -28,7 +28,7 @@ export namespace jpt::Vulkan
     public:
         bool Init(const DynamicArray<uint32>& indices);
 
-        void Shutdown();
+        void Terminate();
 
     public:
         VkBuffer GetBuffer() const { return m_buffer.GetHandle(); }
@@ -71,15 +71,15 @@ export namespace jpt::Vulkan
         }
 
         m_buffer.Copy(stagingBuffer.GetHandle(), indices.Size());
-        stagingBuffer.Shutdown();
+        stagingBuffer.Terminate();
 
         m_count = indices.Count();
         return true;
     }
 
-    void IndexBuffer::Shutdown()
+    void IndexBuffer::Terminate()
     {
-        m_buffer.Shutdown();
+        m_buffer.Terminate();
         m_count = 0;
     }
 }

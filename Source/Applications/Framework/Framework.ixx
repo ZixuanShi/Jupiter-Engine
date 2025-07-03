@@ -15,7 +15,7 @@ export namespace jpt
         virtual bool PreInit() { return true; }
         virtual bool Init() { return true; }
         virtual void Update(TimePrecision) {}
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
 
         virtual const char** GetRequiredExtensions([[maybe_unused]] uint32& extensionCount) { return nullptr; }
     };

@@ -103,7 +103,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void GraphicsPipeline::Shutdown()
+    void GraphicsPipeline::Terminate()
     {
         vkDestroyPipeline(LogicalDevice::GetVkDevice(), m_graphicsPipeline, nullptr);
     }

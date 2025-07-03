@@ -36,7 +36,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void CommandPool::Shutdown()
+    void CommandPool::Terminate()
     {
         const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
         const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();

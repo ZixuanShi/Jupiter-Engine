@@ -31,7 +31,7 @@ namespace jpt::Vulkan
         }
     }
 
-    void DebugMessenger::Shutdown()
+    void DebugMessenger::Terminate()
     {
         const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
         const VkInstance vkInstance = pVulkanRenderer->GetVkInstance();

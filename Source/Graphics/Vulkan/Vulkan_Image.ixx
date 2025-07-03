@@ -25,7 +25,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Load(const File::Path& fullPath);
-        void Shutdown();
+        void Terminate();
 
     public:
         VkImage GetHandle() const { return m_handle; }

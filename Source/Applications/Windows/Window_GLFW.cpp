@@ -80,12 +80,12 @@ namespace jpt
         return true;
     }
 
-    void Window_GLFW::Shutdown()
+    void Window_GLFW::Terminate()
     {
         glfwDestroyWindow(m_pGLFWWindow);
         m_pGLFWWindow = nullptr;
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 
     bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)

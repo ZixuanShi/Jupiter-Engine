@@ -31,7 +31,7 @@ import jpt.StaticArray;
 import jpt.DynamicArray;
 
 jpt::Mutex rawThreadsMutex;
-jpt::Mutex rawThreadsShutdownMutex;
+jpt::Mutex rawThreadsTerminateMutex;
 
 static bool RawThreads()
 {
@@ -55,9 +55,9 @@ static bool RawThreads()
             JPT_LOG("Initializing thread " + m_name);
         }
 
-        void Shutdown() override 
+        void Terminate() override 
         {
-            jpt::LockGuard lock(rawThreadsShutdownMutex);
+            jpt::LockGuard lock(rawThreadsTerminateMutex);
 
             JPT_LOG("Terminating thread " + m_name);
         }
@@ -189,13 +189,13 @@ protected:
 TestThread thread;
 TestThread2 thread2;
 
-class Event_ShutdownThread final : public jpt::Event
+class Event_TerminateThread final : public jpt::Event
 {
 private:
     jpt::Thread* m_pThread;
 
 public:
-    Event_ShutdownThread(jpt::Thread* pThread) :
+    Event_TerminateThread(jpt::Thread* pThread) :
         m_pThread(pThread)
     {
     }
@@ -208,13 +208,13 @@ static bool NotBlockingMain()
     thread.Start();
     thread2.Start();
 
-    Event_ShutdownThread eventShutdownThread(&thread);
-    jpt::EventManager::GetInstance().Queue(eventShutdownThread, 5.0f);
+    Event_TerminateThread eventTerminateThread(&thread);
+    jpt::EventManager::GetInstance().Queue(eventTerminateThread, 5.0f);
 
-    Event_ShutdownThread eventShutdownThread2(&thread2);
-    jpt::EventManager::GetInstance().Queue(eventShutdownThread2, 10.0f);
+    Event_TerminateThread eventTerminateThread2(&thread2);
+    jpt::EventManager::GetInstance().Queue(eventTerminateThread2, 10.0f);
 
-    jpt::EventManager::GetInstance().Register<Event_ShutdownThread>([](const Event_ShutdownThread& event)
+    jpt::EventManager::GetInstance().Register<Event_TerminateThread>([](const Event_TerminateThread& event)
         {
             event.GetThread()->Stop();
             JPT_LOG("Stopped Thread: %s", event.GetThread()->GetName().ConstBuffer());

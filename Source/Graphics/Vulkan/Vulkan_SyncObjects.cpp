@@ -32,7 +32,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void SyncObjects::Shutdown()
+    void SyncObjects::Terminate()
     {
         vkDestroySemaphore(LogicalDevice::GetVkDevice(), m_imageAvailableSemaphore, nullptr);
         vkDestroySemaphore(LogicalDevice::GetVkDevice(), m_renderFinishedSemaphore, nullptr);

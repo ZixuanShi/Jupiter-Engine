@@ -63,14 +63,14 @@ namespace jpt::Vulkan
                 stagingBuffer.GetHandle(), m_handle, static_cast<uint32>(m_width), static_cast<uint32>(m_height));
         }
 
-        stagingBuffer.Shutdown();
+        stagingBuffer.Terminate();
 
         GenerateMipmaps(m_handle, m_format, m_width, m_height, m_mipLevels);
 
         return true;
     }
 
-    void Image_Vulkan::Shutdown()
+    void Image_Vulkan::Terminate()
     {
         LogicalDevice::Get().WaitIdle();
 

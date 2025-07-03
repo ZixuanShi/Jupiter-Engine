@@ -30,7 +30,7 @@ export namespace jpt::DX12
 
     public:
         bool Init(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex);
-        void Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex);
+        void Terminate(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex);
 
         void WaitForPreviousFrame(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex);
     };
@@ -55,7 +55,7 @@ export namespace jpt::DX12
         return true;
     }
 
-    void SyncObjects::Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex)
+    void SyncObjects::Terminate(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex)
     {
         WaitForPreviousFrame(commandQueue, swapChain, frameIndex);
         CloseHandle(m_fenceEvent);

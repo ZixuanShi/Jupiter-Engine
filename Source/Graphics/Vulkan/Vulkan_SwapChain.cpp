@@ -139,7 +139,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void SwapChain::Shutdown()
+    void SwapChain::Terminate()
     {
         for (VkFramebuffer framebuffer : m_framebuffers)
         {

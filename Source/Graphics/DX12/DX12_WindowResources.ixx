@@ -49,7 +49,7 @@ export namespace jpt::DX12
         bool m_shouldRecreateSwapChain = false;
 
     public:
-        void Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
+        void Terminate(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
         void WaitForPreviousFrame(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
 
         bool CreateSwapChain(Microsoft::WRL::ComPtr<IDXGIFactory4> factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue);
@@ -71,9 +71,9 @@ export namespace jpt::DX12
         size_t GetCurrentFrame() const { return m_currentFrame; }
     };
 
-    void WindowResources::Shutdown(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
+    void WindowResources::Terminate(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)
     {
-        m_syncObjects.Shutdown(commandQueue, m_swapChain, m_currentFrame);
+        m_syncObjects.Terminate(commandQueue, m_swapChain, m_currentFrame);
     }
 
     void WindowResources::WaitForPreviousFrame(Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue)

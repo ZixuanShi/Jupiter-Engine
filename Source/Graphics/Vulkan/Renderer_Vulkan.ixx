@@ -69,7 +69,7 @@ export namespace jpt
     public:
         virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
         virtual void DrawFrame() override;
 

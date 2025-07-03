@@ -52,7 +52,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void TextureSampler_Vulkan::Shutdown()
+    void TextureSampler_Vulkan::Terminate()
     {
         Renderer_Vulkan* pRenderer = GetVkRenderer();
         LogicalDevice& logicalDevice = pRenderer->GetLogicalDevice();

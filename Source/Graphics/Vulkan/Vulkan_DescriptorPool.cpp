@@ -46,7 +46,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void DescriptorPool::Shutdown()
+    void DescriptorPool::Terminate()
     {
         vkDestroyDescriptorPool(LogicalDevice::GetVkDevice(), m_descriptorPool, nullptr);
     }

@@ -75,7 +75,7 @@ export namespace jpt
     public:
         virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
         virtual void DrawFrame() override;
 
@@ -140,14 +140,14 @@ export namespace jpt
 
     }
 
-    void Renderer_DX12::Shutdown()
+    void Renderer_DX12::Terminate()
     {
         for (WindowResources& resources : m_windowResources)
         {
-            resources.Shutdown(m_commandQueue);
+            resources.Terminate(m_commandQueue);
         }
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 
     void Renderer_DX12::DrawFrame()

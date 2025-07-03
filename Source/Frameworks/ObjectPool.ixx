@@ -31,7 +31,7 @@ export namespace jpt
 
             stringPool.Release(handle.second);
 
-            stringPool.Shutdown(); */
+            stringPool.Terminate(); */
     template<typename TObject>
     class ObjectPool
     {
@@ -55,7 +55,7 @@ export namespace jpt
 
     public:
         void Init(size_t count);
-        void Shutdown();
+        void Terminate();
 
         Handle Acquire();
         void Release(Index index);
@@ -96,7 +96,7 @@ export namespace jpt
     }
 
     template<typename TObject>
-    void ObjectPool<TObject>::Shutdown()
+    void ObjectPool<TObject>::Terminate()
     {
         if constexpr (std::is_pointer_v<TObject>)
         {

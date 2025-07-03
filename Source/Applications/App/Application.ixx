@@ -38,7 +38,7 @@ export namespace jpt
         virtual bool PreInit();
         virtual bool Init();
         virtual void Update(TimePrecision deltaSeconds);
-        virtual void Shutdown();
+        virtual void Terminate();
 
     public:
         void Run();

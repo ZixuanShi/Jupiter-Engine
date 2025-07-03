@@ -25,7 +25,7 @@ namespace jpt
         CalcFPS(deltaSeconds);
     }
 
-    void Window::Shutdown()
+    void Window::Terminate()
     {
         m_title = nullptr;
         m_frameSize = Vec2i(0, 0);

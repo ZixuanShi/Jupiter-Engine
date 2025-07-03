@@ -21,7 +21,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init();
-        void Shutdown();
+        void Terminate();
 
     public:
         VkSemaphore GetImageAvailableSemaphore() const { return m_imageAvailableSemaphore; }

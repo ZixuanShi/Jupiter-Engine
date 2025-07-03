@@ -18,5 +18,5 @@ private:
 public:
     virtual bool PreInit() override;
     virtual void Update(TimePrecision deltaSeconds) override;
-    virtual void Shutdown() override;
+    virtual void Terminate() override;
 };

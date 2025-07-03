@@ -128,23 +128,23 @@ namespace jpt
         SceneManager::GetInstance().Update(deltaSeconds);
     }
 
-    void Application::Shutdown()
+    void Application::Terminate()
     {
         ProjectSettings::GetInstance().Save();
 
-        AssetManager::GetInstance().Shutdown();
-        SceneManager::GetInstance().Shutdown();
-        InputManager::GetInstance().Shutdown();
-        EventManager::GetInstance().Shutdown();
+        AssetManager::GetInstance().Terminate();
+        SceneManager::GetInstance().Terminate();
+        InputManager::GetInstance().Terminate();
+        EventManager::GetInstance().Terminate();
 
         if (!CommandLine::GetInstance().Has("no_window"))
         {
-            JPT_SHUTDOWN(m_pRenderer);
-            JPT_SHUTDOWN(m_pWindowManager);
-            JPT_SHUTDOWN(m_pFramework);
+            JPT_TERMINATE(m_pRenderer);
+            JPT_TERMINATE(m_pWindowManager);
+            JPT_TERMINATE(m_pFramework);
         }
 
-        JPT_SHUTDOWN(m_pPlatform);
+        JPT_TERMINATE(m_pPlatform);
     }
 
     void Application::Run()

@@ -44,11 +44,11 @@ void Application_Blank::Update(TimePrecision deltaSeconds)
     m_pFoo->Update(deltaSeconds);
 }
 
-void Application_Blank::Shutdown()
+void Application_Blank::Terminate()
 {
-    JPT_SHUTDOWN(m_pFoo);
+    JPT_TERMINATE(m_pFoo);
 
-    Super::Shutdown();
+    Super::Terminate();
 }
 
 JPT_SYNC_CLIENT(Blank)

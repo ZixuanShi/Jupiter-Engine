@@ -16,7 +16,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init();
-        void Shutdown();
+        void Terminate();
 
     public:
         VkDescriptorPool GetHandle() const { return m_descriptorPool; }

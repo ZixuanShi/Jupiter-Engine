@@ -19,7 +19,7 @@ export namespace jpt::Vulkan
 
     public:
         bool Init();
-        void Shutdown();
+        void Terminate();
         void WaitIdle() const;
 
         VkDevice GetHandle() const { return m_device; }

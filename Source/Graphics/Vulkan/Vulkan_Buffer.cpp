@@ -76,7 +76,7 @@ namespace jpt::Vulkan
         vkUnmapMemory(logicalDevice.GetHandle(), m_bufferMemory);
     }
 
-    void Buffer::Shutdown()
+    void Buffer::Terminate()
     {
         const Renderer_Vulkan* pVulkanRenderer = GetVkRenderer();
         const LogicalDevice& logicalDevice = pVulkanRenderer->GetLogicalDevice();

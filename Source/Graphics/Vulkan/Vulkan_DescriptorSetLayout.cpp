@@ -44,7 +44,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void DescriptorSetLayout::Shutdown()
+    void DescriptorSetLayout::Terminate()
     {
         vkDestroyDescriptorSetLayout(LogicalDevice::GetVkDevice(), m_descriptorSetLayout, nullptr);
     }

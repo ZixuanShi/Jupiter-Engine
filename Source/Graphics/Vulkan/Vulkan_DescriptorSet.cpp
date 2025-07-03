@@ -93,7 +93,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void DescriptorSet::Shutdown()
+    void DescriptorSet::Terminate()
     {
         vkFreeDescriptorSets(LogicalDevice::Get().GetHandle(), m_descriptorPool, 1, &m_descriptorSet);
     }

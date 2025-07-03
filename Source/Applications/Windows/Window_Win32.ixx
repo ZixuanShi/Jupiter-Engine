@@ -32,7 +32,7 @@ namespace jpt
 
     public:
         virtual bool Init(const char* title, int32 width, int32 height) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
     public:
         HWND GetHWND() const { return m_hwnd; }
@@ -71,10 +71,10 @@ namespace jpt
         return true;
     }
 
-    void Window_Win32::Shutdown()
+    void Window_Win32::Terminate()
     {
         DestroyWindow(m_hwnd);
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 }

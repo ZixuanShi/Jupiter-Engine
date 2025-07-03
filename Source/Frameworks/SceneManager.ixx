@@ -27,7 +27,7 @@ export namespace jpt
         bool PreInit();
         bool Init();
         void Update(TimePrecision deltaSeconds);
-        void Shutdown();
+        void Terminate();
 
         void SwitchScene(SceneGraph* pScene);
     };
@@ -52,7 +52,7 @@ export namespace jpt
         {
             if (m_pCurrentScene)
             {
-                JPT_SHUTDOWN(m_pCurrentScene);
+                JPT_TERMINATE(m_pCurrentScene);
             }
 
             m_pCurrentScene = m_pNextScene;
@@ -66,10 +66,10 @@ export namespace jpt
         }
     }
 
-    void SceneManager::Shutdown()
+    void SceneManager::Terminate()
     {
-        JPT_SHUTDOWN(m_pCurrentScene);
-        JPT_SHUTDOWN(m_pNextScene);
+        JPT_TERMINATE(m_pCurrentScene);
+        JPT_TERMINATE(m_pNextScene);
     }
 
     void SceneManager::SwitchScene(SceneGraph* pScene)

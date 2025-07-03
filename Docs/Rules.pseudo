@@ -8,7 +8,7 @@ Object Life Cycle:
     - PreUpdate
     - Update
     - FixedUpdate
-    - Shutdown
+    - Terminate
 
 External Dependencies/Tools Folder:
     - Bin

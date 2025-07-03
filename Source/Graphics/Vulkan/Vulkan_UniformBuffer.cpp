@@ -38,10 +38,10 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void UniformBuffer::Shutdown()
+    void UniformBuffer::Terminate()
     {
         vkUnmapMemory(LogicalDevice::GetVkDevice(), m_buffer.GetMemory());
-        m_buffer.Shutdown();
+        m_buffer.Terminate();
     }
 
     void UniformBuffer::MapMemory(void* pSource, VkDeviceSize size)

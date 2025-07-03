@@ -33,7 +33,7 @@ namespace jpt
         virtual bool PreInit() override;
         virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
     public:
         static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -77,11 +77,11 @@ namespace jpt
         }
     }
 
-    void Framework_Win32::Shutdown()
+    void Framework_Win32::Terminate()
     {
         UnregisterClass(m_windowClass.lpszClassName, GetPlatform_Windows()->GetHINSTANCE());
 
-        Super::Shutdown();
+        Super::Terminate();
     }
 
     LRESULT Framework_Win32::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

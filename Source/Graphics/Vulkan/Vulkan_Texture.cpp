@@ -47,7 +47,7 @@ namespace jpt::Vulkan
 
     void Texture_Vulkan::Unload()
     {
-        m_image.Shutdown();
+        m_image.Terminate();
 
         LogicalDevice::Get().WaitIdle();
         vkDestroyImageView(LogicalDevice::GetVkDevice(), m_imageView, nullptr);

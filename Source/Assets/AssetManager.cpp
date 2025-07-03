@@ -21,7 +21,7 @@ namespace jpt
         return true;
     }
 
-    void AssetManager::Shutdown()
+    void AssetManager::Terminate()
     {
         for (auto& [path, pAsset] : m_assets)
         {

@@ -61,7 +61,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void LogicalDevice::Shutdown()
+    void LogicalDevice::Terminate()
     {
         vkDestroyDevice(m_device, nullptr);
     }

@@ -21,6 +21,6 @@ export namespace jpt
         virtual bool PreInit() { return true; }
         virtual bool Init() { return true; }
         virtual void Update(TimePrecision) {}
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
     };
 }

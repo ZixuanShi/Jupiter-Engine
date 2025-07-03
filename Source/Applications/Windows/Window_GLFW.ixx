@@ -21,7 +21,7 @@ namespace jpt
 
     public:
         virtual bool Init(const char* title, int32 width, int32 height) override;
-        virtual void Shutdown() override;
+        virtual void Terminate() override;
 
     public:
         virtual bool CreateSurface(const DynamicArray<Any>& context) override;

@@ -27,7 +27,7 @@ export namespace jpt
         bool PreInit(FrameworkAPI api);
         bool Init();
         void Update(TimePrecision deltaSeconds);
-        void Shutdown();
+        void Terminate();
 
     public:
         Input::RawInput* GetRawInput() const { return m_pRawInput; }
@@ -55,7 +55,7 @@ export namespace jpt
         m_pRawInput->Update(deltaSeconds);
     }
 
-    void InputManager::Shutdown()
+    void InputManager::Terminate()
     {
         delete m_pRawInput;
         m_pRawInput = nullptr;

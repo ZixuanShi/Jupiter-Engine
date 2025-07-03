@@ -34,7 +34,7 @@ export namespace jpt
                     jpt::Sleep(1);
                 }
 
-                void Shutdown() override 
+                void Terminate() override 
                 {
                     JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
                 }
@@ -67,7 +67,7 @@ export namespace jpt
     protected:
         virtual void Init() {}
         virtual void Update() {}
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
     };
 
     Thread::Thread(const char* name) noexcept
@@ -124,7 +124,7 @@ export namespace jpt
                         Update();
                     }
 
-                    Shutdown();
+                    Terminate();
                     Stop();
                 });
         }

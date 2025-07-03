@@ -23,7 +23,7 @@ export namespace jpt::Input
         virtual bool PreInit() { return true; }
         virtual bool Init() { return true; }
         virtual void Update([[maybe_unused]] TimePrecision deltaSeconds) {}
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
 
     public:
         virtual uint32 FromKey([[maybe_unused]] Key key) const { return kInvalidValue<uint32>; }

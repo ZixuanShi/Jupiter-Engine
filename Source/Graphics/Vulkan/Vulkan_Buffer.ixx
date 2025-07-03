@@ -19,7 +19,7 @@ export namespace jpt::Vulkan
         void Copy(VkBuffer srcBuffer, VkDeviceSize size);
         void MapMemory(const void* pPtr, VkDeviceSize size);
 
-        void Shutdown();
+        void Terminate();
 
     public:
         VkBuffer GetHandle() const { return m_buffer; }

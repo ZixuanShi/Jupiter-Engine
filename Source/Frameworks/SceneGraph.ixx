@@ -32,7 +32,7 @@ export namespace jpt
         
         virtual bool Init() { return true; }
         virtual void Update(TimePrecision deltaSeconds);
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
     };
 
     void SceneGraph::Update(TimePrecision deltaSeconds)

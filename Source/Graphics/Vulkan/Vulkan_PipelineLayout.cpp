@@ -44,7 +44,7 @@ namespace jpt::Vulkan
         return true;
     }
 
-    void PipelineLayout::Shutdown()
+    void PipelineLayout::Terminate()
     {
         vkDestroyPipelineLayout(LogicalDevice::GetVkDevice(), m_pipelineLayout, nullptr);
     }

@@ -21,7 +21,7 @@ export namespace jpt
         Mutex m_mutex;
         Queue<T> m_queue;
         ConditionVariable m_conditionVariable;
-        Atomic<bool> m_shouldShutdown{ false };
+        Atomic<bool> m_shouldTerminate{ false };
 
     public:
         ThreadSafeQueue() = default;
@@ -32,8 +32,8 @@ export namespace jpt
         Optional<T> TryPop();
         Optional<T> WaitPop();
 
-        /** @note    Should explicitly call Shutdown() when a thread is using WaitPop() */
-        void Shutdown();
+        /** @note    Should explicitly call Terminate() when a thread is using WaitPop() */
+        void Terminate();
 
         bool IsEmpty() const;
     };
@@ -74,9 +74,9 @@ export namespace jpt
     {
         auto lock = m_mutex.CreateUniqueLock();
 
-        m_conditionVariable.Wait(lock, [this] { return !m_queue.IsEmpty() || m_shouldShutdown; });
+        m_conditionVariable.Wait(lock, [this] { return !m_queue.IsEmpty() || m_shouldTerminate; });
 
-        if (m_queue.IsEmpty() && m_shouldShutdown)
+        if (m_queue.IsEmpty() && m_shouldTerminate)
         {
             return {};
         }
@@ -87,10 +87,10 @@ export namespace jpt
     }
 
     template<typename T>
-    void ThreadSafeQueue<T>::Shutdown()
+    void ThreadSafeQueue<T>::Terminate()
     {
         LockGuard lock(m_mutex);
-        m_shouldShutdown = true;
+        m_shouldTerminate = true;
         m_conditionVariable.NotifyAll();
     }
 

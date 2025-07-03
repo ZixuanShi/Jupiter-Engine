@@ -14,6 +14,6 @@ export namespace jpt
 
     public:
         virtual bool Init() { return true; }
-        virtual void Shutdown() {}
+        virtual void Terminate() {}
     };
 }
