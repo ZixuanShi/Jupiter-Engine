@@ -8,4 +8,3 @@ if __name__ == "__main__":
     command = "\"" + jupiterRoot + "/Tools/Premake/Bin/Premake5.exe" + "\" vs2022"
 
     os.system(command)
-    os.system("pause")

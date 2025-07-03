@@ -53,7 +53,6 @@ if __name__ == "__main__":
     command = "\\"" + jupiterRoot + "/Tools/Premake/Bin/Premake5.exe" + "\\" vs2022"
 
     os.system(command)
-    os.system("pause")
 """
 	
 	# 2022
@@ -163,4 +162,3 @@ if __name__ == "__main__":
 	CreateSource()
 
 	print("Successfully Created Project: " + g_projectName + " at " + g_projectDirectory)
-	os.system("pause")

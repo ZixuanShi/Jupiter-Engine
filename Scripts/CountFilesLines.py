@@ -40,4 +40,3 @@ if __name__ == "__main__":
 
     print("Files: " + str(g_filesCount))
     print("Lines: " + str(g_linesCount))
-    os.system("pause")

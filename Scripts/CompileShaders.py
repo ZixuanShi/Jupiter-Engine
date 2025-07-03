@@ -54,5 +54,3 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(g_shaderSourceDir):
         for file in files:
             CompileShader(file)
-
-    os.system("pause")

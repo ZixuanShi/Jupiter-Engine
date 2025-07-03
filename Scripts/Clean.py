@@ -27,4 +27,3 @@ if __name__ == "__main__":
         Clean(projectPath)
 
     print("Finished cleaning Jupiter Engine")
-    os.system("pause")
