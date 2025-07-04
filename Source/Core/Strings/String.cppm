@@ -275,7 +275,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr String_Base<TChar, TAllocator>::String_Base(TChar c)
     {
-        TChar* pBuffer = TAllocator::AllocateArray(2);
+        TChar* pBuffer = TAllocator::NewArray(2);
         pBuffer[0] = c;
         pBuffer[1] = '\0';
         MoveString(pBuffer, 1);
@@ -732,7 +732,7 @@ export namespace jpt
         }
         else
         {
-            result.m_pBuffer = TAllocator::AllocateArray(count + 1);
+            result.m_pBuffer = TAllocator::NewArray(count + 1);
             StrNCpy(result.m_pBuffer, count + 1, &m_pBuffer[index], count);
 
             result.m_pBuffer[count] = '\0';
@@ -916,7 +916,7 @@ export namespace jpt
         }
         else
         {
-            TChar* pNewBuffer = TAllocator::AllocateArray(capacity + 1);
+            TChar* pNewBuffer = TAllocator::NewArray(capacity + 1);
 
             // Copy the old buffer to the current one
             if (m_pBuffer)
@@ -1000,7 +1000,7 @@ export namespace jpt
             }
             else 
             {
-                m_pBuffer = TAllocator::AllocateArray(size + 1);
+                m_pBuffer = TAllocator::NewArray(size + 1);
                 StrNCpy(m_pBuffer, size + 1, inCString, size);
                 m_capacity = size;
             }
@@ -1034,7 +1034,7 @@ export namespace jpt
         {
             StrNCpy(m_smallBuffer, size + 1, inCString, size);
             m_pBuffer = m_smallBuffer;
-            TAllocator::DeallocateArray(inCString);
+            TAllocator::DeleteArray(inCString);
             m_capacity = kSmallDataSize - 1;
         }
         else
@@ -1112,7 +1112,7 @@ export namespace jpt
         if (m_pBuffer && 
             m_pBuffer != m_smallBuffer)
         {
-            TAllocator::DeallocateArray(m_pBuffer);
+            TAllocator::DeleteArray(m_pBuffer);
         }
     }
 

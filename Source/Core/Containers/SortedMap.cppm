@@ -219,7 +219,7 @@ export namespace jpt
                 pCurrent = pCurrent->pRightChild;
             }
         }
-        Node* pNewNode = TAllocator::AllocateWithValue(TData(key, value));
+        Node* pNewNode = TAllocator::New(TData(key, value));
         pNewNode->pParent = pParent;
 
         // Tree is empty
@@ -299,7 +299,7 @@ export namespace jpt
             FixErase(pChild);
         }
 
-        TAllocator::Deallocate(pNode);
+        TAllocator::Delete(pNode);
         pNode = nullptr;
         --m_count;
     }
@@ -315,7 +315,7 @@ export namespace jpt
     {
         PostOrderWalkNode(m_pRoot, [](Node* pNode)
         {
-            TAllocator::Deallocate(pNode);
+            TAllocator::Delete(pNode);
             pNode = nullptr;
         });
 

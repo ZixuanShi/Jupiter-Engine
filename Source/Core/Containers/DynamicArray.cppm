@@ -541,7 +541,7 @@ export namespace jpt
         static constexpr size_t kMinCapacity = 4;
         capacity = Max(capacity, kMinCapacity);
 
-        TData* pNewBuffer = TAllocator::AllocateArray(capacity);
+        TData* pNewBuffer = TAllocator::NewArray(capacity);
 
         if (m_pBuffer)
         {

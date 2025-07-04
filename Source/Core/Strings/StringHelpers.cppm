@@ -366,7 +366,7 @@ export namespace jpt
         // Process 0
         if (value == 0)
         {
-            result = Allocator<TChar>::AllocateArray(2);
+            result = Allocator<TChar>::NewArray(2);
             result[0] = '0';
             result[1] = '\0';
             return result;
@@ -396,7 +396,7 @@ export namespace jpt
         }
 
         // Allocate Result string, + 1 for the end terminater
-        result = Allocator<TChar>::AllocateArray(index + 1);
+        result = Allocator<TChar>::NewArray(index + 1);
 
         // Append string terminator at the end
         result[index] = '\0';

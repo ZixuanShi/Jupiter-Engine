@@ -174,14 +174,14 @@ export namespace jpt
     template<typename TData, typename TAllocator>
     constexpr void LinkedList<TData, TAllocator>::AddBefore(Iterator iterator, const TData& value)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(value);
+        Node* pNewNode = TAllocator::New(value);
         InternalAddBefore(iterator, pNewNode);
     }
 
     template<typename TData, typename TAllocator>
     constexpr void LinkedList<TData, TAllocator>::AddBefore(Iterator iterator, TData&& value)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(Move(value));
+        Node* pNewNode = TAllocator::New(Move(value));
         InternalAddBefore(iterator, pNewNode);
     }
 
@@ -200,14 +200,14 @@ export namespace jpt
     template<typename TData, typename TAllocator>
     constexpr void LinkedList<TData, TAllocator>::AddAfter(Iterator iterator, const TData& value)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(value);
+        Node* pNewNode = TAllocator::New(value);
         InternalAddAfter(iterator, pNewNode);
     }
 
     template<typename TData, typename TAllocator>
     constexpr void LinkedList<TData, TAllocator>::AddAfter(Iterator iterator, TData&& value)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(Move(value));
+        Node* pNewNode = TAllocator::New(Move(value));
         InternalAddAfter(iterator, pNewNode);
     }
 
@@ -227,7 +227,7 @@ export namespace jpt
     template<typename ...TArgs>
     constexpr LinkedList<TData, TAllocator>::TData& LinkedList<TData, TAllocator>::EmplaceAfter(Iterator iterator, TArgs&& ...args)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
+        Node* pNewNode = TAllocator::New(Forward<TArgs>(args)...);
         InternalAddAfter(iterator, pNewNode);
         return pNewNode->data;
     }
@@ -243,7 +243,7 @@ export namespace jpt
     template<typename ...TArgs>
     constexpr LinkedList<TData, TAllocator>::TData& LinkedList<TData, TAllocator>::EmplaceBefore(Iterator iterator, TArgs&& ...args)
     {
-        Node* pNewNode = TAllocator::AllocateWithValue(Forward<TArgs>(args)...);
+        Node* pNewNode = TAllocator::New(Forward<TArgs>(args)...);
         InternalAddBefore(iterator, pNewNode);
         return pNewNode->data;
     }
@@ -283,7 +283,7 @@ export namespace jpt
             pNext->pPrevious = pPrevious;
         }
 
-        TAllocator::Deallocate(pToDelete);
+        TAllocator::Delete(pToDelete);
         --m_count;
     }
 
@@ -306,7 +306,7 @@ export namespace jpt
         {
             Node* pToDelete = m_pHead;
             m_pHead = m_pHead->pNext;
-            TAllocator::Deallocate(pToDelete);
+            TAllocator::Delete(pToDelete);
         }
 
         m_pHead = nullptr;

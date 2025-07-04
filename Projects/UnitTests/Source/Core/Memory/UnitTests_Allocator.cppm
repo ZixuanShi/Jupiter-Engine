@@ -17,19 +17,19 @@ template<jpt::Numeric TNum>
 bool UnitTests_TAllocatorrivialType()
 {
     // Single
-    TNum* pSingle = jpt::Allocator<TNum>::Allocate();
+    TNum* pSingle = jpt::Allocator<TNum>::New();
     JPT_ENSURE(pSingle != nullptr);
-    jpt::Allocator<TNum>::Deallocate(pSingle);
+    jpt::Allocator<TNum>::Delete(pSingle);
 
     // Single with value
-    TNum* pSingleWithValue = jpt::Allocator<TNum>::AllocateWithValue(static_cast<TNum>(42));
+    TNum* pSingleWithValue = jpt::Allocator<TNum>::New(static_cast<TNum>(42));
     JPT_ENSURE(pSingleWithValue != nullptr);
     JPT_ENSURE(*pSingleWithValue == static_cast<TNum>(42));
-    jpt::Allocator<TNum>::Deallocate(pSingleWithValue);
+    jpt::Allocator<TNum>::Delete(pSingleWithValue);
 
     // Array
     constexpr size_t kArraySize = 10'000;
-    TNum* pArray = jpt::Allocator<TNum>::AllocateArray(kArraySize);
+    TNum* pArray = jpt::Allocator<TNum>::NewArray(kArraySize);
     JPT_ENSURE(pArray != nullptr);
 
     for (size_t i = 0; i < kArraySize; ++i)
@@ -40,16 +40,16 @@ bool UnitTests_TAllocatorrivialType()
     {
         JPT_ENSURE(pArray[i] == static_cast<TNum>(i));
     }
-    jpt::Allocator<TNum>::DeallocateArray(pArray);
+    jpt::Allocator<TNum>::DeleteArray(pArray);
 
     // Multi with value initializer list
-    TNum* pMultiWithValue = jpt::Allocator<TNum>::AllocateArrayWithValues(10, { 0,1,2,3,4,5,6,7,8,9 });
+    TNum* pMultiWithValue = jpt::Allocator<TNum>::NewArray(10, 0,1,2,3,4,5,6,7,8,9);
     JPT_ENSURE(pMultiWithValue != nullptr);
     for (size_t i = 0; i < 10; ++i)
     {
         JPT_ENSURE(pMultiWithValue[i] == static_cast<TNum>(i));
     }
-    jpt::Allocator<TNum>::Deallocate(pMultiWithValue);
+    jpt::Allocator<TNum>::Delete(pMultiWithValue);
 
     return true;
 }
@@ -114,24 +114,24 @@ bool UnitTests_TAllocator_NonTrivial()
 
     jpt::Allocator<Foo> allocator;
 
-    Foo* pFoo = allocator.Allocate();
+    Foo* pFoo = allocator.New();
     JPT_ENSURE(pFoo != nullptr);
-    allocator.Deallocate(pFoo);
+    allocator.Delete(pFoo);
 
-    Foo* pFooWithArgs = allocator.AllocateWithValue(jpt::String("Bar"));
+    Foo* pFooWithArgs = allocator.New(jpt::String("Bar"));
     JPT_ENSURE(pFooWithArgs != nullptr);
     JPT_ENSURE(pFooWithArgs->ToString() == "FooBar");
-    allocator.Deallocate(pFooWithArgs);
+    allocator.Delete(pFooWithArgs);
 
-    Foo* pFooArray = allocator.AllocateArrayWithValues(10, { Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9") });
+    Foo* pFooArray = allocator.NewArray(10, Foo("0"), Foo("1"), Foo("2"), Foo("3"), Foo("4"), Foo("5"), Foo("6"), Foo("7"),Foo("8"), Foo("9"));
     JPT_ENSURE(pFooArray != nullptr);
     for (size_t i = 0; i < 10; ++i)
     {
         JPT_ENSURE(pFooArray[i].ToString() == "Foo" + jpt::ToString(i));
     }
-    allocator.DeallocateArray(pFooArray);
+    allocator.DeleteArray(pFooArray);
 
-    Foo* pConstructedFoo = allocator.Allocate();
+    Foo* pConstructedFoo = allocator.New();
     allocator.Construct(pConstructedFoo, Foo("Bar"));
     JPT_ENSURE(pConstructedFoo != nullptr);
     JPT_ENSURE(pConstructedFoo->ToString() == "FooBar");
@@ -148,7 +148,7 @@ bool UnitTests_TAllocator_NonTrivial()
     JPT_ENSURE(pConstructedFoo->ToString() == "FooBaz");
     allocator.Destruct(pConstructedFoo);
 
-    allocator.Deallocate(pConstructedFoo);
+    allocator.Delete(pConstructedFoo);
 
     return true;
 }

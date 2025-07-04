@@ -24,44 +24,32 @@ export namespace jpt
     class Allocator
     {
     public:
-        constexpr Allocator() = default;
-
-        template<class TOther>
-        constexpr Allocator(const Allocator<TOther>& other) noexcept {}
-
-    public:
         /** Allocates plain heap memory for <Type>*/
-        static constexpr T* Allocate();
-        static constexpr T* AllocateArray(size_t count);
+        template<typename ...TArgs> 
+        static constexpr T* New(TArgs&&... args);
 
-        /** Allocates heap memory for <Type>, with initializing value */
-        template<typename ...TArgs>
-        static constexpr T* AllocateWithValue(TArgs&&... args);
-        static constexpr T* AllocateArrayWithValues(size_t count, std::initializer_list<T>&& values);
+        template<typename ...TArgs> 
+        static constexpr T* NewArray(size_t count, TArgs&&... args);
 
         /** Deallocate memory for the passed in pointer */
-        static constexpr void Deallocate(T* pPointer);
-        static constexpr void DeallocateArray(T* pArray);
+        static constexpr void Delete(T* pPointer);
+        static constexpr void DeleteArray(T* pArray);
 
         template<typename ...TArgs>
         static constexpr void Construct(T* pPointer, TArgs&&... args);
         static constexpr void Destruct(T* pPointer);
-
-        template<class TOther>
-        constexpr bool operator==(const Allocator<TOther>&) const noexcept;
-
-        template<class TOther>
-        constexpr bool operator!=(const Allocator<TOther>&) const noexcept;
     };
 
     template<typename T>
-    constexpr T* Allocator<T>::Allocate()
+    template<typename ...TArgs>
+    constexpr T* Allocator<T>::New(TArgs&&... args)
     {
-        return new T;
+        return new T(Forward<TArgs>(args)...);
     }
 
     template<typename T>
-    constexpr T* Allocator<T>::AllocateArray(size_t count)
+    template<typename ...TArgs>
+    constexpr T* Allocator<T>::NewArray(size_t count, TArgs&&... args)
     {
         if (count == 0) 
         {
@@ -71,39 +59,17 @@ export namespace jpt
         // Check for overflow
         JPT_ASSERT(count <= std::numeric_limits<size_t>::max() / sizeof(T));
 
-        return new T[count];
+        return new T[count]{ static_cast<T>(Forward<TArgs>(args))... };
     }
 
     template<typename T>
-    template<typename ...TArgs>
-    constexpr T* Allocator<T>::AllocateWithValue(TArgs&& ...args)
-    {
-        return new T(Forward<TArgs>(args)...);
-    }
-
-    template<typename T>
-    constexpr T* Allocator<T>::AllocateArrayWithValues(size_t count, std::initializer_list<T>&& values)
-    {
-        T* pArray = new T[count];
-
-        size_t i = 0;
-        for (const T& element : values)
-        {
-            pArray[i] = Move(const_cast<T&>(element));
-            ++i;
-        }
-
-        return pArray;
-    }
-
-    template<typename T>
-    constexpr void Allocator<T>::Deallocate(T* pPointer)
+    constexpr void Allocator<T>::Delete(T* pPointer)
     {
         delete pPointer;
     }
 
     template<typename T>
-    constexpr void Allocator<T>::DeallocateArray(T* pArray)
+    constexpr void Allocator<T>::DeleteArray(T* pArray)
     {
         delete[] pArray;
     }
@@ -119,19 +85,5 @@ export namespace jpt
     constexpr void Allocator<T>::Destruct(T* pPointer)
     {
         std::destroy_at(pPointer);
-    }
-
-    template<typename T>
-    template<class TOtherype>
-    constexpr bool Allocator<T>::operator==(const Allocator<TOtherype>&) const noexcept
-    {
-        return true;
-    }
-
-    template<typename T>
-    template<class TOtherype>
-    constexpr bool Allocator<T>::operator!=(const Allocator<TOtherype>&) const noexcept
-    {
-        return false;
     }
 }

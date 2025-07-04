@@ -144,7 +144,7 @@ export namespace jpt
         if (m_pBuffer &&
             m_pBuffer != m_smallBuffer)
         {
-            Allocator<Byte>::DeallocateArray(m_pBuffer);
+            Allocator<Byte>::DeleteArray(m_pBuffer);
         }
     }
 
@@ -242,7 +242,7 @@ export namespace jpt
         }
         else
         {
-            m_pBuffer = Allocator<Byte>::AllocateArray(m_currentTypeSize);
+            m_pBuffer = Allocator<Byte>::NewArray(m_currentTypeSize);
             MemCpy(m_pBuffer, other.m_pBuffer, m_currentTypeSize);
         }
 
@@ -313,7 +313,7 @@ export namespace jpt
             }
             else
             {
-                m_pBuffer = Allocator<Byte>::AllocateArray(newSize);
+                m_pBuffer = Allocator<Byte>::NewArray(newSize);
             }
         }
 

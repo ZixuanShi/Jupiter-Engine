@@ -73,8 +73,8 @@ export namespace jpt
         MemoryPool(const Config& config) noexcept;
         ~MemoryPool() noexcept;
 
-        void* Allocate();
-        void Deallocate(void* ptr);
+        void* New();
+        void Delete(void* ptr);
 
     private:
         bool AllocateChunk();
@@ -113,7 +113,7 @@ export namespace jpt
         }
     }
 
-    void* MemoryPool::Allocate()
+    void* MemoryPool::New()
     {
         LockGuard lock(m_mutex);
 
@@ -134,7 +134,7 @@ export namespace jpt
         return Align(pBlock->data);
     }
 
-    void MemoryPool::Deallocate(void* ptr)
+    void MemoryPool::Delete(void* ptr)
     {
         if (!ptr)
         {

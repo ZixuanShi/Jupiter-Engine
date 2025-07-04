@@ -83,7 +83,7 @@ export namespace jpt
         {
             for (ObjectData& objectData : m_objects)
             {
-                objectData.instance = Allocator<TRaw>::Allocate();
+                objectData.instance = Allocator<TRaw>::New();
             }
         }
         else
