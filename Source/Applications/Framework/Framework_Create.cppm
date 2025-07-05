@@ -49,10 +49,10 @@ export namespace jpt
         switch (api.Value())
         {
         case FrameworkAPI::GLFW:
-            return new Framework_GLFW();
+            return Allocator<Framework_GLFW>::New();
 
         case FrameworkAPI::Win32:
-            return new Framework_Win32();
+            return Allocator<Framework_Win32>::New();
 
         default:
             JPT_ASSERT(false, "Un-implemented Framework API: %s", ToString(api).ConstBuffer());

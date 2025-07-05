@@ -20,10 +20,10 @@ export namespace jpt::Input
         switch (frameworkAPI.Value())
         {
         case FrameworkAPI::GLFW:
-            return new RawInput_GLFW();
+            return Allocator<RawInput_GLFW>::New();
 
         case FrameworkAPI::Win32:
-            return new RawInput_Win32();
+            return Allocator<RawInput_Win32>::New();
 
         default:
             JPT_WARN("Unsupported framework API: " + ToString(frameworkAPI));

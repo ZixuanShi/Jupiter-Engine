@@ -76,7 +76,7 @@ export namespace jpt
 
         ++count;    // For null terminator
 
-        wchar_t* pBuffer = new wchar_t[count];
+        wchar_t* pBuffer = Allocator<wchar_t>::NewArray(count);
         mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
 
         return pBuffer;
@@ -94,7 +94,7 @@ export namespace jpt
 
         ++count;    // For null terminator
 
-        char* pBuffer = new char[count];
+        char* pBuffer = Allocator<char>::NewArray(count);
         wcstombs_s(nullptr, pBuffer, count, pWStr, count);
 
         return pBuffer;
@@ -529,7 +529,7 @@ export namespace jpt
     {
         static constexpr size_t kMaxSize = 32;
 
-        TChar* buffer = new TChar[kMaxSize];
+        TChar* buffer = Allocator<TChar>::NewArray(kMaxSize);
         const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);    // controls how many precision digits to keep
 
         if constexpr (AreSameType<TChar, char>)

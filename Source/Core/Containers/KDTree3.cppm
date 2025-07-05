@@ -81,7 +81,7 @@ namespace jpt
             {
                 if (pNode->pLeft == nullptr)
                 {
-                    pNode->pLeft = new Node();
+                    pNode->pLeft = Allocator<Node>::New();
                     pNode->pLeft->data = point;
                     break;
                 }
@@ -94,7 +94,7 @@ namespace jpt
             {
                 if (pNode->pRight == nullptr)
                 {
-                    pNode->pRight = new Node();
+                    pNode->pRight = Allocator<Node>::New();
                     pNode->pRight->data = point;
                     break;
                 }
@@ -321,7 +321,7 @@ namespace jpt
             });
 
         // Build the node and recur to the left and right child
-        KDTree3<T>::Node* pNode = new KDTree3<T>::Node();
+        KDTree3<T>::Node* pNode = Allocator<KDTree3<T>::Node>::New();
         pNode->data = sortedpoints[mid];
         pNode->pLeft = InternalBuild(sortedpoints, begin, mid, depth + 1);
         pNode->pRight = InternalBuild(sortedpoints, mid + 1, end, depth + 1);

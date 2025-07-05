@@ -2,6 +2,7 @@
 
 export module jpt.UniquePtr;
 
+import jpt.Allocator;
 import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt_private.Deleter;
@@ -55,7 +56,7 @@ export namespace jpt
     template<typename TData, class... TArgs>
     [[nodiscard]] constexpr UniquePtr<TData> MakeUnique(TArgs&&...args)
     {
-        return UniquePtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
+        return UniquePtr<TData>(Allocator<TData>::New(Forward<TArgs>(args)...));
     }
 
     template<class TData1, class DleterT1, class TData2, class DleterT2 >

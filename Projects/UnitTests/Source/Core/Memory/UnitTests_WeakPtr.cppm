@@ -68,7 +68,7 @@ bool UnitTests_WeakPtr_Class()
     JPT_ENSURE(fooWeak.GetRefCount() == 0);
 
     {
-        jpt::SharedPtr<Foo> fooShared1 = jpt::MakeStrong<Foo>(42, 'C');
+        jpt::SharedPtr<Foo> fooShared1 = jpt::MakeShared<Foo>(42, 'C');
         fooWeak = fooShared1;
 
         JPT_ENSURE(!fooWeak.IsExpired());
@@ -96,7 +96,7 @@ jpt::WeakPtr<jpt::String> weakStringPtr2;
 jpt::WeakPtr<jpt::String> weakStringPtr3;
 bool UnitTests_WeakPtr_Referencing()
 {
-    jpt::SharedPtr<jpt::String> strongStringPtr1 = jpt::MakeStrong<jpt::String>("Jupiter Engine");
+    jpt::SharedPtr<jpt::String> strongStringPtr1 = jpt::MakeShared<jpt::String>("Jupiter Engine");
     JPT_ENSURE(*strongStringPtr1 == "Jupiter Engine");
 
     weakStringPtr1 = strongStringPtr1;
@@ -111,7 +111,7 @@ bool UnitTests_WeakPtr_Referencing()
     JPT_ENSURE(weakStringPtr3.GetRefCount() == 1);
 
     {
-        jpt::SharedPtr<jpt::String> strongStringPtr2 = jpt::MakeStrong<jpt::String>("Zixuan Shi");
+        jpt::SharedPtr<jpt::String> strongStringPtr2 = jpt::MakeShared<jpt::String>("Zixuan Shi");
         JPT_ENSURE(*strongStringPtr2 == "Zixuan Shi");
 
         weakStringPtr1 = strongStringPtr2;

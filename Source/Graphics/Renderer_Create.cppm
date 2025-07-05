@@ -49,10 +49,10 @@ export namespace jpt
         switch (api.Value())
         {
         case GraphicsAPI::Vulkan:
-            return new Renderer_Vulkan();
+            return Allocator<Renderer_Vulkan>::New();
 
         case GraphicsAPI::DX12:
-            return new Renderer_DX12();
+            return Allocator<Renderer_DX12>::New();
 
         default:
             JPT_ERROR("Un-implemented Graphics API: " + ToString(api));

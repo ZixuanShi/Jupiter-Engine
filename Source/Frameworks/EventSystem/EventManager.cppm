@@ -162,7 +162,7 @@ export namespace jpt
     template<typename TEvent>
     void EventManager::Queue(const TEvent& event, TimePrecision timer /*= 0.0*/)
     {
-        m_eventQueue.EmplaceBack(new TEvent(event), TypeRegistry::GetId<TEvent>(), timer);
+        m_eventQueue.EmplaceBack(Allocator<TEvent>::New(event), TypeRegistry::GetId<TEvent>(), timer);
     }
 
     void EventManager::Update(TimePrecision deltaSeconds)

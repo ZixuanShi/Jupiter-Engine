@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
     CommandLine::GetInstance().Parse(launchArgs);
 
-    Platform_Windows* pPlatform_Windows = new Platform_Windows(hInstance, nCmdShow);
+    Platform_Windows* pPlatform_Windows = Allocator<Platform_Windows>::New(hInstance, nCmdShow);
     GetApplication()->SetPlatform(pPlatform_Windows);
 
     return MainImpl();

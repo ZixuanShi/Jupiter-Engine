@@ -13,7 +13,7 @@ import jpt.SharedPtr;
 
 bool UnitTests_SharedPtr_Char()
 {
-    jpt::SharedPtr<char> sharedCharPtr1 = jpt::MakeStrong<char>('C');
+    jpt::SharedPtr<char> sharedCharPtr1 = jpt::MakeShared<char>('C');
     JPT_ENSURE(sharedCharPtr1.IsValid());
     JPT_ENSURE(sharedCharPtr1);
     JPT_ENSURE(*sharedCharPtr1 == 'C');

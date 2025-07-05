@@ -43,7 +43,7 @@ export namespace jpt
     {
         JPT_ASSERT(!m_assets.Has(path));
 
-        TAsset* pAsset = new TAsset();
+        TAsset* pAsset = Allocator<TAsset>::New();
         if (!pAsset->Load(path))
         {
             delete pAsset;

@@ -2,6 +2,9 @@
 
 #pragma once
 
+import jpt.Allocator;
+import jpt.TypeDefs;
+import jpt.TypeTraits;
 import jpt.Utilities;
 
 #pragma region Building
@@ -19,12 +22,12 @@ import jpt.Utilities;
 #pragma region Memory
 
 /** Deleter helpers */
-#define JPT_DELETE(pPointer)            \
-            delete pPointer;            \
+#define JPT_DELETE(pPointer)                                                           \
+            jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::Delete(pPointer); \
             pPointer = nullptr;
 
-#define JPT_DELETE_ARRAY(pPointer)      \
-            delete[] pPointer;          \
+#define JPT_DELETE_ARRAY(pPointer)                                                          \
+            jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::DeleteArray(pPointer); \
             pPointer = nullptr;
 
 #define JPT_SAFE_DELETE(pPointer)       \
@@ -39,10 +42,10 @@ import jpt.Utilities;
             JPT_DELETE_ARRAY(pPointer); \
         }
 
-#define JPT_TERMINATE(pPointer)          \
+#define JPT_TERMINATE(pPointer)         \
         if (pPointer)                   \
         {                               \
-            pPointer->Terminate();       \
+            pPointer->Terminate();      \
             JPT_DELETE(pPointer);       \
         }
 

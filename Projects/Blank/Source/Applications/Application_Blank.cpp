@@ -27,7 +27,7 @@ bool Application_Blank::PreInit()
 {
     JPT_ENSURE(Super::PreInit());
 
-    m_pFoo = new Entity_Foo();
+    m_pFoo = jpt::Allocator<Entity_Foo>::New();
     m_pFoo->PreInit();
 
     jpt::EventManager::GetInstance().Register<jpt::Event_Key>([]([[maybe_unused]] const jpt::Event_Key& keyPressEvent) 

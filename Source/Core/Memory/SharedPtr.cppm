@@ -6,11 +6,11 @@ module;
 
 export module jpt.SharedPtr;
 
-import jpt.TypeDefs;
 import jpt.Utilities;
+import jpt.WeakPtr;
+
 import jpt_private.Deleter;
 import jpt_private.ReferenceCounter;
-import jpt.WeakPtr;
 
 namespace jpt
 {
@@ -65,9 +65,9 @@ namespace jpt
     };
 
     export template<typename TData, class... TArgs>
-    [[nodiscard]] constexpr SharedPtr<TData> MakeStrong(TArgs&&... args)
+    [[nodiscard]] constexpr SharedPtr<TData> MakeShared(TArgs&&... args)
     {
-        return SharedPtr<TData>(new TData(jpt::Forward<TArgs>(args)...));
+        return SharedPtr<TData>(Allocator<TData>::New(Forward<TArgs>(args)...));
     }
 
     template<typename TData>
@@ -168,7 +168,7 @@ namespace jpt
 
             if (m_pPtr)
             {
-                m_pRefCounter = new jpt_private::ReferenceCounter(1, 0);
+                m_pRefCounter = Allocator<jpt_private::ReferenceCounter>::New(1, 0);
             }
         }
     }

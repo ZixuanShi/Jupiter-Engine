@@ -6,6 +6,7 @@ module;
 
 export module jpt.Function;
 
+import jpt.Allocator;
 import jpt.TypeTraits;
 import jpt.Utilities;
 
@@ -54,7 +55,7 @@ export namespace jpt
 
             virtual Function_Base* Clone() const override final
             {
-                return new FunctionData(m_function);
+                return Allocator<FunctionData>::New(m_function);
             }
         };
 
@@ -84,7 +85,7 @@ export namespace jpt
 
             virtual Function_Base* Clone() const override final
             {
-                return new MemberFunctionData(m_pCaller, m_pMemberFunction);
+                return Allocator<MemberFunctionData>::New(m_pCaller, m_pMemberFunction);
             }
 
             virtual       void* GetCaller()       override { return m_pCaller; }
@@ -212,7 +213,7 @@ export namespace jpt
     constexpr void Function<TReturn(TArgs...)>::Connect(TFunction function)
     {
         Disconnect();
-        m_pFunction = new FunctionData<TFunction>(function);
+        m_pFunction = Allocator<FunctionData<TFunction>>::New(function);
     }
 
     template<class TReturn, class ...TArgs>
@@ -220,7 +221,7 @@ export namespace jpt
     constexpr void Function<TReturn(TArgs...)>::Connect(TCaller* pCaller, TReturn(TCaller::*pMemberFunction)(TArgs...))
     {
         Disconnect();
-        m_pFunction = new MemberFunctionData<TCaller>(pCaller, pMemberFunction);
+        m_pFunction = Allocator<MemberFunctionData<TCaller>>::New(pCaller, pMemberFunction);
     }
 
     template<class TReturn, class ...TArgs>

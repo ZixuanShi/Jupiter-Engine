@@ -6,7 +6,6 @@ module;
 
 export module jpt.WeakPtr;
 
-import jpt.TypeDefs;
 import jpt_private.ReferenceCounter;
 
 export namespace jpt

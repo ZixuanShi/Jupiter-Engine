@@ -78,7 +78,7 @@ namespace jpt
         success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_Cat.png")) != nullptr;
         success &= AssetManager::GetInstance().Load<Texture_Vulkan>(File::FixDependencies("Assets/Jupiter_Common/Textures/T_SecurityRoom.png")) != nullptr;
 
-        m_pTextureSampler = new TextureSampler_Vulkan();
+        m_pTextureSampler = Allocator<TextureSampler_Vulkan>::New();
         m_pTextureSampler->Init();
 
         // Main window

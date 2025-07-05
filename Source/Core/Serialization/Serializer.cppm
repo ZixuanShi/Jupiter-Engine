@@ -9,6 +9,8 @@ module;
 
 export module jpt.Serializer;
 
+import jpt.Allocator;
+
 export namespace jpt
 {
     enum class SerializerMode : std::ios_base::openmode
@@ -168,7 +170,7 @@ export namespace jpt
             }
         }
 
-        char* buffer = new char[content.size() + 1];
+        char* buffer = Allocator<char>::NewArray(content.size() + 1);
         strcpy_s(buffer, content.size() + 1, content.c_str());
         return buffer;
     }

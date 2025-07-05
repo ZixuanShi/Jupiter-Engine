@@ -63,7 +63,7 @@ namespace jpt
         // Initialize core systems
         JPT_ASSERT(m_pPlatform, "Platform is not set");
         m_pFramework     = Framework_Create(m_frameworkAPI);
-        m_pWindowManager = new WindowManager();
+        m_pWindowManager = Allocator<WindowManager>::New();
         m_pRenderer      = Renderer_Create(m_graphicsAPI);
 
         bool success = true;

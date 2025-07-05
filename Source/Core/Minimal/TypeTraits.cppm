@@ -11,22 +11,22 @@ import jpt.Constants;
 namespace jpt_private
 {
 #pragma region Removing Qualifiers
-    template<typename T> struct RemoveReference              { using Type = T;  };
-    template<typename T> struct RemoveReference<T&>          { using Type = T;  };
-    template<typename T> struct RemoveReference<T&&>         { using Type = T;  };
-    template<typename T> struct RemovePointer                { using Type = T;  };
-    template<typename T> struct RemovePointer<T*>            { using Type = T;  };
-    template<typename T> struct RemovePointer<const T*>      { using Type = T;  };
-    template<typename T> struct RemoveConst                  { using Type = T;  };
-    template<typename T> struct RemoveConst<const T>         { using Type = T;  };
-    template<typename T> struct RValueToLValueReference      { using Type = T;  };
-    template<typename T> struct RValueToLValueReference<T&&> { using Type = T&; };
-    template<typename T> struct Decay                        { using Type = T;  };
-    template<typename T> struct Decay<T&>                    { using Type = T;  };
-    template<typename T> struct Decay<T&&>                   { using Type = T;  };
-    template<typename T> struct Decay<const T>               { using Type = T;  };
-    template<typename T> struct Decay<const T&>              { using Type = T;  };
-    template<typename T> struct Decay<const T&&>             { using Type = T;  };
+    template<typename T> struct RemoveReference              { using Type =       T;  };
+    template<typename T> struct RemoveReference<T&>          { using Type =       T;  };
+    template<typename T> struct RemoveReference<T&&>         { using Type =       T;  };
+    template<typename T> struct RemovePointer                { using Type =       T;  };
+    template<typename T> struct RemovePointer<T*>            { using Type =       T;  };
+    template<typename T> struct RemovePointer<const T*>      { using Type = const T;  };
+    template<typename T> struct RemoveConst                  { using Type =       T;  };
+    template<typename T> struct RemoveConst<const T>         { using Type =       T;  };
+    template<typename T> struct RValueToLValueReference      { using Type =       T;  };
+    template<typename T> struct RValueToLValueReference<T&&> { using Type =       T&; };
+    template<typename T> struct Decay                        { using Type =       T;  };
+    template<typename T> struct Decay<T&>                    { using Type =       T;  };
+    template<typename T> struct Decay<T&&>                   { using Type =       T;  };
+    template<typename T> struct Decay<const T>               { using Type =       T;  };
+    template<typename T> struct Decay<const T&>              { using Type =       T;  };
+    template<typename T> struct Decay<const T&&>             { using Type =       T;  };
 #pragma endregion
 
 #pragma region Adding Qualifiers
@@ -92,7 +92,7 @@ export namespace jpt
             jpt::IsArray<decltype(numArray)> // true
         
         @example
-            int32* numArray = new int[2];
+            int32* numArray = Allocator<int>::NewArray(2);
             jpt::IsArray<decltype(numArray)>;    // false */
     template<typename T>           constexpr bool IsArray       = false;
     template<typename T>           constexpr bool IsArray<T[]>  = true;

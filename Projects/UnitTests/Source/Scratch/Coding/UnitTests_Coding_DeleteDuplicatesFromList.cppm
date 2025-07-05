@@ -64,13 +64,13 @@ ListNode* DeleteDuplicates(ListNode* head)
 
 export bool UnitTests_Coding_DeleteDuplicatesFromList()
 {
-    ListNode* pHead = new ListNode(1);
-    pHead->next = new ListNode(1);
-    pHead->next->next = new ListNode(1);
-    pHead->next->next->next = new ListNode(2);
-    pHead->next->next->next->next = new ListNode(3);
-    pHead->next->next->next->next->next = new ListNode(3);
-    pHead->next->next->next->next->next->next = new ListNode(4);
+    ListNode* pHead = jpt::Allocator<ListNode>::New(1);
+    pHead->next = jpt::Allocator<ListNode>::New(1);
+    pHead->next->next = jpt::Allocator<ListNode>::New(1);
+    pHead->next->next->next = jpt::Allocator<ListNode>::New(2);
+    pHead->next->next->next->next = jpt::Allocator<ListNode>::New(3);
+    pHead->next->next->next->next->next = jpt::Allocator<ListNode>::New(3);
+    pHead->next->next->next->next->next->next = jpt::Allocator<ListNode>::New(4);
 
     pHead = DeleteDuplicates(pHead);
 

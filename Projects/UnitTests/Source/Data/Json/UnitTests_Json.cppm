@@ -96,7 +96,7 @@ bool UnitTests_Json_Update()
     subSet["year"] = 1999;
     subSet["Brand"] = jpt::String("MSI");
 
-    // Add new data
+    // Add data
     jsonRoot["new_data"] = jpt::String("New Data");
 
     jpt::WriteJsonFile(path, jsonRoot);

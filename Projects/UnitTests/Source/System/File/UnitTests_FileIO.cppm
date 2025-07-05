@@ -106,14 +106,14 @@ bool UnitTests_FileIO_TextFile()
 
     const Path path = jpt::File::Combine(Source::Client, "Assets/NewTextFile_UnitTest.txt");
 
-    // Save new file
-    jpt::String newContent = "Hello, World! I'm a new text file\n I'm the second line";
+    // Save file
+    jpt::String newContent = "Hello, World! I'm a text file\n I'm the second line";
     WriteTextFile(path, newContent);
     JPT_ENSURE(Exists(path));
 
     // Load again
     jpt::Optional<jpt::String> loaded = ReadTextFile(path);
-    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a new text file\n I'm the second line");
+    JPT_ENSURE(loaded.Value() == "Hello, World! I'm a text file\n I'm the second line");
 
     // Clean up
     Delete(path);
@@ -127,7 +127,7 @@ static bool FileIO_AppendTextFile()
     const Path path = jpt::File::Combine(Source::Client, "Assets/StackFile_UnitTest.txt");
     jpt::String newContent;
 
-    // Save new file
+    // Save file
     newContent = "1";
     jpt::File::AppendTextFile(path, newContent);
     JPT_ENSURE(Exists(path));

@@ -103,7 +103,7 @@ export namespace jpt
         void Deserialize(Serializer& serializer);
 
     private:
-        /** Create a new data buffer with a new capacity, move the existing data over */
+        /** Create a data buffer with given capacity, move the existing data over */
         constexpr void UpdateBuffer(size_t capacity);
         
         /** Copy other's data through it's iterators. TOtherContainer should be guaranteed to provide iterator interfaces */
