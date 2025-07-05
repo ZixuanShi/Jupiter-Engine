@@ -2,10 +2,13 @@
 
 export module jpt.KDTree3;
 
+import jpt.Allocator;
 import jpt.Concepts;
 import jpt.Sort;
 import jpt.DynamicArray;
 import jpt.Vector3;
+import jpt.TypeDefs;
+
 import jpt_private.BinaryTreeIterator;
 
 namespace jpt
@@ -16,6 +19,7 @@ namespace jpt
     {
     private:
         using Node = jpt_private::BinaryTreeNode<Vector3<T>>;
+        using TAllocator = Allocator<Node>;
 
     private:
         Node* m_pRoot = nullptr;
@@ -81,7 +85,7 @@ namespace jpt
             {
                 if (pNode->pLeft == nullptr)
                 {
-                    pNode->pLeft = Allocator<Node>::New();
+                    pNode->pLeft = TAllocator::New();
                     pNode->pLeft->data = point;
                     break;
                 }
@@ -94,7 +98,7 @@ namespace jpt
             {
                 if (pNode->pRight == nullptr)
                 {
-                    pNode->pRight = Allocator<Node>::New();
+                    pNode->pRight = TAllocator::New();
                     pNode->pRight->data = point;
                     break;
                 }
@@ -146,22 +150,22 @@ namespace jpt
             return;
         }
 
-        // If the node is a leaf node, just delete it
+        // If the node is a leaf node, just remove it
         if (pNode->pLeft == nullptr && pNode->pRight == nullptr)
         {
             if (pParent == nullptr)
             {
-                delete pNode;
+                TAllocator::Delete(pNode);
                 m_pRoot = nullptr;
             }
             else if (pParent->pLeft == pNode)
             {
-                delete pNode;
+                TAllocator::Delete(pNode);
                 pParent->pLeft = nullptr;
             }
             else
             {
-                delete pNode;
+                TAllocator::Delete(pNode);
                 pParent->pRight = nullptr;
             }
         }
@@ -171,17 +175,17 @@ namespace jpt
             if (pParent == nullptr)
             {
                 m_pRoot = pNode->pLeft;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
             else if (pParent->pLeft == pNode)
             {
                 pParent->pLeft = pNode->pLeft;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
             else
             {
                 pParent->pRight = pNode->pLeft;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
         }
         else if (pNode->pLeft == nullptr && pNode->pRight != nullptr)
@@ -189,17 +193,17 @@ namespace jpt
             if (pParent == nullptr)
             {
                 m_pRoot = pNode->pRight;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
             else if (pParent->pLeft == pNode)
             {
                 pParent->pLeft = pNode->pRight;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
             else
             {
                 pParent->pRight = pNode->pRight;
-                delete pNode;
+                TAllocator::Delete(pNode);
             }
         }
         // If the node has two children, replace the node with the minimum node in the right subtree
@@ -225,7 +229,7 @@ namespace jpt
                 pMinParent->pRight = pMinNode->pRight;
             }
 
-            delete pMinNode;
+            TAllocator::Delete(pMinNode);
         }
 
         --m_count;
@@ -236,7 +240,7 @@ namespace jpt
     {
         RecurPostOrderWalkNode(m_pRoot, [](Node* pNode) 
             { 
-                delete pNode; 
+                TAllocator::Delete(pNode);
                 pNode = nullptr;
             });
 
@@ -371,4 +375,4 @@ namespace jpt
     }
 }
 
-export using KDTree3f = jpt::KDTree3<float>;
+export using KDTree3f = jpt::KDTree3<float32>;

@@ -97,7 +97,7 @@ bool UnitTests_Json_Update()
     subSet["Brand"] = jpt::String("MSI");
 
     // Add data
-    jsonRoot["new_data"] = jpt::String("New Data");
+    jsonRoot["new_data"] = jpt::String("New_Data");
 
     jpt::WriteJsonFile(path, jsonRoot);
 
@@ -116,7 +116,7 @@ bool UnitTests_Json_ReadUpdated()
     JPT_ENSURE(subSet["Brand"] == jpt::String("MSI"));
     JPT_ENSURE(subSet.Count() == 5);
 
-    JPT_ENSURE(jsonRoot["new_data"] == jpt::String("New Data"));
+    JPT_ENSURE(jsonRoot["new_data"] == jpt::String("New_Data"));
 
     return true;
 }

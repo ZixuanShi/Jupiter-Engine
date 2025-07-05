@@ -30,24 +30,24 @@ ListNode* DeleteDuplicates(ListNode* head)
         pCurrent = pCurrent->next;
     }
 
-    // Loop through the list again, and delete any nodes with a count greater than 1
+    // Loop through the list again, and remove any nodes with a count greater than 1
     pCurrent = head;
     ListNode* pPrevious = nullptr;
     while (pCurrent)
     {
-        // If the count is greater than 1, delete the node
+        // If the count is greater than 1, remove the node
         if (counter[pCurrent->val] > 1)
         {
             if (pPrevious)
             {
                 pPrevious->next = pCurrent->next;
-                delete pCurrent;
+                JPT_DELETE(pCurrent);
                 pCurrent = pPrevious->next;
             }
             else
             {
                 head = pCurrent->next;
-                delete pCurrent;
+                JPT_DELETE(pCurrent);
                 pCurrent = head;
             }
         }
@@ -80,7 +80,7 @@ export bool UnitTests_Coding_DeleteDuplicatesFromList()
     while (pHead)
     {
         ListNode* pNext = pHead->next;
-        delete pHead;
+        JPT_DELETE(pHead);
         pHead = pNext;
     }
 

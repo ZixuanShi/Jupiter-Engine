@@ -51,12 +51,12 @@ export namespace jpt
     };
 
     /** Constructs a non-array type T. The arguments args are passed to the constructor of T. 
-        This overload participates in overload resolution only if T is not an array type. 
-        The function is equivalent to: UniquePtr<T>(new T(std::forward<Args>(args)...)) */
+        This overload participates in overload resolution only if T is not an array type. */
     template<typename TData, class... TArgs>
     [[nodiscard]] constexpr UniquePtr<TData> MakeUnique(TArgs&&...args)
     {
-        return UniquePtr<TData>(Allocator<TData>::New(Forward<TArgs>(args)...));
+        TData* pPtr = Allocator<TData>::New(Forward<TArgs>(args)...);
+        return UniquePtr<TData>(pPtr);
     }
 
     template<class TData1, class DleterT1, class TData2, class DleterT2 >

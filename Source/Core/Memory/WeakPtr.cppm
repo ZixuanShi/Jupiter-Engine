@@ -1,10 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Minimal/CoreMacros.h"
-
 export module jpt.WeakPtr;
+
+import jpt.Allocator;
+import jpt.TypeDefs;
 
 import jpt_private.ReferenceCounter;
 
@@ -129,7 +128,7 @@ export namespace jpt
     {
         if (m_pRefCounter)
         {
-            return m_pRefCounter->GetStrongRefs();
+            return m_pRefCounter->GetSharedRefs();
         }
 
         return 0;
@@ -167,7 +166,7 @@ export namespace jpt
             m_pRefCounter->DecrementWeakRef();
             if (!m_pRefCounter->HasAnyRef())
             {
-                JPT_DELETE(m_pRefCounter);
+                Allocator<jpt_private::ReferenceCounter>::Delete(m_pRefCounter);
             }
         }
     }

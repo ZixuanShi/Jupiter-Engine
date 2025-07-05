@@ -102,7 +102,7 @@ export namespace jpt
         {
             for (ObjectData& objectData : m_objects)
             {
-                delete objectData.instance;
+                jpt::Allocator<TRaw>::Delete(objectData.instance);
                 objectData.instance = nullptr;
             }
         }

@@ -26,7 +26,7 @@ namespace jpt
         for (auto& [path, pAsset] : m_assets)
         {
             pAsset->Unload();
-            delete pAsset;
+            Allocator<Asset>::Delete(pAsset);
             pAsset = nullptr;
         }
 
@@ -39,7 +39,7 @@ namespace jpt
         JPT_ASSERT(itr != m_assets.end());
 
         itr->second->Unload();
-        delete itr->second;
+        Allocator<Asset>::Delete(itr->second);
         m_assets.Erase(path);
     }
 }

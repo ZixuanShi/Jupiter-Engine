@@ -57,7 +57,7 @@ export namespace jpt
 
     void InputManager::Terminate()
     {
-        delete m_pRawInput;
+        Allocator<Input::RawInput>::Delete(m_pRawInput);
         m_pRawInput = nullptr;
     }
 }

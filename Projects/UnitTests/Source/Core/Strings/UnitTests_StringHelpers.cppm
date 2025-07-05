@@ -29,11 +29,11 @@ bool UnitTests_ToCStr()
 
     const TChar* integerCStr = jpt::IntegerToCStr<TChar>(114514);
     JPT_ENSURE(jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(TChar, 114514), 6));
-    delete integerCStr;
+    JPT_DELETE(integerCStr);
 
     integerCStr = jpt::IntegerToCStr<TChar>(-114514);
     JPT_ENSURE(jpt::AreStringsSame(integerCStr, JPT_GET_PROPER_STRING(TChar, -114514), 7));
-    delete integerCStr;
+    JPT_DELETE(integerCStr);
 
     int32 num = jpt::CStrToInteger<TChar>(JPT_GET_PROPER_STRING(TChar, 114514), 6);
     JPT_ENSURE(num == 114514);
@@ -49,7 +49,7 @@ bool UnitTests_ToCStr()
 
     const TChar* floatingCStr = jpt::FloatToCStr<TChar>(-114514.114f);
     //JPT_RETURN_FALSE_IF_LOG(!jpt::AreStringsSame(floatingCStr, "-114514.114", 11));    // Not stable
-    delete floatingCStr;
+    JPT_DELETE(floatingCStr);
 
     return true;
 }
@@ -73,12 +73,12 @@ bool RunUnitTests_StringUtils_IntegerToCStr()
 {
     const char* result = jpt::IntegerToCStr(123456);
     JPT_ENSURE(jpt::AreStringsSame(result, "123456"));
-    delete result;
+    JPT_DELETE(result);
 
     // Hex
     result = jpt::IntegerToCStr(0xFF00FF00, EIntBase::Hex);
     JPT_ENSURE(jpt::AreStringsSame(result, "0xFF00FF00"));
-    delete result;
+    JPT_DELETE(result);
 
     return true;
 }

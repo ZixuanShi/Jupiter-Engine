@@ -180,7 +180,7 @@ export namespace jpt
                     handlerData.func(*item.pEvent);
                 }
 
-                delete item.pEvent;
+                Allocator<Event>::Delete(item.pEvent);
                 item.pEvent = nullptr;
 
                 itr = m_eventQueue.Erase(itr);
@@ -196,7 +196,7 @@ export namespace jpt
     {
         for (QueueItem& item : m_eventQueue)
         {
-            delete item.pEvent;
+            Allocator<Event>::Delete(item.pEvent);
             item.pEvent = nullptr;
         }
 

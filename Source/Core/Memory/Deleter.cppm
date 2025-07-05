@@ -1,6 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
 export module jpt_private.Deleter;
+
+import jpt.Allocator;
 
 export namespace jpt_private
 {
@@ -18,7 +22,7 @@ export namespace jpt_private
         template<class TOther>
         constexpr DefaultDelete& operator=(const DefaultDelete<TOther>&) { return *this; }
 
-        constexpr void operator()(T* pPtr) const { delete pPtr; }
+        constexpr void operator()(T* pPtr) const { jpt::Allocator<T>::Delete(pPtr); }
     };
 
     template<class T>

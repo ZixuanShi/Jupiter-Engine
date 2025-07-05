@@ -1,11 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module;
-
-#include "Core/Minimal/CoreMacros.h"
-
 export module jpt.SharedPtr;
 
+import jpt.Allocator;
+import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.WeakPtr;
 
@@ -61,19 +59,20 @@ namespace jpt
         template<typename TDeleter = jpt_private::DefaultDelete<TData>>
         constexpr void InternalReset(TData* pPtr, const TDeleter& deleter = TDeleter());
 
-        constexpr void IncrementStrongRef();
+        constexpr void IncrementSharedRef();
     };
 
     export template<typename TData, class... TArgs>
     [[nodiscard]] constexpr SharedPtr<TData> MakeShared(TArgs&&... args)
     {
-        return SharedPtr<TData>(Allocator<TData>::New(Forward<TArgs>(args)...));
+        TData* pPtr = Allocator<TData>::New(Forward<TArgs>(args)...);
+        return SharedPtr<TData>(pPtr);
     }
 
     template<typename TData>
     constexpr SharedPtr<TData>::SharedPtr(TData* pPtr) noexcept
         : m_pPtr(pPtr)
-        , m_pRefCounter(new jpt_private::ReferenceCounter(1, 0))
+        , m_pRefCounter(Allocator<jpt_private::ReferenceCounter>::New(1, 0))
     {
     }
 
@@ -82,7 +81,7 @@ namespace jpt
         : m_pPtr(other.m_pPtr)
         , m_pRefCounter(other.m_pRefCounter)
     {
-        IncrementStrongRef();
+        IncrementSharedRef();
     }
 
     template<typename TData>
@@ -90,7 +89,7 @@ namespace jpt
         : m_pPtr(weakPtr.m_pPtr)
         , m_pRefCounter(weakPtr.m_pRefCounter)
     {
-        IncrementStrongRef();
+        IncrementSharedRef();
     }
 
     template<typename TData>
@@ -109,7 +108,7 @@ namespace jpt
         {
             InternalReset(other.m_pPtr);
             m_pRefCounter = other.m_pRefCounter;
-            IncrementStrongRef();
+            IncrementSharedRef();
         }
 
         return *this;
@@ -120,7 +119,7 @@ namespace jpt
     {
         InternalReset(weakPtr.m_pPtr);
         m_pRefCounter = weakPtr.m_pRefCounter;
-        IncrementStrongRef();
+        IncrementSharedRef();
 
         return *this;
     }
@@ -151,7 +150,7 @@ namespace jpt
     {
         if (m_pRefCounter)
         {
-            return m_pRefCounter->GetStrongRefs();
+            return m_pRefCounter->GetSharedRefs();
         }
 
         return 0;
@@ -179,14 +178,14 @@ namespace jpt
     {
         if (m_pRefCounter)
         {
-            m_pRefCounter->DecrementStrongRef();
+            m_pRefCounter->DecrementSharedRef();
             if (!m_pRefCounter->HasAnyRef())
             {
-                JPT_DELETE(m_pRefCounter);
+                Allocator<jpt_private::ReferenceCounter>::Delete(m_pRefCounter);
             }
         }
 
-        if (!m_pRefCounter || !m_pRefCounter->HasAnyStrongRef())
+        if (!m_pRefCounter || !m_pRefCounter->HasAnySharedRef())
         {
             deleter(m_pPtr);
         }
@@ -195,11 +194,11 @@ namespace jpt
     }
 
     template<typename TData>
-    constexpr void SharedPtr<TData>::IncrementStrongRef()
+    constexpr void SharedPtr<TData>::IncrementSharedRef()
     {
         if (m_pRefCounter)
         {
-            m_pRefCounter->IncrementStrongRef();
+            m_pRefCounter->IncrementSharedRef();
         }
     }
 }

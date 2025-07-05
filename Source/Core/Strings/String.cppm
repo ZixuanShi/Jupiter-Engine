@@ -228,14 +228,14 @@ export namespace jpt
         {
             const char* pCStr = ToChars(CString, cStrCount);
             result = AreStringsSame(string.ConstBuffer(), pCStr, string.Count(), cStrCount);
-            JPT_DELETE_ARRAY(pCStr);
+            Allocator<const char>::DeleteArray(pCStr);
         }
         // WString to const char*
         else if constexpr (AreSameType<TChar1, wchar_t> && AreSameType<TChar2, char>)
         {
             const wchar_t* pWCStr = ToWChars(CString, cStrCount);
             result = AreStringsSame(string.ConstBuffer(), pWCStr, string.Count(), cStrCount);
-            JPT_DELETE_ARRAY(pWCStr);
+            Allocator<const wchar_t>::DeleteArray(pWCStr);
         }
         else
         {

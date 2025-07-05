@@ -242,7 +242,7 @@ export namespace jpt
     template<class TReturn, class ...TArgs>
     constexpr void Function<TReturn(TArgs...)>::Disconnect()
     {
-        delete m_pFunction;
+        Allocator<Function_Base>::Delete(m_pFunction);
         m_pFunction = nullptr;
     }
 

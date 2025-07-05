@@ -557,7 +557,7 @@ export namespace jpt
                 }
             }
 
-            JPT_DELETE_ARRAY(m_pBuffer);
+            TAllocator::DeleteArray(m_pBuffer);
         }
 
         m_pBuffer  = pNewBuffer;
