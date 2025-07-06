@@ -39,6 +39,6 @@ export namespace jpt_private
         template<class TOther>
         DefaultDelete& operator=(const DefaultDelete<TOther[]>&) { return *this; }
 
-        constexpr void operator()(T* pPtr) const { delete[] pPtr; }
+        constexpr void operator()(T* pPtr) const { jpt::Allocator<T>::DeleteArray(pPtr); }
     };
 }

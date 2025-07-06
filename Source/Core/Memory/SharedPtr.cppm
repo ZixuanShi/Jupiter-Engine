@@ -182,6 +182,7 @@ namespace jpt
             if (!m_pRefCounter->HasAnyRef())
             {
                 Allocator<jpt_private::ReferenceCounter>::Delete(m_pRefCounter);
+                m_pRefCounter = nullptr;
             }
         }
 
