@@ -46,7 +46,7 @@ export namespace jpt
         TAsset* pAsset = JPT_NEW(TAsset);
         if (!pAsset->Load(path))
         {
-            Allocator<TAsset>::Delete(pAsset);
+            JPT_DELETE(pAsset);
             return nullptr;
         }
 

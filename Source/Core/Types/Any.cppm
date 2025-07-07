@@ -144,7 +144,7 @@ export namespace jpt
         if (m_pBuffer &&
             m_pBuffer != m_smallBuffer)
         {
-            Allocator<Byte>::DeleteArray(m_pBuffer);
+            JPT_DELETE_ARRAY(m_pBuffer);
         }
     }
 

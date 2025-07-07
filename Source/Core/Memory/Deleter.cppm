@@ -2,6 +2,8 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
+
 export module jpt_private.Deleter;
 
 import jpt.Allocator;
@@ -22,7 +24,7 @@ export namespace jpt_private
         template<class TOther>
         constexpr DefaultDelete& operator=(const DefaultDelete<TOther>&) { return *this; }
 
-        constexpr void operator()(T* pPtr) const { jpt::Allocator<T>::Delete(pPtr); }
+        constexpr void operator()(T* pPtr) const { JPT_DELETE(pPtr); }
     };
 
     template<class T>
@@ -39,6 +41,6 @@ export namespace jpt_private
         template<class TOther>
         DefaultDelete& operator=(const DefaultDelete<TOther[]>&) { return *this; }
 
-        constexpr void operator()(T* pPtr) const { jpt::Allocator<T>::DeleteArray(pPtr); }
+        constexpr void operator()(T* pPtr) const { JPT_DELETE_ARRAY(pPtr); }
     };
 }

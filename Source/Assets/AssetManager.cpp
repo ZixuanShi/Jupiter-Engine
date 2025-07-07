@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
 module jpt.AssetManager;
@@ -26,7 +27,7 @@ namespace jpt
         for (auto& [path, pAsset] : m_assets)
         {
             pAsset->Unload();
-            Allocator<Asset>::Delete(pAsset);
+            JPT_DELETE(pAsset);
             pAsset = nullptr;
         }
 

@@ -19,13 +19,13 @@ bool UnitTests_TAllocatorrivialType()
     // Single
     TNum* pSingle = JPT_NEW(TNum);
     JPT_ENSURE(pSingle != nullptr);
-    jpt::Allocator<TNum>::Delete(pSingle);
+    JPT_DELETE(pSingle);
 
     // Single with value
     TNum* pSingleWithValue = JPT_NEW(TNum, static_cast<TNum>(42));
     JPT_ENSURE(pSingleWithValue != nullptr);
     JPT_ENSURE(*pSingleWithValue == static_cast<TNum>(42));
-    jpt::Allocator<TNum>::Delete(pSingleWithValue);
+    JPT_DELETE(pSingleWithValue);
 
     // Array
     constexpr size_t kArraySize = 10'000;
@@ -40,7 +40,7 @@ bool UnitTests_TAllocatorrivialType()
     {
         JPT_ENSURE(pArray[i] == static_cast<TNum>(i));
     }
-    jpt::Allocator<TNum>::DeleteArray(pArray);
+    JPT_DELETE_ARRAY(pArray);
 
     // Multi with value initializer list
     TNum* pMultiWithValue = JPT_NEW_ARRAY(TNum, 10, 0,1,2,3,4,5,6,7,8,9);
@@ -49,7 +49,7 @@ bool UnitTests_TAllocatorrivialType()
     {
         JPT_ENSURE(pMultiWithValue[i] == static_cast<TNum>(i));
     }
-    jpt::Allocator<TNum>::Delete(pMultiWithValue);
+    JPT_DELETE(pMultiWithValue);
 
     return true;
 }
