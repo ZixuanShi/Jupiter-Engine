@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
@@ -49,10 +50,10 @@ export namespace jpt
         switch (api.Value())
         {
         case GraphicsAPI::Vulkan:
-            return Allocator<Renderer_Vulkan>::New();
+            return JPT_NEW(Renderer_Vulkan);
 
         case GraphicsAPI::DX12:
-            return Allocator<Renderer_DX12>::New();
+            return JPT_NEW(Renderer_DX12);
 
         default:
             JPT_ERROR("Un-implemented Graphics API: " + ToString(api));

@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
@@ -49,10 +50,10 @@ export namespace jpt
         switch (api.Value())
         {
         case FrameworkAPI::GLFW:
-            return Allocator<Framework_GLFW>::New();
+            return JPT_NEW(Framework_GLFW);
 
         case FrameworkAPI::Win32:
-            return Allocator<Framework_Win32>::New();
+            return JPT_NEW(Framework_Win32);
 
         default:
             JPT_ASSERT(false, "Un-implemented Framework API: %s", ToString(api).ConstBuffer());

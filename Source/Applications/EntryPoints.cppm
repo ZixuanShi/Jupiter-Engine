@@ -2,6 +2,8 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
+
 #if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN
     #include <Windows.h>
@@ -50,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 
     CommandLine::GetInstance().Parse(launchArgs);
 
-    Platform_Windows* pPlatform_Windows = Allocator<Platform_Windows>::New(hInstance, nCmdShow);
+    Platform_Windows* pPlatform_Windows = JPT_NEW(Platform_Windows, hInstance, nCmdShow);
     GetApplication()->SetPlatform(pPlatform_Windows);
 
     return MainImpl();

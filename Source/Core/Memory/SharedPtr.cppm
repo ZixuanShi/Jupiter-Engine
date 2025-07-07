@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Minimal/CoreMacros.h"
+
 export module jpt.SharedPtr;
 
 import jpt.Allocator;
@@ -65,7 +69,7 @@ namespace jpt
     export template<typename TData, class... TArgs>
     [[nodiscard]] constexpr SharedPtr<TData> MakeShared(TArgs&&... args)
     {
-        TData* pPtr = Allocator<TData>::New(Forward<TArgs>(args)...);
+        TData* pPtr = JPT_NEW(TData, Forward<TArgs>(args)...);
         return SharedPtr<TData>(pPtr);
     }
 
@@ -167,7 +171,7 @@ namespace jpt
 
             if (m_pPtr)
             {
-                m_pRefCounter = Allocator<jpt_private::ReferenceCounter>::New(1, 0);
+                m_pRefCounter = JPT_NEW(jpt_private::ReferenceCounter, 1, 0);
             }
         }
     }

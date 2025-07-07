@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Minimal/CoreMacros.h"
+
 export module jpt.UniquePtr;
 
 import jpt.Allocator;
@@ -55,7 +59,7 @@ export namespace jpt
     template<typename TData, class... TArgs>
     [[nodiscard]] constexpr UniquePtr<TData> MakeUnique(TArgs&&...args)
     {
-        TData* pPtr = Allocator<TData>::New(Forward<TArgs>(args)...);
+        TData* pPtr = JPT_NEW(TData, Forward<TArgs>(args)...);
         return UniquePtr<TData>(pPtr);
     }
 

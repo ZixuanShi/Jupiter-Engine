@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
 export module jpt.Function;
@@ -55,7 +56,7 @@ export namespace jpt
 
             virtual Function_Base* Clone() const override final
             {
-                return Allocator<FunctionData>::New(m_function);
+                return JPT_NEW(FunctionData, m_function);
             }
         };
 
@@ -85,7 +86,7 @@ export namespace jpt
 
             virtual Function_Base* Clone() const override final
             {
-                return Allocator<MemberFunctionData>::New(m_pCaller, m_pMemberFunction);
+                return JPT_NEW(MemberFunctionData, m_pCaller, m_pMemberFunction);
             }
 
             virtual       void* GetCaller()       override { return m_pCaller; }
@@ -213,7 +214,7 @@ export namespace jpt
     constexpr void Function<TReturn(TArgs...)>::Connect(TFunction function)
     {
         Disconnect();
-        m_pFunction = Allocator<FunctionData<TFunction>>::New(function);
+        m_pFunction = JPT_NEW(FunctionData<TFunction>, function);
     }
 
     template<class TReturn, class ...TArgs>
@@ -221,7 +222,7 @@ export namespace jpt
     constexpr void Function<TReturn(TArgs...)>::Connect(TCaller* pCaller, TReturn(TCaller::*pMemberFunction)(TArgs...))
     {
         Disconnect();
-        m_pFunction = Allocator<MemberFunctionData<TCaller>>::New(pCaller, pMemberFunction);
+        m_pFunction = JPT_NEW(MemberFunctionData<TCaller>, pCaller, pMemberFunction);
     }
 
     template<class TReturn, class ...TArgs>

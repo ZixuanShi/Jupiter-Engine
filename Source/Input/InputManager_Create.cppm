@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
@@ -20,10 +21,10 @@ export namespace jpt::Input
         switch (frameworkAPI.Value())
         {
         case FrameworkAPI::GLFW:
-            return Allocator<RawInput_GLFW>::New();
+            return JPT_NEW(RawInput_GLFW);
 
         case FrameworkAPI::Win32:
-            return Allocator<RawInput_Win32>::New();
+            return JPT_NEW(RawInput_Win32);
 
         default:
             JPT_WARN("Unsupported framework API: " + ToString(frameworkAPI));

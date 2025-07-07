@@ -32,7 +32,7 @@ bool UnitTests_SharedPtr_Char()
     JPT_ENSURE(sharedCharPtr2.GetRefCount() == 3);
     JPT_ENSURE(sharedCharPtr3.GetRefCount() == 3);
 
-    sharedCharPtr3.Reset(jpt::Allocator<char>::New('A'));
+    sharedCharPtr3.Reset(JPT_NEW(char, 'A'));
     JPT_ENSURE(sharedCharPtr3.IsValid());
     JPT_ENSURE(sharedCharPtr3);
     JPT_ENSURE(*sharedCharPtr3 == 'A');
@@ -50,9 +50,9 @@ bool UnitTests_SharedPtr_Char()
     JPT_ENSURE(sharedCharPtr2.GetRefCount() == 1);
     JPT_ENSURE(sharedCharPtr3.GetRefCount() == 2);
 
-    jpt::SharedPtr<int> left(jpt::Allocator<int>::New(3));
-    jpt::SharedPtr<int> right(jpt::Allocator<int>::New(4));
-    jpt::SharedPtr<int> third(jpt::Allocator<int>::New(5));
+    jpt::SharedPtr<int> left(JPT_NEW(int, 3));
+    jpt::SharedPtr<int> right(JPT_NEW(int, 4));
+    jpt::SharedPtr<int> third(JPT_NEW(int, 5));
     left = right;
     third = jpt::Move(left);
     right = third;
@@ -62,7 +62,7 @@ bool UnitTests_SharedPtr_Char()
             //JPT_LOG("Deleted a strong ptr");
             JPT_DELETE(pPtr); 
         });
-    left.Reset(jpt::Allocator<int>::New(42));
+    left.Reset(JPT_NEW(int, 42));
     third = left;
     right = jpt::Move(left);
 
@@ -83,8 +83,8 @@ bool UnitTests_SharedPtr_Class()
         jpt::WeakPtr<Foo> m_foo;
     };
 
-    jpt::SharedPtr<Foo> foo(jpt::Allocator<Foo>::New());
-    jpt::SharedPtr<Bar> bar(jpt::Allocator<Bar>::New());
+    jpt::SharedPtr<Foo> foo(JPT_NEW(Foo));
+    jpt::SharedPtr<Bar> bar(JPT_NEW(Bar));
 
     foo->m_bar = bar;
     bar->m_foo = foo;
@@ -105,18 +105,18 @@ bool UnitTests_SharedPtr_Class2()
         jpt::SharedPtr<Foo> m_foo;
     };
 
-    jpt::SharedPtr<Foo> foo(jpt::Allocator<Foo>::New());
-    jpt::SharedPtr<Bar> bar(jpt::Allocator<Bar>::New());
+    jpt::SharedPtr<Foo> foo(JPT_NEW(Foo));
+    jpt::SharedPtr<Bar> bar(JPT_NEW(Bar));
 
     foo->m_bar = bar;
     bar->m_foo = foo;
 
-    foo.Reset(jpt::Allocator<Foo>::New());
+    foo.Reset(JPT_NEW(Foo));
 
     jpt::WeakPtr<Foo> weakFoo;
     jpt::WeakPtr<Foo> weakFoo2;
-    jpt::SharedPtr<Foo> sharedFoo1(jpt::Allocator<Foo>::New());
-    jpt::SharedPtr<Foo> sharedFoo2(jpt::Allocator<Foo>::New());
+    jpt::SharedPtr<Foo> sharedFoo1(JPT_NEW(Foo));
+    jpt::SharedPtr<Foo> sharedFoo2(JPT_NEW(Foo));
     weakFoo = sharedFoo1;
     weakFoo = sharedFoo2;
     weakFoo = weakFoo2;

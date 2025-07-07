@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Minimal/CoreMacros.h"
+
 export module jpt.KDTree3;
 
 import jpt.Allocator;
@@ -325,7 +329,7 @@ namespace jpt
             });
 
         // Build the node and recur to the left and right child
-        KDTree3<T>::Node* pNode = Allocator<KDTree3<T>::Node>::New();
+        KDTree3<T>::Node* pNode = JPT_NEW(KDTree3<T>::Node);
         pNode->data = sortedpoints[mid];
         pNode->pLeft = InternalBuild(sortedpoints, begin, mid, depth + 1);
         pNode->pRight = InternalBuild(sortedpoints, mid + 1, end, depth + 1);

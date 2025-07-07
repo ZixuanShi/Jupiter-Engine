@@ -93,11 +93,11 @@ export namespace jpt
         switch (api.Value())
         {
         case FrameworkAPI::GLFW:
-            m_windows.EmplaceBack(Allocator<Window_GLFW>::New());
+            m_windows.EmplaceBack(JPT_NEW(Window_GLFW));
             break;
 
         case FrameworkAPI::Win32:
-            m_windows.EmplaceBack(Allocator<Window_Win32>::New());
+            m_windows.EmplaceBack(JPT_NEW(Window_Win32));
             break;
 
         default:

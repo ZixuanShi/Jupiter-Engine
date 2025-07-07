@@ -44,7 +44,7 @@ import jpt.Utilities;
 
 #pragma endregion
 
-#pragma region Logging
+#pragma region Verification
 
 /**< Return, with Error logging */
 #define JPT_VERIFY(condition, returnValue, ...)  \

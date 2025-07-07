@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Minimal/CoreMacros.h"
 #include "Core/Validation/Assert.h"
 
 #include <type_traits>
@@ -83,7 +84,7 @@ export namespace jpt
         {
             for (ObjectData& objectData : m_objects)
             {
-                objectData.instance = Allocator<TRaw>::New();
+                objectData.instance = JPT_NEW(TRaw);
             }
         }
         else
