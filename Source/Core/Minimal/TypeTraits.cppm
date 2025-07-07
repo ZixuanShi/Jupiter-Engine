@@ -92,7 +92,7 @@ export namespace jpt
             jpt::IsArray<decltype(numArray)> // true
         
         @example
-            int32* numArray = Allocator<int>::NewArray(2);
+            int32* numArray = JPT_NEW_ARRAY(int, 2);
             jpt::IsArray<decltype(numArray)>;    // false */
     template<typename T>           constexpr bool IsArray       = false;
     template<typename T>           constexpr bool IsArray<T[]>  = true;

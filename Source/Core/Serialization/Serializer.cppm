@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Validation/Assert.h"
+#include "Core/Minimal/CoreMacros.h"
 
 #include <fstream>
 #include <string>
@@ -170,7 +171,7 @@ export namespace jpt
             }
         }
 
-        char* buffer = Allocator<char>::NewArray(content.size() + 1);
+        char* buffer = JPT_NEW_ARRAY(char, content.size() + 1);
         strcpy_s(buffer, content.size() + 1, content.c_str());
         return buffer;
     }

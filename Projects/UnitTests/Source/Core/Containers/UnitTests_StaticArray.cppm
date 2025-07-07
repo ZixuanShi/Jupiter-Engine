@@ -130,20 +130,20 @@ bool UnitTests_StaticArray_HeapAllocating()
 {
     jpt::StaticArray<jpt::String*, 5> staticArray1
     { 
-        jpt::Allocator<jpt::String>::New("Four"), 
-        jpt::Allocator<jpt::String>::New("Three"), 
-        jpt::Allocator<jpt::String>::New("Two"), 
-        jpt::Allocator<jpt::String>::New("One"),   
-        jpt::Allocator<jpt::String>::New("Zero"),
+        JPT_NEW(jpt::String, "Four"), 
+        JPT_NEW(jpt::String, "Three"), 
+        JPT_NEW(jpt::String, "Two"), 
+        JPT_NEW(jpt::String, "One"),   
+        JPT_NEW(jpt::String, "Zero"),
     };
 
     jpt::StaticArray<jpt::String*, 5> staticArray2
     { 
-        jpt::Allocator<jpt::String>::New("Zero"), 
-        jpt::Allocator<jpt::String>::New("One"),   
-        jpt::Allocator<jpt::String>::New("Two"), 
-        jpt::Allocator<jpt::String>::New("Three"), 
-        jpt::Allocator<jpt::String>::New("Four"),
+        JPT_NEW(jpt::String, "Zero"), 
+        JPT_NEW(jpt::String, "One"),   
+        JPT_NEW(jpt::String, "Two"), 
+        JPT_NEW(jpt::String, "Three"), 
+        JPT_NEW(jpt::String, "Four"),
     };
 
     jpt::Swap(staticArray1, staticArray2);

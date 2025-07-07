@@ -253,7 +253,7 @@ bool UnitTests_IsArray()
     JPT_ENSURE(!jpt::IsArray<decltype(num2)>);
     JPT_DELETE(num2);
 
-    int32* numArray4 = jpt::Allocator<int>::NewArray(2);
+    int32* numArray4 = JPT_NEW_ARRAY(int, 2);
     JPT_ENSURE(!jpt::IsArray<decltype(numArray4)>);
     JPT_DELETE(numArray4);
 
@@ -278,7 +278,7 @@ bool UnitTests_IsCharArray()
     JPT_ENSURE(!jpt::IsCharArray<decltype(cPtr)>);
     JPT_DELETE(cPtr);
 
-    char* cArray4 = jpt::Allocator<char>::NewArray(2);
+    char* cArray4 = JPT_NEW_ARRAY(char, 2);
     JPT_ENSURE(!jpt::IsCharArray<decltype(cArray4)>);
     JPT_DELETE(cArray4);
 

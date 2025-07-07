@@ -242,7 +242,7 @@ export namespace jpt
         }
         else
         {
-            m_pBuffer = Allocator<Byte>::NewArray(m_currentTypeSize);
+            m_pBuffer = JPT_NEW_ARRAY(Byte, m_currentTypeSize);
             MemCpy(m_pBuffer, other.m_pBuffer, m_currentTypeSize);
         }
 
@@ -313,7 +313,7 @@ export namespace jpt
             }
             else
             {
-                m_pBuffer = Allocator<Byte>::NewArray(newSize);
+                m_pBuffer = JPT_NEW_ARRAY(Byte, newSize);
             }
         }
 

@@ -61,7 +61,7 @@ bool UnitTests_UniquePtr_Char()
     source = jpt::Move(other);
     JPT_ENSURE(*source == 'B');
 
-    jpt::UniquePtr<char[]> charArray(jpt::Allocator<char>::NewArray(10, 'A', 'B', 'C', 'A'));
+    jpt::UniquePtr<char[]> charArray(JPT_NEW_ARRAY(char, 10, 'A', 'B', 'C', 'A'));
     //JPT_LOG(charArray.Get()[0]);
     //JPT_LOG(charArray.Get()[1]);
     //JPT_LOG(charArray.Get()[2]);
@@ -119,7 +119,7 @@ bool UnitTests_UniquePtr_Int()
     jpt::UniquePtr<int32, decltype(deleter)> other = jpt::UniquePtr<int32, decltype(deleter)>(jpt::Allocator<int32>::New(101), deleter);
     source = jpt::Move(other);
 
-    jpt::UniquePtr<int32[]> int32Array(jpt::Allocator<int32>::NewArray(10, 1, 2, 3, 4));
+    jpt::UniquePtr<int32[]> int32Array(JPT_NEW_ARRAY(int32, 10, 1, 2, 3, 4));
     //JPT_LOG(int32Array.Get()[0]);
     //JPT_LOG(int32Array.Get()[1]);
     //JPT_LOG(int32Array.Get()[2]);
@@ -257,7 +257,7 @@ bool UnitTests_UniquePtr_Class()
     jpt::UniquePtr<Foo, decltype(deleter)> other = jpt::UniquePtr<Foo, decltype(deleter)>(jpt::Allocator<Foo>::New(43, 'c'), deleter);
     source = jpt::Move(other);
 
-    jpt::UniquePtr<Foo[]> FooArray(jpt::Allocator<Foo>::NewArray(10, Foo{1, 'a'}, Foo{2, 'b'}, Foo(3, 'c'), Foo{4, 'd'}));
+    jpt::UniquePtr<Foo[]> FooArray(JPT_NEW_ARRAY(Foo, 10, Foo{1, 'a'}, Foo{2, 'b'}, Foo(3, 'c'), Foo{4, 'd'}));
     JPT_ENSURE(FooArray.Get()[0] == Foo(1, 'a'));
     JPT_ENSURE(FooArray.Get()[1] == Foo(2, 'b'));
     JPT_ENSURE(FooArray.Get()[2] == Foo(3, 'c'));

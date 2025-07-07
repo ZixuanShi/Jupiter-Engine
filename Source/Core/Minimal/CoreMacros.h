@@ -21,12 +21,11 @@ import jpt.Utilities;
 
 #pragma region Memory
 
-#define JPT_NEW(type, ...)                          \
-            jpt::Allocator<type>::New(__VA_ARGS__);  
+#define JPT_NEW(type, ...) \
+            jpt::Allocator<type>::New(__VA_ARGS__)
             
-#define JPT_NEW_ARRAY(type, count)                  \
-            jpt::Allocator<type>::NewArray(count);
-
+#define JPT_NEW_ARRAY(type, count, ...) \
+            jpt::Allocator<type>::NewArray(count, __VA_ARGS__)
 
 #define JPT_DELETE(pPointer)                                                           \
             jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::Delete(pPointer); \

@@ -4,6 +4,7 @@ module;
 
 #include "Core/Strings/StringMacros.h"
 #include "Core/Validation/Assert.h"
+#include "Core/Minimal/CoreMacros.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -76,7 +77,7 @@ export namespace jpt
 
         ++count;    // For null terminator
 
-        wchar_t* pBuffer = Allocator<wchar_t>::NewArray(count);
+        wchar_t* pBuffer = JPT_NEW_ARRAY(wchar_t, count);
         mbstowcs_s(nullptr, pBuffer, count, pCStr, count);
 
         return pBuffer;
@@ -94,7 +95,7 @@ export namespace jpt
 
         ++count;    // For null terminator
 
-        char* pBuffer = Allocator<char>::NewArray(count);
+        char* pBuffer = JPT_NEW_ARRAY(char, count);
         wcstombs_s(nullptr, pBuffer, count, pWStr, count);
 
         return pBuffer;
@@ -366,7 +367,7 @@ export namespace jpt
         // Process 0
         if (value == 0)
         {
-            result = Allocator<TChar>::NewArray(2);
+            result = JPT_NEW_ARRAY(TChar, 2);
             result[0] = '0';
             result[1] = '\0';
             return result;
@@ -396,7 +397,7 @@ export namespace jpt
         }
 
         // Allocate Result string, + 1 for the end terminater
-        result = Allocator<TChar>::NewArray(index + 1);
+        result = JPT_NEW_ARRAY(TChar, index + 1);
 
         // Append string terminator at the end
         result[index] = '\0';
@@ -529,7 +530,7 @@ export namespace jpt
     {
         static constexpr size_t kMaxSize = 32;
 
-        TChar* buffer = Allocator<TChar>::NewArray(kMaxSize);
+        TChar* buffer = JPT_NEW_ARRAY(TChar, kMaxSize);
         const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);    // controls how many precision digits to keep
 
         if constexpr (AreSameType<TChar, char>)
