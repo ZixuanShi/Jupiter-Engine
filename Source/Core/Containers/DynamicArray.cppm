@@ -297,7 +297,7 @@ export namespace jpt
             }
         }
 
-        JPT_SAFE_DELETE_ARRAY(m_pBuffer);
+        JPT_DELETE_ARRAY(m_pBuffer);
         m_count = 0;
         m_capacity = 0;
     }

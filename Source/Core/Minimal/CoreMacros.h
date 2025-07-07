@@ -21,7 +21,13 @@ import jpt.Utilities;
 
 #pragma region Memory
 
-/** Deleter helpers */
+#define JPT_NEW(type, ...)                          \
+            jpt::Allocator<type>::New(__VA_ARGS__);  
+            
+#define JPT_NEW_ARRAY(type, count)                  \
+            jpt::Allocator<type>::NewArray(count);
+
+
 #define JPT_DELETE(pPointer)                                                           \
             jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::Delete(pPointer); \
             pPointer = nullptr;
@@ -29,18 +35,6 @@ import jpt.Utilities;
 #define JPT_DELETE_ARRAY(pPointer)                                                          \
             jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::DeleteArray(pPointer); \
             pPointer = nullptr;
-
-#define JPT_SAFE_DELETE(pPointer)       \
-        if (pPointer)                   \
-        {                               \
-            JPT_DELETE(pPointer);       \
-        }
-
-#define JPT_SAFE_DELETE_ARRAY(pPointer) \
-        if (pPointer)                   \
-        {                               \
-            JPT_DELETE_ARRAY(pPointer); \
-        }
 
 #define JPT_TERMINATE(pPointer)         \
         if (pPointer)                   \
