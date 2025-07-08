@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
 #include "Core/Validation/Assert.h"
 
 module jpt.AssetManager;

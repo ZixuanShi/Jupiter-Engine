@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Minimal/Utilities.h"
 #include "Debugging/Logger.h"
 
 export module UnitTests_Line3;

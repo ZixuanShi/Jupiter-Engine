@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
 
 #if IS_PLATFORM_WINDOWS
     #define WIN32_LEAN_AND_MEAN

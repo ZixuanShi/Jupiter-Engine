@@ -34,8 +34,8 @@ bool UnitTests_Line2_DistanceToPoint()
     JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(0, 0)), 0.0f));
     JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(1, 1)), 0.0f));
     JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(2, 2)), 0.0f));
-    JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(0, 1)), std::sqrt(2.0f) / 2.0f));
-    JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(1, 0)), std::sqrt(2.0f) / 2.0f));
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(0, 1)), jpt::Sqrt(2.0f) / 2.0f));
+    JPT_ENSURE(jpt::AreValuesClose(line.Distance(Vec2f(1, 0)), jpt::Sqrt(2.0f) / 2.0f));
 
     return true;
 }

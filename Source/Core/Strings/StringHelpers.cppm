@@ -4,7 +4,7 @@ module;
 
 #include "Core/Strings/StringMacros.h"
 #include "Core/Validation/Assert.h"
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
 
 #include <string.h>
 #include <stdio.h>

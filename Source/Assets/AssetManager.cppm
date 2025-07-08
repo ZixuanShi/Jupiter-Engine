@@ -2,7 +2,8 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Minimal/Utilities.h"
+#include "Core/Memory/Memory.h"
 #include "Core/Validation/Assert.h"
 
 export module jpt.AssetManager;

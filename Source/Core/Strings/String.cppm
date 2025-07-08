@@ -3,7 +3,8 @@
 module;
 
 #include "Core/Strings/StringMacros.h"
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
+#include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
 
 #include <stdio.h>

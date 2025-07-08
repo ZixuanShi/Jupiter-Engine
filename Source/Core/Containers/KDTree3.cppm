@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
 
 export module jpt.KDTree3;
 

@@ -2,7 +2,8 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
+#include "Core/Minimal/Utilities.h"
 #include "Debugging/Logger.h"
 
 #include <type_traits>

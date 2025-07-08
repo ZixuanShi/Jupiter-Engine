@@ -2,15 +2,13 @@
 
 #pragma once
 
-// Building
-#include "CoreMacros.h"
+// Minimal
+#include "Utilities.h"
 
 // Core
 #include "Core/Types/Enum.h"
+#include "Core/Memory/Memory.h"
 
 // Debugging
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
-
-// Profiling
-#include "Profiling/TimingProfiler.h"

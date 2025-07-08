@@ -3,7 +3,7 @@
 module;
 
 #include "Core/Validation/Assert.h"
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Memory/Memory.h"
 
 #include <fstream>
 #include <string>

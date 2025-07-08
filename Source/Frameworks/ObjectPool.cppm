@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
 
 #include <type_traits>

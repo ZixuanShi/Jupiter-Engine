@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/CoreMacros.h"
+#include "Core/Minimal/Utilities.h"
 
 export module jpt.LinearFind;
 

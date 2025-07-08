@@ -4,6 +4,8 @@ module;
 
 #include "Core/Minimal/CoreHeaders.h"
 
+#include <cmath>
+
 export module UnitTests_Coding_IsPalindrome;
 
 import jpt.Utilities;
@@ -49,7 +51,7 @@ bool IsPalindrome_V2(int32 x)
     copy = x;
     for (int32 i = 0; i < digitCount / 2; ++i)
     {
-        const int32 factor = static_cast<int32>(pow(10, digitCount - (i * 2) - 1));
+        const int32 factor = static_cast<int32>(std::pow(10, digitCount - (i * 2) - 1));
 
         // Left
         const int32 left = copy / factor;
