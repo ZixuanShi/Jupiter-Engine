@@ -18,3 +18,4 @@ External Dependencies/Tools Folder:
 
 Philosophies:
     - One job, one class, one method. Don't have multiple ways to do the same task
+    - Compilation speed, size on disk, runtime performance, and memory usage are all important
