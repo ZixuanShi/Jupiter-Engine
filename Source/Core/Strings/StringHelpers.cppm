@@ -445,12 +445,17 @@ export namespace jpt
     }
 
     /** @return Integral number converted from pBuffer
-        @param pBuffer        Source buffer containing integer data 
+        @param pBuffer      Source buffer containing integer data 
         @param count        Desired count to parse from start of pBuffer
-        @param base            Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
+        @param base         Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
     template<StringLiteral TChar = char, Integral TInt = int32>
-    constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count, EIntBase base = EIntBase::Decimal)
+    constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count = npos, EIntBase base = EIntBase::Decimal)
     {
+        if (count == npos)
+        {
+            count = FindCharsCount(pBuffer);
+        }
+
         TInt result = 0;
         bool isNegative = false;
         size_t start = 0;
@@ -519,11 +524,6 @@ export namespace jpt
 
         return result;
     }
-    template<StringLiteral TChar = char, Integral TInt = int32>
-    constexpr TInt CStrToInteger(const TChar* pBuffer)
-    {
-        return CStrToInteger<TChar, TInt>(pBuffer, FindCharsCount(pBuffer));
-    }
 
     template<StringLiteral TChar = char, Floating TFloat = float>
     constexpr TChar* FloatToCStr(TFloat value)
@@ -547,9 +547,14 @@ export namespace jpt
 
     /** @note    Will ignore the 'f' is there's any */
     template<StringLiteral TChar = char, Floating TFloat = float32>
-    constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count)
+    constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count = npos)
     {
         // Parse two integral parts of the precision dot, then combine them
+
+        if (count == npos)
+        {
+            count = FindCharsCount(pBuffer);
+        }
 
         TFloat integer = 0;        // Left of precision
         TFloat floatingNum = 0;    // Right of precision
@@ -608,10 +613,5 @@ export namespace jpt
         }
 
         return result;
-    }
-    template<StringLiteral TChar = char, Floating TFloat = float>
-    constexpr TFloat CStrToFloat(const TChar* pBuffer)
-    {
-        return CStrToFloat(pBuffer, FindCharsCount(pBuffer));
     }
 }
