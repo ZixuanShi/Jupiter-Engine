@@ -1,15 +1,14 @@
 # Jupiter-Engine
 I design, plan, write, test everything from scratch by myself
 
-- C++ 20 Features
-  - Modules. Replaced Pre-Compiled Headers for faster compilation speed
-  - Concepts. Safer, and more flexible Templates magic
+- Extreme fast compilation speed using C++20 feature Modules.
+  - It takes 15 seconds to fully rebuild 45,000 lines of C++ code with i9-14900k and Samsung 990 Pro
 - Implemented my own STL
-  - Containers, DynamicArray, HashMap, Red Black Tree, Graph, Heap
+  - Containers. DynamicArray, HashMap, Red Black Tree, Graph, Heap, and more.
   - Strings Library
   - Smart Pointers and Memory Pool
   - Threading, Mutex, ThreadSafeQueue
-  - Types, reflective Enums, Any, Variant, Tuple
+  - Types, reflective Enums, Any, Variant, Tuple.
 - Implemented Json and CSV for Data-Driven
 - Vulkan and DX12 renderer
 - Core Systems. Input, Event System, Debugging, File IO, and more.
