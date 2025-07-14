@@ -6,10 +6,10 @@ I design, plan, write, test everything from scratch by myself
 - Implemented my own STL
   - Containers. DynamicArray, HashMap, Red Black Tree, Graph, Heap, and more.
   - Strings Library
-  - Smart Pointers and Memory Pool
+  - Memory. Allocator, Smart Pointers, Memory Pool
   - Threading, Mutex, ThreadSafeQueue
   - Types, reflective Enums, Any, Variant, Tuple.
-- Implemented Json and CSV for Data-Driven
+- Implemented Data-Driven System, support JSON, CSV read/write
 - Vulkan and DX12 renderer
 - Core Systems. Input, Event System, Debugging, File IO, and more.
 - GLFW and WIN32 frameworks
