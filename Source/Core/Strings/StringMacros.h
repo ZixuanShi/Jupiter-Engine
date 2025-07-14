@@ -4,10 +4,12 @@
 
 import jpt.Utilities;
 
-/** Combines two strings 
-    @example #define TEST(x) JPT_COMBINE_STR("Hello ", #x)    // x can be anything
-    @example #define TEST(x) JPT_COMBINE_STR(L"你好 ", #x) */
-#define JPT_COMBINE_STR(A, B)   A##B
+/** Combines two tokens. Creating unique identifiers or concatenating strings.
+    @example: JPT_CONCAT(foo, bar) will result in fooBar
+    @example: JPT_CONCAT("foo", "bar") will result in "foo""Bar"
+    @example: JPT_CONCAT(foo, __LINE__) will result in foo<line_number> */
+#define JPT_CONCAT(a, b) JPT_CONCAT_IMPL(a, b)
+#define JPT_CONCAT_IMPL(a, b) a##b
 
 /** Converts a const char* to const wchar_t* by prefixing 'L' */
 #define JPT_TO_WSTRING(cStr) L##cStr

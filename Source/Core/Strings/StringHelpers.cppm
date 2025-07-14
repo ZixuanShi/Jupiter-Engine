@@ -359,10 +359,10 @@ export namespace jpt
     constexpr TChar* IntegerToCStr(TInt value, EIntBase base = EIntBase::Decimal)
     {
         // Prepare data
-        bool isNegative = false;    // Whether this value is negative or not
+        const bool isNegative = value < 0;    // Whether this value is negative or not
+        const TInt numBase = static_cast<TInt>(base);
         TChar* result = nullptr;    // Final result string to return
         size_t index = 0;            // The index I'm using for char array, will be used as length of this value and string as well
-        const TInt numBase = static_cast<TInt>(base);
 
         // Process 0
         if (value == 0)
@@ -375,9 +375,8 @@ export namespace jpt
         // Process negative if IntegerType can be signed
         if constexpr (std::is_signed_v<TInt>)
         {
-            if (value < 0)
+            if (isNegative)
             {
-                isNegative = true;
                 value = -value;
                 ++index;
             }
