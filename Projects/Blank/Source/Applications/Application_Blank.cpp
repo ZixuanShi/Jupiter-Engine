@@ -21,7 +21,6 @@ import jpt.WindowManager;
 import jpt.Renderer;
 
 import jpt.EventManager;
-import jpt.Event_Key;
 
 bool Application_Blank::PreInit()
 {
