@@ -88,11 +88,15 @@ export namespace jpt::File
     /** @return        String data of a text file */
     Optional<String> ReadTextFile(const Path& path, SerializerMode mode = SerializerMode::Read)
     {
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {
-            JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
+            JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.GetString<wchar_t>().ConstBuffer());
             return Optional<String>();
         }
 
@@ -107,11 +111,15 @@ export namespace jpt::File
     bool WriteTextFile(const Path& path, const char* data, size_t sizeInBytes, SerializerMode mode = SerializerMode::WriteAll)
     {
         EnsureParentDirExists(path);
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {
-            JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
+            JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.GetString<wchar_t>().ConstBuffer());
             return false;
         }
 
@@ -135,11 +143,15 @@ export namespace jpt::File
             return false;
         }
 
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {
-            JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
+            JPT_ERROR("Failed to open file for writing with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.GetString<wchar_t>().ConstBuffer());
             return false;
         }
 
@@ -159,11 +171,15 @@ export namespace jpt::File
     template<typename T>
     Optional<T> ReadBinaryFile(const Path& path, SerializerMode mode = SerializerMode::ReadBinary)
     {
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {
-            JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.ConstBuffer());
+            JPT_ERROR("Failed to open file for reading with SerializerMode::%u: %ls", static_cast<uint32>(mode), path.GetString<wchar_t>().ConstBuffer());
             return Optional<T>();
         }
 
@@ -174,7 +190,11 @@ export namespace jpt::File
 
     DynamicArray<char> ReadBinaryFileArray(const Path& path, SerializerMode mode = SerializerMode::ReadBinary)
     {
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {
@@ -195,7 +215,11 @@ export namespace jpt::File
     template<typename T>
     bool WriteBinaryFile(const Path& path, const T& obj, SerializerMode mode = SerializerMode::WriteAll)
     {
+#if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX        
         Serializer serializer(path.ConstBuffer(), mode);
+#else
+        Serializer serializer(path.GetString<wchar_t>().ConstBuffer(), mode);
+#endif
 
         if (!serializer.IsOpen()) [[unlikely]]
         {

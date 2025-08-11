@@ -223,8 +223,8 @@ export namespace jpt
 #else
         UINT compileFlags = 0;
 #endif
-        JPT_ASSERT(D3DCompileFromFile(shadersPath.ConstBuffer(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) == S_OK);
-        JPT_ASSERT(D3DCompileFromFile(shadersPath.ConstBuffer(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) == S_OK);
+        JPT_ASSERT(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) == S_OK);
+        JPT_ASSERT(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) == S_OK);
 
         // Define the vertex input layout.
         D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =

@@ -82,6 +82,7 @@ export namespace jpt
 
         return pBuffer;
     }
+
     char* ToChars(const wchar_t* pWStr, size_t count = npos)
     {
         if (!pWStr || count == 0)
@@ -159,21 +160,25 @@ export namespace jpt
     {
         return StrCmp(pString1, pString2, count, count);
     }
+
     template<StringLiteral TChar>
     constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2)
     {
         return StrCmp(pString1, pString2, FindCharsCount(pString1), FindCharsCount(pString2));
     }
+
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
     {
         return StrCmp(pString1, pString2, string1Count, string2Count) == npos;
     }
+
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t count)
     {
         return StrCmp(pString1, pString2, count) == npos;
     }
+
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2)
     {

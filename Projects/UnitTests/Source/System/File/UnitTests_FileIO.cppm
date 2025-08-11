@@ -67,7 +67,7 @@ bool UnitTests_FileIO_Exists()
     // Client
     jpt::File::WriteTextFile(jpt::File::Combine(Source::Client, L"Assets/好家伙/中文文本.txt"), "中文测试");
     JPT_ENSURE(Exists(jpt::File::Combine(Source::Client, L"Assets/好家伙/中文文本.txt")));
-    jpt::File::Delete(jpt::System::Paths::GetInstance().GetClientDir() + L"Assets/好家伙");
+    jpt::File::Delete(jpt::System::Paths::GetInstance().GetClientDir() + jpt::File::Path(L"Assets/好家伙"));
 
     return true;
 }

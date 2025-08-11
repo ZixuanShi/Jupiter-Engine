@@ -20,8 +20,7 @@ import jpt.File_Enums;
 
 import jpt.Graphics_Enums;
 
-static const jpt::File::Path path = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
-static const jpt::File::Path engineJsonPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
+static const jpt::File::Path outputJsonPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
 
 bool UnitTests_Json_Write()
 {
@@ -48,7 +47,7 @@ bool UnitTests_Json_Write()
 
     jsonRoot.Add("data_map", subMap);
 
-    jpt::WriteJsonFile(path, jsonRoot);
+    jpt::WriteJsonFile(outputJsonPath, jsonRoot);
 
     return true;
 }
@@ -56,7 +55,7 @@ bool UnitTests_Json_Write()
 bool UnitTests_Json_Read()
 {
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(outputJsonPath).Value();
 
     // Access the data with operator[]
     JPT_ENSURE(jsonRoot["source"] == jpt::String("Client"));
@@ -86,7 +85,7 @@ bool UnitTests_Json_Read()
 bool UnitTests_Json_Update()
 {
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(outputJsonPath).Value();
 
     // Update the data
     jsonRoot["source"] = jpt::String("Jupiter Client");
@@ -99,7 +98,7 @@ bool UnitTests_Json_Update()
     // Add data
     jsonRoot["new_data"] = jpt::String("New_Data");
 
-    jpt::WriteJsonFile(path, jsonRoot);
+    jpt::WriteJsonFile(outputJsonPath, jsonRoot);
 
     return true;
 }
@@ -107,7 +106,7 @@ bool UnitTests_Json_Update()
 bool UnitTests_Json_ReadUpdated()
 {
     // Reads a json file. All the data should have been read into memory with this call
-    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(path).Value();
+    jpt::JsonMap jsonRoot = jpt::ReadJsonFile(outputJsonPath).Value();
 
     JPT_ENSURE(jsonRoot["source"] == jpt::String("Jupiter Client"));
 
@@ -130,14 +129,14 @@ static bool Engine_Write()
     jpt::GraphicsAPI graphicsAPI = jpt::GraphicsAPI::Vulkan;
     engineJson.Add("graphics_API", ToString(graphicsAPI));
 
-    jpt::WriteJsonFile(engineJsonPath, engineJson);
+    jpt::WriteJsonFile(outputJsonPath, engineJson);
 
     return true;
 }
 
 static bool Engine_Read()
 {
-    jpt::JsonMap engineJson = jpt::ReadJsonFile(engineJsonPath).Value();
+    jpt::JsonMap engineJson = jpt::ReadJsonFile(outputJsonPath).Value();
 
     JPT_ENSURE(engineJson["engine_version"] == 0);
 
@@ -160,8 +159,7 @@ export bool RunUnitTests_Json()
     JPT_ENSURE(Engine_Write());
     JPT_ENSURE(Engine_Read());
 
-    jpt::File::Delete(path);
-    jpt::File::Delete(engineJsonPath);
+    jpt::File::Delete(outputJsonPath);
 
     return true;
 }

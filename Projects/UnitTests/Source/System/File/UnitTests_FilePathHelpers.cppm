@@ -24,9 +24,9 @@ bool UnitTests_FilePathHelpers_Getters()
 bool UnitTests_FilePathHelpers_GetSeparator()
 {
 #if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX
-    JPT_ENSURE(jpt::File::GetSeparator<jpt::File::Path>() == L"\\");
+    JPT_ENSURE(jpt::File::GetSeparator<jpt::WString>() == L"\\");
 #else 
-    JPT_ENSURE(jpt::File::GetSeparator<jpt::File::Path>() == L"/");
+    JPT_ENSURE(jpt::File::GetSeparator<jpt::WString>() == L"/");
 #endif
 
     return true;
@@ -37,7 +37,7 @@ bool UnitTests_FilePathHelpers_FixSeparators()
 #if IS_PLATFORM_WINDOWS || IS_PLATFORM_XBOX
     jpt::File::Path path = "C:/Users/<user_name>/Documents/UnitTests";
     jpt::File::FixSeparators(path);
-    JPT_ENSURE(path == "C:\\Users\\<user_name>\\Documents\\UnitTests");
+    JPT_ENSURE(path == jpt::File::Path("C:\\Users\\<user_name>\\Documents\\UnitTests"));
 #else 
     jpt::File::Path path = "C:\\Users\\<user_name>\\Documents\\UnitTests";
     jpt::File::FixSeparators(path);
@@ -50,8 +50,8 @@ bool UnitTests_FilePathHelpers_FixSeparators()
 export bool RunUnitTests_FilePathUtils()
 {
     JPT_ENSURE(UnitTests_FilePathHelpers_Getters());
-    JPT_ENSURE(UnitTests_FilePathHelpers_FixSeparators());
     JPT_ENSURE(UnitTests_FilePathHelpers_GetSeparator());
+    JPT_ENSURE(UnitTests_FilePathHelpers_FixSeparators());
 
     return true;
 }

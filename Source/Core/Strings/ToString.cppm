@@ -156,6 +156,7 @@ export namespace jpt
         wstr.MoveString(pBuffer, str.Count());
         return wstr;
     }
+
     WString CStrToWStr(const char* pCStr, size_t count = npos)
     {
         if (count == npos)
@@ -186,6 +187,7 @@ export namespace jpt
         str.MoveString(pBuffer, wstr.Count());
         return str;
     }
+
     String WCStrToStr(const wchar_t* pWStr, size_t count = npos)
     {
         if (count == npos)
