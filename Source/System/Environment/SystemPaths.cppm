@@ -62,8 +62,7 @@ export namespace jpt::System
         m_executablePath = buffer;
 #endif
 
-        const size_t lastSlash = m_executablePath.FindLastOf(GetSeparator<Path::TString>());
-        m_outputDir = m_executablePath.SubPath(0, lastSlash + 1);
+        m_outputDir = m_executablePath.GetParent();
 
         m_savedDir = m_outputDir + L"_Saved/";
 
