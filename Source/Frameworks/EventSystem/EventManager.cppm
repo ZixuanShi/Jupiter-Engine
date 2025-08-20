@@ -22,8 +22,6 @@ import jpt.HashMap;
 import jpt.Function;
 import jpt.Event;
 
-import jpt.TimeTypeDefs;
-
 export namespace jpt
 {
     class EventManager

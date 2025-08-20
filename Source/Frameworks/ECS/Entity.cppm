@@ -5,7 +5,6 @@ export module jpt.Entity;
 import jpt.String;
 import jpt.Constants;
 import jpt.TypeDefs;
-import jpt.TimeTypeDefs;
 
 export namespace jpt
 {
@@ -14,6 +13,7 @@ export namespace jpt
     {
     protected:
         String m_name = "Entity";        /**< The name of the entity */
+        Id m_id = kInvalidId;          /**< The unique id of the entity */
 
     public:
         virtual ~Entity() = default;

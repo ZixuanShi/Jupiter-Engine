@@ -3,36 +3,14 @@
 module;
 
 #include "Core/Memory/Memory.h"
-#include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
 
-export module jpt.SceneManager;
+module jpt.SceneManager;
 
 import jpt.SceneGraph;
 
-import jpt.TypeDefs;
-import jpt.TimeTypeDefs;
-
-export namespace jpt
+namespace jpt
 {
-    /** Manages the scenes in the game as a finite state machine */
-    class SceneManager
-    {
-        JPT_DECLARE_SINGLETON(SceneManager);
-
-    private:
-        SceneGraph* m_pCurrentScene = nullptr;    /**< The current scene. Can be nullptr if IS_EDITOR, the Jupiter Editor will still able to run non-scene related tools */
-        SceneGraph* m_pNextScene = nullptr;
-
-    public:
-        bool PreInit();
-        bool Init();
-        void Update(TimePrecision deltaSeconds);
-        void Terminate();
-
-        void SwitchScene(SceneGraph* pScene);
-    };
-
     bool SceneManager::PreInit()
     {
         return true;

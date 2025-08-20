@@ -15,7 +15,7 @@ import jpt.Window;
 
 import jpt.Renderer_Vulkan;
 import jpt.Camera;
-import jpt.Particle;
+import jpt.Particle2D;
 
 import jpt.Vulkan_Utils;
 import jpt.Vulkan_Constants;
