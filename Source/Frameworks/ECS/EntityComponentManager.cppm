@@ -5,7 +5,6 @@ export module jpt.EntityComponentManager;
 import jpt.EntityComponent;
 
 import jpt.TypeDefs;
-import jpt.TimeTypeDefs;
 
 export namespace jpt
 {

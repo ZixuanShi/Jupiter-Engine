@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Particle;
+export module jpt.Particle2D;
 
 import jpt.TypeDefs;
 import jpt.Concepts;
@@ -12,7 +12,7 @@ export namespace jpt
 {
     /** A 2D particle on screen */
     template<Floating T>
-    struct TParticle2
+    struct TParticle2D
     {
         Vector2<T> position;
         Vector2<T> velocity;
@@ -20,4 +20,4 @@ export namespace jpt
     };
 }
 
-export using Particle2 = jpt::TParticle2<Precision>;
+export using Particle2D = jpt::TParticle2D<Precision>;

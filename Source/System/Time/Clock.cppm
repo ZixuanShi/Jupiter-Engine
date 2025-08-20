@@ -2,15 +2,13 @@
 
 module;
 
-#include <time.h>
 #include <chrono>
 
 export module jpt.Clock;
 
-import jpt.TimeTypeDefs;
 import jpt.DateTime;
 import jpt.TypeDefs;
-import jpt.String;
+import jpt.TimeTypeDefs;
 
 export namespace jpt
 {
@@ -27,19 +25,4 @@ export namespace jpt
         static RawTimeType RawNow();
         static DateTime GetCurrentDateTime();
     };
-
-    Clock::Point Clock::Now()
-    {
-        return TClock::now();
-    }
-
-    RawTimeType Clock::RawNow()
-    {
-        return time(nullptr);
-    }
-
-    DateTime Clock::GetCurrentDateTime()
-    {
-        return DateTime(RawNow());
-    }
 }
