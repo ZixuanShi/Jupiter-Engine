@@ -18,20 +18,20 @@ export namespace jpt
         Rows m_rows;
 
     public:
-        constexpr CSVData() = default;
+        CSVData() = default;
 
-        constexpr void AddRow(const Row& row);
+        void AddRow(const Row& row);
 
         /** @param row        Already comma separated formatted string */
-        constexpr void AddRow(const String& row);
+        void AddRow(const String& row);
 
-        constexpr void Reserve(Index rowsCount);
+        void Reserve(Index rowsCount);
 
-        constexpr       Row& operator[](Index index);
-        constexpr const Row& operator[](Index index) const;
+              Row& operator[](Index index);
+        const Row& operator[](Index index) const;
 
-        constexpr Index RowsCount() const;
+        Index RowsCount() const;
     };
 
-    constexpr String ToString(const CSVData& csvData);
+    String ToString(const CSVData& csvData);
 }

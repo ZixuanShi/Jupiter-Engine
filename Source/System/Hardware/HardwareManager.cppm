@@ -6,6 +6,7 @@ module;
 
 export module jpt.HardwareManager;
 
+import jpt.TypeDefs;
 import jpt.CPU;
 
 export namespace jpt
@@ -23,4 +24,14 @@ export namespace jpt
     public:
         const CPU& GetCPU() const { return m_cpu; }
     };
+
+    uint32 GetLogicalProcessorsCount()
+    {
+        return HardwareManager::GetInstance().GetCPU().GetLogicalProcessorsCount();
+    }
+
+    uint32 GetCoresCount()
+    {
+        return HardwareManager::GetInstance().GetCPU().GetCoresCount();
+    }
 }

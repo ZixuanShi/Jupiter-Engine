@@ -6,37 +6,37 @@ module jpt.CSVData;
 
 namespace jpt
 {
-    constexpr void CSVData::AddRow(const Row& row)
+    void CSVData::AddRow(const Row& row)
     {
         m_rows.EmplaceBack(row);
     }
 
-    constexpr void CSVData::AddRow(const String& row)
+    void CSVData::AddRow(const String& row)
     {
         m_rows.EmplaceBack(row.Split(','));
     }
 
-    constexpr void CSVData::Reserve(Index rowsCount)
+    void CSVData::Reserve(Index rowsCount)
     {
         m_rows.Reserve(rowsCount);
     }
 
-    constexpr CSVData::Row& CSVData::operator[](Index index)
+    CSVData::Row& CSVData::operator[](Index index)
     {
         return m_rows[index];
     }
 
-    constexpr const CSVData::Row& CSVData::operator[](Index index) const
+    const CSVData::Row& CSVData::operator[](Index index) const
     {
         return m_rows[index];
     }
 
-    constexpr Index CSVData::RowsCount() const
+    Index CSVData::RowsCount() const
     {
         return m_rows.Count();
     }
 
-    constexpr String ToString(const CSVData& csvData)
+    String ToString(const CSVData& csvData)
     {
         String content;
 

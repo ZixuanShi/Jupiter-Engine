@@ -17,14 +17,4 @@ namespace jpt
 
         return true;
     }
-
-    uint32 GetLogicalProcessorsCount()
-    {
-        return HardwareManager::GetInstance().GetCPU().GetLogicalProcessorsCount();
-    }
-
-    uint32 GetCoresCount()
-    {
-        return HardwareManager::GetInstance().GetCPU().GetCoresCount();
-    }
 }
