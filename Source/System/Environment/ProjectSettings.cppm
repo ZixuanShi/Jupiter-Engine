@@ -4,18 +4,10 @@ module;
 
 #include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
-#include "Debugging/Logger.h"
 
 export module jpt.ProjectSettings;
 
-import jpt.Json;
 import jpt.JsonData;
-import jpt.FilePath;
-import jpt.FilePathUtils;
-
-import jpt.CommandLine;
-
-import jpt.Optional;
 import jpt.TypeTraits;
 
 export namespace jpt
@@ -54,42 +46,12 @@ export namespace jpt
 
         void Set(const String& key, const JsonData& value = JsonData());
         void Set(const String& key, const char* value);
+
         template<Enumerated TEnum>
         void Set(const String& key, TEnum value);
 
         void Erase(const String& key);
     };
-
-    bool ProjectSettings::Load()
-    {
-        const File::Path projectSettingsJson = File::FixDependencies("Config/ProjectSettings.json");
-        Optional<JsonMap> settings = ReadJsonFile(projectSettingsJson);
-        if (!settings)
-        {
-            return false;
-        }
-
-        m_settings = Move(settings.Value());
-
-        // Override settings with command line
-        for (const auto& [key, value] : CommandLine::GetInstance().GetArgs())
-        {
-            if (m_settings.Has(key))
-            {
-                JPT_LOG("Overriding ProjectSettings key: %s with value: %s", key.ConstBuffer(), ToString(value).ConstBuffer());
-
-                m_settings.Add(key, value);
-            }
-        }
-
-        return true;
-    }
-
-    void ProjectSettings::Save()
-    {
-        const File::Path projectSettingsJson = File::FixDependencies("Config/ProjectSettings.json");
-        WriteJsonFile(projectSettingsJson, m_settings);
-    }
 
     template<typename T>
     bool ProjectSettings::TryGet(const String& key, T& value) const
@@ -132,30 +94,9 @@ export namespace jpt
         return defaultValue;
     }
 
-    const String& ProjectSettings::Get(const String& key, const String& defaultStr) const
-    {
-        return Get<String>(key, defaultStr);
-    }
-
-    void ProjectSettings::Set(const String& key, const JsonData& value /* = JsonData()*/)
-    {
-        m_settings[key] = value;
-    }
-
-    void ProjectSettings::Set(const String& key, const char* value)
-    {
-        m_settings[key] = String(value);
-    }
-
     template<Enumerated TEnum>
     void ProjectSettings::Set(const String& key, TEnum value)
     {
         m_settings[key] = static_cast<int32>(value);
-    }
-
-    void ProjectSettings::Erase(const String& key)
-    {
-        JPT_ASSERT(m_settings.Has(key), "ProjectSettings doesn't exist \"%s\"", key.ConstBuffer());
-        m_settings.Erase(key);
     }
 }
