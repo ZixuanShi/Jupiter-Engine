@@ -11,7 +11,7 @@ export namespace jpt_private
     template<typename TData>
     struct RedBlackTreeNode
     {
-        enum class EColor : uint8
+        enum class Color : uint8
         {
             Red,
             Black
@@ -21,7 +21,7 @@ export namespace jpt_private
         RedBlackTreeNode* pParent = nullptr;
         RedBlackTreeNode* pLeftChild = nullptr;
         RedBlackTreeNode* pRightChild = nullptr;
-        EColor color = EColor::Red;
+        Color color = Color::Red;
 
         constexpr RedBlackTreeNode(const TData& _data) : data(_data) {}
         constexpr RedBlackTreeNode(TData&& _data) : data(jpt::Move(_data)) {}
@@ -40,7 +40,7 @@ export namespace jpt_private
         pParent = nullptr;
         pLeftChild = nullptr;
         pRightChild = nullptr;
-        color = EColor::Red;
+        color = Color::Red;
     }
 
     template<typename TData>
