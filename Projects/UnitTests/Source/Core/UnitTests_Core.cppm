@@ -24,6 +24,7 @@ import UnitTests_Queue;
 import UnitTests_Stack;
 import UnitTests_SortedMap;
 import UnitTests_SortedSet;
+import UnitTests_StaticHashMap;
 import UnitTests_HashSet;
 import UnitTests_HashMap;
 import UnitTests_LinkedList;
@@ -105,6 +106,7 @@ export bool RunUnitTests_Core()
     JPT_ENSURE(RunUnitTests_SortedMap());
     JPT_ENSURE(RunUnitTests_SortedSet());
     JPT_ENSURE(RunUnitTests_StaticArray());
+    JPT_ENSURE(RunUnitTests_StaticHashMap());
     JPT_ENSURE(RunUnitTests_DynamicArray());
     JPT_ENSURE(RunUnitTests_LinkedList());
     JPT_ENSURE(RunUnitTests_HashMap());
