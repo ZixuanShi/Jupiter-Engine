@@ -2,69 +2,69 @@
 
 import os
 
-g_projectName: str = ""
-g_projectDirectory: str = ""
+g_project_name: str = ""
+g_project_directory: str = ""
 
 # -----------------------------------------------------------------------------------------------------
 # Get basic information from user
 # -----------------------------------------------------------------------------------------------------
-def GetInfo():
-	global g_projectName
-	global g_projectDirectory
-	g_projectName = input("Enter Project Name: ")
-	g_projectDirectory = input("Enter Project Directory: ") + "/" + g_projectName + "/"
-	g_projectDirectory = g_projectDirectory.replace("\\", "/")
+def get_info():
+	global g_project_name
+	global g_project_directory
+	g_project_name = input("Enter Project Name: ")
+	g_project_directory = input("Enter Project Directory: ") + "/" + g_project_name + "/"
+	g_project_directory = g_project_directory.replace("\\", "/")
 
 
 # -----------------------------------------------------------------------------------------------------
 # Assets folder
 # -----------------------------------------------------------------------------------------------------
-def CreateAssets():
-	os.makedirs(g_projectDirectory + "/Assets")
+def create_assets():
+	os.makedirs(g_project_directory + "/Assets")
 
 # -----------------------------------------------------------------------------------------------------
 # Config folder
 # -----------------------------------------------------------------------------------------------------
-def CreateProjectSettingsJson():
-	projectSettings = """{
+def create_project_settings_json():
+	project_settings = """{
 }"""
 
-	projectSettings = projectSettings.replace("<ProjectName>", g_projectName)
-	with open(g_projectDirectory + "/Config/ProjectSettings.json", "w") as file:
-	    file.write(projectSettings)
+	project_settings = project_settings.replace("<ProjectName>", g_project_name)
+	with open(g_project_directory + "/Config/ProjectSettings.json", "w") as file:
+	    file.write(project_settings)
 
-def CreateConfig():
-	os.makedirs(g_projectDirectory + "/Config")
+def create_config():
+	os.makedirs(g_project_directory + "/Config")
 
-	CreateProjectSettingsJson()
+	create_project_settings_json()
 
 # -----------------------------------------------------------------------------------------------------
 # Scripts folder
 # -----------------------------------------------------------------------------------------------------
 # <ProjectDirectory>/Scripts/GenerateProjectFiles_platform.py
-def CreateGenerateProjectFilesScript():
-	generatorScript = """# Copyright Jupiter Technologies, Inc. All Rights Reserved.
+def create_generate_project_files_script():
+	generator_script = """# Copyright Jupiter Technologies, Inc. All Rights Reserved.
 import os
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     jupiterRoot = os.getenv("JUPITER_ENGINE_ROOT", "C:/Program Files/Jupiter Technologies/Jupiter-Engine")
-    command = "\\"" + jupiterRoot + "/Tools/Premake/Bin/Premake5.exe" + "\\" vs2022"
+    command = "\\"" + jupiterRoot + "/Tools/Premake/Bin/premake5.exe" + "\\" vs2022"
 
     os.system(command)
 """
 	
 	# 2022
-	with open(g_projectDirectory + "/Scripts/GenerateProjectFiles_vs2022.py", "w") as file:
-		file.write(generatorScript)
+	with open(g_project_directory + "/Scripts/generate_project_files_vs2022.py", "w") as file:
+		file.write(generator_script)
 
 	# Add any other versions here
 
-# <ProjectDirectory>/Scripts/Premake5.lua
-def CreatePremakeLua():
-	premakeLua = """-- Copyright Jupiter Technologies, Inc. All Rights Reserved.
-	function FindJupiterRootDir()
+# <ProjectDirectory>/Scripts/premake5.lua
+def create_premake_lua():
+	premake_lua = """-- Copyright Jupiter Technologies, Inc. All Rights Reserved.
+function FindJupiterRootDir()
     local envVar = os.getenv("JUPITER_ENGINE_ROOT")
     if envVar then
         print("Jupiter Engine directory found at: " .. envVar)
@@ -81,31 +81,31 @@ function GetProjectDir()
     return projectDir
 end
 
-include (FindJupiterRootDir() .. "/Scripts/Premake5.lua")
+include (FindJupiterRootDir() .. "/Scripts/premake5.lua")
 
 g_context.project_name = "<ProjectName>"
 g_context.project_dir  = GetProjectDir()
 
 GenerateProjectFiles()
 """
-	premakeLua = premakeLua.replace("<ProjectName>", g_projectName)
-	with open(g_projectDirectory + "/Scripts/Premake5.lua", "w") as file:
-	    file.write(premakeLua)
+	premake_lua = premake_lua.replace("<ProjectName>", g_project_name)
+	with open(g_project_directory + "/Scripts/premake5.lua", "w") as file:
+	    file.write(premake_lua)
 
-def CreateScripts():
-	os.makedirs(g_projectDirectory + "/Scripts")
+def create_scripts():
+	os.makedirs(g_project_directory + "/Scripts")
 
-	CreateGenerateProjectFilesScript()
-	CreatePremakeLua()
+	create_generate_project_files_script()
+	create_premake_lua()
 
 
 # -----------------------------------------------------------------------------------------------------
 # Source folder
 # -----------------------------------------------------------------------------------------------------
-def CreateApplicationIxx():
+def create_application_cppm():
 	content = """module;
 
-export module Aplications_<ProjectName>;
+export module Applications_<ProjectName>;
 
 import jpt.Application;
 
@@ -118,17 +118,17 @@ public:
 	virtual bool PreInit() override;
 };"""
 
-	content = content.replace("<ProjectName>", g_projectName)
-	with open(g_projectDirectory + "/Source/Applications/Application_" + g_projectName + ".ixx", "w") as file:
+	content = content.replace("<ProjectName>", g_project_name)
+	with open(g_project_directory + "/Source/Applications/Application_" + g_project_name + ".cppm", "w") as file:
 	    file.write(content)
 
-def CreateApplicationCpp():
+def create_application_cpp():
 	content = """module;
 
 #include "Core/Minimal/CoreHeaders.h"
 #include "System/Environment/SyncClient.h"
 
-module Aplications_<ProjectName>;
+module Applications_<ProjectName>;
 
 import jpt.CoreModules;
 
@@ -141,24 +141,24 @@ bool Application_<ProjectName>::PreInit()
 
 JPT_SYNC_CLIENT(<ProjectName>)"""
 
-	content = content.replace("<ProjectName>", g_projectName)
-	with open(g_projectDirectory + "/Source/Applications/Application_" + g_projectName + ".cpp", "w") as file:
+	content = content.replace("<ProjectName>", g_project_name)
+	with open(g_project_directory + "/Source/Applications/Application_" + g_project_name + ".cpp", "w") as file:
 	    file.write(content)
 
 
-def CreateSource():
-	os.makedirs(g_projectDirectory + "/Source/Applications")
+def create_source():
+	os.makedirs(g_project_directory + "/Source/Applications")
 
-	CreateApplicationIxx()
-	CreateApplicationCpp()
+	create_application_cppm()
+	create_application_cpp()
 
 
 if __name__ == "__main__":
-	GetInfo()
+	get_info()
 
-	CreateAssets()
-	CreateConfig()
-	CreateScripts()
-	CreateSource()
+	create_assets()
+	create_config()
+	create_scripts()
+	create_source()
 
-	print("Successfully Created Project: " + g_projectName + " at " + g_projectDirectory)
+	print("Successfully Created Project: " + g_project_name + " at " + g_project_directory)
