@@ -23,5 +23,5 @@ I design, plan, write, test everything from scratch by myself
     - Correct: C:\Program Files\Jupiter Technologies\Jupiter-Engine
     - Wrong:   C:\Program Files\Jupiter Technologies\Jupiter-Engine\
 - Compile shaders. Navigate to Jupiter-Engine/Scripts, run CompileShaders.py
-- Build Visual Studio Solution and Projects. Navigate to Jupiter-Engine/Projects/Blank/Scripts, run GenerateProjectFiles_vs2022.bat. You will have Blank/_ProjectFiles, it contains the VS solution file
+- Build Visual Studio Solution and Projects. Navigate to Jupiter-Engine/Projects/Blank/Scripts, run generate_project_files_vs2022.py. You will have Blank/_ProjectFiles, it contains the VS solution file
 - You can build Jupiter Engine and Blank project now, enjoy
