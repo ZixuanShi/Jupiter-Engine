@@ -31,7 +31,7 @@ export namespace jpt
         using Iterator      = jpt_private::IteratorRedBlackTree<TData>;
         using ConstIterator = jpt_private::ConstIteratorRedBlackTree<TData>;
 
-        using Color = typename Node::EColor;
+        using Color = typename Node::Color;
         using WalkerFunc = Function<void(const TData&)>;
 
     public:

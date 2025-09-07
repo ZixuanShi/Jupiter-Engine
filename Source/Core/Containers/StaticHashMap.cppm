@@ -81,6 +81,7 @@ export namespace jpt
         // Capacity
         constexpr size_t Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
+        constexpr bool IsFull() const noexcept;
 
         // Searching
         constexpr Iterator      Find(const TKey& key) noexcept;
@@ -250,7 +251,7 @@ export namespace jpt
         Iterator itr = Find(key);
         if (itr == end())
         {
-            return Emplace(key, {});
+            return Add(key, TValue());
         }
 
         return itr->second;
@@ -325,6 +326,12 @@ export namespace jpt
     constexpr bool StaticHashMap<TKey, TValue, kCapacity, TComparator>::IsEmpty() const noexcept
     {
         return m_count == 0;
+    }
+
+    template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
+    constexpr bool StaticHashMap<TKey, TValue, kCapacity, TComparator>::IsFull() const noexcept
+    {
+        return m_count == kCapacity;
     }
 
     template<typename TKey, typename TValue, Index kCapacity, typename TComparator>
