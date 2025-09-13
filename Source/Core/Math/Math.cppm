@@ -15,98 +15,6 @@ import jpt.Utilities;
 
 export namespace jpt
 {
-#pragma region Clamping
-    /** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Exclusive */
-    template<ComparableTrivial T>
-    constexpr T Clamp(T value, T min, T max)
-    {
-        if (value < min)
-        {
-            return min;
-        }
-        else if (value > max)
-        {
-            return max;
-        }
-        return value;
-    }
-    template<ComparableNonTrivial T>
-    constexpr T Clamp(const T& value, const T& min, const T& max)
-    {
-        if (value < min)
-        {
-            return min;
-        }
-        else if (value > max)
-        {
-            return max;
-        }
-        return value;
-    }
-
-    /** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
-        @param outValue:    Will be changed if less than min or bigger than max */
-    template<ComparableTrivial T>
-    constexpr void ClampTo(T& outValue, T min, T max)
-    {
-        if (outValue < min)
-        {
-            outValue = min;
-        }
-        else if (outValue > max)
-        {
-            outValue = max;
-        }
-    }
-    template<ComparableNonTrivial T>
-    constexpr void ClampTo(T& outValue, const T& min, const T& max)
-    {
-        if (outValue < min)
-        {
-            outValue = min;
-        }
-        else if (outValue > max)
-        {
-            outValue = max;
-        }
-    }
-
-#pragma endregion Clamping
-
-#pragma region Lerp
-    template<NonTrivial T, Floating TFloat = float32>
-    constexpr T Lerp(const T& start, const T& end, TFloat t)
-    {
-        return start + t * (end - start);
-    }
-    template<Trivial T, Floating TFloat = float32>
-    constexpr T Lerp(T start, T end, TFloat t)
-    {
-        return start + t * (end - start);
-    }
-    template<NonTrivial T, Floating TFloat = float32>
-    constexpr void Lerp(T& value, const T& start, const T& end, TFloat t)
-    {
-        value = start + t * (end - start);
-    }
-    template<Trivial T, Floating TFloat = float32>
-    constexpr void Lerp(T& value, T start, T end, TFloat t)
-    {
-        value = start + t * (end - start);
-    }
-
-    template<NonTrivial T>
-    constexpr T InvLerp(const T& start, const T& end, const T& value)
-    {
-        return (value - start) / (end - start);
-    }
-    template<Trivial T>
-    constexpr T InvLerp(T start, T end, T value)
-    {
-        return (value - start) / (end - start);
-    }
-#pragma endregion Lerp
-
 #pragma region MinMax
 
     template <Trivial TFirst, typename... TRest>
@@ -179,16 +87,19 @@ export namespace jpt
     {
         return radians * static_cast<TFloat>(180) / kPi<TFloat>;
     }
+
     template<typename T> requires (!Floating<T>)
         constexpr T ToDegrees(const T& obj)
     {
         return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat ToRadians(TFloat degrees)
     {
         return degrees * kPi<TFloat> / static_cast<TFloat>(180);
     }
+
     template<typename T> requires (!Floating<T>)
         constexpr T ToRadians(const T& obj)
     {
@@ -200,26 +111,31 @@ export namespace jpt
     {
         return std::sin(value);
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat Cos(TFloat value)
     {
         return std::cos(value);
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat Tan(TFloat value)
     {
         return std::tan(value);
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat Atan2(TFloat lhs, TFloat rhs)
     {
         return std::atan2(lhs, rhs);
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat Asin(TFloat value)
     {
         return std::asin(value);
     }
+
     template<Floating TFloat = float32>
     constexpr TFloat Acos(TFloat value)
     {
@@ -227,6 +143,111 @@ export namespace jpt
     }
 
 #pragma endregion Geometry
+
+#pragma region Clamping
+    /** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Inclusive */
+    template<ComparableTrivial T>
+    constexpr T Clamp(T value, T min, T max)
+    {
+        if (value < min)
+        {
+            return min;
+        }
+        else if (value > max)
+        {
+            return max;
+        }
+        return value;
+    }
+    template<ComparableNonTrivial T>
+    constexpr T Clamp(const T& value, const T& min, const T& max)
+    {
+        if (value < min)
+        {
+            return min;
+        }
+        else if (value > max)
+        {
+            return max;
+        }
+        return value;
+    }
+
+    /** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
+        @param outValue:    Will be changed if less than min or bigger than max */
+    template<ComparableTrivial T>
+    constexpr void ClampTo(T& outValue, T min, T max)
+    {
+        if (outValue < min)
+        {
+            outValue = min;
+        }
+        else if (outValue > max)
+        {
+            outValue = max;
+        }
+    }
+    template<ComparableNonTrivial T>
+    constexpr void ClampTo(T& outValue, const T& min, const T& max)
+    {
+        if (outValue < min)
+        {
+            outValue = min;
+        }
+        else if (outValue > max)
+        {
+            outValue = max;
+        }
+    }
+
+    template<Floating T = float32>
+    constexpr T Saturate(T value)
+    {
+        return Max(static_cast<T>(0), Min(value, static_cast<T>(1)));
+    }
+
+#pragma endregion Clamping
+
+#pragma region Interpolation
+    template<NonTrivial T, Floating TFloat = float32>
+    constexpr T Lerp(const T& start, const T& end, TFloat t)
+    {
+        return start + t * (end - start);
+    }
+
+    template<Trivial T, Floating TFloat = float32>
+    constexpr T Lerp(T start, T end, TFloat t)
+    {
+        return start + t * (end - start);
+    }
+
+    template<NonTrivial T>
+    constexpr T InvLerp(const T& start, const T& end, const T& value)
+    {
+        return (value - start) / (end - start);
+    }
+
+    template<Trivial T>
+    constexpr T InvLerp(T start, T end, T value)
+    {
+        return (value - start) / (end - start);
+    }
+
+    template<Floating T = float32>
+    constexpr T SmoothStep(T edge0, T edge1, T x)
+    {
+        x = Saturate((x - edge0) / (edge1 - edge0));
+        return x * x * (static_cast<T>(3) - static_cast<T>(2) * x);
+    }
+
+    template<Floating T = float32>
+    constexpr T SmootherStep(T edge0, T edge1, T x)
+    {
+        x = Saturate((x - edge0) / (edge1 - edge0));
+        return x * x * x * (x * (x * static_cast<T>(6) - static_cast<T>(15)) + static_cast<T>(10));
+    }
+
+#pragma endregion Interpolation
 
     /** @return The absolute value of input arithmetic parameter */
     template<Numeric TNum>
