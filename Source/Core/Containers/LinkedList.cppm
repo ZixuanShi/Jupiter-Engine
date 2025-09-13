@@ -33,7 +33,7 @@ export namespace jpt
     private:
         Node* m_pHead = nullptr;
         Node* m_pTail = nullptr;
-        size_t m_count = 0;
+        Index m_count = 0;
 
     public:
         constexpr LinkedList() = default;
@@ -87,7 +87,7 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
         // Modifier
@@ -375,7 +375,7 @@ export namespace jpt
     }
 
     template<typename TData, typename TAllocator>
-    constexpr size_t LinkedList<TData, TAllocator>::Count() const noexcept
+    constexpr Index LinkedList<TData, TAllocator>::Count() const noexcept
     {
         return m_count;
     }

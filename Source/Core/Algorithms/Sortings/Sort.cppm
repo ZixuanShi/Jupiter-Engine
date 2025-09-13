@@ -8,8 +8,9 @@ export module jpt.Sort;
 
 import jpt.Comparators;
 import jpt.Concepts;
-import jpt.Utilities;
 import jpt.IntroSort;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -29,14 +30,14 @@ export namespace jpt
 
     // Container/Plain Array with start/end index
     template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
-    constexpr void Sort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator = TComparator())
+    constexpr void Sort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator = TComparator())
     {
         IntroSort(container, beginIndex, endIndex, Move(comparator));
     }
 
     // Container/Plain Array from 0 to end index
     template<Indexable TContainer, typename TComparator = Comparator_Less<void>>
-    constexpr void Sort(TContainer& container, size_t size, TComparator&& comparator = TComparator())
+    constexpr void Sort(TContainer& container, Index size, TComparator&& comparator = TComparator())
     {
         IntroSort(container, 0, size - 1, Move(comparator));
     }

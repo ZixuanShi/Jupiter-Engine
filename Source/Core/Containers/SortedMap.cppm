@@ -15,6 +15,7 @@ import jpt.Concepts;
 import jpt.Constants;
 import jpt.Function;
 import jpt.Pair;
+import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Queue;
 
@@ -43,7 +44,7 @@ export namespace jpt
 
     private:
         Node* m_pRoot = nullptr;
-        size_t m_count = 0;
+        Index m_count = 0;
 
     public:
         constexpr SortedMap() = default;
@@ -73,7 +74,7 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
         // Searching
@@ -360,7 +361,7 @@ export namespace jpt
     }
 
     template<Comparable TKey, typename TValue, typename TComparator, typename TAllocator>
-    constexpr size_t SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const noexcept
+    constexpr Index SortedMap<TKey, TValue, TComparator, TAllocator>::Count() const noexcept
     {
         return m_count;
     }

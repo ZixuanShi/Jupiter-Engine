@@ -16,6 +16,7 @@ import jpt.DynamicArray;
 import jpt.Hash;
 import jpt.LinkedList;
 import jpt.Math;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 import jpt_private.IteratorHashTable_Chaining;
@@ -29,19 +30,19 @@ export namespace jpt
     public:
         using TData         = _TData;
         using TComparator   = _Comparator;
-        using TBucket       = LinkedList<TData>;
-        using TBuckets      = DynamicArray<TBucket>;
+        using Bucket        = LinkedList<TData>;
+        using Buckets       = DynamicArray<Bucket>;
         using Iterator      = jpt_private::IteratorHashTable_Chaining<TData>;
         using ConstIterator = jpt_private::ConstIteratorHashTable_Chaining<TData>;
 
     private:
         static constexpr TComparator kComparator = TComparator();
         static constexpr float kLoadFactor = 0.75f;
-        static constexpr size_t kGrowMultiplier = 2;
+        static constexpr Index kGrowMultiplier = 2;
 
     private:
-        TBuckets m_buckets;
-        size_t   m_count = 0;
+        Buckets m_buckets;
+        Index   m_count = 0;
 
     public:
         constexpr HashSet() noexcept = default;
@@ -70,11 +71,11 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
         // Modifiers
-        constexpr void Reserve(size_t capacity);
+        constexpr void Reserve(Index capacity);
 
         // Searching
         constexpr Iterator      Find(const TData& key);
@@ -82,12 +83,12 @@ export namespace jpt
         constexpr bool Has(const TData& key) const;
 
     protected:
-        constexpr size_t GetBucketIndex(const TData& key) const;
-        constexpr       TBucket& GetBucket(const TData& key);
-        constexpr const TBucket& GetBucket(const TData& key) const;
+        constexpr Index GetBucketIndex(const TData& key) const;
+        constexpr       Bucket& GetBucket(const TData& key);
+        constexpr const Bucket& GetBucket(const TData& key) const;
 
         template<Iterable TContainer>
-        constexpr void CopyData(const TContainer& container, size_t size);
+        constexpr void CopyData(const TContainer& container, Index size);
 
         constexpr void MoveSet(HashSet&& other);
     };
@@ -149,7 +150,7 @@ export namespace jpt
             Reserve(m_count * kGrowMultiplier);
         }
 
-        TBucket& bucket = GetBucket(data);
+        Bucket& bucket = GetBucket(data);
 
         // Check if the key already exists. If it does, return
         for (TData& element : bucket)
@@ -172,7 +173,7 @@ export namespace jpt
         {
             Iterator nextItr = itr + 1;
 
-            TBucket& bucket = m_buckets[itr.GetIndex()];
+            Bucket& bucket = m_buckets[itr.GetIndex()];
             bucket.Erase(itr.GetIterator());
             --m_count;
 
@@ -244,7 +245,7 @@ export namespace jpt
     }
 
     template<typename TValue, typename TComparator>
-    constexpr size_t HashSet<TValue, TComparator>::Count() const noexcept
+    constexpr Index HashSet<TValue, TComparator>::Count() const noexcept
     {
         return m_count;
     }
@@ -256,19 +257,19 @@ export namespace jpt
     }
 
     template<typename TValue, typename TComparator>
-    constexpr void HashSet<TValue, TComparator>::Reserve(size_t capacity)
+    constexpr void HashSet<TValue, TComparator>::Reserve(Index capacity)
     {
-        static constexpr size_t kMinCapacity = 8;
+        static constexpr Index kMinCapacity = 8;
 
-        TBuckets oldDataCopy = m_buckets;
+        Buckets oldDataCopy = m_buckets;
         m_buckets.Clear();
         m_buckets.Resize(Max(kMinCapacity, capacity));
 
-        for (const TBucket& bucket : oldDataCopy)
+        for (const Bucket& bucket : oldDataCopy)
         {
             for (const TData& element : bucket)
             {
-                const size_t index = GetBucketIndex(element);
+                const Index index = GetBucketIndex(element);
                 m_buckets[index].EmplaceBack(element);
             }
         }
@@ -282,10 +283,10 @@ export namespace jpt
             return end();
         }
 
-        const size_t index = GetBucketIndex(key);
-        TBucket& bucket = m_buckets[index];
+        const Index index = GetBucketIndex(key);
+        Bucket& bucket = m_buckets[index];
 
-        for (typename TBucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
+        for (typename Bucket::Iterator itr = bucket.begin(); itr != bucket.end(); ++itr)
         {
             if (kComparator(*itr, key))
             {
@@ -304,10 +305,10 @@ export namespace jpt
             return cend();
         }
 
-        const size_t index = GetBucketIndex(key);
-        const TBucket& bucket = m_buckets[index];
+        const Index index = GetBucketIndex(key);
+        const Bucket& bucket = m_buckets[index];
 
-        for (typename TBucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
+        for (typename Bucket::ConstIterator itr = bucket.cbegin(); itr != bucket.cend(); ++itr)
         {
             if (kComparator(*itr, key))
             {
@@ -325,26 +326,26 @@ export namespace jpt
     }
 
     template<typename TValue, typename TComparator>
-    constexpr size_t HashSet<TValue, TComparator>::GetBucketIndex(const TData& key) const
+    constexpr Index HashSet<TValue, TComparator>::GetBucketIndex(const TData& key) const
     {
         return Hash(key) % m_buckets.Count();
     }
 
     template<typename TValue, typename TComparator>
-    constexpr HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TData& key)
+    constexpr HashSet<TValue, TComparator>::Bucket& HashSet<TValue, TComparator>::GetBucket(const TData& key)
     {
         return m_buckets[GetBucketIndex(key)];
     }
 
     template<typename TValue, typename TComparator>
-    constexpr const HashSet<TValue, TComparator>::TBucket& HashSet<TValue, TComparator>::GetBucket(const TData& key) const
+    constexpr const HashSet<TValue, TComparator>::Bucket& HashSet<TValue, TComparator>::GetBucket(const TData& key) const
     {
         return m_buckets[GetBucketIndex(key)];
     }
 
     template<typename TValue, typename TComparator>
     template<Iterable TContainer>
-    constexpr void HashSet<TValue, TComparator>::CopyData(const TContainer& container, size_t size)
+    constexpr void HashSet<TValue, TComparator>::CopyData(const TContainer& container, Index size)
     {
         Reserve(m_count + size);
 

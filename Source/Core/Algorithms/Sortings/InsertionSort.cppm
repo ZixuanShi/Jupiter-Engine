@@ -8,9 +8,9 @@ import jpt.TypeDefs;
 export namespace jpt
 {
     template<Indexable TContainer, typename TComparator>
-    constexpr void InsertionSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr void InsertionSort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
-        for (size_t i = beginIndex + 1; i <= endIndex; ++i)
+        for (Index i = beginIndex + 1; i <= endIndex; ++i)
         {
             const auto key = container[i];
             int64 j = static_cast<int64>(i);

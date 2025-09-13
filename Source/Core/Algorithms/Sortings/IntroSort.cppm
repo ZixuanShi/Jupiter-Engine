@@ -12,16 +12,17 @@ import jpt.TypeDefs;
 import jpt.InsertionSort;
 import jpt.QuickSort;
 import jpt.HeapSort;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 namespace jpt
 {
     template<Indexable TContainer, typename TComparator>
-    constexpr void IntroSortDepth(TContainer& container, size_t beginIndex, size_t endIndex, size_t depth, TComparator&& comparator)
+    constexpr void IntroSortDepth(TContainer& container, Index beginIndex, Index endIndex, Index depth, TComparator&& comparator)
     {
-        static constexpr size_t kInsertionSortThreshold = 16;
+        static constexpr Index kInsertionSortThreshold = 16;
 
-        if (beginIndex >= endIndex || endIndex == Constants<size_t>::kMax)
+        if (beginIndex >= endIndex || endIndex == Constants<Index>::kMax)
         {
             return;
         }
@@ -39,16 +40,16 @@ namespace jpt
         // Otherwise, use quick sort
         else
         {
-            const size_t pivot = Partition(container, beginIndex, endIndex, Move(comparator));
+            const Index pivot = Partition(container, beginIndex, endIndex, Move(comparator));
             IntroSortDepth(container, beginIndex, pivot - 1, depth - 1, Move(comparator));
             IntroSortDepth(container, pivot + 1, endIndex, depth - 1, Move(comparator));
         }
     }
 
     export template<Indexable TContainer, typename TComparator>
-    constexpr void IntroSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr void IntroSort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
-        const size_t depth = static_cast<size_t>(std::log2(endIndex - beginIndex + 1) * 2);
+        const Index depth = static_cast<Index>(std::log2(endIndex - beginIndex + 1) * 2);
         IntroSortDepth(container, beginIndex, endIndex, depth, Move(comparator));
     }
 }

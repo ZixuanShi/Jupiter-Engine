@@ -3,6 +3,7 @@
 export module jpt.Stack;
 
 import jpt.DynamicArray;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 export namespace jpt
@@ -42,11 +43,11 @@ export namespace jpt
 
         // Capacity
         constexpr bool IsEmpty() const noexcept;
-        constexpr size_t Count() const noexcept;
-        constexpr size_t Capacity() const noexcept;
+        constexpr Index Count() const noexcept;
+        constexpr Index Capacity() const noexcept;
 
         // Modifiers
-        constexpr void Reserve(size_t capacity);
+        constexpr void Reserve(Index capacity);
     };
 
     template<typename TData>
@@ -135,19 +136,19 @@ export namespace jpt
     }
 
     template<typename TData>
-    constexpr size_t Stack<TData>::Count() const noexcept
+    constexpr Index Stack<TData>::Count() const noexcept
     {
         return m_container.Count();
     }
 
     template<typename TData>
-    constexpr size_t Stack<TData>::Capacity() const noexcept
+    constexpr Index Stack<TData>::Capacity() const noexcept
     {
         return m_container.Capacity();
     }
 
     template<typename TData>
-    constexpr void Stack<TData>::Reserve(size_t capacity)
+    constexpr void Stack<TData>::Reserve(Index capacity)
     {
         m_container.Reserve(capacity);
     }

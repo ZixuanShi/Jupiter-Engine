@@ -3,6 +3,7 @@
 export module jpt.Queue;
 
 import jpt.LinkedList;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 export namespace jpt
@@ -44,7 +45,7 @@ export namespace jpt
 
         // Capacity
         constexpr bool IsEmpty() const noexcept;
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
     };
 
     template<typename TData>
@@ -145,7 +146,7 @@ export namespace jpt
     }
 
     template<typename TData>
-    constexpr size_t Queue<TData>::Count() const noexcept
+    constexpr Index Queue<TData>::Count() const noexcept
     {
         return m_container.Count();
     }

@@ -8,10 +8,10 @@ export module jpt.KDTree3;
 
 import jpt.Allocator;
 import jpt.Concepts;
-import jpt.Sort;
 import jpt.DynamicArray;
-import jpt.Vector3;
+import jpt.Sort;
 import jpt.TypeDefs;
+import jpt.Vector3;
 
 import jpt_private.BinaryTreeIterator;
 
@@ -27,7 +27,7 @@ namespace jpt
 
     private:
         Node* m_pRoot = nullptr;
-        size_t m_count = 0;
+        Index m_count = 0;
 
     public:
         constexpr KDTree3() = default;
@@ -41,7 +41,7 @@ namespace jpt
         constexpr void Clear();
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
         // Building
@@ -53,10 +53,10 @@ namespace jpt
 
     private:
         // Building
-        constexpr Node* InternalBuild(const DynamicArray<Vector3<T>>& points, size_t begin, size_t end, size_t depth);
+        constexpr Node* InternalBuild(const DynamicArray<Vector3<T>>& points, Index begin, Index end, Index depth);
 
         // Searching
-        void RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, size_t depth, DynamicArray<Vector3<T>>& result) const;
+        void RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, Index depth, DynamicArray<Vector3<T>>& result) const;
 
         // Traversal
         template<typename TFunc>
@@ -79,11 +79,11 @@ namespace jpt
     constexpr void KDTree3<T>::Add(const Vector3<T>& point)
     {
         Node* pNode = m_pRoot;
-        size_t depth = 0;
+        Index depth = 0;
 
         while (true)
         {
-            size_t axis = depth % 3;
+            Index axis = depth % 3;
 
             if (point[axis] < pNode->data[axis])
             {
@@ -123,12 +123,12 @@ namespace jpt
     {
         Node* pNode = m_pRoot;
         Node* pParent = nullptr;
-        size_t depth = 0;
+        Index depth = 0;
 
         // Find the node to erase
         while (pNode != nullptr)
         {
-            size_t axis = depth % 3;
+            Index axis = depth % 3;
 
             if (point[axis] == pNode->data[axis])
             {
@@ -253,7 +253,7 @@ namespace jpt
     }
 
     template<Floating T>
-    constexpr size_t KDTree3<T>::Count() const noexcept
+    constexpr Index KDTree3<T>::Count() const noexcept
     {
         return m_count;
     }
@@ -276,11 +276,11 @@ namespace jpt
     constexpr bool KDTree3<T>::Has(const Vector3<T>& point) const
     {
         Node* pNode = m_pRoot;
-        size_t depth = 0;
+        Index depth = 0;
 
         while (pNode != nullptr)
         {
-            size_t axis = depth % 3;
+            Index axis = depth % 3;
 
             if (point[axis] == pNode->data[axis])
             {
@@ -311,15 +311,15 @@ namespace jpt
     }
 
     template<Floating T>
-    constexpr typename KDTree3<T>::Node* KDTree3<T>::InternalBuild(const DynamicArray<Vector3<T>>& points, size_t begin, size_t end, size_t depth)
+    constexpr typename KDTree3<T>::Node* KDTree3<T>::InternalBuild(const DynamicArray<Vector3<T>>& points, Index begin, Index end, Index depth)
     {
         if (begin >= end)
         {
             return nullptr;
         }
 
-        size_t axis = depth % 3;
-        size_t mid = begin + (end - begin) / 2;
+        Index axis = depth % 3;
+        Index mid = begin + (end - begin) / 2;
 
         // Sort the points based on the axis so that we can find the median
         DynamicArray<Vector3<T>> sortedpoints = points;
@@ -338,15 +338,15 @@ namespace jpt
     }
 
     template<Floating T>
-    void KDTree3<T>::RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, size_t depth, DynamicArray<Vector3<T>>& result) const
+    void KDTree3<T>::RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, Index depth, DynamicArray<Vector3<T>>& result) const
     {
         if (pNode == nullptr)
         {
             return;
         }
 
-        size_t axis = depth % 3;
-        size_t count = 0;
+        Index axis = depth % 3;
+        Index count = 0;
 
         // Check if the current node is closer than threshold, if so add it to the result
         if (Vec3f::Distance(pNode->data, point) < threshold)

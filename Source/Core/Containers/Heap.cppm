@@ -11,8 +11,9 @@ import jpt.Comparators;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.DynamicArray;
-import jpt.Utilities;
 import jpt.Math;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 export namespace jpt
 {
@@ -52,13 +53,13 @@ export namespace jpt
         constexpr void Clear();
 
         // Modifiers
-        constexpr void Reserve(size_t capacity);
+        constexpr void Reserve(Index capacity);
 
         // Accessing
         constexpr const TData& Top() const noexcept;
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
     private:
@@ -67,9 +68,9 @@ export namespace jpt
         constexpr void FixPop();
 
         // Helper functions for calculating the parent, left, and right index
-        constexpr size_t Parent(size_t index) const;
-        constexpr size_t Left(size_t index)   const;
-        constexpr size_t Right(size_t index)  const;
+        constexpr Index Parent(Index index) const;
+        constexpr Index Left(Index index)   const;
+        constexpr Index Right(Index index)  const;
     };
 
     template<typename TData, typename TComparator, typename TAllocator>
@@ -131,7 +132,7 @@ export namespace jpt
     }
 
     template<typename _TData, typename _TComparator, typename _TAllocator>
-    constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(size_t capacity)
+    constexpr void Heap<_TData, _TComparator, _TAllocator>::Reserve(Index capacity)
     {
         m_buffer.Reserve(capacity + 1);
     }
@@ -144,7 +145,7 @@ export namespace jpt
     }
 
     template<typename TData, typename TComparator, typename TAllocator>
-    constexpr size_t Heap<TData, TComparator, TAllocator>::Count() const noexcept
+    constexpr Index Heap<TData, TComparator, TAllocator>::Count() const noexcept
     {
         return m_buffer.Count() - 1;
     }
@@ -159,8 +160,8 @@ export namespace jpt
     constexpr void Heap<_TData, _TComparator, _TAllocator>::FixAdd()
     {
         // Last added element will be at index Count()
-        size_t currentIndex = Count();
-        size_t parentIndex  = Parent(currentIndex);
+        Index currentIndex = Count();
+        Index parentIndex  = Parent(currentIndex);
 
         // Stop at the root
         while (currentIndex > 1)
@@ -184,15 +185,15 @@ export namespace jpt
     constexpr void Heap<_TData, _TComparator, _TAllocator>::FixPop()
     {
         // Last element is now at the root
-        size_t currentIndex = 1;
-        size_t leftIndex    = Left(currentIndex);
-        size_t rightIndex   = Right(currentIndex);
+        Index currentIndex = 1;
+        Index leftIndex    = Left(currentIndex);
+        Index rightIndex   = Right(currentIndex);
 
         // Stops when there is no child to compare
         while (leftIndex <= Count())
         {
             // Find a better target child to swap
-            size_t targetIndex = leftIndex;
+            Index targetIndex = leftIndex;
             if (rightIndex <= Count() && m_comparator(m_buffer[rightIndex], m_buffer[leftIndex]))
             {
                 targetIndex = rightIndex;
@@ -214,7 +215,7 @@ export namespace jpt
     }
 
     template<typename _TData, typename _TComparator, typename _TAllocator>
-    constexpr size_t Heap<_TData, _TComparator, _TAllocator>::Parent(size_t index) const
+    constexpr Index Heap<_TData, _TComparator, _TAllocator>::Parent(Index index) const
     {
         // if index is 1, then it is the root
         if (index == 1)
@@ -224,13 +225,13 @@ export namespace jpt
     }
 
     template<typename _TData, typename _TComparator, typename _TAllocator>
-    constexpr size_t Heap<_TData, _TComparator, _TAllocator>::Left(size_t index) const
+    constexpr Index Heap<_TData, _TComparator, _TAllocator>::Left(Index index) const
     {
         return 2 * index;
     }
 
     template<typename _TData, typename _TComparator, typename _TAllocator>
-    constexpr size_t Heap<_TData, _TComparator, _TAllocator>::Right(size_t index) const
+    constexpr Index Heap<_TData, _TComparator, _TAllocator>::Right(Index index) const
     {
         return 2 * index + 1;
     }
