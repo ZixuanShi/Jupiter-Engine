@@ -6,10 +6,10 @@ module;
 
 export module jpt.LinearFind;
 
-import jpt.TypeDefs;
-import jpt.Utilities;
 import jpt.Concepts;
 import jpt.Constants;
+import jpt.TypeDefs;
+import jpt.Utilities;
 
 export namespace jpt
 {

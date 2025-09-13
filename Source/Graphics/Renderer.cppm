@@ -49,11 +49,10 @@ export namespace jpt
 
     public:
         GraphicsSettings& GetSettings();
-        const GraphicsSettings& GetSettings() const;
-
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
-        
         Camera& GetCamera() { return m_camera; }
+        
+        const GraphicsSettings& GetSettings() const;
         const Camera& GetCamera() const { return m_camera; }
     };
 

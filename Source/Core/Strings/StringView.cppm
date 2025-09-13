@@ -29,12 +29,12 @@ export namespace jpt
 
     private:
         const TChar* m_pBuffer = nullptr;
-        size_t m_count = 0;
+        Index m_count = 0;
 
     public:
         // Constructors
         constexpr StringView_Base() = default;
-        constexpr StringView_Base(const TChar* CString, size_t size);
+        constexpr StringView_Base(const TChar* CString, Index count);
         constexpr StringView_Base(const TChar* CString);
         constexpr StringView_Base(const StringView_Base& other);
         constexpr StringView_Base(const String_Base<TChar>& string);
@@ -45,11 +45,11 @@ export namespace jpt
         StringView_Base& operator=(const String_Base<TChar>& string);
 
         // Element Access
-        constexpr const TChar* ConstBuffer()    const { return m_pBuffer;             } 
-        constexpr const TChar& At(size_t index) const { return m_pBuffer[index];      }
-        constexpr const TChar& Front()          const { return m_pBuffer[0];          }
-        constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1]; }
-        constexpr const TChar& operator[](size_t index) const { return m_pBuffer[index]; }
+        constexpr const TChar* ConstBuffer()    const { return m_pBuffer;               } 
+        constexpr const TChar& At(Index index)  const { return m_pBuffer[index];        }
+        constexpr const TChar& Front()          const { return m_pBuffer[0];            }
+        constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1];  }
+        constexpr const TChar& operator[](Index index) const { return m_pBuffer[index]; }
 
         // Iterators
         constexpr Iterator begin() noexcept;
@@ -60,26 +60,26 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr size_t Count() const { return m_count; }
+        constexpr Index Count() const { return m_count; }
         constexpr bool IsEmpty() const { return m_count == 0; }
 
         /** @return        A sub string within the given range at index and length */
-        constexpr StringView_Base SubStr(size_t index, size_t count = npos) const;
+        constexpr StringView_Base SubStr(Index index, Index count = npos) const;
 
         /** @return     true if the string view starts with the given prefix */
-        constexpr bool StartsWith(const TChar* CString, size_t count) const;
+        constexpr bool StartsWith(const TChar* CString, Index count) const;
         constexpr bool StartsWith(const TChar* CString) const { return StartsWith(CString, FindCharsCount(CString)); }
 
         /** @return     true if the string view ends with the given suffix */
-        constexpr bool EndsWith(const TChar* CString, size_t count) const;
+        constexpr bool EndsWith(const TChar* CString, Index count) const;
         constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, FindCharsCount(CString)); }
 
-        constexpr size_t Find(      TChar  charToFind,    size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-        constexpr size_t Find(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const;
-        constexpr size_t FindLastOf(      TChar charToFind,     size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-        constexpr size_t FindLastOf(const TChar* pStringToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1)  const;
-        constexpr bool   Has(      TChar  charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
-        constexpr bool   Has(const TChar* charToFind, size_t startIndex = 0, size_t endIndex = npos, size_t count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+        constexpr Index Find(      TChar  charToFind,    Index startIndex = 0, Index endIndex = npos, Index count = 1) const;
+        constexpr Index Find(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const;
+        constexpr Index FindLastOf(      TChar charToFind,     Index startIndex = 0, Index endIndex = npos, Index count = 1)  const;
+        constexpr Index FindLastOf(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1)  const;
+        constexpr bool   Has(      TChar  charToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+        constexpr bool   Has(const TChar* charToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -112,9 +112,9 @@ export namespace jpt
     // Member Functions Definitions
     // ------------------------------------------------------------------------------------------------
     template<StringLiteral TChar>
-    constexpr StringView_Base<TChar>::StringView_Base(const TChar* CString, size_t size)
+    constexpr StringView_Base<TChar>::StringView_Base(const TChar* CString, Index count)
         : m_pBuffer(CString)
-        , m_count(size)
+        , m_count(count)
     {
     }
 
@@ -211,7 +211,7 @@ export namespace jpt
     }
 
     template<StringLiteral TChar>
-    constexpr StringView_Base<TChar> StringView_Base<TChar>::SubStr(size_t index, size_t count) const
+    constexpr StringView_Base<TChar> StringView_Base<TChar>::SubStr(Index index, Index count) const
     {
         if (count == npos)
         {
@@ -224,23 +224,23 @@ export namespace jpt
     }
 
     template<StringLiteral _TChar>
-    constexpr bool StringView_Base<_TChar>::StartsWith(const TChar* CString, size_t count) const
+    constexpr bool StringView_Base<_TChar>::StartsWith(const TChar* CString, Index count) const
     {
         return AreStringsSame(m_pBuffer, CString, count);
     }
 
     template<StringLiteral _TChar>
-    constexpr bool StringView_Base<_TChar>::EndsWith(const TChar* CString, size_t count) const
+    constexpr bool StringView_Base<_TChar>::EndsWith(const TChar* CString, Index count) const
     {
         return AreStringsSame(m_pBuffer + m_count - count, CString, count);
     }
 
     template<StringLiteral _TChar>
-    constexpr size_t StringView_Base<_TChar>::Find(TChar charToFind, size_t startIndex /* = 0*/, size_t endIndex /* = npos*/, size_t count/* = 1*/) const
+    constexpr Index StringView_Base<_TChar>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = npos*/, Index count/* = 1*/) const
     {
-        ClampTo(endIndex, size_t(0), m_count);
+        ClampTo(endIndex, Index(0), m_count);
 
-        for (size_t i = startIndex; i < endIndex; ++i)
+        for (Index i = startIndex; i < endIndex; ++i)
         {
             if ((i + 1) > endIndex)
             {
@@ -261,13 +261,13 @@ export namespace jpt
     }
 
     template<StringLiteral _TChar>
-    constexpr size_t StringView_Base<_TChar>::Find(const TChar* pStringToFind, size_t startIndex /*= 0*/, size_t endIndex/*= npos*/, size_t count/* = 1*/) const
+    constexpr Index StringView_Base<_TChar>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/, Index count/* = 1*/) const
     {
-        const size_t StringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, static_cast<size_t>(0), m_count);
+        const Index StringToFindSize = FindCharsCount(pStringToFind);
+        ClampTo(endIndex, static_cast<Index>(0), m_count);
 
         StringView_Base current;
-        for (size_t i = startIndex; i < endIndex; ++i)
+        for (Index i = startIndex; i < endIndex; ++i)
         {
             if ((i + StringToFindSize) > endIndex)
             {
@@ -289,9 +289,9 @@ export namespace jpt
     }
 
     template<StringLiteral _TChar>
-    constexpr size_t StringView_Base<_TChar>::FindLastOf(TChar charToFind, size_t startIndex, size_t endIndex, size_t count) const
+    constexpr Index StringView_Base<_TChar>::FindLastOf(TChar charToFind, Index startIndex, Index endIndex, Index count) const
     {
-        ClampTo(endIndex, size_t(0), m_count);
+        ClampTo(endIndex, Index(0), m_count);
 
         for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
         {
@@ -314,10 +314,10 @@ export namespace jpt
     }
 
     template<StringLiteral _TChar>
-    constexpr size_t StringView_Base<_TChar>::FindLastOf(const TChar* pStringToFind, size_t startIndex, size_t endIndex, size_t count) const
+    constexpr Index StringView_Base<_TChar>::FindLastOf(const TChar* pStringToFind, Index startIndex, Index endIndex, Index count) const
     {
-        const size_t StringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, size_t(0), m_count);
+        const Index StringToFindSize = FindCharsCount(pStringToFind);
+        ClampTo(endIndex, Index(0), m_count);
 
         String_Base<TChar> current;
         for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)

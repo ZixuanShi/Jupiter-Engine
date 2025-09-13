@@ -10,7 +10,7 @@ import jpt.Utilities;
 export namespace jpt
 {
     template<Indexable TContainer, typename TComparator>
-    constexpr size_t GetPivot(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr Index GetPivot(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
         // Mid of three pivot selection
 
@@ -53,16 +53,16 @@ export namespace jpt
     }
 
     template<Indexable TContainer, typename TComparator>
-    constexpr size_t Partition(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr Index Partition(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
-        size_t pivotIndex = GetPivot(container, beginIndex, endIndex, comparator);
+        Index pivotIndex = GetPivot(container, beginIndex, endIndex, comparator);
         Swap(container[pivotIndex], container[endIndex]);
 
         const auto pivot = container[endIndex];
-        size_t i = beginIndex - 1;    // i is the last element's index of region 1, which is less than the pivot
+        Index i = beginIndex - 1;    // i is the last element's index of region 1, which is less than the pivot
 
         // j is the current processing element's index
-        for (size_t j = beginIndex; j < endIndex; ++j)
+        for (Index j = beginIndex; j < endIndex; ++j)
         {
             // if current element should be placed to region one
             // Swap last element in region 1 with current processing element.
@@ -82,16 +82,16 @@ export namespace jpt
     }
 
     template<Indexable TContainer, typename TComparator>
-    constexpr void QuickSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr void QuickSort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
         // Bounds check
-        if (beginIndex >= endIndex || endIndex == Constants<size_t>::kMax)
+        if (beginIndex >= endIndex || endIndex == Constants<Index>::kMax)
         {
             return;
         }
 
         // Recursively sort the left and right partitions
-        const size_t pivot = Partition(container, beginIndex, endIndex, Move(comparator));
+        const Index pivot = Partition(container, beginIndex, endIndex, Move(comparator));
         QuickSort(container, beginIndex, pivot - 1, Move(comparator));
         QuickSort(container, pivot + 1, endIndex, Move(comparator));
     }

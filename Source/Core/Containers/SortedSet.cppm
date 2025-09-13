@@ -13,6 +13,7 @@ import jpt.Allocator;
 import jpt.Comparators;
 import jpt.Concepts;
 import jpt.Function;
+import jpt.TypeDefs;
 import jpt.Utilities;
 
 import jpt_private.IteratorRedBlackTree;
@@ -39,7 +40,7 @@ export namespace jpt
 
     private:
         Node* m_pRoot = nullptr;
-        size_t m_count = 0;
+        Index m_count = 0;
 
     public:
         constexpr SortedSet() = default;
@@ -68,7 +69,7 @@ export namespace jpt
         constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr size_t Count() const noexcept;
+        constexpr Index Count() const noexcept;
         constexpr bool IsEmpty() const noexcept;
 
         // Traverse
@@ -313,7 +314,7 @@ export namespace jpt
     }
 
     template<Comparable TData, typename Comparator, typename TAllocator>
-    constexpr size_t SortedSet<TData, Comparator, TAllocator>::Count() const noexcept
+    constexpr Index SortedSet<TData, Comparator, TAllocator>::Count() const noexcept
     {
         return m_count;
     }

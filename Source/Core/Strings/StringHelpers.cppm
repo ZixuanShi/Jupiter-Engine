@@ -24,14 +24,14 @@ export namespace jpt
 {
     /**    @return How many characters inside of the given CString. Excluding '\0' */
     template<StringLiteral TChar>
-    constexpr size_t FindCharsCount(const TChar* string)
+    constexpr Index FindCharsCount(const TChar* string)
     {
         if (!string)
         {
             return 0;
         }
 
-        size_t count = 0;
+        Index count = 0;
         while (string[count] != '\0')
         {
             ++count;
@@ -64,7 +64,7 @@ export namespace jpt
     }
 
     /** @return Heap allocated Buffer with content of input string. Caller needs to take ownership of buffer. i.e. Memory Managing, deleting */
-    wchar_t* ToWChars(const char* pCStr, size_t count = npos)
+    wchar_t* ToWChars(const char* pCStr, Index count = npos)
     {
         if (!pCStr || count == 0)
         {
@@ -83,7 +83,7 @@ export namespace jpt
         return pBuffer;
     }
 
-    char* ToChars(const wchar_t* pWStr, size_t count = npos)
+    char* ToChars(const wchar_t* pWStr, Index count = npos)
     {
         if (!pWStr || count == 0)
         {
@@ -104,7 +104,7 @@ export namespace jpt
 
     /**    Copies data from destination to source with the given size */
     template<StringLiteral TChar>
-    constexpr void StrCpy(TChar* pDestination, size_t size, const TChar* pSource)
+    constexpr void StrCpy(TChar* pDestination, Index size, const TChar* pSource)
     {
         if constexpr (AreSameType<TChar, char>)
         {
@@ -118,7 +118,7 @@ export namespace jpt
 
     /**    Copies data from destination to source with the given size and max count */
     template<StringLiteral TChar>
-    constexpr void StrNCpy(TChar* pDestination, size_t size, const TChar* pSource, size_t maxCount)
+    constexpr void StrNCpy(TChar* pDestination, Index size, const TChar* pSource, Index maxCount)
     {
         if constexpr (AreSameType<TChar, char>)
         {
@@ -138,14 +138,14 @@ export namespace jpt
         - 0 maybe strings' sizes are not equal
         - 0 to size for the index of of the first different char found in two strings */
     template<StringLiteral TChar>
-    constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
+    constexpr Index StrCmp(const TChar* pString1, const TChar* pString2, Index string1Count, Index string2Count)
     {
         if (string1Count != string2Count)
         {
             return 0;
         }
 
-        for (size_t i = 0; i < string1Count; ++i)
+        for (Index i = 0; i < string1Count; ++i)
         {
             if (pString1[i] != pString2[i])
             {
@@ -156,25 +156,25 @@ export namespace jpt
         return npos;
     }
     template<StringLiteral TChar>
-    constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2, size_t count)
+    constexpr Index StrCmp(const TChar* pString1, const TChar* pString2, Index count)
     {
         return StrCmp(pString1, pString2, count, count);
     }
 
     template<StringLiteral TChar>
-    constexpr size_t StrCmp(const TChar* pString1, const TChar* pString2)
+    constexpr Index StrCmp(const TChar* pString1, const TChar* pString2)
     {
         return StrCmp(pString1, pString2, FindCharsCount(pString1), FindCharsCount(pString2));
     }
 
     template<StringLiteral TChar>
-    constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t string1Count, size_t string2Count)
+    constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, Index string1Count, Index string2Count)
     {
         return StrCmp(pString1, pString2, string1Count, string2Count) == npos;
     }
 
     template<StringLiteral TChar>
-    constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, size_t count)
+    constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, Index count)
     {
         return StrCmp(pString1, pString2, count) == npos;
     }
@@ -251,7 +251,7 @@ export namespace jpt
         }
 
         // Check each char validness
-        size_t i = 0;
+        Index i = 0;
         while (true)
         {
             const TChar c = pString[i];
@@ -288,7 +288,7 @@ export namespace jpt
         }
 
         // Check each char validness
-        size_t i = 0;
+        Index i = 0;
         while (true)
         {
             const TChar c = pString[i];
@@ -325,7 +325,7 @@ export namespace jpt
         }
 
         // Check each char validness
-        size_t i = 0;
+        Index i = 0;
         bool hasDot = false;
         while (true)
         {
@@ -367,7 +367,7 @@ export namespace jpt
         const bool isNegative = value < 0;    // Whether this value is negative or not
         const TInt numBase = static_cast<TInt>(base);
         TChar* result = nullptr;    // Final result string to return
-        size_t index = 0;            // The index I'm using for char array, will be used as length of this value and string as well
+        Index index = 0;            // The index I'm using for char array, will be used as length of this value and string as well
 
         // Process 0
         if (value == 0)
@@ -453,7 +453,7 @@ export namespace jpt
         @param count        Desired count to parse from start of pBuffer
         @param base         Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
     template<StringLiteral TChar = char, Integral TInt = int32>
-    constexpr TInt CStrToInteger(const TChar* pBuffer, size_t count = npos, EIntBase base = EIntBase::Decimal)
+    constexpr TInt CStrToInteger(const TChar* pBuffer, Index count = npos, EIntBase base = EIntBase::Decimal)
     {
         if (count == npos)
         {
@@ -462,7 +462,7 @@ export namespace jpt
 
         TInt result = 0;
         bool isNegative = false;
-        size_t start = 0;
+        Index start = 0;
         const TInt numBase = static_cast<TInt>(base);
 
         // Negative
@@ -481,7 +481,7 @@ export namespace jpt
             start = 2;
         }
 
-        for (size_t i = start; i < count; ++i)
+        for (Index i = start; i < count; ++i)
         {
             TChar c = pBuffer[i];
 
@@ -532,7 +532,7 @@ export namespace jpt
     template<StringLiteral TChar = char, Floating TFloat = float>
     constexpr TChar* FloatToCStr(TFloat value)
     {
-        static constexpr size_t kMaxSize = 32;
+        static constexpr Index kMaxSize = 32;
 
         TChar* buffer = JPT_NEW_ARRAY(TChar, kMaxSize);
         const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);    // controls how many precision digits to keep
@@ -551,7 +551,7 @@ export namespace jpt
 
     /** @note    Will ignore the 'f' is there's any */
     template<StringLiteral TChar = char, Floating TFloat = float32>
-    constexpr TFloat CStrToFloat(const TChar* pBuffer, size_t count = npos)
+    constexpr TFloat CStrToFloat(const TChar* pBuffer, Index count = npos)
     {
         // Parse two integral parts of the precision dot, then combine them
 
@@ -562,10 +562,10 @@ export namespace jpt
 
         TFloat integer = 0;        // Left of precision
         TFloat floatingNum = 0;    // Right of precision
-        size_t precisionIndex = kInvalidValue<size_t>;
+        Index precisionIndex = kInvalidValue<Index>;
         bool isNegative = false;
 
-        for (size_t i = 0; i < count; ++i)
+        for (Index i = 0; i < count; ++i)
         {
             const TChar c = pBuffer[i];
 
@@ -587,7 +587,7 @@ export namespace jpt
             JPT_ASSERT(IsDigit<TChar>(c), "Invalid character for converting to number");
             const int32 number = c - static_cast<TChar>('0');
 
-            if (precisionIndex == kInvalidValue<size_t>)
+            if (precisionIndex == kInvalidIndex)
             {
                 integer *= static_cast<TFloat>(10);
                 integer += number;

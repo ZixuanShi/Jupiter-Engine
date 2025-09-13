@@ -9,11 +9,11 @@ import jpt.Utilities;
 export namespace jpt
 {
     template<Indexable TContainer, typename TComparator>
-    constexpr void Heapify(TContainer& container, size_t beginIndex, size_t endIndex, size_t index, TComparator&& comparator)
+    constexpr void Heapify(TContainer& container, Index beginIndex, Index endIndex, Index index, TComparator&& comparator)
     {
-        size_t largest = index;
-        const size_t left = 2 * (index - beginIndex) + 1 + beginIndex;
-        const size_t right = 2 * (index - beginIndex) + 2 + beginIndex;
+        Index largest = index;
+        const Index left = 2 * (index - beginIndex) + 1 + beginIndex;
+        const Index right = 2 * (index - beginIndex) + 2 + beginIndex;
 
         if (left <= endIndex && comparator(container[largest], container[left]))
         {
@@ -33,7 +33,7 @@ export namespace jpt
     }
 
     template<Indexable TContainer, typename TComparator>
-    constexpr void HeapSort(TContainer& container, size_t beginIndex, size_t endIndex, TComparator&& comparator)
+    constexpr void HeapSort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
         for (int64 i = (beginIndex + endIndex) / 2; i >= static_cast<int64>(beginIndex); --i)
         {
