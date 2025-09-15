@@ -23,16 +23,17 @@ namespace jpt
     };
 }
 
-/** Use this macro to profile a scope of code regarding time
+/** Use this macro to profile a scope of code by the time taken.
     @example 
     
     void SomeFunction()
-        {
-            JPT_SCOPED_TIMING_PROFILER(topic_name_label);
+    {
+        JPT_SCOPED_TIMING_PROFILER(topic_name_label);
 
-            // Your code here
-            // ...
-        } */
+        // code here
+        // ...
+    } 
+*/
 #define JPT_SCOPED_TIMING_PROFILER(label) jpt::ScopedTimingProfiler timing_profilier(label, __FILE__, __LINE__)
 
 #else
