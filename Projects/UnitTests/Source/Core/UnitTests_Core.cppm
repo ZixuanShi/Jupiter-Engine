@@ -78,6 +78,7 @@ import UnitTests_StringView;
 // Types
 import UnitTests_Enum_Global;
 import UnitTests_Any;
+import UnitTests_BoolPack;
 import UnitTests_Byte;
 import UnitTests_Variant;
 import UnitTests_Optional;
@@ -157,6 +158,7 @@ export bool RunUnitTests_Core()
 
     // Types
     JPT_ENSURE(RunUnitTests_Any());
+    JPT_ENSURE(RunUnitTests_BoolPack());
     JPT_ENSURE(RunUnitTests_Byte());
     JPT_ENSURE(RunUnitTests_Variant());
     JPT_ENSURE(RunUnitTests_Optional());
