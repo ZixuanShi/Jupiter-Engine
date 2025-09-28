@@ -91,7 +91,7 @@ export namespace jpt
         return color / scalar;
     }
 
-    constexpr bool operator==(const Color& lhs, const Color& rhs) noexcept
+    constexpr bool operator==(Color lhs, Color rhs) noexcept
     {
         return lhs.r == rhs.r &&
                lhs.g == rhs.g &&
@@ -99,7 +99,7 @@ export namespace jpt
                lhs.a == rhs.a;
     }
 
-    constexpr uint64 Hash(const Color& color) noexcept
+    constexpr uint64 Hash(Color color) noexcept
     {
         uint64 hash = jpt::Hash(color.r);
         hash ^= jpt::Hash(color.g) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
@@ -108,7 +108,7 @@ export namespace jpt
         return hash;
     }
 
-    constexpr String ToString(const Color& color) noexcept
+    constexpr String ToString(Color color) noexcept
     {
         return String::Format<32>("r: %u, g: %u, b: %u, a: %u", color.r, color.g, color.b, color.a);
     }

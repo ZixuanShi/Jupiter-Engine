@@ -18,10 +18,11 @@ export namespace jpt
 
     public:
         bool ShouldCapFPS() const { return m_targetFPS > 0.0 && m_VSyncMode == VSyncMode::Off; }
-        TimePrecision GetTargetFPS() const { return m_targetFPS; }
-        void SetTargetFPS(TimePrecision targetFPS);
 
+        TimePrecision GetTargetFPS() const { return m_targetFPS; }
         VSyncMode GetVSyncMode() const { return m_VSyncMode; }
+
+        void SetTargetFPS(TimePrecision targetFPS);
         void SetVSyncMode(VSyncMode VSyncMode);
     };
 }
