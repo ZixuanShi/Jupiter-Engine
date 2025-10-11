@@ -20,8 +20,10 @@ I design, plan, write, test everything from scratch by myself
 - Have Visual Studio 2022, and Vulkan installed on your windows
 - Clone this despository to any location on your PC.
 - Add an Environment Variable. Set the name to JUPITER_ENGINE_ROOT, and the value to Jupiter Engine's Root Directory. Note it should NOT end with '\\'. Example:
-    - Correct: C:\Program Files\Jupiter Technologies\Jupiter-Engine
-    - Wrong:   C:\Program Files\Jupiter Technologies\Jupiter-Engine\
-- Compile shaders. Navigate to Jupiter-Engine/Scripts, run CompileShaders.py
-- Build Visual Studio Solution and Projects. Navigate to Jupiter-Engine/Projects/Blank/Scripts, run generate_project_files_vs2022.py. You will have Blank/_ProjectFiles, it contains the VS solution file
+  - Correct: C:\Program Files\Jupiter Technologies\Jupiter-Engine
+  - Wrong:   C:\Program Files\Jupiter Technologies\Jupiter-Engine\
+- Compile shaders. 
+  - Navigate to Jupiter-Engine/Scripts, run CompileShaders.py
+- Build Visual Studio Solution and Projects. 
+  - Navigate to Jupiter-Engine/Projects/Blank/Scripts, run generate_project_files_vs2022.py. You will have Blank/_ProjectFiles, it contains the VS solution file
 - You can build Jupiter Engine and Blank project now, enjoy
