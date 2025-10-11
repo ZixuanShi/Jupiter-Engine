@@ -26,6 +26,7 @@ export namespace jpt
         GraphicsSettings m_settings;
         TextureSampler* m_pTextureSampler = nullptr;
         Camera m_camera;
+        GraphicsAPI m_api = GraphicsAPI::Unknown;
 
     public:
         virtual ~Renderer() = default;
@@ -51,6 +52,7 @@ export namespace jpt
         GraphicsSettings& GetSettings();
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
         Camera& GetCamera() { return m_camera; }
+        GraphicsAPI GetAPI() const { return m_api; }
         
         const GraphicsSettings& GetSettings() const;
         const Camera& GetCamera() const { return m_camera; }

@@ -56,22 +56,18 @@ namespace jpt
             return true;
         }
 
-        // Pick APIs
-        m_frameworkAPI = FindFrameworkAPI();
-        m_graphicsAPI  = FindGraphicsAPI();
-
         // Initialize core systems
         JPT_ASSERT(m_pPlatform, "Platform is not set");
-        m_pFramework     = Framework_Create(m_frameworkAPI);
+        m_pFramework     = Framework_Create();
         m_pWindowManager = JPT_NEW(WindowManager);
-        m_pRenderer      = Renderer_Create(m_graphicsAPI);
+        m_pRenderer      = Renderer_Create();
 
         bool success = true;
         success &= m_pPlatform->PreInit();
         success &= m_pFramework->PreInit();
         success &= m_pWindowManager->PreInit();
         success &= m_pRenderer->PreInit();
-        success &= InputManager::GetInstance().PreInit(m_frameworkAPI);
+        success &= InputManager::GetInstance().PreInit();
         success &= SceneManager::GetInstance().PreInit();
         success &= AssetManager::GetInstance().PreInit();
 

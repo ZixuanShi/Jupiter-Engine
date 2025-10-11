@@ -73,6 +73,7 @@ export namespace jpt
         bool m_useWarpDevice = false;
 
     public:
+        virtual bool PreInit() override;
         virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
         virtual void Terminate() override;
@@ -85,6 +86,14 @@ export namespace jpt
         void CompileShaders();
         void CreateVertexBuffer(float aspectRatio);
     };
+
+    bool Renderer_DX12::PreInit()
+    {
+        m_api = GraphicsAPI::DX12;
+        JPT_ENSURE(Super::PreInit());
+
+        return true;
+    }
 
     bool Renderer_DX12::Init()
     {

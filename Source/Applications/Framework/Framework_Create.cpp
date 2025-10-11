@@ -43,8 +43,10 @@ namespace jpt
         return api;
     }
 
-    Framework* Framework_Create(FrameworkAPI api)
+    Framework* Framework_Create()
     {
+        const FrameworkAPI api = FindFrameworkAPI();
+
         switch (api.Value())
         {
         case FrameworkAPI::GLFW:

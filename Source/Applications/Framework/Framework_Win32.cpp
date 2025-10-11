@@ -22,6 +22,7 @@ namespace jpt
 {
     bool Framework_Win32::PreInit()
     {
+        m_api = FrameworkAPI::Win32;
         JPT_ENSURE(Super::PreInit());
 
         // Initialize the window class.

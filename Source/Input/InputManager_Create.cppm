@@ -8,16 +8,21 @@ module;
 
 export module jpt.InputManager_Create;
 
+import jpt.Application;
+import jpt.Framework;
+import jpt.Framework_Enums;
+
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
 import jpt.RawInput_Win32;
 
-import jpt.Framework_Enums;
 
 export namespace jpt::Input
 {
-    RawInput* RawInput_Create(FrameworkAPI frameworkAPI)
+    RawInput* RawInput_Create()
     {
+        const FrameworkAPI frameworkAPI = GetApplication()->GetFramework()->GetAPI();
+
         switch (frameworkAPI.Value())
         {
         case FrameworkAPI::GLFW:

@@ -8,6 +8,7 @@ module;
 module jpt.WindowManager;
 
 import jpt.Application;
+import jpt.Framework;
 import jpt.Window_GLFW;
 import jpt.Window_Win32;
 
@@ -61,7 +62,7 @@ namespace jpt
     {
         JPT_ASSERT(m_windows.Count() < kMaxWindows, "Maximum number of windows reached");
 
-        const FrameworkAPI api = GetApplication()->GetFrameworkAPI();
+        const FrameworkAPI api = GetApplication()->GetFramework()->GetAPI();
         switch (api.Value())
         {
         case FrameworkAPI::GLFW:

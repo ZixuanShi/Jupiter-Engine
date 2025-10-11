@@ -43,6 +43,14 @@ using namespace jpt::Vulkan;
 
 namespace jpt
 {
+    bool Renderer_Vulkan::PreInit()
+    {
+        m_api = GraphicsAPI::Vulkan;
+        JPT_ENSURE(Super::PreInit());
+
+        return true;
+    }
+
     bool Renderer_Vulkan::Init()
     {
         JPT_ENSURE(Super::Init());
@@ -106,6 +114,11 @@ namespace jpt
 
     void Renderer_Vulkan::Terminate()
     {
+        if (m_logicalDevice.GetHandle() == VK_NULL_HANDLE)
+        {
+            return;
+        }
+
         m_logicalDevice.WaitIdle();
 
         for (WindowResources& resources : m_windowResources)

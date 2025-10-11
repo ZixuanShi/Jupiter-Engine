@@ -7,6 +7,5 @@ import jpt.Framework_Enums;
 
 export namespace jpt
 {
-    FrameworkAPI FindFrameworkAPI();
-    Framework* Framework_Create(FrameworkAPI api);
+    Framework* Framework_Create();
 }

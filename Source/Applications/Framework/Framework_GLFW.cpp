@@ -29,6 +29,7 @@ namespace jpt
 
     bool Framework_GLFW::PreInit()
     {
+        m_api = FrameworkAPI::GLFW;
         JPT_ENSURE(Super::PreInit());
 
         JPT_ENSURE(glfwInit());

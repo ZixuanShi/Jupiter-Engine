@@ -2,6 +2,9 @@
 
 module;
 
+#include "Debugging/Logger.h"
+#include "Core/Minimal/Utilities.h"
+
 module jpt.Renderer;
 
 import jpt.Application;
@@ -13,10 +16,10 @@ namespace jpt
         EventManager::GetInstance().Register<Event_Window_Resize>(this, &Renderer::OnWindowResize);
         EventManager::GetInstance().Register<Event_Window_Close>(this, &Renderer::OnWindowClose);
 
-        bool success = true;
-        success &= m_settings.PreInit();
+        JPT_ENSURE(m_api != GraphicsAPI::Unknown);
+        JPT_ENSURE(m_settings.PreInit());
 
-        return success;
+        return true;
     }
 
     bool Renderer::Init()
