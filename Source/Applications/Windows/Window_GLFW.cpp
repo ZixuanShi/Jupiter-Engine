@@ -29,6 +29,7 @@ import jpt.RawInput_GLFW;
 import jpt.TimeTypeDefs;
 
 import jpt.Graphics_Enums;
+import jpt.Renderer;
 
 import jpt.EventManager;
 import jpt.Event_Window_Resize;
@@ -90,7 +91,7 @@ namespace jpt
 
     bool Window_GLFW::CreateSurface(const DynamicArray<Any>& context)
     {
-        const GraphicsAPI api = GetApplication()->GetGraphicsAPI();
+        const GraphicsAPI api = GetApplication()->GetRenderer()->GetAPI();
 
         switch (api.Value())
         {

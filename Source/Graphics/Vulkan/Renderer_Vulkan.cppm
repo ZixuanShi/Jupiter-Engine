@@ -67,6 +67,7 @@ export namespace jpt
         DynamicArray<WindowResources> m_windowResources;
 
     public:
+        virtual bool PreInit() override;
         virtual bool Init() override;
         virtual void Update(TimePrecision deltaSeconds) override;
         virtual void Terminate() override;

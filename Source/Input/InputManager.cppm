@@ -22,7 +22,7 @@ namespace jpt
         Input::RawInput* m_pRawInput = nullptr;
 
     public:
-        bool PreInit(FrameworkAPI api);
+        bool PreInit();
         bool Init();
         void Update(TimePrecision deltaSeconds);
         void Terminate();

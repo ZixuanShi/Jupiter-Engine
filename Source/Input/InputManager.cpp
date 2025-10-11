@@ -6,12 +6,11 @@ module;
 
 module jpt.InputManager;
 
-
 namespace jpt
 {
-    bool InputManager::PreInit(FrameworkAPI api)
+    bool InputManager::PreInit()
     {
-        m_pRawInput = Input::RawInput_Create(api);
+        m_pRawInput = Input::RawInput_Create();
 
         bool success = true;
         success &= m_pRawInput->PreInit();

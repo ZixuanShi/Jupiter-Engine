@@ -4,8 +4,6 @@ export module jpt.Application;
 
 import jpt.TypeDefs;
 import jpt.Status;
-import jpt.Framework_Enums;
-import jpt.Graphics_Enums;
 
 export namespace jpt
 {
@@ -27,10 +25,6 @@ export namespace jpt
         WindowManager* m_pWindowManager = nullptr;
         Renderer*      m_pRenderer      = nullptr;
 
-        // Think. Do I need these when I can do m_pFramework->GetType() ?
-        FrameworkAPI m_frameworkAPI = FrameworkAPI::Unknown;
-        GraphicsAPI m_graphicsAPI   = GraphicsAPI::Unknown;
-
         Status m_status = Status::Pending;
 
     public:
@@ -49,9 +43,6 @@ export namespace jpt
         Framework*     GetFramework()     const { return m_pFramework;     }
         WindowManager* GetWindowManager() const { return m_pWindowManager; }
         Renderer*      GetRenderer()      const { return m_pRenderer;      }
-
-        FrameworkAPI GetFrameworkAPI() const { return m_frameworkAPI; }
-        GraphicsAPI  GetGraphicsAPI()  const { return m_graphicsAPI;  }
 
         Window* GetMainWindow() const;
         const char* GetName() const;
