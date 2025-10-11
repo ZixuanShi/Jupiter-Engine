@@ -27,6 +27,7 @@ export namespace jpt
         WindowManager* m_pWindowManager = nullptr;
         Renderer*      m_pRenderer      = nullptr;
 
+        // Think. Do I need these when I can do m_pFramework->GetType() ?
         FrameworkAPI m_frameworkAPI = FrameworkAPI::Unknown;
         GraphicsAPI m_graphicsAPI   = GraphicsAPI::Unknown;
 

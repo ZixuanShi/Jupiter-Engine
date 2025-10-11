@@ -17,7 +17,7 @@ import jpt.StaticArray;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-import jpt_private.IteratorHashTable_LinearProbing;
+import jpt_private.Iterator_HashTable_LinearProbing;
 
 export namespace jpt
 {
@@ -32,8 +32,8 @@ export namespace jpt
         using TComparator   = _TComparator;
         using TStorage      = StaticArray<jpt_private::Entry<TKey, TValue>, kCapacity>;
         using TData         = jpt_private::Entry<TKey, TValue>::TData;
-        using Iterator      = jpt_private::IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>;
-        using ConstIterator = jpt_private::ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>;
+        using Iterator      = jpt_private::Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>;
+        using ConstIterator = jpt_private::ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>;
 
     private:
         static constexpr TComparator kComparator = TComparator();

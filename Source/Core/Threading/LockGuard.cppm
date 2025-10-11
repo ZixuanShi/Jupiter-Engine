@@ -16,15 +16,4 @@ export namespace jpt
         LockGuard(Mutex& mutex);
         ~LockGuard();
     };
-
-    LockGuard::LockGuard(Mutex& mutex)
-        : m_mutex(mutex)
-    {
-        m_mutex.Lock();
-    }
-
-    LockGuard::~LockGuard()
-    {
-        m_mutex.Unlock();
-    }
 }

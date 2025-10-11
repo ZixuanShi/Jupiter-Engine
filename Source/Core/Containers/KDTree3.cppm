@@ -13,7 +13,7 @@ import jpt.Sort;
 import jpt.TypeDefs;
 import jpt.Vector3;
 
-import jpt_private.BinaryTreeIterator;
+import jpt_private.Iterator_BinaryTree;
 
 namespace jpt
 {

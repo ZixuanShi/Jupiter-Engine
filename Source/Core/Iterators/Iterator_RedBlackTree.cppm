@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.IteratorRedBlackTree;
+export module jpt_private.Iterator_RedBlackTree;
 
 import jpt.TypeDefs;
 import jpt.TypeTraits;
@@ -44,23 +44,23 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    class IteratorRedBlackTree
+    class Iterator_RedBlackTree
     {
     private:
         RedBlackTreeNode<TData>* m_pNode;
 
     public:
-        constexpr IteratorRedBlackTree() = default;
-        constexpr IteratorRedBlackTree(RedBlackTreeNode<TData>* pNode) : m_pNode(pNode) {}
+        constexpr Iterator_RedBlackTree() = default;
+        constexpr Iterator_RedBlackTree(RedBlackTreeNode<TData>* pNode) : m_pNode(pNode) {}
 
-        constexpr IteratorRedBlackTree& operator++();
-        constexpr IteratorRedBlackTree operator++(int32);
+        constexpr Iterator_RedBlackTree& operator++();
+        constexpr Iterator_RedBlackTree operator++(int32);
 
-        constexpr IteratorRedBlackTree& operator+=(size_t offset);
-        constexpr IteratorRedBlackTree operator+(size_t offset);
+        constexpr Iterator_RedBlackTree& operator+=(size_t offset);
+        constexpr Iterator_RedBlackTree operator+(size_t offset);
 
-        constexpr IteratorRedBlackTree& operator--();
-        constexpr IteratorRedBlackTree operator--(int32);
+        constexpr Iterator_RedBlackTree& operator--();
+        constexpr Iterator_RedBlackTree operator--(int32);
 
         constexpr       TData* operator->()       { return &m_pNode->data; }
         constexpr const TData* operator->() const { return &m_pNode->data; }
@@ -69,7 +69,7 @@ export namespace jpt_private
 
         constexpr RedBlackTreeNode<TData>* GetNode() const { return m_pNode; }
 
-        constexpr bool operator==(const IteratorRedBlackTree& other) const;
+        constexpr bool operator==(const Iterator_RedBlackTree& other) const;
 
     private:
         constexpr void FindNextValidIterator();
@@ -77,22 +77,22 @@ export namespace jpt_private
     };
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData>& IteratorRedBlackTree<TData>::operator++()
+    constexpr Iterator_RedBlackTree<TData>& Iterator_RedBlackTree<TData>::operator++()
     {
         FindNextValidIterator();
         return *this;
     }
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData> IteratorRedBlackTree<TData>::operator++(int32)
+    constexpr Iterator_RedBlackTree<TData> Iterator_RedBlackTree<TData>::operator++(int32)
     {
-        IteratorRedBlackTree iterator = *this;
+        Iterator_RedBlackTree iterator = *this;
         ++(*this);
         return iterator;
     }
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData>& IteratorRedBlackTree<TData>::operator+=(size_t offset)
+    constexpr Iterator_RedBlackTree<TData>& Iterator_RedBlackTree<TData>::operator+=(size_t offset)
     {
         for (size_t i = 0; i < offset; ++i)
         {
@@ -103,36 +103,36 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData> IteratorRedBlackTree<TData>::operator+(size_t offset)
+    constexpr Iterator_RedBlackTree<TData> Iterator_RedBlackTree<TData>::operator+(size_t offset)
     {
-        IteratorRedBlackTree iterator = *this;
+        Iterator_RedBlackTree iterator = *this;
         iterator += offset;
         return iterator;
     }
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData>& IteratorRedBlackTree<TData>::operator--()
+    constexpr Iterator_RedBlackTree<TData>& Iterator_RedBlackTree<TData>::operator--()
     {
         FindPreviousValidIterator();
         return *this;
     }
 
     template<typename TData>
-    constexpr IteratorRedBlackTree<TData> IteratorRedBlackTree<TData>::operator--(int32)
+    constexpr Iterator_RedBlackTree<TData> Iterator_RedBlackTree<TData>::operator--(int32)
     {
-        IteratorRedBlackTree iterator = *this;
+        Iterator_RedBlackTree iterator = *this;
         --(*this);
         return iterator;
     }
 
     template<typename TData>
-    constexpr bool IteratorRedBlackTree<TData>::operator==(const IteratorRedBlackTree& other) const
+    constexpr bool Iterator_RedBlackTree<TData>::operator==(const Iterator_RedBlackTree& other) const
     {
         return m_pNode == other.m_pNode;
     }
 
     template<typename TData>
-    constexpr void IteratorRedBlackTree<TData>::FindNextValidIterator()
+    constexpr void Iterator_RedBlackTree<TData>::FindNextValidIterator()
     {
         if (m_pNode->pRightChild)
         {
@@ -155,7 +155,7 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr void IteratorRedBlackTree<TData>::FindPreviousValidIterator()
+    constexpr void Iterator_RedBlackTree<TData>::FindPreviousValidIterator()
     {
         if (m_pNode->pLeftChild)
         {
@@ -178,30 +178,30 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    class ConstIteratorRedBlackTree
+    class ConstIterator_RedBlackTree
     {
     private:
         const RedBlackTreeNode<TData>* m_pNode;
 
     public:
-        constexpr ConstIteratorRedBlackTree() = default;
-        constexpr ConstIteratorRedBlackTree(const RedBlackTreeNode<TData>* pNode) : m_pNode(pNode) {}
+        constexpr ConstIterator_RedBlackTree() = default;
+        constexpr ConstIterator_RedBlackTree(const RedBlackTreeNode<TData>* pNode) : m_pNode(pNode) {}
 
-        constexpr ConstIteratorRedBlackTree& operator++();
-        constexpr ConstIteratorRedBlackTree operator++(int32);
+        constexpr ConstIterator_RedBlackTree& operator++();
+        constexpr ConstIterator_RedBlackTree operator++(int32);
 
-        constexpr ConstIteratorRedBlackTree& operator+=(size_t offset);
-        constexpr ConstIteratorRedBlackTree operator+(size_t offset);
+        constexpr ConstIterator_RedBlackTree& operator+=(size_t offset);
+        constexpr ConstIterator_RedBlackTree operator+(size_t offset);
 
-        constexpr ConstIteratorRedBlackTree& operator--();
-        constexpr ConstIteratorRedBlackTree operator--(int32);
+        constexpr ConstIterator_RedBlackTree& operator--();
+        constexpr ConstIterator_RedBlackTree operator--(int32);
 
         constexpr const TData* operator->() const { return &m_pNode->data; }
         constexpr const TData& operator*()  const { return m_pNode->data; }
 
         constexpr const RedBlackTreeNode<TData>* GetNode() const { return m_pNode; }
 
-        constexpr bool operator==(const ConstIteratorRedBlackTree& other) const;
+        constexpr bool operator==(const ConstIterator_RedBlackTree& other) const;
 
     private:
         constexpr void FindNextValidIterator();
@@ -209,22 +209,22 @@ export namespace jpt_private
     };
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData>& ConstIteratorRedBlackTree<TData>::operator++()
+    constexpr ConstIterator_RedBlackTree<TData>& ConstIterator_RedBlackTree<TData>::operator++()
     {
         FindNextValidIterator();
         return *this;
     }
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData> ConstIteratorRedBlackTree<TData>::operator++(int32)
+    constexpr ConstIterator_RedBlackTree<TData> ConstIterator_RedBlackTree<TData>::operator++(int32)
     {
-        ConstIteratorRedBlackTree iterator = *this;
+        ConstIterator_RedBlackTree iterator = *this;
         ++(*this);
         return iterator;
     }
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData>& ConstIteratorRedBlackTree<TData>::operator+=(size_t offset)
+    constexpr ConstIterator_RedBlackTree<TData>& ConstIterator_RedBlackTree<TData>::operator+=(size_t offset)
     {
         for (size_t i = 0; i < offset; ++i)
         {
@@ -235,36 +235,36 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData> ConstIteratorRedBlackTree<TData>::operator+(size_t offset)
+    constexpr ConstIterator_RedBlackTree<TData> ConstIterator_RedBlackTree<TData>::operator+(size_t offset)
     {
-        ConstIteratorRedBlackTree iterator = *this;
+        ConstIterator_RedBlackTree iterator = *this;
         iterator += offset;
         return iterator;
     }
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData>& ConstIteratorRedBlackTree<TData>::operator--()
+    constexpr ConstIterator_RedBlackTree<TData>& ConstIterator_RedBlackTree<TData>::operator--()
     {
         FindPreviousValidIterator();
         return *this;
     }
 
     template<typename TData>
-    constexpr ConstIteratorRedBlackTree<TData> ConstIteratorRedBlackTree<TData>::operator--(int32)
+    constexpr ConstIterator_RedBlackTree<TData> ConstIterator_RedBlackTree<TData>::operator--(int32)
     {
-        ConstIteratorRedBlackTree iterator = *this;
+        ConstIterator_RedBlackTree iterator = *this;
         --(*this);
         return iterator;
     }
 
     template<typename TData>
-    constexpr bool ConstIteratorRedBlackTree<TData>::operator==(const ConstIteratorRedBlackTree& other) const
+    constexpr bool ConstIterator_RedBlackTree<TData>::operator==(const ConstIterator_RedBlackTree& other) const
     {
         return m_pNode == other.m_pNode;
     }
 
     template<typename TData>
-    constexpr void ConstIteratorRedBlackTree<TData>::FindNextValidIterator()
+    constexpr void ConstIterator_RedBlackTree<TData>::FindNextValidIterator()
     {
         if (m_pNode->pRightChild)
         {
@@ -287,7 +287,7 @@ export namespace jpt_private
     }
 
     template<typename TData>
-    constexpr void ConstIteratorRedBlackTree<TData>::FindPreviousValidIterator()
+    constexpr void ConstIterator_RedBlackTree<TData>::FindPreviousValidIterator()
     {
         if (m_pNode->pLeftChild)
         {
