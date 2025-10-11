@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.IteratorHashTable_LinearProbing;
+export module jpt_private.Iterator_HashTable_LinearProbing;
 
 import jpt.TypeDefs;
 import jpt.Pair;
@@ -17,21 +17,21 @@ export namespace jpt_private
     };
 
     template<typename TKey, typename TValue, Index kCapacity>
-    class IteratorHashTable_LinearProbing
+    class Iterator_HashTable_LinearProbing
     {
     private:
         Entry<TKey, TValue>* m_pArray;
         Index m_index = 0;  /**< Current index in the hash table */
 
     public:
-        constexpr IteratorHashTable_LinearProbing() = default;
-        constexpr IteratorHashTable_LinearProbing(Entry<TKey, TValue>* pArray, Index index);
+        constexpr Iterator_HashTable_LinearProbing() = default;
+        constexpr Iterator_HashTable_LinearProbing(Entry<TKey, TValue>* pArray, Index index);
 
-        constexpr IteratorHashTable_LinearProbing& operator++();
-        constexpr IteratorHashTable_LinearProbing operator++(int32);
+        constexpr Iterator_HashTable_LinearProbing& operator++();
+        constexpr Iterator_HashTable_LinearProbing operator++(int32);
 
-        constexpr IteratorHashTable_LinearProbing& operator+=(Index offset);
-        constexpr IteratorHashTable_LinearProbing operator+(Index offset);
+        constexpr Iterator_HashTable_LinearProbing& operator+=(Index offset);
+        constexpr Iterator_HashTable_LinearProbing operator+(Index offset);
 
         constexpr       Entry<TKey, TValue>::TData* operator->()       { return &m_pArray[m_index].data; }
         constexpr const Entry<TKey, TValue>::TData* operator->() const { return &m_pArray[m_index].data; }
@@ -40,42 +40,42 @@ export namespace jpt_private
 
         constexpr Index GetIndex() const { return m_index; }
 
-        constexpr bool operator==(const IteratorHashTable_LinearProbing& other) const;
+        constexpr bool operator==(const Iterator_HashTable_LinearProbing& other) const;
 
     private:
         constexpr void FindNextValidIndex();
     };
 
     template<typename TKey, typename TValue, Index kCapacity>
-    class ConstIteratorHashTable_LinearProbing
+    class ConstIterator_HashTable_LinearProbing
     {
     private:
         const Entry<TKey, TValue>* m_pArray;
         Index m_index = 0;  /**< Current index in the hash table */
 
     public:
-        constexpr ConstIteratorHashTable_LinearProbing() = default;
-        constexpr ConstIteratorHashTable_LinearProbing(const Entry<TKey, TValue>* pArray, Index index);
+        constexpr ConstIterator_HashTable_LinearProbing() = default;
+        constexpr ConstIterator_HashTable_LinearProbing(const Entry<TKey, TValue>* pArray, Index index);
 
-        constexpr ConstIteratorHashTable_LinearProbing& operator++();
-        constexpr ConstIteratorHashTable_LinearProbing operator++(int32);
+        constexpr ConstIterator_HashTable_LinearProbing& operator++();
+        constexpr ConstIterator_HashTable_LinearProbing operator++(int32);
 
-        constexpr ConstIteratorHashTable_LinearProbing& operator+=(Index offset);
-        constexpr ConstIteratorHashTable_LinearProbing operator+(Index offset);
+        constexpr ConstIterator_HashTable_LinearProbing& operator+=(Index offset);
+        constexpr ConstIterator_HashTable_LinearProbing operator+(Index offset);
 
         constexpr const Entry<TKey, TValue>::TData* operator->() const { return &m_pArray[m_index].data; }
         constexpr const Entry<TKey, TValue>::TData& operator*()  const { return  m_pArray[m_index].data; }
 
         constexpr Index GetIndex() const { return m_index; }
 
-        constexpr bool operator==(const ConstIteratorHashTable_LinearProbing& other) const;
+        constexpr bool operator==(const ConstIterator_HashTable_LinearProbing& other) const;
 
     private:
         constexpr void FindNextValidIndex();
     };
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::IteratorHashTable_LinearProbing(Entry<TKey, TValue>* pArray, Index index)
+    constexpr Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::Iterator_HashTable_LinearProbing(Entry<TKey, TValue>* pArray, Index index)
         : m_pArray(pArray)
         , m_index(index)
     {
@@ -83,7 +83,7 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>& IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator++()
+    constexpr Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>& Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator++()
     {
         ++m_index;
         FindNextValidIndex();
@@ -91,16 +91,16 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr IteratorHashTable_LinearProbing<TKey, TValue, kCapacity> IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator++(int32)
+    constexpr Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity> Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator++(int32)
     {
-        IteratorHashTable_LinearProbing iterator = *this;
+        Iterator_HashTable_LinearProbing iterator = *this;
         ++m_index;
         FindNextValidIndex();
         return iterator;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>& IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator+=(Index offset)
+    constexpr Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>& Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator+=(Index offset)
     {
         for (Index i = 0; i < offset; ++i)
         {
@@ -111,21 +111,21 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr IteratorHashTable_LinearProbing<TKey, TValue, kCapacity> IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator+(Index offset)
+    constexpr Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity> Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator+(Index offset)
     {
-        IteratorHashTable_LinearProbing iterator = *this;
+        Iterator_HashTable_LinearProbing iterator = *this;
         return iterator += offset;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr bool IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator==(const IteratorHashTable_LinearProbing& other) const
+    constexpr bool Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator==(const Iterator_HashTable_LinearProbing& other) const
     {
         return m_pArray == other.m_pArray &&
                m_index    == other.m_index;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr void IteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::FindNextValidIndex()
+    constexpr void Iterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::FindNextValidIndex()
     {
         while (m_index < kCapacity &&
               !m_pArray[m_index].isOccupied)
@@ -135,7 +135,7 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::ConstIteratorHashTable_LinearProbing(const Entry<TKey, TValue>* pArray, Index index)
+    constexpr ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::ConstIterator_HashTable_LinearProbing(const Entry<TKey, TValue>* pArray, Index index)
         : m_pArray(pArray)
         , m_index(index)
     {
@@ -143,7 +143,7 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>& ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator++()
+    constexpr ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>& ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator++()
     {
         ++m_index;
         FindNextValidIndex();
@@ -151,16 +151,16 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity> ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator++(int32)
+    constexpr ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity> ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator++(int32)
     {
-        ConstIteratorHashTable_LinearProbing iterator = *this;
+        ConstIterator_HashTable_LinearProbing iterator = *this;
         ++m_index;
         FindNextValidIndex();
         return iterator;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>& ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator+=(Index offset)
+    constexpr ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>& ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator+=(Index offset)
     {
         for (Index i = 0; i < offset; ++i)
         {
@@ -171,21 +171,21 @@ export namespace jpt_private
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity> ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator+(Index offset)
+    constexpr ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity> ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator+(Index offset)
     {
-        ConstIteratorHashTable_LinearProbing iterator = *this;
+        ConstIterator_HashTable_LinearProbing iterator = *this;
         return iterator += offset;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr bool ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::operator==(const ConstIteratorHashTable_LinearProbing& other) const
+    constexpr bool ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::operator==(const ConstIterator_HashTable_LinearProbing& other) const
     {
         return m_pArray == other.m_pArray &&
                m_index    == other.m_index;
     }
 
     template<typename TKey, typename TValue, Index kCapacity>
-    constexpr void ConstIteratorHashTable_LinearProbing<TKey, TValue, kCapacity>::FindNextValidIndex()
+    constexpr void ConstIterator_HashTable_LinearProbing<TKey, TValue, kCapacity>::FindNextValidIndex()
     {
         while (m_index < kCapacity &&
               !m_pArray[m_index].isOccupied)

@@ -24,14 +24,4 @@ export namespace jpt
         /** Multiple threads can read */
         [[nodiscard]] SharedLock CreateSharedLock();
     };
-
-    [[nodiscard]] UniqueLock SharedMutex::CreateUniqueLock()
-    {
-        return UniqueLock(m_mutex);
-    }
-
-    [[nodiscard]] SharedLock SharedMutex::CreateSharedLock()
-    {
-        return SharedLock(m_mutex);
-    }
 }

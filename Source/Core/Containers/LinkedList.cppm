@@ -15,7 +15,7 @@ import jpt.TypeDefs;
 import jpt.TypeTraits;
 import jpt.Utilities;
 
-import jpt_private.IteratorLinearNode;
+import jpt_private.Iterator_LinearNode;
 
 export namespace jpt
 {
@@ -27,8 +27,8 @@ export namespace jpt
         using TData         = _TData;
         using TAllocator    = _TAllocator;
         using Node          = jpt_private::LinearNode<TData>;
-        using Iterator      = jpt_private::IteratorLinearNode<TData>;
-        using ConstIterator = jpt_private::ConstIteratorLinearNode<TData>;
+        using Iterator      = jpt_private::Iterator_LinearNode<TData>;
+        using ConstIterator = jpt_private::ConstIterator_LinearNode<TData>;
 
     private:
         Node* m_pHead = nullptr;

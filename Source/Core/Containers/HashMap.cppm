@@ -22,7 +22,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Serializer;
 
-import jpt_private.IteratorHashTable_Chaining;
+import jpt_private.Iterator_HashTable_Chaining;
 
 export namespace jpt
 {
@@ -37,8 +37,8 @@ export namespace jpt
         using Data          = Pair<const TKey, TValue>;
         using Bucket        = LinkedList<Data>;
         using Buckets       = DynamicArray<Bucket>;
-        using Iterator      = jpt_private::IteratorHashTable_Chaining<Data>;
-        using ConstIterator = jpt_private::ConstIteratorHashTable_Chaining<Data>;
+        using Iterator      = jpt_private::Iterator_HashTable_Chaining<Data>;
+        using ConstIterator = jpt_private::ConstIterator_HashTable_Chaining<Data>;
 
     private:
         static constexpr TComparator kComparator = TComparator();

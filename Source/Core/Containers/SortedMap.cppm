@@ -19,7 +19,7 @@ import jpt.TypeDefs;
 import jpt.Utilities;
 import jpt.Queue;
 
-import jpt_private.IteratorRedBlackTree;
+import jpt_private.Iterator_RedBlackTree;
 
 export namespace jpt
 {
@@ -33,8 +33,8 @@ export namespace jpt
         using TComparator   = _TComparator;
         using TData         = Pair<const TKey, TValue>;
         using Node          = jpt_private::RedBlackTreeNode<TData>;
-        using Iterator      = jpt_private::IteratorRedBlackTree<TData>;
-        using ConstIterator = jpt_private::ConstIteratorRedBlackTree<TData>;
+        using Iterator      = jpt_private::Iterator_RedBlackTree<TData>;
+        using ConstIterator = jpt_private::ConstIterator_RedBlackTree<TData>;
 
         using Color         = typename Node::Color;
         using WalkerFunc    = Function<void(const TKey&, TValue&)>;

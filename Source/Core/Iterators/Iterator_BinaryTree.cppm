@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt_private.BinaryTreeIterator;
+export module jpt_private.Iterator_BinaryTree;
 
 import jpt.TypeDefs;
 import jpt.TypeTraits;
