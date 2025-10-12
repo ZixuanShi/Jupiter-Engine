@@ -41,8 +41,9 @@ namespace jpt
     {
         const Vec3 right = Vec3::Cross(m_forward, Vec3::Up());
 
-        m_worldPos += m_forward * m_mover.y * kMoveSpeed * deltaSeconds;
-        m_worldPos +=     right * m_mover.x * kMoveSpeed * deltaSeconds;
+        m_worldPos +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
+        m_worldPos += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
+        m_worldPos +=  m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
     }
 
     void Camera::OnKey(const Event_Key& eventKey)
@@ -53,15 +54,23 @@ namespace jpt
 
         switch (key.Value())
         {
-        case Input::Key::W:
-        case Input::Key::S:
-            m_mover.y = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
-            break;
+            // Left/Right
+            case Input::Key::A:
+            case Input::Key::D:
+                m_mover.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
+                break;
 
-        case Input::Key::D:
-        case Input::Key::A:
-            m_mover.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
-            break;
+            // Up/Down
+            case Input::Key::E:
+            case Input::Key::Q:
+                m_mover.y = keyDown ? (key == Input::Key::E ? 1.0f : -1.0f) : 0.0f;
+                break;
+
+            // Fowrard/Backward
+            case Input::Key::W:
+            case Input::Key::S:
+                m_mover.z = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
+                break;
         }
     }
 
