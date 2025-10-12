@@ -21,25 +21,30 @@ export namespace jpt
     class Camera
     {
     private:
-        enum class MouseMode
+        enum class MouseMode : uint8
         {
-            PitchYaw,
-            XY,
+            Pan,    // Horizontal/Vertical movement
+            Orbit,  // Rotate
         };
 
     private:
-        Matrix44 m_matrix;
-        Vec3 m_move;
+        // Position and Rotation
+        Vec3 m_worldPos   = Vec3(2.0f, 2.0f, 2.0f);   /**< Current world position */
+        Precision m_pitch = 0.0f;   /**< (-Pi/2, Pi/2) */
+        Precision m_yaw   = 0.0f;   /**< (-Pi, Pi) */
 
-        Vec3 m_position = Vec3(2.0f, 2.0f, 2.0f);
-        Vec3 m_forward;
+        // Updaters with delta time
+        Vec2 m_mover;    /**< x = left/right, y = forward/backward */
 
-        // Mouse control
+        // Current window the camera is controlling. TODO: Support multiple windows
         Window* m_pWindow = nullptr;
-        Vec2i m_lockMousePos = Vec2i(Constants<int32>::kMax);
-        MouseMode m_mouseMode = MouseMode::XY;
-        float m_pitch = 0.0f;
-        float m_yaw = 0.0f;
+
+        // Controls
+        Vec2i m_lockMousePos  = Vec2i(Constants<int32>::kMax);
+        MouseMode m_mouseMode = MouseMode::Pan;
+
+        // Cached
+        Vec3 m_forward;  /**< Current heading direction, normalized */
 
     public:
         bool Init();
@@ -51,6 +56,7 @@ export namespace jpt
         void OnMouseScroll(const Event_Mouse_Scroll& eventMouseScroll);
 
     public:
-        const Matrix44& GetMatrix() const { return m_matrix; }
+        Matrix44 CalcMatrix() const;
+        Vec3 GetForward() const;
     };
 }
