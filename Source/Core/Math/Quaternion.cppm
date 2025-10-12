@@ -34,7 +34,7 @@ export namespace jpt
 
     public:
         constexpr TQuaternion() = default;
-        constexpr TQuaternion(T x, T y, T z, T w);
+        constexpr TQuaternion(T _x, T _y, T _z, T _w);
 
     public:
         constexpr TQuaternion operator+(const TQuaternion& rhs) const;
@@ -97,11 +97,11 @@ export namespace jpt
     // Member Functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr TQuaternion<T>::TQuaternion(T x, T y, T z, T w)
-        : x(x)
-        , y(y)
-        , z(z)
-        , w(w)
+    constexpr TQuaternion<T>::TQuaternion(T _x, T _y, T _z, T _w)
+        : x(_x)
+        , y(_y)
+        , z(_z)
+        , w(_w)
     {
     }
 
@@ -308,12 +308,12 @@ export namespace jpt
         const T sinHalfAngle = Sin(halfAngle);
         const T cosHalfAngle = Cos(halfAngle);
 
-        const T x = axisAngle.x * sinHalfAngle;
-        const T y = axisAngle.y * sinHalfAngle;
-        const T z = axisAngle.z * sinHalfAngle;
-        const T w = cosHalfAngle;
+        const T _x = axisAngle.x * sinHalfAngle;
+        const T _y = axisAngle.y * sinHalfAngle;
+        const T _z = axisAngle.z * sinHalfAngle;
+        const T _w = cosHalfAngle;
 
-        return TQuaternion(x, y, z, w);
+        return TQuaternion(_x, _y, _z, _w);
     }
 
     template<Numeric T>
@@ -333,12 +333,12 @@ export namespace jpt
         const T sz = Sin(halfZ);
 
         // Compute quaternion components for right-handed system. ZYX order
-        const T x = cx * sy * cz + sx * cy * sz;
-        const T y = sx * sy * cz - cx * cy * sz;
-        const T z = cx * sy * sz - sx * cy * cz;
-        const T w = cx * cy * cz + sx * sy * sz;
+        const T _x = cx * sy * cz + sx * cy * sz;
+        const T _y = sx * sy * cz - cx * cy * sz;
+        const T _z = cx * sy * sz - sx * cy * cz;
+        const T _w = cx * cy * cz + sx * sy * sz;
 
-        return TQuaternion(x, y, z, w).Normalized(); // Ensure unit quaternion
+        return TQuaternion(_x, _y, _z, _w).Normalized(); // Ensure unit quaternion
     }
 
     template<Numeric T>

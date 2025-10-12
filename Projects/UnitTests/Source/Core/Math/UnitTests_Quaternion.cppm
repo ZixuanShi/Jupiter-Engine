@@ -16,10 +16,10 @@ import jpt.Matrix44;
 
 bool operator==(const Quaternion& lhs, const glm::quat& rhs)
 {
-    return jpt::AreValuesClose(lhs.x, rhs.x, 0.05f) && 
-           jpt::AreValuesClose(lhs.y, rhs.y, 0.05f) && 
-           jpt::AreValuesClose(lhs.z, rhs.z, 0.05f) && 
-           jpt::AreValuesClose(lhs.w, rhs.w, 0.05f);
+    return jpt::AreValuesClose(lhs.x, rhs.x) && 
+           jpt::AreValuesClose(lhs.y, rhs.y) && 
+           jpt::AreValuesClose(lhs.z, rhs.z) && 
+           jpt::AreValuesClose(lhs.w, rhs.w);
 }
 
 bool UnitTests_Quaternion_Lerp()
