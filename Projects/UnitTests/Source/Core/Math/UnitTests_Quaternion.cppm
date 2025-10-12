@@ -16,10 +16,10 @@ import jpt.Matrix44;
 
 bool operator==(const Quaternion& lhs, const glm::quat& rhs)
 {
-    return jpt::AreValuesClose(lhs.x, rhs.x, 0.05f) && 
-           jpt::AreValuesClose(lhs.y, rhs.y, 0.05f) && 
-           jpt::AreValuesClose(lhs.z, rhs.z, 0.05f) && 
-           jpt::AreValuesClose(lhs.w, rhs.w, 0.05f);
+    return jpt::AreValuesClose(lhs.x, rhs.x) && 
+           jpt::AreValuesClose(lhs.y, rhs.y) && 
+           jpt::AreValuesClose(lhs.z, rhs.z) && 
+           jpt::AreValuesClose(lhs.w, rhs.w);
 }
 
 bool UnitTests_Quaternion_Lerp()
@@ -72,11 +72,357 @@ bool UnitTests_Quaternion_EulerAngles()
     return true;
 }
 
+bool UnitTests_Quaternion_Direction_X()
+{
+    Quaternion quat = Quaternion::Identity();
+
+    // Rotate around Vec3::Right() axis 90 degrees 4 times
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Up());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Backward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Down());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Forward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Left() axis 90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Left(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Down());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Forward());
+
+    quat.Rotate(Vec3::Left(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Left(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Up());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Backward());
+
+    quat.Rotate(Vec3::Left(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Right() axis -90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Down());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Forward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Up());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Backward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Right() axis 45 degrees 8 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.0f, 0.707f, 0.707f));
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3(0.0f, 0.707f, -0.707f));
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Up());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Backward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.0f, 0.707f, -0.707f));
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3(0.0f, -0.707f, -0.707f));
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.0f, -0.707f, -0.707f));
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3(0.0f, -0.707f, 0.707f));
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Down());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Forward());
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.0f, -0.707f, 0.707f));
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3(0.0f, 0.707f, 0.707f));
+
+    quat.Rotate(Vec3::Right(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    return true;
+}
+
+bool UnitTests_Quaternion_Direction_Y()
+{
+    Quaternion quat = Quaternion::Identity();
+
+    // Rotate around Vec3::Up() axis 90 degrees 4 times
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Left());
+    JPT_ENSURE(quat.Right() == Vec3::Forward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Right());
+    JPT_ENSURE(quat.Right() == Vec3::Backward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Down() axis 90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Down(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Right());
+    JPT_ENSURE(quat.Right() == Vec3::Backward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Down(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Down(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Left());
+    JPT_ENSURE(quat.Right() == Vec3::Forward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Down(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Up() axis -90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Right());
+    JPT_ENSURE(quat.Right() == Vec3::Backward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Left());
+    JPT_ENSURE(quat.Right() == Vec3::Forward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Up() axis 45 degrees 8 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(-0.707f, 0.0f, 0.707f));
+    JPT_ENSURE(quat.Right() == Vec3(0.707f, 0.0f, 0.707f));
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Left());
+    JPT_ENSURE(quat.Right() == Vec3::Forward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(-0.707f, 0.0f, -0.707f));
+    JPT_ENSURE(quat.Right() == Vec3(-0.707f, 0.0f, 0.707f));
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Backward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.707f, 0.0f, -0.707f));
+    JPT_ENSURE(quat.Right() == Vec3(-0.707f, 0.0f, -0.707f));
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Right());
+    JPT_ENSURE(quat.Right() == Vec3::Backward());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3(0.707f, 0.0f, 0.707f));
+    JPT_ENSURE(quat.Right() == Vec3(0.707f, 0.0f, -0.707f));
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    quat.Rotate(Vec3::Up(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    return true;
+}
+
+bool UnitTests_Quaternion_Direction_Z()
+{
+    Quaternion quat = Quaternion::Identity();
+
+    // Rotate around Vec3::Forward() axis 90 degrees 4 times
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Down());  // 
+    JPT_ENSURE(quat.Up() == Vec3::Right());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Up());
+    JPT_ENSURE(quat.Up() == Vec3::Left());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Backward() axis 90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Backward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Up());
+    JPT_ENSURE(quat.Up() == Vec3::Left());
+
+    quat.Rotate(Vec3::Backward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Backward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Down());
+    JPT_ENSURE(quat.Up() == Vec3::Right());
+
+    quat.Rotate(Vec3::Backward(), jpt::ToRadians(90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Forward() axis -90 degrees 4 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Up());
+    JPT_ENSURE(quat.Up() == Vec3::Left());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Down());
+    JPT_ENSURE(quat.Up() == Vec3::Right());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(-90.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    // Rotate around Vec3::Forward() axis 45 degrees 8 times
+    quat = Quaternion::Identity();
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3(0.707f, -0.707f, 0.0f));
+    JPT_ENSURE(quat.Up() == Vec3(0.707f, 0.707f, 0.0f));
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Down());
+    JPT_ENSURE(quat.Up() == Vec3::Right());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3(-0.707f, -0.707f, 0.0f));
+    JPT_ENSURE(quat.Up() == Vec3(0.707f, -0.707f, 0.0f));
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Left());
+    JPT_ENSURE(quat.Up() == Vec3::Down());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3(-0.707f, 0.707f, 0.0f));
+    JPT_ENSURE(quat.Up() == Vec3(-0.707f, -0.707f, 0.0f));
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Up());
+    JPT_ENSURE(quat.Up() == Vec3::Left());
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3(0.707f, 0.707f, 0.0f));
+    JPT_ENSURE(quat.Up() == Vec3(-0.707f, 0.707f, 0.0f));
+
+    quat.Rotate(Vec3::Forward(), jpt::ToRadians(45.0f));
+    JPT_ENSURE(quat.Forward() == Vec3::Forward());
+    JPT_ENSURE(quat.Right() == Vec3::Right());
+    JPT_ENSURE(quat.Up() == Vec3::Up());
+
+    return true;
+}
+
 export bool RunUnitTests_Quaternion()
 {
     JPT_ENSURE(UnitTests_Quaternion_Lerp());
     JPT_ENSURE(UnitTests_Quaternion_SLerp());
     JPT_ENSURE(UnitTests_Quaternion_EulerAngles());
+
+    JPT_ENSURE(UnitTests_Quaternion_Direction_X());
+    JPT_ENSURE(UnitTests_Quaternion_Direction_Y());
+    JPT_ENSURE(UnitTests_Quaternion_Direction_Z());
 
     return true;
 }

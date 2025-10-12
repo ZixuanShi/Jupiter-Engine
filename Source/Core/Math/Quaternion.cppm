@@ -34,7 +34,7 @@ export namespace jpt
 
     public:
         constexpr TQuaternion() = default;
-        constexpr TQuaternion(T x, T y, T z, T w);
+        constexpr TQuaternion(T _x, T _y, T _z, T _w);
 
     public:
         constexpr TQuaternion operator+(const TQuaternion& rhs) const;
@@ -73,6 +73,11 @@ export namespace jpt
         constexpr static TQuaternion Rotation(const Vector3<T>& eulerAngles);
         constexpr void Rotate(const Vector3<T>& axisAngle, T radians);
         constexpr void Rotate(const Vector3<T>& eulerAngles);
+
+        // Directions
+        constexpr Vector3<T> Forward() const;
+        constexpr Vector3<T> Right() const;
+        constexpr Vector3<T> Up() const;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -97,11 +102,11 @@ export namespace jpt
     // Member Functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr TQuaternion<T>::TQuaternion(T x, T y, T z, T w)
-        : x(x)
-        , y(y)
-        , z(z)
-        , w(w)
+    constexpr TQuaternion<T>::TQuaternion(T _x, T _y, T _z, T _w)
+        : x(_x)
+        , y(_y)
+        , z(_z)
+        , w(_w)
     {
     }
 
@@ -308,12 +313,12 @@ export namespace jpt
         const T sinHalfAngle = Sin(halfAngle);
         const T cosHalfAngle = Cos(halfAngle);
 
-        const T x = axisAngle.x * sinHalfAngle;
-        const T y = axisAngle.y * sinHalfAngle;
-        const T z = axisAngle.z * sinHalfAngle;
-        const T w = cosHalfAngle;
+        const T _x = axisAngle.x * sinHalfAngle;
+        const T _y = axisAngle.y * sinHalfAngle;
+        const T _z = axisAngle.z * sinHalfAngle;
+        const T _w = cosHalfAngle;
 
-        return TQuaternion(x, y, z, w);
+        return TQuaternion(_x, _y, _z, _w);
     }
 
     template<Numeric T>
@@ -333,12 +338,12 @@ export namespace jpt
         const T sz = Sin(halfZ);
 
         // Compute quaternion components for right-handed system. ZYX order
-        const T x = cx * sy * cz + sx * cy * sz;
-        const T y = sx * sy * cz - cx * cy * sz;
-        const T z = cx * sy * sz - sx * cy * cz;
-        const T w = cx * cy * cz + sx * sy * sz;
+        const T _x = cx * sy * cz + sx * cy * sz;
+        const T _y = sx * sy * cz - cx * cy * sz;
+        const T _z = cx * sy * sz - sx * cy * cz;
+        const T _w = cx * cy * cz + sx * sy * sz;
 
-        return TQuaternion(x, y, z, w).Normalized(); // Ensure unit quaternion
+        return TQuaternion(_x, _y, _z, _w); // Ensure unit quaternion
     }
 
     template<Numeric T>
@@ -351,6 +356,33 @@ export namespace jpt
     constexpr void TQuaternion<T>::Rotate(const Vector3<T>& eulerAngles)
     {
         *this *= Rotation(eulerAngles);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Forward() const
+    {
+        const T _x = static_cast<T>(2) * (x * z - w * y);
+        const T _y = static_cast<T>(2) * (y * z + w * x);
+        const T _z = static_cast<T>(1) - static_cast<T>(2) * (x * x + y * y);
+        return Vector3<T>(_x, _y, _z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Right() const
+    {
+        const T _x = static_cast<T>(1) - static_cast<T>(2) * (y * y + z * z);
+        const T _y = static_cast<T>(2) * (x * y - w * z);
+        const T _z = static_cast<T>(2) * (x * z + w * y);
+        return Vector3<T>(_x, _y, _z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Up() const
+    {
+        const T _x = static_cast<T>(2) * (x * y + w * z);
+        const T _y = static_cast<T>(1) - static_cast<T>(2) * (x * x + z * z);
+        const T _z = static_cast<T>(2) * (y * z - w * x);
+        return Vector3<T>(_x, _y, _z);
     }
 }
 
