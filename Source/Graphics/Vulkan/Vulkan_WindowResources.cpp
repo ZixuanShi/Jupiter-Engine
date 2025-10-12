@@ -373,11 +373,15 @@ namespace jpt::Vulkan
         vkQueueWaitIdle(m_presentQueue);
     }
 
-    void WindowResources::UpdateUniformBuffer(TimePrecision /*deltaSeconds*/)
+    void WindowResources::UpdateUniformBuffer(TimePrecision deltaSeconds)
     {
         Uniform_MVP mvp = {};
 
         mvp.view = GetVkRenderer()->GetCamera().CalcMatrix();
+
+        static Matrix44 s_model = Matrix44::Identity();
+        s_model.RotateY(ToRadians(45.0f) * deltaSeconds);
+        mvp.model = s_model;
 
         mvp.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
         mvp.proj[1][1] *= -1;
