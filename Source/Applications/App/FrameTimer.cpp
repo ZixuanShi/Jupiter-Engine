@@ -4,6 +4,7 @@ module;
 
 module jpt.FrameTimer;
 
+import jpt.Application;
 import jpt.ThreadUtils;
 import jpt.Renderer;
 import jpt.Graphics_Settings;
@@ -20,7 +21,7 @@ namespace jpt
     void FrameTimer::EndFrame()
     {
         // Cap FPS if necessary
-        const GraphicsSettings& graphicsSettings = GetGraphicsSettings();
+        const Graphics_Settings& graphicsSettings = GetApplication()->GetRenderer()->GetSettings();
         if (graphicsSettings.ShouldCapFPS())
         {
             const StopWatch::Point frameEndTime = StopWatch::Now();
