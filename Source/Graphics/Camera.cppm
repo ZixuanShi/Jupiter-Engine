@@ -34,7 +34,7 @@ export namespace jpt
         Precision m_yaw   = 0.0f;   /**< (-Pi, Pi) */
 
         // Updaters with delta time
-        Vec2 m_mover;    /**< x = left/right, y = forward/backward */
+        Vec3 m_mover;    /**< x = left/right, y = up/down, z = forward/backward */
 
         // Current window the camera is controlling. TODO: Support multiple windows
         Window* m_pWindow = nullptr;
