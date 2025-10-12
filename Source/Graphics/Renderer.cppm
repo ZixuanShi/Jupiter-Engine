@@ -23,7 +23,7 @@ export namespace jpt
     class Renderer
     {
     protected:
-        GraphicsSettings m_settings;
+        Graphics_Settings m_settings;
         TextureSampler* m_pTextureSampler = nullptr;
         Camera m_camera;
         GraphicsAPI m_api = GraphicsAPI::Unknown;
@@ -49,14 +49,12 @@ export namespace jpt
         virtual void SetShouldRecreateSwapChains() {}
 
     public:
-        GraphicsSettings& GetSettings();
+        Graphics_Settings& GetSettings();
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
         Camera& GetCamera() { return m_camera; }
         GraphicsAPI GetAPI() const { return m_api; }
         
-        const GraphicsSettings& GetSettings() const;
+        const Graphics_Settings& GetSettings() const;
         const Camera& GetCamera() const { return m_camera; }
     };
-
-    GraphicsSettings& GetGraphicsSettings();
 }

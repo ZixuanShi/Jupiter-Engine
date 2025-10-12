@@ -7,7 +7,7 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-    class GraphicsSettings
+    class Graphics_Settings
     {
     private:
         TimePrecision m_targetFPS = -1.0f;

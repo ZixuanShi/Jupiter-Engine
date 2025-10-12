@@ -16,7 +16,7 @@ namespace jpt
     static const String kTargetFPS  = "targetFPS";
     static const String kVSyncOnKey = "VSyncMode";
 
-    bool GraphicsSettings::PreInit()
+    bool Graphics_Settings::PreInit()
     {
         const ProjectSettings& projSettings = ProjectSettings::GetInstance();
 
@@ -26,7 +26,7 @@ namespace jpt
         return true;
     }
 
-    void GraphicsSettings::SetTargetFPS(TimePrecision targetFPS)
+    void Graphics_Settings::SetTargetFPS(TimePrecision targetFPS)
     {
         if (AreValuesClose(m_targetFPS, targetFPS))
         {
@@ -45,7 +45,7 @@ namespace jpt
         }
     }
 
-    void GraphicsSettings::SetVSyncMode(VSyncMode VSyncMode)
+    void Graphics_Settings::SetVSyncMode(VSyncMode VSyncMode)
     {
         if (m_VSyncMode == VSyncMode)
         {
