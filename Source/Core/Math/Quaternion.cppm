@@ -73,6 +73,11 @@ export namespace jpt
         constexpr static TQuaternion Rotation(const Vector3<T>& eulerAngles);
         constexpr void Rotate(const Vector3<T>& axisAngle, T radians);
         constexpr void Rotate(const Vector3<T>& eulerAngles);
+
+        // Directions
+        constexpr Vector3<T> Forward() const;
+        constexpr Vector3<T> Right() const;
+        constexpr Vector3<T> Up() const;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -338,7 +343,7 @@ export namespace jpt
         const T _z = cx * sy * sz - sx * cy * cz;
         const T _w = cx * cy * cz + sx * sy * sz;
 
-        return TQuaternion(_x, _y, _z, _w).Normalized(); // Ensure unit quaternion
+        return TQuaternion(_x, _y, _z, _w); // Ensure unit quaternion
     }
 
     template<Numeric T>
@@ -351,6 +356,33 @@ export namespace jpt
     constexpr void TQuaternion<T>::Rotate(const Vector3<T>& eulerAngles)
     {
         *this *= Rotation(eulerAngles);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Forward() const
+    {
+        const T _x = static_cast<T>(2) * (x * z - w * y);
+        const T _y = static_cast<T>(2) * (y * z + w * x);
+        const T _z = static_cast<T>(1) - static_cast<T>(2) * (x * x + y * y);
+        return Vector3<T>(_x, _y, _z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Right() const
+    {
+        const T _x = static_cast<T>(1) - static_cast<T>(2) * (y * y + z * z);
+        const T _y = static_cast<T>(2) * (x * y - w * z);
+        const T _z = static_cast<T>(2) * (x * z + w * y);
+        return Vector3<T>(_x, _y, _z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::Up() const
+    {
+        const T _x = static_cast<T>(2) * (x * y + w * z);
+        const T _y = static_cast<T>(1) - static_cast<T>(2) * (x * x + z * z);
+        const T _z = static_cast<T>(2) * (y * z - w * x);
+        return Vector3<T>(_x, _y, _z);
     }
 }
 
