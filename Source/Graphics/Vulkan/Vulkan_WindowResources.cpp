@@ -377,7 +377,7 @@ namespace jpt::Vulkan
     {
         Uniform_MVP mvp = {};
 
-        mvp.view = GetVkRenderer()->GetCamera().GetMatrix();
+        mvp.view = GetVkRenderer()->GetCamera().CalcMatrix();
 
         mvp.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);
         mvp.proj[1][1] *= -1;

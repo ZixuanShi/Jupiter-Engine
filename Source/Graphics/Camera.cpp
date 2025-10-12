@@ -30,9 +30,9 @@ namespace jpt
         EventManager::GetInstance().Register<Event_Mouse_Scroll>(this, &Camera::OnMouseScroll);
 
         // Init position and rotation
-        m_forward = (Vec3(0.0f) - m_position).Normalized();
-        m_pitch = Asin(m_forward.y);
-        m_yaw   = Atan2(m_forward.x, m_forward.z);
+        m_forward = (Vec3(0.0f) - m_worldPos).Normalized();
+        m_pitch   = Asin(m_forward.y);
+        m_yaw     = Atan2(m_forward.x, m_forward.z);
 
         return true;
     }
@@ -41,10 +41,8 @@ namespace jpt
     {
         const Vec3 right = Vec3::Cross(m_forward, Vec3::Up());
 
-        m_position += m_forward * m_move.z * kMoveSpeed * deltaSeconds;
-        m_position +=     right * m_move.x * kMoveSpeed * deltaSeconds;
-
-        m_matrix = Matrix44::LookAt(m_position, m_position + m_forward);
+        m_worldPos += m_forward * m_mover.y * kMoveSpeed * deltaSeconds;
+        m_worldPos +=     right * m_mover.x * kMoveSpeed * deltaSeconds;
     }
 
     void Camera::OnKey(const Event_Key& eventKey)
@@ -57,12 +55,12 @@ namespace jpt
         {
         case Input::Key::W:
         case Input::Key::S:
-            m_move.z = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
+            m_mover.y = keyDown ? (key == Input::Key::W ? 1.0f : -1.0f) : 0.0f;
             break;
 
         case Input::Key::D:
         case Input::Key::A:
-            m_move.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
+            m_mover.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
             break;
         }
     }
@@ -75,12 +73,12 @@ namespace jpt
         // Right mouse button. FPS camera rotation
         if (button == Input::MouseButton::Right)
         {
-            m_mouseMode = MouseMode::PitchYaw;
+            m_mouseMode = MouseMode::Orbit;
         }
         // Wheel button. Move camera up/down and left/right
         else if (button == Input::MouseButton::Wheel)
         {
-            m_mouseMode = MouseMode::XY;
+            m_mouseMode = MouseMode::Pan;
         }
         else
         {
@@ -121,7 +119,7 @@ namespace jpt
 
         switch (m_mouseMode)
         {
-            case MouseMode::PitchYaw:
+            case MouseMode::Orbit:
             {
                 // Update the yaw and pitch relative to the mouse movement
                 m_pitch += dy * kSensitivity;
@@ -131,7 +129,7 @@ namespace jpt
                 m_pitch = Clamp(m_pitch, -kPitchLimit, kPitchLimit);
                 m_yaw   = Modf(m_yaw, TwoPi);
 
-                // Calculate the updated forward vector
+                // Calculate the new forward vector
                 m_forward.x = Cos(m_pitch) * Sin(m_yaw);
                 m_forward.y = Sin(m_pitch);
                 m_forward.z = Cos(m_pitch) * Cos(m_yaw);
@@ -139,11 +137,11 @@ namespace jpt
 
                 break;
             }
-            case MouseMode::XY:
+            case MouseMode::Pan:
             {
                 // Move the camera up/down and left/right
-                m_position += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
-                m_position += Vec3::Up() * dy * kSensitivity;
+                m_worldPos += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
+                m_worldPos += Vec3::Up() * dy * kSensitivity;
 
                 break;
             }
@@ -162,6 +160,16 @@ namespace jpt
     {
         const double y = eventMouseScroll.GetY();
 
-        m_position += m_forward * static_cast<Precision>(y) * kScrollSpeed;
+        m_worldPos += m_forward * static_cast<Precision>(y) * kScrollSpeed;
+    }
+
+    Matrix44 Camera::CalcMatrix() const
+    {
+        return Matrix44::LookAt(m_worldPos, m_worldPos + m_forward);
+    }
+
+    Vec3 Camera::GetForward() const
+    {
+        return m_forward;
     }
 }
