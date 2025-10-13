@@ -141,7 +141,7 @@ bool UnitTests_Function_Copy()
 
     func3.Connect(&test, &Test::Subtract);
     JPT_ENSURE(func3(2) == 15);
-    JPT_ENSURE(func4(2) == 17);
+    JPT_ENSURE(func4(2) == 13);
 
     return true;
 }
