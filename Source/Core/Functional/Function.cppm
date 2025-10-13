@@ -37,8 +37,9 @@ export namespace jpt
         {
             TFunction m_function;
 
-            FunctionData(TFunction function)
-                : m_function(function)
+            template<class TFunc>
+            FunctionData(TFunc&& function)
+                : m_function(Forward<TFunc>(function))
             {
             }
 
