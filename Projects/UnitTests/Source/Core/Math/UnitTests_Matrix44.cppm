@@ -49,7 +49,7 @@ bool UnitTests_Matrix44_GLM()
     glmMat4 = glm::rotate(glmMat4, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     //LogGlmMatrix44(glmMat4);
 
-    matrix44.Rotate(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f));
+    matrix44.RotateEulerAngles(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f));
     //JPT_LOG(matrix44);
 
     // Scaling

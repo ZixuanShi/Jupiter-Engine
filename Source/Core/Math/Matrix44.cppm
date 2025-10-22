@@ -10,13 +10,13 @@ export module jpt.Matrix44;
 
 import jpt.Concepts;
 import jpt.Constants;
-import jpt.TypeDefs;
 import jpt.Math;
 import jpt.Math_Settings;
+import jpt.String;
+import jpt.TypeDefs;
+import jpt.Utilities;
 import jpt.Vector3;
 import jpt.Vector4;
-import jpt.Utilities;
-import jpt.String;
 
 export namespace jpt
 {
@@ -44,8 +44,8 @@ export namespace jpt
     public:
         constexpr TMatrix44<T>  operator* (const TMatrix44<T>& rhs) const;
         constexpr TMatrix44<T>& operator*=(const TMatrix44<T>& rhs);
-        constexpr Vector3<T>    operator* (const Vector3<T>&  rhs) const;
-        constexpr Vector4<T>    operator* (const Vector4<T>&   rhs) const;
+        constexpr Vector3<T>    operator* (const Vector3<T>& rhs) const;
+        constexpr Vector4<T>    operator* (const Vector4<T>& rhs) const;
 
         constexpr       Vector4<T>& operator[](size_t index)       { return m[index]; }
         constexpr const Vector4<T>& operator[](size_t index) const { return m[index]; }
@@ -62,14 +62,16 @@ export namespace jpt
         constexpr static TMatrix44<T> RotationX(T radians);
         constexpr static TMatrix44<T> RotationY(T radians);
         constexpr static TMatrix44<T> RotationZ(T radians);
-        constexpr static TMatrix44<T> Rotation(const Vector3<T>& radians);
-        constexpr static TMatrix44<T> Rotation(T pitch, T yaw, T roll);
         constexpr void RotateX(T radians);
         constexpr void RotateY(T radians);
         constexpr void RotateZ(T radians);
-        constexpr void Rotate(const Vector3<T>& radians);
-        constexpr void Rotate(T pitch, T yaw, T roll);
-        constexpr Vector3<T> GetRotation() const;    // Euler Angles in Radians
+
+        // Euler Angles
+        constexpr static TMatrix44<T> FromEulerAngles(const Vector3<T>& eulerAngles);
+        constexpr static TMatrix44<T> FromEulerAngles(T pitch, T yaw, T roll);
+        constexpr void RotateEulerAngles(const Vector3<T>& eulerAngles);
+        constexpr void RotateEulerAngles(T pitch, T yaw, T roll);
+        constexpr Vector3<T> CalcEulerAngles() const;    // Euler Angles in Radians
 
         // Scaling & Size
         constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
@@ -270,13 +272,13 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix44<T> TMatrix44<T>::Rotation(const Vector3<T>& radians)
+    constexpr TMatrix44<T> TMatrix44<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
     {
-        return RotationX(radians.x) * RotationY(radians.y) * RotationZ(radians.z);
+        return RotationX(eulerAngles.x) * RotationY(eulerAngles.y) * RotationZ(eulerAngles.z);
     }
 
     template<Numeric T>
-    constexpr TMatrix44<T> TMatrix44<T>::Rotation(T pitch, T yaw, T roll)
+    constexpr TMatrix44<T> TMatrix44<T>::FromEulerAngles(T pitch, T yaw, T roll)
     {
         return RotationX(pitch) * RotationY(yaw) * RotationZ(roll);
     }
@@ -300,19 +302,19 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr void TMatrix44<T>::Rotate(const Vector3<T>& radians)
+    constexpr void TMatrix44<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
-        *this *= Rotation(radians);
+        *this *= FromEulerAngles(eulerAngles);
     }
 
     template<Numeric T>
-    constexpr void TMatrix44<T>::Rotate(T pitch, T yaw, T roll)
+    constexpr void TMatrix44<T>::RotateEulerAngles(T pitch, T yaw, T roll)
     {
-        *this *= Rotation(pitch, yaw, roll);
+        *this *= FromEulerAngles(pitch, yaw, roll);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> TMatrix44<T>::GetRotation() const
+    constexpr Vector3<T> TMatrix44<T>::CalcEulerAngles() const
     {
         // Extracting Euler Angles from a Rotation Matrix
 
