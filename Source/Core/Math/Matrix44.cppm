@@ -73,6 +73,9 @@ export namespace jpt
         constexpr void RotateEulerAngles(T pitch, T yaw, T roll);
         constexpr Vector3<T> CalcEulerAngles() const;    // Euler Angles in Radians
 
+        // Quaternions
+
+
         // Scaling & Size
         constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
         constexpr static TMatrix44<T> Scaling(T x, T y, T z);

@@ -71,6 +71,7 @@ export namespace jpt
         constexpr static TQuaternion FromEulerAngles(const Vector3<T>& eulerAngles);
         constexpr void RotateEulerAngles(const Vector3<T>& axisAngle, T radians);
         constexpr void RotateEulerAngles(const Vector3<T>& eulerAngles);
+        constexpr Vector3<T> CalcEulerAngles() const;
 
         // Directions
         constexpr Vector3<T> Forward() const;
@@ -319,6 +320,50 @@ export namespace jpt
     constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
         *this *= FromEulerAngles(eulerAngles);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::CalcEulerAngles() const
+    {
+        // Convert quaternion to Euler angles (pitch, yaw, roll)
+        // Right-handed system, XYZ order
+
+        const TQuaternion<T> q = Normalized();
+
+        // Test for gimbal lock
+        const T test = q.x * q.y + q.z * q.w;
+        constexpr T singularityThreshold = static_cast<T>(0.4999); // Just under 0.5
+
+        if (test > singularityThreshold) // North pole singularity
+        {
+            const T yaw = static_cast<T>(2) * Atan2(q.x, q.w);
+            const T pitch = kPi<T> / static_cast<T>(2);
+            const T roll = static_cast<T>(0);
+            return Vector3<T>(pitch, yaw, roll);
+        }
+
+        if (test < -singularityThreshold) // South pole singularity
+        {
+            const T yaw = static_cast<T>(-2) * Atan2(q.x, q.w);
+            const T pitch = -kPi<T> / static_cast<T>(2);
+            const T roll = static_cast<T>(0);
+            return Vector3<T>(pitch, yaw, roll);
+        }
+
+        // Normal case
+        const T sqx = q.x * q.x;
+        const T sqy = q.y * q.y;
+        const T sqz = q.z * q.z;
+
+        const T pitch = Atan2(static_cast<T>(2) * (q.w * q.x - q.y * q.z),
+            static_cast<T>(1) - static_cast<T>(2) * (sqx + sqy));
+
+        const T yaw = Asin(static_cast<T>(2) * test);
+
+        const T roll = Atan2(static_cast<T>(2) * (q.w * q.z - q.x * q.y),
+            static_cast<T>(1) - static_cast<T>(2) * (sqy + sqz));
+
+        return Vector3<T>(pitch, yaw, roll);
     }
 
     template<Numeric T>
