@@ -326,44 +326,33 @@ export namespace jpt
     constexpr Vector3<T> TQuaternion<T>::CalcEulerAngles() const
     {
         // Convert quaternion to Euler angles (pitch, yaw, roll)
-        // Right-handed system, XYZ order
+        // Right-handed system, XYZ order (matching Matrix44::CalcEulerAngles())
 
         const TQuaternion<T> q = Normalized();
 
-        // Test for gimbal lock
-        const T test = q.x * q.y + q.z * q.w;
-        constexpr T singularityThreshold = static_cast<T>(0.4999); // Just under 0.5
+        // Convert to rotation matrix elements (matching Matrix44 column-major layout)
+        // rotation[i][j] means column i, row j
+        const T r00 = static_cast<T>(1) - static_cast<T>(2) * (q.y * q.y + q.z * q.z);
+        const T r10 = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
+        const T r20 = static_cast<T>(2) * (q.x * q.z - q.w * q.y);
+        const T r21 = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
+        const T r22 = static_cast<T>(1) - static_cast<T>(2) * (q.x * q.x + q.y * q.y);
 
-        if (test > singularityThreshold) // North pole singularity
+        // Same formula as Matrix44::GetRotation()
+        const T sy = Sqrt(r00 * r00 + r10 * r10);
+
+        if (sy > kEpsilon<T>)
         {
-            const T yaw = static_cast<T>(2) * Atan2(q.x, q.w);
-            const T pitch = kPi<T> / static_cast<T>(2);
-            const T roll = static_cast<T>(0);
+            const T pitch = -Atan2(r21, r22);
+            const T yaw = -Atan2(-r20, sy);
+            const T roll = -Atan2(r10, r00);
             return Vector3<T>(pitch, yaw, roll);
         }
-
-        if (test < -singularityThreshold) // South pole singularity
+        else // Gimbal lock
         {
-            const T yaw = static_cast<T>(-2) * Atan2(q.x, q.w);
-            const T pitch = -kPi<T> / static_cast<T>(2);
-            const T roll = static_cast<T>(0);
-            return Vector3<T>(pitch, yaw, roll);
+            JPT_ASSERT(false, "Gimbal lock detected");
+            return Vector3<T>(0);
         }
-
-        // Normal case
-        const T sqx = q.x * q.x;
-        const T sqy = q.y * q.y;
-        const T sqz = q.z * q.z;
-
-        const T pitch = Atan2(static_cast<T>(2) * (q.w * q.x - q.y * q.z),
-            static_cast<T>(1) - static_cast<T>(2) * (sqx + sqy));
-
-        const T yaw = Asin(static_cast<T>(2) * test);
-
-        const T roll = Atan2(static_cast<T>(2) * (q.w * q.z - q.x * q.y),
-            static_cast<T>(1) - static_cast<T>(2) * (sqy + sqz));
-
-        return Vector3<T>(pitch, yaw, roll);
     }
 
     template<Numeric T>

@@ -75,7 +75,7 @@ export namespace jpt
         constexpr Vector3<T> CalcEulerAngles() const;    // Euler Angles in Radians
 
         // Quaternions
-
+        constexpr static TMatrix44<T> FromQuaternion(const TQuaternion<T>& quaternion);
 
         // Scaling & Size
         constexpr static TMatrix44<T> Scaling(const Vector3<T>& v);
@@ -343,6 +343,26 @@ export namespace jpt
             JPT_ASSERT(false, "Gimbal lock detected");
             return Vector3<T>(0);
         }
+    }
+
+    template<Numeric T>
+    constexpr TMatrix44<T> TMatrix44<T>::FromQuaternion(const TQuaternion<T>& quaternion)
+    {
+        const T xx = quaternion.x * quaternion.x;
+        const T yy = quaternion.y * quaternion.y;
+        const T zz = quaternion.z * quaternion.z;
+        const T xy = quaternion.x * quaternion.y;
+        const T xz = quaternion.x * quaternion.z;
+        const T yz = quaternion.y * quaternion.z;
+        const T wx = quaternion.w * quaternion.x;
+        const T wy = quaternion.w * quaternion.y;
+        const T wz = quaternion.w * quaternion.z;
+
+        // Column-major order
+        return TMatrix44<T>(1 - 2 * (yy + zz),     2 * (xy + wz),     2 * (xz - wy), 0,
+                                2 * (xy - wz), 1 - 2 * (xx + zz),     2 * (yz + wx), 0,
+                                2 * (xz + wy),     2 * (yz - wx), 1 - 2 * (xx + yy), 0,
+                                            0,                 0,                 0, 1);
     }
 
     template<Numeric T>

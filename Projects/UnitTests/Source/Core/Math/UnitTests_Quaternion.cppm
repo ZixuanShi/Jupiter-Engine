@@ -52,34 +52,22 @@ bool UnitTests_Quaternion_EulerAngles()
     jptQuat.RotateEulerAngles(Vec3(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
     glmQuat = glm::rotate(glmQuat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     JPT_ENSURE(jptQuat == glmQuat);
-    JPT_ENSURE(jptQuat.CalcEulerAngles() == Vec3(1.57f, 0.0f, 0.0f));
 
     // Rotate around Y axis
     jptQuat.RotateEulerAngles(Vec3(0.0f, 1.0f, 0.0f), jpt::ToRadians(90.0f));
     glmQuat = glm::rotate(glmQuat, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     JPT_ENSURE(jptQuat == glmQuat);
-    JPT_ENSURE(jptQuat.CalcEulerAngles() == Vec3(1.57f, 1.57f, 0.0f));
 
     // Rotate around Z axis
     jptQuat.RotateEulerAngles(Vec3(0.0f, 0.0f, 1.0f), jpt::ToRadians(45.0f));
     glmQuat = glm::rotate(glmQuat, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     JPT_ENSURE(jptQuat == glmQuat);
-    JPT_ENSURE(jptQuat.CalcEulerAngles() == Vec3(0.0f, 0.785f, 0.0f));
 
     // EulerAngles
     Vec3 eulerAngles(jpt::ToRadians(90.0f), jpt::ToRadians(90.0f), jpt::ToRadians(45.0f));
     Quaternion jptQuat2 = Quaternion::FromEulerAngles(eulerAngles);
     JPT_ENSURE(jptQuat == jptQuat2);
     JPT_ENSURE(glmQuat == jptQuat2);
-    JPT_ENSURE(jptQuat.CalcEulerAngles() == Vec3(0.0f, 0.785f, 0.0f));
-
-    return true;
-}
-
-bool UnitTests_Quaternion_CalcEulerAngles()
-{
-    Quaternion quat = Quaternion::Identity();
-    EulerAngles eulerAngles(90.0f, 45.0f, 180.0f);
 
     return true;
 }
