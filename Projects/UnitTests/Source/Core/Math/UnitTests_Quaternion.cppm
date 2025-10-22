@@ -76,6 +76,14 @@ bool UnitTests_Quaternion_EulerAngles()
     return true;
 }
 
+bool UnitTests_Quaternion_CalcEulerAngles()
+{
+    Quaternion quat = Quaternion::Identity();
+    EulerAngles eulerAngles(90.0f, 45.0f, 180.0f);
+
+    return true;
+}
+
 bool UnitTests_Quaternion_Direction_X()
 {
     Quaternion quat = Quaternion::Identity();
