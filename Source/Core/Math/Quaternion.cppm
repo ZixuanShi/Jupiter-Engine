@@ -65,14 +65,12 @@ export namespace jpt
         // Interpolation
         constexpr static TQuaternion Lerp(const TQuaternion& start, const TQuaternion& end, T t);
         constexpr static TQuaternion Slerp(const TQuaternion& start, const TQuaternion& end, T t);
-        constexpr TQuaternion Lerp(const TQuaternion& rhs, T t) const;
-        constexpr TQuaternion Slerp(const TQuaternion& rhs, T t) const;
 
         // Rotation & Orientation
-        constexpr static TQuaternion Rotation(const Vector3<T>& axisAngle, T radians);
-        constexpr static TQuaternion Rotation(const Vector3<T>& eulerAngles);
-        constexpr void Rotate(const Vector3<T>& axisAngle, T radians);
-        constexpr void Rotate(const Vector3<T>& eulerAngles);
+        constexpr static TQuaternion FromAxisAngle(const Vector3<T>& axisAngle, T radians);
+        constexpr static TQuaternion FromEulerAngles(const Vector3<T>& eulerAngles);
+        constexpr void RotateEulerAngles(const Vector3<T>& axisAngle, T radians);
+        constexpr void RotateEulerAngles(const Vector3<T>& eulerAngles);
 
         // Directions
         constexpr Vector3<T> Forward() const;
@@ -239,39 +237,6 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TQuaternion<T> TQuaternion<T>::Lerp(const TQuaternion& rhs, T t) const
-    {
-        const T t1 = static_cast<T>(1) - t;
-        return TQuaternion(
-            x * t1 + rhs.x * t,
-            y * t1 + rhs.y * t,
-            z * t1 + rhs.z * t,
-            w * t1 + rhs.w * t);
-    }
-
-    template<Numeric T>
-    constexpr TQuaternion<T> TQuaternion<T>::Slerp(const TQuaternion& rhs, T t) const
-    {
-        const T dot = Dot(rhs);
-        const T epsilon = static_cast<T>(0.0001);
-        if (dot > static_cast<T>(1) - epsilon)
-        {
-            return Lerp(rhs, t);
-        }
-
-        const T theta = std::acos(dot);
-        const T theta1 = theta * (static_cast<T>(1) - t);
-        const T theta2 = theta * t;
-        const T sinTheta1 = Sin(theta1);
-        const T sinTheta2 = Sin(theta2);
-        const T sinTheta = Sin(theta);
-
-        const TQuaternion q1 = *this * sinTheta1 / sinTheta;
-        const TQuaternion q2 = rhs * sinTheta2 / sinTheta;
-        return q1 + q2;
-    }
-
-    template<Numeric T>
     constexpr TQuaternion<T> TQuaternion<T>::Lerp(const TQuaternion& start, const TQuaternion& end, T t)
     {
         const T t1 = static_cast<T>(1) - t;
@@ -305,7 +270,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TQuaternion<T> TQuaternion<T>::Rotation(const Vector3<T>& axisAngle, T radians)
+    constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
     {
         JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
 
@@ -322,14 +287,12 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TQuaternion<T> TQuaternion<T>::Rotation(const Vector3<T>& eulerAngles)
+    constexpr TQuaternion<T> TQuaternion<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
     {
-        // Convert angles to radians and halve them
         const T halfX = eulerAngles.x * static_cast<T>(0.5); // pitch
         const T halfY = eulerAngles.y * static_cast<T>(0.5); // yaw
         const T halfZ = eulerAngles.z * static_cast<T>(0.5); // roll
 
-        // Compute sines and cosines
         const T cx = Cos(halfX);
         const T sx = Sin(halfX);
         const T cy = Cos(halfY);
@@ -337,25 +300,25 @@ export namespace jpt
         const T cz = Cos(halfZ);
         const T sz = Sin(halfZ);
 
-        // Compute quaternion components for right-handed system. ZYX order
-        const T _x = cx * sy * cz + sx * cy * sz;
-        const T _y = sx * sy * cz - cx * cy * sz;
-        const T _z = cx * sy * sz - sx * cy * cz;
-        const T _w = cx * cy * cz + sx * sy * sz;
+        // Compute quaternion components for right-handed system. XYZ order
+        const T _w = cx * cy * cz - sx * sy * sz;
+        const T _x = sx * cy * cz + cx * sy * sz;
+        const T _y = cx * sy * cz - sx * cy * sz;
+        const T _z = cx * cy * sz + sx * sy * cz;
 
-        return TQuaternion(_x, _y, _z, _w); // Ensure unit quaternion
+        return TQuaternion(_x, _y, _z, _w);
     }
 
     template<Numeric T>
-    constexpr void TQuaternion<T>::Rotate(const Vector3<T>& axisAngle, T radians)
+    constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& axisAngle, T radians)
     {
-        *this *= Rotation(axisAngle, radians);
+        *this *= FromAxisAngle(axisAngle, radians);
     }
 
     template<Numeric T>
-    constexpr void TQuaternion<T>::Rotate(const Vector3<T>& eulerAngles)
+    constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
-        *this *= Rotation(eulerAngles);
+        *this *= FromEulerAngles(eulerAngles);
     }
 
     template<Numeric T>
