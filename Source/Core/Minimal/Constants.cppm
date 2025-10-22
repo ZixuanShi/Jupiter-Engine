@@ -38,6 +38,9 @@ export namespace jpt
 
     template<typename T = Precision>
     constexpr T kHalfPi = static_cast<T>(1.57079632679489661923f);
+
+    template<typename T = Precision>
+    constexpr T kEpsilon = Constants<T>::kEpsilon;
 }
 
 export constexpr Precision Pi = jpt::kPi<Precision>;

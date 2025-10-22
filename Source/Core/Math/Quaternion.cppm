@@ -71,6 +71,7 @@ export namespace jpt
         constexpr static TQuaternion FromEulerAngles(const Vector3<T>& eulerAngles);
         constexpr void RotateEulerAngles(const Vector3<T>& axisAngle, T radians);
         constexpr void RotateEulerAngles(const Vector3<T>& eulerAngles);
+        constexpr Vector3<T> CalcEulerAngles() const;
 
         // Directions
         constexpr Vector3<T> Forward() const;
@@ -319,6 +320,39 @@ export namespace jpt
     constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
         *this *= FromEulerAngles(eulerAngles);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> TQuaternion<T>::CalcEulerAngles() const
+    {
+        // Convert quaternion to Euler angles (pitch, yaw, roll)
+        // Right-handed system, XYZ order (matching Matrix44::CalcEulerAngles())
+
+        const TQuaternion<T> q = Normalized();
+
+        // Convert to rotation matrix elements (matching Matrix44 column-major layout)
+        // rotation[i][j] means column i, row j
+        const T r00 = static_cast<T>(1) - static_cast<T>(2) * (q.y * q.y + q.z * q.z);
+        const T r10 = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
+        const T r20 = static_cast<T>(2) * (q.x * q.z - q.w * q.y);
+        const T r21 = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
+        const T r22 = static_cast<T>(1) - static_cast<T>(2) * (q.x * q.x + q.y * q.y);
+
+        // Same formula as Matrix44::GetRotation()
+        const T sy = Sqrt(r00 * r00 + r10 * r10);
+
+        if (sy > kEpsilon<T>)
+        {
+            const T pitch = -Atan2(r21, r22);
+            const T yaw = -Atan2(-r20, sy);
+            const T roll = -Atan2(r10, r00);
+            return Vector3<T>(pitch, yaw, roll);
+        }
+        else // Gimbal lock
+        {
+            JPT_ASSERT(false, "Gimbal lock detected");
+            return Vector3<T>(0);
+        }
     }
 
     template<Numeric T>

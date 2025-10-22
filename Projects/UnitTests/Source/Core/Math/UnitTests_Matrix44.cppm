@@ -49,7 +49,7 @@ bool UnitTests_Matrix44_GLM()
     glmMat4 = glm::rotate(glmMat4, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     //LogGlmMatrix44(glmMat4);
 
-    matrix44.Rotate(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f));
+    matrix44.RotateEulerAngles(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f));
     //JPT_LOG(matrix44);
 
     // Scaling
@@ -72,6 +72,29 @@ bool UnitTests_Matrix44_Rotation()
     return true;
 }
 
+bool UnitTests_Matrix44_Quaternion()
+{
+    // Both matrix44 and quaternion rotate the same eulerAngles, see if they are equal
+
+    auto tester = [](Vec3 eulerAngles)
+    {
+        const Quaternion quaterion = Quaternion::FromEulerAngles(eulerAngles);
+        const Matrix44 matrixFromQuat = Matrix44::FromQuaternion(quaterion);
+        const Matrix44 matrixFromEuler = Matrix44::FromEulerAngles(eulerAngles);
+
+        return matrixFromQuat == matrixFromEuler;
+    };
+
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(30.0f), jpt::ToRadians(45.0f), jpt::ToRadians(60.0f))));
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(-90.0f), jpt::ToRadians(0.0f), jpt::ToRadians(90.0f))));
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(180.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(135.0f))));
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(0.0f), jpt::ToRadians(0.0f), jpt::ToRadians(0.0f))));
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(360.0f), jpt::ToRadians(360.0f), jpt::ToRadians(360.0f))));
+    JPT_ENSURE(tester(Vec3(jpt::ToRadians(-180.0f), jpt::ToRadians(-180.0f), jpt::ToRadians(-180.0f))));
+
+    return true;
+}
+
 bool UnitTests_Matrix44_Scaling()
 {
     return true;
@@ -87,8 +110,12 @@ export bool RunUnitTests_Matrix44()
     JPT_ENSURE(UnitTests_Matrix44_GLM());
 
     JPT_ENSURE(UnitTests_Matrix44_Translation());
+
     JPT_ENSURE(UnitTests_Matrix44_Rotation());
+    JPT_ENSURE(UnitTests_Matrix44_Quaternion());
+
     JPT_ENSURE(UnitTests_Matrix44_Scaling());
+
     JPT_ENSURE(UnitTests_Matrix44_Transpose());
 
     return true;
