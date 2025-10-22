@@ -289,12 +289,10 @@ export namespace jpt
     template<Numeric T>
     constexpr TQuaternion<T> TQuaternion<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
     {
-        // Convert angles to radians and halve them
         const T halfX = eulerAngles.x * static_cast<T>(0.5); // pitch
         const T halfY = eulerAngles.y * static_cast<T>(0.5); // yaw
         const T halfZ = eulerAngles.z * static_cast<T>(0.5); // roll
 
-        // Compute sines and cosines
         const T cx = Cos(halfX);
         const T sx = Sin(halfX);
         const T cy = Cos(halfY);
@@ -302,13 +300,13 @@ export namespace jpt
         const T cz = Cos(halfZ);
         const T sz = Sin(halfZ);
 
-        // Compute quaternion components for right-handed system. ZYX order
-        const T _x = cx * sy * cz + sx * cy * sz;
-        const T _y = sx * sy * cz - cx * cy * sz;
-        const T _z = cx * sy * sz - sx * cy * cz;
-        const T _w = cx * cy * cz + sx * sy * sz;
+        // Compute quaternion components for right-handed system. XYZ order
+        const T _w = cx * cy * cz - sx * sy * sz;
+        const T _x = sx * cy * cz + cx * sy * sz;
+        const T _y = cx * sy * cz - sx * cy * sz;
+        const T _z = cx * cy * sz + sx * sy * cz;
 
-        return TQuaternion(_x, _y, _z, _w); // Ensure unit quaternion
+        return TQuaternion(_x, _y, _z, _w);
     }
 
     template<Numeric T>

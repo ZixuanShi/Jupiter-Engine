@@ -48,14 +48,14 @@ bool UnitTests_Quaternion_EulerAngles()
     glm::quat glmQuat = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
     JPT_ENSURE(jptQuat == glmQuat);
 
-    // Rotate around Y axis
-    jptQuat.RotateEulerAngles(Vec3(0.0f, 1.0f, 0.0f), jpt::ToRadians(90.0f));
-    glmQuat = glm::rotate(glmQuat, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    JPT_ENSURE(jptQuat == glmQuat);
-
     // Rotate around X axis
     jptQuat.RotateEulerAngles(Vec3(1.0f, 0.0f, 0.0f), jpt::ToRadians(90.0f));
     glmQuat = glm::rotate(glmQuat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    JPT_ENSURE(jptQuat == glmQuat);
+
+    // Rotate around Y axis
+    jptQuat.RotateEulerAngles(Vec3(0.0f, 1.0f, 0.0f), jpt::ToRadians(90.0f));
+    glmQuat = glm::rotate(glmQuat, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     JPT_ENSURE(jptQuat == glmQuat);
 
     // Rotate around Z axis
