@@ -37,8 +37,9 @@ export namespace jpt
         {
             TFunction m_function;
 
-            FunctionData(TFunction function)
-                : m_function(function)
+            template<typename T>
+            FunctionData(T&& function)
+                : m_function(Forward<T>(function))
             {
             }
 
@@ -94,6 +95,7 @@ export namespace jpt
         };
 
     private:
+        // Switch to union and by value?
         Function_Base* m_pFunction = nullptr;
 
     public:
@@ -105,10 +107,10 @@ export namespace jpt
         constexpr ~Function();
 
         template<class TFunction>
-        constexpr Function(TFunction function);
+        constexpr Function(TFunction&& function);
 
         template<class TFunction>
-        constexpr Function& operator=(TFunction function);
+        constexpr Function& operator=(TFunction&& function);
 
         template<class TCaller>
         constexpr Function(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...));
@@ -117,7 +119,7 @@ export namespace jpt
             @example: func.Connect(&Add);
             @example: func.Connect([](int32 a, int32 b) -> int32 { return a - b; }); */
         template<class TFunction>
-        constexpr void Connect(TFunction function);
+        constexpr void Connect(TFunction&& function);
 
         /** Connects a member function to this jpt::Function
             @example: func.Connect(&foo, &Foo::Work); */
@@ -188,17 +190,17 @@ export namespace jpt
 
     template<class TReturn, class ...TArgs>
     template<class TFunction>
-    constexpr Function<TReturn(TArgs...)>::Function(TFunction function)
+    constexpr Function<TReturn(TArgs...)>::Function(TFunction&& function)
     {
-        Connect(function);
+        Connect(Forward<TFunction>(function));
     }
 
     template<class TReturn, class ...TArgs>
     template<class TFunction>
-    constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunction function)
+    constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunction&& function)
     {
         Disconnect();
-        Connect(function);
+        Connect(Forward<TFunction>(function));
         return *this;
     }
 
@@ -211,10 +213,10 @@ export namespace jpt
 
     template<class TReturn, class ...TArgs>
     template<class TFunction>
-    constexpr void Function<TReturn(TArgs...)>::Connect(TFunction function)
+    constexpr void Function<TReturn(TArgs...)>::Connect(TFunction&& function)
     {
         Disconnect();
-        m_pFunction = JPT_NEW(FunctionData<TFunction>, function);
+        m_pFunction = JPT_NEW(FunctionData<TFunction>, Forward<TFunction>(function));
     }
 
     template<class TReturn, class ...TArgs>
