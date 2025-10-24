@@ -29,7 +29,7 @@ export namespace jpt
 
     private:
         // Position and Rotation
-        Vec3 m_worldPos   = Vec3(2.0f, 2.0f, 2.0f);   /**< Current world position */
+        Vec3 m_positionWS = Vec3(2.0f, 2.0f, 2.0f);   /**< Current world position */
         Precision m_pitch = 0.0f;   /**< (-Pi/2, Pi/2) */
         Precision m_yaw   = 0.0f;   /**< (-Pi, Pi) */
 
