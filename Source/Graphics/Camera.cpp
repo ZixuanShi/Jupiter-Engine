@@ -30,7 +30,7 @@ namespace jpt
         EventManager::GetInstance().Register<Event_Mouse_Scroll>(this, &Camera::OnMouseScroll);
 
         // Init position and rotation
-        m_forward = (Vec3(0.0f) - m_worldPos).Normalized();
+        m_forward = (Vec3(0.0f) - m_positionWS).Normalized();
         m_pitch   = Asin(m_forward.y);
         m_yaw     = Atan2(m_forward.x, m_forward.z);
 
@@ -39,11 +39,11 @@ namespace jpt
 
     void Camera::Update(TimePrecision deltaSeconds)
     {
-        const Vec3 right = Vec3::Cross(m_forward, Vec3::Up());
+        const Vec3 right = Vec3::Cross(Vec3::Up(), m_forward);
 
-        m_worldPos +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
-        m_worldPos += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
-        m_worldPos +=  m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
+        m_positionWS +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
+        m_positionWS += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
+        m_positionWS +=  m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
     }
 
     void Camera::OnKey(const Event_Key& eventKey)
@@ -57,7 +57,7 @@ namespace jpt
             // Left/Right
             case Input::Key::A:
             case Input::Key::D:
-                m_mover.x = keyDown ? (key == Input::Key::D ? 1.0f : -1.0f) : 0.0f;
+                m_mover.x = keyDown ? (key == Input::Key::A ? 1.0f : -1.0f) : 0.0f;
                 break;
 
             // Up/Down
@@ -149,8 +149,8 @@ namespace jpt
             case MouseMode::Pan:
             {
                 // Move the camera up/down and left/right
-                m_worldPos += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
-                m_worldPos += Vec3::Up() * dy * kSensitivity;
+                m_positionWS += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
+                m_positionWS += Vec3::Up() * dy * kSensitivity;
 
                 break;
             }
@@ -169,12 +169,12 @@ namespace jpt
     {
         const double y = eventMouseScroll.GetY();
 
-        m_worldPos += m_forward * static_cast<Precision>(y) * kScrollSpeed;
+        m_positionWS += m_forward * static_cast<Precision>(y) * kScrollSpeed;
     }
 
     Matrix44 Camera::CalcMatrix() const
     {
-        return Matrix44::LookAt(m_worldPos, m_worldPos + m_forward);
+        return Matrix44::LookAt(m_positionWS, m_positionWS + m_forward);
     }
 
     Vec3 Camera::GetForward() const
