@@ -17,7 +17,7 @@ import jpt.String;
 
 export namespace jpt
 {
-    template<Numeric T>
+    template<Arithmetic T>
     struct Vector2
     {
     public:
@@ -101,38 +101,38 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Non-Member functions
     // ------------------------------------------------------------------------------------------------
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs)
     {
         return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
                AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05));
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> operator+(T scaler, Vector2<T> vector2)
     {
         return vector2 + scaler;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> operator-(T scaler, Vector2<T> vector2)
     {
         return vector2 - scaler;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> operator*(T scaler, Vector2<T> vector2)
     {
         return vector2 * scaler;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> operator/(T scaler, Vector2<T> vector2)
     {
         return vector2 / scaler;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr uint64 Hash(const Vector2<T>& vector2)
     {
         if constexpr (std::is_floating_point_v<T>)
@@ -155,7 +155,7 @@ export namespace jpt
         }
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr String ToString(const Vector2<T>& vector2)
     {
         return String::Format<32>("x: %.3f, y: %.3f", vector2.x, vector2.y);
@@ -164,45 +164,45 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Member functions
     // ------------------------------------------------------------------------------------------------
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>::Vector2(T val)
         : x(val)
         , y(val)
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>::Vector2(T x, T y)
         : x(x)
         , y(y)
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator+(Vector2 other) const
     {
         return Vector2(x + other.x, y + other.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator-(Vector2 other) const
     {
         return Vector2(x - other.x, y - other.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator*(Vector2 other) const
     {
         return Vector2(x * other.x, y * other.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator/(Vector2 other) const
     {
         return Vector2(x / other.x, y / other.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator+=(Vector2 other)
     {
         x += other.x;
@@ -210,7 +210,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator-=(Vector2 other)
     {
         x -= other.x;
@@ -218,7 +218,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator*=(Vector2 other)
     {
         x *= other.x;
@@ -226,7 +226,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator/=(Vector2 other)
     {
         x /= other.x;
@@ -234,31 +234,31 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator+(T scalar) const
     {
         return Vector2(x + scalar, y + scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator-(T scalar) const
     {
         return Vector2(x - scalar, y - scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator*(T scalar) const
     {
         return Vector2(x * scalar, y * scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::operator/(T scalar) const
     {
         return Vector2(x / scalar, y / scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator+=(T scalar)
     {
         x += scalar; 
@@ -266,7 +266,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator-=(T scalar)
     {
         x -= scalar;
@@ -274,7 +274,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator*=(T scalar)
     {
         x *= scalar; 
@@ -282,7 +282,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T>& Vector2<T>::operator/=(T scalar)
     {
         x /= scalar;
@@ -290,85 +290,85 @@ export namespace jpt
         return *this;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T& Vector2<T>::operator[](size_t index) noexcept
     {
         return (&x)[index];
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr const T& Vector2<T>::operator[](size_t index) const noexcept
     {
         return (&x)[index];
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Dot(Vector2 left, Vector2 right)
     {
         return (left.x * right.x) + (left.y * right.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Dot(Vector2 other) const
     {
         return (x * other.x) + (y * other.y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Length(Vector2 vector)
     {
         return vector.Length();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Length() const
     {
         return std::sqrt(Length2());
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Length2(Vector2 vector)
     {
         return vector.Length2();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Length2() const
     {
         return (x * x) + (y * y);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Distance(Vector2 from, Vector2 to)
     {
         return from.Distance(to);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Distance(Vector2 other) const
     {
         return (*this - other).Length();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Distance2(Vector2 from, Vector2 to)
     {
         return from.Distance2(to);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Distance2(Vector2 other) const
     {
         return (*this - other).Length2();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::Normalized(Vector2 vector)
     {
         return vector.Normalized();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::Normalized() const
     {
         Vector2<T> result = *this;
@@ -376,7 +376,7 @@ export namespace jpt
         return result;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void Vector2<T>::Normalize()
     {
         const T length = Length();
@@ -387,25 +387,25 @@ export namespace jpt
         }
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
     {
         return from.Lerped(to, t);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::Lerped(Vector2 other, T t) const
     {
         return *this + (other - *this) * t;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void Vector2<T>::Lerp(Vector2 other, T t)
     {
         *this += (other - *this) * t;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Angle(Vector2 from, Vector2 to)
     {
         // Formular: dot(a, b) / (|a| * |b|)
@@ -419,19 +419,19 @@ export namespace jpt
         return angle;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::Angle(Vector2 other) const
     {
         return Angle(*this, other);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
     {
         return from.AngleSigned(to);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T Vector2<T>::AngleSigned(Vector2 other) const
     {
         T atan2 = std::atan2(other.y, other.x) - std::atan2(y, x);
@@ -448,21 +448,21 @@ export namespace jpt
         return atan2;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::Rotate(Vector2 vec2, T radians)
     {
         vec2.Rotate(radians);
         return vec2;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 vec2, Vector2 pivot, T radians)
     {
         vec2.RotateAround(pivot, radians);
         return vec2;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void Vector2<T>::Rotate(T radians)
     {
         const T cos = Cos(radians);
@@ -475,7 +475,7 @@ export namespace jpt
         y = dy;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void Vector2<T>::RotateAround(Vector2 pivot, T radians)
     {
         const T cos = Cos(radians);

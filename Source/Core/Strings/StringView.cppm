@@ -345,5 +345,5 @@ export namespace jpt
     using WStringView = StringView_Base<wchar_t>;
 
     template<typename T>
-    concept StringViewType = AreSameType<T, StringView> || AreSameType<T, WStringView>;
+    concept StringViewType = std::is_same_v<T, StringView> || std::is_same_v<T, WStringView>;
 }

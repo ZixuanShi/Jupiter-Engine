@@ -9,7 +9,7 @@ import jpt.TypeDefs;
 
 namespace jpt
 {
-    export template<Numeric T>
+    export template<Arithmetic T>
     struct TRay3
     {
     public:
@@ -25,20 +25,20 @@ namespace jpt
         constexpr Vector3<T> ClosestPoint(const Vector3<T>& point) const noexcept;
     };
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TRay3<T>::TRay3(const Vector3<T>& origin, const Vector3<T>& direction) noexcept
         : origin(origin)
         , direction(direction)
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TRay3<T>::GetPoint(T t) const noexcept
     {
         return origin + direction * t;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TRay3<T>::Distance(const Vector3<T>& point) const noexcept
     {
         const T dot = Vector3<T>::Dot(point - origin, direction);
@@ -59,7 +59,7 @@ namespace jpt
         return distance;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TRay3<T>::ClosestPoint(const Vector3<T>& point) const noexcept
     {
         const Vector3<T> op = point - origin;

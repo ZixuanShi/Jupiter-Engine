@@ -15,7 +15,7 @@ import jpt.Math;
 
 namespace jpt
 {
-    export template<Numeric T>
+    export template<Arithmetic T>
     struct TTriangle3
     {
     public:
@@ -35,26 +35,26 @@ namespace jpt
         constexpr bool Inside(const Vector3<T>& point) const;
     };
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TTriangle3<T>::TTriangle3(const Vector3<T>& _a, const Vector3<T>& _b, const Vector3<T>& _c)
         : a(_a), b(_b), c(_c)
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TTriangle3<T>::Perimeter() const
     {
         return Vector3<T>::Distance(a, b) + Vector3<T>::Distance(b, c) + Vector3<T>::Distance(c, a);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TTriangle3<T>::Area() const
     {
         const T s = Perimeter() * static_cast<T>(0.5);
         return std::sqrt(s * (s - Vector3<T>::Distance(a, b)) * (s - Vector3<T>::Distance(b, c)) * (s - Vector3<T>::Distance(c, a)));
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TTriangle3<T>::Normal() const
     {
         // Compute the edges of the triangle
@@ -67,7 +67,7 @@ namespace jpt
         return normal;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TTriangle3<T>::Distance(const Vector3<T>& point) const
     {
         const Vector3 normal = Normal();
@@ -77,7 +77,7 @@ namespace jpt
         return distance;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr bool TTriangle3<T>::Inside(const Vector3<T>& point) const
     {
         // https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates

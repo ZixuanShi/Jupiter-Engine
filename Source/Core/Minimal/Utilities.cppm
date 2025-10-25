@@ -16,23 +16,23 @@ export namespace jpt
 {
     /** Returns a rvalue of the object */
     template<MoveConstructible T>
-    constexpr TRemoveReference<T>&& Move(T&& object) noexcept
+    constexpr std::remove_reference_t<T>&& Move(T&& object) noexcept
     {
-        using TCast = TRemoveReference<T>;
+        using TCast = std::remove_reference_t<T>;
         return static_cast<TCast&&>(object);
     }
 
     /** Returns LValue if obj is LValue, Returns RValue if obj is RValue */
     template<class T>
-    constexpr T&& Forward(TRemoveReference<T>& obj) noexcept
+    constexpr T&& Forward(std::remove_reference_t<T>& obj) noexcept
     {
         return static_cast<T&&>(obj);
     }
 
     template<class T>
-    constexpr T&& Forward(TRemoveReference<T>&& obj) noexcept
+    constexpr T&& Forward(std::remove_reference_t<T>&& obj) noexcept
     {
-        static_assert(!IsLValueRef<T>, "Bad forward call");
+        static_assert(!std::is_lvalue_reference_v<T>, "Bad forward call");
         return static_cast<T&&>(obj);
     }
 

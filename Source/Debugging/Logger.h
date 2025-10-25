@@ -4,6 +4,8 @@
 
 #include "Core/Validation/Assert.h"
 
+#include <type_traits>
+
 #define IS_LOGGER_ENABLED 1
 
 #if IS_LOGGER_ENABLED
@@ -62,8 +64,8 @@ namespace jpt
 
 #define JPT_LOG(message, ...)                                                                                                                 \
 {                                                                                                                                             \
-    if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
-                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
+    if constexpr (jpt::IsStringLiteral<std::remove_reference_t<decltype(message)>> ||                                                           \
+                  std::is_same_v<decltype(message), const char*>)                                                                           \
     {                                                                                                                                         \
         jpt::Logger::GetInstance().Log(jpt::Logger::Type::Log,  __LINE__, __FILE__, message, __VA_ARGS__);                                    \
     }                                                                                                                                         \
@@ -75,8 +77,8 @@ namespace jpt
 
 #define JPT_INFO(message, ...)                                                                                                                \
 {                                                                                                                                             \
-    if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
-                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
+    if constexpr (jpt::IsStringLiteral<std::remove_reference_t<decltype(message)>> ||                                                           \
+                  std::is_same_v<decltype(message), const char*>)                                                                           \
     {                                                                                                                                         \
         jpt::Logger::GetInstance().Log(jpt::Logger::Type::Info,  __LINE__, __FILE__, message, __VA_ARGS__);                                   \
     }                                                                                                                                         \
@@ -88,8 +90,8 @@ namespace jpt
 
 #define JPT_WARN(message, ...)                                                                                                                \
 {                                                                                                                                             \
-    if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
-                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
+    if constexpr (jpt::IsStringLiteral<std::remove_reference_t<decltype(message)>> ||                                                           \
+                  std::is_same_v<decltype(message), const char*>)                                                                           \
     {                                                                                                                                         \
         jpt::Logger::GetInstance().Log(jpt::Logger::Type::Warn,  __LINE__, __FILE__, message, __VA_ARGS__);                                   \
     }                                                                                                                                         \
@@ -101,8 +103,8 @@ namespace jpt
 
 #define JPT_ERROR(message, ...)                                                                                                               \
 {                                                                                                                                             \
-    if constexpr (jpt::IsStringLiteral<jpt::TRemoveReference<decltype(message)>> ||                                                           \
-                  jpt::AreSameType<decltype(message), const char*>)                                                                           \
+    if constexpr (jpt::IsStringLiteral<std::remove_reference_t<decltype(message)>> ||                                                           \
+                  std::is_same_v<decltype(message), const char*>)                                                                           \
     {                                                                                                                                         \
         jpt::Logger::GetInstance().Log(jpt::Logger::Type::Error,  __LINE__, __FILE__, message, __VA_ARGS__);                                  \
     }                                                                                                                                         \

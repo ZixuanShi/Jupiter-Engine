@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <concepts>
+
 export module jpt.Particle2D;
 
 import jpt.TypeDefs;
@@ -11,7 +15,7 @@ import jpt.LinearColor;
 export namespace jpt
 {
     /** A 2D particle on screen */
-    template<Floating T>
+    template<std::floating_point T>
     struct TParticle2D
     {
         Vector2<T> position;

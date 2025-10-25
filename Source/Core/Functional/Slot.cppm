@@ -4,6 +4,8 @@ module;
 
 #include "Core/Validation/Assert.h"
 
+#include <type_traits>
+
 export module jpt.Slot;
 
 import jpt.Function;
@@ -30,7 +32,7 @@ export namespace jpt
         constexpr size_t Add(const TFunction& function);
 
         template<class T>
-        constexpr size_t Add(const T& function) requires (!AreSameType<T, TFunction>);
+        constexpr size_t Add(const T& function) requires (!std::is_same_v<T, TFunction>);
 
         template<class TCaller>
         constexpr size_t Add(TCaller* pCaller, TReturn(TCaller::* pMemberFunction)(TArgs...));
@@ -67,7 +69,7 @@ export namespace jpt
 
     template<class TReturn, class ...TArgs>
     template<class T>
-    constexpr size_t Slot<TReturn(TArgs...)>::Add(const T& function) requires (!AreSameType<T, TFunction>)
+    constexpr size_t Slot<TReturn(TArgs...)>::Add(const T& function) requires (!std::is_same_v<T, TFunction>)
     {
         for (size_t i = 0; i < m_functions.Count(); ++i)
         {
@@ -146,7 +148,7 @@ export namespace jpt
     template<class TReturn, class ...TArgs>
     constexpr DynamicArray<TReturn> Slot<TReturn(TArgs...)>::ReturnAll(TArgs ...args)
     {
-        static_assert(!AreSameType<TReturn, void>, "Can't return from void");
+        static_assert(!std::is_same_v<TReturn, void>, "Can't return from void");
 
         DynamicArray<TReturn> results;
 

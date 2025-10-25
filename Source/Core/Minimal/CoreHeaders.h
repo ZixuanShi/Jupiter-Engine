@@ -13,3 +13,6 @@
 // Debugging
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
+
+// STL
+#include <type_traits>
