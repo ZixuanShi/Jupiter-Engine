@@ -17,157 +17,6 @@ import jpt.String;
 import jpt.StringView;
 import jpt.StaticArray;
 
-template<typename T>
-bool UnitTests_TRemoveTraits()
-{
-    bool value = false;
-
-    value = jpt::AreSameType<jpt::TRValueToLValueReference<T>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRValueToLValueReference<T&&>, T&>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRemoveReference<T>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRemoveReference<T&>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRemoveReference<T&&>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRemoveReference<const T&>, const T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TRemoveConst<const T>, T>;
-    JPT_ENSURE(value);
-
-    // https://stackoverflow.com/questions/15887144/stdremove-const-with-const-references
-    {
-        value = !jpt::AreSameType<jpt::TRemoveConst<const T&>, T&>;
-        JPT_ENSURE(value);
-
-        T t = T();
-        const T& constRefT = t;
-        jpt::TRemoveReference<decltype(constRefT)> constT = t;
-
-        value = jpt::AreSameType<decltype(constT), const T>;
-        JPT_ENSURE(value);
-
-        jpt::TRemoveConst<decltype(constT)> plainT = t;
-        value = jpt::AreSameType<decltype(plainT), T>;
-        JPT_ENSURE(value);
-    }
-
-    return true;
-}
-
-template<typename T>
-bool UnitTests_TDecay()
-{
-    bool value = false;
-
-    value = jpt::AreSameType<jpt::TDecay<T>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TDecay<T&>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TDecay<T&&>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TDecay<const T>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TDecay<const T&>, T>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::TDecay<const T&&>, T>;
-    JPT_ENSURE(value);
-
-    return true;
-}
-
-bool UnitTests_IsLValueRefType()
-{
-    bool value = false;
-
-    value = jpt::IsLValueRef<int32>;
-    JPT_ENSURE(!value);
-
-    value = jpt::IsLValueRef<int32&>;
-    JPT_ENSURE(value);
-
-    return true;
-}
-
-bool UnitTests_IsRValueRefType()
-{
-    bool value = false;
-
-    value = jpt::IsRValueRef<int32>;
-    JPT_ENSURE(value);
-
-    value = jpt::IsRValueRef<int32&&>;
-    JPT_ENSURE(value);
-
-    return true;
-}
-
-bool UnitTests_IsRef()
-{
-    bool value = false;
-
-    value = jpt::IsRef<int32>;
-    JPT_ENSURE(!value);
-
-    value = jpt::IsRef<int32&>;
-    JPT_ENSURE(value);
-
-    value = jpt::IsRef<int32&&>;
-    JPT_ENSURE(value);
-
-    return true;
-}
-
-bool UnitTests_AreSameType()
-{
-    bool value = false;
-
-    value = jpt::AreSameType<int32, int32>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<int32, int32&>;
-    JPT_ENSURE(!value);
-
-    value = jpt::AreSameType<int32&, int32&>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<int32, float>;
-    JPT_ENSURE(!value);
-
-    value = jpt::AreSameType<float, float>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::String, jpt::String>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::String&, jpt::String&>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::String&&, jpt::String&&>;
-    JPT_ENSURE(value);
-
-    value = jpt::AreSameType<jpt::String&, jpt::String&&>;
-    JPT_ENSURE(!value);
-
-    value = jpt::AreSameType<jpt::String, jpt::String&&>;
-    JPT_ENSURE(!value);
-
-    return true;
-}
-
 template<typename ...TArgs>
 struct Foo
 {
@@ -183,7 +32,7 @@ bool UnitTests_IsAnyOf()
     bool value = false;
     auto helper = [](const auto& var) -> bool
         {
-            return jpt::IsAnyOf<jpt::TDecay<decltype(var)>, int32, float, char, jpt::String>;
+            return jpt::IsAnyOf<std::decay_t<decltype(var)>, int32, float, char, jpt::String>;
         };
 
     Foo<int32, float, char> foo;
@@ -231,31 +80,6 @@ bool UnitTests_IsAnyOf()
     JPT_ENSURE(!value);
     value = helper(false);
     JPT_ENSURE(!value);
-
-    return true;
-}
-
-bool UnitTests_IsArray()
-{
-    int32 num = 0;
-    JPT_ENSURE(!jpt::IsArray<decltype(num)>);
-
-    int32 numArray[] = { 0,1 };
-    JPT_ENSURE(jpt::IsArray<decltype(numArray)>);
-    
-    int32 numArray2[2] = { 0,1 };
-    JPT_ENSURE(jpt::IsArray<decltype(numArray2)>);
-
-    const int32 numArray3[3] = { 0,1,2 };
-    JPT_ENSURE(jpt::IsArray<decltype(numArray3)>);
-
-    int32* num2 = JPT_NEW(int);
-    JPT_ENSURE(!jpt::IsArray<decltype(num2)>);
-    JPT_DELETE(num2);
-
-    int32* numArray4 = JPT_NEW_ARRAY(int, 2);
-    JPT_ENSURE(!jpt::IsArray<decltype(numArray4)>);
-    JPT_DELETE(numArray4);
 
     return true;
 }
@@ -339,18 +163,7 @@ bool UnitTests_IsTrivial()
 
 export bool RunUnitTests_TypeTraits()
 {
-    JPT_ENSURE(UnitTests_TRemoveTraits<int32>());
-    JPT_ENSURE(UnitTests_TRemoveTraits<jpt::String>());
-
-    JPT_ENSURE(UnitTests_TDecay<int32>());
-    JPT_ENSURE(UnitTests_TDecay<jpt::String>());
-
-    JPT_ENSURE(UnitTests_IsLValueRefType());
-    JPT_ENSURE(UnitTests_IsLValueRefType());
-    JPT_ENSURE(UnitTests_IsRef());
-    JPT_ENSURE(UnitTests_AreSameType());
     JPT_ENSURE(UnitTests_IsAnyOf());
-    JPT_ENSURE(UnitTests_IsArray());
     JPT_ENSURE(UnitTests_IsCharArray());
     JPT_ENSURE(UnitTests_IsTrivial());
 

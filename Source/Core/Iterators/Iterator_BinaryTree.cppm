@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <type_traits>
+
 export module jpt_private.Iterator_BinaryTree;
 
 import jpt.TypeDefs;
@@ -24,7 +28,7 @@ export namespace jpt_private
     template<typename TData>
     constexpr BinaryTreeNode<TData>::~BinaryTreeNode()
     {
-        if constexpr (!jpt::IsTriviallyDestructible<TData>)
+        if constexpr (!std::is_trivially_destructible_v<TData>)
         {
             data.~TData();
         }

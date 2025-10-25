@@ -107,11 +107,11 @@ export namespace jpt
     template<StringLiteral TChar>
     constexpr void StrCpy(TChar* pDestination, Index size, const TChar* pSource)
     {
-        if constexpr (AreSameType<TChar, char>)
+        if constexpr (std::is_same_v<TChar, char>)
         {
             strcpy_s(pDestination, size, pSource);
         }
-        else if (AreSameType<TChar, wchar_t>)
+        else if (std::is_same_v<TChar, wchar_t>)
         {
             wcscpy_s(pDestination, size, pSource);
         }
@@ -121,11 +121,11 @@ export namespace jpt
     template<StringLiteral TChar>
     constexpr void StrNCpy(TChar* pDestination, Index size, const TChar* pSource, Index maxCount)
     {
-        if constexpr (AreSameType<TChar, char>)
+        if constexpr (std::is_same_v<TChar, char>)
         {
             strncpy_s(pDestination, size, pSource, maxCount);
         }
-        else if (AreSameType<TChar, wchar_t>)
+        else if (std::is_same_v<TChar, wchar_t>)
         {
             wcsncpy_s(pDestination, size, pSource, maxCount);
         }
@@ -538,11 +538,11 @@ export namespace jpt
         TChar* buffer = JPT_NEW_ARRAY(TChar, kMaxSize);
         const TChar* format = JPT_GET_PROPER_STRING(TChar, %.3f);    // controls how many precision digits to keep
 
-        if constexpr (AreSameType<TChar, char>)
+        if constexpr (std::is_same_v<TChar, char>)
         {
             snprintf(buffer, kMaxSize, format, value);
         }
-        else if (AreSameType<TChar, wchar_t>)
+        else if (std::is_same_v<TChar, wchar_t>)
         {
             swprintf(buffer, kMaxSize, format, value);
         }

@@ -6,7 +6,6 @@ module;
 #include "Core/Minimal/Utilities.h"
 #include "Debugging/Logger.h"
 
-#include <type_traits>
 #include <memory>
 
 export module jpt.EventManager;
@@ -113,7 +112,7 @@ export namespace jpt
 
        // Get the address of the function
        void* address = nullptr;
-       if constexpr (std::is_function_v<TRemovePointer<TRemoveReference<THandlerFunc>>>)
+       if constexpr (std::is_function_v<std::remove_pointer_t<std::remove_reference_t<THandlerFunc>>>)
        {
            // Global function
            using FuncPtr = void(*)(const TEvent&);

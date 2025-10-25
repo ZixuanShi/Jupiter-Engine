@@ -6,6 +6,7 @@ module;
 #include "Core/Validation/Assert.h"
 
 #include <cstring>
+#include <type_traits>
 
 export module jpt.Any;
 
@@ -46,19 +47,19 @@ export namespace jpt
         Any& operator=(Any&& other) noexcept;
 
         template<typename T> 
-        requires (!AreSameType<T, Any>)
+        requires (!std::is_same_v<T, Any>)
         constexpr Any(const T& value);
 
         template<typename T> 
-        requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+        requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
         constexpr Any(T&& value);
 
         template<typename T> 
-        requires (!AreSameType<T, Any>)
+        requires (!std::is_same_v<T, Any>)
         constexpr Any& operator=(const T& value);
 
         template<typename T> 
-        requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+        requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
         constexpr Any& operator=(T&& value);
 
         template<typename T> 
@@ -78,16 +79,16 @@ export namespace jpt
         void MoveAny(Any&& other);
 
         template<typename T> 
-        requires (!AreSameType<T, Any>)
+        requires (!std::is_same_v<T, Any>)
         constexpr void ConstructType(const T& value);
 
         template<typename T> 
-        requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+        requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
         constexpr void ConstructType(T&& value);
 
         /** Adapt to another Type, that type is guaranteed not the same as current type */
         template<typename T> 
-        requires (!AreSameType<T, Any>)
+        requires (!std::is_same_v<T, Any>)
         constexpr void Adapt();
 
         constexpr void DestructObject();
@@ -149,21 +150,21 @@ export namespace jpt
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>)
+    requires (!std::is_same_v<T, Any>)
     constexpr Any::Any(const T& value)
     {
         ConstructType(value);
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+    requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
     constexpr Any::Any(T&& value)
     {
         ConstructType(Move(value));
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>)
+    requires (!std::is_same_v<T, Any>)
     constexpr Any& Any::operator=(const T& value) 
     {
         if (Is<T>())
@@ -178,7 +179,7 @@ export namespace jpt
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+    requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
     constexpr Any& Any::operator=(T&& value)
     {
         if (Is<T>())
@@ -281,7 +282,7 @@ export namespace jpt
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>)
+    requires (!std::is_same_v<T, Any>)
     constexpr void Any::ConstructType(const T& value)
     {
         Adapt<T>();
@@ -289,7 +290,7 @@ export namespace jpt
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>) && AreSameType<T, TRemoveReference<T>>
+    requires (!std::is_same_v<T, Any>) && std::is_same_v<T, std::remove_reference_t<T>>
     constexpr void Any::ConstructType(T&& value)
     {
         Adapt<T>();
@@ -297,7 +298,7 @@ export namespace jpt
     }
 
     template<typename T>
-    requires (!AreSameType<T, Any>)
+    requires (!std::is_same_v<T, Any>)
     constexpr void Any::Adapt()
     {
         // At this point, the current type is guaranteed not the same as T
@@ -323,7 +324,7 @@ export namespace jpt
             };
         m_destructor = []([[maybe_unused]] Byte* pBuffer)
             {
-                if constexpr (!IsTriviallyDestructible<T>)
+                if constexpr (!std::is_trivially_destructible_v<T>)
                 {
                     reinterpret_cast<T*>(pBuffer)->~T();
                 }
