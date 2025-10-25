@@ -18,7 +18,7 @@ import jpt.Vector3;
 
 export namespace jpt
 {
-    template<Numeric T>
+    template<Arithmetic T>
     struct TQuaternion
     {
     public:
@@ -82,7 +82,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Non-Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr bool operator==(const TQuaternion<T>& lhs, const TQuaternion<T>& rhs)
     {
         return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.001)) &&
@@ -91,7 +91,7 @@ export namespace jpt
                AreValuesClose(lhs.w, rhs.w, static_cast<T>(0.001));
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr String ToString(const TQuaternion<T>& quaternion)
     {
         return String::Format<64>("x: %.3f, y: %.3f, z: %.3f, w: %.3f", quaternion.x, quaternion.y, quaternion.z, quaternion.w);
@@ -100,7 +100,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T>::TQuaternion(T _x, T _y, T _z, T _w)
         : x(_x)
         , y(_y)
@@ -109,19 +109,19 @@ export namespace jpt
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator+(const TQuaternion& rhs) const
     {
         return TQuaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator-(const TQuaternion& rhs) const
     {
         return TQuaternion(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator*(const TQuaternion& rhs) const
     {
         const T newW = w * rhs.w - x * rhs.x - y * rhs.y - z * rhs.z;
@@ -131,49 +131,49 @@ export namespace jpt
         return TQuaternion(newX, newY, newZ, newW);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator/(const TQuaternion& rhs) const
     {
         return TQuaternion(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator/(T scalar) const
     {
         return TQuaternion(x / scalar, y / scalar, z / scalar, w / scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::operator*(T scalar) const
     {
         return TQuaternion(x * scalar, y * scalar, z * scalar, w * scalar);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T>& TQuaternion<T>::operator*=(const TQuaternion& rhs)
     {
         return *this = *this * rhs;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T>& TQuaternion<T>::operator+=(const TQuaternion& rhs)
     {
         return *this = *this + rhs;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TQuaternion<T>::Length() const
     {
         return std::sqrt(Length2());
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TQuaternion<T>::Length2() const
     {
         return x * x + y * y + z * z + w * w;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void TQuaternion<T>::Normalize()
     {
         const T length = Length();
@@ -187,7 +187,7 @@ export namespace jpt
         }
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::Normalized() const
     {
         TQuaternion result = *this;
@@ -195,7 +195,7 @@ export namespace jpt
         return result;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void TQuaternion<T>::Conjugate()
     {
         x = -x;
@@ -203,13 +203,13 @@ export namespace jpt
         z = -z;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::Conjugated() const
     {
         return TQuaternion(-x, -y, -z, w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void TQuaternion<T>::Inverse()
     {
         const T length2 = Length2();
@@ -223,7 +223,7 @@ export namespace jpt
         }
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::Inversed() const
     {
         TQuaternion result = *this;
@@ -231,13 +231,13 @@ export namespace jpt
         return result;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TQuaternion<T>::Dot(const TQuaternion& rhs) const
     {
         return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::Lerp(const TQuaternion& start, const TQuaternion& end, T t)
     {
         const T t1 = static_cast<T>(1) - t;
@@ -248,7 +248,7 @@ export namespace jpt
             start.w * t1 + end.w * t);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::Slerp(const TQuaternion& start, const TQuaternion& end, T t)
     {
         const T dot = start.Dot(end);
@@ -270,7 +270,7 @@ export namespace jpt
         return q1 + q2;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::FromAxisAngle(const Vector3<T>& axisAngle, T radians)
     {
         JPT_ASSERT(axisAngle.Normalized() == axisAngle, "Axis Angle must be normalized to be converted to Quaternion");
@@ -287,7 +287,7 @@ export namespace jpt
         return TQuaternion(_x, _y, _z, _w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TQuaternion<T> TQuaternion<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
     {
         const T halfX = eulerAngles.x * static_cast<T>(0.5); // pitch
@@ -310,19 +310,19 @@ export namespace jpt
         return TQuaternion(_x, _y, _z, _w);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& axisAngle, T radians)
     {
         *this *= FromAxisAngle(axisAngle, radians);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr void TQuaternion<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
         *this *= FromEulerAngles(eulerAngles);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TQuaternion<T>::CalcEulerAngles() const
     {
         // Convert quaternion to Euler angles (pitch, yaw, roll)
@@ -355,7 +355,7 @@ export namespace jpt
         }
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TQuaternion<T>::Forward() const
     {
         const T _x = static_cast<T>(2) * (x * z - w * y);
@@ -364,7 +364,7 @@ export namespace jpt
         return Vector3<T>(_x, _y, _z);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TQuaternion<T>::Right() const
     {
         const T _x = static_cast<T>(1) - static_cast<T>(2) * (y * y + z * z);
@@ -373,7 +373,7 @@ export namespace jpt
         return Vector3<T>(_x, _y, _z);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TQuaternion<T>::Up() const
     {
         const T _x = static_cast<T>(2) * (x * y + w * z);

@@ -4,6 +4,7 @@ module;
 
 #include <type_traits>
 #include <iostream>
+#include <concepts>
 
 export module jpt.Concepts;
 
@@ -15,13 +16,7 @@ export namespace jpt
 #pragma region Type Defs
 
     template<typename T>
-    concept Numeric = std::is_arithmetic_v<T>;
-
-    template<typename T>
-    concept Integral = std::is_integral_v<T>;
-
-    template<typename T>
-    concept Floating = std::is_floating_point_v<T>;
+    concept Arithmetic = std::is_arithmetic_v<T>;
 
     template<typename T>
     concept StringLiteral = AreSameType<T, char> || AreSameType<T, wchar_t>;

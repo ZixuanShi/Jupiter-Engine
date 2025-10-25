@@ -10,6 +10,7 @@ module;
 #include <stdio.h>
 #include <stdlib.h>
 #include <type_traits>
+#include <concepts>
 
 export module jpt.StringHelpers;
 
@@ -360,7 +361,7 @@ export namespace jpt
         @param value:        The IntegerType value to convert to char*
         @param base:         The base of the value. Default to decimal as 10. Could be binary, oct, hex.
         @return A char pointer pointing to the memory where we store the converted number's string literal */
-    template<StringLiteral TChar = char, Integral TInt = int32>
+    template<StringLiteral TChar = char, std::integral TInt = int32>
     constexpr TChar* IntegerToCStr(TInt value, EIntBase base = EIntBase::Decimal)
     {
         // Prepare data
@@ -452,7 +453,7 @@ export namespace jpt
         @param pBuffer      Source buffer containing integer data 
         @param count        Desired count to parse from start of pBuffer
         @param base         Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
-    template<StringLiteral TChar = char, Integral TInt = int32>
+    template<StringLiteral TChar = char, std::integral TInt = int32>
     constexpr TInt CStrToInteger(const TChar* pBuffer, Index count = npos, EIntBase base = EIntBase::Decimal)
     {
         if (count == npos)
@@ -529,7 +530,7 @@ export namespace jpt
         return result;
     }
 
-    template<StringLiteral TChar = char, Floating TFloat = float>
+    template<StringLiteral TChar = char, std::floating_point TFloat = float>
     constexpr TChar* FloatToCStr(TFloat value)
     {
         static constexpr Index kMaxSize = 32;
@@ -550,7 +551,7 @@ export namespace jpt
     }
 
     /** @note    Will ignore the 'f' is there's any */
-    template<StringLiteral TChar = char, Floating TFloat = float32>
+    template<StringLiteral TChar = char, std::floating_point TFloat = float32>
     constexpr TFloat CStrToFloat(const TChar* pBuffer, Index count = npos)
     {
         // Parse two integral parts of the precision dot, then combine them

@@ -8,7 +8,7 @@ import jpt.Vector3;
 
 namespace jpt
 {
-    export template<Numeric T>
+    export template<Arithmetic T>
     struct TLineSegment3
     {
     public:
@@ -29,13 +29,13 @@ namespace jpt
         constexpr bool Intersects(const TLineSegment3<T>& other) const noexcept;
     };
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TLineSegment3<T>::Length() const noexcept
     {
         return a.Distance(b);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TLineSegment3<T>::Distance(const Vector3<T>& point) const noexcept
     {
         const Vector3<T> pointOnLine = Project(point);
@@ -43,25 +43,25 @@ namespace jpt
         return pointToLine.Length();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TLineSegment3<T>::Dist(const Vector3<T>& point) const noexcept
     {
         return Distance(point);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TLineSegment3<T>::Direction() const noexcept
     {
         return (b - a).Normalize();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TLineSegment3<T>::Dir() const noexcept
     {
         return Direction();
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr Vector3<T> TLineSegment3<T>::Project(const Vector3<T>& point) const noexcept
     {
         const Vector3<T> ab = b - a;
@@ -71,7 +71,7 @@ namespace jpt
         return a + ab * t;
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr bool TLineSegment3<T>::Intersects(const TLineSegment3<T>& other) const noexcept
     {
         const Vector3<T> p1 = a;

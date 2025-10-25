@@ -2,6 +2,8 @@
 
 #include "Enum.h"
 
+#include <concepts>
+
 using namespace jpt;
 
 import jpt.Optional;
@@ -25,7 +27,7 @@ static String locGetEnumSourceStr(const char* pSource)
     return source;
 }
 
-template<Integral TInt>
+template<std::integral TInt>
 Optional<Pair<TInt, TInt>> EvaluateOperator(const String& expression, const String& operatorStr)
 {
     const size_t operatorIndex = expression.Find(operatorStr.ConstBuffer());
@@ -46,7 +48,7 @@ Optional<Pair<TInt, TInt>> EvaluateOperator(const String& expression, const Stri
 /** @return     Evaluated value numeric of the expression
     @param valueStr        An expression of value to assign. Operators may be involved. i.e. (1<<2), (1|2|4|8), (Foo|Bar|Baz) with alias, etc.
     @param evaluated    Previously evaluated items. Used when assigning values with alias */
-template<Integral TInt>
+template<std::integral TInt>
 TInt Evaluate(const String& valueStr)
 {
     String expression = valueStr;
@@ -77,7 +79,7 @@ TInt Evaluate(const String& valueStr)
     return 0;
 }
 
-template<Integral TInt>
+template<std::integral TInt>
 EnumData<TInt> GenerateData(const char* pSource)
 {
     EnumData<TInt> data;

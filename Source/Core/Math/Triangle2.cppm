@@ -14,7 +14,7 @@ import jpt.Math;
 
 namespace jpt
 {
-    export template<Numeric T>
+    export template<Arithmetic T>
     struct TTriangle2
     {
     public:
@@ -31,26 +31,26 @@ namespace jpt
         constexpr bool Inside(Vector2<T> point) const;
     };
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr TTriangle2<T>::TTriangle2(Vector2<T> _a, Vector2<T> _b, Vector2<T> _c)
         : a(_a), b(_b), c(_c)
     {
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TTriangle2<T>::Perimeter() const
     {
         return Vector2<T>::Distance(a, b) + Vector2<T>::Distance(b, c) + Vector2<T>::Distance(c, a);
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr T TTriangle2<T>::Area() const
     {
         const T s = Perimeter() * static_cast<T>(0.5);
         return std::sqrt(s * (s - Vector2<T>::Distance(a, b)) * (s - Vector2<T>::Distance(b, c)) * (s - Vector2<T>::Distance(c, a)));
     }
 
-    template<Numeric T>
+    template<Arithmetic T>
     constexpr bool TTriangle2<T>::Inside(Vector2<T> point) const
     {
         // Barycentric coordinates
