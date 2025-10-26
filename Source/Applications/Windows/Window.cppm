@@ -14,8 +14,8 @@ export namespace jpt
     {
     public:
         static constexpr const char* kDefaultTitle = "Unnamed"; /**< Default window title */
-        static constexpr int32 kDefaultWidth  = 800;
-        static constexpr int32 kDefaultHeight = 600;
+        static inline int32 s_defaultWidth  = 800;  // Might be overridden by command line
+        static inline int32 s_defaultHeight = 600;
 
     protected:
         const char* m_title = kDefaultTitle; /**< Window title */

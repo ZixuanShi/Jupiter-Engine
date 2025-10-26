@@ -3,7 +3,7 @@
 module;
 
 #include "Core/Minimal/CoreHeaders.h"
-#include "System/Environment/SyncClient.h"
+#include "Applications/Utils/SyncClient.h"
 
 module Application_JupiterUnitTests;
 

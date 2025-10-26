@@ -167,7 +167,7 @@ export bool RunUnitTests_Core()
     JPT_ENSURE(RunUnitTests_Pair());
 
     // Threading
-    if (!jpt::CommandLine::GetInstance().Has("no_threading"))
+    if (!jpt::CommandLine::GetInstance().Has("noThreading"))
     {
         JPT_ENSURE(RunUnitTests_Threading());
     }

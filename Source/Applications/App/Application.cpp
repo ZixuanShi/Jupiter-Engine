@@ -90,7 +90,7 @@ namespace jpt
 
     bool Application::Init()
     {
-        if (CommandLine::GetInstance().Has("no_window"))
+        if (CommandLine::GetInstance().Has("noWindow"))
         {
             return true;
         }
