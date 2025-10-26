@@ -81,6 +81,8 @@ export namespace jpt
     template<size_t N>   constexpr bool IsCharArray<char[N]>       = true;
     template<size_t N>   constexpr bool IsCharArray<const char[N]> = true;
 
+    template<typename T> constexpr bool IsFunction = std::is_function_v<T>;
+
 #pragma endregion
 
 #pragma region Type Properties
