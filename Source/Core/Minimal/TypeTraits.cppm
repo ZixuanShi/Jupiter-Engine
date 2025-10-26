@@ -28,14 +28,6 @@ namespace jpt_private
     template<typename T> struct Decay<const T&>              { using Type =       T;  };
     template<typename T> struct Decay<const T&&>             { using Type =       T;  };
 #pragma endregion
-
-#pragma region Adding Qualifiers
-    template<typename T> struct AddLValueReference { using Type = T&;               };
-    template<typename T> struct AddRValueReference { using Type = T&&;              };
-    template<typename T> struct AddConst           { using Type = const T;          };
-    template<typename T> struct AddVolatile        { using Type = volatile T;       };
-    template<typename T> struct AddConstVolatile   { using Type = const volatile T; };
-#pragma endregion
 }
 
 export namespace jpt
@@ -46,15 +38,6 @@ export namespace jpt
     template<typename T> using TRemoveConst             = typename jpt_private::RemoveConst<T>::Type;
     template<typename T> using TRValueToLValueReference = typename jpt_private::RValueToLValueReference<T>::Type;
     template<typename T> using TDecay                   = typename jpt_private::Decay<T>::Type;
-
-#pragma endregion
-
-#pragma region Adding Qualifiers
-    template<typename T> using TAddLValueReference = typename jpt_private::AddLValueReference<T>::Type;
-    template<typename T> using TAddRValueReference = typename jpt_private::AddRValueReference<T>::Type;
-    template<typename T> using TAddConst           = typename jpt_private::AddConst<T>::Type;
-    template<typename T> using TAddVolatile        = typename jpt_private::AddVolatile<T>::Type;
-    template<typename T> using TAddConstVolatile   = typename jpt_private::AddConstVolatile<T>::Type;
 
 #pragma endregion
 
@@ -80,10 +63,6 @@ export namespace jpt
                 jpt::IsAnyOf<decltype(bar), float, char, int>; // false    */
     template<typename T, typename ...TOthers> 
     constexpr bool IsAnyOf  = (AreSameType<T, TOthers> || ...);
-
-    /** @return true if TChild is a subclass inherited from TParent. */
-    template<typename TChild, typename TParent> 
-    constexpr bool IsChildOf = std::is_base_of_v<TParent, TChild>;
 
     // Is Array
     /** @note    This doesn't work on heap allocated array
