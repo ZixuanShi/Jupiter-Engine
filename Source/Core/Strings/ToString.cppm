@@ -7,7 +7,6 @@ module;
 #include "Core/Validation/Assert.h"
 
 #include <string>
-#include <concepts>
 
 export module jpt.ToString;
 
@@ -22,7 +21,7 @@ import jpt.Utilities;
 export namespace jpt
 {
     // integer
-    template<StringType TString = jpt::String, std::integral TInt = int32>
+    template<StringType TString = jpt::String, Integral TInt = int32>
     constexpr TString ToString(TInt integer)
     {
         using TChar = TString::TChar;
@@ -34,7 +33,7 @@ export namespace jpt
     }
 
     // floating
-    template<StringType TString = jpt::String, std::floating_point TFloat = float32>
+    template<StringType TString = jpt::String, Floating TFloat = float32>
     constexpr TString ToString(TFloat value)
     {
         using TChar = TString::TChar;

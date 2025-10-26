@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <type_traits>
-
 import jpt.Utilities;
 
 #pragma region Building

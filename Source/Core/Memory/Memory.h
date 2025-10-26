@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #if !IS_CONFIG_RELEASE
 
 import jpt.TypeTraits;
@@ -11,11 +9,11 @@ import jpt.TypeTraits;
 #define JPT_NEW_ARRAY(type, count, ...) jpt::Allocator<type>::NewArray(count, __VA_ARGS__)
 
 #define JPT_DELETE(pPointer)                                                           \
-                jpt::Allocator<std::remove_pointer_t<decltype(pPointer)>>::Delete(pPointer); \
+                jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::Delete(pPointer); \
                 pPointer = nullptr;
 
 #define JPT_DELETE_ARRAY(pPointer)                                                          \
-                jpt::Allocator<std::remove_pointer_t<decltype(pPointer)>>::DeleteArray(pPointer); \
+                jpt::Allocator<jpt::TRemovePointer<decltype(pPointer)>>::DeleteArray(pPointer); \
                 pPointer = nullptr;
 #else
 

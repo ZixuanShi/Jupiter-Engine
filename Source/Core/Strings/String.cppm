@@ -225,14 +225,14 @@ export namespace jpt
         bool result = false;
 
         // String to const wchar_t*
-        if constexpr (std::is_same_v<TChar1, char> && std::is_same_v<TChar2, wchar_t>)
+        if constexpr (AreSameType<TChar1, char> && AreSameType<TChar2, wchar_t>)
         {
             const char* pCStr = ToChars(CString, cStrCount);
             result = AreStringsSame(string.ConstBuffer(), pCStr, string.Count(), cStrCount);
             JPT_DELETE_ARRAY(pCStr);
         }
         // WString to const char*
-        else if constexpr (std::is_same_v<TChar1, wchar_t> && std::is_same_v<TChar2, char>)
+        else if constexpr (AreSameType<TChar1, wchar_t> && AreSameType<TChar2, char>)
         {
             const wchar_t* pWCStr = ToWChars(CString, cStrCount);
             result = AreStringsSame(string.ConstBuffer(), pWCStr, string.Count(), cStrCount);
@@ -959,11 +959,11 @@ export namespace jpt
     {
         TChar buffer[kCount];
 
-        if constexpr (std::is_same_v<TChar, char>)
+        if constexpr (AreSameType<TChar, char>)
         {
             JPT_FORMAT_STRING(buffer, format, ...);
         }
-        else if constexpr (std::is_same_v<TChar, wchar_t>)
+        else if constexpr (AreSameType<TChar, wchar_t>)
         {
             JPT_FORMAT_WSTRING(buffer, format, ...);
         }
@@ -1134,7 +1134,7 @@ export namespace jpt
     using WString = String_Base<wchar_t>;    // Wide string
 
     template<typename T>
-    concept StringType = std::is_same_v<T, String> || std::is_same_v<T, WString>;
+    concept StringType = AreSameType<T, String> || AreSameType<T, WString>;
 
     template<typename T> constexpr bool IsStringLiteral = false;
     template<Index N>   constexpr bool IsStringLiteral<char[N]>          = true;

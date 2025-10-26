@@ -4,8 +4,6 @@ module;
 
 #include "Core/Memory/Memory.h"
 
-#include <concepts>
-
 export module jpt.KDTree3;
 
 import jpt.Allocator;
@@ -20,7 +18,7 @@ import jpt_private.Iterator_BinaryTree;
 namespace jpt
 {
     /** 3D K-D Tree implementation */
-    export template<std::floating_point T>
+    export template<Floating T>
     class KDTree3
     {
     private:
@@ -65,19 +63,19 @@ namespace jpt
         void RecurPostOrderWalkNode(Node* pNode, TFunc&& func);
     };
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr KDTree3<T>::KDTree3(const DynamicArray<Vector3<T>>& points)
     {
         Build(points);
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr KDTree3<T>::~KDTree3()
     {
         Clear();
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr void KDTree3<T>::Add(const Vector3<T>& point)
     {
         Node* pNode = m_pRoot;
@@ -120,7 +118,7 @@ namespace jpt
         ++m_count;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr void KDTree3<T>::Erase(const Vector3<T>& point)
     {
         Node* pNode = m_pRoot;
@@ -241,7 +239,7 @@ namespace jpt
         --m_count;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr void KDTree3<T>::Clear()
     {
         RecurPostOrderWalkNode(m_pRoot, [](Node* pNode) 
@@ -254,19 +252,19 @@ namespace jpt
         m_count = 0;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr Index KDTree3<T>::Count() const noexcept
     {
         return m_count;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr bool KDTree3<T>::IsEmpty() const noexcept
     {
         return m_count == 0;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr void KDTree3<T>::Build(const DynamicArray<Vector3<T>>& points)
     {
         Clear();
@@ -274,7 +272,7 @@ namespace jpt
         m_count = points.Count();
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr bool KDTree3<T>::Has(const Vector3<T>& point) const
     {
         Node* pNode = m_pRoot;
@@ -304,7 +302,7 @@ namespace jpt
         return false;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr DynamicArray<Vector3<T>> KDTree3<T>::FindNearest(const Vector3<T>& point, T threshold) const
     {
         DynamicArray<Vector3<T>> result;
@@ -312,7 +310,7 @@ namespace jpt
         return result;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr typename KDTree3<T>::Node* KDTree3<T>::InternalBuild(const DynamicArray<Vector3<T>>& points, Index begin, Index end, Index depth)
     {
         if (begin >= end)
@@ -339,7 +337,7 @@ namespace jpt
         return pNode;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     void KDTree3<T>::RecurFindNearest(Node* pNode, const Vector3<T>& point, T threshold, Index depth, DynamicArray<Vector3<T>>& result) const
     {
         if (pNode == nullptr)
@@ -368,7 +366,7 @@ namespace jpt
         }
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     template<typename TFunc>
     void KDTree3<T>::RecurPostOrderWalkNode(Node* pNode, TFunc&& func)
     {

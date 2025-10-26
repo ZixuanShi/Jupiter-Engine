@@ -16,7 +16,7 @@ import jpt.Math;
 namespace jpt
 {
     /** infinite length across two points */
-    export template<Arithmetic T>
+    export template<Numeric T>
     struct TLine3
     {
     public:
@@ -40,26 +40,26 @@ namespace jpt
         constexpr Vector3<T> Project(const Vector3<T>& point) const;
     };
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TLine3<T>::TLine3(const Vector3<T>& a, const Vector3<T>& b)
         : a(a)
         , b(b)
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TLine3<T>::Direction() const
     {
         return (b - a).Normalized();
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TLine3<T>::Dir() const
     {
         return Direction(); 
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLine3<T>::Distance(const Vector3<T>& point) const
     {
         const Vector3<T> dir = Dir();
@@ -68,13 +68,13 @@ namespace jpt
         return cross.Length();
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLine3<T>::Dist(const Vector3<T>& point) const 
     {
         return Distance(point); 
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TLine3<T>::Project(const Vector3<T>& point) const
     {
         const Vector3<T> dir = Dir();

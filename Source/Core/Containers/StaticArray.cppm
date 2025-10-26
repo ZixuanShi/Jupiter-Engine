@@ -7,7 +7,6 @@ module;
 
 #include <string>
 #include <initializer_list>
-#include <type_traits>
 
 export module jpt.StaticArray;
 
@@ -139,7 +138,7 @@ export namespace jpt
     template<typename TData, Index kCapacity>
     constexpr StaticArray<TData, kCapacity>::~StaticArray()
     {
-        if constexpr (!std::is_trivially_destructible_v<TData>)
+        if constexpr (!IsTriviallyDestructible<TData>)
         {
             for (Index i = 0; i < kCapacity; ++i)
             {
@@ -258,7 +257,7 @@ export namespace jpt
     template<typename TData, Index kCapacity>
     constexpr void StaticArray<TData, kCapacity>::CopyData(const TData* pBegin)
     {
-        if constexpr (std::is_trivially_copyable_v<TData>)
+        if constexpr (IsTriviallyCopyable<TData>)
         {
             MemCpy(m_buffer, pBegin, kCapacity * sizeof(TData));
         }

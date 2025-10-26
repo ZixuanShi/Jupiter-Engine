@@ -292,11 +292,11 @@ namespace jpt::Vulkan
             VkDeviceSize offsets[] = { 0 };
             vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-            if constexpr (std::is_same_v<uint16, IndexBuffer::IndexType>)
+            if constexpr (AreSameType<uint16, IndexBuffer::IndexType>)
             {
                 vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT16);
             }
-            else if constexpr (std::is_same_v<uint32, IndexBuffer::IndexType>)
+            else if constexpr (AreSameType<uint32, IndexBuffer::IndexType>)
             {
                 vkCmdBindIndexBuffer(commandBuffer, indexBuffer.GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
             }

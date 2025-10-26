@@ -6,7 +6,6 @@ module;
 #include "Core/Validation/Assert.h"
 
 #include <initializer_list>
-#include <type_traits>
 
 export module jpt.Deque;
 
@@ -181,7 +180,7 @@ export namespace jpt
         JPT_ASSERT(m_frontIndex >= 0 && m_frontIndex != kInvalidValue<int64>, "Invalid front index");
 
         // Destruct the front element if it's not trivially destructible
-        if constexpr (!std::is_trivially_destructible_v<TData>)
+        if constexpr (!IsTriviallyDestructible<TData>)
         {
             TAllocator::Destruct(m_buffer + m_frontIndex);
         }
@@ -211,7 +210,7 @@ export namespace jpt
         JPT_ARGS_COUNT(m_backIndex >= 0 && m_backIndex != kInvalidValue<int64>, "Invalid back index");
 
         // Destruct the back element if it's not trivially destructible
-        if constexpr (!std::is_trivially_destructible_v<TData>)
+        if constexpr (!IsTriviallyDestructible<TData>)
         {
             TAllocator::Destruct(m_buffer + m_backIndex);
         }
@@ -243,7 +242,7 @@ export namespace jpt
             return;
         }
 
-        if constexpr (!std::is_trivially_destructible_v<TData>)
+        if constexpr (!IsTriviallyDestructible<TData>)
         {
             int64 index = m_frontIndex;
             while (true)
