@@ -36,10 +36,24 @@ bool UnitTests_Interpolation()
 {
     JPT_ENSURE(jpt::Lerp(0.0f, 10.0f, 0.0f) == 0.0f);
     JPT_ENSURE(jpt::Lerp(0.0f, 10.0f, 0.5f) == 5.0f);
+    JPT_ENSURE(jpt::Lerp(0.0f, 10.0f, 0.75f) == 7.5f);
     JPT_ENSURE(jpt::Lerp(0.0f, 10.0f, 1.0f) == 10.0f);
+
+    JPT_ENSURE(jpt::Lerp(-1.0f, 1.0f, 0.0f) == -1.0f);
+    JPT_ENSURE(jpt::Lerp(-1.0f, 1.0f, 0.5f) == 0.0f);
+    JPT_ENSURE(jpt::Lerp(-1.0f, 1.0f, 0.75f) == 0.5f);
+    JPT_ENSURE(jpt::Lerp(-1.0f, 1.0f, 1.0f) == 1.0f);
+
     JPT_ENSURE(jpt::InvLerp(0.0f, 10.0f, 0.0f) == 0.0f);
     JPT_ENSURE(jpt::InvLerp(0.0f, 10.0f, 5.0f) == 0.5f);
+    JPT_ENSURE(jpt::InvLerp(0.0f, 10.0f, 7.5f) == 0.75f);
     JPT_ENSURE(jpt::InvLerp(0.0f, 10.0f, 10.0f) == 1.0f);
+
+    JPT_ENSURE(jpt::InvLerp(-1.0f, 1.0f, -1.0f) == 0.0f);
+    JPT_ENSURE(jpt::InvLerp(-1.0f, 1.0f, 0.0f) == 0.5f);
+    JPT_ENSURE(jpt::InvLerp(-1.0f, 1.0f, 0.5f) == 0.75f);
+    JPT_ENSURE(jpt::InvLerp(-1.0f, 1.0f, 1.0f) == 1.0f);
+
     JPT_ENSURE(jpt::SmoothStep(0.0f, 1.0f, 0.0f) == 0.0f);
     JPT_ENSURE(jpt::AreValuesClose(jpt::SmoothStep(0.0f, 1.0f, 0.5f), 0.5f));
     JPT_ENSURE(jpt::SmoothStep(0.0f, 1.0f, 1.0f) == 1.0f);
