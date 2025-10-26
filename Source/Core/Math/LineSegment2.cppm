@@ -9,7 +9,7 @@ import jpt.Vector2;
 namespace jpt
 {
     /** Has two definite endpoints and a length */
-    export template<Arithmetic T>
+    export template<Numeric T>
     struct TLineSegment2
     {
     public:
@@ -30,25 +30,25 @@ namespace jpt
         constexpr Vector2<T> Project(const Vector2<T>& point) const noexcept;
     };
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TLineSegment2<T>::Direction() const noexcept
     {
         return (b - a).Normalized();
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TLineSegment2<T>::Dir() const noexcept
     {
         return Direction(); 
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLineSegment2<T>::Length() const noexcept
     {
         return a.Distance(b);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLineSegment2<T>::Distance(const Vector2<T>& point) const noexcept
     {
         const Vector2<T> pointOnLine = Project(point);
@@ -56,13 +56,13 @@ namespace jpt
         return pointToLine.Length();
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLineSegment2<T>::Dist(const Vector2<T>& point) const noexcept
     { 
         return Distance(point); 
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TLineSegment2<T>::Project(const Vector2<T>& point) const noexcept
     {
         const Vector2<T> ab = b - a;

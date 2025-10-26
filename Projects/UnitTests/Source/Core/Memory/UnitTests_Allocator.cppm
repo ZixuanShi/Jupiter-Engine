@@ -13,7 +13,7 @@ import jpt.Utilities;
 import jpt.String;
 import jpt.ToString;
 
-template<jpt::Arithmetic TNum>
+template<jpt::Numeric TNum>
 bool UnitTests_TAllocatorrivialType()
 {
     // Single

@@ -16,7 +16,7 @@ import jpt.Hash;
 
 export namespace jpt
 {
-    template<Arithmetic T>
+    template<Numeric T>
     struct Vector4
     {
     public:
@@ -87,7 +87,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Non-Member functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool operator==(const Vector4<T>& lhs, const Vector4<T>& rhs)
     {
         return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
@@ -96,13 +96,13 @@ export namespace jpt
             AreValuesClose(lhs.w, rhs.w, static_cast<T>(0.05));
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr String ToString(const Vector4<T>& vector4)
     {
         return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", vector4.x, vector4.y, vector4.z, vector4.w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr uint64 Hash(const Vector4<T>& vector4)
     {
         if constexpr (std::is_floating_point_v<T>)
@@ -132,7 +132,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Member functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>::Vector4(T scalar)
         : x(scalar)
         , y(scalar)
@@ -141,7 +141,7 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>::Vector4(T x, T y, T z, T w)
         : x(x)
         , y(y)
@@ -150,7 +150,7 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>::Vector4(const Vector3<T>& vector, T w)
         : x(vector.x)
         , y(vector.y)
@@ -159,37 +159,37 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator-() const
     {
         return Vector4(-x, -y, -z, -w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator+(const Vector4& other) const
     {
         return Vector4(x + other.x, y + other.y, z + other.z, w + other.w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator-(const Vector4& other) const
     {
         return Vector4(x - other.x, y - other.y, z - other.z, w - other.w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator*(const Vector4& other) const
     {
         return Vector4(x * other.x, y * other.y, z * other.z, w * other.w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator/(const Vector4& other) const
     {
         return Vector4(x / other.x, y / other.y, z / other.z, w / other.w);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator+=(const Vector4& other)
     {
         x += other.x;
@@ -199,7 +199,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator-=(const Vector4& other)
     {
         x -= other.x;
@@ -209,7 +209,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator*=(const Vector4& other)
     {
         x *= other.x;
@@ -219,7 +219,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator/=(const Vector4& other)
     {
         x /= other.x;
@@ -229,31 +229,31 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator+(T scalar) const
     {
         return Vector4(x + scalar, y + scalar, z + scalar, w + scalar);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator-(T scalar) const
     {
         return Vector4(x - scalar, y - scalar, z - scalar, w - scalar);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator*(T scalar) const
     {
         return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> Vector4<T>::operator/(T scalar) const
     {
         return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator+=(T scalar)
     {
         x += scalar;
@@ -263,7 +263,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator-=(T scalar)
     {
         x -= scalar;
@@ -273,7 +273,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator*=(T scalar)
     {
         x *= scalar;
@@ -283,7 +283,7 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T>& Vector4<T>::operator/=(T scalar)
     {
         x /= scalar;
@@ -293,73 +293,73 @@ export namespace jpt
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T& Vector4<T>::operator[](size_t index) noexcept
     {
         return (&x)[index];
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr const T& Vector4<T>::operator[](size_t index) const noexcept
     {
         return (&x)[index];
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::Length2() const
     {
         return x * x + y * y + z * z;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::Length2W() const
     {
         return x * x + y * y + z * z + w * w;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::Length() const
     {
         return std::sqrt(Length2());
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::LengthW() const
     {
         return std::sqrt(Length2W());
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::Dot(const Vector4& other) const
     {
         return XYZ().Dot(other.XYZ());
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T Vector4<T>::DotW(const Vector4& other) const
     {
         return x * other.x + y * other.y + z * other.z + w * other.w;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> Vector4<T>::Cross(const Vector4& other) const
     {
         return XYZ().Cross(other.XYZ());
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool Vector4<T>::IsDir() const
     {
         return w == static_cast<T>(0);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool Vector4<T>::IsPos() const
     {
         return w > static_cast<T>(0);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> Vector4<T>::XYZ() const
     {
         return Vector3<T>(x, y, z);
@@ -374,25 +374,25 @@ export using Vec4i = jpt::Vector4<int32>;
 template<> constexpr bool jpt::IsTrivial<Vec4f> = true;
 template<> constexpr bool jpt::IsTrivial<Vec4i> = true;
 
-export template<jpt::Arithmetic T>
+export template<jpt::Numeric T>
 constexpr jpt::Vector4<T> operator+(T scaler, const jpt::Vector4<T>& vector4)
 {
     return vector4 + scaler;
 }
 
-export template<jpt::Arithmetic T>
+export template<jpt::Numeric T>
 constexpr jpt::Vector4<T> operator-(T scaler, const jpt::Vector4<T>& vector4)
 {
     return vector4 - scaler;
 }
 
-export template<jpt::Arithmetic T>
+export template<jpt::Numeric T>
 constexpr jpt::Vector4<T> operator*(T scaler, const jpt::Vector4<T>& vector4)
 {
     return vector4 * scaler;
 }
 
-export template<jpt::Arithmetic T>
+export template<jpt::Numeric T>
 constexpr jpt::Vector4<T> operator/(T scaler, const jpt::Vector4<T>& vector4)
 {
     return vector4 / scaler;

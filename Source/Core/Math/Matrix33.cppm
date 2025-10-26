@@ -18,7 +18,7 @@ import jpt.Utilities;
 export namespace jpt
 {
     /** Column-major */
-    template<Arithmetic T>
+    template<Numeric T>
     struct TMatrix33
     {
     public:
@@ -76,7 +76,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Non-Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool operator==(const TMatrix33<T>& lhs, const TMatrix33<T>& rhs)
     {
         return lhs.m[0] == rhs.m[0] &&
@@ -84,7 +84,7 @@ export namespace jpt
                lhs.m[2] == rhs.m[2];
     }
     
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr String ToString(const TMatrix33<T>& m)
     {
         return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
@@ -95,7 +95,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T>::TMatrix33()
         : m{ { 1, 0, 0 },
              { 0, 1, 0 },
@@ -103,13 +103,13 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T>::TMatrix33(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis)
         : m{ xAxis, yAxis, zAxis }
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T>::TMatrix33(T m00, T m01, T m02, 
                                       T m10, T m11, T m12, 
                                       T m20, T m21, T m22)
@@ -119,7 +119,7 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::operator*(const TMatrix33<T>& rhs) const
     {
         TMatrix33<T> result;
@@ -138,21 +138,21 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T>& TMatrix33<T>::operator*=(const TMatrix33<T>& rhs)
     {
         *this = *this * rhs;
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TMatrix33<T>::operator*(const Vector2<T>& v) const
     {
         Vector3<T> result = *this * Vector3<T>(v, 1);
         return Vector2<T>(result.x, result.y);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TMatrix33<T>::operator*(const Vector3<T>& v) const
     {
         Vector3<T> result;
@@ -165,7 +165,7 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Translation(Vector2<T> v)
     {
         return TMatrix33<T>(1,   0, 0,
@@ -173,7 +173,7 @@ export namespace jpt
                           v.x, v.y, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Rotation(T radians)
     {
         const T cos = Cos(radians);
@@ -184,7 +184,7 @@ export namespace jpt
                              0,    0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Scaling(Vector2<T> v)
     {
         return TMatrix33<T>(v.x,   0, 0,
@@ -192,7 +192,7 @@ export namespace jpt
                               0,   0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Scaling(T scalar)
     {
         return TMatrix33<T>(scalar,      0, 0,
@@ -200,31 +200,31 @@ export namespace jpt
                                  0,      0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Translate(Vector2<T> v)
     {
         *this *= Translation(v); 
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Rotate(T radians)
     {
         *this *= Rotation(radians);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Scale(Vector2<T> v)
     {
         *this *= Scaling(v);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Scale(T scalar)
     {
         *this *= Scaling(scalar);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TMatrix33<T>::Determinant() const
     {
         return m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
@@ -232,7 +232,7 @@ export namespace jpt
                m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Transposed(const TMatrix33& matrix)
     {
         return TMatrix33(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -240,7 +240,7 @@ export namespace jpt
                          matrix.m[0][2], matrix.m[1][2], matrix.m[2][2]);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Transpose()
     {
         Swap(m[0][1], m[1][0]);
@@ -248,7 +248,7 @@ export namespace jpt
         Swap(m[1][2], m[2][1]);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Inverse(const TMatrix33& matrix)
     {
         TMatrix33<T> result = matrix;
@@ -256,7 +256,7 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix33<T>::Invert()
     {
         const T det = Determinant();
@@ -281,7 +281,7 @@ export namespace jpt
         *this = result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool TMatrix33<T>::IsOrthogonal() const
     {
         const TMatrix33<T> inverse = Inverse(*this);

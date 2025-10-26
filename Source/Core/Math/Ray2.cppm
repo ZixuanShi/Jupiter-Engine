@@ -10,7 +10,7 @@ import jpt.Vector2;
 namespace jpt
 {
     /** Has one endpoint, endless towards one direction */
-    export template<Arithmetic T>
+    export template<Numeric T>
     struct TRay2
     {
     public:
@@ -25,20 +25,20 @@ namespace jpt
         constexpr T Distance(Vector2<T> point) const noexcept;
     };
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TRay2<T>::TRay2(Vector2<T> origin, Vector2<T> direction) noexcept
         : origin(origin)
         , direction(direction)
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TRay2<T>::GetPoint(T t) const noexcept
     {
         return origin + direction * t;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TRay2<T>::Distance(Vector2<T> point) const noexcept
     {
         const float dot = Vec2f::Dot(point - origin, direction);

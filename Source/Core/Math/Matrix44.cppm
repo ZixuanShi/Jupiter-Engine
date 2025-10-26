@@ -22,7 +22,7 @@ import jpt.Vector4;
 export namespace jpt
 {
     /** Column-major */
-    template<Arithmetic T>
+    template<Numeric T>
     struct TMatrix44
     {
     public:
@@ -111,7 +111,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Non-Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool operator==(const TMatrix44<T>& lhs, const TMatrix44<T>& rhs)
     {
         return lhs.m[0] == rhs.m[0] &&
@@ -120,7 +120,7 @@ export namespace jpt
                lhs.m[3] == rhs.m[3];
     }
     
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr String ToString(const TMatrix44<T>& m)
     {
         return String::Format<256>("\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f\n%.3f, %.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2], m[0][3],
@@ -132,7 +132,7 @@ export namespace jpt
     // ------------------------------------------------------------------------------------------------
     // Member Functions
     // ------------------------------------------------------------------------------------------------
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T>::TMatrix44()
         : m{ { 1, 0, 0, 0 }, 
              { 0, 1, 0, 0 }, 
@@ -141,12 +141,12 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T>::TMatrix44(const Vector4<T>& v0, const Vector4<T>& v1, const Vector4<T>& v2, const Vector4<T>& v3)
         : m{ v0, v1, v2, v3 }
     {
     }
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T>::TMatrix44(T m00, T m01, T m02, T m03, 
                                     T m10, T m11, T m12, T m13, 
                                     T m20, T m21, T m22, T m23, 
@@ -158,7 +158,7 @@ export namespace jpt
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::operator*(const TMatrix44<T>& rhs) const
     {
         TMatrix44<T> result;
@@ -178,14 +178,14 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TMatrix44<T>::operator*(const Vector3<T>& rhs) const
     {
         Vector4<T> result = *this * Vector4<T>(rhs, 1);
         return Vector3<T>(result.x, result.y, result.z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector4<T> TMatrix44<T>::operator*(const Vector4<T>& rhs) const
     {
         Vector4<T> result;
@@ -199,14 +199,14 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T>& TMatrix44<T>::operator*=(const TMatrix44<T>& rhs)
     {
         *this = *this * rhs;
         return *this;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Translation(const Vector3<T>& v)
     {
         return TMatrix44<T>(  1,   0,   0, 0,
@@ -215,7 +215,7 @@ export namespace jpt
                             v.x, v.y, v.z, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Translation(T x, T y, T z)
     {
         return TMatrix44<T>(1, 0, 0, 0,
@@ -224,25 +224,25 @@ export namespace jpt
                             x, y, z, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Translate(const Vector3<T>& v)
     {
         *this *= Translation(v);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Translate(T x, T y, T z)
     {
         *this *= Translation(x, y, z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TMatrix44<T>::GetPosition() const
     {
         return Vector3<T>(m[3].x, m[3].y, m[3].z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::RotationX(T radians)
     {
         const T cos = Cos(radians);
@@ -253,7 +253,7 @@ export namespace jpt
                             0,    0,    0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::RotationY(T radians)
     {
         const T cos = Cos(radians);
@@ -264,7 +264,7 @@ export namespace jpt
                                0, 0,    0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::RotationZ(T radians)
     {
         const T cos = Cos(radians);
@@ -275,49 +275,49 @@ export namespace jpt
                                0,    0, 0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::FromEulerAngles(const Vector3<T>& eulerAngles)
     {
         return RotationX(eulerAngles.x) * RotationY(eulerAngles.y) * RotationZ(eulerAngles.z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::FromEulerAngles(T pitch, T yaw, T roll)
     {
         return RotationX(pitch) * RotationY(yaw) * RotationZ(roll);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::RotateX(T radians)
     {
         *this *= RotationX(radians);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::RotateY(T radians)
     {
         *this *= RotationY(radians);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::RotateZ(T radians)
     {
         *this *= RotationZ(radians);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::RotateEulerAngles(const Vector3<T>& eulerAngles)
     {
         *this *= FromEulerAngles(eulerAngles);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::RotateEulerAngles(T pitch, T yaw, T roll)
     {
         *this *= FromEulerAngles(pitch, yaw, roll);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TMatrix44<T>::CalcEulerAngles() const
     {
         // Extracting Euler Angles from a Rotation Matrix
@@ -345,7 +345,7 @@ export namespace jpt
         }
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::FromQuaternion(const TQuaternion<T>& quaternion)
     {
         const T xx = quaternion.x * quaternion.x;
@@ -365,7 +365,7 @@ export namespace jpt
                                             0,                 0,                 0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Scaling(const Vector3<T>& v)
     {
         return TMatrix44<T>(v.x,  0,   0, 0,
@@ -374,7 +374,7 @@ export namespace jpt
                              0,   0,   0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Scaling(T x, T y, T z)
     {
         return TMatrix44<T>(x, 0, 0, 0,
@@ -383,19 +383,19 @@ export namespace jpt
                             0, 0, 0, 1);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Scale(const Vector3<T>& v)
     {
         *this *= Scaling(v);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Scale(T x, T y, T z)
     {
         *this *= Scaling(x, y, z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TMatrix44<T>::GetScale() const
     {
         const T x = Vector3<T>(m[0].x, m[0].y, m[0].z).Length();
@@ -404,7 +404,7 @@ export namespace jpt
         return Vector3<T>(x, y, z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TMatrix44<T>::Determinant() const
     {
         const T a = m[0][0];
@@ -436,7 +436,7 @@ export namespace jpt
         return det;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Transposed(const TMatrix44<T>& matrix)
     {
         return TMatrix44<T>(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -445,7 +445,7 @@ export namespace jpt
                             matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Transpose()
     {
         Swap(m[0][1], m[1][0]);
@@ -456,7 +456,7 @@ export namespace jpt
         Swap(m[2][3], m[3][2]);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Inverse(const TMatrix44<T>& matrix)
     {
         TMatrix44<T> result = matrix;
@@ -464,7 +464,7 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr void TMatrix44<T>::Invert()
     {
         const T det = Determinant();
@@ -510,7 +510,7 @@ export namespace jpt
         m[3][3] = (a * f * k + b * g * q + c * e * j - a * g * j - b * e * k - c * f * q) * invDet;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool TMatrix44<T>::IsOrthogonal() const
     {
         const TMatrix44<T> inverse = Inverse(*this);
@@ -518,7 +518,7 @@ export namespace jpt
         return inverse == transposed;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Orthographic(T left, T right, T bottom, T top, T near, T far)
     {
         TMatrix44<T> result = TMatrix44<T>::Identity();
@@ -537,7 +537,7 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up /* = Vector3<T>::Up()*/)
     {
         // Calcualte the forward vector
@@ -570,7 +570,7 @@ export namespace jpt
         return result;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::Perspective(T fov, T aspect, T zNear, T zFar)
     {
         const T tanHalfFovy = std::tan(fov / static_cast<T>(2));

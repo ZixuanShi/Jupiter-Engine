@@ -82,61 +82,61 @@ export namespace jpt
 #pragma endregion MinMax
 
 #pragma region Geometry
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat ToDegrees(TFloat radians)
     {
         return radians * static_cast<TFloat>(180) / kPi<TFloat>;
     }
 
-    template<typename T> requires (!std::floating_point<T>)
+    template<typename T> requires (!Floating<T>)
         constexpr T ToDegrees(const T& obj)
     {
         return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat ToRadians(TFloat degrees)
     {
         return degrees * kPi<TFloat> / static_cast<TFloat>(180);
     }
 
-    template<typename T> requires (!std::floating_point<T>)
+    template<typename T> requires (!Floating<T>)
         constexpr T ToRadians(const T& obj)
     {
         return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Sin(TFloat value)
     {
         return std::sin(value);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Cos(TFloat value)
     {
         return std::cos(value);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Tan(TFloat value)
     {
         return std::tan(value);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Atan2(TFloat lhs, TFloat rhs)
     {
         return std::atan2(lhs, rhs);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Asin(TFloat value)
     {
         return std::asin(value);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Acos(TFloat value)
     {
         return std::acos(value);
@@ -200,7 +200,7 @@ export namespace jpt
         }
     }
 
-    template<std::floating_point T = float32>
+    template<Floating T = float32>
     constexpr T Saturate(T value)
     {
         return Max(static_cast<T>(0), Min(value, static_cast<T>(1)));
@@ -209,13 +209,13 @@ export namespace jpt
 #pragma endregion Clamping
 
 #pragma region Interpolation
-    template<NonTrivial T, std::floating_point TFloat = float32>
+    template<NonTrivial T, Floating TFloat = float32>
     constexpr T Lerp(const T& start, const T& end, TFloat t)
     {
         return start + t * (end - start);
     }
 
-    template<Trivial T, std::floating_point TFloat = float32>
+    template<Trivial T, Floating TFloat = float32>
     constexpr T Lerp(T start, T end, TFloat t)
     {
         return start + t * (end - start);
@@ -233,14 +233,14 @@ export namespace jpt
         return (value - start) / (end - start);
     }
 
-    template<std::floating_point T = float32>
+    template<Floating T = float32>
     constexpr T SmoothStep(T edge0, T edge1, T x)
     {
         x = Saturate((x - edge0) / (edge1 - edge0));
         return x * x * (static_cast<T>(3) - static_cast<T>(2) * x);
     }
 
-    template<std::floating_point T = float32>
+    template<Floating T = float32>
     constexpr T SmootherStep(T edge0, T edge1, T x)
     {
         x = Saturate((x - edge0) / (edge1 - edge0));
@@ -250,38 +250,38 @@ export namespace jpt
 #pragma endregion Interpolation
 
     /** @return The absolute value of input arithmetic parameter */
-    template<Arithmetic TNum>
+    template<Numeric TNum>
     constexpr TNum Abs(TNum value)
     {
         return (value >= static_cast<TNum>(0) ? value : -value);
     }
 
-    template<Arithmetic TNum>
+    template<Numeric TNum>
     constexpr TNum Sqrt(TNum value)
     {
         return static_cast<TNum>(std::sqrt(value));
     }
 
-    template<Arithmetic TNum1, Arithmetic TNum2>
+    template<Numeric TNum1, Numeric TNum2>
     constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001))
     {
         return Abs(A - static_cast<TNum1>(B)) <= tolerance;
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr bool IsPowerOfTwo(TInt value)
     {
         return (value & (value - 1)) == 0;
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr bool IsEven(TInt value)
     {
         return (value & 1) == 0;
     }
 
     /** @return Rount down integer */
-    template<Arithmetic T = int32, std::floating_point TFloat = float32>
+    template<Numeric T = int32, Floating TFloat = float32>
     constexpr T Floor(TFloat value)
     {
         const T integer = static_cast<T>(value);
@@ -295,7 +295,7 @@ export namespace jpt
         }
     }
 
-    template<Arithmetic T = int32, std::floating_point TFloat = float32>
+    template<Numeric T = int32, Floating TFloat = float32>
     constexpr T Ceil(TFloat value)
     {
         const T integer = static_cast<T>(value);
@@ -310,7 +310,7 @@ export namespace jpt
     }
 
     /** @return The nearest integer */
-    template<Arithmetic T = int32, std::floating_point TFloat = float32>
+    template<Numeric T = int32, Floating TFloat = float32>
     constexpr T Round(TFloat value)
     {
         const TFloat fraction = value - Floor<T>(value);
@@ -325,7 +325,7 @@ export namespace jpt
     }
 
     /** @return The floor of the value if it's negative, otherwise the ceil */
-    template<Arithmetic T = int32, std::floating_point TFloat = float32>
+    template<Numeric T = int32, Floating TFloat = float32>
     constexpr T FloorCeil(TFloat value)
     {
         if (value < static_cast<TFloat>(0))
@@ -343,13 +343,13 @@ export namespace jpt
         return std::log2(value);
     }
 
-    template<std::floating_point TFloat = float32>
+    template<Floating TFloat = float32>
     constexpr TFloat Modf(TFloat value, TFloat mod)
     {
         return std::fmod(value, mod);
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr bool IsPrime(TInt n)
     {
         if (n <= 1)

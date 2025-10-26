@@ -4,7 +4,6 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-#include <concepts>
 #include <time.h>
 
 export module jpt.Rand;
@@ -27,22 +26,22 @@ export namespace jpt
         /** @return        a random number from min to max inclusive
             @param min    Minimum value inclusive
             @param max    Maximum value inclusive    */
-        template<std::integral TInt = uint32>
+        template<Integral TInt = uint32>
         constexpr TInt RangedInt(TInt min, TInt max);
 
         /** @return        a random integral value within max range
             @param max    Largest possible value (inclusive) */
-        template<std::integral TInt = uint32>
+        template<Integral TInt = uint32>
         constexpr TInt MaxInt(TInt max = Constants<TInt>::kMax);
 
         /** @return        a random floating point from 0 to 1 inclusive */
-        template<std::floating_point Type = float>
+        template<Floating Type = float>
         constexpr Type Float();
 
         /** @return        a random floating point from min to max inclusive
             @param min    Minimum value inclusive
             @param max    Maximum value inclusive    */
-        template<std::floating_point Type = float>
+        template<Floating Type = float>
         constexpr Type RangedFloat(Type min, Type max);
 
         /** @return        a random boolean */
@@ -58,7 +57,7 @@ export namespace jpt
     private:
         /** xorshift128+ algorithm from https://en.wikipedia.org/wiki/Xorshift
             @template Type    The result will be in this Type     */
-        template<std::integral TInt>
+        template<Integral TInt>
         constexpr TInt XOrShift128Plus();
     };
 
@@ -68,7 +67,7 @@ export namespace jpt
         m_seeds[1] = seed << 7 | seed;
     }
 
-    template<std::floating_point Type>
+    template<Floating Type>
     constexpr Type RNG::Float()
     {
         float result = 0.f;
@@ -88,7 +87,7 @@ export namespace jpt
         return result;
     }
 
-    template<std::floating_point T>
+    template<Floating T>
     constexpr T RNG::RangedFloat(T min, T max)
     {
         const T randomFloat = Float();
@@ -114,20 +113,20 @@ export namespace jpt
         return globalRng;
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr TInt RNG::RangedInt(TInt min, TInt max)
     {
         uint64 mod = (uint64)max - (uint64)min + 1;
         return XOrShift128Plus<TInt>() % mod + min;
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr TInt RNG::MaxInt(TInt max /* = Limits<TInt>::Max()*/)
     {
         return RangedInt<TInt>(0, max);
     }
 
-    template<std::integral TInt>
+    template<Integral TInt>
     constexpr TInt RNG::XOrShift128Plus()
     {
         uint64 T = m_seeds[0];

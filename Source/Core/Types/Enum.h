@@ -4,8 +4,6 @@
 
 #include "Core/Validation/Assert.h"
 
-#include <concepts>
-
 import jpt.TypeDefs;
 import jpt.Concepts;
 import jpt.Constants;
@@ -16,7 +14,7 @@ import jpt.HashMap;
 import jpt.DynamicArray;
 
 /** Has shared enum data across all instances and public */
-template<std::integral TInt>
+template<jpt::Integral TInt>
 struct EnumData
 {
     TInt min = jpt::Constants<TInt>::kMax;    /**< The min value of this enum */
@@ -26,7 +24,7 @@ struct EnumData
 
 /** Generate the shared enum data 
     @param pSource        A string Has all the enum values, separated by ',' accepts value assignment too */
-template<std::integral TInt>
+template<jpt::Integral TInt>
 EnumData<TInt> GenerateData(const char* pSource);
 
 /** Enum wrapper supports the followings:
@@ -135,13 +133,13 @@ public:                                                                         
         return *this;                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
-    template<std::integral TInt = TSize>                                                                                     \
+    template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName(TInt integer)                                                                                         \
         : m_value(static_cast<TSize>(integer))                                                                               \
     {                                                                                                                        \
     }                                                                                                                        \
                                                                                                                              \
-    template<std::integral TInt = TSize>                                                                                     \
+    template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator=(TInt integer)                                                                              \
     {                                                                                                                        \
         m_value = static_cast<TSize>(integer);                                                                               \
@@ -166,14 +164,14 @@ public:                                                                         
     /** JPT_ENUM's values are not guaranteed linear and contigous, you will have assertion failed if that's the case */      \
                                                                                                                              \
     /** +=, -= */                                                                                                            \
-    template<std::integral TInt = TSize>                                                                                     \
+    template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator+=(TInt offset)                                                                              \
     {                                                                                                                        \
         m_value += static_cast<TSize>(offset);                                                                               \
         JPT_ASSERT(s_data.names.Has(m_value));                                                                               \
         return *this;                                                                                                        \
     }                                                                                                                        \
-    template<std::integral TInt = TSize>                                                                                     \
+    template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr EnumName& operator-=(TInt offset)                                                                              \
     {                                                                                                                        \
         m_value -= static_cast<TSize>(offset);                                                                               \
@@ -186,13 +184,13 @@ public:                                                                         
     constexpr EnumName& operator--() { return *this -= 1; }                                                                  \
                                                                                                                              \
     /** +, - */                                                                                                              \
-    template<std::integral TInt>                                                                                             \
+    template<jpt::Integral TInt>                                                                                             \
     constexpr EnumName operator+(TInt offset)                                                                                \
     {                                                                                                                        \
         EnumName copy = *this;                                                                                               \
         return copy += offset;                                                                                               \
     }                                                                                                                        \
-    template<std::integral TInt>                                                                                             \
+    template<jpt::Integral TInt>                                                                                             \
     constexpr EnumName operator-(TInt offset)                                                                                \
     {                                                                                                                        \
         EnumName copy = *this;                                                                                               \
@@ -235,7 +233,7 @@ public:                                                                         
                                                                                                                              \
     /** Comparison */                                                                                                        \
     /** == */                                                                                                                \
-    template<std::integral TInt = TSize>                                                                                     \
+    template<jpt::Integral TInt = TSize>                                                                                     \
     constexpr bool operator==(TInt value)            const { return m_value == static_cast<TSize>(value); }                  \
     constexpr bool operator==(const char* str)       const { return s_data.names[m_value] == str; }                          \
     constexpr bool operator==(const EnumName& other) const { return m_value == other.m_value; }                              \

@@ -9,7 +9,7 @@ import jpt.TypeDefs;
 
 export namespace jpt
 {
-    template<Arithmetic T>
+    template<Numeric T>
     struct TBox2
     {
     public:
@@ -28,45 +28,45 @@ export namespace jpt
         constexpr bool Intersects(const TBox2<T>& other) const noexcept;
     };
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool operator==(const TBox2<T>& lhs, const TBox2<T>& rhs) noexcept
     {
         return lhs.min == rhs.min && lhs.max == rhs.max;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TBox2<T>::TBox2(const Vector2<T>& min, const Vector2<T>& max) noexcept
         : min(min)
         , max(max)
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TBox2<T>::Center() const noexcept
     {
         return (min + max) / static_cast<T>(2);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TBox2<T>::Size() const noexcept
     {
         return max - min;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TBox2<T>::HalfSize() const noexcept
     {
         return Size() / 2;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool TBox2<T>::Inside(const Vector2<T>& point) const noexcept
     {
         return (point.x >= min.x && point.x <= max.x) && 
                (point.y >= min.y && point.y <= max.y);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr bool TBox2<T>::Intersects(const TBox2<T>& other) const noexcept
     {
         if (min.x > other.max.x)

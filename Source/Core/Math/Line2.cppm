@@ -17,7 +17,7 @@ import jpt.Vector3;
 namespace jpt
 {
     /** infinite length across two points */
-    export template<Arithmetic T>
+    export template<Numeric T>
     struct TLine2
     {
     public:
@@ -40,14 +40,14 @@ namespace jpt
         constexpr Vector2<T> Project(const Vector2<T>& point) const;
     };
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr TLine2<T>::TLine2(const Vector2<T>& a, const Vector2<T>& b)
         : a(a)
         , b(b) 
     {
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector3<T> TLine2<T>::Coefficients() const
     {
         const T x = a.y - b.y;
@@ -56,7 +56,7 @@ namespace jpt
         return Vector3<T>(x, y, z);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLine2<T>::Distance(const Vector2<T>& point) const
     {
         // d = |Ax0 + By0 + C| / sqrt(A^2 + B^2)
@@ -70,13 +70,13 @@ namespace jpt
         return numerator / denominator;
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr T TLine2<T>::Dist(const Vector2<T>& point) const
     {
         return Distance(point);
     }
 
-    template<Arithmetic T>
+    template<Numeric T>
     constexpr Vector2<T> TLine2<T>::Project(const Vector2<T>& point) const
     {
         const Vector3<T> coefficients = Coefficients();
