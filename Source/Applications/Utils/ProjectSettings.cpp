@@ -50,6 +50,11 @@ namespace jpt
         WriteJsonFile(projectSettingsJson, m_settings);
     }
 
+    bool ProjectSettings::Has(const String& key) const
+    {
+        return m_settings.Has(key);
+    }
+
     const String& ProjectSettings::Get(const String& key, const String& defaultStr) const
     {
         return Get<String>(key, defaultStr);

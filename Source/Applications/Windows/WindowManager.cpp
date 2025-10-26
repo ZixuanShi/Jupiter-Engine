@@ -8,7 +8,7 @@ module;
 module jpt.WindowManager;
 
 import jpt.Application;
-import jpt.CommandLine;
+import jpt.Settings;
 import jpt.Framework;
 import jpt.Window_GLFW;
 import jpt.Window_Win32;
@@ -16,8 +16,6 @@ import jpt.Window_Win32;
 import jpt.Renderer;
 import jpt.Framework_Enums;
 import jpt.Status;
-
-import jpt.ProjectSettings;
 
 import jpt.EventManager;
 import jpt.Event_Window_Close;
@@ -31,10 +29,8 @@ namespace jpt
                 Destroy(eventWindowClose.GetWindow());
             });
 
-        Window::s_defaultWidth  = ProjectSettings::GetInstance().Get("windowWidth",  Window::s_defaultWidth);
-        Window::s_defaultHeight = ProjectSettings::GetInstance().Get("windowHeight", Window::s_defaultHeight);
-        Window::s_defaultWidth  = CommandLine::GetInstance().Get("windowWidth",  Window::s_defaultWidth);
-        Window::s_defaultHeight = CommandLine::GetInstance().Get("windowHeight", Window::s_defaultHeight);
+        Window::s_defaultWidth = SyncSettings("windowWidth", Window::s_defaultWidth);
+        Window::s_defaultWidth = SyncSettings("windowHeight", Window::s_defaultHeight);
 
         return true;
     }

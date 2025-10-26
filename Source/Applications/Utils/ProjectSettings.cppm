@@ -25,8 +25,7 @@ export namespace jpt
         bool Load();
         void Save();
 
-        template<typename T>
-        bool TryGet(const String& key, T& value) const;
+        bool Has(const String& key) const;
 
         template<typename T>
         const T& Get(const String& key) const;
@@ -52,18 +51,6 @@ export namespace jpt
 
         void Erase(const String& key);
     };
-
-    template<typename T>
-    bool ProjectSettings::TryGet(const String& key, T& value) const
-    {
-        if (m_settings.Has(key))
-        {
-            value = m_settings[key].As<T>();
-            return true;
-        }
-
-        return false;
-    }
 
     template<typename T>
     const T& ProjectSettings::Get(const String& key) const

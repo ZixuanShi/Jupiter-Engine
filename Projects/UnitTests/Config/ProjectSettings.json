@@ -1,4 +1,6 @@
 {
     "windowWidth": 600,
+    "graphicsAPI": 2,
+    "frameworkAPI": 2,
     "windowHeight": 600
 }
