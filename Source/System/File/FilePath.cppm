@@ -5,8 +5,6 @@ module;
 #include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
 
-#include <type_traits>
-
 export module jpt.FilePath;
 
 import jpt.String;
@@ -26,7 +24,7 @@ export namespace jpt
         template<typename _TChar>
         class TPath
         {
-            static_assert(std::is_same_v<_TChar, char> || std::is_same_v<_TChar, wchar_t>, "TPath must be either char or wchar_t");
+            static_assert(AreSameType<_TChar, char> || AreSameType<_TChar, wchar_t>, "TPath must be either char or wchar_t");
 
         public:
             using TChar   = _TChar;
@@ -109,11 +107,11 @@ export namespace jpt
         template<typename TChar>
         constexpr TPath<TChar>::TPath(const char* path)
         {
-            if constexpr (std::is_same_v<TChar, char>)
+            if constexpr (AreSameType<TChar, char>)
             {
                 m_path = path;
             }
-            else if constexpr (std::is_same_v<TChar, wchar_t>)
+            else if constexpr (AreSameType<TChar, wchar_t>)
             {
                 m_path = CStrToWStr(path);
             }
@@ -124,11 +122,11 @@ export namespace jpt
         template<typename TChar>
         constexpr TPath<TChar>::TPath(const wchar_t* path)
         {
-            if constexpr (std::is_same_v<TChar, wchar_t>)
+            if constexpr (AreSameType<TChar, wchar_t>)
             {
                 m_path = path;
             }
-            else if constexpr (std::is_same_v<TChar, char>)
+            else if constexpr (AreSameType<TChar, char>)
             {
                 m_path = WCStrToStr(path);
             }
@@ -190,15 +188,15 @@ export namespace jpt
         template<typename T>
         constexpr String_Base<T> TPath<TChar>::GetString() const noexcept
         {
-            if constexpr (std::is_same_v<T, TChar>)
+            if constexpr (AreSameType<T, TChar>)
             {
                 return m_path;
             }
-            else if constexpr (std::is_same_v<T, char>)
+            else if constexpr (AreSameType<T, char>)
             {
                 return WStrToStr(GetTString());
             }
-            else if constexpr (std::is_same_v<T, wchar_t>)
+            else if constexpr (AreSameType<T, wchar_t>)
             {
                 return StrToWStr(GetTString());
             }

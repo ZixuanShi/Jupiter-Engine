@@ -5,8 +5,6 @@ module;
 #include "Core/Memory/Memory.h"
 #include "Core/Validation/Assert.h"
 
-#include <type_traits>
-
 export module jpt.Function;
 
 import jpt.Allocator;
@@ -46,7 +44,7 @@ export namespace jpt
 
             virtual TReturn operator()(TArgs... args) const override final
             {
-                if constexpr (std::is_same_v<TReturn, void>)
+                if constexpr (AreSameType<TReturn, void>)
                 {
                     m_function(Forward<TArgs>(args)...);
                 }
@@ -76,7 +74,7 @@ export namespace jpt
 
             virtual TReturn operator()(TArgs... args) const override final
             {
-                if constexpr (std::is_same_v<TReturn, void>)
+                if constexpr (AreSameType<TReturn, void>)
                 {
                     (m_pCaller->*m_pMemberFunction)(Forward<TArgs>(args)...);
                 }
@@ -232,7 +230,7 @@ export namespace jpt
     {
         JPT_ASSERT(IsConnected(), "Function is not connected");
 
-        if constexpr (std::is_same_v<TReturn, void>)
+        if constexpr (AreSameType<TReturn, void>)
         {
             (*m_pFunction)(Forward<TArgs>(args)...);
         }

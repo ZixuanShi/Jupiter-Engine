@@ -22,11 +22,11 @@ import jpt.Utilities;
     []() -> const TChar*                                     \
     {                                                        \
         const TChar* pString = nullptr;                      \
-        if constexpr (std::is_same_v<TChar, char>)           \
+        if constexpr (jpt::AreSameType<TChar, char>)         \
         {                                                    \
             pString = #SourceStr;                            \
         }                                                    \
-        else if constexpr (std::is_same_v<TChar, wchar_t>)   \
+        else if constexpr (jpt::AreSameType<TChar, wchar_t>) \
         {                                                    \
             pString = JPT_TO_WSTRING(#SourceStr);            \
         }                                                    \

@@ -19,7 +19,7 @@ export namespace jpt
     concept Arithmetic = std::is_arithmetic_v<T>;
 
     template<typename T>
-    concept StringLiteral = std::is_same_v<T, char> || std::is_same_v<T, wchar_t>;
+    concept StringLiteral = AreSameType<T, char> || AreSameType<T, wchar_t>;
 
     template<typename T>
     concept Primitive = std::is_fundamental_v<T>;

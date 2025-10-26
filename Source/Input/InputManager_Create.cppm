@@ -16,6 +16,7 @@ import jpt.RawInput;
 import jpt.RawInput_GLFW;
 import jpt.RawInput_Win32;
 
+
 export namespace jpt::Input
 {
     RawInput* RawInput_Create()
