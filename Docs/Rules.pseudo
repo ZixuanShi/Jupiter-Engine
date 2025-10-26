@@ -1,5 +1,5 @@
 Config override priorities:
-    - CommandLine > Config/Settings > System Default
+    - CommandLine > ProjectSettings > System Default
 
 Object Life Cycle:
     - PreInit
