@@ -12,7 +12,7 @@ import jpt.TypeTraits;
 
 export namespace jpt
 {
-#pragma region Type Defs
+#pragma region Type Traits
 
     template<typename T>
     concept Numeric = std::is_arithmetic_v<T>;
@@ -26,18 +26,15 @@ export namespace jpt
     template<typename T>
     concept StringLiteral = AreSameType<T, char> || AreSameType<T, wchar_t>;
 
-    template<typename T>
-    concept Primitive = std::is_fundamental_v<T>;
-
-    template<typename TParent , typename TDerived>
-    concept BaseOf = std::is_base_of_v<TParent, TDerived>;
-
     // If a simple struct is deduced as non-trivial, you can override jpt::IsTrivial<T> to return true in your struct. Refer to Vector2
     template<typename T>
     concept Trivial = jpt::IsTrivial<T> && jpt::IsSmall<T>;
 
     template<typename T>
     concept NonTrivial = !jpt::IsTrivial<T> || !jpt::IsSmall<T>;
+
+    template<typename T>
+    concept Functional = IsFunction<T>;
 
 #pragma endregion
 
@@ -97,11 +94,6 @@ export namespace jpt
     template<typename T>
     concept Containable = Iterable<T> && Countable<T>;
 
-    template<typename TContainer>
-    concept IndexableTrivial = Indexable<TContainer> && Trivial<typename TContainer::TData>;
-
-    template<typename TContainer>
-    concept IndexableNonTrivial = Indexable<TContainer> && NonTrivial<typename TContainer::TData>;
 #pragma endregion Container
 
 #pragma region Enum
