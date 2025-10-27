@@ -3,6 +3,7 @@
 module jpt.Graphics_Settings;
 
 import jpt.Application;
+import jpt.AppSettings;
 import jpt.Renderer;
 
 import jpt.ProjectSettings;
@@ -34,15 +35,7 @@ namespace jpt
         }
 
         m_targetFPS = targetFPS;
-
-        if (!ShouldCapFPS())
-        {
-            ProjectSettings::GetInstance().Erase(kTargetFPS);
-        }
-        else
-        {
-            ProjectSettings::GetInstance().Set(kTargetFPS, targetFPS);
-        }
+        SetSettings(kTargetFPS, targetFPS, !ShouldCapFPS());
     }
 
     void Graphics_Settings::SetVSyncMode(VSyncMode VSyncMode)
@@ -53,16 +46,7 @@ namespace jpt
         }
 
         m_VSyncMode = VSyncMode;
-
         GetApplication()->GetRenderer()->SetShouldRecreateSwapChains();
-
-        if (m_VSyncMode == VSyncMode::On)
-        {
-            ProjectSettings::GetInstance().Erase(kVSyncOnKey);
-        }
-        else
-        {
-            ProjectSettings::GetInstance().Set(kVSyncOnKey, m_VSyncMode);
-        }
+        SetSettings(kVSyncOnKey, VSyncMode, m_VSyncMode == VSyncMode::On);
     }
 }

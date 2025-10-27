@@ -100,8 +100,53 @@ export namespace jpt
         return defaultValue;
     }
 
-    void SetSettings()
+    void SetSettings(const String& key, const JsonData& value, bool restoreCondition)
     {
-        // TODO
+        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+        if (projectSettings.Has(key) && restoreCondition)
+        {
+            if (projectSettings.Has(key))
+            {
+                projectSettings.Erase(key);
+            }
+        }
+        else
+        {
+            projectSettings.Set(key, value);
+        }
+    }
+
+    template<JptEnumerated TEnum>
+    void SetSettings(const String& key, const TEnum& e, bool restoreCondition)
+    {
+        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+        if (restoreCondition)
+        {
+            if (projectSettings.Has(key))
+            {
+                projectSettings.Erase(key);
+            }
+        }
+        else
+        {
+            projectSettings.Set(key, ToString(e));
+        }
+    }
+
+    template<Enumerated TValue>
+    void SetSettings(const String& key, TValue value, bool restoreCondition)
+    {
+        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+        if (restoreCondition)
+        {
+            if(projectSettings.Has(key))
+            {
+                projectSettings.Erase(key);
+            }
+        }
+        else
+        {
+            projectSettings.Set(key, static_cast<int32>(value));
+        }
     }
 }
