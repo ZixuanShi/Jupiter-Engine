@@ -6,7 +6,7 @@ module;
 
 export module UnitTests_Core;
 
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.Utilities;
 
 /** Unit Test Modules */
@@ -167,7 +167,7 @@ export bool RunUnitTests_Core()
     JPT_ENSURE(RunUnitTests_Pair());
 
     // Threading
-    if (!jpt::CommandLine::GetInstance().Has("no_threading"))
+    if (!jpt::LaunchArgs::GetInstance().Has("noThreading"))
     {
         JPT_ENSURE(RunUnitTests_Threading());
     }

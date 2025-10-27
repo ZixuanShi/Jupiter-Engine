@@ -10,7 +10,7 @@ module jpt.ProjectSettings;
 import jpt.Optional;
 
 import jpt.Json;
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.FilePath;
 import jpt.FilePathUtils;
 
@@ -31,7 +31,7 @@ namespace jpt
         JPT_INFO(m_settings);
 
         // Override settings with command line
-        for (const auto& [key, value] : CommandLine::GetInstance().GetArgs())
+        for (const auto& [key, value] : LaunchArgs::GetInstance().GetArgs())
         {
             if (m_settings.Has(key))
             {
@@ -48,6 +48,11 @@ namespace jpt
     {
         const File::Path projectSettingsJson = File::FixDependencies("Config/ProjectSettings.json");
         WriteJsonFile(projectSettingsJson, m_settings);
+    }
+
+    bool ProjectSettings::Has(const String& key) const
+    {
+        return m_settings.Has(key);
     }
 
     const String& ProjectSettings::Get(const String& key, const String& defaultStr) const

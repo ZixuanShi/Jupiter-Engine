@@ -4,7 +4,7 @@ module;
 
 #include "Debugging/Logger.h"
 
-module jpt.CommandLine;
+module jpt.LaunchArgs;
 
 import jpt.DynamicArray;
 import jpt.HashMap;
@@ -15,7 +15,7 @@ import jpt.Json;
 
 namespace jpt
 {
-    void CommandLine::Parse(int32 argsCount, char* arguments[])
+    void LaunchArgs::Parse(int32 argsCount, char* arguments[])
     {
         m_arguments.ResizeBuckets(argsCount - 1);
 
@@ -28,7 +28,7 @@ namespace jpt
         }
     }
 
-    void CommandLine::Parse(const char* argumentStr)
+    void LaunchArgs::Parse(const char* argumentStr)
     {
         if (FindCharsCount(argumentStr) == 0)
         {
@@ -58,23 +58,23 @@ namespace jpt
         }
     }
 
-    void CommandLine::Set(const String& key, const JsonData& value /* = JsonData()*/)
+    void LaunchArgs::Set(const String& key, const JsonData& value /* = JsonData()*/)
     {
         m_arguments[key] = value;
     }
 
-    bool CommandLine::Has(const String& key) const
+    bool LaunchArgs::Has(const String& key) const
     {
         return m_arguments.Has(key);
     }
 
-    void CommandLine::Erase(const String& key)
+    void LaunchArgs::Erase(const String& key)
     {
         JPT_ASSERT(m_arguments.Has(key), "CommandLine doesn't exist \"%s\"", key.ConstBuffer());
         m_arguments.Erase(key);
     }
 
-    void CommandLine::Parse(String&& argument)
+    void LaunchArgs::Parse(String&& argument)
     {
         // Remove the leading '-'
         if (argument.Front() == '-')

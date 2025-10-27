@@ -24,7 +24,7 @@ export namespace jpt
         void Terminate();
 
     public:
-        Window* Create(const char* title = Window::kDefaultTitle, int32 width = Window::kDefaultWidth, int32 height = Window::kDefaultHeight);
+        Window* Create(const char* title = Window::kDefaultTitle, int32 width = Window::s_defaultWidth, int32 height = Window::s_defaultHeight);
         void Destroy(const Window* pWindowToDestroy);
 
     public:

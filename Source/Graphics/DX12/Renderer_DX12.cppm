@@ -30,7 +30,7 @@ import jpt.Renderer;
 import jpt.Graphics_Constants;
 import jpt.Vertex;
 
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 
 import jpt.DX12_DebugLayer;
 import jpt.DX12_Device;
@@ -99,7 +99,7 @@ export namespace jpt
     {
         JPT_ENSURE(Super::Init());
 
-        m_useWarpDevice = CommandLine::GetInstance().Get("warp", false);
+        m_useWarpDevice = LaunchArgs::GetInstance().Get("warp", false);
 
         bool success = true;
 

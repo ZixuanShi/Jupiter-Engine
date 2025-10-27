@@ -2,7 +2,7 @@
 
 module;
 
-#include "System/Environment/SyncClient.h"
+#include "Applications/Utils/SyncClient.h"
 #include "Core/Minimal/CoreMacros.h"
 #include "Debugging/Logger.h"
 
@@ -11,13 +11,13 @@ module Application_Benchmarks;
 import jpt.CoreModules;
 import jpt.BenchmarksReporter;
 import jpt.FilePathHelpers;
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 
 import Benchmarks_Core;
 
 bool Application_Benchmarks::PreInit()
 {
-    jpt::CommandLine::GetInstance().Set("no_window");
+    jpt::LaunchArgs::GetInstance().Set("no_window");
 
     JPT_ENSURE(Super::PreInit());
 

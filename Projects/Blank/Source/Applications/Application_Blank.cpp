@@ -3,13 +3,13 @@
 module;
 
 #include "Core/Minimal/CoreHeaders.h"
-#include "System/Environment/SyncClient.h"
+#include "Applications/Utils/SyncClient.h"
 
 module Application_Blank;
 
 import jpt.CoreModules;
 
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.SystemPaths;
 
 import jpt.RawInput;

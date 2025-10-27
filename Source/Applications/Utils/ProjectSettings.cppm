@@ -25,24 +25,31 @@ export namespace jpt
         bool Load();
         void Save();
 
-        template<typename T>
-        bool TryGet(const String& key, T& value) const;
+        [[nodiscard]] bool Has(const String& key) const;
+
+        /** @return true if the value associated with the key is of type T */
+        template<ValidJsonType T>
+        [[nodiscard]] bool Is(const String& key) const;
 
         template<typename T>
-        const T& Get(const String& key) const;
+        [[nodiscard]] const T& Get(const String& key) const;
 
         /** requires !IsCharArray<T> for not mixing raw char array with Strings for default value
             !jpt::Enumerated<T> for not mixing enum class with integers */
         template<typename T> requires (!IsCharArray<T> && !Enumerated<T>)
-        const T& Get(const String& key, const T& defaultValue) const;
+        [[nodiscard]] const T& Get(const String& key, const T& defaultValue) const;
 
-        /** Specialized for enum class */
-        template<Enumerated TEnum>
-        TEnum Get(const String& key, TEnum defaultValue) const;
+        /** Specialized for Jupiter Enum class */
+        template<JptEnumerated TEnum, Enumerated TValue>
+        [[nodiscard]] TEnum Get(const String& key, TValue defaultValue) const;
+
+        /** Specialized for C++ Enum class */
+        template<Enumerated TValue>
+        [[nodiscard]] TValue Get(const String& key, TValue defaultValue) const;
 
         /** Specialized for Strings input & output. 
             Work around for preventing compiler recognizing "foo" as const char[4] and wants to return it as const char[4] as well */
-        const String& Get(const String& key, const String& defaultStr) const;
+        [[nodiscard]] const String& Get(const String& key, const String& defaultStr) const;
 
         void Set(const String& key, const JsonData& value = JsonData());
         void Set(const String& key, const char* value);
@@ -53,16 +60,11 @@ export namespace jpt
         void Erase(const String& key);
     };
 
-    template<typename T>
-    bool ProjectSettings::TryGet(const String& key, T& value) const
+    template<ValidJsonType T>
+    bool ProjectSettings::Is(const String& key) const
     {
-        if (m_settings.Has(key))
-        {
-            value = m_settings[key].As<T>();
-            return true;
-        }
-
-        return false;
+        JPT_ASSERT(Has(key), "ProjectSettings doesn't exist \"%s\"", key.ConstBuffer());
+        return m_settings[key].Is<T>();
     }
 
     template<typename T>
@@ -83,12 +85,31 @@ export namespace jpt
         return defaultValue;
     }
 
-    template<Enumerated TEnum>
-    TEnum ProjectSettings::Get(const String& key, TEnum defaultValue) const
+    template<JptEnumerated TEnum, Enumerated TValue>
+    TEnum ProjectSettings::Get(const String& key, TValue defaultValue) const
     {
         if (m_settings.Has(key))
         {
-            return static_cast<TEnum>(m_settings[key].As<int32>());
+            if (m_settings[key].Is<String>())
+            {
+                const String& enumStr = m_settings[key].As<String>();
+                return TEnum::FromName(enumStr);
+            }
+            else if (m_settings[key].Is<int32>())
+            {
+                return static_cast<TValue>(m_settings[key].As<int32>());
+            }
+        }
+
+        return defaultValue;
+    }
+
+    template<Enumerated TValue>
+    TValue ProjectSettings::Get(const String& key, TValue defaultValue) const
+    {
+        if (m_settings.Has(key))
+        {
+            return static_cast<TValue>(m_settings[key].As<int32>());
         }
 
         return defaultValue;

@@ -126,7 +126,7 @@ def create_application_cpp():
 	content = """module;
 
 #include "Core/Minimal/CoreHeaders.h"
-#include "System/Environment/SyncClient.h"
+#include "Applications/Utils/SyncClient.h"
 
 module Applications_<ProjectName>;
 
