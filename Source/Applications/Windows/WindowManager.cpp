@@ -8,7 +8,7 @@ module;
 module jpt.WindowManager;
 
 import jpt.Application;
-import jpt.Settings;
+import jpt.AppSettings;
 import jpt.Framework;
 import jpt.Window_GLFW;
 import jpt.Window_Win32;
@@ -29,8 +29,8 @@ namespace jpt
                 Destroy(eventWindowClose.GetWindow());
             });
 
-        Window::s_defaultWidth = SyncSettings("windowWidth", Window::s_defaultWidth);
-        Window::s_defaultWidth = SyncSettings("windowHeight", Window::s_defaultHeight);
+        Window::s_defaultWidth  = GetSettings("windowWidth",  Window::s_defaultWidth);
+        Window::s_defaultHeight = GetSettings("windowHeight", Window::s_defaultHeight);
 
         return true;
     }

@@ -22,7 +22,7 @@ namespace jpt
 
         m_targetFPS = projSettings.Get(kTargetFPS, -1.0f);
         m_VSyncMode = projSettings.Get(kVSyncOnKey, VSyncMode::On);
-        
+
         return true;
     }
 

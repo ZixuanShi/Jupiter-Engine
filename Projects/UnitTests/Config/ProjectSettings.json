@@ -1,6 +1,6 @@
 {
     "windowWidth": 600,
-    "graphicsAPI": 2,
-    "frameworkAPI": 2,
+    "graphicsAPI": "DX12",
+    "frameworkAPI": "Win32",
     "windowHeight": 600
 }

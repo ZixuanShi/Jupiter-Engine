@@ -12,7 +12,7 @@ import jpt.Framework;
 import jpt.Framework_Create;
 import jpt.Window;
 import jpt.WindowManager;
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.FrameTimer;
 
 import jpt.AssetManager;
@@ -44,13 +44,13 @@ namespace jpt
     {
         System::Paths::GetInstance().PreInit();
         Debugger::GetInstance().PreInit();
-        JPT_INFO("Application Launched with Args: " + ToString(CommandLine::GetInstance().GetArgs()));
+        JPT_INFO("Application Launched with Args: " + ToString(LaunchArgs::GetInstance().GetArgs()));
 
         HardwareManager::GetInstance().PreInit();
 
         ProjectSettings::GetInstance().Load();
 
-        if (CommandLine::GetInstance().Has("no_window"))
+        if (LaunchArgs::GetInstance().Has("no_window"))
         {
             m_status = Status::Success;
             return true;
@@ -90,7 +90,7 @@ namespace jpt
 
     bool Application::Init()
     {
-        if (CommandLine::GetInstance().Has("noWindow"))
+        if (LaunchArgs::GetInstance().Has("noWindow"))
         {
             return true;
         }
@@ -133,7 +133,7 @@ namespace jpt
         InputManager::GetInstance().Terminate();
         EventManager::GetInstance().Terminate();
 
-        if (!CommandLine::GetInstance().Has("no_window"))
+        if (!LaunchArgs::GetInstance().Has("no_window"))
         {
             JPT_TERMINATE(m_pRenderer);
             JPT_TERMINATE(m_pWindowManager);

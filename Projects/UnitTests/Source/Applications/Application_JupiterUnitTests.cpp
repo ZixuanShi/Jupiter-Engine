@@ -8,7 +8,7 @@ module;
 module Application_JupiterUnitTests;
 
 import jpt.CoreModules;
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.Utilities;
 import jpt.FilePathHelpers;
 

@@ -1,29 +1,31 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Settings;
+export module jpt.AppSettings;
 
 import jpt.Concepts;
 import jpt.String;
 import jpt.TypeDefs;
 
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.JsonData;
 import jpt.ProjectSettings;
 
 export namespace jpt
 {
-    template<typename T> requires (!IsCharArray<T> && !Enumerated<T>)
-    [[nodiscard]] const T& SyncSettings(const String& key, const T& defaultValue)
-    {
-        CommandLine& commandLine = CommandLine::GetInstance();
-        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+    // Priority: CommandLine > ProjectSettings > DefaultValue
 
-        // Check Command Line first
-        if (commandLine.Has(key))
+    /** requires !IsCharArray<T> for not mixing raw char array with Strings for default value
+        !jpt::Enumerated<T> for not mixing enum class with integers */
+    template<typename T> requires (!IsCharArray<T> && !Enumerated<T>)
+    [[nodiscard]] const T& GetSettings(const String& key, const T& defaultValue)
+    {
+        const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
+        const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+
+        if (launchArgs.Has(key))
         {
-            return commandLine.Get<T>(key);
+            return launchArgs.Get<T>(key);
         }
-        // Then check Project Settings
         else if (projectSettings.Has(key))
         {
             return projectSettings.Get<T>(key);
@@ -32,42 +34,74 @@ export namespace jpt
         return defaultValue;
     }
 
-    [[nodiscard]] const String& SyncSettings(const String& key, const String& defaultValue)
+    /** Specialized for Strings input & output. 
+        Work around for preventing compiler recognizing "foo" as const char[4] and wants to return it as const char[4] as well */
+    [[nodiscard]] const String& GetSettings(const String& key, const String& defaultValue)
     {
-        CommandLine& commandLine = CommandLine::GetInstance();
-        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+        return GetSettings<String>(key, defaultValue);
+    }
 
-        // Check Command Line first
-        if (commandLine.Has(key))
+    /** Specialized for Jupiter Enums. 
+        @note Should have enum template explicityly declared. i.e. GetSettings<FrameworkAPI>("frameworkAPI", FrameworkAPI::GLFW); */
+    template<JptEnumerated TEnum, Enumerated TValue>
+    [[nodiscard]] TEnum GetSettings(const String& key, TValue defaultValue)
+    {
+        const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
+        const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+
+        // Enum could be stored as string or integer
+
+        if (launchArgs.Has(key))
         {
-            return commandLine.Get<String>(key);
+            if (launchArgs.Is<String>(key))
+            {
+                const String& enumStr = launchArgs.Get<String>(key);
+                return TEnum::FromName(enumStr);
+            }
+            else if (launchArgs.Is<int32>(key))
+            {
+                return static_cast<TValue>(launchArgs.Get<int32>(key));
+            }
         }
-        // Then check Project Settings
         else if (projectSettings.Has(key))
         {
-            return projectSettings.Get<String>(key);
+            if (projectSettings.Is<String>(key))
+            {
+                const String& enumStr = projectSettings.Get<String>(key);
+                return TEnum::FromName(enumStr);
+            }
+            else if (projectSettings.Is<int32>(key))
+            {
+                return static_cast<TValue>(projectSettings.Get<int32>(key));
+            }
         }
 
         return defaultValue;
     }
 
-    template<Enumerated TEnum>
-    [[nodiscard]] TEnum SyncSettings(const String& key, TEnum defaultValue)
+    /** Specialized for C++ Enums */
+    template<Enumerated TValue>
+    [[nodiscard]] TValue GetSettings(const String& key, TValue defaultValue)
     {
-        CommandLine& commandLine = CommandLine::GetInstance();
-        ProjectSettings& projectSettings = ProjectSettings::GetInstance();
+        const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
+        const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
 
-        // Check Command Line first
-        if (commandLine.Has(key))
+        // Enum could be stored as string or integer
+
+        if (launchArgs.Has(key))
         {
-            return static_cast<TEnum>(commandLine.Get<int32>(key));
+            return static_cast<TValue>(launchArgs.Get<int32>(key));
         }
-        // Then check Project Settings
         else if (projectSettings.Has(key))
         {
-            return static_cast<TEnum>(projectSettings.Get<int32>(key));
+            return static_cast<TValue>(projectSettings.Get<int32>(key));
         }
 
         return defaultValue;
+    }
+
+    void SetSettings()
+    {
+        // TODO
     }
 }

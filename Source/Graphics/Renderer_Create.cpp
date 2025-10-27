@@ -13,17 +13,14 @@ import jpt.Graphics_Enums;
 import jpt.Renderer_Vulkan;
 import jpt.Renderer_DX12;
 
-import jpt.Settings;
+import jpt.AppSettings;
 
 namespace jpt
 {
     GraphicsAPI FindGraphicsAPI()
     {
-        GraphicsAPI api = GraphicsAPI::Unknown;
-        const String graphicsApiKey = "graphicsAPI";
-
 #if IS_PLATFORM_WINDOWS
-        api = SyncSettings(graphicsApiKey, GraphicsAPI::Vulkan);
+        const GraphicsAPI api = GetSettings<GraphicsAPI>("graphicsAPI", GraphicsAPI::Vulkan);
 #endif
 
         JPT_ASSERT(api != GraphicsAPI::Unknown, "No Graphics API specified in CommandLine or ProjectSettings.json.");

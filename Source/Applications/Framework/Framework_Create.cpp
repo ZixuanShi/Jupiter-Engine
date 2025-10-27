@@ -11,17 +11,14 @@ module jpt.Framework_Create;
 import jpt.Framework_GLFW;
 import jpt.Framework_Win32;
 
-import jpt.Settings;
+import jpt.AppSettings;
 
 namespace jpt
 {
     FrameworkAPI FindFrameworkAPI()
     {
-        FrameworkAPI api = FrameworkAPI::Unknown;
-        const String frameworkApiKey = "frameworkAPI";
-
 #if IS_PLATFORM_WINDOWS
-        api = SyncSettings(frameworkApiKey, FrameworkAPI::GLFW);
+        const FrameworkAPI api = GetSettings<FrameworkAPI>("frameworkAPI", FrameworkAPI::GLFW);
 #endif
 
         JPT_ASSERT(api != FrameworkAPI::Unknown, "No Framework API specified in CommandLine or ProjectSettings.json.");

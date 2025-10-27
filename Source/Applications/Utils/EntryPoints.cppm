@@ -12,7 +12,7 @@ module;
 export module jpt.EntryPoints;
 
 import jpt.Application;
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 
 #if IS_CONFIG_DEBUG
     import jpt.MemoryLeakDetector;
@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR launchArgs, int nCmdSho
 {
     using namespace jpt;
 
-    CommandLine::GetInstance().Parse(launchArgs);
+    LaunchArgs::GetInstance().Parse(launchArgs);
 
     Platform_Windows* pPlatform_Windows = JPT_NEW(Platform_Windows, hInstance, nCmdShow);
     GetApplication()->SetPlatform(pPlatform_Windows);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 {
     using namespace jpt;
 
-    CommandLine::GetInstance().Parse(argc, argv);
+    LaunchArgs::GetInstance().Parse(argc, argv);
     return jpt::MainImpl();
 }
 #endif

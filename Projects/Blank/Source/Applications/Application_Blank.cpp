@@ -9,7 +9,7 @@ module Application_Blank;
 
 import jpt.CoreModules;
 
-import jpt.CommandLine;
+import jpt.LaunchArgs;
 import jpt.SystemPaths;
 
 import jpt.RawInput;
