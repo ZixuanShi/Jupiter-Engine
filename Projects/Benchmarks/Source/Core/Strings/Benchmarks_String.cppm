@@ -5,7 +5,6 @@ module;
 #include "Profiling/TimingProfiler.h"
 #include "Debugging/Logger.h"
 #include "Core/Validation/Assert.h"
-#include "Core/Minimal/CoreMacros.h"
 
 #include <string>
 
