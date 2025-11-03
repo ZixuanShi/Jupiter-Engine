@@ -102,21 +102,21 @@ static bool UnitTests_Vec3f_Angle()
     from = Vec3::Right();
     to = Vec3::Right() + Vec3::Up();
 
-    angle = from.Angle(to);
+    angle = from.Angle(to.Normalized());
     JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
 
     // y to y + z
     from = Vec3::Up();
     to = Vec3::Up() + Vec3::Forward();
 
-    angle = from.Angle(to);
+    angle = from.Angle(to.Normalized());
     JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
 
     // z to z + x
     from = Vec3::Forward();
     to = Vec3::Forward() + Vec3::Right();
 
-    angle = from.Angle(to);
+    angle = from.Angle(to.Normalized());
     JPT_ENSURE(jpt::AreValuesClose(angle, HalfPi / 2.0f));
 
     return true;

@@ -426,13 +426,10 @@ export namespace jpt
     template<Numeric T>
     constexpr T Vector3<T>::Angle(const Vector3& from, const Vector3& to)
     {
-        // Calculate the angle between two vectors. Right-handed, counter-clockwise.
         // Formula: angle = acos(a . b / (|a| * |b|))
+        // Assumes from and to are normalized
 
-        const Vector3<T> a = from.Normalized();
-        const Vector3<T> b = to.Normalized();
-
-        const T dot = a.Dot(b);        
+        const T dot = from.Dot(to);        
         const T angle = Acos(dot);
 
         return angle;
@@ -447,14 +444,12 @@ export namespace jpt
     template<Numeric T>
     constexpr T Vector3<T>::AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis)
     {
-        // Calculate the angle between two vectors. Right-handed, counter-clockwise.
         // Formula: angle = atan2((a x b) . c, a . b)
+        // Assumes from and to are normalized
 
-        const Vector3<T> a = from.Normalized();
-        const Vector3<T> b = to.Normalized();
-        const Vector3<T> cross = a.Cross(b);
+        const Vector3<T> cross = from.Cross(to);
 
-        const T dot_a_b = a.Dot(b);
+        const T dot_a_b = from.Dot(to);
         const T dot_cross_Axis = cross.Dot(axis);
 
         const T angle = Atan2(dot_cross_Axis, dot_a_b);

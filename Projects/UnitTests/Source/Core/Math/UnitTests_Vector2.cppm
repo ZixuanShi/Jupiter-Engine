@@ -94,8 +94,8 @@ bool RunUnitTests_Vector2_Angle()
     Vec2f source(0.0f, 1.0f);
     Vec2f target(1.0f, 1.0f);
 
-    JPT_ENSURE(jpt::AreValuesClose(Vec2f::Angle(source, target), jpt::ToRadians(45.0f)));
-    JPT_ENSURE(jpt::AreValuesClose(Vec2f::AngleSigned(source, target), jpt::ToRadians(-45.0f)));
+    JPT_ENSURE(jpt::AreValuesClose(Vec2f::Angle(source, target.Normalized()), jpt::ToRadians(45.0f)));
+    JPT_ENSURE(jpt::AreValuesClose(Vec2f::AngleSigned(source, target.Normalized()), jpt::ToRadians(-45.0f)));
 
     Vec2 vector1(1.0f, 0.0f);
     Vec2 vector2(1.0f, 0.0f);

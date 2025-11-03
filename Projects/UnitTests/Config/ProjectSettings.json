@@ -1,8 +1,6 @@
 {
     "windowWidth": 600,
     "targetFPS": 60.000,
-    "graphicsAPI": "DX12",
-    "frameworkAPI": 2,
     "windowHeight": 600,
     "VSyncMode": 3
 }
