@@ -409,11 +409,9 @@ export namespace jpt
     constexpr T Vector2<T>::Angle(Vector2 from, Vector2 to)
     {
         // Formular: dot(a, b) / (|a| * |b|)
+        // Assumes from and to are normalized
 
-        const Vector2<T> a = from.Normalized();
-        const Vector2<T> b = to.Normalized();
-
-        const T dot = a.Dot(b);
+        const T dot = from.Dot(to);
         const T angle = Acos(dot);
 
         return angle;
