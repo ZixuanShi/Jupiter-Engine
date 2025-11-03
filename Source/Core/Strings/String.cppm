@@ -424,7 +424,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr Index String_Base<TChar, TAllocator>::Count(TChar c, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
         Index count = 0;
 
         for (Index i = startIndex; i < endIndex; ++i)
@@ -442,7 +442,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr Index String_Base<TChar, TAllocator>::Count(const TChar* pString, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
         Index count = 0;
         const Index stringToFindSize = FindCharsCount(pString);
 
@@ -488,7 +488,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr Index String_Base<TChar, TAllocator>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         for (Index i = startIndex; i < endIndex; ++i)
         {
@@ -505,7 +505,7 @@ export namespace jpt
     constexpr Index String_Base<TChar, TAllocator>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
     {
         const Index stringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, static_cast<Index>(0), m_count);
+        endIndex = Clamp(endIndex, static_cast<Index>(0), m_count);
 
         for (Index i = startIndex; i < endIndex; ++i)
         {
@@ -538,7 +538,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr Index String_Base<TChar, TAllocator>::FindLastOf(TChar charToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         for (int64 i = endIndex; i >= static_cast<int64>(startIndex); --i)
         {
@@ -560,7 +560,7 @@ export namespace jpt
     constexpr Index String_Base<TChar, TAllocator>::FindLastOf(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
     {
         const Index StringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         for (int64 i = endIndex; i >= static_cast<int64>(startIndex); --i)
         {

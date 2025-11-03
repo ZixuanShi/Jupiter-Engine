@@ -17,7 +17,7 @@ export namespace jpt
 {
 #pragma region MinMax
 
-    template <Trivial TFirst, typename... TRest>
+    template<typename TFirst, typename... TRest>
     constexpr TFirst Min(TFirst first, TRest... inputs)
     {
         TFirst smallestVal = first;
@@ -32,39 +32,9 @@ export namespace jpt
 
         return smallestVal;
     }
-    template <NonTrivial TFirst, typename... TRest>
-    constexpr TFirst Min(const TFirst& first, const TRest&... inputs)
-    {
-        TFirst smallestVal = first;
 
-        ([&]
-            {
-                if (smallestVal > inputs)
-                {
-                    smallestVal = inputs;
-                }
-            } (), ...);
-
-        return smallestVal;
-    }
-
-    template <Trivial TFirst, typename... TRest>
+    template <typename TFirst, typename... TRest>
     constexpr TFirst Max(TFirst first, TRest... inputs)
-    {
-        TFirst largestVal = first;
-
-        ([&]
-            {
-                if (largestVal < inputs)
-                {
-                    largestVal = inputs;
-                }
-            } (), ...);
-
-        return largestVal;
-    }
-    template <NonTrivial TFirst, typename... TRest>
-    constexpr TFirst Max(const TFirst& first, const TRest&... inputs)
     {
         TFirst largestVal = first;
 
@@ -89,7 +59,7 @@ export namespace jpt
     }
 
     template<typename T> requires (!Floating<T>)
-        constexpr T ToDegrees(const T& obj)
+    constexpr T ToDegrees(const T& obj)
     {
         return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
     }
@@ -101,7 +71,7 @@ export namespace jpt
     }
 
     template<typename T> requires (!Floating<T>)
-        constexpr T ToRadians(const T& obj)
+    constexpr T ToRadians(const T& obj)
     {
         return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
     }
@@ -146,7 +116,7 @@ export namespace jpt
 
 #pragma region Clamping
     /** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Inclusive */
-    template<ComparableTrivial T>
+    template<typename T>
     constexpr T Clamp(T value, T min, T max)
     {
         if (value < min)
@@ -159,51 +129,11 @@ export namespace jpt
         }
         return value;
     }
-    template<ComparableNonTrivial T>
-    constexpr T Clamp(const T& value, const T& min, const T& max)
-    {
-        if (value < min)
-        {
-            return min;
-        }
-        else if (value > max)
-        {
-            return max;
-        }
-        return value;
-    }
-
-    /** Clamps a value. Ensure it's at least bigger than min and smaller than max. Exclusive
-        @param outValue:    Will be changed if less than min or bigger than max */
-    template<ComparableTrivial T>
-    constexpr void ClampTo(T& outValue, T min, T max)
-    {
-        if (outValue < min)
-        {
-            outValue = min;
-        }
-        else if (outValue > max)
-        {
-            outValue = max;
-        }
-    }
-    template<ComparableNonTrivial T>
-    constexpr void ClampTo(T& outValue, const T& min, const T& max)
-    {
-        if (outValue < min)
-        {
-            outValue = min;
-        }
-        else if (outValue > max)
-        {
-            outValue = max;
-        }
-    }
 
     template<Floating T = float32>
     constexpr T Saturate(T value)
     {
-        return Max(static_cast<T>(0), Min(value, static_cast<T>(1)));
+        return Clamp(value, static_cast<T>(0), static_cast<T>(1));
     }
 
 #pragma endregion Clamping
