@@ -28,18 +28,16 @@ export namespace jpt
     public:
         using NumericType = T;
 
-        static consteval Vector3 Zero() { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
-        static consteval Vector3 One()  { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
+        [[nodiscard]] static consteval Vector3 Zero() noexcept { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(0)); }
+        [[nodiscard]] static consteval Vector3 One()  noexcept { return Vector3( static_cast<T>(1),  static_cast<T>(1),  static_cast<T>(1)); }
 
         // Right-handed. X = right (pitch), Y = up (yaw), Z = forward (roll).
-        static consteval Vector3 Right() { return Vector3(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0)); }
-        static consteval Vector3 Left()  { return Vector3(static_cast<T>(-1), static_cast<T>(0), static_cast<T>(0)); }
-
-        static consteval Vector3 Up()   { return Vector3( static_cast<T>(0),  static_cast<T>(1),  static_cast<T>(0)); }
-        static consteval Vector3 Down() { return Vector3( static_cast<T>(0), static_cast<T>(-1),  static_cast<T>(0)); }
-
-        static consteval Vector3 Forward()  { return Vector3( static_cast<T>(0),  static_cast<T>(0),  static_cast<T>(1)); }
-        static consteval Vector3 Backward() { return Vector3( static_cast<T>(0),  static_cast<T>(0), static_cast<T>(-1)); }
+        [[nodiscard]] static consteval Vector3 Right()    noexcept { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Left()     noexcept { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Up()       noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Down()     noexcept { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Forward()  noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
+        [[nodiscard]] static consteval Vector3 Backward() noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
 
     public:
         constexpr Vector3() = default;
@@ -48,65 +46,49 @@ export namespace jpt
         constexpr Vector3(const Vector2<T>& vector2, T _z);
 
     public:
-        constexpr Vector3 operator-() const;
+        [[nodiscard]] constexpr Vector3 operator-() const noexcept;
 
-        constexpr Vector3 operator+(const Vector3& other) const;
-        constexpr Vector3 operator-(const Vector3& other) const;
-        constexpr Vector3 operator*(const Vector3& other) const;
-        constexpr Vector3 operator/(const Vector3& other) const;
+        [[nodiscard]] constexpr Vector3 operator+(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator-(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator*(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator/(const Vector3& other) const noexcept;
 
-        constexpr Vector3& operator+=(const Vector3& other);
-        constexpr Vector3& operator-=(const Vector3& other);
-        constexpr Vector3& operator*=(const Vector3& other);
-        constexpr Vector3& operator/=(const Vector3& other);
+        constexpr Vector3& operator+=(const Vector3& other) noexcept;
+        constexpr Vector3& operator-=(const Vector3& other) noexcept;
+        constexpr Vector3& operator*=(const Vector3& other) noexcept;
+        constexpr Vector3& operator/=(const Vector3& other) noexcept;
 
-        constexpr Vector3 operator+(T scalar) const;
-        constexpr Vector3 operator-(T scalar) const;
-        constexpr Vector3 operator*(T scalar) const;
-        constexpr Vector3 operator/(T scalar) const;
+        [[nodiscard]] constexpr Vector3 operator+(T scalar) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator-(T scalar) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator*(T scalar) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator/(T scalar) const noexcept;
 
-        constexpr Vector3& operator+=(T scalar);
-        constexpr Vector3& operator-=(T scalar);
-        constexpr Vector3& operator*=(T scalar);
-        constexpr Vector3& operator/=(T scalar);
+        constexpr Vector3& operator+=(T scalar) noexcept;
+        constexpr Vector3& operator-=(T scalar) noexcept;
+        constexpr Vector3& operator*=(T scalar) noexcept;
+        constexpr Vector3& operator/=(T scalar) noexcept;
 
-        constexpr T& operator[](size_t index) noexcept;
-        constexpr const T& operator[](size_t index) const noexcept;
+        [[nodiscard]] constexpr T& operator[](size_t index);
+        [[nodiscard]] constexpr const T& operator[](size_t index) const;
 
     public:
-        constexpr static T Dot(const Vector3& left, const Vector3& right);
-        constexpr T Dot(const Vector3& other) const;
+        [[nodiscard]] constexpr T Dot(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 Cross(const Vector3& other) const noexcept;
 
-        constexpr static Vector3 Cross(const Vector3& left, const Vector3& right);
-        constexpr Vector3 Cross(const Vector3& other) const;
+        [[nodiscard]] constexpr T Length() const noexcept;
+        [[nodiscard]] constexpr T Length2() const noexcept;  // 2 means squared
 
-        constexpr static T Length(const Vector3& TVector3);
-        constexpr T Length() const;
+        [[nodiscard]] constexpr T Distance(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr T Distance2(const Vector3& other) const noexcept;  // 2 means squared
 
-        constexpr static T Length2(const Vector3& TVector3);
-        constexpr T Length2() const;
-
-        constexpr static T Distance(const Vector3& left, const Vector3& right);
-        constexpr T Distance(const Vector3& other) const;
-
-        constexpr static T Distance2(const Vector3& left, const Vector3& right);
-        constexpr T Distance2(const Vector3& other) const;
-
-        constexpr static Vector3 Normalize(const Vector3& TVector3);
-        constexpr Vector3 Normalized() const;
-        constexpr void Normalize();
+        constexpr void Normalize() noexcept;
+        [[nodiscard]] constexpr Vector3 Normalized() const noexcept;
 
         constexpr static T Angle(const Vector3& from, const Vector3& to); // Unsigned, faster (no atan2)
         constexpr T Angle(const Vector3& to) const;
 
         constexpr static T AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis);
         constexpr T AngleSigned(const Vector3& to, const Vector3& axis) const;
-
-        constexpr static Vector3 Lerp(const Vector3& start, const Vector3& end, T t);
-        constexpr Vector3 Lerp(const Vector3& other, T t) const;
-
-        constexpr static Vector3 InvLerp(const Vector3& start, const Vector3& end, const Vector3& value);
-        constexpr Vector3 InvLerp(const Vector3& other, const Vector3& value) const;
 
         constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
         constexpr Vector3 Project(const Vector3& to) const;
@@ -184,37 +166,37 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator-() const
+    constexpr Vector3<T> Vector3<T>::operator-() const noexcept
     {
         return Vector3(-x, -y, -z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator+(const Vector3& other) const
+    constexpr Vector3<T> Vector3<T>::operator+(const Vector3& other) const noexcept
     {
         return Vector3(x + other.x, y + other.y, z + other.z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator-(const Vector3& other) const
+    constexpr Vector3<T> Vector3<T>::operator-(const Vector3& other) const noexcept
     {
         return Vector3(x - other.x, y - other.y, z - other.z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator*(const Vector3& other) const
+    constexpr Vector3<T> Vector3<T>::operator*(const Vector3& other) const noexcept
     {
         return Vector3(x * other.x, y * other.y, z * other.z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator/(const Vector3& other) const
+    constexpr Vector3<T> Vector3<T>::operator/(const Vector3& other) const noexcept
     {
         return Vector3(x / other.x, y / other.y, z / other.z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator+=(const Vector3& other)
+    constexpr Vector3<T>& Vector3<T>::operator+=(const Vector3& other) noexcept
     {
         x += other.x;
         y += other.y;
@@ -223,7 +205,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator-=(const Vector3& other)
+    constexpr Vector3<T>& Vector3<T>::operator-=(const Vector3& other) noexcept
     {
         x -= other.x;
         y -= other.y;
@@ -232,7 +214,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator*=(const Vector3& other)
+    constexpr Vector3<T>& Vector3<T>::operator*=(const Vector3& other) noexcept
     {
         x *= other.x;
         y *= other.y;
@@ -241,7 +223,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator/=(const Vector3& other)
+    constexpr Vector3<T>& Vector3<T>::operator/=(const Vector3& other) noexcept
     {
         x /= other.x;
         y /= other.y;
@@ -250,31 +232,31 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator+(T scalar) const
+    constexpr Vector3<T> Vector3<T>::operator+(T scalar) const noexcept
     {
         return Vector3(x + scalar, y + scalar, z + scalar);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator-(T scalar) const
+    constexpr Vector3<T> Vector3<T>::operator-(T scalar) const noexcept
     {
         return Vector3(x - scalar, y - scalar, z - scalar);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator*(T scalar) const
+    constexpr Vector3<T> Vector3<T>::operator*(T scalar) const noexcept
     {
         return Vector3(x * scalar, y * scalar, z * scalar);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::operator/(T scalar) const
+    constexpr Vector3<T> Vector3<T>::operator/(T scalar) const noexcept
     {
         return Vector3(x / scalar, y / scalar, z / scalar);
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator+=(T scalar)
+    constexpr Vector3<T>& Vector3<T>::operator+=(T scalar) noexcept
     {
         x += scalar;
         y += scalar;
@@ -283,7 +265,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator-=(T scalar)
+    constexpr Vector3<T>& Vector3<T>::operator-=(T scalar) noexcept
     {
         x -= scalar;
         y -= scalar;
@@ -292,7 +274,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator*=(T scalar)
+    constexpr Vector3<T>& Vector3<T>::operator*=(T scalar) noexcept
     {
         x *= scalar;
         y *= scalar;
@@ -301,7 +283,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector3<T>& Vector3<T>::operator/=(T scalar)
+    constexpr Vector3<T>& Vector3<T>::operator/=(T scalar) noexcept
     {
         x /= scalar;
         y /= scalar;
@@ -310,37 +292,25 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T& Vector3<T>::operator[](size_t index) noexcept
+    constexpr T& Vector3<T>::operator[](size_t index)
     {
         return (&x)[index];
     }
 
     template<Numeric T>
-    constexpr const T& Vector3<T>::operator[](size_t index) const noexcept
+    constexpr const T& Vector3<T>::operator[](size_t index) const
     {
         return (&x)[index];
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Dot(const Vector3& left, const Vector3& right)
-    {
-        return left.Dot(right);
-    }
-
-    template<Numeric T>
-    constexpr T Vector3<T>::Dot(const Vector3& other) const
+    constexpr T Vector3<T>::Dot(const Vector3& other) const noexcept
     {
         return x * other.x + y * other.y + z * other.z;
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Cross(const Vector3& left, const Vector3& right)
-    {
-        return left.Cross(right);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Cross(const Vector3& other) const
+    constexpr Vector3<T> Vector3<T>::Cross(const Vector3& other) const noexcept
     {
         return Vector3(y * other.z - z * other.y, 
                        z * other.x - x * other.z, 
@@ -348,71 +318,31 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Length(const Vector3& TVector3)
-    {
-        return TVector3.Length();
-    }
-
-    template<Numeric T>
-    constexpr T Vector3<T>::Length() const
+    constexpr T Vector3<T>::Length() const noexcept
     {
         return Sqrt(Length2());
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Length2(const Vector3& TVector3)
-    {
-        return TVector3.Length2();
-    }
-
-    template<Numeric T>
-    constexpr T Vector3<T>::Length2() const
+    constexpr T Vector3<T>::Length2() const noexcept
     {
         return x * x + y * y + z * z;
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Distance(const Vector3& left, const Vector3& right)
-    {
-        return left.Distance(right);
-    }
-
-    template<Numeric T>
-    constexpr T Vector3<T>::Distance(const Vector3& other) const
+    constexpr T Vector3<T>::Distance(const Vector3& other) const noexcept
     {
         return Sqrt(Distance2(other));
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Distance2(const Vector3& left, const Vector3& right)
-    {
-        return left.Distance2(right);
-    }
-
-    template<Numeric T>
-    constexpr T Vector3<T>::Distance2(const Vector3& other) const
+    constexpr T Vector3<T>::Distance2(const Vector3& other) const noexcept
     {
         return (x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z);
     }
 
     template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Normalize(const Vector3& vector)
-    {
-        Vector3<T> result = vector;
-        result.Normalize();
-        return result;
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Normalized() const
-    {
-        Vector3<T> result = *this;
-        result.Normalize();
-        return result;
-    }
-
-    template<Numeric T>
-    constexpr void Vector3<T>::Normalize()
+    constexpr void Vector3<T>::Normalize() noexcept
     {
         const T length = Length();
         if (length > static_cast<T>(0))
@@ -421,6 +351,14 @@ export namespace jpt
             y /= length;
             z /= length;
         }
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::Normalized() const noexcept
+    {
+        Vector3<T> result = *this;
+        result.Normalize();
+        return result;
     }
 
     template<Numeric T>
@@ -460,30 +398,6 @@ export namespace jpt
     constexpr T Vector3<T>::AngleSigned(const Vector3& to, const Vector3& axis) const
     {
         return AngleSigned(*this, to, axis);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& start, const Vector3& end, T t)
-    {
-        return start.Lerp(end, t);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Lerp(const Vector3& other, T t) const
-    {
-        return *this + (other - *this) * t;
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& start, const Vector3& end, const Vector3& value)
-    {
-        return start.InvLerp(end, value);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::InvLerp(const Vector3& other, const Vector3& value) const
-    {
-        return (value - *this) / (other - *this);
     }
 
     template<Numeric T>

@@ -77,7 +77,7 @@ bool UnitTests_Vec2f_Functionalities()
     JPT_ENSURE(v.Normalized() == Vec2f(0.7071067f, 0.7071067f));
 
     // Lerp
-    JPT_ENSURE(Vec2f::Lerp(v, Vec2f(4.0f, 4.0f), 0.5f) == Vec2f(3.0f, 3.0f));
+    JPT_ENSURE(Lerp(v, Vec2f(4.0f, 4.0f), 0.5f) == Vec2f(3.0f, 3.0f));
 
     return true;
 }

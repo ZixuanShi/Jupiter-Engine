@@ -25,12 +25,12 @@ export namespace jpt
         T y = static_cast<T>(0);
 
     public:
-        static consteval Vector2 Zero()  { return Vector2(static_cast<T>( 0), static_cast<T>(0 )); }
-        static consteval Vector2 One()   { return Vector2(static_cast<T>( 1), static_cast<T>(1 )); }
-        static consteval Vector2 Up()    { return Vector2(static_cast<T>( 0), static_cast<T>(1 )); }
-        static consteval Vector2 Down()  { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
-        static consteval Vector2 Left()  { return Vector2(static_cast<T>(-1), static_cast<T>(0 )); }
-        static consteval Vector2 Right() { return Vector2(static_cast<T>( 1), static_cast<T>(0 )); }
+        [[nodiscard]] static consteval Vector2 Zero()  noexcept { return Vector2(static_cast<T>( 0), static_cast<T>(0 )); }
+        [[nodiscard]] static consteval Vector2 One()   noexcept { return Vector2(static_cast<T>( 1), static_cast<T>(1 )); }
+        [[nodiscard]] static consteval Vector2 Up()    noexcept { return Vector2(static_cast<T>( 0), static_cast<T>(1 )); }
+        [[nodiscard]] static consteval Vector2 Down()  noexcept { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
+        [[nodiscard]] static consteval Vector2 Left()  noexcept { return Vector2(static_cast<T>(-1), static_cast<T>(0 )); }
+        [[nodiscard]] static consteval Vector2 Right() noexcept { return Vector2(static_cast<T>( 1), static_cast<T>(0 )); }
 
     public:
         constexpr Vector2() = default;
@@ -58,29 +58,24 @@ export namespace jpt
         constexpr Vector2& operator*=(T scalar) noexcept;
         constexpr Vector2& operator/=(T scalar) noexcept;
 
-        [[nodiscard]] constexpr T& operator[](size_t index);
-        [[nodiscard]] constexpr const T& operator[](size_t index) const;
-
     public:
-        [[nodiscard]] constexpr T Dot(Vector2 other) const;
+        [[nodiscard]] constexpr T Dot(Vector2 other) const noexcept;
 
-        [[nodiscard]] constexpr T Length()  const;
-        [[nodiscard]] constexpr T Length2() const;
+        [[nodiscard]] constexpr T Length()  const noexcept;
+        [[nodiscard]] constexpr T Length2() const noexcept;  // 2 means squared
 
-        [[nodiscard]] constexpr T Distance(Vector2 other) const;
-        [[nodiscard]] constexpr T Distance2(Vector2 other) const; // 2 means squared
+        [[nodiscard]] constexpr T Distance(Vector2 other) const noexcept;
+        [[nodiscard]] constexpr T Distance2(Vector2 other) const noexcept; // 2 means squared
 
-        constexpr void Normalize();
-        [[nodiscard]] constexpr Vector2 Normalized() const;
+        constexpr void Normalize() noexcept;
+        [[nodiscard]] constexpr Vector2 Normalized() const noexcept;
 
-        [[nodiscard]] constexpr static Vector2 Lerp(Vector2 from, Vector2 to, T t);
-
-        [[nodiscard]] constexpr static T Angle(Vector2 lhs, Vector2 rhs);         // Unsigned Radians. Faster (no atan2
-        [[nodiscard]] constexpr static T AngleSigned(Vector2 from, Vector2 to);   // Signed Radians. Slower
+        [[nodiscard]] constexpr static T Angle(Vector2 lhs, Vector2 rhs) noexcept;         // Unsigned Radians. Faster (no atan2
+        [[nodiscard]] constexpr static T AngleSigned(Vector2 from, Vector2 to) noexcept;   // Signed Radians. Slower
         
         // Counter-clockwise rotation
-        [[nodiscard]] constexpr Vector2 Rotate(T radians);
-        [[nodiscard]] constexpr Vector2 RotateAround(Vector2 pivot, T radians);
+        [[nodiscard]] constexpr Vector2 Rotate(T radians) noexcept;
+        [[nodiscard]] constexpr Vector2 RotateAround(Vector2 pivot, T radians) noexcept;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -276,57 +271,37 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T& Vector2<T>::operator[](size_t index)
-    {
-        return (&x)[index];
-    }
-
-    template<Numeric T>
-    constexpr const T& Vector2<T>::operator[](size_t index) const
-    {
-        return (&x)[index];
-    }
-
-    template<Numeric T>
-    constexpr T Vector2<T>::Dot(Vector2 other) const
+    constexpr T Vector2<T>::Dot(Vector2 other) const noexcept
     {
         return (x * other.x) + (y * other.y);
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::Length() const
+    constexpr T Vector2<T>::Length() const noexcept
     {
         return std::sqrt(Length2());
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::Length2() const
+    constexpr T Vector2<T>::Length2() const noexcept
     {
         return (x * x) + (y * y);
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::Distance(Vector2 other) const
+    constexpr T Vector2<T>::Distance(Vector2 other) const noexcept
     {
         return (*this - other).Length();
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::Distance2(Vector2 other) const
+    constexpr T Vector2<T>::Distance2(Vector2 other) const noexcept
     {
         return (*this - other).Length2();
     }
 
     template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::Normalized() const
-    {
-        Vector2<T> result = *this;
-        result.Normalize();
-        return result;
-    }
-
-    template<Numeric T>
-    constexpr void Vector2<T>::Normalize()
+    constexpr void Vector2<T>::Normalize() noexcept
     {
         const T length = Length();
         if (length != 0.0f)
@@ -337,13 +312,15 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::Lerp(Vector2 from, Vector2 to, T t)
+    constexpr Vector2<T> Vector2<T>::Normalized() const noexcept
     {
-        return from + (to - from) * t;
+        Vector2<T> result = *this;
+        result.Normalize();
+        return result;
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::Angle(Vector2 from, Vector2 to)
+    constexpr T Vector2<T>::Angle(Vector2 from, Vector2 to) noexcept
     {
         // Formular: dot(a, b) / (|a| * |b|)
         // Assumes from and to are normalized
@@ -355,7 +332,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to)
+    constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to) noexcept
     {
         T atan2 = Atan2(to.y, to.x) - std::atan2(from.y, from.x);
 
@@ -372,7 +349,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::Rotate(T radians)
+    constexpr Vector2<T> Vector2<T>::Rotate(T radians) noexcept
     {
         Vector2<T> v = *this;
 
@@ -386,7 +363,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 pivot, T radians)
+    constexpr Vector2<T> Vector2<T>::RotateAround(Vector2 pivot, T radians) noexcept
     {
         Vector2<T> v = *this;
 

@@ -39,7 +39,7 @@ namespace jpt
 
     void Camera::Update(TimePrecision deltaSeconds)
     {
-        const Vec3 right = Vec3::Cross(Vec3::Up(), m_forward);
+        const Vec3 right = Vec3::Up().Cross(m_forward);
 
         m_positionWS +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
         m_positionWS += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
@@ -149,7 +149,7 @@ namespace jpt
             case MouseMode::Pan:
             {
                 // Move the camera up/down and left/right
-                m_positionWS += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
+                m_positionWS += Vec3::Up().Cross(m_forward) * dx * kSensitivity;
                 m_positionWS += Vec3::Up() * dy * kSensitivity;
 
                 break;
