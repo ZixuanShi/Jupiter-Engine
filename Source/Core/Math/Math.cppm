@@ -18,7 +18,7 @@ export namespace jpt
 #pragma region MinMax
 
     template<typename TFirst, typename... TRest>
-    constexpr TFirst Min(TFirst first, TRest... inputs)
+    [[nodiscard]] constexpr TFirst Min(TFirst first, TRest... inputs) noexcept
     {
         TFirst smallestVal = first;
 
@@ -34,7 +34,7 @@ export namespace jpt
     }
 
     template <typename TFirst, typename... TRest>
-    constexpr TFirst Max(TFirst first, TRest... inputs)
+    [[nodiscard]] constexpr TFirst Max(TFirst first, TRest... inputs) noexcept
     {
         TFirst largestVal = first;
 
@@ -53,61 +53,61 @@ export namespace jpt
 
 #pragma region Geometry
     template<Floating TFloat = float32>
-    constexpr TFloat ToDegrees(TFloat radians)
+    [[nodiscard]] constexpr TFloat ToDegrees(TFloat radians) noexcept
     {
         return radians * static_cast<TFloat>(180) / kPi<TFloat>;
     }
 
     template<typename T> requires (!Floating<T>)
-    constexpr T ToDegrees(const T& obj)
+    [[nodiscard]] constexpr T ToDegrees(const T& obj) noexcept
     {
         return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat ToRadians(TFloat degrees)
+    [[nodiscard]] constexpr TFloat ToRadians(TFloat degrees) noexcept
     {
         return degrees * kPi<TFloat> / static_cast<TFloat>(180);
     }
 
     template<typename T> requires (!Floating<T>)
-    constexpr T ToRadians(const T& obj)
+    [[nodiscard]] constexpr T ToRadians(const T& obj) noexcept
     {
         return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Sin(TFloat value)
+    [[nodiscard]] constexpr TFloat Sin(TFloat value) noexcept
     {
         return std::sin(value);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Cos(TFloat value)
+    [[nodiscard]] constexpr TFloat Cos(TFloat value) noexcept
     {
         return std::cos(value);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Tan(TFloat value)
+    [[nodiscard]] constexpr TFloat Tan(TFloat value) noexcept
     {
         return std::tan(value);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Atan2(TFloat lhs, TFloat rhs)
+    [[nodiscard]] constexpr TFloat Atan2(TFloat lhs, TFloat rhs) noexcept
     {
         return std::atan2(lhs, rhs);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Asin(TFloat value)
+    [[nodiscard]] constexpr TFloat Asin(TFloat value) noexcept
     {
         return std::asin(value);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Acos(TFloat value)
+    [[nodiscard]] constexpr TFloat Acos(TFloat value) noexcept
     {
         return std::acos(value);
     }
@@ -117,7 +117,7 @@ export namespace jpt
 #pragma region Clamping
     /** @return Clamped value. Ensure it's at least bigger than min and smaller than max. Inclusive */
     template<typename T>
-    constexpr T Clamp(T value, T min, T max)
+    [[nodiscard]] constexpr T Clamp(T value, T min, T max) noexcept
     {
         if (value < min)
         {
@@ -131,7 +131,7 @@ export namespace jpt
     }
 
     template<Floating T = float32>
-    constexpr T Saturate(T value)
+    [[nodiscard]] constexpr T Saturate(T value) noexcept
     {
         return Clamp(value, static_cast<T>(0), static_cast<T>(1));
     }
@@ -140,26 +140,26 @@ export namespace jpt
 
 #pragma region Interpolation
     template<typename T, Floating TFloat = float32>
-    constexpr T Lerp(T start, T end, TFloat t)
+    [[nodiscard]] constexpr T Lerp(T start, T end, TFloat t) noexcept
     {
         return start + t * (end - start);
     }
 
     template<typename T>
-    constexpr T InvLerp(T start, T end, T value)
+    [[nodiscard]] constexpr T InvLerp(T start, T end, T value) noexcept
     {
         return (value - start) / (end - start);
     }
 
     template<Floating T = float32>
-    constexpr T SmoothStep(T edge0, T edge1, T x)
+    [[nodiscard]] constexpr T SmoothStep(T edge0, T edge1, T x) noexcept
     {
         x = Saturate((x - edge0) / (edge1 - edge0));
         return x * x * (static_cast<T>(3) - static_cast<T>(2) * x);
     }
 
     template<Floating T = float32>
-    constexpr T SmootherStep(T edge0, T edge1, T x)
+    [[nodiscard]] constexpr T SmootherStep(T edge0, T edge1, T x) noexcept
     {
         x = Saturate((x - edge0) / (edge1 - edge0));
         return x * x * x * (x * (x * static_cast<T>(6) - static_cast<T>(15)) + static_cast<T>(10));
@@ -169,38 +169,38 @@ export namespace jpt
 
     /** @return The absolute value of input arithmetic parameter */
     template<Numeric TNum>
-    constexpr TNum Abs(TNum value)
+    [[nodiscard]] constexpr TNum Abs(TNum value) noexcept
     {
         return (value >= static_cast<TNum>(0) ? value : -value);
     }
 
     template<Numeric TNum>
-    constexpr TNum Sqrt(TNum value)
+    [[nodiscard]] constexpr TNum Sqrt(TNum value) noexcept
     {
         return static_cast<TNum>(std::sqrt(value));
     }
 
     template<Numeric TNum1, Numeric TNum2>
-    constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001))
+    [[nodiscard]] constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001)) noexcept
     {
         return Abs(A - static_cast<TNum1>(B)) <= tolerance;
     }
 
     template<Integral TInt>
-    constexpr bool IsPowerOfTwo(TInt value)
+    [[nodiscard]] constexpr bool IsPowerOfTwo(TInt value) noexcept
     {
         return (value & (value - 1)) == 0;
     }
 
     template<Integral TInt>
-    constexpr bool IsEven(TInt value)
+    [[nodiscard]] constexpr bool IsEven(TInt value) noexcept
     {
         return (value & 1) == 0;
     }
 
     /** @return Rount down integer */
     template<Numeric T = int32, Floating TFloat = float32>
-    constexpr T Floor(TFloat value)
+    [[nodiscard]] constexpr T Floor(TFloat value) noexcept
     {
         const T integer = static_cast<T>(value);
         if (value >= integer)
@@ -214,7 +214,7 @@ export namespace jpt
     }
 
     template<Numeric T = int32, Floating TFloat = float32>
-    constexpr T Ceil(TFloat value)
+    [[nodiscard]] constexpr T Ceil(TFloat value) noexcept
     {
         const T integer = static_cast<T>(value);
         if (value <= integer)
@@ -229,7 +229,7 @@ export namespace jpt
 
     /** @return The nearest integer */
     template<Numeric T = int32, Floating TFloat = float32>
-    constexpr T Round(TFloat value)
+    [[nodiscard]] constexpr T Round(TFloat value) noexcept
     {
         const TFloat fraction = value - Floor<T>(value);
         if (fraction >= static_cast<TFloat>(0.5))
@@ -244,7 +244,7 @@ export namespace jpt
 
     /** @return The floor of the value if it's negative, otherwise the ceil */
     template<Numeric T = int32, Floating TFloat = float32>
-    constexpr T FloorCeil(TFloat value)
+    [[nodiscard]] constexpr T FloorCeil(TFloat value) noexcept
     {
         if (value < static_cast<TFloat>(0))
         {
@@ -256,19 +256,19 @@ export namespace jpt
         }
     }
 
-    constexpr auto Log2(auto value)
+    [[nodiscard]] constexpr auto Log2(auto value) noexcept
     {
         return std::log2(value);
     }
 
     template<Floating TFloat = float32>
-    constexpr TFloat Modf(TFloat value, TFloat mod)
+    [[nodiscard]] constexpr TFloat Modf(TFloat value, TFloat mod) noexcept
     {
         return std::fmod(value, mod);
     }
 
     template<Integral TInt>
-    constexpr bool IsPrime(TInt n)
+    [[nodiscard]] constexpr bool IsPrime(TInt n) noexcept
     {
         if (n <= 1)
         {
