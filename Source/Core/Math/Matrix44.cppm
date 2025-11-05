@@ -11,7 +11,6 @@ export module jpt.Matrix44;
 import jpt.Concepts;
 import jpt.Constants;
 import jpt.Math;
-import jpt.Math_Settings;
 import jpt.Quaternion;
 import jpt.String;
 import jpt.TypeDefs;
