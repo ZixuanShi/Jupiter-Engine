@@ -41,19 +41,19 @@ namespace jpt
     template<Numeric T>
     constexpr T TRay2<T>::Distance(Vector2<T> point) const noexcept
     {
-        const float dot = Vec2f::Dot(point - origin, direction);
+        const float dot = Vec2f(point - origin).Dot(direction);
         float distance = jpt::kInvalidValue<T>;
 
         // If the point is behind the ray's origin, return the distance to the origin
         if (dot < 0.0f)
         {
-            distance = Vec2f::Distance(point, origin);
+            distance = point.Distance(origin);
         }
         else
         {
             // Otherwise, return the distance to the point on the ray closest to the point
             const Vec2f projection = origin + direction * (dot / direction.Length2());
-            distance = Vec2f::Distance(point, projection);
+            distance = point.Distance(projection);
         }
 
         return distance;

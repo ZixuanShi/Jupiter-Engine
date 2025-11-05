@@ -139,25 +139,13 @@ export namespace jpt
 #pragma endregion Clamping
 
 #pragma region Interpolation
-    template<NonTrivial T, Floating TFloat = float32>
-    constexpr T Lerp(const T& start, const T& end, TFloat t)
-    {
-        return start + t * (end - start);
-    }
-
-    template<Trivial T, Floating TFloat = float32>
+    template<typename T, Floating TFloat = float32>
     constexpr T Lerp(T start, T end, TFloat t)
     {
         return start + t * (end - start);
     }
 
-    template<NonTrivial T>
-    constexpr T InvLerp(const T& start, const T& end, const T& value)
-    {
-        return (value - start) / (end - start);
-    }
-
-    template<Trivial T>
+    template<typename T>
     constexpr T InvLerp(T start, T end, T value)
     {
         return (value - start) / (end - start);
