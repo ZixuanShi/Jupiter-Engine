@@ -52,28 +52,30 @@ export namespace jpt
 #pragma endregion MinMax
 
 #pragma region Geometry
-    template<Floating TFloat = float32>
-    [[nodiscard]] constexpr TFloat ToDegrees(TFloat radians) noexcept
+    template<typename T = float32>
+    [[nodiscard]] constexpr T ToDegrees(T radians) noexcept
     {
-        return radians * static_cast<TFloat>(180) / kPi<TFloat>;
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            return radians * static_cast<T>(180) / kPi<T>;
+        }
+        else
+        {
+            return radians * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
+        }
     }
 
-    template<typename T> requires (!Floating<T>)
-    [[nodiscard]] constexpr T ToDegrees(const T& obj) noexcept
+    template<typename T = float32>
+    [[nodiscard]] constexpr T ToRadians(T degrees) noexcept
     {
-        return obj * static_cast<T::NumericType>(180) / kPi<T::NumericType>;
-    }
-
-    template<Floating TFloat = float32>
-    [[nodiscard]] constexpr TFloat ToRadians(TFloat degrees) noexcept
-    {
-        return degrees * kPi<TFloat> / static_cast<TFloat>(180);
-    }
-
-    template<typename T> requires (!Floating<T>)
-    [[nodiscard]] constexpr T ToRadians(const T& obj) noexcept
-    {
-        return obj * kPi<T::NumericType> / static_cast<T::NumericType>(180);
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            return degrees * kPi<T> / static_cast<T>(180);
+        }
+        else
+        {
+            return degrees * kPi<T::NumericType> / static_cast<T::NumericType>(180);
+        }
     }
 
     template<Floating TFloat = float32>
@@ -171,7 +173,7 @@ export namespace jpt
     template<Numeric TNum>
     [[nodiscard]] constexpr TNum Abs(TNum value) noexcept
     {
-        return (value >= static_cast<TNum>(0) ? value : -value);
+        return (value > static_cast<TNum>(0) ? value : -value);
     }
 
     template<Numeric TNum>
@@ -181,7 +183,7 @@ export namespace jpt
     }
 
     template<Numeric TNum1, Numeric TNum2>
-    [[nodiscard]] constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = static_cast<TNum1>(0.000001)) noexcept
+    [[nodiscard]] constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = kEpsilon<TNum1>) noexcept
     {
         return Abs(A - static_cast<TNum1>(B)) <= tolerance;
     }

@@ -82,38 +82,66 @@ export namespace jpt
     // Non-Member functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs)
+    [[nodiscard]] constexpr bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs)
     {
         return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
                AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05));
     }
 
     template<Numeric T>
-    constexpr Vector2<T> operator+(T scaler, Vector2<T> vector2)
+    [[nodiscard]] constexpr Vector2<T> operator+(T scaler, Vector2<T> vector2)
     {
         return vector2 + scaler;
     }
 
     template<Numeric T>
-    constexpr Vector2<T> operator-(T scaler, Vector2<T> vector2)
+    [[nodiscard]] constexpr Vector2<T> operator-(T scaler, Vector2<T> vector2)
     {
         return vector2 - scaler;
     }
 
     template<Numeric T>
-    constexpr Vector2<T> operator*(T scaler, Vector2<T> vector2)
+    [[nodiscard]] constexpr Vector2<T> operator*(T scaler, Vector2<T> vector2)
     {
         return vector2 * scaler;
     }
 
     template<Numeric T>
-    constexpr Vector2<T> operator/(T scaler, Vector2<T> vector2)
+    [[nodiscard]] constexpr Vector2<T> operator/(T scaler, Vector2<T> vector2)
     {
         return vector2 / scaler;
     }
 
     template<Numeric T>
-    constexpr uint64 Hash(const Vector2<T>& vector2)
+    [[nodiscard]] constexpr bool operator<=(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
+    {
+        return lhs.x <= rhs.x && 
+               lhs.y <= rhs.y;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator<(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
+    {
+        return lhs.x < rhs.x && 
+               lhs.y < rhs.y;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator>=(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
+    {
+        return lhs.x >= rhs.x && 
+               lhs.y >= rhs.y;
+    }
+    
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator>(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
+    {
+        return lhs.x > rhs.x && 
+               lhs.y > rhs.y;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr uint64 Hash(const Vector2<T>& vector2)
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -136,7 +164,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr String ToString(const Vector2<T>& vector2)
+    [[nodiscard]] constexpr String ToString(const Vector2<T>& vector2)
     {
         return String::Format<32>("x: %.3f, y: %.3f", vector2.x, vector2.y);
     }
@@ -156,6 +184,12 @@ export namespace jpt
         : x(x)
         , y(y)
     {
+    }
+
+    template<Numeric T>
+    constexpr Vector2<T> operator-(const Vector2<T>& vector2) noexcept
+    {
+        return Vector2(-vector2.x, -vector2.y);
     }
 
     template<Numeric T>

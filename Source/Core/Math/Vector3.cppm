@@ -87,7 +87,7 @@ export namespace jpt
         constexpr static T Angle(const Vector3& from, const Vector3& to); // Unsigned, faster (no atan2)
         constexpr T Angle(const Vector3& to) const;
 
-        constexpr static T AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis);
+        constexpr static T AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis);  // Signed, but slower
         constexpr T AngleSigned(const Vector3& to, const Vector3& axis) const;
 
         constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
@@ -100,15 +100,71 @@ export namespace jpt
     // Non-Member functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr bool operator==(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+    [[nodiscard]] constexpr bool operator==(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
     {
         return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
                AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05)) &&
                AreValuesClose(lhs.z, rhs.z, static_cast<T>(0.05));
     }
+    
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector3<T> operator+(T scaler, const Vector3<T>& TVector3)
+    {
+        return TVector3 + scaler;
+    }
 
     template<Numeric T>
-    constexpr uint64 Hash(const Vector3<T>& vector3)
+    [[nodiscard]] constexpr Vector3<T> operator-(T scaler, const Vector3<T>& TVector3)
+    {
+        return TVector3 - scaler;
+    }
+    
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector3<T> operator*(T scaler, const Vector3<T>& TVector3)
+    {
+        return TVector3 * scaler;
+    }
+    
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector3<T> operator/(T scaler, const Vector3<T>& TVector3)
+    {
+        return TVector3 / scaler;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator<(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+    {
+        return lhs.x < rhs.x && 
+               lhs.y < rhs.y &&
+               lhs.z < rhs.z;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator<=(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+    {
+        return lhs.x <= rhs.x && 
+               lhs.y <= rhs.y &&
+               lhs.z <= rhs.z;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator>(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+    {
+        return lhs.x > rhs.x && 
+               lhs.y > rhs.y && 
+               lhs.z > rhs.z;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr bool operator>=(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
+    {
+        return lhs.x >= rhs.x && 
+               lhs.y >= rhs.y && 
+               lhs.z >= rhs.z;
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr uint64 Hash(const Vector3<T>& vector3)
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -133,7 +189,7 @@ export namespace jpt
     }
         
     template<Numeric T>
-    constexpr String ToString(const Vector3<T>& vector3)
+    [[nodiscard]] constexpr String ToString(const Vector3<T>& vector3)
     {
         return String::Format<64>("x: %.3f, y: %.3f, z: %.3f", vector3.x, vector3.y, vector3.z);
     }
@@ -446,27 +502,3 @@ export using Vec3u = jpt::Vector3<uint32>;
 template<> constexpr bool jpt::IsTrivial<Vec3f> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3i> = true;
 template<> constexpr bool jpt::IsTrivial<Vec3u> = true;
-
-export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator+(T scaler, const jpt::Vector3<T>& TVector3)
-{
-    return TVector3 + scaler;
-}
-
-export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator-(T scaler, const jpt::Vector3<T>& TVector3)
-{
-    return TVector3 - scaler;
-}
-
-export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator*(T scaler, const jpt::Vector3<T>& TVector3)
-{
-    return TVector3 * scaler;
-}
-
-export template<jpt::Numeric T>
-constexpr jpt::Vector3<T> operator/(T scaler, const jpt::Vector3<T>& TVector3)
-{
-    return TVector3 / scaler;
-}

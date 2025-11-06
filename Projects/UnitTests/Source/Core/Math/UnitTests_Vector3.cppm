@@ -211,12 +211,38 @@ static bool UnitTests_Vec3f_AngleSigned()
     return true;
 }
 
+static bool UnitTests_Vec3f_Math()
+{
+    Vec3f v1(-30.0f,  90.0f,  125.0f);
+    Vec3f v2(  0.0f, -66.0f, -222.0f);
+
+    // To Radians
+    JPT_ENSURE(jpt::ToRadians(v1) == Vec3f(-0.5235988f, 1.570796f, 2.181661f));
+
+    // To Degrees
+    
+
+    // Lerp
+
+
+    // AreValuesClose
+    //jpt::AreValuesClose(v1, v1);
+
+    Vec2f v3 = v1.Length2();
+
+    //5.0f + v2;
+    //5.0f - v3;
+
+    return true;
+}
+
 export bool RunUnitTests_Vector3()
 {
     JPT_ENSURE(UnitTests_Vec3f_Operations());
     JPT_ENSURE(UnitTests_Vec3f_Cross());
     JPT_ENSURE(UnitTests_Vec3f_Angle());
     JPT_ENSURE(UnitTests_Vec3f_AngleSigned());
+    JPT_ENSURE(UnitTests_Vec3f_Math());
 
     return true;
 }

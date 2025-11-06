@@ -808,7 +808,10 @@ export namespace jpt
     constexpr void String_Base<TChar, TAllocator>::Insert(const TChar* CString, Index index, Index size)
     {
         JPT_ASSERT(index <= m_count, "Index out of bound");
-        JPT_EXIT_IF(size == 0);
+        if (size == 0)
+        {
+            return;
+        }
 
         Reserve(m_count + size);
 
@@ -829,7 +832,11 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr void String_Base<TChar, TAllocator>::Append(const TChar* CString, Index newStringSize)
     {
-        JPT_EXIT_IF(newStringSize == 0);
+        if (newStringSize == 0)
+        {
+            return;
+        }
+
         AppendImpl(CString, newStringSize);
     }
 
@@ -842,7 +849,11 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr void String_Base<TChar, TAllocator>::Append(const String_Base<TChar>& otherString)
     {
-        JPT_EXIT_IF(otherString.IsEmpty());
+        if (otherString.IsEmpty())
+        {
+            return;
+        }
+
         AppendImpl(otherString.ConstBuffer(), otherString.m_count);
     }
 
@@ -1120,7 +1131,10 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr void String_Base<TChar, TAllocator>::AppendImpl(const TChar* CString, Index size)
     {
-        JPT_EXIT_IF(size == 0);
+        if (size == 0)
+        {
+            return;
+        }
 
         const Index newSize = m_count + size;
 
