@@ -105,7 +105,7 @@ namespace jpt
         }
         else if (state == Input::KeyState::Released)
         {
-            m_lockMousePos = Vec2i(Constants<int32>::kMax);
+            m_lockMousePos = Vec2i(kMax<int32>);
 
             m_pWindow->SetCursorVisible(true);
             m_pWindow = nullptr;
@@ -115,7 +115,7 @@ namespace jpt
     void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
     {
         // If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
-        if (m_lockMousePos == Vec2i(Constants<int32>::kMax))
+        if (m_lockMousePos == Vec2i(kMax<int32>))
         {
             return;
         }

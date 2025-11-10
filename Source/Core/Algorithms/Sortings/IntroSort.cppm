@@ -22,7 +22,7 @@ namespace jpt
     {
         static constexpr Index kInsertionSortThreshold = 16;
 
-        if (beginIndex >= endIndex || endIndex == Constants<Index>::kMax)
+        if (beginIndex >= endIndex || endIndex == kMax<Index>)
         {
             return;
         }

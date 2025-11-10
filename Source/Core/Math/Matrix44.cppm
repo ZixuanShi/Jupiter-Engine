@@ -329,7 +329,7 @@ export namespace jpt
         rotation[3] = Vector4<T>(0, 0, 0, 1);
 
         const T sy = Sqrt(rotation[0][0] * rotation[0][0] + rotation[1][0] * rotation[1][0]);
-        if (sy > Constants<T>::kEpsilon)
+        if (sy > kEpsilon<T>)
         {
             const T x = -Atan2(rotation[2][1], rotation[2][2]);
             const T y = -Atan2(-rotation[2][0], sy);

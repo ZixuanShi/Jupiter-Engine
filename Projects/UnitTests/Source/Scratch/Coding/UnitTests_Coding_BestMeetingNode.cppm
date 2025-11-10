@@ -84,7 +84,7 @@ float32 GetDistanceToNode(const Adjacencylist& adjacencyList, const Node& from, 
 {
     struct SearchData
     {
-        float32 distance = jpt::Constants<float32>::kMax;
+        float32 distance = jpt::kMax<float32>;
         Index previous = kInvalidIndex;
         bool visited = false;
     };
@@ -129,13 +129,13 @@ float32 GetDistanceToNode(const Adjacencylist& adjacencyList, const Node& from, 
         }
     }
 
-    return jpt::Constants<float32>::kMax;
+    return jpt::kMax<float32>;
 }
 
 Index FindBestMeetingNode(const jpt::DynamicArray<Node>& nodes, const Adjacencylist& adjacencyList, const jpt::DynamicArray<Node>& people)
 {
     Index bestNode = kInvalidIndex;
-    float32 shortestDistance = jpt::Constants<float32>::kMax;
+    float32 shortestDistance = jpt::kMax<float32>;
 
     // For each node. Calculate the total distance traveled by all people.
     for (const Node& node : nodes)
@@ -148,9 +148,9 @@ Index FindBestMeetingNode(const jpt::DynamicArray<Node>& nodes, const Adjacencyl
             const float32 distance = GetDistanceToNode(adjacencyList, person, node);
 
             // No path found. Skip this node
-            if (distance == jpt::Constants<float32>::kMax)
+            if (distance == jpt::kMax<float32>)
             {
-                totalDistance = jpt::Constants<float32>::kMax;
+                totalDistance = jpt::kMax<float32>;
                 break;
             }
             else

@@ -40,7 +40,7 @@ export namespace jpt
         Window* m_pWindow = nullptr;
 
         // Controls
-        Vec2i m_lockMousePos  = Vec2i(Constants<int32>::kMax);
+        Vec2i m_lockMousePos  = Vec2i(kMax<int32>);
         MouseMode m_mouseMode = MouseMode::Pan;
 
         // Cached

@@ -74,8 +74,6 @@ bool UnitTests_Vec2f_Functionalities()
     JPT_ENSURE(v.Distance2(Vec2f(1.0f, 2.0f)) == 1.0f);
 
     // Normalize
-    auto normal = v.Normalized();
-    JPT_LOG(normal);
     JPT_ENSURE(v.Normalized() == Vec2f(0.7071067f, 0.7071067f));
 
     // Lerp

@@ -86,8 +86,6 @@ export namespace jpt
         const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
         const ProjectSettings& projectSettings = ProjectSettings::GetInstance();
 
-        // Enum could be stored as string or integer
-
         if (launchArgs.Has(key))
         {
             return static_cast<TValue>(launchArgs.Get<int32>(key));

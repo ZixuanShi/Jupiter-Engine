@@ -113,34 +113,6 @@ export namespace jpt
     }
 
     template<Numeric T>
-    [[nodiscard]] constexpr bool operator<=(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
-    {
-        return lhs.x <= rhs.x && 
-               lhs.y <= rhs.y;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator<(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
-    {
-        return lhs.x < rhs.x && 
-               lhs.y < rhs.y;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator>=(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
-    {
-        return lhs.x >= rhs.x && 
-               lhs.y >= rhs.y;
-    }
-    
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator>(const Vector2<T>& lhs, const Vector2<T>& rhs) noexcept
-    {
-        return lhs.x > rhs.x && 
-               lhs.y > rhs.y;
-    }
-
-    template<Numeric T>
     [[nodiscard]] constexpr uint64 Hash(const Vector2<T>& vector2)
     {
         if constexpr (std::is_floating_point_v<T>)

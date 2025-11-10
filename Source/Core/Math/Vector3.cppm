@@ -102,9 +102,9 @@ export namespace jpt
     template<Numeric T>
     [[nodiscard]] constexpr bool operator==(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
     {
-        return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
-               AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05)) &&
-               AreValuesClose(lhs.z, rhs.z, static_cast<T>(0.05));
+        return AreValuesClose(lhs.x, rhs.x) &&
+               AreValuesClose(lhs.y, rhs.y) &&
+               AreValuesClose(lhs.z, rhs.z);
     }
     
     template<Numeric T>
@@ -129,38 +129,6 @@ export namespace jpt
     [[nodiscard]] constexpr Vector3<T> operator/(T scaler, const Vector3<T>& TVector3)
     {
         return TVector3 / scaler;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator<(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
-    {
-        return lhs.x < rhs.x && 
-               lhs.y < rhs.y &&
-               lhs.z < rhs.z;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator<=(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
-    {
-        return lhs.x <= rhs.x && 
-               lhs.y <= rhs.y &&
-               lhs.z <= rhs.z;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator>(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
-    {
-        return lhs.x > rhs.x && 
-               lhs.y > rhs.y && 
-               lhs.z > rhs.z;
-    }
-
-    template<Numeric T>
-    [[nodiscard]] constexpr bool operator>=(const Vector3<T>& lhs, const Vector3<T>& rhs) noexcept
-    {
-        return lhs.x >= rhs.x && 
-               lhs.y >= rhs.y && 
-               lhs.z >= rhs.z;
     }
 
     template<Numeric T>

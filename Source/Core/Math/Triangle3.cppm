@@ -98,7 +98,7 @@ namespace jpt
 
         return (u >= 0) && 
                (v >= 0) && 
-               (u + v <= static_cast<T>(1) + Constants<T>::kEpsilon);
+               (u + v <= static_cast<T>(1) + kEpsilon<T>);
     }
 }
 

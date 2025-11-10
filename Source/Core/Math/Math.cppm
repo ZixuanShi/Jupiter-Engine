@@ -183,9 +183,9 @@ export namespace jpt
     }
 
     template<Numeric TNum1, Numeric TNum2>
-    [[nodiscard]] constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 tolerance = kEpsilon<TNum1>) noexcept
+    [[nodiscard]] constexpr bool AreValuesClose(TNum1 A, TNum2 B, TNum1 epsilon = kEpsilon<TNum1>) noexcept
     {
-        return Abs(A - static_cast<TNum1>(B)) <= tolerance;
+        return Abs(A - static_cast<TNum1>(B)) <= epsilon;
     }
 
     template<Integral TInt>
