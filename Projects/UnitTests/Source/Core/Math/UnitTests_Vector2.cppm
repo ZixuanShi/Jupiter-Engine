@@ -108,9 +108,9 @@ bool RunUnitTests_Vector2_Rotation()
     v1 = v1.Rotate(jpt::ToRadians(49.0f));
     v2 = v2.Rotate(jpt::ToRadians(49.0f));
     v3 = v3.Rotate(jpt::ToRadians(49.0f));
-    JPT_ENSURE(v1 == Vec2f(-1.5f, 1.3f));
-    JPT_ENSURE(v2 == Vec2f(1.4f, 0.1f));
-    JPT_ENSURE(v3 == Vec2f(0.1f, -1.4f));
+    JPT_ENSURE(v1 == Vec2f(-1.50941920f, 1.31211793f));
+    JPT_ENSURE(v2 == Vec2f(1.41076851f, 0.0986506343f));
+    JPT_ENSURE(v3 == Vec2f(0.0986506343f, -1.41076851f));
 
     JPT_ENSURE(v1.Rotate(jpt::ToRadians(-49.0f)) == Vec2f(0.0f, 2.0f));
     JPT_ENSURE(v2.Rotate(jpt::ToRadians(-49.0f)) == Vec2f(1.0f, -1.0f));
@@ -119,9 +119,9 @@ bool RunUnitTests_Vector2_Rotation()
     v1 = v1.Rotate(jpt::ToRadians(360.0f));
     v2 = v2.Rotate(jpt::ToRadians(360.0f));
     v3 = v3.Rotate(jpt::ToRadians(360.0f));
-    JPT_ENSURE(v1 == Vec2f(-1.5f, 1.3f));
-    JPT_ENSURE(v2 == Vec2f(1.4f, 0.1f));
-    JPT_ENSURE(v3 == Vec2f(0.1f, -1.4f));
+    JPT_ENSURE(v1 == Vec2f(-1.50941944f, 1.31211770f));
+    JPT_ENSURE(v2 == Vec2f(1.41076851f, 0.0986508802f));
+    JPT_ENSURE(v3 == Vec2f(0.0986508802f, -1.41076851f));
 
     v3 = Vec2f(10.0f, 10.0f);    // pivot
     v1 = Vec2f(0.0f, 0.0f);

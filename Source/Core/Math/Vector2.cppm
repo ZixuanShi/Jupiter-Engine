@@ -84,8 +84,8 @@ export namespace jpt
     template<Numeric T>
     [[nodiscard]] constexpr bool operator==(const Vector2<T>& lhs, const Vector2<T>& rhs)
     {
-        return AreValuesClose(lhs.x, rhs.x, static_cast<T>(0.05)) &&
-               AreValuesClose(lhs.y, rhs.y, static_cast<T>(0.05));
+        return AreValuesClose(lhs.x, rhs.x) &&
+               AreValuesClose(lhs.y, rhs.y);
     }
 
     template<Numeric T>
@@ -346,7 +346,7 @@ export namespace jpt
         {
             atan2 -= kTwoPi<T>;
         }
-        else if (atan2 < -Pi)
+        else if (atan2 < -kPi<T>)
         {
             atan2 += kTwoPi<T>;
         }
