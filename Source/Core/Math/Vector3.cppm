@@ -84,16 +84,12 @@ export namespace jpt
         constexpr void Normalize() noexcept;
         [[nodiscard]] constexpr Vector3 Normalized() const noexcept;
 
-        constexpr static T Angle(const Vector3& from, const Vector3& to); // Unsigned, faster (no atan2)
-        constexpr T Angle(const Vector3& to) const;
+        constexpr bool IsOnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
 
+        constexpr static T Angle(const Vector3& from, const Vector3& to); // Unsigned, faster (no atan2)
         constexpr static T AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis);  // Signed, but slower
-        constexpr T AngleSigned(const Vector3& to, const Vector3& axis) const;
 
         constexpr static Vector3 Project(const Vector3& from, const Vector3& to);
-        constexpr Vector3 Project(const Vector3& to) const;
-
-        constexpr bool OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -398,12 +394,6 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::Angle(const Vector3& to) const
-    {
-        return Angle(*this, to);
-    }
-
-    template<Numeric T>
     constexpr T Vector3<T>::AngleSigned(const Vector3& from, const Vector3& to, const Vector3& axis)
     {
         // Formula: angle = atan2((a x b) . c, a . b)
@@ -419,19 +409,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T Vector3<T>::AngleSigned(const Vector3& to, const Vector3& axis) const
-    {
-        return AngleSigned(*this, to, axis);
-    }
-
-    template<Numeric T>
     constexpr Vector3<T> Vector3<T>::Project(const Vector3& from, const Vector3& to)
-    {
-        return from.Project(to);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> Vector3<T>::Project(const Vector3& to) const
     {
         // Projects from this vector to the other
         // Formula: proj_v(u) = (u . v / |v|^2) * v
@@ -442,13 +420,13 @@ export namespace jpt
             return Vector3<T>::Zero();
         }
 
-        const T dot = this->Dot(to);
+        const T dot = from.Dot(to);
         const T scalar = dot / length2;
         return to * scalar;
     }
 
     template<Numeric T>
-    constexpr bool Vector3<T>::OnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const
+    constexpr bool Vector3<T>::IsOnLeft(const Vector3& viewPosition, const Vector3& viewDirection) const
     {
         // Calculate the vector from the view position to the point
         const Vector3 viewToPoint = *this - viewPosition;
