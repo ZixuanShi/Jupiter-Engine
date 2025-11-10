@@ -40,13 +40,13 @@ namespace jpt
         while (true)
         {
             const Index start = argumentsCopy.FindFirstOf('-');
-            if (start == npos)
+            if (start == kInvalidIndex)
             {
                 break;
             }
 
             Index end = argumentsCopy.FindFirstOf('-', start + 1);
-            if (end == npos)
+            if (end == kInvalidIndex)
             {
                 end = argumentsCopy.Count();
             }
@@ -89,7 +89,7 @@ namespace jpt
         const size_t equalPos = argument.Find('=');
 
         // Flag
-        if (equalPos == npos)
+        if (equalPos == kInvalidIndex)
         {
             key = argument;
         }

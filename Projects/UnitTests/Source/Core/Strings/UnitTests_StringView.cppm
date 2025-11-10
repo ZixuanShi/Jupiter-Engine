@@ -47,8 +47,8 @@ bool UnitTests_StringView()
 
     JPT_ENSURE(strView.Find("StringView") == 10);
     JPT_ENSURE(strView.Find('I') == 3);
-    JPT_ENSURE(strView.Find("NoExist") == jpt::npos);
-    JPT_ENSURE(strView.Find('N') == jpt::npos);
+    JPT_ENSURE(strView.Find("NoExist") == kInvalidIndex);
+    JPT_ENSURE(strView.Find('N') == kInvalidIndex);
     JPT_ENSURE(strView.Has("StringView"));
     JPT_ENSURE(strView.Has('I'));
     JPT_ENSURE(!strView.Has("N"));

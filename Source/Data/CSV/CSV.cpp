@@ -47,7 +47,7 @@ namespace jpt
                 const Index quoteStartIndex = row.Find('\"');
 
                 // If there's no quote, split this row by comma and break
-                if (quoteStartIndex == npos)
+                if (quoteStartIndex == kInvalidIndex)
                 {
                     currentRow += row.Split(',');
                     break;
@@ -55,13 +55,13 @@ namespace jpt
 
                 // If there's a quote
                 const Index commaIndex = row.Find(',');
-                if (quoteStartIndex != npos)
+                if (quoteStartIndex != kInvalidIndex)
                 {
                     // Quoted cell is at the start of the row
                     if (quoteStartIndex < commaIndex)
                     {
                         const Index quoteEndIndex = row.Find('\"', quoteStartIndex + 1);
-                        JPT_ASSERT(quoteEndIndex != npos, "Failed to find closing quote in CSV row");
+                        JPT_ASSERT(quoteEndIndex != kInvalidIndex, "Failed to find closing quote in CSV row");
 
                         const String cell = row.SubStr(quoteStartIndex + 1, quoteEndIndex - quoteStartIndex - 1);
                         currentRow.EmplaceBack(cell);

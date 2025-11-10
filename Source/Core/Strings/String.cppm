@@ -79,18 +79,18 @@ export namespace jpt
         constexpr Index Capacity() const noexcept;
         constexpr bool   IsEmpty()  const noexcept;
         constexpr Index Count()    const noexcept; /**< How many characters in this string */
-        constexpr Index Count(TChar c, Index startIndex = 0, Index endIndex = npos) const noexcept; /**< How many times the character c appears in this string */
-        constexpr Index Count(const TChar* pString, Index startIndex = 0, Index endIndex = npos) const noexcept;
+        constexpr Index Count(TChar c, Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept; /**< How many times the character c appears in this string */
+        constexpr Index Count(const TChar* pString, Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
 
-        /** Searching. Returns npos if not found */
-        constexpr Index Find(      TChar  charToFind,    Index startIndex = 0, Index endIndex = npos) const noexcept;
-        constexpr Index Find(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos) const noexcept;
-        constexpr Index FindFirstOf(      TChar  charToFind,    Index startIndex = 0, Index endIndex = npos) const noexcept;
-        constexpr Index FindFirstOf(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos) const noexcept;
-        constexpr Index FindLastOf(      TChar  charToFind,     Index startIndex = 0, Index endIndex = npos)  const noexcept;
-        constexpr Index FindLastOf(const TChar* pStringToFind,  Index startIndex = 0, Index endIndex = npos)  const noexcept;
-        constexpr bool   Has(      TChar  charToFind,    Index startIndex = 0, Index endIndex = npos) const noexcept;
-        constexpr bool   Has(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos) const noexcept;
+        /** Searching. Returns kInvalidIndex if not found */
+        constexpr Index Find(      TChar  charToFind,    Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
+        constexpr Index Find(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
+        constexpr Index FindFirstOf(      TChar  charToFind,    Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
+        constexpr Index FindFirstOf(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
+        constexpr Index FindLastOf(      TChar  charToFind,     Index startIndex = 0, Index endIndex = kInvalidIndex)  const noexcept;
+        constexpr Index FindLastOf(const TChar* pStringToFind,  Index startIndex = 0, Index endIndex = kInvalidIndex)  const noexcept;
+        constexpr bool   Has(      TChar  charToFind,    Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
+        constexpr bool   Has(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = kInvalidIndex) const noexcept;
         constexpr bool BeginsWith(const TChar* pStringToFind) const noexcept;
         constexpr bool EndsWith(const TChar* pStringToFind) const noexcept;
 
@@ -102,20 +102,20 @@ export namespace jpt
             @param StringToReplace:    The string to replace the original data
             @param startIndex:        [optional] The start index to start searching. Default to 0
             @param endIndex:        [optional] The end index to stop operation. Default to Count() */
-        constexpr String_Base& Replace(const TChar* pStringToFind, const TChar* pStringToReplace, Index startIndex = 0, Index endIndex = npos);
+        constexpr String_Base& Replace(const TChar* pStringToFind, const TChar* pStringToReplace, Index startIndex = 0, Index endIndex = kInvalidIndex);
 
         /** Splits this string to substrings by a keyword */
         constexpr DynamicArray<String_Base> Split(const TChar* pKeyword) const;
         constexpr DynamicArray<String_Base> Split(TChar keyword) const;
 
         /** @return        A sub string within the given range at index and length */
-        constexpr String_Base SubStr(Index index, Index count = npos) const;
+        constexpr String_Base SubStr(Index index, Index count = kInvalidIndex) const;
         constexpr void PopBack(Index count = 1);
 
         /** Trim string from the left or right at given index
-            @param index:    [optional] The index to trim to. Default to npos if just trim out white spaces */
-        constexpr void TrimLeft(Index index = npos);
-        constexpr void TrimRight(Index index = npos);
+            @param index:    [optional] The index to trim to. Default to kInvalidIndex if just trim out white spaces */
+        constexpr void TrimLeft(Index index = kInvalidIndex);
+        constexpr void TrimRight(Index index = kInvalidIndex);
 
         /** Insert a string at the index
             @param CString:      String to insert
@@ -422,7 +422,7 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::Count(TChar c, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::Count(TChar c, Index startIndex /* = 0*/, Index endIndex /* = kInvalidIndex*/) const noexcept
     {
         endIndex = Clamp(endIndex, Index(0), m_count);
         Index count = 0;
@@ -440,7 +440,7 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::Count(const TChar* pString, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::Count(const TChar* pString, Index startIndex /* = 0*/, Index endIndex /* = kInvalidIndex*/) const noexcept
     {
         endIndex = Clamp(endIndex, Index(0), m_count);
         Index count = 0;
@@ -486,7 +486,7 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = kInvalidIndex*/) const noexcept
     {
         endIndex = Clamp(endIndex, Index(0), m_count);
 
@@ -498,11 +498,11 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/) const noexcept
     {
         const Index stringToFindSize = FindCharsCount(pStringToFind);
         endIndex = Clamp(endIndex, static_cast<Index>(0), m_count);
@@ -511,7 +511,7 @@ export namespace jpt
         {
             if ((i + stringToFindSize) > endIndex)
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             if (AreStringsSame(m_pBuffer + i, pStringToFind, stringToFindSize))
@@ -520,23 +520,23 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::FindFirstOf(TChar charToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::FindFirstOf(TChar charToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/) const noexcept
     {
         return Find(charToFind, startIndex, endIndex);
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::FindFirstOf(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::FindFirstOf(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/) const noexcept
     {
         return Find(pStringToFind, startIndex, endIndex);
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::FindLastOf(TChar charToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::FindLastOf(TChar charToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/) const noexcept
     {
         endIndex = Clamp(endIndex, Index(0), m_count);
 
@@ -544,7 +544,7 @@ export namespace jpt
         {
             if (i < static_cast<int64>(startIndex))
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             if (m_pBuffer[i] == charToFind)
@@ -553,11 +553,11 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr Index String_Base<TChar, TAllocator>::FindLastOf(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/) const noexcept
+    constexpr Index String_Base<TChar, TAllocator>::FindLastOf(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/) const noexcept
     {
         const Index StringToFindSize = FindCharsCount(pStringToFind);
         endIndex = Clamp(endIndex, Index(0), m_count);
@@ -566,7 +566,7 @@ export namespace jpt
         {
             if ((i - StringToFindSize) < startIndex)
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             if (AreStringsSame(m_pBuffer + i - StringToFindSize, pStringToFind, StringToFindSize))
@@ -575,19 +575,19 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
     constexpr bool String_Base<TChar, TAllocator>::Has(TChar charToFind, Index startIndex, Index endIndex) const noexcept
     {
-        return Find(charToFind, startIndex, endIndex) != npos;
+        return Find(charToFind, startIndex, endIndex) != kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
     constexpr bool String_Base<TChar, TAllocator>::Has(const TChar* pStringToFind, Index startIndex, Index endIndex) const noexcept
     {
-        return Find(pStringToFind, startIndex, endIndex) != npos;
+        return Find(pStringToFind, startIndex, endIndex) != kInvalidIndex;
     }
 
     template<StringLiteral TChar, class TAllocator>
@@ -617,7 +617,7 @@ export namespace jpt
     template<StringLiteral TChar, class TAllocator>
     constexpr String_Base<TChar, TAllocator>& String_Base<TChar, TAllocator>::Replace(const TChar* pStringToFind, const TChar* pStringToReplace, Index startIndex, Index endIndex)
     {
-        if (endIndex == npos)
+        if (endIndex == kInvalidIndex)
         {
             endIndex = m_count;
         }
@@ -635,7 +635,7 @@ export namespace jpt
         while (true)
         {
             const Index foundPos = Find(pStringToFind, startIndex, endIndex);
-            if (foundPos == npos)
+            if (foundPos == kInvalidIndex)
             {
                 break;
             }
@@ -671,7 +671,7 @@ export namespace jpt
         while (true)
         {
             const Index keywordIndex = copy.Find(pKeyword);
-            if (keywordIndex == npos)
+            if (keywordIndex == kInvalidIndex)
             {
                 substrs.EmplaceBack(copy);
                 break;
@@ -693,7 +693,7 @@ export namespace jpt
         while (true)
         {
             const Index keywordIndex = copy.Find(keyword);
-            if (keywordIndex == npos)
+            if (keywordIndex == kInvalidIndex)
             {
                 substrs.EmplaceBack(copy);
                 break;
@@ -707,9 +707,9 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::SubStr(Index index, Index count /*= npos*/) const
+    constexpr String_Base<TChar, TAllocator> String_Base<TChar, TAllocator>::SubStr(Index index, Index count /*= kInvalidIndex*/) const
     {
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = m_count - index;
         }
@@ -751,10 +751,10 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr void String_Base<TChar, TAllocator>::TrimLeft(Index index /* = npos*/)
+    constexpr void String_Base<TChar, TAllocator>::TrimLeft(Index index /* = kInvalidIndex*/)
     {
-        // If index == npos, trim all the white spaces from the left
-        if (index == npos)
+        // If index == kInvalidIndex, trim all the white spaces from the left
+        if (index == kInvalidIndex)
         {
             Index i = 0;
             while (i < m_count && m_pBuffer[i] == ' ')
@@ -771,10 +771,10 @@ export namespace jpt
     }
 
     template<StringLiteral TChar, class TAllocator>
-    constexpr void String_Base<TChar, TAllocator>::TrimRight(Index index /* = npos*/)
+    constexpr void String_Base<TChar, TAllocator>::TrimRight(Index index /* = kInvalidIndex*/)
     {
-        // If index == npos, trim all the white spaces from the right
-        if (index == npos)
+        // If index == kInvalidIndex, trim all the white spaces from the right
+        if (index == kInvalidIndex)
         {
             Index i = m_count - 1;
             while (i >= 0 && m_pBuffer[i] == ' ')

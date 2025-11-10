@@ -47,7 +47,7 @@ namespace jpt
                 return i;
             }();
 
-        size_t valueEnd = npos;
+        size_t valueEnd = kInvalidIndex;
 
         // Is empty. Could be start of map
         if (valueStart == line.Count())
@@ -63,7 +63,7 @@ namespace jpt
         else
         {
             valueEnd = line.Find(",", valueStart);
-            if (valueEnd == npos)    // Last element. No comma
+            if (valueEnd == kInvalidIndex)    // Last element. No comma
             {
                 valueEnd = line.Count();
             }
@@ -118,7 +118,7 @@ namespace jpt
                     }();
 
                 size_t valueEnd = copy.Find(",", valueStart);
-                if (valueEnd == npos)
+                if (valueEnd == kInvalidIndex)
                 {
                     // Last element
                     arr.Add(ParseValueData(copy.SubStr(valueStart, copy.Count() - valueStart)));
@@ -148,7 +148,7 @@ namespace jpt
 
                 const size_t valueStart = copy.Find(":", keyEnd) + 1;
                 size_t valueEnd = copy.Find(",", valueStart);
-                if (valueEnd == npos)
+                if (valueEnd == kInvalidIndex)
                 {
                     valueEnd = copy.Count();
                 }
@@ -170,7 +170,7 @@ namespace jpt
         else
         {
             // Integer
-            if (valueStr.Find('.') == npos)
+            if (valueStr.Find('.') == kInvalidIndex)
             {
                 const int32 integer = CStrToInteger(valueStr.ConstBuffer(), valueStr.Count());
                 return integer;
@@ -201,7 +201,7 @@ namespace jpt
         {
             const String line = stdLine.c_str();
 
-            if (const size_t colonIndex = line.Find(":"); colonIndex != npos)
+            if (const size_t colonIndex = line.Find(":"); colonIndex != kInvalidIndex)
             {
                 const String keyStr = ParseKeyStr(line);
                 const String valueStr = ParseValueStr(line);

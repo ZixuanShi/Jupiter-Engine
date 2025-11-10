@@ -22,9 +22,6 @@ export namespace jpt
     template<typename T> 
     constexpr T kInvalidValue = kMax<T>;
 
-    /** Short version of invalid value regarding indexing */
-    constexpr size_t npos = kInvalidValue<size_t>;
-
     /** Any data sizeof(Type) larger than this will be considered large, and may trigger optimizations */
     constexpr size_t kSmallDataSize = 16;
 
