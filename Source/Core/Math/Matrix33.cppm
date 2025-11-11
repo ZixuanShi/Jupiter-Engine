@@ -35,42 +35,34 @@ export namespace jpt
                             T m20, T m21, T m22);
 
     public:
-        constexpr TMatrix33<T>  operator* (const TMatrix33<T>& rhs) const;
-        constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs);
-        constexpr Vector2<T>    operator* (const Vector2<T>& v) const;
-        constexpr Vector3<T>    operator* (const Vector3<T>& v) const;
+        [[nodiscard]] constexpr TMatrix33<T>  operator*(const TMatrix33<T>& rhs) const noexcept;
+        [[nodiscard]] constexpr Vector3<T>    operator*(const Vector3<T>& vector3) const noexcept;
+        constexpr TMatrix33<T>& operator*=(const TMatrix33<T>& rhs) noexcept;
 
-        constexpr       Vector3<T>& operator[](size_t index)       noexcept;
-        constexpr const Vector3<T>& operator[](size_t index) const noexcept;
+        [[nodiscard]] constexpr       Vector3<T>& operator[](size_t index)       noexcept;
+        [[nodiscard]] constexpr const Vector3<T>& operator[](size_t index) const noexcept;
 
     public:
         // Translation & Position
-        constexpr static TMatrix33 Translation(Vector2<T> v);
-        constexpr void Translate(Vector2<T> v);
+        [[nodiscard]] constexpr static TMatrix33 Translate(Vector2<T> v) noexcept;
 
         // Rotation & Orientation
-        constexpr static TMatrix33 Rotation(T radians);
-        constexpr void Rotate(T radians);
+        [[nodiscard]] constexpr static TMatrix33 Rotate(T radians) noexcept;
 
         // Scaling & Size
-        constexpr static TMatrix33 Scaling(Vector2<T> v);
-        constexpr static TMatrix33 Scaling(T scalar);
-        constexpr void Scale(Vector2<T> v);
-        constexpr void Scale(T scalar);
+        [[nodiscard]] constexpr static TMatrix33 Scale(Vector2<T> v) noexcept;
 
         /** Measures the volume of the parallelepiped spanned by the vectors of the matrix.    If determinant is 0, matrix is not invertible. */
-        constexpr T Determinant() const;
+        [[nodiscard]] constexpr static T Determinant(const TMatrix33& matrix) noexcept;
 
         /** Swaps elements across the main diagonal. Used in checking orthogonality and normalizing the matrix. */
-        constexpr static TMatrix33 Transposed(const TMatrix33& matrix);
-        constexpr void Transpose();
+        [[nodiscard]] constexpr static TMatrix33 Transpose(const TMatrix33& matrix) noexcept;
 
         /** Inverse matrix's behaviors. Undo */
-        constexpr static TMatrix33 Inverse(const TMatrix33& matrix);
-        constexpr void Invert();
+        [[nodiscard]] constexpr static TMatrix33 Inverse(const TMatrix33& m) noexcept;
 
         /** @return true if matrix is orthogonal. Validates that a matrix only contains rotation (no scaling/shearing) */
-        constexpr bool IsOrthogonal() const;
+        [[nodiscard]] constexpr bool IsOrthogonal() const noexcept;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -83,7 +75,15 @@ export namespace jpt
                lhs.m[1] == rhs.m[1] &&
                lhs.m[2] == rhs.m[2];
     }
-    
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator*(const TMatrix33<T>& matrix33, Vector2<T>& vector2) noexcept
+    {
+        const Vector3<T> vector3 = Vector3<T>(vector2, static_cast<T>(1));
+        const Vector3<T> result = matrix33 * vector3;
+        return Vector2<T>(result.x, result.y);
+    }
+
     template<Numeric T>
     constexpr String ToString(const TMatrix33<T>& m)
     {
@@ -120,7 +120,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::operator*(const TMatrix33<T>& rhs) const
+    constexpr TMatrix33<T> TMatrix33<T>::operator*(const TMatrix33<T>& rhs) const noexcept
     {
         TMatrix33<T> result;
 
@@ -139,21 +139,14 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T>& TMatrix33<T>::operator*=(const TMatrix33<T>& rhs)
+    constexpr TMatrix33<T>& TMatrix33<T>::operator*=(const TMatrix33<T>& rhs) noexcept
     {
         *this = *this * rhs;
         return *this;
     }
 
     template<Numeric T>
-    constexpr Vector2<T> TMatrix33<T>::operator*(const Vector2<T>& v) const
-    {
-        Vector3<T> result = *this * Vector3<T>(v, 1);
-        return Vector2<T>(result.x, result.y);
-    }
-
-    template<Numeric T>
-    constexpr Vector3<T> TMatrix33<T>::operator*(const Vector3<T>& v) const
+    constexpr Vector3<T> TMatrix33<T>::operator*(const Vector3<T>& v) const noexcept
     {
         Vector3<T> result;
         for (size_t i = 0; i < 3; ++i)
@@ -178,7 +171,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Translation(Vector2<T> v)
+    constexpr TMatrix33<T> TMatrix33<T>::Translate(Vector2<T> v) noexcept
     {
         return TMatrix33<T>(1,   0, 0,
                             0,   1, 0,
@@ -186,7 +179,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Rotation(T radians)
+    constexpr TMatrix33<T> TMatrix33<T>::Rotate(T radians) noexcept
     {
         const T cos = Cos(radians);
         const T sin = Sin(radians);
@@ -197,7 +190,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Scaling(Vector2<T> v)
+    constexpr TMatrix33<T> TMatrix33<T>::Scale(Vector2<T> v) noexcept
     {
         return TMatrix33<T>(v.x,   0, 0,
                               0, v.y, 0,
@@ -205,47 +198,15 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Scaling(T scalar)
+    constexpr T TMatrix33<T>::Determinant(const TMatrix33& matrix) noexcept
     {
-        return TMatrix33<T>(scalar,      0, 0,
-                                 0, scalar, 0,
-                                 0,      0, 1);
+        return matrix.m[0][0] * (matrix.m[1][1] * matrix.m[2][2] - matrix.m[1][2] * matrix.m[2][1]) -
+               matrix.m[0][1] * (matrix.m[1][0] * matrix.m[2][2] - matrix.m[1][2] * matrix.m[2][0]) +
+               matrix.m[0][2] * (matrix.m[1][0] * matrix.m[2][1] - matrix.m[1][1] * matrix.m[2][0]);
     }
 
     template<Numeric T>
-    constexpr void TMatrix33<T>::Translate(Vector2<T> v)
-    {
-        *this *= Translation(v); 
-    }
-
-    template<Numeric T>
-    constexpr void TMatrix33<T>::Rotate(T radians)
-    {
-        *this *= Rotation(radians);
-    }
-
-    template<Numeric T>
-    constexpr void TMatrix33<T>::Scale(Vector2<T> v)
-    {
-        *this *= Scaling(v);
-    }
-
-    template<Numeric T>
-    constexpr void TMatrix33<T>::Scale(T scalar)
-    {
-        *this *= Scaling(scalar);
-    }
-
-    template<Numeric T>
-    constexpr T TMatrix33<T>::Determinant() const
-    {
-        return m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
-               m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
-               m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
-    }
-
-    template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Transposed(const TMatrix33& matrix)
+    constexpr TMatrix33<T> TMatrix33<T>::Transpose(const TMatrix33& matrix) noexcept
     {
         return TMatrix33(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
                          matrix.m[0][1], matrix.m[1][1], matrix.m[2][1],
@@ -253,28 +214,12 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr void TMatrix33<T>::Transpose()
+    constexpr TMatrix33<T> TMatrix33<T>::Inverse(const TMatrix33& m) noexcept
     {
-        Swap(m[0][1], m[1][0]);
-        Swap(m[0][2], m[2][0]);
-        Swap(m[1][2], m[2][1]);
-    }
-
-    template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Inverse(const TMatrix33& matrix)
-    {
-        TMatrix33<T> result = matrix;
-        result.Invert();
-        return result;
-    }
-
-    template<Numeric T>
-    constexpr void TMatrix33<T>::Invert()
-    {
-        const T det = Determinant();
-        if (det == static_cast<T>(0))
+        const T det = TMatrix33<T>::Determinant(m);
+        if (AreValuesClose(det, static_cast<T>(0)))
         {
-            return;
+            return TMatrix33<T>();
         }
 
         const T invDet = static_cast<T>(1) / det;
@@ -290,15 +235,15 @@ export namespace jpt
         result.m[2][1] = (m[0][1] * m[2][0] - m[0][0] * m[2][1]) * invDet;
         result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
 
-        *this = result;
+        return result;
     }
 
     template<Numeric T>
-    constexpr bool TMatrix33<T>::IsOrthogonal() const
+    constexpr bool TMatrix33<T>::IsOrthogonal() const noexcept
     {
         const TMatrix33<T> inverse = Inverse(*this);
-        const TMatrix33<T> transposed = Transposed(*this);
-        return inverse == transposed;
+        const TMatrix33<T> transpose = Transpose(*this);
+        return inverse == transpose;
     }
 }
 
