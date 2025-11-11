@@ -11,6 +11,50 @@ import jpt.Utilities;
 import jpt.TypeDefs;
 import jpt.Math;
 
+bool UnitTests_Vec2f_Length()
+{
+    Vec2f v(3.0f, 4.0f);
+    JPT_ENSURE(v.Length() == 5.0f);
+    JPT_ENSURE(v.Length2() == 25.0f);
+
+    Vec2f zero(0.0f, 0.0f);
+    JPT_ENSURE(zero.Length() == 0.0f);
+    JPT_ENSURE(zero.Length2() == 0.0f);
+
+    Vec2f unitX(1.0f, 0.0f);
+    JPT_ENSURE(unitX.Length() == 1.0f);
+    JPT_ENSURE(unitX.Length2() == 1.0f);
+
+    Vec2f unitY(0.0f, 1.0f);
+    JPT_ENSURE(unitY.Length() == 1.0f);
+    JPT_ENSURE(unitY.Length2() == 1.0f);
+
+    Vec2f negative(-3.0f, -4.0f);
+    JPT_ENSURE(negative.Length() == 5.0f);
+    JPT_ENSURE(negative.Length2() == 25.0f);
+
+    return true;
+}
+
+bool UnitTests_Vec2f_Distance()
+{
+    Vec2f v1(1.0f, 2.0f);
+    Vec2f v2(4.0f, 6.0f);
+    JPT_ENSURE(v1.Distance(v2) == 5.0f);
+    JPT_ENSURE(v1.Distance2(v2) == 25.0f);
+
+    v1 = Vec2f(-1.0f, -2.0f);
+    v2 = Vec2f(-4.0f, -6.0f);
+    JPT_ENSURE(v1.Distance(v2) == 5.0f);
+    JPT_ENSURE(v1.Distance2(v2) == 25.0f);
+
+    v1 = Vec2f(0.0f, 0.0f);
+    JPT_ENSURE(jpt::AreValuesClose(v1.Distance(v2), 7.21110249f));
+    JPT_ENSURE(v1.Distance2(v2) == 52.0f);
+
+    return true;
+}
+
 bool UnitTests_Vec2f_Operations()
 {
     Vec2f v(2.0f, 2.0f);
@@ -82,7 +126,7 @@ bool UnitTests_Vec2f_Functionalities()
     return true;
 }
 
-bool RunUnitTests_Vector2_Angle()
+bool RunUnitTests_Vec2f_Angle()
 {
     Vec2f source(0.0f, 1.0f);
     Vec2f target(1.0f, 1.0f);
@@ -99,7 +143,7 @@ bool RunUnitTests_Vector2_Angle()
     return true;
 }
 
-bool RunUnitTests_Vector2_Rotation()
+bool RunUnitTests_Vec2f_Rotation()
 {
     Vec2f v1(0.0f, 2.0f);
     Vec2f v2(1.0f, -1.0f);
@@ -135,10 +179,12 @@ bool RunUnitTests_Vector2_Rotation()
 
 export bool RunUnitTests_Vector2()
 {
+    JPT_ENSURE(UnitTests_Vec2f_Length());
+    JPT_ENSURE(UnitTests_Vec2f_Distance());
     JPT_ENSURE(UnitTests_Vec2f_Operations());
     JPT_ENSURE(UnitTests_Vec2f_Functionalities());
-    JPT_ENSURE(RunUnitTests_Vector2_Angle());
-    JPT_ENSURE(RunUnitTests_Vector2_Rotation());
+    JPT_ENSURE(RunUnitTests_Vec2f_Angle());
+    JPT_ENSURE(RunUnitTests_Vec2f_Rotation());
     
     return true;
 }

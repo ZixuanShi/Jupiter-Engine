@@ -38,21 +38,10 @@ export namespace jpt
         constexpr Vector2(T x, T y);
 
     public:
-        [[nodiscard]] constexpr Vector2 operator+(Vector2 other) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator-(Vector2 other) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator*(Vector2 other) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator/(Vector2 other) const noexcept;
-
         constexpr Vector2& operator+=(Vector2 other) noexcept;
         constexpr Vector2& operator-=(Vector2 other) noexcept;
         constexpr Vector2& operator*=(Vector2 other) noexcept;
         constexpr Vector2& operator/=(Vector2 other) noexcept;
-
-        [[nodiscard]] constexpr Vector2 operator+(T scalar) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator-(T scalar) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator*(T scalar) const noexcept;
-        [[nodiscard]] constexpr Vector2 operator/(T scalar) const noexcept;
-
         constexpr Vector2& operator+=(T scalar) noexcept;
         constexpr Vector2& operator-=(T scalar) noexcept;
         constexpr Vector2& operator*=(T scalar) noexcept;
@@ -86,6 +75,60 @@ export namespace jpt
     {
         return AreValuesClose(lhs.x, rhs.x) &&
                AreValuesClose(lhs.y, rhs.y);
+    }
+    
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator-(Vector2<T> vector2) noexcept
+    {
+        return Vector2(-vector2.x, -vector2.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator+(Vector2<T> lhs, Vector2<T> rhs) noexcept
+    {
+        return Vector2(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator-(Vector2<T> lhs, Vector2<T> rhs) noexcept
+    {
+        return Vector2(lhs.x - rhs.x, lhs.y - rhs.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator*(Vector2<T> lhs, Vector2<T> rhs) noexcept
+    {
+        return Vector2(lhs.x * rhs.x, lhs.y * rhs.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator/(Vector2<T> lhs, Vector2<T> rhs) noexcept
+    {
+        return Vector2(lhs.x / rhs.x, lhs.y / rhs.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator+(Vector2<T> vector2, T scalar) noexcept
+    {
+        return Vector2(vector2.x + scalar, vector2.y + scalar);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator-(Vector2<T> vector2, T scalar) noexcept
+    {
+        return Vector2(scalar - vector2.x, scalar - vector2.y);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator*(Vector2<T> vector2, T scalar) noexcept
+    {
+        return Vector2(vector2.x * scalar, vector2.y * scalar);
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator/(Vector2<T> vector2, T scalar) noexcept
+    {
+        return Vector2(vector2.x / scalar, vector2.y / scalar);
     }
 
     template<Numeric T>
@@ -165,30 +208,6 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator+(Vector2 other) const noexcept
-    {
-        return Vector2(x + other.x, y + other.y);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator-(Vector2 other) const noexcept
-    {
-        return Vector2(x - other.x, y - other.y);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator*(Vector2 other) const noexcept
-    {
-        return Vector2(x * other.x, y * other.y);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator/(Vector2 other) const noexcept
-    {
-        return Vector2(x / other.x, y / other.y);
-    }
-
-    template<Numeric T>
     constexpr Vector2<T>& Vector2<T>::operator+=(Vector2 other) noexcept
     {
         x += other.x;
@@ -218,30 +237,6 @@ export namespace jpt
         x /= other.x;
         y /= other.y;
         return *this;
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator+(T scalar) const noexcept
-    {
-        return Vector2(x + scalar, y + scalar);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator-(T scalar) const noexcept
-    {
-        return Vector2(x - scalar, y - scalar);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator*(T scalar) const noexcept
-    {
-        return Vector2(x * scalar, y * scalar);
-    }
-
-    template<Numeric T>
-    constexpr Vector2<T> Vector2<T>::operator/(T scalar) const noexcept
-    {
-        return Vector2(x / scalar, y / scalar);
     }
 
     template<Numeric T>
@@ -297,13 +292,14 @@ export namespace jpt
     template<Numeric T>
     constexpr T Vector2<T>::Distance(Vector2 other) const noexcept
     {
-        return (*this - other).Length();
+        return Sqrt(Distance2(other));
     }
 
     template<Numeric T>
     constexpr T Vector2<T>::Distance2(Vector2 other) const noexcept
     {
-        return (*this - other).Length2();
+        return (x - other.x) * (x - other.x) + 
+               (y - other.y) * (y - other.y);
     }
 
     template<Numeric T>

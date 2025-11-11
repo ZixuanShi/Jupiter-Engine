@@ -114,7 +114,7 @@ bool UnitTests_Matrix33_Inverse()
     Matrix33 jptMat = Matrix33::Identity();
 
     // Translation
-    jptMat.Translate(Vec2(2.0f, 3.0f));
+    jptMat *= Matrix33::Translation(Vec2(2.0f, 3.0f));
 
     // Rotation
     jptMat.Rotate(jpt::ToRadians(90.0f));

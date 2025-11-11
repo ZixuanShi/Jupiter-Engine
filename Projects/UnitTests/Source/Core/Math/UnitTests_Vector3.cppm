@@ -12,6 +12,86 @@ import jpt.Utilities;
 import jpt.Math;
 import jpt.Constants;
 
+static bool UnitTests_Vec3f_Length()
+{
+    Vec3f v(1.0f, 2.0f, 2.0f);
+    JPT_ENSURE(v.Length() == 3.0f);
+    JPT_ENSURE(v.Length2() == 9.0f);
+    
+    Vec3f zero(0.0f, 0.0f, 0.0f);
+    JPT_ENSURE(zero.Length() == 0.0f);
+    JPT_ENSURE(zero.Length2() == 0.0f);
+    
+    Vec3f unitX(1.0f, 0.0f, 0.0f);
+    JPT_ENSURE(unitX.Length() == 1.0f);
+    JPT_ENSURE(unitX.Length2() == 1.0f);
+    
+    Vec3f unitY(0.0f, 1.0f, 0.0f);
+    JPT_ENSURE(unitY.Length() == 1.0f);
+    JPT_ENSURE(unitY.Length2() == 1.0f);
+    
+    Vec3f unitZ(0.0f, 0.0f, 1.0f);
+    JPT_ENSURE(unitZ.Length() == 1.0f);
+    JPT_ENSURE(unitZ.Length2() == 1.0f);
+
+    Vec3f negative(-1.0f, -2.0f, -2.0f);
+    JPT_ENSURE(negative.Length() == 3.0f);
+    JPT_ENSURE(negative.Length2() == 9.0f);
+    
+    return true;
+}
+
+static bool UnitTests_Vec3f_Distance()
+{
+    // Same point
+    Vec3f a(1.0f, 2.0f, 3.0f);
+    Vec3f b(1.0f, 2.0f, 3.0f);
+    JPT_ENSURE(a.Distance(b) == 0.0f);
+    JPT_ENSURE(a.Distance2(b) == 0.0f);
+
+    // Distance along X axis
+    Vec3f origin(0.0f, 0.0f, 0.0f);
+    Vec3f xPoint(3.0f, 0.0f, 0.0f);
+    JPT_ENSURE(origin.Distance(xPoint) == 3.0f);
+    JPT_ENSURE(origin.Distance2(xPoint) == 9.0f);
+
+    // Distance along Y axis
+    Vec3f yPoint(0.0f, 4.0f, 0.0f);
+    JPT_ENSURE(origin.Distance(yPoint) == 4.0f);
+    JPT_ENSURE(origin.Distance2(yPoint) == 16.0f);
+
+    // Distance along Z axis
+    Vec3f zPoint(0.0f, 0.0f, 5.0f);
+    JPT_ENSURE(origin.Distance(zPoint) == 5.0f);
+    JPT_ENSURE(origin.Distance2(zPoint) == 25.0f);
+
+    // 3D distance (Pythagorean theorem: sqrt(1^2 + 2^2 + 2^2) = 3)
+    Vec3f p1(0.0f, 0.0f, 0.0f);
+    Vec3f p2(1.0f, 2.0f, 2.0f);
+    JPT_ENSURE(p1.Distance(p2) == 3.0f);
+    JPT_ENSURE(p1.Distance2(p2) == 9.0f);
+
+    // Negative coordinates
+    Vec3f neg1(-1.0f, -2.0f, -2.0f);
+    Vec3f neg2(0.0f, 0.0f, 0.0f);
+    JPT_ENSURE(neg1.Distance(neg2) == 3.0f);
+    JPT_ENSURE(neg1.Distance2(neg2) == 9.0f);
+
+    // Symmetry test (distance A to B = distance B to A)
+    Vec3f v1(1.0f, 2.0f, 3.0f);
+    Vec3f v2(4.0f, 6.0f, 8.0f);
+    JPT_ENSURE(v1.Distance(v2) == v2.Distance(v1));
+    JPT_ENSURE(v1.Distance2(v2) == v2.Distance2(v1));
+
+    // Known distance: (0,0,0) to (3,4,0) = 5
+    Vec3f xyOrigin(0.0f, 0.0f, 0.0f);
+    Vec3f xyPoint(3.0f, 4.0f, 0.0f);
+    JPT_ENSURE(xyOrigin.Distance(xyPoint) == 5.0f);
+    JPT_ENSURE(xyOrigin.Distance2(xyPoint) == 25.0f);
+
+    return true;
+}
+
 static bool UnitTests_Vec3f_Operations()
 {
     Vec3f v(1.0f, 2.0f, 3.0f);
@@ -232,11 +312,13 @@ static bool UnitTests_Vec3f_Math()
 
 export bool RunUnitTests_Vector3()
 {
+    JPT_ENSURE(UnitTests_Vec3f_Length());
+    JPT_ENSURE(UnitTests_Vec3f_Distance());
     JPT_ENSURE(UnitTests_Vec3f_Operations());
     JPT_ENSURE(UnitTests_Vec3f_Cross());
     JPT_ENSURE(UnitTests_Vec3f_Angle());
     JPT_ENSURE(UnitTests_Vec3f_AngleSigned());
     JPT_ENSURE(UnitTests_Vec3f_Math());
-
+   
     return true;
 }

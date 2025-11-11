@@ -40,8 +40,8 @@ export namespace jpt
         constexpr Vector2<T>    operator* (const Vector2<T>& v) const;
         constexpr Vector3<T>    operator* (const Vector3<T>& v) const;
 
-        constexpr       Vector3<T>& operator[](size_t index)       noexcept { return m[index]; }
-        constexpr const Vector3<T>& operator[](size_t index) const noexcept { return m[index]; }
+        constexpr       Vector3<T>& operator[](size_t index)       noexcept;
+        constexpr const Vector3<T>& operator[](size_t index) const noexcept;
 
     public:
         // Translation & Position
@@ -163,6 +163,18 @@ export namespace jpt
                         m[2][i] * v[2];
         }
         return result;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>& TMatrix33<T>::operator[](size_t index) noexcept
+    {
+        return m[index];
+    }
+
+    template<Numeric T>
+    constexpr const Vector3<T>& TMatrix33<T>::operator[](size_t index) const noexcept
+    {
+        return m[index];
     }
 
     template<Numeric T>
