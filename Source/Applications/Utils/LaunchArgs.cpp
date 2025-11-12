@@ -39,13 +39,13 @@ namespace jpt
 
         while (true)
         {
-            const Index start = argumentsCopy.FindFirstOf('-');
+            const Index start = argumentsCopy.Find('-');
             if (start == kInvalidIndex)
             {
                 break;
             }
 
-            Index end = argumentsCopy.FindFirstOf('-', start + 1);
+            Index end = argumentsCopy.Find('-', start + 1);
             if (end == kInvalidIndex)
             {
                 end = argumentsCopy.Count();

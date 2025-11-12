@@ -153,7 +153,7 @@ export namespace jpt
                 path.PopBack(separatorLen);
             }
 
-            const size_t lastSeparatorIndex = path.FindLastOf(separator.ConstBuffer());
+            const size_t lastSeparatorIndex = path.FindLast(separator.ConstBuffer());
             if (lastSeparatorIndex == kInvalidIndex)
             {
                 JPT_ASSERT(false, "Path has no parent");
@@ -175,7 +175,7 @@ export namespace jpt
                 path.PopBack(separatorLen);
             }
 
-            const size_t lastSeparatorIndex = path.FindLastOf(separator.ConstBuffer());
+            const size_t lastSeparatorIndex = path.FindLast(separator.ConstBuffer());
             if (lastSeparatorIndex == kInvalidIndex)
             {
                 return *this;
