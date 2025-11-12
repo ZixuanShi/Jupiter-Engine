@@ -337,42 +337,36 @@ export namespace jpt
             return TMatrix44<T>::Identity();
         }
 
-        const T invDet = 1 / det;
+        const T invDet = static_cast<T>(1) / det;
 
-        const T a = m[0][0];
-        const T b = m[0][1];
-        const T c = m[0][2];
-        const T d = m[0][3];
-        const T e = m[1][0];
-        const T f = m[1][1];
-        const T g = m[1][2];
-        const T h = m[1][3];
-        const T i = m[2][0];
-        const T j = m[2][1];
-        const T k = m[2][2];
-        const T l = m[2][3];
-        const T q = m[3][0];
-        const T n = m[3][1];
-        const T o = m[3][2];
-        const T p = m[3][3];
+        // Column-major: m[col][row]
+        const T m00 = m.m[0][0], m01 = m.m[0][1], m02 = m.m[0][2], m03 = m.m[0][3];
+        const T m10 = m.m[1][0], m11 = m.m[1][1], m12 = m.m[1][2], m13 = m.m[1][3];
+        const T m20 = m.m[2][0], m21 = m.m[2][1], m22 = m.m[2][2], m23 = m.m[2][3];
+        const T m30 = m.m[3][0], m31 = m.m[3][1], m32 = m.m[3][2], m33 = m.m[3][3];
 
         TMatrix44<T> result;
-        result.m[0][0] = (f * k * p + g * l * n + h * j * o - f * l * o - g * j * p - h * k * n) * invDet;
-        result.m[0][1] = (b * l * o + c * j * p + d * k * n - b * k * p - c * l * n - d * j * o) * invDet;
-        result.m[0][2] = (b * g * p + c * h * n + d * f * o - b * h * o - c * f * p - d * g * n) * invDet;
-        result.m[0][3] = (b * h * k + c * f * l + d * g * j - b * g * l - c * h * j - d * f * k) * invDet;
-        result.m[1][0] = (e * l * o + g * i * p + h * k * q - e * k * p - g * l * q - h * i * o) * invDet;
-        result.m[1][1] = (a * k * p + c * l * q + d * i * o - a * l * o - c * i * p - d * k * q) * invDet;
-        result.m[1][2] = (a * h * o + c * f * p + d * g * q - a * g * p - c * h * q - d * f * o) * invDet;
-        result.m[1][3] = (a * g * l + c * h * q + d * f * k - a * h * k - c * f * l - d * g * q) * invDet;
-        result.m[2][0] = (e * j * p + f * l * q + h * i * n - e * l * n - f * i * p - h * j * q) * invDet;
-        result.m[2][1] = (a * l * n + b * i * p + d * j * q - a * j * p - b * l * q - d * i * n) * invDet;
-        result.m[2][2] = (a * f * p + b * h * q + d * e * n - a * h * n - b * e * p - d * f * q) * invDet;
-        result.m[2][3] = (a * h * j + b * e * l + d * f * i - a * f * l - b * h * i - d * e * j) * invDet;
-        result.m[3][0] = (e * k * n + f * i * o + g * j * q - e * j * o - f * k * q - g * i * n) * invDet;
-        result.m[3][1] = (a * j * o + b * k * q + c * i * n - a * k * n - b * i * o - c * j * q) * invDet;
-        result.m[3][2] = (a * g * n + b * e * o + c * f * q - a * f * o - b * g * q - c * e * n) * invDet;
-        result.m[3][3] = (a * f * k + b * g * q + c * e * j - a * g * j - b * e * k - c * f * q) * invDet;
+
+        // Calculate cofactor matrix (transposed to get adjugate)
+        result.m[0][0] =  (m11 * (m22 * m33 - m23 * m32) - m21 * (m12 * m33 - m13 * m32) + m31 * (m12 * m23 - m13 * m22)) * invDet;
+        result.m[1][0] = -(m10 * (m22 * m33 - m23 * m32) - m20 * (m12 * m33 - m13 * m32) + m30 * (m12 * m23 - m13 * m22)) * invDet;
+        result.m[2][0] =  (m10 * (m21 * m33 - m23 * m31) - m20 * (m11 * m33 - m13 * m31) + m30 * (m11 * m23 - m13 * m21)) * invDet;
+        result.m[3][0] = -(m10 * (m21 * m32 - m22 * m31) - m20 * (m11 * m32 - m12 * m31) + m30 * (m11 * m22 - m12 * m21)) * invDet;
+
+        result.m[0][1] = -(m01 * (m22 * m33 - m23 * m32) - m21 * (m02 * m33 - m03 * m32) + m31 * (m02 * m23 - m03 * m22)) * invDet;
+        result.m[1][1] =  (m00 * (m22 * m33 - m23 * m32) - m20 * (m02 * m33 - m03 * m32) + m30 * (m02 * m23 - m03 * m22)) * invDet;
+        result.m[2][1] = -(m00 * (m21 * m33 - m23 * m31) - m20 * (m01 * m33 - m03 * m31) + m30 * (m01 * m23 - m03 * m21)) * invDet;
+        result.m[3][1] =  (m00 * (m21 * m32 - m22 * m31) - m20 * (m01 * m32 - m02 * m31) + m30 * (m01 * m22 - m02 * m21)) * invDet;
+
+        result.m[0][2] =  (m01 * (m12 * m33 - m13 * m32) - m11 * (m02 * m33 - m03 * m32) + m31 * (m02 * m13 - m03 * m12)) * invDet;
+        result.m[1][2] = -(m00 * (m12 * m33 - m13 * m32) - m10 * (m02 * m33 - m03 * m32) + m30 * (m02 * m13 - m03 * m12)) * invDet;
+        result.m[2][2] =  (m00 * (m11 * m33 - m13 * m31) - m10 * (m01 * m33 - m03 * m31) + m30 * (m01 * m13 - m03 * m11)) * invDet;
+        result.m[3][2] = -(m00 * (m11 * m32 - m12 * m31) - m10 * (m01 * m32 - m02 * m31) + m30 * (m01 * m12 - m02 * m11)) * invDet;
+
+        result.m[0][3] = -(m01 * (m12 * m23 - m13 * m22) - m11 * (m02 * m23 - m03 * m22) + m21 * (m02 * m13 - m03 * m12)) * invDet;
+        result.m[1][3] =  (m00 * (m12 * m23 - m13 * m22) - m10 * (m02 * m23 - m03 * m22) + m20 * (m02 * m13 - m03 * m12)) * invDet;
+        result.m[2][3] = -(m00 * (m11 * m23 - m13 * m21) - m10 * (m01 * m23 - m03 * m21) + m20 * (m01 * m13 - m03 * m11)) * invDet;
+        result.m[3][3] =  (m00 * (m11 * m22 - m12 * m21) - m10 * (m01 * m22 - m02 * m21) + m20 * (m01 * m12 - m02 * m11)) * invDet;
 
         return result;
     }
@@ -399,16 +393,10 @@ export namespace jpt
     template<Numeric T>
     constexpr TMatrix44<T> TMatrix44<T>::LookAt(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up /* = Vector3<T>::Up()*/) noexcept
     {
-        // Calcualte the forward vector
         const Vector3<T> forward = (center - eye).Normalized();
-
-        // Calculate the right vector
         const Vector3<T> right = forward.Cross(up).Normalized();
-
-        // Calculate the up vector
         const Vector3<T> newUp = right.Cross(forward);
 
-        // Create the view matrix
         TMatrix44<T> result = TMatrix44<T>::Identity();
         result.m[0][0] = right.x;
         result.m[1][0] = right.y;
@@ -453,33 +441,19 @@ export namespace jpt
     template<Numeric T>
     constexpr T TMatrix44<T>::Determinant() const noexcept
     {
-        const T a = m[0][0];
-        const T b = m[0][1];
-        const T c = m[0][2];
-        const T d = m[0][3];
-        const T e = m[1][0];
-        const T f = m[1][1];
-        const T g = m[1][2];
-        const T h = m[1][3];
-        const T i = m[2][0];
-        const T j = m[2][1];
-        const T k = m[2][2];
-        const T l = m[2][3];
-        const T q = m[3][0];
-        const T n = m[3][1];
-        const T o = m[3][2];
-        const T p = m[3][3];
+        // Column-major: m[col][row]
+        const T m00 = m[0][0], m01 = m[0][1], m02 = m[0][2], m03 = m[0][3];
+        const T m10 = m[1][0], m11 = m[1][1], m12 = m[1][2], m13 = m[1][3];
+        const T m20 = m[2][0], m21 = m[2][1], m22 = m[2][2], m23 = m[2][3];
+        const T m30 = m[3][0], m31 = m[3][1], m32 = m[3][2], m33 = m[3][3];
 
-        const T det = a * f * k * p + a * g * l * n + a * h * j * o +
-                      b * e * l * p + b * g * i * p + b * h * k * n +
-                      c * e * j * p + c * f * l * q + c * h * i * q +
-                      d * e * k * n + d * f * i * o + d * g * j * q -
-                      a * f * l * o - a * g * j * p - a * h * k * q -
-                      b * e * k * o - b * g * l * q - b * h * i * p -
-                      c * e * l * n - c * f * i * p - c * h * j * q -
-                      d * e * j * n - d * f * k * q - d * g * i * l;
+        // Cofactor expansion along first column
+        const T c0 = m11 * (m22 * m33 - m23 * m32) - m21 * (m12 * m33 - m13 * m32) + m31 * (m12 * m23 - m13 * m22);
+        const T c1 = m10 * (m22 * m33 - m23 * m32) - m20 * (m12 * m33 - m13 * m32) + m30 * (m12 * m23 - m13 * m22);
+        const T c2 = m10 * (m21 * m33 - m23 * m31) - m20 * (m11 * m33 - m13 * m31) + m30 * (m11 * m23 - m13 * m21);
+        const T c3 = m10 * (m21 * m32 - m22 * m31) - m20 * (m11 * m32 - m12 * m31) + m30 * (m11 * m22 - m12 * m21);
 
-        return det;
+        return m00 * c0 - m01 * c1 + m02 * c2 - m03 * c3;
     }
 }
 

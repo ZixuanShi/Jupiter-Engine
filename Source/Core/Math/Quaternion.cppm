@@ -225,21 +225,31 @@ export namespace jpt
     template<Numeric T>
     constexpr TQuaternion<T> TQuaternion<T>::Slerp(const TQuaternion& start, const TQuaternion& end, T t) noexcept
     {
-        const T dot = start.Dot(end);
-        if (dot > static_cast<T>(1) - kEpsilon<T>)
+        T dot = start.Dot(end);
+
+        // Take the shorter path by negating end if dot is negative
+        TQuaternion adjustedEnd = end;
+        if (dot < static_cast<T>(0))
         {
-            return Lerp(start, end, t);
+            adjustedEnd = end * static_cast<T>(-1);
+            dot = -dot;
         }
 
-        const T theta  = Acos(dot);
+        // If quaternions are very close, use linear interpolation
+        if (dot > static_cast<T>(1) - kEpsilon<T>)
+        {
+            return Lerp(start, adjustedEnd, t).Normalized();
+        }
+
+        const T theta = Acos(dot);
+        const T sinTheta = Sin(theta);
         const T theta1 = theta * (static_cast<T>(1) - t);
         const T theta2 = theta * t;
         const T sinTheta1 = Sin(theta1);
         const T sinTheta2 = Sin(theta2);
-        const T sinTheta  = Sin(theta);
 
         const TQuaternion q1 = (start * sinTheta1) / sinTheta;
-        const TQuaternion q2 = (end   * sinTheta2) / sinTheta;
+        const TQuaternion q2 = (adjustedEnd * sinTheta2) / sinTheta;
         return q1 + q2;
     }
 

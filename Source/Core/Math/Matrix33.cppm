@@ -232,16 +232,25 @@ export namespace jpt
 
         const T invDet = static_cast<T>(1) / det;
 
+        // Column-major: m[col][row]
+        const T m00 = m.m[0][0], m01 = m.m[0][1], m02 = m.m[0][2];
+        const T m10 = m.m[1][0], m11 = m.m[1][1], m12 = m.m[1][2];
+        const T m20 = m.m[2][0], m21 = m.m[2][1], m22 = m.m[2][2];
+
         TMatrix33<T> result;
-        result.m[0][0] = (m[1][1] * m[2][2] - m[1][2] * m[2][1]) * invDet;
-        result.m[0][1] = (m[0][2] * m[2][1] - m[0][1] * m[2][2]) * invDet;
-        result.m[0][2] = (m[0][1] * m[1][2] - m[0][2] * m[1][1]) * invDet;
-        result.m[1][0] = (m[1][2] * m[2][0] - m[1][0] * m[2][2]) * invDet;
-        result.m[1][1] = (m[0][0] * m[2][2] - m[0][2] * m[2][0]) * invDet;
-        result.m[1][2] = (m[0][2] * m[1][0] - m[0][0] * m[1][2]) * invDet;
-        result.m[2][0] = (m[1][0] * m[2][1] - m[1][1] * m[2][0]) * invDet;
-        result.m[2][1] = (m[0][1] * m[2][0] - m[0][0] * m[2][1]) * invDet;
-        result.m[2][2] = (m[0][0] * m[1][1] - m[0][1] * m[1][0]) * invDet;
+
+        // Adjugate matrix (transpose of cofactor matrix) divided by determinant
+        result.m[0][0] = (m11 * m22 - m12 * m21) * invDet;
+        result.m[0][1] = (m02 * m21 - m01 * m22) * invDet;
+        result.m[0][2] = (m01 * m12 - m02 * m11) * invDet;
+
+        result.m[1][0] = (m12 * m20 - m10 * m22) * invDet;
+        result.m[1][1] = (m00 * m22 - m02 * m20) * invDet;
+        result.m[1][2] = (m02 * m10 - m00 * m12) * invDet;
+
+        result.m[2][0] = (m10 * m21 - m11 * m20) * invDet;
+        result.m[2][1] = (m01 * m20 - m00 * m21) * invDet;
+        result.m[2][2] = (m00 * m11 - m01 * m10) * invDet;
 
         return result;
     }
