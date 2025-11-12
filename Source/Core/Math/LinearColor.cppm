@@ -15,38 +15,38 @@ export namespace jpt
     {
 #pragma region Presets
     public:
-        static consteval LinearColor Black()        { return {  0.0f,  0.0f,  0.0f }; }
-        static consteval LinearColor White()        { return {  1.0f,  1.0f,  1.0f }; }
-        static consteval LinearColor Red()          { return {  1.0f,  0.0f,  0.0f }; }
-        static consteval LinearColor Green()        { return {  0.0f,  1.0f,  0.0f }; }
-        static consteval LinearColor Blue()         { return {  0.0f,  0.0f,  1.0f }; }
-        static consteval LinearColor Yellow()       { return {  1.0f,  1.0f,  0.0f }; }
-        static consteval LinearColor Magenta()      { return {  1.0f,  0.0f,  1.0f }; }
-        static consteval LinearColor Cyan()         { return {  0.0f,  1.0f,  1.0f }; }
-        static consteval LinearColor Gray()         { return {  0.5f,  0.5f,  0.5f }; }
-        static consteval LinearColor LightGray()    { return { 0.75f, 0.75f, 0.75f }; }
-        static consteval LinearColor DarkGray()     { return { 0.25f, 0.25f, 0.25f }; }
-        static consteval LinearColor LightRed()     { return {  1.0f,  0.5f,  0.5f }; }
-        static consteval LinearColor LightGreen()   { return {  0.5f,  1.0f,  0.5f }; }
-        static consteval LinearColor LightBlue()    { return {  0.5f,  0.5f,  1.0f }; }
-        static consteval LinearColor LightYellow()  { return {  1.0f,  1.0f,  0.5f }; }
-        static consteval LinearColor LightMagenta() { return {  1.0f,  0.5f,  1.0f }; }
-        static consteval LinearColor LightCyan()    { return {  0.5f,  1.0f,  1.0f }; }
-        static consteval LinearColor DarkRed()      { return {  0.5f,  0.0f,  0.0f }; }
-        static consteval LinearColor DarkGreen()    { return {  0.0f,  0.5f,  0.0f }; }
-        static consteval LinearColor DarkBlue()     { return {  0.0f,  0.0f,  0.5f }; }
-        static consteval LinearColor DarkYellow()   { return {  0.5f,  0.5f,  0.0f }; }
-        static consteval LinearColor DarkMagenta()  { return {  0.5f,  0.0f,  0.5f }; }
-        static consteval LinearColor DarkCyan()     { return {  0.0f,  0.5f,  0.5f }; }
-        static consteval LinearColor Orange()       { return {  1.0f,  0.5f,  0.0f }; }
-        static consteval LinearColor Brown()        { return {  0.6f,  0.4f,  0.2f }; }
-        static consteval LinearColor Pink()         { return {  1.0f, 0.75f,  0.8f }; }
-        static consteval LinearColor Purple()       { return {  0.5f,  0.0f,  0.5f }; }
-        static consteval LinearColor Violet()       { return {  0.5f,  0.0f,  1.0f }; }
-        static consteval LinearColor Gold()         { return {  1.0f, 0.84f,  0.0f }; }
-        static consteval LinearColor Silver()       { return { 0.75f, 0.75f, 0.75f }; }
-        static consteval LinearColor Bronze()       { return {  0.8f,  0.5f,  0.2f }; }
-        static consteval LinearColor Transparent()  { return {  0.0f,  0.0f,  0.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Black()       noexcept { return {  0.0f,  0.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor White()       noexcept { return {  1.0f,  1.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor Red()         noexcept { return {  1.0f,  0.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Green()       noexcept { return {  0.0f,  1.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Blue()        noexcept { return {  0.0f,  0.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor Yellow()      noexcept { return {  1.0f,  1.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Magenta()     noexcept { return {  1.0f,  0.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor Cyan()        noexcept { return {  0.0f,  1.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor Gray()        noexcept { return {  0.5f,  0.5f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor LightGray()   noexcept { return { 0.75f, 0.75f, 0.75f }; }
+        [[nodiscard]] static consteval LinearColor DarkGray()    noexcept { return { 0.25f, 0.25f, 0.25f }; }
+        [[nodiscard]] static consteval LinearColor LightRed()    noexcept { return {  1.0f,  0.5f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor LightGreen()  noexcept { return {  0.5f,  1.0f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor LightBlue()   noexcept { return {  0.5f,  0.5f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor LightYellow() noexcept { return {  1.0f,  1.0f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor LightMagenta()noexcept { return {  1.0f,  0.5f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor LightCyan()   noexcept { return {  0.5f,  1.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor DarkRed()     noexcept { return {  0.5f,  0.0f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor DarkGreen()   noexcept { return {  0.0f,  0.5f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor DarkBlue()    noexcept { return {  0.0f,  0.0f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor DarkYellow()  noexcept { return {  0.5f,  0.5f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor DarkMagenta() noexcept { return {  0.5f,  0.0f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor DarkCyan()    noexcept { return {  0.0f,  0.5f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor Orange()      noexcept { return {  1.0f,  0.5f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Brown()       noexcept { return {  0.6f,  0.4f,  0.2f }; }
+        [[nodiscard]] static consteval LinearColor Pink()        noexcept { return {  1.0f, 0.75f,  0.8f }; }
+        [[nodiscard]] static consteval LinearColor Purple()      noexcept { return {  0.5f,  0.0f,  0.5f }; }
+        [[nodiscard]] static consteval LinearColor Violet()      noexcept { return {  0.5f,  0.0f,  1.0f }; }
+        [[nodiscard]] static consteval LinearColor Gold()        noexcept { return {  1.0f, 0.84f,  0.0f }; }
+        [[nodiscard]] static consteval LinearColor Silver()      noexcept { return { 0.75f, 0.75f, 0.75f }; }
+        [[nodiscard]] static consteval LinearColor Bronze()      noexcept { return {  0.8f,  0.5f,  0.2f }; }
+        [[nodiscard]] static consteval LinearColor Transparent() noexcept { return {  0.0f,  0.0f,  0.0f,  0.0f }; }
 #pragma endregion Presets
 
     public:
@@ -60,10 +60,10 @@ export namespace jpt
         constexpr LinearColor(uint32 rgba) noexcept;
         constexpr LinearColor(float32 r, float32 g, float32 b, float32 a = 1.0f) noexcept;
 
-        constexpr LinearColor operator+(LinearColor other) const noexcept;
-        constexpr LinearColor operator-(LinearColor other) const noexcept;
-        constexpr LinearColor operator*(float32 scalar) const noexcept;
-        constexpr LinearColor operator/(float32 scalar) const noexcept;
+        [[nodiscard]] constexpr LinearColor operator+(LinearColor other) const noexcept;
+        [[nodiscard]] constexpr LinearColor operator-(LinearColor other) const noexcept;
+        [[nodiscard]] constexpr LinearColor operator*(float32 scalar) const noexcept;
+        [[nodiscard]] constexpr LinearColor operator/(float32 scalar) const noexcept;
 
         constexpr LinearColor& operator+=(LinearColor other) noexcept;
         constexpr LinearColor& operator-=(LinearColor other) noexcept;
@@ -71,7 +71,7 @@ export namespace jpt
         constexpr LinearColor& operator/=(float32 scalar) noexcept;
 
         constexpr void FromRGBA(uint32 rgba) noexcept;
-        constexpr uint32 ToRGBA() const noexcept;
+        [[nodiscard]] constexpr uint32 ToRGBA() const noexcept;
     };
 
     // ------------------------------------------------------------------------------------------------

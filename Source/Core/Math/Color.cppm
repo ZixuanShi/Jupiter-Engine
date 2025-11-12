@@ -16,38 +16,38 @@ export namespace jpt
     {
 #pragma region Presets
     public:
-        static consteval Color Black()        { return {   0,   0,   0 }; }
-        static consteval Color White()        { return { 255, 255, 255 }; }
-        static consteval Color Red()          { return { 255,   0,   0 }; }
-        static consteval Color Green()        { return {   0, 255,   0 }; }
-        static consteval Color Blue()         { return {   0,   0, 255 }; }
-        static consteval Color Yellow()       { return { 255, 255,   0 }; }
-        static consteval Color Magenta()      { return { 255,   0, 255 }; }
-        static consteval Color Cyan()         { return {   0, 255, 255 }; }
-        static consteval Color Gray()         { return { 128, 128, 128 }; }
-        static consteval Color LightGray()    { return { 192, 192, 192 }; }
-        static consteval Color DarkGray()     { return {  64,  64,  64 }; }
-        static consteval Color LightRed()     { return { 255, 128, 128 }; }
-        static consteval Color LightGreen()   { return { 128, 255, 128 }; }
-        static consteval Color LightBlue()    { return { 128, 128, 255 }; }
-        static consteval Color LightYellow()  { return { 255, 255, 128 }; }
-        static consteval Color LightMagenta() { return { 255, 128, 255 }; }
-        static consteval Color LightCyan()    { return { 128, 255, 255 }; }
-        static consteval Color DarkRed()      { return { 128,   0,   0 }; }
-        static consteval Color DarkGreen()    { return {   0, 128,   0 }; }
-        static consteval Color DarkBlue()     { return {   0,   0, 128 }; }
-        static consteval Color DarkYellow()   { return { 128, 128,   0 }; }
-        static consteval Color DarkMagenta()  { return { 128,   0, 128 }; }
-        static consteval Color DarkCyan()     { return {   0, 128, 128 }; }
-        static consteval Color Orange()       { return { 255, 165,   0 }; }
-        static consteval Color Brown()        { return { 165,  42,  42 }; }
-        static consteval Color Pink()         { return { 255, 192, 203 }; }
-        static consteval Color Purple()       { return { 128,   0, 128 }; }
-        static consteval Color Violet()       { return { 238, 130, 238 }; }
-        static consteval Color Gold()         { return { 255, 215,   0 }; }
-        static consteval Color Silver()       { return { 192, 192, 192 }; }
-        static consteval Color Bronze()       { return { 205, 127,  50 }; }
-        static consteval Color Transparent()  { return {   0,   0,   0,   0 }; }
+        [[nodiscard]] static consteval Color Black()        noexcept { return {   0,   0,   0 }; }
+        [[nodiscard]] static consteval Color White()        noexcept { return { 255, 255, 255 }; }
+        [[nodiscard]] static consteval Color Red()          noexcept { return { 255,   0,   0 }; }
+        [[nodiscard]] static consteval Color Green()        noexcept { return {   0, 255,   0 }; }
+        [[nodiscard]] static consteval Color Blue()         noexcept { return {   0,   0, 255 }; }
+        [[nodiscard]] static consteval Color Yellow()       noexcept { return { 255, 255,   0 }; }
+        [[nodiscard]] static consteval Color Magenta()      noexcept { return { 255,   0, 255 }; }
+        [[nodiscard]] static consteval Color Cyan()         noexcept { return {   0, 255, 255 }; }
+        [[nodiscard]] static consteval Color Gray()         noexcept { return { 128, 128, 128 }; }
+        [[nodiscard]] static consteval Color LightGray()    noexcept { return { 192, 192, 192 }; }
+        [[nodiscard]] static consteval Color DarkGray()     noexcept { return {  64,  64,  64 }; }
+        [[nodiscard]] static consteval Color LightRed()     noexcept { return { 255, 128, 128 }; }
+        [[nodiscard]] static consteval Color LightGreen()   noexcept { return { 128, 255, 128 }; }
+        [[nodiscard]] static consteval Color LightBlue()    noexcept { return { 128, 128, 255 }; }
+        [[nodiscard]] static consteval Color LightYellow()  noexcept { return { 255, 255, 128 }; }
+        [[nodiscard]] static consteval Color LightMagenta() noexcept { return { 255, 128, 255 }; }
+        [[nodiscard]] static consteval Color LightCyan()    noexcept { return { 128, 255, 255 }; }
+        [[nodiscard]] static consteval Color DarkRed()      noexcept { return { 128,   0,   0 }; }
+        [[nodiscard]] static consteval Color DarkGreen()    noexcept { return {   0, 128,   0 }; }
+        [[nodiscard]] static consteval Color DarkBlue()     noexcept { return {   0,   0, 128 }; }
+        [[nodiscard]] static consteval Color DarkYellow()   noexcept { return { 128, 128,   0 }; }
+        [[nodiscard]] static consteval Color DarkMagenta()  noexcept { return { 128,   0, 128 }; }
+        [[nodiscard]] static consteval Color DarkCyan()     noexcept { return {   0, 128, 128 }; }
+        [[nodiscard]] static consteval Color Orange()       noexcept { return { 255, 165,   0 }; }
+        [[nodiscard]] static consteval Color Brown()        noexcept { return { 165,  42,  42 }; }
+        [[nodiscard]] static consteval Color Pink()         noexcept { return { 255, 192, 203 }; }
+        [[nodiscard]] static consteval Color Purple()       noexcept { return { 128,   0, 128 }; }
+        [[nodiscard]] static consteval Color Violet()       noexcept { return { 238, 130, 238 }; }
+        [[nodiscard]] static consteval Color Gold()         noexcept { return { 255, 215,   0 }; }
+        [[nodiscard]] static consteval Color Silver()       noexcept { return { 192, 192, 192 }; }
+        [[nodiscard]] static consteval Color Bronze()       noexcept { return { 205, 127,  50 }; }
+        [[nodiscard]] static consteval Color Transparent()  noexcept { return {   0,   0,   0,   0 }; }
 #pragma endregion Presets
 
     public:
@@ -62,10 +62,10 @@ export namespace jpt
         constexpr Color(LinearColor linearColor) noexcept;
         constexpr Color(uint8 r, uint8 g, uint8 b, uint8 a = 255) noexcept;
 
-        constexpr Color operator+(Color other) const noexcept;
-        constexpr Color operator-(Color other) const noexcept;
-        constexpr Color operator*(float32 scalar) const noexcept;
-        constexpr Color operator/(float32 scalar) const noexcept;
+        [[nodiscard]] constexpr Color operator+(Color other) const noexcept;
+        [[nodiscard]] constexpr Color operator-(Color other) const noexcept;
+        [[nodiscard]] constexpr Color operator*(float32 scalar) const noexcept;
+        [[nodiscard]] constexpr Color operator/(float32 scalar) const noexcept;
 
         constexpr Color& operator+=(Color other) noexcept;
         constexpr Color& operator-=(Color other) noexcept;
@@ -75,7 +75,7 @@ export namespace jpt
         constexpr void FromRGBA(uint32 rgba) noexcept;
         constexpr void FromLinearColor(LinearColor linearColor) noexcept;
 
-        constexpr uint32 ToRGBA() const noexcept;
+        [[nodiscard]] constexpr uint32 ToRGBA() const noexcept;
     };
 
     // ------------------------------------------------------------------------------------------------
