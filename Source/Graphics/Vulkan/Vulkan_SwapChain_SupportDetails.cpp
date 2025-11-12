@@ -66,7 +66,7 @@ namespace jpt::Vulkan
 
     VkExtent2D SwapChainSupportDetails::GetExtent(Window* pWindow) const
     {
-        if (capabilities.currentExtent.width != Constants<uint32>::kMax)
+        if (capabilities.currentExtent.width != kMax<uint32>)
         {
             return capabilities.currentExtent;
         }

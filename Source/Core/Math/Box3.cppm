@@ -53,7 +53,7 @@ export namespace jpt
     template<Numeric T>
     constexpr Vector3<T> TBox3<T>::HalfSize() const noexcept
     {
-        return Size() / 2;
+        return Size() / static_cast<T>(2);
     }
 
     template<Numeric T>

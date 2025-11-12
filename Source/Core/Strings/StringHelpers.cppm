@@ -64,13 +64,13 @@ export namespace jpt
     }
 
     /** @return Heap allocated Buffer with content of input string. Caller needs to take ownership of buffer. i.e. Memory Managing, deleting */
-    wchar_t* ToWChars(const char* pCStr, Index count = npos)
+    wchar_t* ToWChars(const char* pCStr, Index count = kInvalidIndex)
     {
         if (!pCStr || count == 0)
         {
             return nullptr;
         }
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pCStr);
         }
@@ -83,13 +83,13 @@ export namespace jpt
         return pBuffer;
     }
 
-    char* ToChars(const wchar_t* pWStr, Index count = npos)
+    char* ToChars(const wchar_t* pWStr, Index count = kInvalidIndex)
     {
         if (!pWStr || count == 0)
         {
             return nullptr;
         }
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pWStr);
         }
@@ -134,7 +134,7 @@ export namespace jpt
         Optional one size parameter indicates how many characters should it compare from begin
         Optional two size parameters indicates the first and second string's size in order
         @return        
-        - npos if two C-Style strings within the given size are identical. 
+        - kInvalidIndex if two C-Style strings within the given size are identical. 
         - 0 maybe strings' sizes are not equal
         - 0 to size for the index of of the first different char found in two strings */
     template<StringLiteral TChar>
@@ -153,7 +153,7 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
     template<StringLiteral TChar>
     constexpr Index StrCmp(const TChar* pString1, const TChar* pString2, Index count)
@@ -170,19 +170,19 @@ export namespace jpt
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, Index string1Count, Index string2Count)
     {
-        return StrCmp(pString1, pString2, string1Count, string2Count) == npos;
+        return StrCmp(pString1, pString2, string1Count, string2Count) == kInvalidIndex;
     }
 
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2, Index count)
     {
-        return StrCmp(pString1, pString2, count) == npos;
+        return StrCmp(pString1, pString2, count) == kInvalidIndex;
     }
 
     template<StringLiteral TChar>
     constexpr bool AreStringsSame(const TChar* pString1, const TChar* pString2)
     {
-        return StrCmp(pString1, pString2) == npos;
+        return StrCmp(pString1, pString2) == kInvalidIndex;
     }
 
     template<StringLiteral TChar = char>
@@ -453,9 +453,9 @@ export namespace jpt
         @param count        Desired count to parse from start of pBuffer
         @param base         Decimal, Hex, etc. If it's Hex, Ignore 0x prefix */
     template<StringLiteral TChar = char, Integral TInt = int32>
-    constexpr TInt CStrToInteger(const TChar* pBuffer, Index count = npos, EIntBase base = EIntBase::Decimal)
+    constexpr TInt CStrToInteger(const TChar* pBuffer, Index count = kInvalidIndex, EIntBase base = EIntBase::Decimal)
     {
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pBuffer);
         }
@@ -551,11 +551,11 @@ export namespace jpt
 
     /** @note    Will ignore the 'f' is there's any */
     template<StringLiteral TChar = char, Floating TFloat = float32>
-    constexpr TFloat CStrToFloat(const TChar* pBuffer, Index count = npos)
+    constexpr TFloat CStrToFloat(const TChar* pBuffer, Index count = kInvalidIndex)
     {
         // Parse two integral parts of the precision dot, then combine them
 
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pBuffer);
         }

@@ -35,16 +35,6 @@ import jpt.Utilities;
                                                  
 #define JPT_ENSURE(condition, ...)               \
     JPT_VERIFY(condition, false, __VA_ARGS__)    
-                                                 
-/**< Slient Return */                             
-#define JPT_RETURN_IF(condition, returnValue)    \
-    if ((condition))                             \
-    {                                            \
-        return returnValue;                      \
-    }                                             
-                                                 
-#define JPT_EXIT_IF(condition)                   \
-    JPT_RETURN_IF(condition, void())
 
 #pragma endregion
 

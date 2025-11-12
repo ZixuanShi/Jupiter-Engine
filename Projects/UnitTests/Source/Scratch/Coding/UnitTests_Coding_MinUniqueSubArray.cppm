@@ -20,7 +20,7 @@ import jpt.Math;
 //        return 1;
 //    }
 //
-//    int32 minScore = jpt::Constants<int32>::kMax;
+//    int32 minScore = jpt::kMax<int32>;
 //
 //    for (size_t beginIndex = 0; beginIndex < watchHistory.Count(); ++beginIndex)
 //    {
@@ -64,7 +64,7 @@ int32 GetMinScore(const jpt::DynamicArray<Id>& watchHistory, Id series1, Id seri
         return 1;
     }
 
-    int32 minScore = jpt::Constants<int32>::kMax;
+    int32 minScore = jpt::kMax<int32>;
 
     // Find the subarrays that starts and ends with series 1 or 2
     size_t beginIndex = 0;

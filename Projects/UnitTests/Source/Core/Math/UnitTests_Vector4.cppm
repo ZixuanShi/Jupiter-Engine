@@ -13,8 +13,6 @@ import jpt.Utilities;
 
 bool UnitTests_Vector4()
 {
-    Vec4f v1(1.0f, 2.0f, 3.0f, 4.0f);
-    //JPT_LOG(v1);
     return true;
 }
 

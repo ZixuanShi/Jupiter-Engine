@@ -17,8 +17,8 @@ import jpt.DynamicArray;
 template<jpt::Integral TInt>
 struct EnumData
 {
-    TInt min = jpt::Constants<TInt>::kMax;    /**< The min value of this enum */
-    TInt max = jpt::Constants<TInt>::kMin;    /**< The max value of this enum */
+    TInt min = jpt::kMax<TInt>;    /**< The min value of this enum */
+    TInt max = jpt::kMin<TInt>;    /**< The max value of this enum */
     jpt::HashMap<TInt, jpt::String> names;    /**< Key by Enum Value, Value is the value's associated string name */
 };
 

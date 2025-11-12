@@ -15,7 +15,7 @@ import jpt.Optional;
 jpt::Optional<uint32> GetBestSeat(const jpt::DynamicArray<uint32>& seats)
 {
     uint32 bestSeat = jpt::kInvalidValue<uint32>;
-    int32 bestScore = jpt::Constants<uint32>::kMin;
+    int32 bestScore = jpt::kMin<uint32>;
     for (uint32 i = 0; i < seats.Count(); ++i)
     {
         if (seats[i] == 1)

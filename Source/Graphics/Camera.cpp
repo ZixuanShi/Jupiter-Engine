@@ -39,7 +39,7 @@ namespace jpt
 
     void Camera::Update(TimePrecision deltaSeconds)
     {
-        const Vec3 right = Vec3::Cross(Vec3::Up(), m_forward);
+        const Vec3 right = Vec3::Up().Cross(m_forward);
 
         m_positionWS +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
         m_positionWS += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
@@ -105,7 +105,7 @@ namespace jpt
         }
         else if (state == Input::KeyState::Released)
         {
-            m_lockMousePos = Vec2i(Constants<int32>::kMax);
+            m_lockMousePos = Vec2i(kMax<int32>);
 
             m_pWindow->SetCursorVisible(true);
             m_pWindow = nullptr;
@@ -115,7 +115,7 @@ namespace jpt
     void Camera::OnMouseMove(const Event_Mouse_Move& eventMouseMove)
     {
         // If the last mouse position is invalid, means the right mouse button is not pressed and shouldn't rotate by mouse axis. See OnMouseButton()
-        if (m_lockMousePos == Vec2i(Constants<int32>::kMax))
+        if (m_lockMousePos == Vec2i(kMax<int32>))
         {
             return;
         }
@@ -149,7 +149,7 @@ namespace jpt
             case MouseMode::Pan:
             {
                 // Move the camera up/down and left/right
-                m_positionWS += Vec3::Cross(Vec3::Up(), m_forward) * dx * kSensitivity;
+                m_positionWS += Vec3::Up().Cross(m_forward) * dx * kSensitivity;
                 m_positionWS += Vec3::Up() * dy * kSensitivity;
 
                 break;

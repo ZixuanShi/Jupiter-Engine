@@ -29,7 +29,7 @@ template<Integral TInt>
 Optional<Pair<TInt, TInt>> EvaluateOperator(const String& expression, const String& operatorStr)
 {
     const size_t operatorIndex = expression.Find(operatorStr.ConstBuffer());
-    if (operatorIndex == npos)
+    if (operatorIndex == kInvalidIndex)
     {
         return Optional<Pair<TInt, TInt>>();
     }
@@ -94,7 +94,7 @@ EnumData<TInt> GenerateData(const char* pSource)
         String name;
 
         // If token Has an equal sign, then it is a name=value pair. We need to extract the value and assign it to the key.
-        if (const size_t equalIndex = token.Find('='); equalIndex != npos)
+        if (const size_t equalIndex = token.Find('='); equalIndex != kInvalidIndex)
         {
             name = token.SubStr(0, equalIndex);
 

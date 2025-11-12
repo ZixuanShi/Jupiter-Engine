@@ -45,64 +45,64 @@ export namespace jpt
         StringView_Base& operator=(const String_Base<TChar>& string);
 
         // Element Access
-        constexpr const TChar* ConstBuffer()    const { return m_pBuffer;               } 
-        constexpr const TChar& At(Index index)  const { return m_pBuffer[index];        }
-        constexpr const TChar& Front()          const { return m_pBuffer[0];            }
-        constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1];  }
-        constexpr const TChar& operator[](Index index) const { return m_pBuffer[index]; }
+        [[nodiscard]] constexpr const TChar* ConstBuffer()    const { return m_pBuffer; }
+        [[nodiscard]] constexpr const TChar& At(Index index)  const { return m_pBuffer[index]; }
+        [[nodiscard]] constexpr const TChar& Front()          const { return m_pBuffer[0]; }
+        [[nodiscard]] constexpr const TChar& Back()           const { return m_pBuffer[m_count - 1]; }
+        [[nodiscard]] constexpr const TChar& operator[](Index index) const { return m_pBuffer[index]; }
 
         // Iterators
-        constexpr Iterator begin() noexcept;
-        constexpr Iterator end() noexcept;
-        constexpr ConstIterator begin()  const noexcept;
-        constexpr ConstIterator cbegin() const noexcept;
-        constexpr ConstIterator end()    const noexcept;
-        constexpr ConstIterator cend()   const noexcept;
+        [[nodiscard]] constexpr Iterator begin() noexcept;
+        [[nodiscard]] constexpr Iterator end() noexcept;
+        [[nodiscard]] constexpr ConstIterator begin()  const noexcept;
+        [[nodiscard]] constexpr ConstIterator cbegin() const noexcept;
+        [[nodiscard]] constexpr ConstIterator end()    const noexcept;
+        [[nodiscard]] constexpr ConstIterator cend()   const noexcept;
 
         // Capacity
-        constexpr Index Count() const { return m_count; }
-        constexpr bool IsEmpty() const { return m_count == 0; }
+        [[nodiscard]] constexpr Index Count() const noexcept;
+        [[nodiscard]] constexpr bool IsEmpty() const noexcept;
 
         /** @return        A sub string within the given range at index and length */
-        constexpr StringView_Base SubStr(Index index, Index count = npos) const;
+        [[nodiscard]] constexpr StringView_Base SubStr(Index index, Index count = kInvalidIndex) const;
 
         /** @return     true if the string view starts with the given prefix */
-        constexpr bool StartsWith(const TChar* CString, Index count) const;
-        constexpr bool StartsWith(const TChar* CString) const { return StartsWith(CString, FindCharsCount(CString)); }
+        [[nodiscard]] constexpr bool StartsWith(const TChar* CString, Index count) const;
+        [[nodiscard]] constexpr bool StartsWith(const TChar* CString) const { return StartsWith(CString, FindCharsCount(CString)); }
 
         /** @return     true if the string view ends with the given suffix */
-        constexpr bool EndsWith(const TChar* CString, Index count) const;
-        constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, FindCharsCount(CString)); }
+        [[nodiscard]] constexpr bool EndsWith(const TChar* CString, Index count) const;
+        [[nodiscard]] constexpr bool EndsWith(const TChar* CString) const { return EndsWith(CString, FindCharsCount(CString)); }
 
-        constexpr Index Find(      TChar  charToFind,    Index startIndex = 0, Index endIndex = npos, Index count = 1) const;
-        constexpr Index Find(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const;
-        constexpr Index FindLastOf(      TChar charToFind,     Index startIndex = 0, Index endIndex = npos, Index count = 1)  const;
-        constexpr Index FindLastOf(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1)  const;
-        constexpr bool   Has(      TChar  charToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
-        constexpr bool   Has(const TChar* charToFind, Index startIndex = 0, Index endIndex = npos, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != npos; }
+        [[nodiscard]] constexpr Index Find(      TChar  charToFind,    Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1) const;
+        [[nodiscard]] constexpr Index Find(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1) const;
+        [[nodiscard]] constexpr Index FindLast(      TChar charToFind,     Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1)  const;
+        [[nodiscard]] constexpr Index FindLast(const TChar* pStringToFind, Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1)  const;
+        [[nodiscard]] constexpr bool  Has(      TChar  charToFind, Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != kInvalidIndex; }
+        [[nodiscard]] constexpr bool  Has(const TChar* charToFind, Index startIndex = 0, Index endIndex = kInvalidIndex, Index count = 1) const { return Find(charToFind, startIndex, endIndex, count) != kInvalidIndex; }
     };
 
     // ------------------------------------------------------------------------------------------------
     // Non member functions
     // ------------------------------------------------------------------------------------------------
     template<StringLiteral TChar>
-    constexpr bool operator==(const StringView_Base<TChar>& a, const StringView_Base<TChar>& b)
+    [[nodiscard]] constexpr bool operator==(const StringView_Base<TChar>& a, const StringView_Base<TChar>& b) noexcept
     {
         return AreStringsSame(a.ConstBuffer(), b.ConstBuffer(), a.Count(), b.Count());
     }
     template<StringLiteral TChar>
-    constexpr bool operator==(const StringView_Base<TChar>& a, const TChar* b)
+    [[nodiscard]] constexpr bool operator==(const StringView_Base<TChar>& a, const TChar* b) noexcept
     {
         return AreStringsSame(a.ConstBuffer(), b, a.Count(), FindCharsCount(b));
     }
     template<StringLiteral TChar>
-    constexpr bool operator==(const StringView_Base<TChar>& a, const String_Base<TChar>& b)
+    [[nodiscard]] constexpr bool operator==(const StringView_Base<TChar>& a, const String_Base<TChar>& b) noexcept
     {
         return AreStringsSame(a.ConstBuffer(), b.ConstBuffer(), a.Count(), b.Count());
     }
 
     template<StringLiteral TChar>
-    constexpr String ToString(const StringView_Base<TChar>& stringView)
+    [[nodiscard]] constexpr String ToString(const StringView_Base<TChar>& stringView)
     {
         JPT_WARN("Converting StringView \"%s\" to a string. This allocates duplicated memory.", stringView.ConstBuffer());
         return String(stringView.ConstBuffer(), stringView.Count());
@@ -211,9 +211,21 @@ export namespace jpt
     }
 
     template<StringLiteral TChar>
+    constexpr Index StringView_Base<TChar>::Count() const noexcept
+    {
+        return m_count;
+    }
+
+    template<StringLiteral TChar>
+    constexpr bool StringView_Base<TChar>::IsEmpty() const noexcept
+    {
+        return m_count == 0;
+    }
+
+    template<StringLiteral TChar>
     constexpr StringView_Base<TChar> StringView_Base<TChar>::SubStr(Index index, Index count) const
     {
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = m_count - index;
         }
@@ -236,15 +248,15 @@ export namespace jpt
     }
 
     template<StringLiteral _TChar>
-    constexpr Index StringView_Base<_TChar>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = npos*/, Index count/* = 1*/) const
+    constexpr Index StringView_Base<_TChar>::Find(TChar charToFind, Index startIndex /* = 0*/, Index endIndex /* = kInvalidIndex*/, Index count/* = 1*/) const
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         for (Index i = startIndex; i < endIndex; ++i)
         {
             if ((i + 1) > endIndex)
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             if (m_pBuffer[i] == charToFind)
@@ -257,21 +269,21 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral _TChar>
-    constexpr Index StringView_Base<_TChar>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= npos*/, Index count/* = 1*/) const
+    constexpr Index StringView_Base<_TChar>::Find(const TChar* pStringToFind, Index startIndex /*= 0*/, Index endIndex/*= kInvalidIndex*/, Index count/* = 1*/) const
     {
         const Index StringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, static_cast<Index>(0), m_count);
+        endIndex = Clamp(endIndex, static_cast<Index>(0), m_count);
 
         StringView_Base current;
         for (Index i = startIndex; i < endIndex; ++i)
         {
             if ((i + StringToFindSize) > endIndex)
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             current = SubStr(i, StringToFindSize);
@@ -285,19 +297,19 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral _TChar>
-    constexpr Index StringView_Base<_TChar>::FindLastOf(TChar charToFind, Index startIndex, Index endIndex, Index count) const
+    constexpr Index StringView_Base<_TChar>::FindLast(TChar charToFind, Index startIndex, Index endIndex, Index count) const
     {
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
         {
             if (i < static_cast<int64>(startIndex))
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             if (m_pBuffer[i] == charToFind)
@@ -310,21 +322,21 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     template<StringLiteral _TChar>
-    constexpr Index StringView_Base<_TChar>::FindLastOf(const TChar* pStringToFind, Index startIndex, Index endIndex, Index count) const
+    constexpr Index StringView_Base<_TChar>::FindLast(const TChar* pStringToFind, Index startIndex, Index endIndex, Index count) const
     {
         const Index StringToFindSize = FindCharsCount(pStringToFind);
-        ClampTo(endIndex, Index(0), m_count);
+        endIndex = Clamp(endIndex, Index(0), m_count);
 
         String_Base<TChar> current;
         for (int64 i = endIndex - 1; i >= static_cast<int64>(startIndex); --i)
         {
             if ((i - StringToFindSize) < startIndex)
             {
-                return npos;
+                return kInvalidIndex;
             }
 
             current = SubStr(i - StringToFindSize, StringToFindSize);
@@ -338,7 +350,7 @@ export namespace jpt
             }
         }
 
-        return npos;
+        return kInvalidIndex;
     }
 
     using StringView = StringView_Base<char>;

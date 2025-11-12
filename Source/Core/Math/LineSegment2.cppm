@@ -5,6 +5,7 @@ export module jpt.LineSegment2;
 import jpt.Concepts;
 import jpt.Math;
 import jpt.Vector2;
+import jpt.TypeDefs;
 
 namespace jpt
 {
@@ -68,7 +69,7 @@ namespace jpt
         const Vector2<T> ab = b - a;
         const Vector2<T> ap = point - a;
         T t = ab.Dot(ap) / ab.Dot(ab);
-        ClampTo(t, static_cast<T>(0), static_cast<T>(1));
+        t = Saturate(t);
         return a + ab * t;
     }
 }

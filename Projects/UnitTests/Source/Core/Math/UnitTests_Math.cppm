@@ -18,10 +18,10 @@ bool UnitTests_Clamping()
     int32 n = jpt::Clamp(5, 10, 13);
     JPT_ENSURE(n == 10);
 
-    jpt::ClampTo(n, 5, 13);
+    n = jpt::Clamp(n, 5, 13);
     JPT_ENSURE(n == 10);
 
-    jpt::ClampTo(n, 1, 3);
+    n = jpt::Clamp(n, 1, 3);
     JPT_ENSURE(n == 3);
 
     JPT_ENSURE(jpt::Saturate(-1.0f) == 0.0f);

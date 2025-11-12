@@ -268,7 +268,7 @@ export namespace jpt
     {
         struct SearchData
         {
-            Weight distance = Constants<Weight>::kMax;
+            Weight distance = kMax<Weight>;
             Index previous = kInvalidValue<Index>;
             bool visited = false;
         };

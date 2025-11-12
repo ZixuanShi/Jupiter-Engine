@@ -349,7 +349,7 @@ namespace jpt
         Index count = 0;
 
         // Check if the current node is closer than threshold, if so add it to the result
-        if (Vec3f::Distance(pNode->data, point) < threshold)
+        if (pNode->data.Distance(point) < threshold)
         {
             result.EmplaceBack(pNode->data);
             ++count;

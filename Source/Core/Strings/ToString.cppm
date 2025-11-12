@@ -157,9 +157,9 @@ export namespace jpt
         return wstr;
     }
 
-    WString CStrToWStr(const char* pCStr, size_t count = npos)
+    WString CStrToWStr(const char* pCStr, size_t count = kInvalidIndex)
     {
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pCStr);
         }
@@ -188,9 +188,9 @@ export namespace jpt
         return str;
     }
 
-    String WCStrToStr(const wchar_t* pWStr, size_t count = npos)
+    String WCStrToStr(const wchar_t* pWStr, size_t count = kInvalidIndex)
     {
-        if (count == npos)
+        if (count == kInvalidIndex)
         {
             count = FindCharsCount(pWStr);
         }

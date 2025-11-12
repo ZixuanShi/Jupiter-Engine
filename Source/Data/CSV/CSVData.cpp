@@ -45,7 +45,7 @@ namespace jpt
             for (Index col = 0; col < csvData[row].Count(); ++col)
             {
                 String cell = csvData[row][col];
-                if (cell.Find(',') != npos)
+                if (cell.Find(',') != kInvalidIndex)
                 {
                     cell = "\"" + cell + "\"";
                 }

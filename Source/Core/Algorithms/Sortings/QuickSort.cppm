@@ -85,7 +85,7 @@ export namespace jpt
     constexpr void QuickSort(TContainer& container, Index beginIndex, Index endIndex, TComparator&& comparator)
     {
         // Bounds check
-        if (beginIndex >= endIndex || endIndex == Constants<Index>::kMax)
+        if (beginIndex >= endIndex || endIndex == kMax<Index>)
         {
             return;
         }

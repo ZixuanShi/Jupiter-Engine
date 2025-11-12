@@ -71,7 +71,7 @@ export namespace jpt
             // Modifiers
             constexpr void Append(const TPath& path);
             constexpr void operator+=(const WString& path);
-            constexpr TPath& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = npos);
+            constexpr TPath& Replace(const TChar* StringToFind, const TChar* StringToReplace, size_t startIndex = 0, size_t endIndex = kInvalidIndex);
 
             // Search
             constexpr bool Has(const TPath& path) const;
@@ -153,8 +153,8 @@ export namespace jpt
                 path.PopBack(separatorLen);
             }
 
-            const size_t lastSeparatorIndex = path.FindLastOf(separator.ConstBuffer());
-            if (lastSeparatorIndex == npos)
+            const size_t lastSeparatorIndex = path.FindLast(separator.ConstBuffer());
+            if (lastSeparatorIndex == kInvalidIndex)
             {
                 JPT_ASSERT(false, "Path has no parent");
                 return {};
@@ -175,8 +175,8 @@ export namespace jpt
                 path.PopBack(separatorLen);
             }
 
-            const size_t lastSeparatorIndex = path.FindLastOf(separator.ConstBuffer());
-            if (lastSeparatorIndex == npos)
+            const size_t lastSeparatorIndex = path.FindLast(separator.ConstBuffer());
+            if (lastSeparatorIndex == kInvalidIndex)
             {
                 return *this;
             }
