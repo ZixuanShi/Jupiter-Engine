@@ -380,7 +380,7 @@ namespace jpt::Vulkan
         mvp.view = GetVkRenderer()->GetCamera().CalcMatrix();
 
         static Matrix44 s_model = Matrix44::Identity();
-        s_model.RotateY(ToRadians(45.0f) * deltaSeconds);
+        s_model *= Matrix44::RotateY(ToRadians(45.0f) * deltaSeconds);
         mvp.model = s_model;
 
         mvp.proj = Matrix44::Perspective(ToRadians(45.0f), m_pOwner->GetAspectRatio(), 0.1f, 100.0f);

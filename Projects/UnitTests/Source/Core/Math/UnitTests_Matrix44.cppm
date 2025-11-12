@@ -40,7 +40,7 @@ bool UnitTests_Matrix44_GLM()
     glmMat4 = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 2.0f, 3.0f));
     //LogGlmMatrix44(glmMat4);
 
-    matrix44.Translate(1.0f, 2.0f, 3.0f);
+    matrix44 *= Matrix44::Translate(Vec3f(1.0f, 2.0f, 3.0f));
     //JPT_LOG(matrix44);
 
     // Rotation
@@ -49,14 +49,14 @@ bool UnitTests_Matrix44_GLM()
     glmMat4 = glm::rotate(glmMat4, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     //LogGlmMatrix44(glmMat4);
 
-    matrix44.RotateEulerAngles(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f));
+    matrix44 *= Matrix44::FromEulerAngles(Vec3f(jpt::ToRadians(120.0f), jpt::ToRadians(-45.0f), jpt::ToRadians(90.0f)));
     //JPT_LOG(matrix44);
 
     // Scaling
     glmMat4 = glm::scale(glmMat4, glm::vec3(2.0f, 3.0f, 4.0f));
     //LogGlmMatrix44(glmMat4);
 
-    matrix44.Scale(2.0f, 3.0f, 4.0f);
+    matrix44 *= Matrix44::Scale(Vec3f(2.0f, 3.0f, 4.0f));
     //JPT_LOG(matrix44);
 
     return true;

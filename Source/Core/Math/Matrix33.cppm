@@ -45,15 +45,17 @@ export namespace jpt
     public:
         // Translation & Position
         [[nodiscard]] constexpr static TMatrix33 Translate(Vector2<T> v) noexcept;
+        [[nodiscard]] constexpr Vector2<T> GetPosition() const noexcept;
 
         // Rotation & Orientation
         [[nodiscard]] constexpr static TMatrix33 Rotate(T radians) noexcept;
 
         // Scaling & Size
         [[nodiscard]] constexpr static TMatrix33 Scale(Vector2<T> v) noexcept;
+        [[nodiscard]] constexpr Vector2<T> GetScale() const noexcept;
 
         /** Swaps elements across the main diagonal. Used in checking orthogonality and normalizing the matrix. */
-        [[nodiscard]] constexpr static TMatrix33 Transpose(const TMatrix33& matrix) noexcept;
+        [[nodiscard]] constexpr static TMatrix33 Transpose(const TMatrix33& m) noexcept;
 
         /** Inverse matrix's behaviors. Undo */
         [[nodiscard]] constexpr static TMatrix33 Inverse(const TMatrix33& m) noexcept;
@@ -85,7 +87,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    [[nodiscard]] constexpr String ToString(const TMatrix33<T>& m)
+    [[nodiscard]] constexpr String ToString(const TMatrix33<T>& m) noexcept
     {
         return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
                                                                                              m[1][0], m[1][1], m[1][2],
@@ -179,6 +181,12 @@ export namespace jpt
     }
 
     template<Numeric T>
+    constexpr Vector2<T> TMatrix33<T>::GetPosition() const noexcept
+    {
+        return Vector2<T>(m[2].x, m[2].y);
+    }
+
+    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Rotate(T radians) noexcept
     {
         const T cos = Cos(radians);
@@ -198,11 +206,19 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr TMatrix33<T> TMatrix33<T>::Transpose(const TMatrix33& matrix) noexcept
+    constexpr Vector2<T> TMatrix33<T>::GetScale() const noexcept
     {
-        return TMatrix33(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
-                         matrix.m[0][1], matrix.m[1][1], matrix.m[2][1],
-                         matrix.m[0][2], matrix.m[1][2], matrix.m[2][2]);
+        const T x = Vector3<T>(m[0].x, m[0].y, m[0].z).Length();
+        const T y = Vector3<T>(m[1].x, m[1].y, m[1].z).Length();
+        return Vector2<T>(x, y);
+    }
+
+    template<Numeric T>
+    constexpr TMatrix33<T> TMatrix33<T>::Transpose(const TMatrix33& m) noexcept
+    {
+        return TMatrix33(m[0][0], m[1][0], m[2][0],
+                         m[0][1], m[1][1], m[2][1],
+                         m[0][2], m[1][2], m[2][2]);
     }
 
     template<Numeric T>
@@ -211,7 +227,7 @@ export namespace jpt
         const T det = m.Determinant();
         if (AreValuesClose(det, static_cast<T>(0)))
         {
-            return TMatrix33<T>();
+            return TMatrix33<T>::Identity();
         }
 
         const T invDet = static_cast<T>(1) / det;

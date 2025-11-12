@@ -67,6 +67,7 @@ bool UnitTests_Matrix33_Translation()
     Matrix33 jptMat1 = Matrix33::Translate(Vec2(2.0f, 3.0f));
 
     JPT_ENSURE(jptMat1 * translation == Vec2(2.0f, 3.0f));
+    JPT_ENSURE(jptMat1.GetPosition() == Vec2(2.0f, 3.0f));
 
     return true;
 }
@@ -87,6 +88,7 @@ bool UnitTests_Matrix33_Scaling()
     Matrix33 scalingMatrix = Matrix33::Scale(Vec2(2.0f, 3.0f));
 
     JPT_ENSURE(scalingMatrix * scaling == Vec2(2.0f, 3.0f));
+    JPT_ENSURE(scalingMatrix.GetScale() == Vec2(2.0f, 3.0f));
 
     return true;
 }
