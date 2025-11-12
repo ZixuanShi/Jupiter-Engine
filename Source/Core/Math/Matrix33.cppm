@@ -52,14 +52,14 @@ export namespace jpt
         // Scaling & Size
         [[nodiscard]] constexpr static TMatrix33 Scale(Vector2<T> v) noexcept;
 
-        /** Measures the volume of the parallelepiped spanned by the vectors of the matrix.    If determinant is 0, matrix is not invertible. */
-        [[nodiscard]] constexpr static T Determinant(const TMatrix33& matrix) noexcept;
-
         /** Swaps elements across the main diagonal. Used in checking orthogonality and normalizing the matrix. */
         [[nodiscard]] constexpr static TMatrix33 Transpose(const TMatrix33& matrix) noexcept;
 
         /** Inverse matrix's behaviors. Undo */
         [[nodiscard]] constexpr static TMatrix33 Inverse(const TMatrix33& m) noexcept;
+
+        /** Measures the volume of the parallelepiped spanned by the vectors of the matrix.    If determinant is 0, matrix is not invertible. */
+        [[nodiscard]] constexpr T Determinant() const noexcept;
 
         /** @return true if matrix is orthogonal. Validates that a matrix only contains rotation (no scaling/shearing) */
         [[nodiscard]] constexpr bool IsOrthogonal() const noexcept;
@@ -69,7 +69,7 @@ export namespace jpt
     // Non-Member Functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr bool operator==(const TMatrix33<T>& lhs, const TMatrix33<T>& rhs)
+    [[nodiscard]] constexpr bool operator==(const TMatrix33<T>& lhs, const TMatrix33<T>& rhs)
     {
         return lhs.m[0] == rhs.m[0] &&
                lhs.m[1] == rhs.m[1] &&
@@ -85,7 +85,7 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr String ToString(const TMatrix33<T>& m)
+    [[nodiscard]] constexpr String ToString(const TMatrix33<T>& m)
     {
         return String::Format<128>("\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f\n%.3f, %.3f, %.3f", m[0][0], m[0][1], m[0][2],
                                                                                              m[1][0], m[1][1], m[1][2],
@@ -198,14 +198,6 @@ export namespace jpt
     }
 
     template<Numeric T>
-    constexpr T TMatrix33<T>::Determinant(const TMatrix33& matrix) noexcept
-    {
-        return matrix.m[0][0] * (matrix.m[1][1] * matrix.m[2][2] - matrix.m[1][2] * matrix.m[2][1]) -
-               matrix.m[0][1] * (matrix.m[1][0] * matrix.m[2][2] - matrix.m[1][2] * matrix.m[2][0]) +
-               matrix.m[0][2] * (matrix.m[1][0] * matrix.m[2][1] - matrix.m[1][1] * matrix.m[2][0]);
-    }
-
-    template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Transpose(const TMatrix33& matrix) noexcept
     {
         return TMatrix33(matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -216,7 +208,7 @@ export namespace jpt
     template<Numeric T>
     constexpr TMatrix33<T> TMatrix33<T>::Inverse(const TMatrix33& m) noexcept
     {
-        const T det = TMatrix33<T>::Determinant(m);
+        const T det = m.Determinant();
         if (AreValuesClose(det, static_cast<T>(0)))
         {
             return TMatrix33<T>();
@@ -239,11 +231,17 @@ export namespace jpt
     }
 
     template<Numeric T>
+    constexpr T TMatrix33<T>::Determinant() const noexcept
+    {
+        return m[0][0] * (m[1][1] * m[2][2] - m[1][2] * m[2][1]) -
+               m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0]) +
+               m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+    }
+
+    template<Numeric T>
     constexpr bool TMatrix33<T>::IsOrthogonal() const noexcept
     {
-        const TMatrix33<T> inverse = Inverse(*this);
-        const TMatrix33<T> transpose = Transpose(*this);
-        return inverse == transpose;
+        return Inverse(*this) == Transpose(*this);
     }
 }
 

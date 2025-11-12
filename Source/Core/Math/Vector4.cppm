@@ -78,7 +78,7 @@ export namespace jpt
     // Non-Member functions
     // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr bool operator==(const Vector4<T>& lhs, const Vector4<T>& rhs)
+    [[nodiscard]] constexpr bool operator==(const Vector4<T>& lhs, const Vector4<T>& rhs)
     {
         return AreValuesClose(lhs.x, rhs.x) &&
                AreValuesClose(lhs.y, rhs.y) &&
@@ -163,14 +163,9 @@ export namespace jpt
     {
         return vector4 / scaler;
     }
-    template<Numeric T>
-    constexpr String ToString(const Vector4<T>& vector4)
-    {
-        return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", vector4.x, vector4.y, vector4.z, vector4.w);
-    }
 
     template<Numeric T>
-    constexpr uint64 Hash(const Vector4<T>& vector4)
+    [[nodiscard]] constexpr uint64 Hash(const Vector4<T>& vector4)
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -194,6 +189,12 @@ export namespace jpt
             hash ^= jpt::Hash(vector4.w) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
             return hash;
         }
+    }
+
+    template<Numeric T>
+    [[nodiscard]] constexpr String ToString(const Vector4<T>& vector4)
+    {
+        return String::Format<64>("x: %.3f, y: %.3f, w: %.3f, w: %.3f", vector4.x, vector4.y, vector4.z, vector4.w);
     }
 
     // ------------------------------------------------------------------------------------------------

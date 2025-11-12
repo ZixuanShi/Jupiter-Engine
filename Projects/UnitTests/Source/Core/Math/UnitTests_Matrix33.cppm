@@ -133,6 +133,19 @@ bool UnitTests_Matrix33_Inverse()
     return true;
 }
 
+bool UnitTests_Matrix33_IsOrthogonal()
+{
+    Matrix33 jptMat = Matrix33::Identity();
+
+    jptMat *= Matrix33::Rotate(jpt::ToRadians(90.0f));
+    JPT_ENSURE(jptMat.IsOrthogonal());
+
+    jptMat *= Matrix33::Scale(Vec2(2.0f, 3.0f));
+    JPT_ENSURE(!jptMat.IsOrthogonal());
+
+    return true;
+}
+
 export bool RunUnitTests_Matrix33()
 {
     JPT_ENSURE(UnitTests_Matrix33_Mul());
@@ -141,6 +154,7 @@ export bool RunUnitTests_Matrix33()
     JPT_ENSURE(UnitTests_Matrix33_Scaling());
     JPT_ENSURE(UnitTests_Matrix33_Transpose());
     JPT_ENSURE(UnitTests_Matrix33_Inverse());
+    JPT_ENSURE(UnitTests_Matrix33_IsOrthogonal());
 
     return true;
 }
