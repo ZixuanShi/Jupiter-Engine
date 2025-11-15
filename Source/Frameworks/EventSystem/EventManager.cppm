@@ -6,63 +6,47 @@ module;
 #include "Core/Minimal/Utilities.h"
 #include "Debugging/Logger.h"
 
-#include <type_traits>
-#include <memory>
-
 export module jpt.EventManager;
 
 import jpt.Constants;
+import jpt.DynamicArray;
+import jpt.Function;
+import jpt.HashMap;
 import jpt.TypeTraits;
 import jpt.TypeRegistry;
 import jpt.Utilities;
 
-import jpt.DynamicArray;
-import jpt.HashMap;
-
-import jpt.Function;
 import jpt.Event;
+
+import jpt_private.EventHelpers;
 
 export namespace jpt
 {
     class EventManager
     {
         JPT_DECLARE_SINGLETON(EventManager);
-
+        
     private:
-        struct Handler
-        {
-            Function<void(const Event&)> func; /**< Function to be called when an event is sent. Could be global or member or local lambda */
-            const void* pOwner = nullptr;       /**< class instance if func is it's member function. Function address if func is global or lambda */
-        };
+        jpt_private::FunctionsMap m_functionsMap;  /**< Map from event Ids to handlers */
+        jpt_private::EventQueue   m_eventQueue;    /**< Queue of events to be sent later */
 
-        /** Queued events to be sent later */
-        struct QueueItem
-        {
-            Event* pEvent = nullptr;         /**< Event to be sent */
-            Id eventId = kInvalidValue<Id>;     /**< Id of the event when Queue() called. Used for getting the right handlers */
-            TimePrecision m_timer = 0.0;     /**< Timer to delay the event. 0.0 means next frame */
-        };
-
-    private:
-        using Handlers     = DynamicArray<Handler>;   /**< List of functions to be called when an event is sent */
-        using HandlersMap  = HashMap<Id, Handlers>;   /**< Key: Event Id. Value: The handlers that are registered to listen to this event */
-
-    private:
-        HandlersMap m_handlersMap;                /**< Map from event Ids to handlers */
-        DynamicArray<QueueItem> m_eventQueue;    /**< Queue of events to be sent later */
+        Id m_handleId = 0;  /**< Counter for generating unique handle IDs */
 
     public:
         /** Register a member function to event */
         template<typename TEvent, typename TListener>
-        void Register(TListener* pListener, void(TListener::* pMemberFunction)(const TEvent&));
+        EventHandle Register(TListener* pListener, void(TListener::* pMemberFunction)(const TEvent&));
 
         /** Register a global function or lambda to event */
         template<typename TEvent, typename THandlerFunc>
-        void Register(THandlerFunc&& func);
+        EventHandle Register(THandlerFunc&& func);
 
-        /** Unregister a listener from an event */
-        template<typename TEvent, typename TListener>
+        /** Unregister a listener from an event
+            @param pListener    Cannot be a lambda. */
+        template<typename TEvent, Functional TListener>
         void Unregister(TListener* pListener);
+
+        void Unregister(EventHandle eventHandle);
 
         /** Unregister all listeners from an event */
         template<typename TEvent>
@@ -76,9 +60,11 @@ export namespace jpt
         template<typename TEvent>
         void Queue(const TEvent& event, TimePrecision timer = 0.0);
 
-        /** @return true if Listener is already listening to an event, false if not */
-        template<typename TEvent>
-        bool IsListening(const void* pListener) const;
+        /** @return true if handle is listening to an event, false if not */
+        template<typename TEvent, Functional TListener>
+        bool IsListening(const TListener* pListener) const;
+
+        bool IsListening(EventHandle eventHandle) const;
 
         /** Process all events in the queue */
         void Update(TimePrecision deltaSeconds);
@@ -87,58 +73,80 @@ export namespace jpt
         void Terminate();
 
     private:
-        template<typename TEvent>       Handlers& GetHandlers();
-        template<typename TEvent> const Handlers& GetHandlers() const;
+        template<typename TEvent>       jpt_private::EventFunctions& GetFunctions();
+        template<typename TEvent> const jpt_private::EventFunctions& GetFunctions() const;
     };
 
     template<typename TEvent, typename TListener>
-    void EventManager::Register(TListener* pListener, void(TListener::* pMemberFunction)(const TEvent&))
+    EventHandle EventManager::Register(TListener* pListener, void(TListener::* pMemberFunction)(const TEvent&))
     {
         auto handlerFunc = [pListener, pMemberFunction](const Event& event)
             {
                 (pListener->*pMemberFunction)(static_cast<const TEvent&>(event));
             };
 
-        GetHandlers<TEvent>().EmplaceBack(handlerFunc, pListener);
+        jpt_private::EventFunction& eventFunction = GetFunctions<TEvent>().EmplaceBack();
+        eventFunction.func     = Move(handlerFunc);
+        eventFunction.pContext = pListener;
+        eventFunction.Id       = m_handleId++;
+        
+        const Id eventId = TypeRegistry::GetId<TEvent>();
+        return EventHandle(eventId, eventFunction.Id);
     }
 
    template<typename TEvent, typename THandlerFunc>
-   void EventManager::Register(THandlerFunc&& func)
+   EventHandle EventManager::Register(THandlerFunc&& func)
    {
        // Lambda wrapper to call the function
-       auto handlerFunc = [func](const Event& event)
+        auto handlerFunc = [func](const Event& event)
            {
                func(static_cast<const TEvent&>(event));
            };
 
-       // Get the address of the function
-       void* address = nullptr;
-       if constexpr (std::is_function_v<TRemovePointer<TRemoveReference<THandlerFunc>>>)
-       {
-           // Global function
-           using FuncPtr = void(*)(const TEvent&);
-           FuncPtr fptr = func;
-           address = reinterpret_cast<void*>(fptr);
-       }
-       else
-       {
-           // Lambda or other callable
-           address = reinterpret_cast<void*>(std::addressof(func));
-       }
+        jpt_private::EventFunction& eventFunction = GetFunctions<TEvent>().EmplaceBack();
+        eventFunction.func     = Move(handlerFunc);
+        eventFunction.Id       = m_handleId++;
 
-       GetHandlers<TEvent>().EmplaceBack(handlerFunc, address);
+        if constexpr (IsFunction<TRemovePointer<TRemoveReference<THandlerFunc>>>)
+        {
+            // Global function
+            using FuncPtr = void(*)(const TEvent&);
+            FuncPtr fptr = func;
+            eventFunction.pContext = reinterpret_cast<void*>(fptr);
+        }
+        else
+        {
+            // Lambda has no context
+            eventFunction.pContext = nullptr; 
+        }
+        
+        const Id eventId = TypeRegistry::GetId<TEvent>();
+        return EventHandle(eventId, eventFunction.Id);
    }
 
-    template<typename TEvent, typename TListener>
-    void EventManager::Unregister(TListener* pListener)
-    {
-        Handlers& handlers = GetHandlers<TEvent>();
+   template<typename TEvent, Functional TListener>
+   void EventManager::Unregister(TListener* pListener)
+   {
+       jpt_private::EventFunctions& functions = GetFunctions<TEvent>();
 
-        for (int32 i = static_cast<int32>(handlers.Count()) - 1; i >= 0; --i)
+       for (int32 i = static_cast<int32>(functions.Count()) - 1; i >= 0; --i)
+       {
+           if (functions[i].pContext == pListener)
+           {
+               functions.Erase(i);
+           }
+       }
+   }
+
+    void EventManager::Unregister(EventHandle eventHandle)
+    {
+        jpt_private::EventFunctions& functions = m_functionsMap[eventHandle.eventId];
+
+        for (int32 i = static_cast<int32>(functions.Count()) - 1; i >= 0; --i)
         {
-            if (handlers[i].pOwner == pListener)
+            if (functions[i].Id == eventHandle.functionId)
             {
-                handlers.Erase(i);
+                functions.Erase(i);
             }
         }
     }
@@ -146,37 +154,66 @@ export namespace jpt
     template<typename TEvent>
     void EventManager::UnregisterAll()
     {
-        GetHandlers<TEvent>().Clear();
+        GetFunctions<TEvent>().Clear();
     }
 
     template<typename TEvent>
     void EventManager::Send(const TEvent& event)
     {
-        for (const Handler& handler : GetHandlers<TEvent>())
+        for (const jpt_private::EventFunction& function : GetFunctions<TEvent>())
         {
-            handler.func(event);
+            function.func(event);
         }
     }
 
     template<typename TEvent>
     void EventManager::Queue(const TEvent& event, TimePrecision timer /*= 0.0*/)
     {
-        m_eventQueue.EmplaceBack(JPT_NEW(TEvent, event), TypeRegistry::GetId<TEvent>(), timer);
+        const Id eventId = TypeRegistry::GetId<TEvent>();
+
+        m_eventQueue.EmplaceBack(JPT_NEW(TEvent, event), eventId, timer);
+    }
+
+    template<typename TEvent, Functional TListener>
+    bool EventManager::IsListening(const TListener* pListener) const
+    {
+        for (const jpt_private::EventFunction& function : GetFunctions<TEvent>())
+        {
+            if (function.pContext == pListener)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool EventManager::IsListening(EventHandle eventHandle) const
+    {
+        for (const jpt_private::EventFunction& function : m_functionsMap[eventHandle.eventId])
+        {
+            if (function.Id == eventHandle.functionId)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void EventManager::Update(TimePrecision deltaSeconds)
     {
         for (auto itr = m_eventQueue.begin(); itr != m_eventQueue.end();)
         {
-            QueueItem& item = *itr;
+            jpt_private::PendingEvent& item = *itr;
             item.m_timer -= deltaSeconds;
 
             if (item.m_timer <= 0.0)
             {
-                const Handlers& handlers = m_handlersMap[item.eventId];
-                for (const Handler& handlerData : handlers)
+                const jpt_private::EventFunctions& functions = m_functionsMap[item.eventId];
+                for (const jpt_private::EventFunction& function : functions)
                 {
-                    handlerData.func(*item.pEvent);
+                    function.func(*item.pEvent);
                 }
 
                 JPT_DELETE(item.pEvent);
@@ -193,7 +230,7 @@ export namespace jpt
 
     void EventManager::Terminate()
     {
-        for (QueueItem& item : m_eventQueue)
+        for (jpt_private::PendingEvent& item : m_eventQueue)
         {
             JPT_DELETE(item.pEvent);
             item.pEvent = nullptr;
@@ -203,30 +240,18 @@ export namespace jpt
     }
 
     template<typename TEvent>
-    bool EventManager::IsListening(const void* pListener) const
+    jpt_private::EventFunctions& EventManager::GetFunctions()
     {
-        for (const Handler& handler : GetHandlers<TEvent>())
-        {
-            if (handler.pOwner == pListener)
-            {
-                return true;
-            }
-        }
+        const Id eventId = TypeRegistry::GetId<TEvent>();
 
-        return false;
+        return m_functionsMap[eventId];
     }
 
     template<typename TEvent>
-    EventManager::Handlers& EventManager::GetHandlers()
+    const jpt_private::EventFunctions& EventManager::GetFunctions() const
     {
         const Id eventId = TypeRegistry::GetId<TEvent>();
-        return m_handlersMap[eventId];
-    }
 
-    template<typename TEvent>
-    const EventManager::Handlers& EventManager::GetHandlers() const
-    {
-        const Id eventId = TypeRegistry::GetId<TEvent>();
-        return m_handlersMap[eventId];
+        return m_functionsMap[eventId];
     }
 }

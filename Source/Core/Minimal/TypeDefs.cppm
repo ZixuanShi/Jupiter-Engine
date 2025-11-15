@@ -21,8 +21,8 @@ export using float64  = double;
 
 export using Id            = size_t;    // Unique ID for objects
 export using Index         = size_t;    // Index for containers
-export using Precision     = float32;
-export using TimePrecision = float32;
+export using Precision     = float32;   // General purpose floating point type
+export using TimePrecision = float32;   // Floating point type used for time measurements
 
 export using uintptr = uintptr_t;
 

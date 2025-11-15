@@ -77,7 +77,7 @@ static bool Lambda()
         };
 
     // Register
-    jpt::EventManager::GetInstance().Register<Event_Test>(testLambda);
+    jpt::EventHandle handle = jpt::EventManager::GetInstance().Register<Event_Test>(testLambda);
 
     Event_Test event(789);
     jpt::EventManager::GetInstance().Send(event);
@@ -85,7 +85,8 @@ static bool Lambda()
     JPT_ENSURE(num == 789);
 
     // Unregister
-    jpt::EventManager::GetInstance().Unregister<Event_Test>(&testLambda);
+    //jpt::EventManager::GetInstance().Unregister<Event_Test>(&testLambda); // This is wrong, cannot unregister lambda this way
+    jpt::EventManager::GetInstance().Unregister(handle);
     Event_Test event2(101112);
     jpt::EventManager::GetInstance().Send(event2);
 
@@ -112,10 +113,10 @@ public:
 };
 
 Listener g_listener;
-
+jpt::EventHandle g_memberFunctionHandle;
 static bool RegisterMemberFunction()
 {
-    jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
+    g_memberFunctionHandle = jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
 
     Event_Test event(131415);
     jpt::EventManager::GetInstance().Send(event);
@@ -127,7 +128,7 @@ static bool RegisterMemberFunction()
 
 static bool UnregisterMemberFunction()
 {
-    jpt::EventManager::GetInstance().Unregister<Event_Test>(&g_listener);
+    jpt::EventManager::GetInstance().Unregister(g_memberFunctionHandle);
 
     Event_Test event(0);
     jpt::EventManager::GetInstance().Send(event);
@@ -147,18 +148,18 @@ static bool UnregisterAll()
             g_num = eventTest.GetNum();
         };
     jpt::EventManager::GetInstance().Register<Event_Test>(&GlobalEventHandler);
-    jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
-    jpt::EventManager::GetInstance().Register<Event_Test>(testLambda);
+    g_memberFunctionHandle = jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
+    jpt::EventHandle handle = jpt::EventManager::GetInstance().Register<Event_Test>(testLambda);
 
     JPT_ENSURE(jpt::EventManager::GetInstance().IsListening<Event_Test>(&GlobalEventHandler));
-    JPT_ENSURE(jpt::EventManager::GetInstance().IsListening<Event_Test>(&g_listener));
-    JPT_ENSURE(jpt::EventManager::GetInstance().IsListening<Event_Test>(&testLambda));
+    JPT_ENSURE(jpt::EventManager::GetInstance().IsListening(g_memberFunctionHandle));
+    JPT_ENSURE(jpt::EventManager::GetInstance().IsListening(handle));
 
     jpt::EventManager::GetInstance().UnregisterAll<Event_Test>();
 
     JPT_ENSURE(!jpt::EventManager::GetInstance().IsListening<Event_Test>(&GlobalEventHandler));
-    JPT_ENSURE(!jpt::EventManager::GetInstance().IsListening<Event_Test>(&g_listener));
-    JPT_ENSURE(!jpt::EventManager::GetInstance().IsListening<Event_Test>(&testLambda));
+    JPT_ENSURE(!jpt::EventManager::GetInstance().IsListening(g_memberFunctionHandle));
+    JPT_ENSURE(!jpt::EventManager::GetInstance().IsListening(handle));
 
     return true;
 }
