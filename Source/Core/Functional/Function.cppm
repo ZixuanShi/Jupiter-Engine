@@ -95,7 +95,6 @@ export namespace jpt
         };
 
     private:
-        // Switch to union and by value?
         Function_Base* m_pFunction = nullptr;
 
     public:

@@ -11,6 +11,7 @@ import jpt_private.EventHelpers;
 export namespace jpt
 {
     /** The handle returned of EventManager::Register(). Used for unregister and check is listening */
+    // Could be moved to Event.cppm
     struct EventHandle
     {
         Id eventId    = kInvalidId;

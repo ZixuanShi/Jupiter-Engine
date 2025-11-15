@@ -148,7 +148,7 @@ static bool UnregisterAll()
             g_num = eventTest.GetNum();
         };
     jpt::EventManager::GetInstance().Register<Event_Test>(&GlobalEventHandler);
-    jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
+    g_memberFunctionHandle = jpt::EventManager::GetInstance().Register<Event_Test>(&g_listener, &Listener::MemberFunction);
     jpt::EventHandle handle = jpt::EventManager::GetInstance().Register<Event_Test>(testLambda);
 
     JPT_ENSURE(jpt::EventManager::GetInstance().IsListening<Event_Test>(&GlobalEventHandler));
