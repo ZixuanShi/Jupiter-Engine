@@ -2,6 +2,7 @@
 
 export module jpt.Event;
 
+import jpt.Constants;
 import jpt.TypeDefs;
 
 export namespace jpt
@@ -10,9 +11,13 @@ export namespace jpt
     class Event
     {
     public:
-        using Id = Id;
-
-    public:
         virtual ~Event() = default;
+    };
+
+    /** The handle returned of EventManager::Register(). Used for unregister and check is listening */
+    struct EventHandle
+    {
+        Id eventId    = kInvalidId;
+        Id functionId = kInvalidId;
     };
 }

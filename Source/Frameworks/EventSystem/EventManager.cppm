@@ -17,7 +17,6 @@ import jpt.TypeRegistry;
 import jpt.Utilities;
 
 import jpt.Event;
-import jpt.EventHandle;
 
 import jpt_private.EventHelpers;
 
