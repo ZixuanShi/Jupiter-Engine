@@ -135,7 +135,8 @@ bool UnitTests_Function_Copy()
     jpt::Function<int32(int32)> func3;
     func3.Connect(&test, &Test::Add);
 
-    jpt::Function<int32(int32)> func4(func3);
+    jpt::Function<int32(int32)> func4;
+    func4 = func3;
     JPT_ENSURE(func3(2) == 15);
     JPT_ENSURE(func4(2) == 17);
 

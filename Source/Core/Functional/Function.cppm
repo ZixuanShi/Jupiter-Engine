@@ -95,6 +95,7 @@ export namespace jpt
         };
 
     private:
+        // Switch to union and by value?
         Function_Base* m_pFunction = nullptr;
 
     public:
@@ -105,10 +106,10 @@ export namespace jpt
         constexpr Function& operator=(Function&& other);
         constexpr ~Function();
 
-        template<class TFunction>
+        template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
         constexpr Function(TFunction&& function);
 
-        template<class TFunction>
+        template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
         constexpr Function& operator=(TFunction&& function);
 
         template<class TCaller>
@@ -117,7 +118,7 @@ export namespace jpt
         /** Connects a global function or lambda to this jpt::Function
             @example: func.Connect(&Add);
             @example: func.Connect([](int32 a, int32 b) -> int32 { return a - b; }); */
-        template<class TFunction>
+        template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
         constexpr void Connect(TFunction&& function);
 
         /** Connects a member function to this jpt::Function
@@ -188,14 +189,14 @@ export namespace jpt
     }
 
     template<class TReturn, class ...TArgs>
-    template<class TFunction>
+    template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
     constexpr Function<TReturn(TArgs...)>::Function(TFunction&& function)
     {
         Connect(Forward<TFunction>(function));
     }
 
     template<class TReturn, class ...TArgs>
-    template<class TFunction>
+    template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
     constexpr Function<TReturn(TArgs...)>& Function<TReturn(TArgs...)>::operator=(TFunction&& function)
     {
         Disconnect();
@@ -211,7 +212,7 @@ export namespace jpt
     }
 
     template<class TReturn, class ...TArgs>
-    template<class TFunction>
+    template<class TFunction> requires (!AreSameType<TDecay<TFunction>, Function<TReturn(TArgs...)>>)
     constexpr void Function<TReturn(TArgs...)>::Connect(TFunction&& function)
     {
         Disconnect();
