@@ -142,15 +142,28 @@ export namespace jpt
 
 #pragma region Interpolation
     template<typename T, Floating TFloat = float32>
-    [[nodiscard]] constexpr T Lerp(T start, T end, TFloat t) noexcept
+    [[nodiscard]] constexpr T Lerp(T begin, T end, TFloat t) noexcept
     {
-        return start + t * (end - start);
+        return begin + t * (end - begin);
     }
 
     template<typename T>
-    [[nodiscard]] constexpr T InvLerp(T start, T end, T value) noexcept
+    [[nodiscard]] constexpr T InvLerp(T begin, T end, T value) noexcept
     {
-        return (value - start) / (end - start);
+        return (value - begin) / (end - begin);
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr T Step(T edge, T value) noexcept
+    {
+        return (value < edge) ? static_cast<T>(0) : static_cast<T>(1);
+    }
+
+    template<typename T>
+    [[nodiscard]] constexpr T Remap(T inBegin, T inEnd, T outBegin, T outEnd, T value) noexcept
+    {
+        const T t = InvLerp(inBegin, inEnd, value);
+        return Lerp(outBegin, outEnd, t);
     }
 
     template<Floating T = float32>
