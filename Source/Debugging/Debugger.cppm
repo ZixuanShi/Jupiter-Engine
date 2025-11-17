@@ -3,6 +3,7 @@
 module;
 
 #include "Core/Minimal/Utilities.h"
+#include "Core/Validation/Assert.h"
 
 export module jpt.Debugger;
 
@@ -15,7 +16,9 @@ export namespace jpt
         JPT_DECLARE_SINGLETON(Debugger);
 
     private:
+#if ASSERT_ENABLED
         AssertImpl m_assertImpl;
+#endif
 
     public:
         bool PreInit();

@@ -12,11 +12,11 @@ module;
 
 module jpt.AssertImpl;
 
+#if ASSERT_ENABLED
 import jpt.String;
 
 namespace jpt
 {
-#if ASSERT_ENABLED
     void locAssertCallback(int line, const char* file, const char* expression, const char* message)
     {
         String messageStr(expression);
@@ -32,13 +32,11 @@ namespace jpt
         MessageBoxA(nullptr, messageStr.ConstBuffer(), "Assertion Failed", MB_ABORTRETRYIGNORE);
 #endif
     }
-#endif
 
     bool AssertImpl::PreInit()
     {
-#if ASSERT_ENABLED
         g_AssertCallback = locAssertCallback;
-#endif
         return true;
     }
 }
+#endif

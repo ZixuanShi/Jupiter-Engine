@@ -135,10 +135,18 @@ bool UnitTests_AreSameType()
 {
     bool value = false;
 
+    
+
     value = jpt::AreSameType<int32, int32>;
     JPT_ENSURE(value);
 
+    value = jpt::AreSameType<int32, const int32>;
+    JPT_ENSURE(!value);
+
     value = jpt::AreSameType<int32, int32&>;
+    JPT_ENSURE(!value);
+
+    value = jpt::AreSameType<int32, const int32&>;
     JPT_ENSURE(!value);
 
     value = jpt::AreSameType<int32&, int32&>;

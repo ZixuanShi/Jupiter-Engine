@@ -1,6 +1,3 @@
 {
-    "windowWidth": 600,
-    "targetFPS": 60.000,
-    "windowHeight": 600,
     "VSyncMode": 3
 }

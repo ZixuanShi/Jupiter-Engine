@@ -66,7 +66,7 @@ export namespace jpt::DX12
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> Device::CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE type) const
     {
         Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
-        HRESULT hr = m_device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator));
+        [[maybe_unused]] HRESULT hr = m_device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator));
         JPT_ASSERT(hr == S_OK);
         return commandAllocator;
     }
@@ -78,7 +78,7 @@ export namespace jpt::DX12
         queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
         Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
-        HRESULT hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
+        [[maybe_unused]] HRESULT hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
         JPT_ASSERT(hr == S_OK);
 
         return commandQueue;

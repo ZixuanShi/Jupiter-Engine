@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define ASSERT_ENABLED (IS_CONFIG_DEBUG || IS_CONFIG_DEV)
+#define ASSERT_ENABLED (!IS_CONFIG_RELEASE)
 
 #if ASSERT_ENABLED
 
@@ -48,6 +48,6 @@ namespace jpt
             } while(false)
 }
 #else
-    #define JPT_ASSERT(expression, ...) static_cast<void>(expression)
+    #define JPT_ASSERT(expression, ...) static_cast<void>(0)
 
 #endif // ASSERT_ENABLED
