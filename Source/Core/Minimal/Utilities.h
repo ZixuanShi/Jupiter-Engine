@@ -16,28 +16,6 @@ import jpt.Utilities;
 
 #pragma endregion
 
-#pragma region Verification
-
-/**< Return, with Error logging */
-#define JPT_VERIFY(condition, returnValue, ...)  \
-    if (!(condition))                            \
-    {                                            \
-        if (JPT_HAS_ARGS(__VA_ARGS__))           \
-        {                                        \
-            JPT_ERROR("%s", __VA_ARGS__);        \
-        }                                        \
-        else                                     \
-        {                                        \
-            JPT_ERROR("Failed: %s", #condition); \
-        }                                        \
-        return returnValue;                      \
-    }                                             
-                                                 
-#define JPT_ENSURE(condition, ...)               \
-    JPT_VERIFY(condition, false, __VA_ARGS__)    
-
-#pragma endregion
-
 #pragma region VA_ARGS
 
 /** @return true if a macro's variadic arguments has passed in parameters. false if it's empty
