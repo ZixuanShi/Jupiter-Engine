@@ -19,6 +19,9 @@ import Benchmarks_String;
 // Math
 import Benchmarks_Math;
 
+// Minimal
+import Benchmarks_Utilities;
+
 export void RunBenchmarks_Core(jpt::BenchmarksReporter& reporter)
 {
     /** Benchmark Functions */
@@ -28,11 +31,14 @@ export void RunBenchmarks_Core(jpt::BenchmarksReporter& reporter)
     //RunBenchmarks_HashMap(reporter);
 
     // Functional
-    RunBenchmarks_Function(reporter);
+    //RunBenchmarks_Function(reporter);
 
     // Strings
     //RunBenchmarks_String(reporter);
 
     // Math
     //RunBenchmarks_Math(reporter);
+
+    // Minimal
+    RunBenchmarks_Utilities(reporter);
 }
