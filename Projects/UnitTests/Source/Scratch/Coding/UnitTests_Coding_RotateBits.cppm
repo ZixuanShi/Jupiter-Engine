@@ -1,7 +1,6 @@
 module;
 
-#include "Core/Minimal/Utilities.h"
-#include "Debugging/Logger.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 #include <memory>
 

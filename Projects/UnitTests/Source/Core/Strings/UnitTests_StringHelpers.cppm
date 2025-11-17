@@ -137,9 +137,8 @@ bool RunUnitTests_StringUtils_WStrToCStr()
 
 bool UnitTests_IsSpace()
 {
-    JPT_ENSURE(' ');
-    JPT_ENSURE('\u00A0');
-    JPT_ENSURE(' ');
+    JPT_ENSURE(jpt::IsSpace(' '));
+    JPT_ENSURE(jpt::IsSpace('\u00A0'));
 
     return true;
 }

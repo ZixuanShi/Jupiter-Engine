@@ -4,8 +4,6 @@ module;
 
 #include "Core/Minimal/CoreHeaders.h"
 
-#include "Core/Types/Enum.h"
-
 export module UnitTests_Enum;
 
 import UnitTests_Enum_Global;
@@ -73,16 +71,21 @@ bool UnitTests_Enum_NonSequence()
     for (const auto& [key, value] : fruit) // Structure binding is available too
     {
         if (key == 5)
+        {
             JPT_ENSURE(value == "Apple");
-
+        }
         if (key == 6)
+        {
             JPT_ENSURE(value == "Banana");
-
+        }
         if (key == 9)
+        {
             JPT_ENSURE(value == "Orange");
-
+        }
         if (key == 10)
+        {
             JPT_ENSURE(value == "Grape");
+        }
     }
 
     // Assigning with different sized integer

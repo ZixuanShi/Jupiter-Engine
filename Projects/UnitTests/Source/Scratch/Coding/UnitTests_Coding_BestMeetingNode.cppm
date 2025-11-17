@@ -2,9 +2,7 @@
 
 module;
 
-#include "Core/Minimal/Utilities.h"
-#include "Core/Validation/Assert.h"
-#include "Debugging/Logger.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 export module UnitTests_Coding_BestMeetingNode;
 

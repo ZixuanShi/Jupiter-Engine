@@ -2,8 +2,7 @@
 
 module;
 
-#include "Debugging/Logger.h"
-#include "Core/Minimal/Utilities.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 module jpt.Renderer;
 

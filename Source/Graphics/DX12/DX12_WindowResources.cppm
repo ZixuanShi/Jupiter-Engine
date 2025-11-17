@@ -2,7 +2,7 @@
 
 module;
 
-#include <Core/Validation/Assert.h>
+#include <Core/Minimal/CoreHeaders.h>
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -87,7 +87,7 @@ export namespace jpt::DX12
         JPT_ASSERT(win32Window, "Window is not of type Window_Win32");
 
         const HWND hwnd = win32Window->GetHWND();
-        JPT_ASSERT(m_swapChain.Init(m_pOwner->GetFrameSize(), hwnd, factory, commandQueue));
+        JPT_VERIFY(m_swapChain.Init(m_pOwner->GetFrameSize(), hwnd, factory, commandQueue));
 
         m_currentFrame = m_swapChain.GetCurrentBackBufferIndex();
 
@@ -107,7 +107,7 @@ export namespace jpt::DX12
         // Create a RTV for each frame.
         for (UINT n = 0; n < kMaxFramesInFlight; n++)
         {
-            JPT_ASSERT(m_swapChain.GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])) == S_OK);
+            JPT_VERIFY(m_swapChain.GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n])) == S_OK);
             device.CreateRenderTargetView(m_renderTargets[n].Get(), nullptr, rtvHandle);
             rtvHandle.Offset(1, device.GetRTVDescriptorSize());
         }

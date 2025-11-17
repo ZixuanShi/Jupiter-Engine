@@ -2,8 +2,7 @@
 
 module;
 
-#include <Core/Validation/Assert.h>
-#include "Debugging/Logger.h"
+#include "Core/Minimal/CoreHeaders.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -37,7 +36,7 @@ export namespace jpt::DX12
 
     bool SyncObjects::Init(Microsoft::WRL::ComPtr<ID3D12Device> device, Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue, const SwapChain& swapChain, size_t& frameIndex)
     {
-        JPT_ASSERT(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) == S_OK);
+        JPT_VERIFY(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)) == S_OK);
         m_fenceValue = 1;
 
         // Create an event handle to use for frame synchronization.
@@ -70,13 +69,13 @@ export namespace jpt::DX12
         
         // Signal and increment the fence value.
         const UINT64 fence = m_fenceValue;
-        JPT_ASSERT(commandQueue->Signal(m_fence.Get(), fence) == S_OK);
+        JPT_VERIFY(commandQueue->Signal(m_fence.Get(), fence) == S_OK);
         ++m_fenceValue;
 
         // Wait until the previous frame is finished.
         if (m_fence->GetCompletedValue() < fence)
         {
-            JPT_ASSERT(m_fence->SetEventOnCompletion(fence, m_fenceEvent) == S_OK);
+            JPT_VERIFY(m_fence->SetEventOnCompletion(fence, m_fenceEvent) == S_OK);
             WaitForSingleObject(m_fenceEvent, INFINITE);
         }
 
