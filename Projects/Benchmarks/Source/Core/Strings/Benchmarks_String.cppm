@@ -22,7 +22,7 @@ void Find(jpt::BenchmarksReporter& reporter)
         {
             jpt::String str = "Hello Jupiter World";
             JPT_ASSERT(str.Find("Jupiter") == 6);
-            JPT_ASSERT(str.Find("NonExist") == jpt::npos);
+            JPT_ASSERT(str.Find("NonExist") == kInvalidIndex);
         });
 }
 
