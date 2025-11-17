@@ -2,7 +2,7 @@
 
 module;
 
-#include <Core/Validation/Assert.h>
+#include "Core/Minimal/CoreHeaders.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -45,7 +45,7 @@ export namespace jpt::DX12
         swapChainDesc.SampleDesc.Count = 1;
 
         Microsoft::WRL::ComPtr<IDXGISwapChain1> swapChain;
-        JPT_ASSERT(factory->CreateSwapChainForHwnd(
+        JPT_VERIFY(factory->CreateSwapChainForHwnd(
             commandQueue.Get(),        // Swap chain needs the queue so that it can force a flush on it.
             hwnd,
             &swapChainDesc,

@@ -48,7 +48,7 @@ namespace jpt
             } while(false)
 }
 #else
-    #define JPT_ASSERT(expression, ...) static_cast<void>(expression)
+    #define JPT_ASSERT(expression, ...) static_cast<void>(0)
 
 #endif // ASSERT_ENABLED
 

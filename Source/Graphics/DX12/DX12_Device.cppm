@@ -2,7 +2,7 @@
 
 module;
 
-#include <Core/Validation/Assert.h>
+#include "Core/Minimal/CoreHeaders.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -49,14 +49,14 @@ export namespace jpt::DX12
         if (useWarpDevice)
         {
             Microsoft::WRL::ComPtr<IDXGIAdapter> warpAdapter;
-            JPT_ASSERT(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)) == S_OK);
-            JPT_ASSERT(D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) == S_OK);
+            JPT_VERIFY(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)) == S_OK);
+            JPT_VERIFY(D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) == S_OK);
         }
         else
         {
             Microsoft::WRL::ComPtr<IDXGIAdapter1> hardwareAdapter;
             GetHardwareAdapter(factory.Get(), &hardwareAdapter);
-            JPT_ASSERT(D3D12CreateDevice(hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) == S_OK);
+            JPT_VERIFY(D3D12CreateDevice(hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_device)) == S_OK);
         }
 
         m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -66,8 +66,7 @@ export namespace jpt::DX12
     Microsoft::WRL::ComPtr<ID3D12CommandAllocator> Device::CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE type) const
     {
         Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
-        [[maybe_unused]] HRESULT hr = m_device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator));
-        JPT_ASSERT(hr == S_OK);
+        JPT_VERIFY(m_device->CreateCommandAllocator(type, IID_PPV_ARGS(&commandAllocator)) == S_OK);
         return commandAllocator;
     }
 
@@ -78,8 +77,7 @@ export namespace jpt::DX12
         queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
         Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
-        [[maybe_unused]] HRESULT hr = m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
-        JPT_ASSERT(hr == S_OK);
+        JPT_VERIFY(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue)) == S_OK);
 
         return commandQueue;
     }
@@ -92,8 +90,8 @@ export namespace jpt::DX12
 
         Microsoft::WRL::ComPtr<ID3DBlob> signature;
         Microsoft::WRL::ComPtr<ID3DBlob> error;
-        JPT_ASSERT(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error) == S_OK);
-        JPT_ASSERT(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)) == S_OK);
+        JPT_VERIFY(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error) == S_OK);
+        JPT_VERIFY(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature)) == S_OK);
 
         return rootSignature;
     }
@@ -107,7 +105,7 @@ export namespace jpt::DX12
         rtvHeapDesc.NumDescriptors = kMaxFramesInFlight;
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        JPT_ASSERT(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)) == S_OK);
+        JPT_VERIFY(m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)) == S_OK);
 
         return RTVHeap(rtvHeap);
     }

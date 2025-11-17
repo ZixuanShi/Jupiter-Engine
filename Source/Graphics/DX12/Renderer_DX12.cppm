@@ -171,7 +171,7 @@ export namespace jpt
         m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
         // Present the frame.
-        JPT_ASSERT(resources.GetSwapChain().Present(1, 0) == S_OK);
+        JPT_VERIFY(resources.GetSwapChain().Present(1, 0) == S_OK);
 
         resources.WaitForPreviousFrame(m_commandQueue);
     }
@@ -184,12 +184,12 @@ export namespace jpt
         // Command list allocators can only be reset when the associated 
         // command lists have finished execution on the GPU; apps should use 
         // fences to determine GPU execution progress.
-        JPT_ASSERT(m_commandAllocator->Reset() == S_OK);
+        JPT_VERIFY(m_commandAllocator->Reset() == S_OK);
 
         // However, when ExecuteCommandList() is called on a particular command 
         // list, that command list can then be reset at any time and must be before 
         // re-recording.
-        JPT_ASSERT(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) == S_OK);
+        JPT_VERIFY(m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get()) == S_OK);
 
         // Set necessary state.
         m_commandList->SetGraphicsRootSignature(m_rootSignature.Get());
@@ -214,7 +214,7 @@ export namespace jpt
         auto barrier2 = CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
         m_commandList->ResourceBarrier(1, &barrier2);
 
-        JPT_ASSERT(m_commandList->Close() == S_OK);
+        JPT_VERIFY(m_commandList->Close() == S_OK);
     }
 
     void Renderer_DX12::CompileShaders()
@@ -230,8 +230,8 @@ export namespace jpt
 #else
         UINT compileFlags = 0;
 #endif
-        JPT_ASSERT(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) == S_OK);
-        JPT_ASSERT(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) == S_OK);
+        JPT_VERIFY(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr) == S_OK);
+        JPT_VERIFY(D3DCompileFromFile(shadersPath.GetString<wchar_t>().ConstBuffer(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr) == S_OK);
 
         // Define the vertex input layout.
         D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -255,7 +255,7 @@ export namespace jpt
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
         psoDesc.SampleDesc.Count = 1;
-        JPT_ASSERT(m_device.Get()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)) == S_OK);
+        JPT_VERIFY(m_device.Get()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState)) == S_OK);
     }
 
     void Renderer_DX12::CreateVertexBuffer(float aspectRatio)
@@ -276,7 +276,7 @@ export namespace jpt
         // code simplicity and because there are very few verts to actually transfer.
         CD3DX12_HEAP_PROPERTIES heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         CD3DX12_RESOURCE_DESC vertexBufferDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
-        JPT_ASSERT(m_device.Get()->CreateCommittedResource(
+        JPT_VERIFY(m_device.Get()->CreateCommittedResource(
             &heapProperties,
             D3D12_HEAP_FLAG_NONE,
             &vertexBufferDesc,
@@ -287,7 +287,7 @@ export namespace jpt
         // Copy the triangle data to the vertex buffer.
         UINT8* pVertexDataBegin;
         CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
-        JPT_ASSERT(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)) == S_OK);
+        JPT_VERIFY(m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)) == S_OK);
         memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
         m_vertexBuffer->Unmap(0, nullptr);
 
