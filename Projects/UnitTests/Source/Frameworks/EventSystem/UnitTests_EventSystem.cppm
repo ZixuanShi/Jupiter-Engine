@@ -169,7 +169,9 @@ static bool RegisterEvents()
 {
     jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>([](const jpt::Event_Mouse_Button& eventMouseButtonPress)
         {
-            JPT_LOG("Mouse button press: %s, x: %f, y: %f", jpt::ToString(eventMouseButtonPress.GetButton()).ConstBuffer(), eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
+            const char* stateStr  = jpt::ToString(eventMouseButtonPress.GetState()).ConstBuffer();
+            const char* buttonStr = jpt::ToString(eventMouseButtonPress.GetButton()).ConstBuffer();
+            JPT_LOG("Mouse Button %s: %s, x: %f, y: %f", stateStr, buttonStr, eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
         });
 
     jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Scroll>([](const jpt::Event_Mouse_Scroll& eventMouseScroll)
@@ -179,7 +181,9 @@ static bool RegisterEvents()
 
     jpt::EventManager::GetInstance().Register<jpt::Event_Key>([](const jpt::Event_Key& eventKey)
         {
-            JPT_LOG("Key: %s, state: %s", jpt::ToString(eventKey.GetKey()).ConstBuffer(), jpt::ToString(eventKey.GetState()).ConstBuffer());
+            const char* stateStr = jpt::ToString(eventKey.GetState()).ConstBuffer();
+            const char* keyStr   = jpt::ToString(eventKey.GetKey()).ConstBuffer();
+            JPT_LOG("Key %s: %s", stateStr, keyStr);
         });
 
     return true;
