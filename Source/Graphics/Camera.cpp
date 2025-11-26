@@ -39,11 +39,15 @@ namespace jpt
 
     void Camera::Update(TimePrecision deltaSeconds)
     {
-        const Vec3 right = Vec3::Up().Cross(m_forward);
+        Vec3 rightLS = Vec3::Up().Cross(m_forward);
+        Vec3 upLS    = m_forward.Cross(rightLS);
 
-        m_positionWS +=      right * m_mover.x * kMoveSpeed * deltaSeconds;
-        m_positionWS += Vec3::Up() * m_mover.y * kMoveSpeed * deltaSeconds;
-        m_positionWS +=  m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
+        rightLS.Normalize();
+        upLS.Normalize();
+
+        m_positionWS +=   rightLS * m_mover.x * kMoveSpeed * deltaSeconds;
+        m_positionWS +=      upLS * m_mover.y * kMoveSpeed * deltaSeconds;
+        m_positionWS += m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
     }
 
     void Camera::OnKey(const Event_Key& eventKey)
