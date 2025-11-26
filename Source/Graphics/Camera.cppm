@@ -23,6 +23,7 @@ export namespace jpt
     private:
         enum class MouseMode : uint8
         {
+            None,   // No movement
             Pan,    // Horizontal/Vertical movement
             Orbit,  // Rotate
         };
@@ -41,7 +42,7 @@ export namespace jpt
 
         // Controls
         Vec2i m_lockMousePos  = Vec2i(kMax<int32>);
-        MouseMode m_mouseMode = MouseMode::Pan;
+        MouseMode m_mouseMode = MouseMode::None;
 
         // Cached
         Vec3 m_forward;  /**< Current heading direction, normalized */

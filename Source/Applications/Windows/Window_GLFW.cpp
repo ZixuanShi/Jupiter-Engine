@@ -166,14 +166,14 @@ namespace jpt
             double x, y;
             glfwGetCursorPos(pGLFWWindow, &x, &y);
 
-            const Event_Mouse_Button eventMouseButtonPress = { pWindow,
+            const Event_Mouse_Button eventMouseButton = { pWindow,
                                                                x,
                                                                y,
                                                                mouseButton,
                                                                state,
                                                                modifiers };
 
-            EventManager::GetInstance().Send(eventMouseButtonPress);
+            EventManager::GetInstance().Send(eventMouseButton);
         }
 
         void OnMouseMove(GLFWwindow* pGLFWWindow, double x, double y)
@@ -203,9 +203,9 @@ namespace jpt
             const Input::KeyState keyState = pRawInputGLFW->ParseKeyState(action);
 
             Window* pWindow = static_cast<Window*>(glfwGetWindowUserPointer(pGLFWWindow));
-            const Event_Key eventKeyboardKeyPress = { pWindow, keyCode, keyState, modifiers };
+            const Event_Key eventKey = { pWindow, keyCode, keyState, modifiers };
 
-            EventManager::GetInstance().Send(eventKeyboardKeyPress);
+            EventManager::GetInstance().Send(eventKey);
         }
     }
 }

@@ -39,15 +39,18 @@ namespace jpt
 
     void Camera::Update(TimePrecision deltaSeconds)
     {
-        Vec3 rightLS = Vec3::Up().Cross(m_forward);
-        Vec3 upLS    = m_forward.Cross(rightLS);
+        if (m_mouseMode != MouseMode::None)
+        {
+            Vec3 rightLS = Vec3::Up().Cross(m_forward);
+            Vec3 upLS    = m_forward.Cross(rightLS);
 
-        rightLS.Normalize();
-        upLS.Normalize();
+            rightLS.Normalize();
+            upLS.Normalize();
 
-        m_positionWS +=   rightLS * m_mover.x * kMoveSpeed * deltaSeconds;
-        m_positionWS +=      upLS * m_mover.y * kMoveSpeed * deltaSeconds;
-        m_positionWS += m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
+            m_positionWS +=   rightLS * m_mover.x * kMoveSpeed * deltaSeconds;
+            m_positionWS +=      upLS * m_mover.y * kMoveSpeed * deltaSeconds;
+            m_positionWS += m_forward * m_mover.z * kMoveSpeed * deltaSeconds;
+        }
     }
 
     void Camera::OnKey(const Event_Key& eventKey)
@@ -83,23 +86,23 @@ namespace jpt
         const Input::MouseButton button = eventMouseButton.GetButton();
         const Input::KeyState state     = eventMouseButton.GetState();
 
-        // Right mouse button. FPS camera rotation
-        if (button == Input::MouseButton::Right)
-        {
-            m_mouseMode = MouseMode::Orbit;
-        }
-        // Wheel button. Move camera up/down and left/right
-        else if (button == Input::MouseButton::Wheel)
-        {
-            m_mouseMode = MouseMode::Pan;
-        }
-        else
-        {
-            return;
-        }
-
         if (state == Input::KeyState::Pressed)
         {
+            // Right mouse button. FPS camera rotation
+            if (button == Input::MouseButton::Right)
+            {
+                m_mouseMode = MouseMode::Orbit;
+            }
+            // Wheel button. Move camera up/down and left/right
+            else if (button == Input::MouseButton::Wheel)
+            {
+                m_mouseMode = MouseMode::Pan;
+            }
+            else
+            {
+                return;
+            }
+
             const double x = eventMouseButton.GetX();
             const double y = eventMouseButton.GetY();
             m_lockMousePos = Vec2i(static_cast<int32>(x), static_cast<int32>(y));
@@ -107,8 +110,9 @@ namespace jpt
             m_pWindow = eventMouseButton.GetWindow();
             m_pWindow->SetCursorVisible(false);
         }
-        else if (state == Input::KeyState::Released)
+        else if (state == Input::KeyState::Released && m_mouseMode != MouseMode::None)
         {
+            m_mouseMode = MouseMode::None;
             m_lockMousePos = Vec2i(kMax<int32>);
 
             m_pWindow->SetCursorVisible(true);
