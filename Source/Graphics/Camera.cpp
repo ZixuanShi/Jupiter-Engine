@@ -153,8 +153,14 @@ namespace jpt
             case MouseMode::Pan:
             {
                 // Move the camera up/down and left/right
-                m_positionWS += Vec3::Up().Cross(m_forward) * dx * kSensitivity;
-                m_positionWS += Vec3::Up() * dy * kSensitivity;
+                Vec3 rightLS = Vec3::Up().Cross(m_forward);
+                Vec3 upLS = m_forward.Cross(rightLS);
+
+                rightLS.Normalize();
+                upLS.Normalize();
+
+                m_positionWS += rightLS * dx * kSensitivity;
+                m_positionWS +=    upLS * dy * kSensitivity;
 
                 break;
             }
