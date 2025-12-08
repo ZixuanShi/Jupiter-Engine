@@ -26,7 +26,7 @@ bool UnitTests_WeakPtr_Class()
         Foo(int32 left, char right) : m_left(left), m_right(right) {}
         ~Foo() 
         { 
-            //JPT_LOG("Destroyed a Foo %s", ToString().ConstBuffer()); 
+            //JPT_INFO("Destroyed a Foo %s", ToString().ConstBuffer()); 
         }
 
         jpt::String ToString() const

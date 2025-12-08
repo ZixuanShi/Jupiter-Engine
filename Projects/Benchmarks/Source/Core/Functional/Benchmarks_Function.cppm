@@ -20,7 +20,7 @@ static constexpr int32 kCount = 1'000'000;
 bool SampleFunction(int32 num) { return num > 0; }
 bool SampleFunction2(int32 num) { return num < 0; }
 
-void jptFunction_Call(jpt::BenchmarksReporter& reporter)
+void jptFunction_Call([[maybe_unused]] jpt::BenchmarksReporter& reporter)
 {
     JPT_SCOPED_TIMING_PROFILER("Benchmarks_Function::RunBenchmarks_jptFunction");
 
@@ -31,7 +31,7 @@ void jptFunction_Call(jpt::BenchmarksReporter& reporter)
     }
 }
 
-void stdFunction_Call(jpt::BenchmarksReporter& reporter)
+void stdFunction_Call([[maybe_unused]] jpt::BenchmarksReporter& reporter)
 {
     JPT_SCOPED_TIMING_PROFILER("Benchmarks_Function::RunBenchmarks_stdFunction");
 
@@ -42,7 +42,7 @@ void stdFunction_Call(jpt::BenchmarksReporter& reporter)
     }
 }
 
-void jptFunction_Assign(jpt::BenchmarksReporter& reporter)
+void jptFunction_Assign([[maybe_unused]] jpt::BenchmarksReporter& reporter)
 {
     JPT_SCOPED_TIMING_PROFILER("Benchmarks_Function::RunBenchmarks_jptFunction_Assign");
 
@@ -60,7 +60,7 @@ void jptFunction_Assign(jpt::BenchmarksReporter& reporter)
     }
 }
 
-void stdFunction_Assign(jpt::BenchmarksReporter& reporter)
+void stdFunction_Assign([[maybe_unused]] jpt::BenchmarksReporter& reporter)
 {
     JPT_SCOPED_TIMING_PROFILER("Benchmarks_Function::RunBenchmarks_stdFunction_Assign");
     std::function<bool(int32)> func;

@@ -21,18 +21,18 @@ export namespace jpt
             protected:
                 void Init() override 
                 {
-                    JPT_LOG("Initializing thread " + m_name + jpt::ToString(GetId()));
+                    JPT_INFO("Initializing thread " + m_name + jpt::ToString(GetId()));
                 }
 
                 void Update() override 
                 {
-                    JPT_LOG("Updating thread " + m_name + jpt::ToString(GetId()));
+                    JPT_INFO("Updating thread " + m_name + jpt::ToString(GetId()));
                     jpt::Sleep(1);
                 }
 
                 void Terminate() override 
                 {
-                    JPT_LOG("Terminating thread " + m_name + jpt::ToString(GetId()));
+                    JPT_INFO("Terminating thread " + m_name + jpt::ToString(GetId()));
                 }
             }; */
     class Thread

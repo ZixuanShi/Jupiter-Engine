@@ -77,11 +77,7 @@ function CreateEngineWorkspace()
             defines { "IS_CONFIG_RELEASE" }
             optimize "Speed"
             symbols "off"
-            flags{ "FatalCompileWarnings" }
-
-        -- Release shouldn't use editors
-        filter { "configurations:Release", "platforms:Windows_Editor" }
-            flags { "ExcludeFromBuild" } 
+            fatalwarnings { "All" }
 
         -- Global filters for windows
         filter "platforms:Windows_Client or Windows_Editor"

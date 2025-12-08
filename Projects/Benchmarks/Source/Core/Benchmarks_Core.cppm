@@ -34,11 +34,11 @@ export void RunBenchmarks_Core(jpt::BenchmarksReporter& reporter)
     //RunBenchmarks_Function(reporter);
 
     // Strings
-    //RunBenchmarks_String(reporter);
+    RunBenchmarks_String(reporter);
 
     // Math
     //RunBenchmarks_Math(reporter);
 
     // Minimal
-    RunBenchmarks_Utilities(reporter);
+    //RunBenchmarks_Utilities(reporter);
 }

@@ -28,7 +28,7 @@ export namespace jpt
             auto handle = stringPool.Acquire();
             (*handle.first) = "Hello, World!";
 
-            JPT_LOG(*handle.first);
+            JPT_INFO(*handle.first);
 
             stringPool.Release(handle.second);
 

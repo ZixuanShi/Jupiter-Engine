@@ -50,17 +50,17 @@ export bool UnitTests_Coding_BuildPalindromeWithRemains()
 {
     if (BuildPalindromeWithRemains("abca") != 1)
     {
-        JPT_LOG("BuildPalindromeWithRemains abca failed");
+        JPT_INFO("BuildPalindromeWithRemains abca failed");
     }
 
     if (BuildPalindromeWithRemains("abcda") != 2)
     {
-        JPT_LOG("BuildPalindromeWithRemains abcda failed");
+        JPT_INFO("BuildPalindromeWithRemains abcda failed");
     }
 
     if (BuildPalindromeWithRemains("ervervige") != 2)
     {
-        JPT_LOG("BuildPalindromeWithRemains ervervige failed");
+        JPT_INFO("BuildPalindromeWithRemains ervervige failed");
     }
 
     return true;

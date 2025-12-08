@@ -44,13 +44,13 @@ void ParameterPack()
 template<typename T>
 void ParameterPack(T t)
 {
-    JPT_LOG(t);
+    JPT_INFO(t);
 }
 
 template<typename T, typename ...TArgs>
 void ParameterPack(T t, TArgs&&... args)
 {
-    JPT_LOG(t);
+    JPT_INFO(t);
     ParameterPack(args...);
 }
 
@@ -64,7 +64,7 @@ void ParameterPackLambda(TArgs&&... args)
 {
     ([&]
         {
-            JPT_LOG(args);
+            JPT_INFO(args);
         } (), ...);
 }
 
@@ -74,7 +74,7 @@ void InitializerList(const std::initializer_list<T>& list)
 {
     for (const T& item : list)
     {
-        JPT_LOG(item);
+        JPT_INFO(item);
     }
 }
 

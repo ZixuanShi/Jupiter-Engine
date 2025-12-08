@@ -2,8 +2,6 @@
 
 #include "Debugging/Logger.h"
 
-#if IS_LOGGER_ENABLED
-
 #include "Core/Strings/StringMacros.h"
 #include "Core/Validation/Assert.h"
 
@@ -31,17 +29,17 @@ import jpt.StringHelpers;
 
 namespace jpt
 {
-    static constexpr size_t kMaxMessageSize = 1024;
+    static constexpr size_t kMaxMessageSize = 2048;
     static File::Path locLogFilePath = File::Combine(File::Source::Saved, "Log.txt");
 
     static const char* locGetLogStr(Logger::Type type)
     {
         switch (type)
         {
-            case Logger::Type::Log:            return "Log";
+            case Logger::Type::Debug:       return "Debug";
             case Logger::Type::Info:        return "Info";
             case Logger::Type::Warn:        return "Warn";
-            case Logger::Type::Error:        return "Error";
+            case Logger::Type::Error:       return "Error";
             default:  JPT_ASSERT(false, "Unrecognized Log category"); return nullptr;
         }
     }
@@ -65,7 +63,7 @@ namespace jpt
         String stamp;
         stamp.Reserve(kMaxMessageSize);
 
-        // Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_LOG got called
+        // Convert to relative path from VS proj, so double-clicking a Log message will redirect to the source code where JPT_INFO got called
         const String fileStr(file);
         stamp += ".." + File::GetSeparator<String>() + fileStr.SubStr(fileStr.Find("Source"));
 
@@ -138,5 +136,3 @@ namespace jpt
         return s_logger;
     }
 }
-
-#endif

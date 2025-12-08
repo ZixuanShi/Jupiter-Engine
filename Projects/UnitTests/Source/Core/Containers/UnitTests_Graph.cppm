@@ -192,7 +192,7 @@ export bool DFS(const jpt::Graph<Foo>& graph, const Foo& start)
 
     graph.DFS(i, [](const Foo& foo)
         {
-            JPT_LOG(foo.m_data);
+            JPT_INFO(foo.m_data);
         });
 
     return true;
@@ -204,7 +204,7 @@ export bool BFS(const jpt::Graph<Foo>& graph, const Foo& start)
 
     graph.BFS(i, [](const Foo& foo)
         {
-            JPT_LOG(foo.m_data);
+            JPT_INFO(foo.m_data);
         });
 
     return true;
@@ -222,7 +222,7 @@ export bool Dijkstra(const jpt::Graph<Foo>& graph, const Foo& start, const Foo& 
         for (Index i : result)
         {
             const Foo& foo = graph[i];
-            JPT_LOG(foo.m_data);
+            JPT_INFO(foo.m_data);
         }
     }
 
@@ -274,9 +274,9 @@ export bool RunUnitTests_Graph()
     //jpt::Graph<Foo> graph = GetGraph2();
 
     //DFS(graph, 'A');
-    //JPT_LOG("---------------------------");
+    //JPT_INFO("---------------------------");
     //BFS(graph, 'A');
-    //JPT_LOG("---------------------------");
+    //JPT_INFO("---------------------------");
 
     JPT_ENSURE(Dijkstra());
 

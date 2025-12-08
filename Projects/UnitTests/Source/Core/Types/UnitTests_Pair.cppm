@@ -12,7 +12,7 @@ import jpt.Utilities;
 bool UnitTests_Pair()
 {
     jpt::Pair<int, bool> pair{ 42, true };
-    //JPT_LOG(pair);
+    //JPT_INFO(pair);
 
     JPT_ENSURE(pair.first == 42);
     JPT_ENSURE(pair.second == true);

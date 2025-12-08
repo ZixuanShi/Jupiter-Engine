@@ -153,25 +153,25 @@ bool UnitTests_SortedMap_Walk()
     sortedMap.Add(13, 'N');
     sortedMap.Add(15, 'O');
 
-    JPT_LOG("-------------------------------------------------\nPre Order");
+    JPT_INFO("-------------------------------------------------\nPre Order");
     sortedMap.PreOrderWalk([](int32 key, char value)
         {
-            JPT_LOG("Key: %i, Value: %c", key, value);
+            JPT_INFO("Key: %i, Value: %c", key, value);
         });
-    JPT_LOG("-------------------------------------------------\nIn Order");
+    JPT_INFO("-------------------------------------------------\nIn Order");
     sortedMap.InOrderWalk([](int32 key, char value)
         {
-            JPT_LOG("Key: %i, Value: %c", key, value);
+            JPT_INFO("Key: %i, Value: %c", key, value);
         });
-    JPT_LOG("-------------------------------------------------\nPost Order");
+    JPT_INFO("-------------------------------------------------\nPost Order");
     sortedMap.PostOrderWalk([](int32 key, char value)
         {
-            JPT_LOG("Key: %i, Value: %c", key, value);
+            JPT_INFO("Key: %i, Value: %c", key, value);
         });
-    JPT_LOG("-------------------------------------------------\nBFS");
+    JPT_INFO("-------------------------------------------------\nBFS");
     sortedMap.BFS([](int32 key, char value)
         {
-            JPT_LOG("Key: %i, Value: %c", key, value);
+            JPT_INFO("Key: %i, Value: %c", key, value);
         });
 
     return true;

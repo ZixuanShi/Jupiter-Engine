@@ -52,14 +52,14 @@ static bool RawThreads()
             m_name += jpt::ToString(s_id);
             ++s_id;
 
-            JPT_LOG("Initializing thread " + m_name);
+            JPT_INFO("Initializing thread " + m_name);
         }
 
         void Terminate() override 
         {
             jpt::LockGuard lock(rawThreadsTerminateMutex);
 
-            JPT_LOG("Terminating thread " + m_name);
+            JPT_INFO("Terminating thread " + m_name);
         }
     };
 
@@ -102,7 +102,7 @@ static bool ThreadSafeQueue()
             for (int32 i = 0; i < 10; ++i)
             {
                 m_queue.Push(i);
-                JPT_LOG("Produced: " + jpt::ToString(i));
+                JPT_INFO("Produced: " + jpt::ToString(i));
                 jpt::SleepMs(100);
             }
 
@@ -127,7 +127,7 @@ static bool ThreadSafeQueue()
             auto value = m_queue.TryPop();
             if (value)
             {
-                JPT_LOG("Consumed: " + jpt::ToString(value.Value()));
+                JPT_INFO("Consumed: " + jpt::ToString(value.Value()));
             }
             else
             {
@@ -166,7 +166,7 @@ public:
 protected:
     virtual void Update() override
     {
-        JPT_LOG("Hello");
+        JPT_INFO("Hello");
         jpt::Sleep(1);
     }
 };
@@ -181,7 +181,7 @@ public:
 protected:
     virtual void Update() override
     {
-        JPT_LOG("Bye");
+        JPT_INFO("Bye");
         jpt::Sleep(2);
     }
 };
@@ -217,7 +217,7 @@ static bool NotBlockingMain()
     jpt::EventManager::GetInstance().Register<Event_TerminateThread>([](const Event_TerminateThread& event)
         {
             event.GetThread()->Stop();
-            JPT_LOG("Stopped Thread: %s", event.GetThread()->GetName().ConstBuffer());
+            JPT_INFO("Stopped Thread: %s", event.GetThread()->GetName().ConstBuffer());
         });
 
     return true;
@@ -230,6 +230,7 @@ bool MutexVsAtomic(size_t threadsCount)
     jpt::DynamicArray<uint32> data(1024, 1);
 
     jpt::Atomic<uint32> sum = 0;
+    //uint32 sum = 0;
 
     {
         JPT_SCOPED_TIMING_PROFILER("MutexVsAtomic");

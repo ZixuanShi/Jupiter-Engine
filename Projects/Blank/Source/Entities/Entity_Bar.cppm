@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/Utilities.h"
+#include "Core/Minimal/CoreHeaders.h"
 #include "Debugging/Logger.h"
 
 export module Entity.Bar;

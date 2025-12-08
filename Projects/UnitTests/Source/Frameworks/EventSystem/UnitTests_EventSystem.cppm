@@ -169,21 +169,21 @@ static bool RegisterEvents()
 {
     jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Button>([](const jpt::Event_Mouse_Button& eventMouseButtonPress)
         {
-            const char* stateStr  = jpt::ToString(eventMouseButtonPress.GetState()).ConstBuffer();
-            const char* buttonStr = jpt::ToString(eventMouseButtonPress.GetButton()).ConstBuffer();
-            JPT_LOG("Mouse Button %s: %s, x: %f, y: %f", stateStr, buttonStr, eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
+            [[maybe_unused]] const char* stateStr  = jpt::ToString(eventMouseButtonPress.GetState()).ConstBuffer();
+            [[maybe_unused]] const char* buttonStr = jpt::ToString(eventMouseButtonPress.GetButton()).ConstBuffer();
+            JPT_DEBUG("Mouse Button %s: %s, x: %f, y: %f", stateStr, buttonStr, eventMouseButtonPress.GetX(), eventMouseButtonPress.GetY());
         });
 
-    jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Scroll>([](const jpt::Event_Mouse_Scroll& eventMouseScroll)
+    jpt::EventManager::GetInstance().Register<jpt::Event_Mouse_Scroll>([]([[maybe_unused]] const jpt::Event_Mouse_Scroll& eventMouseScroll)
         {
-            JPT_LOG("Mouse Scroll: y: %f", eventMouseScroll.GetY());
+            JPT_DEBUG("Mouse Scroll: y: %f", eventMouseScroll.GetY());
         });
 
     jpt::EventManager::GetInstance().Register<jpt::Event_Key>([](const jpt::Event_Key& eventKey)
         {
-            const char* stateStr = jpt::ToString(eventKey.GetState()).ConstBuffer();
-            const char* keyStr   = jpt::ToString(eventKey.GetKey()).ConstBuffer();
-            JPT_LOG("Key %s: %s", stateStr, keyStr);
+            [[maybe_unused]] const char* stateStr = jpt::ToString(eventKey.GetState()).ConstBuffer();
+            [[maybe_unused]] const char* keyStr   = jpt::ToString(eventKey.GetKey()).ConstBuffer();
+            JPT_DEBUG("Key %s: %s", stateStr, keyStr);
         });
 
     return true;

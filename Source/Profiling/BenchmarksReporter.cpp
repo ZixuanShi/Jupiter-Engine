@@ -48,6 +48,6 @@ namespace jpt
 
     void BenchmarksReporter::LogResults()
     {
-        JPT_LOG(m_results);
+        JPT_INFO(m_results);
     }
 }

@@ -189,7 +189,7 @@ namespace jpt
         std::ifstream file(path.ConstBuffer(), std::ios::in);
         if (!file.is_open()) [[unlikely]]
         {
-            JPT_LOG("Couldn't find Json File: %ls", path.ConstBuffer());
+            JPT_INFO("Couldn't find Json File: %ls", path.ConstBuffer());
             return {};
         }
 

@@ -27,10 +27,10 @@ bool UnitTests_StopWatch()
     
     const jpt::StopWatch::Point end = jpt::StopWatch::Now();
 
-    JPT_LOG(jpt::StopWatch::GetSecondsBetween(start, end));
-    JPT_LOG(jpt::StopWatch::GetSecondsFrom(start));
-    JPT_LOG(jpt::StopWatch::GetMsBetween(start, end));
-    JPT_LOG(jpt::StopWatch::GetMsFrom(start));
+    JPT_INFO(jpt::StopWatch::GetSecondsBetween(start, end));
+    JPT_INFO(jpt::StopWatch::GetSecondsFrom(start));
+    JPT_INFO(jpt::StopWatch::GetMsBetween(start, end));
+    JPT_INFO(jpt::StopWatch::GetMsFrom(start));
 #endif
 
     return true;
