@@ -238,7 +238,7 @@ bool UnitTests_Function_LambdaCapturesThis()
 
 void VoidFunction()
 {
-    JPT_LOG("Hello Void Func");
+    JPT_INFO("Hello Void Func");
 }
 bool UnitTests_Function_Void()
 {

@@ -3,7 +3,7 @@
 module;
 
 #include "Applications/Utils/SyncClient.h"
-#include "Core/Minimal/Utilities.h"
+#include "Core/Minimal/CoreHeaders.h"
 #include "Debugging/Logger.h"
 
 module Application_Benchmarks;

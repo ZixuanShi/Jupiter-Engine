@@ -135,12 +135,12 @@ bool UnitTests_Any_CStr()
     //jpt::Any any;
     //
     //any = "Hello World";
-    //JPT_LOG(any.As<const char*>());
+    //JPT_INFO(any.As<const char*>());
 
     std::any stdAny;
 
     stdAny = "Hello World";
-    //JPT_LOG(std::any_cast<const char*>(stdAny));
+    //JPT_INFO(std::any_cast<const char*>(stdAny));
 
     return true;
 }

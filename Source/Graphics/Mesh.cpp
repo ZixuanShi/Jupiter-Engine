@@ -16,7 +16,7 @@ namespace jpt
 {
     bool Mesh::Load(const File::Path& meshPath)
     {
-        JPT_LOG("Loading mesh: %s", ToString(meshPath).ConstBuffer());
+        JPT_DEBUG("Loading mesh: %s", ToString(meshPath).ConstBuffer());
 
         tinyobj::attrib_t attrib;
         std::vector<tinyobj::shape_t> shapes;
@@ -68,8 +68,8 @@ namespace jpt
                 }
             }
 
-            JPT_LOG("Vertices: %i", m_vertices.Count());
-            JPT_LOG("Indices: %i", m_indices.Count());
+            JPT_DEBUG("Vertices: %i", m_vertices.Count());
+            JPT_DEBUG("Indices: %i", m_indices.Count());
         }
 
         return true;

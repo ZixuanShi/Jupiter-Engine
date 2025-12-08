@@ -47,9 +47,9 @@ bool UnitTests_HashMap_Trivial()
     JPT_ENSURE(map.Find('e') == map.end());
 
     // Modifiying
-    //JPT_LOG(map);
+    //JPT_INFO(map);
     map.Clear();
-    //JPT_LOG(map);
+    //JPT_INFO(map);
 
     // Capacity
     JPT_ENSURE(map.IsEmpty());
@@ -78,9 +78,9 @@ bool UnitTests_HashMap_Trivial_Copy()
     JPT_ENSURE(otherMap2['c'] == 3);
     JPT_ENSURE(otherMap2.Count() == 3);
 
-    //JPT_LOG(map);
-    //JPT_LOG(otherMap);
-    //JPT_LOG(otherMap2);
+    //JPT_INFO(map);
+    //JPT_INFO(otherMap);
+    //JPT_INFO(otherMap2);
 
     return true;
 }
@@ -108,9 +108,9 @@ bool UnitTests_HashMap_Trivial_Move()
     JPT_ENSURE(otherMap2.Count() == 3);
     JPT_ENSURE(otherMap.IsEmpty());
 
-    //JPT_LOG(map);
-    //JPT_LOG(otherMap);
-    //JPT_LOG(otherMap2);
+    //JPT_INFO(map);
+    //JPT_INFO(otherMap);
+    //JPT_INFO(otherMap2);
 
     return true;
 }
@@ -144,9 +144,9 @@ bool UnitTests_HashMap_NonTrivial()
     JPT_ENSURE(map.Find("Champ E") == map.end());
 
     // Modifiying
-    //JPT_LOG(map);
+    //JPT_INFO(map);
     map.Clear();
-    //JPT_LOG(map);
+    //JPT_INFO(map);
 
     // Capacity
     JPT_ENSURE(map.IsEmpty());
@@ -175,9 +175,9 @@ bool UnitTests_HashMap_NonTrivial_Copy()
     JPT_ENSURE(otherMap2["Champ C"] == "Darius");
     JPT_ENSURE(otherMap2.Count() == 3);
 
-    //JPT_LOG(map);
-    //JPT_LOG(otherMap);
-    //JPT_LOG(otherMap2);
+    //JPT_INFO(map);
+    //JPT_INFO(otherMap);
+    //JPT_INFO(otherMap2);
 
     return true;
 }
@@ -203,9 +203,9 @@ bool UnitTests_HashMap_NonTrivial_Move()
     JPT_ENSURE(otherMap2["Champ C"] == "Darius");
     JPT_ENSURE(otherMap2.Count() == 3);
 
-    //JPT_LOG(map);
-    //JPT_LOG(otherMap);
-    //JPT_LOG(otherMap2);
+    //JPT_INFO(map);
+    //JPT_INFO(otherMap);
+    //JPT_INFO(otherMap2);
 
     return true;
 }
@@ -371,7 +371,7 @@ bool UnitTests_HashMap_Iterate_Erase_Container()
         { "Tools" ,        { "Premake", "Doxygen"                  }}
     };
 
-    //JPT_LOG(hashMap);
+    //JPT_INFO(hashMap);
     JPT_ENSURE(hashMap.Count() == 4);
 
     JPT_ENSURE(hashMap.Find("Languages")->second     == (jpt::DynamicArray<jpt::String>{ "C++", "Python", "Lua" }));
@@ -428,7 +428,7 @@ bool UnitTests_HashMap_Enum()
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
 
-    //JPT_LOG(hashMap);
+    //JPT_INFO(hashMap);
 
     hashMap.Erase(EWeapon::Sword);
 
@@ -438,7 +438,7 @@ bool UnitTests_HashMap_Enum()
     JPT_ENSURE(hashMap[EWeapon::Axe]    == 3);
     JPT_ENSURE(hashMap[EWeapon::Spear]  == 2);
 
-    //JPT_LOG(hashMap);
+    //JPT_INFO(hashMap);
 
     return true;
 }

@@ -25,23 +25,23 @@ namespace jpt
 
 bool UnitTests_Logger_Data()
 {
-    JPT_LOG("%d", 1);
-    JPT_LOG(1);
+    JPT_INFO("%d", 1);
+    JPT_INFO(1);
 
-    JPT_LOG(2);
-    JPT_LOG(2.0f);
-    JPT_LOG(2.0);
-    JPT_LOG(false);
-    JPT_LOG(true);
-    JPT_LOG('C');
-    JPT_LOG('a');
-    JPT_LOG("I'm genius");
+    JPT_INFO(2);
+    JPT_INFO(2.0f);
+    JPT_INFO(2.0);
+    JPT_INFO(false);
+    JPT_INFO(true);
+    JPT_INFO('C');
+    JPT_INFO('a');
+    JPT_INFO("I'm genius");
 
     Foo foo;
-    JPT_LOG(foo);
-    JPT_LOG(jpt::ToString(foo));
-    JPT_LOG(jpt::ToString(foo).ConstBuffer());
-    JPT_LOG("%s", jpt::ToString(foo).ConstBuffer());
+    JPT_INFO(foo);
+    JPT_INFO(jpt::ToString(foo));
+    JPT_INFO(jpt::ToString(foo).ConstBuffer());
+    JPT_INFO("%s", jpt::ToString(foo).ConstBuffer());
 
     JPT_ENSURE(jpt::ToString(foo) == "I am a Foo object");
 

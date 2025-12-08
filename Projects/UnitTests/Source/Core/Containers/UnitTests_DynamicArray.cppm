@@ -147,7 +147,7 @@ bool UnitTests_DynamicArray_Trivial()
         JPT_ENSURE(element == i * 2);
         ++i;
     }
-    //JPT_LOG(copiedArray);
+    //JPT_INFO(copiedArray);
 
     return true;
 }
@@ -263,7 +263,7 @@ bool UnitTests_DynamicArray_NonTrivial()
         JPT_ENSURE(element == locHelper(i * 2));
         ++i;
     }
-    //JPT_LOG(copiedArray);
+    //JPT_INFO(copiedArray);
 
     return true;
 }

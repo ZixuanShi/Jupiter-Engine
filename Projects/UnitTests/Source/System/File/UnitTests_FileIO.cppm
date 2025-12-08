@@ -102,7 +102,7 @@ bool UnitTests_FileIO_TextFile()
     // Load existing file
     //jpt::String text;
     //jpt::File::ReadTextFile({ ESource::Client, "Config/TestJson.json"), text);
-    //JPT_LOG(text);
+    //JPT_INFO(text);
 
     const Path path = jpt::File::Combine(Source::Client, "Assets/NewTextFile_UnitTest.txt");
 

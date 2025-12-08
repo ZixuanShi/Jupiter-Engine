@@ -92,7 +92,7 @@ namespace jpt
 
         if (m_accumulator >= 1.0f)
         {
-            JPT_LOG("Window \"%s\" FPS: %u", m_title, m_fps);
+            JPT_DEBUG("Window \"%s\" FPS: %u", m_title, m_fps);
 
             m_fps = m_frameCount;
             m_frameCount = 0;

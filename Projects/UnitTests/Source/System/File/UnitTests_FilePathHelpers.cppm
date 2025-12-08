@@ -15,8 +15,8 @@ import jpt.FilePathHelpers;
 
 bool UnitTests_FilePathHelpers_Getters()
 {
-    //JPT_LOG(jpt::File::GetClientPath());
-    //JPT_LOG(jpt::File::GetEnginePath());
+    //JPT_INFO(jpt::File::GetClientPath());
+    //JPT_INFO(jpt::File::GetEnginePath());
 
     return true;
 }

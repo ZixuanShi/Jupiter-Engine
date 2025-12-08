@@ -59,7 +59,7 @@ bool UnitTests_SharedPtr_Char()
     right = left;
     third.Reset(nullptr, [](int* pPtr)
         { 
-            //JPT_LOG("Deleted a strong ptr");
+            //JPT_INFO("Deleted a strong ptr");
             JPT_DELETE(pPtr); 
         });
     left.Reset(JPT_NEW(int, 42));

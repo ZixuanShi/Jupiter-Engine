@@ -121,7 +121,7 @@ bool UnitTests_StaticArray_Moving()
         JPT_ENSURE(element == locHelper(i++));
     }
 
-    //JPT_LOG(staticArray1);
+    //JPT_INFO(staticArray1);
 
     return true;
 }

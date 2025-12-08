@@ -35,7 +35,7 @@ void Store::Put(const jpt::String& key, int32 value)
     History& history = m_data[key];
     history.Add({ m_version, value });
 
-    JPT_LOG("Put(#%u) %s: %i", m_version, key.ConstBuffer(), value);
+    JPT_INFO("Put(#%u) %s: %i", m_version, key.ConstBuffer(), value);
 
     ++m_version;
 }
@@ -45,14 +45,14 @@ int32 Store::Get(const jpt::String& key) const
     const auto itr = m_data.Find(key);
     if (itr == m_data.end())
     {
-        JPT_LOG("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
+        JPT_INFO("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
         return jpt::kInvalidValue<int32>;
     }
 
     const History& history = itr->second;
     const Record& record = history.Back();
 
-    JPT_LOG("Get(#%u) %s: %i", m_version, key.ConstBuffer(), record.second);
+    JPT_INFO("Get(#%u) %s: %i", m_version, key.ConstBuffer(), record.second);
 
     return record.second;
 }
@@ -64,7 +64,7 @@ int32 Store::Get(const jpt::String& key, uint32 version) const
     const auto itr = m_data.Find(key);
     if (itr == m_data.end())
     {
-        JPT_LOG("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
+        JPT_INFO("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
         return jpt::kInvalidValue<int32>;
     }
 
@@ -74,7 +74,7 @@ int32 Store::Get(const jpt::String& key, uint32 version) const
     const Record& firstRecord = history.Front();
     if (version < firstRecord.first)
     {
-        JPT_LOG("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
+        JPT_INFO("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
         return jpt::kInvalidValue<int32>;
     }
 
@@ -82,7 +82,7 @@ int32 Store::Get(const jpt::String& key, uint32 version) const
     const Record& lastRecord = history.Back();
     if (lastRecord.first <= version)
     {
-        JPT_LOG("Get(#%u) %s: %i", m_version, key.ConstBuffer(), lastRecord.second);
+        JPT_INFO("Get(#%u) %s: %i", m_version, key.ConstBuffer(), lastRecord.second);
         return lastRecord.second;
     }
 
@@ -94,12 +94,12 @@ int32 Store::Get(const jpt::String& key, uint32 version) const
 
         if (currentRecord.first <= version && version < nextRecord.first)
         {
-            JPT_LOG("Get(#%u) %s: %i", m_version, key.ConstBuffer(), currentRecord.second);
+            JPT_INFO("Get(#%u) %s: %i", m_version, key.ConstBuffer(), currentRecord.second);
             return currentRecord.second;
         }
     }
 
-    JPT_LOG("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
+    JPT_INFO("Get(#%u) %s: NULL", m_version, key.ConstBuffer());
     return jpt::kInvalidValue<int32>;
 }
 

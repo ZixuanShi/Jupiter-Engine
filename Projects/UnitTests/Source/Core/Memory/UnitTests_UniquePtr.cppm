@@ -17,13 +17,13 @@ bool UnitTests_UniquePtr_Char()
 {
     auto deleter = [](char* pCharPtr)
         {
-            //JPT_LOG("Deleted a char %c", *pCharPtr);
+            //JPT_INFO("Deleted a char %c", *pCharPtr);
             JPT_DELETE(pCharPtr);
         };
 
     auto deleter2 = [](char* pCharPtr)
         {
-            //JPT_LOG("Another Deleted a char %c", *pCharPtr);
+            //JPT_INFO("Another Deleted a char %c", *pCharPtr);
             JPT_DELETE(pCharPtr);
         };
 
@@ -62,12 +62,12 @@ bool UnitTests_UniquePtr_Char()
     JPT_ENSURE(*source == 'B');
 
     jpt::UniquePtr<char[]> charArray(JPT_NEW_ARRAY(char, 10, 'A', 'B', 'C', 'A'));
-    //JPT_LOG(charArray.Get()[0]);
-    //JPT_LOG(charArray.Get()[1]);
-    //JPT_LOG(charArray.Get()[2]);
-    //JPT_LOG(charArray.Get()[3]);
-    //JPT_LOG(charArray.Get()[4]);
-    //JPT_LOG(charArray.Get()[5]);
+    //JPT_INFO(charArray.Get()[0]);
+    //JPT_INFO(charArray.Get()[1]);
+    //JPT_INFO(charArray.Get()[2]);
+    //JPT_INFO(charArray.Get()[3]);
+    //JPT_INFO(charArray.Get()[4]);
+    //JPT_INFO(charArray.Get()[5]);
 
     return true;
 }
@@ -76,13 +76,13 @@ bool UnitTests_UniquePtr_Int()
 {
     auto deleter = [](int32* pint32Ptr)
         {
-            //JPT_LOG("Deleted a int32 %d", *pint32Ptr);
+            //JPT_INFO("Deleted a int32 %d", *pint32Ptr);
             JPT_DELETE(pint32Ptr);
         };
 
     auto deleter2 = [](int32* pint32Ptr)
         {
-            //JPT_LOG("Another Deleted a int32 %d", *pint32Ptr);
+            //JPT_INFO("Another Deleted a int32 %d", *pint32Ptr);
             JPT_DELETE(pint32Ptr);
         };
 
@@ -120,12 +120,12 @@ bool UnitTests_UniquePtr_Int()
     source = jpt::Move(other);
 
     jpt::UniquePtr<int32[]> int32Array(JPT_NEW_ARRAY(int32, 10, 1, 2, 3, 4));
-    //JPT_LOG(int32Array.Get()[0]);
-    //JPT_LOG(int32Array.Get()[1]);
-    //JPT_LOG(int32Array.Get()[2]);
-    //JPT_LOG(int32Array.Get()[3]);
-    //JPT_LOG(int32Array.Get()[4]);
-    //JPT_LOG(int32Array.Get()[5]);
+    //JPT_INFO(int32Array.Get()[0]);
+    //JPT_INFO(int32Array.Get()[1]);
+    //JPT_INFO(int32Array.Get()[2]);
+    //JPT_INFO(int32Array.Get()[3]);
+    //JPT_INFO(int32Array.Get()[4]);
+    //JPT_INFO(int32Array.Get()[5]);
 
     return true;
 }
@@ -136,13 +136,13 @@ bool UnitTests_UniquePtr_String()
 
     auto deleter = [](String* pStringPtr)
         {
-            //JPT_LOG("Deleted a String %s", pStringPtr->ConstBuffer());
+            //JPT_INFO("Deleted a String %s", pStringPtr->ConstBuffer());
             JPT_DELETE(pStringPtr);
         };
 
     auto deleter2 = [](String* pStringPtr)
         {
-            //JPT_LOG("Another Deleted a String %s", pStringPtr->ConstBuffer());
+            //JPT_INFO("Another Deleted a String %s", pStringPtr->ConstBuffer());
             JPT_DELETE(pStringPtr);
         };
 
@@ -208,13 +208,13 @@ bool UnitTests_UniquePtr_Class()
 {
     auto deleter = [](Foo* pFooPtr)
         {
-            //JPT_LOG("Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
+            //JPT_INFO("Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
             JPT_DELETE(pFooPtr);
         };
 
     auto deleter2 = [](Foo* pFooPtr)
         {
-            //JPT_LOG("Another Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
+            //JPT_INFO("Another Deleted a Foo %s", pFooPtr->ToString().ConstBuffer());
             JPT_DELETE(pFooPtr);
         };
 

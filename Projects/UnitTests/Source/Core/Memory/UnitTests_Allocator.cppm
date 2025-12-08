@@ -56,7 +56,7 @@ bool UnitTests_TAllocatorrivialType()
 
 bool UnitTests_TAllocator_NonTrivial()
 {
-    // If uncomment the following JPT_LOGs, only one "Foo copy ctor called" should be printed
+    // If uncomment the following JPT_INFOs, only one "Foo copy ctor called" should be printed
 
     class Foo
     {
@@ -66,44 +66,44 @@ bool UnitTests_TAllocator_NonTrivial()
     public:
         Foo() 
         {
-            //JPT_LOG("Foo default ctor called");
+            //JPT_INFO("Foo default ctor called");
         }
 
         Foo(const jpt::String& str) 
             : m_str(str) 
         {
-            //JPT_LOG("Foo String ctor called");
+            //JPT_INFO("Foo String ctor called");
         }
 
         Foo(const Foo& other) 
             : m_str(other.m_str)
         {
-            //JPT_LOG("Foo copy ctor called");
+            //JPT_INFO("Foo copy ctor called");
         }
 
         Foo(Foo&& other)
             : m_str(jpt::Move(other.m_str))
         {
-            //JPT_LOG("Foo move ctor called");
+            //JPT_INFO("Foo move ctor called");
         }
 
         Foo& operator=(const Foo& other) 
         { 
-            //JPT_LOG("Foo copy operator= called");
+            //JPT_INFO("Foo copy operator= called");
             m_str = other.m_str;
             return *this; 
         }
 
         Foo& operator=(Foo&& other) 
         { 
-            //JPT_LOG("Foo move operator= called");
+            //JPT_INFO("Foo move operator= called");
             m_str = jpt::Move(other.m_str);
             return *this; 
         }
 
         ~Foo() 
         {
-            //JPT_LOG("Foo dtor called");
+            //JPT_INFO("Foo dtor called");
         }
 
         jpt::String ToString() const 

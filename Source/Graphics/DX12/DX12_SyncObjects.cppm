@@ -43,7 +43,7 @@ export namespace jpt::DX12
         m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
         if (m_fenceEvent == nullptr)
         {
-            JPT_LOG(HRESULT_FROM_WIN32(GetLastError()));
+            JPT_INFO(HRESULT_FROM_WIN32(GetLastError()));
         }
 
         // Wait for the command list to execute; we are reusing the same command 

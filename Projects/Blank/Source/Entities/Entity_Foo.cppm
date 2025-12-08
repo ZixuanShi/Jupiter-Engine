@@ -2,7 +2,7 @@
 
 module;
 
-#include "Core/Minimal/Utilities.h"
+#include "Core/Minimal/CoreHeaders.h"
 #include "Debugging/Logger.h"
 
 export module Entity.Foo;
@@ -51,7 +51,7 @@ void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
     const bool hasCtrlMod = eventKeyboardKey.HasModifier(jpt::Input::Modifier::Ctrl);
     const jpt::String hasCtrlModStr = hasCtrlMod ? "true" : "false";
 
-    JPT_LOG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKey.GetWindow(), jpt::ToString(eventKeyboardKey.GetKey()).ConstBuffer(), hasCtrlModStr.ConstBuffer());
+    JPT_DEBUG("Entity_Foo::OnKeyPress. %lu Key: %s, Has Ctrl: %s", eventKeyboardKey.GetWindow(), jpt::ToString(eventKeyboardKey.GetKey()).ConstBuffer(), hasCtrlModStr.ConstBuffer());
 
     // toggle VSync on Ctrl + V
     if (key == jpt::Input::Key::V &&
@@ -76,10 +76,10 @@ void Entity_Foo::OnMouseButton(const jpt::Event_Mouse_Button& eventMouseButton)
 {
     const bool hasShiftMod = eventMouseButton.HasModifier(jpt::Input::Modifier::Shift);
     const jpt::String hasShiftModStr = hasShiftMod ? "true" : "false";
-    JPT_LOG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButton.GetWindow(), eventMouseButton.GetX(), eventMouseButton.GetY(), jpt::ToString(eventMouseButton.GetButton()).ConstBuffer(), hasShiftModStr.ConstBuffer());
+    JPT_DEBUG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButton.GetWindow(), eventMouseButton.GetX(), eventMouseButton.GetY(), jpt::ToString(eventMouseButton.GetButton()).ConstBuffer(), hasShiftModStr.ConstBuffer());
 }
 
 void Entity_Foo::OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize)
 {
-    JPT_LOG("Entity_Foo::OnWindowResize. %lu width: %i, height: %i", eventWindowResize.GetWindow(), eventWindowResize.GetWidth(), eventWindowResize.GetHeight());
+    JPT_DEBUG("Entity_Foo::OnWindowResize. %lu width: %i, height: %i", eventWindowResize.GetWindow(), eventWindowResize.GetWidth(), eventWindowResize.GetHeight());
 }

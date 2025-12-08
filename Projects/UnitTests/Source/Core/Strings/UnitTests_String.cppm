@@ -505,7 +505,7 @@ bool UnitTests_String_Iterator()
     int32 i = 0;
     for (char c : str)
     {
-        //JPT_LOG(c);
+        //JPT_INFO(c);
 
         jpt::String s = jpt::ToString(i);
         JPT_ENSURE(s[0] == c);
@@ -529,7 +529,7 @@ bool UnitTests_WString_Iterator()
     int32 i = 0;
     for (wchar_t c : str)
     {
-        //JPT_LOG(c);
+        //JPT_INFO(c);
 
         wchar_t* wStr = jpt::IntegerToCStr<wchar_t, int32>(i);
 
