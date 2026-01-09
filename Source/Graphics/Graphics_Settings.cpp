@@ -46,7 +46,7 @@ namespace jpt
         }
 
         m_VSyncMode = VSyncMode;
-        GetApplication()->GetRenderer()->SetShouldRecreateSwapChains();
+        GetApplication()->GetRenderer()->RequireReinitSwapChains();
         SetSettings(kVSyncOnKey, VSyncMode, m_VSyncMode == VSyncMode::On);
     }
 }

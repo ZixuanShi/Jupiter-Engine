@@ -336,7 +336,7 @@ export namespace jpt
     template<Numeric T>
     constexpr T Vector2<T>::AngleSigned(Vector2 from, Vector2 to) noexcept
     {
-        T atan2 = Atan2(to.y, to.x) - std::atan2(from.y, from.x);
+        T atan2 = Atan2(to.y, to.x) - Atan2(from.y, from.x);
 
         if (atan2 > kPi<T>)
         {

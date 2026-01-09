@@ -104,7 +104,7 @@ namespace jpt::Vulkan
 
     void WindowResources::Update(TimePrecision deltaSeconds)
     {
-        if (m_shouldRecreateSwapChain)
+        if (m_requiredReinitSwapChain)
         {
             RecreateSwapChain();
         }
@@ -192,9 +192,9 @@ namespace jpt::Vulkan
         return canDraw;
     }
 
-    void WindowResources::SetShouldRecreateSwapChain()
+    void WindowResources::RequireReinitSwapChains()
     {
-        m_shouldRecreateSwapChain = true;
+        m_requiredReinitSwapChain = true;
     }
 
     void WindowResources::RecreateSwapChain()
@@ -211,7 +211,7 @@ namespace jpt::Vulkan
         CreateDepthResources();
         m_swapChain.CreateFramebuffers(m_colorImageView, m_depthImageView);
 
-        m_shouldRecreateSwapChain = false;
+        m_requiredReinitSwapChain = false;
     }
 
     Optional<uint32> WindowResources::AcquireNextImage()
@@ -224,7 +224,7 @@ namespace jpt::Vulkan
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
         {
-            m_shouldRecreateSwapChain = true;
+            m_requiredReinitSwapChain = true;
             return {};
         }
         else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -364,7 +364,7 @@ namespace jpt::Vulkan
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
         {
-            m_shouldRecreateSwapChain = true;
+            m_requiredReinitSwapChain = true;
             return;
         }
 

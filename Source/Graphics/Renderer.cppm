@@ -45,8 +45,8 @@ export namespace jpt
         virtual void OnWindowClose([[maybe_unused]] const Event_Window_Close& eventWindowClose) {}
 
     public:
-        /** Sets shouldRecreateSwapChain for all window resources */
-        virtual void SetShouldRecreateSwapChains() {}
+        /** Sets requireReinitSwapChain for all window resources */
+        virtual void RequireReinitSwapChains() {}
 
     public:
         Graphics_Settings& GetSettings();

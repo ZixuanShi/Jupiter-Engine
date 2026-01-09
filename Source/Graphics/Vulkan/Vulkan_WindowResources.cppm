@@ -53,7 +53,7 @@ export namespace jpt
             VkImageView    m_depthImageView;
 
             uint32 m_currentFrame = 0;
-            bool m_shouldRecreateSwapChain = false;
+            bool m_requiredReinitSwapChain = false;
 
         public:
             bool Init(Window* pWindow);
@@ -70,7 +70,7 @@ export namespace jpt
             Window* GetOwner() const;
             bool CanDraw() const;
 
-            void SetShouldRecreateSwapChain();
+            void RequireReinitSwapChains();
 
         private:
             void RecreateSwapChain();

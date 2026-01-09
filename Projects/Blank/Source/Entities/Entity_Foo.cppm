@@ -79,7 +79,7 @@ void Entity_Foo::OnMouseButton(const jpt::Event_Mouse_Button& eventMouseButton)
     JPT_DEBUG("Entity_Foo::OnMouseButtonPress. %lu x: %i, y: %i, Mouse Button: %s, Has Shift: %s", eventMouseButton.GetWindow(), eventMouseButton.GetX(), eventMouseButton.GetY(), jpt::ToString(eventMouseButton.GetButton()).ConstBuffer(), hasShiftModStr.ConstBuffer());
 }
 
-void Entity_Foo::OnWindowResize(const jpt::Event_Window_Resize& eventWindowResize)
+void Entity_Foo::OnWindowResize([[maybe_unused]] const jpt::Event_Window_Resize& eventWindowResize)
 {
     JPT_DEBUG("Entity_Foo::OnWindowResize. %lu width: %i, height: %i", eventWindowResize.GetWindow(), eventWindowResize.GetWidth(), eventWindowResize.GetHeight());
 }

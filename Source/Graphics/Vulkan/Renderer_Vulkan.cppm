@@ -78,7 +78,7 @@ export namespace jpt
         virtual void OnWindowClose(const Event_Window_Close& eventWindowClose) override;
 
     public:
-        virtual void SetShouldRecreateSwapChains() override;
+        virtual void RequireReinitSwapChains() override;
 
     public:
         VkInstance GetVkInstance()                    { return m_instance;                  }

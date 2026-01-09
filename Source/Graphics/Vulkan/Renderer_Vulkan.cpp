@@ -184,11 +184,11 @@ namespace jpt
         JPT_INFO("Window unregistered with Vulkan renderer: %lu", pWindow);
     }
 
-    void Renderer_Vulkan::SetShouldRecreateSwapChains()
+    void Renderer_Vulkan::RequireReinitSwapChains()
     {
         for (WindowResources& resources : m_windowResources)
         {
-            resources.SetShouldRecreateSwapChain();
+            resources.RequireReinitSwapChains();
         }
     }
 
