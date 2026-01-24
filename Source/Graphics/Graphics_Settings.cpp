@@ -19,10 +19,8 @@ namespace jpt
 
     bool Graphics_Settings::PreInit()
     {
-        const ProjectSettings& projSettings = ProjectSettings::GetInstance();
-
-        m_targetFPS = projSettings.Get(kTargetFPS, -1.0f);
-        m_VSyncMode = projSettings.Get(kVSyncOnKey, VSyncMode::On);
+        m_targetFPS = GetSettings(kTargetFPS, -1.0f);
+        m_VSyncMode = GetSettings(kVSyncOnKey, VSyncMode::On);
 
         return true;
     }
