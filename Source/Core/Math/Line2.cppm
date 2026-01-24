@@ -33,7 +33,6 @@ namespace jpt
 
         /** distance from point to line */
         constexpr T Distance(const Vector2<T>& point) const;
-        constexpr T Dist(const Vector2<T>& point) const;
 
         /** The projected point is the closest point on the line to the given point
             We can find it by moving from the original point perpendicular to the line */
@@ -68,12 +67,6 @@ namespace jpt
         
         JPT_ASSERT(denominator != 0.0f);
         return numerator / denominator;
-    }
-
-    template<Numeric T>
-    constexpr T TLine2<T>::Dist(const Vector2<T>& point) const
-    {
-        return Distance(point);
     }
 
     template<Numeric T>
