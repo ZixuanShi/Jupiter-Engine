@@ -101,7 +101,7 @@ export namespace jpt
     void SetSettings(const String& key, const JsonData& value, bool restoreCondition)
     {
         ProjectSettings& projectSettings = ProjectSettings::GetInstance();
-        if (projectSettings.Has(key) && restoreCondition)
+        if (restoreCondition)
         {
             if (projectSettings.Has(key))
             {
@@ -137,7 +137,7 @@ export namespace jpt
         ProjectSettings& projectSettings = ProjectSettings::GetInstance();
         if (restoreCondition)
         {
-            if(projectSettings.Has(key))
+            if (projectSettings.Has(key))
             {
                 projectSettings.Erase(key);
             }
