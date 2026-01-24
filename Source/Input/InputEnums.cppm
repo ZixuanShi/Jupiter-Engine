@@ -5,9 +5,7 @@ module;
 #include "Core/Types/Enum.h"
 #include "Core/Validation/Assert.h"
 
-#include <string>
-
-export module jpt.Input_Enums;
+export module jpt.InputEnums;
 
 import jpt.TypeDefs;
 import jpt.Hash;

@@ -19,7 +19,7 @@ import jpt.DateTime;
 
 import jpt.Debugger;
 
-import jpt.File_Enums;
+import jpt.FileEnums;
 import jpt.FileIO;
 import jpt.FilePath;
 import jpt.FilePathUtils;

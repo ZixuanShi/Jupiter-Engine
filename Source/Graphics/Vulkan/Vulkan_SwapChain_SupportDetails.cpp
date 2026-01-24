@@ -11,8 +11,8 @@ import jpt.Vulkan_Constants;
 
 import jpt.Application;
 import jpt.Renderer;
-import jpt.Graphics_Settings;
-import jpt.Graphics_Enums;
+import jpt.GraphicsSettings;
+import jpt.GraphicsEnums;
 
 import jpt.Window;
 import jpt.Constants;
@@ -38,8 +38,8 @@ namespace jpt::Vulkan
 
     VkPresentModeKHR SwapChainSupportDetails::GetPresentMode() const
     {
-        Graphics_Settings& Graphics_Settings = GetApplication()->GetRenderer()->GetSettings();
-        const VSyncMode vsyncMode = Graphics_Settings.GetVSyncMode();
+        GraphicsSettings& GraphicsSettings = GetApplication()->GetRenderer()->GetSettings();
+        const VSyncMode vsyncMode = GraphicsSettings.GetVSyncMode();
 
         if (vsyncMode == VSyncMode::Fast && supportsMailbox)
         {
@@ -57,7 +57,7 @@ namespace jpt::Vulkan
         if (vsyncMode != VSyncMode::On)
         {
             JPT_ERROR("VSync mode \"%i\" is not supported on current machine. Changing to VSyncMode::On now", vsyncMode);
-            Graphics_Settings.SetVSyncMode(VSyncMode::On);
+            GraphicsSettings.SetVSyncMode(VSyncMode::On);
         }
 
         // Always supported

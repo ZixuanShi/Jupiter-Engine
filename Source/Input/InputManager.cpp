@@ -5,12 +5,13 @@ module;
 #include "Core/Memory/Memory.h"
 
 module jpt.InputManager;
+import jpt.InputManagerCreator;
 
 namespace jpt
 {
     bool InputManager::PreInit()
     {
-        m_pRawInput = Input::RawInput_Create();
+        m_pRawInput = Input::CreateRawInput();
 
         bool success = true;
         success &= m_pRawInput->PreInit();

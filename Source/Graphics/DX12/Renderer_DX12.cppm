@@ -25,7 +25,7 @@ export module jpt.Renderer_DX12;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 import jpt.Vertex;
 
 import jpt.LaunchArgs;

@@ -3,7 +3,7 @@
 export module jpt.Event_Mouse_Scroll;
 
 import jpt.Event;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.TypeDefs;
 
 export namespace jpt

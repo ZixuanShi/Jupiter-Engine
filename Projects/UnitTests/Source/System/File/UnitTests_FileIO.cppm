@@ -22,7 +22,7 @@ import jpt.HashMap;
 import jpt.Serializer;
 import jpt.Optional;
 
-import jpt.File_Enums;
+import jpt.FileEnums;
 import jpt.FileIO;
 import jpt.FilePath;
 import jpt.FilePathUtils;  

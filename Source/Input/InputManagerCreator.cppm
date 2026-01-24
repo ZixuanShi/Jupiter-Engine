@@ -6,20 +6,19 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-export module jpt.InputManager_Create;
+export module jpt.InputManagerCreator;
 
 import jpt.Application;
 import jpt.Framework;
-import jpt.Framework_Enums;
+import jpt.FrameworkEnums;
 
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
 import jpt.RawInput_Win32;
 
-
 export namespace jpt::Input
 {
-    RawInput* RawInput_Create()
+    RawInput* CreateRawInput()
     {
         const FrameworkAPI frameworkAPI = GetApplication()->GetFramework()->GetAPI();
 

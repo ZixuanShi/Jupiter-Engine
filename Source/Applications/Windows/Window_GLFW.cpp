@@ -22,13 +22,13 @@ import jpt.Any;
 import jpt.DynamicArray;
 
 import jpt.InputManager;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.RawInput;
 import jpt.RawInput_GLFW;
 
 import jpt.TimeTypeDefs;
 
-import jpt.Graphics_Enums;
+import jpt.GraphicsEnums;
 import jpt.Renderer;
 
 import jpt.EventManager;

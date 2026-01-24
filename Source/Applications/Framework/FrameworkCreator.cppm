@@ -1,11 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Framework_Create;
+export module jpt.FrameworkCreator;
 
 import jpt.Framework;
-import jpt.Framework_Enums;
+import jpt.FrameworkEnums;
 
 export namespace jpt
 {
-    Framework* Framework_Create();
+    Framework* CreateFramework();
 }

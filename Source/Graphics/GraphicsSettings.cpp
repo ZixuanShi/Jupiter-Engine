@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module jpt.Graphics_Settings;
+module jpt.GraphicsSettings;
 
 import jpt.Application;
 import jpt.AppSettings;
@@ -17,7 +17,7 @@ namespace jpt
     static const String kTargetFPS  = "targetFPS";
     static const String kVSyncOnKey = "VSyncMode";
 
-    bool Graphics_Settings::PreInit()
+    bool GraphicsSettings::PreInit()
     {
         m_targetFPS = GetSettings(kTargetFPS, -1.0f);
         m_VSyncMode = GetSettings(kVSyncOnKey, VSyncMode::On);
@@ -25,7 +25,7 @@ namespace jpt
         return true;
     }
 
-    void Graphics_Settings::SetTargetFPS(TimePrecision targetFPS)
+    void GraphicsSettings::SetTargetFPS(TimePrecision targetFPS)
     {
         if (AreValuesClose(m_targetFPS, targetFPS))
         {
@@ -36,7 +36,7 @@ namespace jpt
         SetSettings(kTargetFPS, targetFPS, !ShouldCapFPS());
     }
 
-    void Graphics_Settings::SetVSyncMode(VSyncMode VSyncMode)
+    void GraphicsSettings::SetVSyncMode(VSyncMode VSyncMode)
     {
         if (m_VSyncMode == VSyncMode)
         {

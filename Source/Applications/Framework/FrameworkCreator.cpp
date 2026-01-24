@@ -6,7 +6,7 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-module jpt.Framework_Create;
+module jpt.FrameworkCreator;
 
 import jpt.Framework_GLFW;
 import jpt.Framework_Win32;
@@ -25,7 +25,7 @@ namespace jpt
         return api;
     }
 
-    Framework* Framework_Create()
+    Framework* CreateFramework()
     {
         const FrameworkAPI api = FindFrameworkAPI();
 

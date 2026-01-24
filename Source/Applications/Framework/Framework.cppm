@@ -2,7 +2,7 @@
 
 export module jpt.Framework;
 
-import jpt.Framework_Enums;
+import jpt.FrameworkEnums;
 import jpt.TypeDefs;
 
 export namespace jpt

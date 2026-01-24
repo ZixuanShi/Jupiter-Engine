@@ -29,7 +29,7 @@ import jpt.Event_Key;
 import jpt.Event_Mouse_Button;
 import jpt.Event_Mouse_Move;
 
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.InputManager;
 
 import jpt.FileIO;

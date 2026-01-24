@@ -14,7 +14,7 @@ import jpt.Application;
 import jpt.Renderer_Vulkan;
 import jpt.AssetManager;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 import jpt.TextureSampler;
 
 import jpt.Vulkan_LogicalDevice;

@@ -10,7 +10,7 @@ module jpt.Vulkan_DescriptorPool;
 
 import jpt.Application;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 import jpt.Vulkan_LogicalDevice;
 
 import jpt.WindowManager;

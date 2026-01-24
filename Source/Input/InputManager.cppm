@@ -9,8 +9,7 @@ export module jpt.InputManager;
 
 import jpt.TypeDefs;
 import jpt.RawInput;
-import jpt.InputManager_Create;
-import jpt.Framework_Enums;
+import jpt.FrameworkEnums;
 
 namespace jpt
 {

@@ -8,7 +8,7 @@ module;
 
 module jpt.RawInput_GLFW;
 
-import jpt.Input_Enums;
+import jpt.InputEnums;
 
 import jpt.Constants;
 import jpt.Hash;

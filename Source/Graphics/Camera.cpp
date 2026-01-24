@@ -11,7 +11,7 @@ import jpt.Framework;
 
 import jpt.EventManager;
 
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.Math;
 
 namespace jpt

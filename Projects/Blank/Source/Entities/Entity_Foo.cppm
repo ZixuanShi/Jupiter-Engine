@@ -10,12 +10,12 @@ export module Entity.Foo;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics_Enums;
-import jpt.Graphics_Settings;
+import jpt.GraphicsEnums;
+import jpt.GraphicsSettings;
 
 import jpt.Entity;
 import jpt.EventManager;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 
 import jpt.Event_Key;
 import jpt.Event_Mouse_Button;
@@ -58,7 +58,7 @@ void Entity_Foo::OnKey(const jpt::Event_Key& eventKeyboardKey)
         hasCtrlMod && 
         keyState == jpt::Input::KeyState::Pressed)
     {
-        jpt::Graphics_Settings& graphicsSettings = jpt::GetApplication()->GetRenderer()->GetSettings();
+        jpt::GraphicsSettings& graphicsSettings = jpt::GetApplication()->GetRenderer()->GetSettings();
         const jpt::VSyncMode vsyncMode = graphicsSettings.GetVSyncMode();
         graphicsSettings.SetVSyncMode(vsyncMode == jpt::VSyncMode::On ? jpt::VSyncMode::Off : jpt::VSyncMode::On);
     }

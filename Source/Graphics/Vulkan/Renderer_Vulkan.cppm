@@ -11,7 +11,7 @@ export module jpt.Renderer_Vulkan;
 import jpt.Application;
 
 import jpt.Renderer;
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.Vertex;
 import jpt.Vulkan_Utils;

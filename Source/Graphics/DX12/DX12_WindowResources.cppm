@@ -16,7 +16,7 @@ export module jpt.DX12_WindowResources;
 import jpt.Window;
 import jpt.Window_Win32;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.DX12_SwapChain;
 import jpt.DX12_RTVHeap;

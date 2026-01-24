@@ -6,7 +6,7 @@ module;
 
 export module jpt.Vulkan_WindowResources;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.Vulkan_SwapChain;
 import jpt.Vulkan_DescriptorSet;

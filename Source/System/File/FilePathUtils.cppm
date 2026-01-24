@@ -2,7 +2,7 @@
 
 export module jpt.FilePathUtils;
 
-import jpt.File_Enums;
+import jpt.FileEnums;
 import jpt.FilePath;
 
 export namespace jpt::File

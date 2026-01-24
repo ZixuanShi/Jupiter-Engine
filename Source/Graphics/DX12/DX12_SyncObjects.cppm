@@ -10,7 +10,7 @@ module;
 
 export module jpt.DX12_SyncObjects;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.DX12_SwapChain;
 

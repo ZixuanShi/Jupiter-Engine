@@ -1,13 +1,13 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Graphics_Settings;
+export module jpt.GraphicsSettings;
 
-import jpt.Graphics_Enums;
+import jpt.GraphicsEnums;
 import jpt.TypeDefs;
 
 export namespace jpt
 {
-    class Graphics_Settings
+    class GraphicsSettings
     {
     private:
         TimePrecision m_targetFPS = -1.0f;

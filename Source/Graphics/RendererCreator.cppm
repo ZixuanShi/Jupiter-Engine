@@ -1,10 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.Renderer_Create;
+export module jpt.RendererCreator;
 
 export namespace jpt
 {
     class Renderer;
 
-    Renderer* Renderer_Create();
+    Renderer* CreateRenderer();
 }

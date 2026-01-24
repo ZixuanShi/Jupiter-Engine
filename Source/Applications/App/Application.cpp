@@ -9,7 +9,7 @@ module;
 module jpt.Application;
 
 import jpt.Framework;
-import jpt.Framework_Create;
+import jpt.FrameworkCreator;
 import jpt.Window;
 import jpt.WindowManager;
 import jpt.LaunchArgs;
@@ -28,9 +28,9 @@ import jpt.Event_Window_Close;
 import jpt.Event_Key;
 
 import jpt.Renderer;
-import jpt.Renderer_Create;
+import jpt.RendererCreator;
 
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.InputManager;
 
 import jpt.Platform;
@@ -58,9 +58,9 @@ namespace jpt
 
         // Initialize core systems
         JPT_ASSERT(m_pPlatform, "Platform is not set");
-        m_pFramework     = Framework_Create();
+        m_pFramework     = CreateFramework();
         m_pWindowManager = JPT_NEW(WindowManager);
-        m_pRenderer      = Renderer_Create();
+        m_pRenderer      = CreateRenderer();
 
         bool success = true;
         success &= m_pPlatform->PreInit();

@@ -4,7 +4,7 @@ module;
 
 #include "Core/Types/Enum.h"
 
-export module jpt.Graphics_Enums;
+export module jpt.GraphicsEnums;
 
 export namespace jpt
 {

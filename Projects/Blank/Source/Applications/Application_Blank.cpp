@@ -13,7 +13,7 @@ import jpt.LaunchArgs;
 import jpt.SystemPaths;
 
 import jpt.RawInput;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 
 import jpt.Window;
 import jpt.WindowManager;

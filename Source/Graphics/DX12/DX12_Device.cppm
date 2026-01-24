@@ -12,7 +12,7 @@ module;
 
 export module jpt.DX12_Device;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.DX12_RTVHeap;
 

@@ -13,7 +13,7 @@ import jpt.ToString;
 import jpt.TypeDefs;
 import jpt.Utilities;
 
-import jpt.File_Enums;
+import jpt.FileEnums;
 import jpt.FilePathHelpers;
 
 export namespace jpt

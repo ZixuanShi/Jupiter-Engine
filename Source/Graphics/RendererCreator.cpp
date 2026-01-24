@@ -6,10 +6,10 @@ module;
 #include "Core/Validation/Assert.h"
 #include "Debugging/Logger.h"
 
-module jpt.Renderer_Create;
+module jpt.RendererCreator;
 
 import jpt.Renderer;
-import jpt.Graphics_Enums;
+import jpt.GraphicsEnums;
 import jpt.Renderer_Vulkan;
 import jpt.Renderer_DX12;
 
@@ -27,7 +27,7 @@ namespace jpt
         return api;
     }
 
-    Renderer* Renderer_Create()
+    Renderer* CreateRenderer()
     {
         const GraphicsAPI api = FindGraphicsAPI();
 

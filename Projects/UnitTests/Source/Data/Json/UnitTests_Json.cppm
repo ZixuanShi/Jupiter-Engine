@@ -16,9 +16,9 @@ import jpt.JsonData;
 import jpt.FilePath;
 import jpt.FilePathUtils;
 import jpt.FileIO;
-import jpt.File_Enums;
+import jpt.FileEnums;
 
-import jpt.Graphics_Enums;
+import jpt.GraphicsEnums;
 
 static const jpt::File::Path outputJsonPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/TestJson_UnitTest.json");
 

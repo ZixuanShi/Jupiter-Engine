@@ -7,7 +7,7 @@ module;
 export module jpt.RawInput_Win32;
 
 import jpt.RawInput;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 
 import jpt.Constants;
 import jpt.HashMap;

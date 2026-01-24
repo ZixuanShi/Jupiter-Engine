@@ -10,7 +10,7 @@ module;
 
 export module jpt.DX12_SwapChain;
 
-import jpt.Graphics_Constants;
+import jpt.GraphicsConstants;
 
 import jpt.Vector2;
 import jpt.TypeDefs;

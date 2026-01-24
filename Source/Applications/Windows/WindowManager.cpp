@@ -14,7 +14,7 @@ import jpt.Window_GLFW;
 import jpt.Window_Win32;
 
 import jpt.Renderer;
-import jpt.Framework_Enums;
+import jpt.FrameworkEnums;
 import jpt.Status;
 
 import jpt.EventManager;

@@ -3,7 +3,7 @@
 export module jpt.Event_Key;
 
 import jpt.Event;
-import jpt.Input_Enums;
+import jpt.InputEnums;
 import jpt.TypeDefs;
 import jpt.Window;
 

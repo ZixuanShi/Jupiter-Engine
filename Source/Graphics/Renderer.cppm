@@ -6,7 +6,7 @@ module;
 
 export module jpt.Renderer;
 
-import jpt.Graphics_Settings;
+import jpt.GraphicsSettings;
 
 import jpt.TextureSampler;
 import jpt.Camera;
@@ -23,7 +23,7 @@ export namespace jpt
     class Renderer
     {
     protected:
-        Graphics_Settings m_settings;
+        GraphicsSettings m_settings;
         TextureSampler* m_pTextureSampler = nullptr;
         Camera m_camera;
         GraphicsAPI m_api = GraphicsAPI::Unknown;
@@ -49,12 +49,12 @@ export namespace jpt
         virtual void RequireReinitSwapChains() {}
 
     public:
-        Graphics_Settings& GetSettings();
+        GraphicsSettings& GetSettings();
         TextureSampler* GetTextureSampler() const { return m_pTextureSampler; }
         Camera& GetCamera() { return m_camera; }
         GraphicsAPI GetAPI() const { return m_api; }
         
-        const Graphics_Settings& GetSettings() const;
+        const GraphicsSettings& GetSettings() const;
         const Camera& GetCamera() const { return m_camera; }
     };
 }

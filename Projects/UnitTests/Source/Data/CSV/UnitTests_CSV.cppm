@@ -16,7 +16,7 @@ import jpt.Utilities;
 import jpt.FilePath;
 import jpt.FilePathUtils;
 import jpt.FileIO;
-import jpt.File_Enums;
+import jpt.FileEnums;
 
 const jpt::File::Path kCSVPath = jpt::File::Combine(jpt::File::Source::Output, "Assets/Test.csv");
 

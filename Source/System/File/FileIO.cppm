@@ -11,7 +11,7 @@ import jpt.String;
 import jpt.Optional;
 import jpt.Serializer;
 
-import jpt.File_Enums;
+import jpt.FileEnums;
 import jpt.FilePath;
 
 import jpt.DynamicArray;
