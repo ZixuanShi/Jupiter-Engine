@@ -4,8 +4,6 @@ module;
 
 #include "Core/Validation/Assert.h"
 
-#include <string>
-
 export module jpt.Variant;
 
 import jpt.Allocator;
@@ -255,7 +253,7 @@ export namespace jpt
 
         if (other.m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
         {
-            Construct<TCurrent>(other.As<TCurrent>());
+            Construct<TCurrent>(other.template As<TCurrent>());
         }
 
         if constexpr (sizeof...(TRest) > 0)
@@ -275,7 +273,7 @@ export namespace jpt
 
         if (other.m_currentIndex == kTypesCount - sizeof...(TRest) - 1)
         {
-            Construct<TCurrent>(Move(other.As<TCurrent>()));
+            Construct<TCurrent>(Move(other.template As<TCurrent>()));
             other.m_currentIndex = kInvalidValue<TIndex>;
         }
 

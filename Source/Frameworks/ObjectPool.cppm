@@ -2,6 +2,7 @@
 
 module;
 
+#include "Core/Memory/Memory.h"
 #include "Core/Minimal/Utilities.h"
 #include "Core/Validation/Assert.h"
 
