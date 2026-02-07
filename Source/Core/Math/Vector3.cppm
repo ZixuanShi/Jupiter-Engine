@@ -429,8 +429,8 @@ export namespace jpt
 }
 
 export using Vec3  = jpt::Vector3<Precision>;
-export using Vec3f = jpt::Vector3<float>;
-export using Vec3d = jpt::Vector3<double>;
+export using Vec3f = jpt::Vector3<float32>;
+export using Vec3d = jpt::Vector3<float64>;
 export using Vec3i = jpt::Vector3<int32>;
 export using Vec3u = jpt::Vector3<uint32>;
 

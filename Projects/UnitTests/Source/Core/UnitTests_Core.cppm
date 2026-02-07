@@ -52,6 +52,7 @@ import UnitTests_Hash;
 import UnitTests_Vector3;
 import UnitTests_Vector2;
 import UnitTests_Math;
+import UnitTests_Plane;
 import UnitTests_Rand;
 import UnitTests_MathPractice;
 import UnitTests_Matrix33;
@@ -139,6 +140,7 @@ export bool RunUnitTests_Core()
     JPT_ENSURE(RunUnitTests_Hash());
     JPT_ENSURE(RunUnitTests_Vector3());
     JPT_ENSURE(RunUnitTests_Vector2());
+    JPT_ENSURE(RunUnitTests_Plane());
     JPT_ENSURE(RunUnitTests_Math());
     JPT_ENSURE(RunUnitTests_Rand());
     JPT_ENSURE(RunUnitTests_Matrix33());
