@@ -17,7 +17,7 @@ export namespace jpt
     /** Represents a plane in 3D space using the equation: ax + by + cz + d = 0
         Where (a, b, c) is the normal vector and d is the distance from origin
     
-        Alternatively: normal � point + distance = 0 */
+        Alternatively: normal · point + distance = 0 */
     template<Floating T>
     struct TPlane
     {
