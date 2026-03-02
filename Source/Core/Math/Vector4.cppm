@@ -149,19 +149,19 @@ export namespace jpt
     template<Numeric T>
     [[nodiscard]] constexpr Vector4<T> operator-(T scaler, const Vector4<T>& vector4) noexcept
     {
-        return vector4 - scaler;
+        return Vector4(scaler - vector4.x, scaler - vector4.y, scaler - vector4.z, scaler - vector4.w);
     }
-    
+
     template<Numeric T>
     [[nodiscard]] constexpr Vector4<T> operator*(T scaler, const Vector4<T>& vector4) noexcept
     {
         return vector4 * scaler;
     }
-    
+
     template<Numeric T>
     [[nodiscard]] constexpr Vector4<T> operator/(T scaler, const Vector4<T>& vector4) noexcept
     {
-        return vector4 / scaler;
+        return Vector4(scaler / vector4.x, scaler / vector4.y, scaler / vector4.z, scaler / vector4.w);
     }
 
     template<Numeric T>

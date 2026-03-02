@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Core/Validation/Assert.h"
+
 export module jpt.Plane;
 
 import jpt.Concepts;
@@ -13,7 +17,7 @@ export namespace jpt
     /** Represents a plane in 3D space using the equation: ax + by + cz + d = 0
         Where (a, b, c) is the normal vector and d is the distance from origin
     
-        Alternatively: normal · point + distance = 0 */
+        Alternatively: normal ï¿½ point + distance = 0 */
     template<Floating T>
     struct TPlane
     {
@@ -39,6 +43,7 @@ export namespace jpt
         : m_normal(normal)
         , m_distance(distance)
     {
+        JPT_ASSERT(AreValuesClose(normal.Length2(), static_cast<T>(1)), "Plane normal must be normalized");
     }
 
     template<Floating T>
@@ -46,6 +51,7 @@ export namespace jpt
         : m_normal(normal)
         , m_distance(-normal.Dot(point))
     {
+        JPT_ASSERT(AreValuesClose(normal.Length2(), static_cast<T>(1)), "Plane normal must be normalized");
     }
 
     template<Floating T>

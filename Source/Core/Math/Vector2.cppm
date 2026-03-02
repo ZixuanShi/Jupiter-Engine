@@ -116,7 +116,7 @@ export namespace jpt
     template<Numeric T>
     [[nodiscard]] constexpr Vector2<T> operator-(Vector2<T> vector2, T scalar) noexcept
     {
-        return Vector2(scalar - vector2.x, scalar - vector2.y);
+        return Vector2(vector2.x - scalar, vector2.y - scalar);
     }
 
     template<Numeric T>
@@ -140,7 +140,7 @@ export namespace jpt
     template<Numeric T>
     [[nodiscard]] constexpr Vector2<T> operator-(T scaler, Vector2<T> vector2)
     {
-        return vector2 - scaler;
+        return Vector2(scaler - vector2.x, scaler - vector2.y);
     }
 
     template<Numeric T>

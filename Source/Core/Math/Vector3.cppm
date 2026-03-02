@@ -145,27 +145,27 @@ export namespace jpt
     }
 
     template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator+(T scaler, const Vector3<T>& vector3)
+    [[nodiscard]] constexpr Vector3<T> operator+(T scaler, const Vector3<T>& vector3) noexcept
     {
         return vector3 + scaler;
     }
 
     template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator-(T scaler, const Vector3<T>& vector3)
+    [[nodiscard]] constexpr Vector3<T> operator-(T scaler, const Vector3<T>& vector3) noexcept
     {
-        return vector3 - scaler;
+        return Vector3(scaler - vector3.x, scaler - vector3.y, scaler - vector3.z);
     }
-    
+
     template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator*(T scaler, const Vector3<T>& vector3)
+    [[nodiscard]] constexpr Vector3<T> operator*(T scaler, const Vector3<T>& vector3) noexcept
     {
         return vector3 * scaler;
     }
-    
+
     template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator/(T scaler, const Vector3<T>& vector3)
+    [[nodiscard]] constexpr Vector3<T> operator/(T scaler, const Vector3<T>& vector3) noexcept
     {
-        return vector3 / scaler;
+        return Vector3(scaler / vector3.x, scaler / vector3.y, scaler / vector3.z);
     }
 
     template<Numeric T>
