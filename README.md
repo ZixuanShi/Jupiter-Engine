@@ -1,7 +1,7 @@
 # Jupiter-Engine
 I design, plan, write, test everything from scratch by myself
 
-- Extreme fast compilation speed using C++20 feature Modules.
+- Extremely fast compilation speed using C++20 feature Modules.
   - It takes 15 seconds to fully rebuild 45,000 lines of C++ code with i9-14900k and Samsung 990 Pro
 - Implemented my own STL
   - Containers. DynamicArray, HashMap, Red Black Tree, Graph, Heap, and more.
