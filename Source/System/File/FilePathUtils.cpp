@@ -45,7 +45,6 @@ namespace jpt::File
             }
 #endif
             path.Append(L"_Baked/");
-
             break;
 
         default:

@@ -96,29 +96,32 @@ macro(jupiter_add_client project_name)
     set_target_properties(${project_name} PROPERTIES
         VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${project_name}>")
 
-    # Copy runtime data to the output directory for all configurations.
-    # The exe lives in _Output/<project>_<config>_Output/ so data must be alongside it.
+    # Copy runtime data to the Release output directory only.
+    # Debug/Dev read Assets and _Baked directly from the source tree via JPT_ENGINE_DIR_W / JPT_CLIENT_DIR_W.
+    # Release must be self-contained for deployment, so everything is copied alongside the exe.
     # if(EXISTS ...) is evaluated at configure time; all guarded directories exist in the repo.
 
-    # Client Assets  (replaces premake: xcopy "$(SolutionDir)..\Assets" "$(OutDir)Assets")
+    # Client Assets — Release only
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Assets")
         add_custom_command(TARGET ${project_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            COMMAND ${CMAKE_COMMAND} -E
+                $<IF:$<CONFIG:Release>,copy_directory,true>
                 "${CMAKE_CURRENT_SOURCE_DIR}/Assets"
                 "$<TARGET_FILE_DIR:${project_name}>/Assets"
-            COMMENT "Copying client assets"
+            COMMENT "Copying client assets (Release only)"
         )
     endif()
 
-    # Engine common Assets  (replaces premake: xcopy "<engine>/Assets/Jupiter_Common" ...)
+    # Engine common Assets — Release only
     add_custom_command(TARGET ${project_name} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        COMMAND ${CMAKE_COMMAND} -E
+            $<IF:$<CONFIG:Release>,copy_directory,true>
             "${JUPITER_ENGINE_ROOT}/Assets/Jupiter_Common"
             "$<TARGET_FILE_DIR:${project_name}>/Assets/Jupiter_Common"
-        COMMENT "Copying engine common assets"
+        COMMENT "Copying engine common assets (Release only)"
     )
 
-    # Client _Baked — Release only (Debug/Dev read from the source tree directly via JPT_ENGINE_DIR_W)
+    # Client _Baked — Release only
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_Baked")
         add_custom_command(TARGET ${project_name} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E
@@ -129,7 +132,7 @@ macro(jupiter_add_client project_name)
         )
     endif()
 
-    # Engine common _Baked — Release only (Debug/Dev read from engine source tree directly)
+    # Engine common _Baked — Release only
     add_custom_command(TARGET ${project_name} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E
             $<IF:$<CONFIG:Release>,copy_directory,true>
@@ -138,13 +141,14 @@ macro(jupiter_add_client project_name)
         COMMENT "Copying engine baked shaders (Release only)"
     )
 
-    # Client Config  (ProjectSettings.json and any other config files)
+    # Client Config — Release only (ProjectSettings.json and any other config files)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Config")
         add_custom_command(TARGET ${project_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            COMMAND ${CMAKE_COMMAND} -E
+                $<IF:$<CONFIG:Release>,copy_directory,true>
                 "${CMAKE_CURRENT_SOURCE_DIR}/Config"
                 "$<TARGET_FILE_DIR:${project_name}>/Config"
-            COMMENT "Copying client config"
+            COMMENT "Copying client config (Release only)"
         )
     endif()
 
