@@ -18,6 +18,6 @@ export namespace jpt::File
         Output,        // Build output folder where the executable is located
         Saved,         // Output/_Saved
 
-        Baked,         // Release: Output/Baked. Non-Release: Engine/Baked or Client/Baked
+        Baked,         // Release: Output/_Baked. Non-Release: Engine/_Baked or Client/_Baked
     };
 }
