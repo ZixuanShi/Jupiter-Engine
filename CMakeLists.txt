@@ -79,12 +79,12 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/Source"
 
 target_include_directories(Engine PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/Source"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Vulkan/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/DX12/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/stb/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/tiny_obj/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/glm/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Vulkan/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/GLFW/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/DX12/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/stb/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/tiny_obj/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/glm/Include"
 )
 
 # ─── Compile definitions ──────────────────────────────────────────────────────
@@ -151,12 +151,12 @@ endif()
 
 if(WIN32)
     target_link_libraries(Engine PUBLIC
-        "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/Vulkan/Libs/vulkan-1.lib"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/Vulkan/Libs/vulkan-1.lib"
         d3d12
         dxgi
         d3dcompiler
-        "$<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/Libs/glfw3_Debug.lib>"
-        "$<$<NOT:$<CONFIG:Debug>>:${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/Libs/glfw3_Release.lib>"
+        "$<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/Vendor/GLFW/Libs/glfw3_Debug.lib>"
+        "$<$<NOT:$<CONFIG:Debug>>:${CMAKE_CURRENT_SOURCE_DIR}/Vendor/GLFW/Libs/glfw3_Release.lib>"
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(Vulkan REQUIRED)

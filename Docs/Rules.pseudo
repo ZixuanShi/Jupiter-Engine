@@ -10,7 +10,7 @@ Object Life Cycle:
     - FixedUpdate
     - Terminate
 
-External Dependencies/Tools Folder:
+External Vendor/Tools Folder:
     - Bin
     - Include
     - Libs
