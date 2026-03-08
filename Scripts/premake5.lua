@@ -103,7 +103,7 @@ function CreateEngineWorkspace()
         includedirs
         {
             (g_jupiterDir .. "Source"),
-            (g_jupiterDir .. "Dependencies/*/Include"),
+            (g_jupiterDir .. "Vendor/*/Include"),
         }
         files 
         {
@@ -124,7 +124,7 @@ function CreateClientProject()
         includedirs
         {
             (g_jupiterDir .. "Source"),
-            (g_jupiterDir .. "Dependencies/*/Include"),
+            (g_jupiterDir .. "Vendor/*/Include"),
             (g_context.project_dir .. "Source"),
         }
         files
@@ -135,7 +135,7 @@ function CreateClientProject()
         libdirs
         {
             (g_jupiterDir .. "_Output/Engine_" .. g_outputPath .. "_Output"),
-            (g_jupiterDir .. "Dependencies/*/Libs"),
+            (g_jupiterDir .. "Vendor/*/Libs"),
         }
         links
         {
