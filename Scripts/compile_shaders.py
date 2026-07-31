@@ -43,7 +43,7 @@ def compile_shader(file: str) -> None:
 
 if __name__ == "__main__":
     # Get paths
-    jupiterRoot     = os.getenv("JUPITER_ENGINE_ROOT", "C:/Program Files/Jupiter Technologies/Jupiter-Engine")
+    jupiterRoot = os.getenv("JUPITER_ENGINE_ROOT_LEGACY", "C:\\Users\\szx07\\repos\\Jupiter-Engine-legacy")
     g_shader_source_dir = jupiterRoot + "/Assets/Shaders"
     g_shader_output_dir = jupiterRoot + "/_Baked/Jupiter_Common/Shaders"
     g_compiler_path = get_compiler_path()
