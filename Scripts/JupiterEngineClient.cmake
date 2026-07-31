@@ -62,6 +62,9 @@ macro(jupiter_add_client project_name)
     # Link engine (brings in all PUBLIC includes, defines, and libs)
     target_link_libraries(${project_name} PRIVATE Engine)
 
+    # Ensure Engine is built before the client executable
+    add_dependencies(${project_name} Engine)
+
     # Client-specific include directory (own Source/ folder)
     target_include_directories(${project_name} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/Source"
