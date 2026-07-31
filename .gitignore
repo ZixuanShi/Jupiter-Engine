@@ -1,4 +1,20 @@
+# Intermediate build files
+*.dSYM
+
+# macOS system files
+.DS_Store
+
+# Output and Intermediate
 _Output
 _ProjectFiles
 _Saved
 _Baked
+Scripts/__pycache__
+
+# Generated files
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vs/
+
+# CMake
+CMakeUserPresets.json
