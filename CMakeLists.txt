@@ -5,16 +5,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_MODULE_STD ON)
 
-# `import std;` is experimental in CMake — the UUID acknowledges the opt-in.
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 
-# Apple's toolchain ships neither libc++.modules.json nor clang-scan-deps, so it can build
-# neither `import std;` nor named modules. Homebrew LLVM provides both, and cross-compiles
-# ObjC++ against the Apple SDKs while still linking the system libc++ — so it drives every
-# Apple target here, macOS and iOS alike.
+# Homebrew LLVM lives at <root>/bin/clang++ with its libc++ at <root>/lib/c++.
+# Derived once here, before project(), because CMAKE_CXX_STDLIB_MODULES_JSON has to be set
+# before the compiler is configured. Plain variables survive project(), so the target rpath
+# below reuses _cxx_root rather than recomputing it.
 if(APPLE)
-    get_filename_component(_cxx_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+    get_filename_component(_cxx_bin  "${CMAKE_CXX_COMPILER}" DIRECTORY)
     get_filename_component(_cxx_root "${_cxx_bin}" DIRECTORY)
+
     if(EXISTS "${_cxx_root}/lib/c++/libc++.modules.json")
         set(CMAKE_CXX_STDLIB_MODULES_JSON "${_cxx_root}/lib/c++/libc++.modules.json")
     endif()
@@ -85,7 +85,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
 
-add_executable(JupiterEngine ${JUPITER_SOURCES})
+# ObjC++ platform layer. Every .mm is globbed on every Apple target and guards its own body
+# with #if IS_PLATFORM_MACOS / IS_PLATFORM_IOS, so there is no per-platform source list here.
+if(APPLE)
+    file(GLOB_RECURSE JUPITER_OBJCXX_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.mm")
+endif()
+
+add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
+
+# Lets any unit include platform headers by path from Source/, e.g. #include "Platform/Apple/AppleWindow.h"
+target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
 
 target_sources(JupiterEngine
     PUBLIC
@@ -95,8 +104,18 @@ target_sources(JupiterEngine
 )
 
 if(APPLE)
-    get_filename_component(_cxx_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
-    get_filename_component(_cxx_root "${_cxx_bin}" DIRECTORY)
+    target_compile_options(JupiterEngine PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
+
+    if(JUPITER_PLATFORM STREQUAL "IOS")
+        target_link_libraries(JupiterEngine PRIVATE
+            "-framework UIKit" "-framework Foundation"
+            "-framework Metal" "-framework QuartzCore")
+    else()
+        target_link_libraries(JupiterEngine PRIVATE
+            "-framework Cocoa"
+            "-framework Metal" "-framework QuartzCore")
+    endif()
+
     if(EXISTS "${_cxx_root}/lib/c++/libc++.dylib")
         set_target_properties(JupiterEngine PROPERTIES
             BUILD_RPATH "${_cxx_root}/lib/c++"

@@ -2,5 +2,7 @@
     "files.associations": {
         "iostream": "cpp"
     },
-    "cmake.useCMakePresets": "always"
+    "cmake.useCMakePresets": "always",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.default.cppStandard": "c++23"
 }

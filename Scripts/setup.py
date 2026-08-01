@@ -6,6 +6,7 @@ import sys
 from utils import ROOT, SETUP_FILE
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
+COMPILE_COMMANDS_LINK = ROOT / "compile_commands.json"
 CONFIGS = ("debug", "dev", "release")
 
 
@@ -45,6 +46,25 @@ def write_launch_json(preset):
     LAUNCH_FILE.write_text(json.dumps(launch, indent=4) + "\n")
 
 
+def link_compile_commands(preset):
+    """Point a stable repo-root path at the active preset's compilation database.
+
+    IntelliSense needs this to know about IS_PLATFORM_* / IS_CONFIG_* and the include
+    paths; without it every #if IS_PLATFORM_MACOS block greys out as inactive. The link
+    keeps .vscode/settings.json free of the preset name, which changes per platform.
+    """
+    target = ROOT / "_ProjectFiles" / "build" / preset / "compile_commands.json"
+
+    if COMPILE_COMMANDS_LINK.is_symlink() or COMPILE_COMMANDS_LINK.exists():
+        COMPILE_COMMANDS_LINK.unlink()
+
+    try:
+        COMPILE_COMMANDS_LINK.symlink_to(target)
+    except OSError as error:
+        # Windows needs Developer Mode or elevation for symlinks; not fatal.
+        print(f"Could not link compile_commands.json ({error})")
+
+
 def main():
     config = sys.argv[1].lower() if len(sys.argv) > 1 else prompt_choice("Configuration", CONFIGS, "dev")
     if config not in CONFIGS:
@@ -57,7 +77,11 @@ def main():
     write_launch_json(preset)
     print(f"Saved setup: {preset}")
 
-    sys.exit(subprocess.run(["cmake", "--preset", preset, "-Wno-dev"], cwd=ROOT).returncode)
+    result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev"], cwd=ROOT)
+    if result.returncode == 0:
+        link_compile_commands(preset)
+
+    sys.exit(result.returncode)
 
 
 if __name__ == "__main__":
