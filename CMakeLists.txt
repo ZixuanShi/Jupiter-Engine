@@ -8,6 +8,10 @@ set(CMAKE_CXX_MODULE_STD ON)
 # `import std;` is experimental in CMake — the UUID acknowledges the opt-in.
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 
+# Apple's toolchain ships neither libc++.modules.json nor clang-scan-deps, so it can build
+# neither `import std;` nor named modules. Homebrew LLVM provides both, and cross-compiles
+# ObjC++ against the Apple SDKs while still linking the system libc++ — so it drives every
+# Apple target here, macOS and iOS alike.
 if(APPLE)
     get_filename_component(_cxx_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
     get_filename_component(_cxx_root "${_cxx_bin}" DIRECTORY)
@@ -16,7 +20,7 @@ if(APPLE)
     endif()
 endif()
 
-project(JupiterEngine LANGUAGES CXX)
+project(JupiterEngine LANGUAGES CXX OBJCXX)
 
 # --- Platform defines ---
 set(JUPITER_PLATFORMS WINDOWS MACOS IOS ANDROID LINUX)

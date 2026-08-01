@@ -10,6 +10,10 @@ When extending CMake, assume one binary named `JupiterEngine`. Do not introduce 
 
 Engine subsystems are added as C++23 modules (`export module jpt.<Name>;`, contents under `namespace jpt`), not as extra `.cpp` translation units — `Main.cpp` stays the single non-module entry point that imports and composes them.
 
+**Exception — the platform layer.** `Source/Platform/**` holds plain ObjC++ (`.mm`) / C++ (`.cpp`) translation units, because CMake's module scanner does not scan `OBJCXX` sources and they therefore cannot be modules. Each exposes a narrow plain-C++ header that a `jpt.<Name>` module wraps; keep the ObjC types behind an opaque handle or pimpl so they never appear in the header. This is the only place standalone TUs belong.
+
+**Hard constraint: `.mm` files must never `import std;`** — use `#include` instead. Clang refuses to load a C++-built `std.pcm` into an Objective-C++ translation unit (`error: Objective-C was disabled in precompiled file 'std.pcm' but is currently enabled`). Only pure-C++ `.cppm` modules import std.
+
 ## Build flow
 
 The build is driven by CMake + Ninja + clang++ (set unconditionally in `CMakePresets.json`). Three thin Python scripts in `Scripts/` wrap the CMake commands so the same workflow works on every host:
@@ -38,4 +42,5 @@ The same four steps are exposed as VS Code tasks (`Setup`, `Build`, `Run`, `Clea
 
 - C++23, no compiler extensions (`CMAKE_CXX_EXTENSIONS OFF`).
 - Compiler is pinned to `clang++` across all hosts via the base preset — assume clang diagnostics/flags, not MSVC.
+- On Apple platforms the compiler must be **Homebrew LLVM** (`/opt/homebrew/opt/llvm/bin/clang++`), for both `CXX` and `OBJCXX`. Apple clang cannot build C++ modules at all: Xcode ships no `clang-scan-deps`, so CMake fails with *"the compiler does not provide a way to discover the import graph dependencies"*, and it has no `libc++.modules.json` for `import std`. Homebrew clang cross-compiles ObjC++ against the Apple SDKs and links the **system** `/usr/lib/libc++.1.dylib`, so nothing needs embedding in an iOS bundle.
 - Shell-based scripts have been deliberately replaced with cross-platform Python (commit `827a515`); keep new automation in Python and route it through the existing `setup → build → run` scripts rather than adding `.sh`/`.bat`.
