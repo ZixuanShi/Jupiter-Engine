@@ -22,6 +22,8 @@ endif()
 
 project(JupiterEngine LANGUAGES CXX OBJCXX)
 
+option(JUPITER_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+
 # --- Platform defines ---
 set(JUPITER_PLATFORMS WINDOWS MACOS IOS ANDROID LINUX)
 
@@ -69,15 +71,21 @@ endforeach()
 # --- Compiler flags ---
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-fcolor-diagnostics -fansi-escape-codes)
+    add_compile_options(-Wall -Wextra -Wpedantic)
+
+    if(JUPITER_WARNINGS_AS_ERRORS)
+        add_compile_options(-Werror)
+    endif()
 endif()
 
 # --- Output directories ---
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
 
 # --- Executable ---
-add_executable(JupiterEngine Source/Main.cpp)
-
+file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
+
+add_executable(JupiterEngine ${JUPITER_SOURCES})
 
 target_sources(JupiterEngine
     PUBLIC

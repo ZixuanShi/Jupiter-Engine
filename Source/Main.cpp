@@ -9,7 +9,7 @@ int main()
     jpt::Application app;
     if (app.PreInit() && app.Init())
     {
-        app.Update();
+        app.Run();
     }
 
     app.Terminate();

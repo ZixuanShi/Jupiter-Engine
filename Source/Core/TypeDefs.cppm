@@ -18,3 +18,16 @@ export using float32 = float;
 export using float64 = double;
 
 export using usize = std::size_t;
+
+export namespace jpt
+{
+    enum class Status : uint8
+    {
+        Pending,        // Not started
+        Running,        // In progress
+        Succeeded,      // Completed successfully
+        Failed,         // Completed with errors
+        Warning,        // Completed with warnings
+        Canceled,       // Canceled by user
+    };
+}

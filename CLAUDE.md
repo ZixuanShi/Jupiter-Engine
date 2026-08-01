@@ -8,7 +8,11 @@ JupiterEngine is a cross-platform Vulkan/Metal game engine. It compiles to a **s
 
 When extending CMake, assume one binary named `JupiterEngine`. Do not introduce multi-executable abstractions or per-file `add_executable` loops.
 
-Engine subsystems are added as C++23 modules (`export module jpt.<Name>;`, contents under `namespace jpt`), not as extra `.cpp` translation units — `Main.cpp` stays the single non-module entry point that imports and composes them.
+Engine subsystems are added as C++23 modules (`export module jpt.<Name>;`, contents under `namespace jpt`). `Main.cpp` stays the single non-module entry point that imports and composes them.
+
+A subsystem may be split across two files: the interface unit `Foo.cppm` (`export module jpt.Foo;`, declarations) and an optional implementation unit `Foo.cpp` (`module jpt.Foo;` — **no** `export`, definitions). `CMakeLists.txt` globs `Source/*.cppm` into the `CXX_MODULES` file set and `Source/*.cpp` as ordinary sources; the file set is for interface units only, so implementation units must be regular sources or their symbols never get compiled and the link fails with undefined `jpt::Foo@jpt.Foo::Bar()`.
+
+Each translation unit needs **its own global module fragment**. A GMF is private to its file: the `#include <chrono>` in `Foo.cppm` makes those names *reachable* but not *visible* inside `Foo.cpp`, which fails with `'X' must be declared before it is used ... declaration here is not visible`. Repeat the includes in every unit that uses them.
 
 **Exception — the platform layer.** `Source/Platform/**` holds plain ObjC++ (`.mm`) / C++ (`.cpp`) translation units, because CMake's module scanner does not scan `OBJCXX` sources and they therefore cannot be modules. Each exposes a narrow plain-C++ header that a `jpt.<Name>` module wraps; keep the ObjC types behind an opaque handle or pimpl so they never appear in the header. This is the only place standalone TUs belong.
 
