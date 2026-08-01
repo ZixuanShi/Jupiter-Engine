@@ -3,32 +3,17 @@ import json
 import subprocess
 import sys
 
-from utils import ROOT, SETUP_FILE
+from utils import ROOT, SETUP_FILE, CONFIGS, PLATFORMS, USAGE, host_platform, artifact_path
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
 COMPILE_COMMANDS_LINK = ROOT / "compile_commands.json"
-CONFIGS = ("debug", "dev", "release")
-
-
-def platform_name():
-    if sys.platform == "darwin":
-        return "macos"
-    if sys.platform.startswith("linux"):
-        return "linux"
-    return "windows"
-
-
-def prompt_choice(label, choices, default):
-    while True:
-        print(f"{label}? [{'/'.join(choices)}] (default: {default}): ", end="", flush=True)
-        answer = input().strip().lower() or default
-        if answer in choices:
-            return answer
-        print(f"Invalid choice: {answer}")
 
 
 def write_launch_json(preset):
-    ext = ".exe" if sys.platform == "win32" else ""
+    """Write the debugger config pointing at the active preset's artifact."""
+    program = artifact_path(preset)
+    relative = program.relative_to(ROOT).as_posix()
+
     LAUNCH_FILE.parent.mkdir(parents=True, exist_ok=True)
     launch = {
         "version": "2.0.0",
@@ -37,7 +22,7 @@ def write_launch_json(preset):
                 "name": f"Launch ({preset})",
                 "type": "lldb",
                 "request": "launch",
-                "program": f"${{workspaceFolder}}/_Output/{preset}/JupiterEngine{ext}",
+                "program": f"${{workspaceFolder}}/{relative}",
                 "cwd": f"${{workspaceFolder}}/_Output/{preset}",
                 "preLaunchTask": "Build"
             }
@@ -65,15 +50,38 @@ def link_compile_commands(preset):
         print(f"Could not link compile_commands.json ({error})")
 
 
-def main():
-    config = sys.argv[1].lower() if len(sys.argv) > 1 else prompt_choice("Configuration", CONFIGS, "dev")
-    if config not in CONFIGS:
-        print(f"Invalid configuration: {config} (expected one of {', '.join(CONFIGS)})")
+def parse_args(argv) -> tuple:
+    """Resolve argv into (config, platform), or exit with usage on bad input."""
+    args = [a.lower() for a in argv]
+
+    if not args:
+        print(USAGE)
         sys.exit(1)
 
-    preset = f"{platform_name()}-{config}"
+    config = next((a for a in args if a in CONFIGS), None)
+    platform = next((a for a in args if a in PLATFORMS), None)
+    unknown = [a for a in args if a not in CONFIGS and a not in PLATFORMS]
+
+    if unknown:
+        print(f"Unknown argument(s): {', '.join(unknown)}")
+        print(USAGE)
+        sys.exit(1)
+
+    if config is None:
+        print("Missing configuration.")
+        print(USAGE)
+        sys.exit(1)
+
+    return config, platform or host_platform()
+
+
+def main():
+    config, platform = parse_args(sys.argv[1:])
+    preset = f"{platform}-{config}"
+
     SETUP_FILE.parent.mkdir(parents=True, exist_ok=True)
-    SETUP_FILE.write_text(json.dumps({"config": config, "preset": preset}, indent=2) + "\n")
+    SETUP_FILE.write_text(
+        json.dumps({"config": config, "platform": platform, "preset": preset}, indent=2) + "\n")
     write_launch_json(preset)
     print(f"Saved setup: {preset}")
 

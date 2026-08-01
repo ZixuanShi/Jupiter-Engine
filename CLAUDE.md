@@ -48,3 +48,10 @@ The same four steps are exposed as VS Code tasks (`Setup`, `Build`, `Run`, `Clea
 - Compiler is pinned to `clang++` across all hosts via the base preset — assume clang diagnostics/flags, not MSVC.
 - On Apple platforms the compiler must be **Homebrew LLVM** (`/opt/homebrew/opt/llvm/bin/clang++`), for both `CXX` and `OBJCXX`. Apple clang cannot build C++ modules at all: Xcode ships no `clang-scan-deps`, so CMake fails with *"the compiler does not provide a way to discover the import graph dependencies"*, and it has no `libc++.modules.json` for `import std`. Homebrew clang cross-compiles ObjC++ against the Apple SDKs and links the **system** `/usr/lib/libc++.1.dylib`, so nothing needs embedding in an iOS bundle.
 - Shell-based scripts have been deliberately replaced with cross-platform Python (commit `827a515`); keep new automation in Python and route it through the existing `setup → build → run` scripts rather than adding `.sh`/`.bat`.
+
+### Python style (`Scripts/`)
+
+- **Docstrings, per [PEP 257](https://peps.python.org/pep-0257/).** Document a function with a `"""..."""` as the first statement in its body — one line for simple cases, or a summary line plus a blank line and detail. Do not use banner comments above `def`; they leave `__doc__` as `None`, so doc generators and any programmatic introspection see nothing.
+- **Annotate return types.** Every function that returns a value ends its signature with `-> <type>` (`-> str`, `-> bool`, `-> Path`, `-> int`, `-> list | None`). Functions that return nothing take no annotation.
+- Shared constants and path helpers live in `Scripts/utils.py` so `setup.py` / `build.py` / `run.py` / `Clean.py` never duplicate a path or a name. `artifact_path()` is the single place that knows a macOS binary lives inside `.app/Contents/MacOS/` while an iOS `.app` is installed whole.
+- Scripts take arguments only; they never prompt interactively. On bad or missing input, print `utils.USAGE` and exit non-zero.

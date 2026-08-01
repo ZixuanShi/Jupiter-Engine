@@ -7,8 +7,10 @@ from utils import ROOT
 def main():
     shutil.rmtree(ROOT / "_Output", ignore_errors=True)
     shutil.rmtree(ROOT / "_ProjectFiles", ignore_errors=True)
-    
+
     (ROOT / ".vscode" / "launch.json").unlink(missing_ok=True)
+
+    # Symlink into _ProjectFiles, so it dangles once that is gone.
     (ROOT / "compile_commands.json").unlink(missing_ok=True)
 
 

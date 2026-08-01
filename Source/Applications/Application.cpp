@@ -2,18 +2,20 @@
 
 module;
 
-#if IS_PLATFORM_MACOS
+#if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
     #include "Window/Apple/AppleWindow.h"
 #endif
 
 module jpt.Application;
 
 import jpt.Logger;
+import jpt.Utils;
 
 namespace jpt
 {
     bool Application::PreInit()
     {
+        jpt::Debug("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
         return true;
     }
 
