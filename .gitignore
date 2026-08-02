@@ -11,6 +11,9 @@ _Saved
 _Baked
 Scripts/__pycache__
 
+# Vendored third-party headers (see Vendor/*/README.md to restore)
+Vendor/*/Include
+
 # Generated files
 .vscode/c_cpp_properties.json
 .vscode/launch.json

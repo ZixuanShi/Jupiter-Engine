@@ -90,6 +90,16 @@ add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
 target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
 
+if(APPLE)
+    set(JUPITER_METAL_CPP "${CMAKE_SOURCE_DIR}/Vendor/Metal-Cpp/Include")
+    if(NOT EXISTS "${JUPITER_METAL_CPP}/Metal/Metal.hpp")
+        message(FATAL_ERROR "metal-cpp missing. See Vendor/Metal-Cpp/README.md")
+    endif()
+    # SYSTEM so -Wpedantic -Werror does not fire on metal-cpp's own headers, which use
+    # anonymous structs. Our sources keep the full warning set.
+    target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_METAL_CPP}")
+endif()
+
 target_sources(JupiterEngine
     PUBLIC
         FILE_SET CXX_MODULES

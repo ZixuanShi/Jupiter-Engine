@@ -48,7 +48,7 @@ def connected_device() -> str | None:
     return None
 
 
-def launch_steps(preset, artifact) -> list | None:
+def launch_steps(preset, artifact, console) -> list | None:
     """Return the commands that install and launch the artifact.
 
     None means the target is not reachable; the reason has already been printed.
@@ -65,9 +65,16 @@ def launch_steps(preset, artifact) -> list | None:
         subprocess.run(["xcrun", "simctl", "terminate", udid, BUNDLE_ID],
                        capture_output=True)
 
+        # --console-pty streams stdout but ties the app's lifetime to this terminal:
+        # interrupting the stream kills the app. Detached is the default so the app keeps
+        # running and the shell comes back.
+        launch = ["xcrun", "simctl", "launch", udid, BUNDLE_ID]
+        if console:
+            launch.insert(3, "--console-pty")
+
         return [
             ["xcrun", "simctl", "install", udid, str(artifact)],
-            ["xcrun", "simctl", "launch", "--console-pty", udid, BUNDLE_ID],
+            launch,
         ]
 
     if preset.startswith("ios-device"):
@@ -79,10 +86,14 @@ def launch_steps(preset, artifact) -> list | None:
             print("  - in Developer Mode (Settings > Privacy & Security > Developer Mode)")
             print("Then: xcrun devicectl list devices")
             return None
+        launch = ["xcrun", "devicectl", "device", "process", "launch",
+                  "--device", udid, BUNDLE_ID]
+        if console:
+            launch.insert(5, "--console")
+
         return [
             ["xcrun", "devicectl", "device", "install", "app", "--device", udid, str(artifact)],
-            ["xcrun", "devicectl", "device", "process", "launch", "--console",
-             "--device", udid, BUNDLE_ID],
+            launch,
         ]
 
     # Run directly rather than via `open`, so stdout stays attached to this terminal.
@@ -90,6 +101,13 @@ def launch_steps(preset, artifact) -> list | None:
 
 
 def main():
+    console = "--console" in sys.argv[1:]
+    unknown = [a for a in sys.argv[1:] if a != "--console"]
+    if unknown:
+        print(f"Unknown argument(s): {', '.join(unknown)}")
+        print("Usage: py Scripts/run.py [--console]")
+        sys.exit(1)
+
     if not SETUP_FILE.exists():
         print("No setup found. Run: py Scripts/setup.py")
         sys.exit(1)
@@ -102,7 +120,7 @@ def main():
         print("Run: py Scripts/build.py")
         sys.exit(1)
 
-    steps = launch_steps(preset, artifact)
+    steps = launch_steps(preset, artifact, console)
     sys.exit(1 if steps is None else run_steps(steps))
 
 
