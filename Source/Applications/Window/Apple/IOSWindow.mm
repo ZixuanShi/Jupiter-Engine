@@ -27,7 +27,8 @@
     const CGSize points = self.bounds.size;
     const CGFloat scale = self.contentScaleFactor;
 
-    jpt::ResizeRenderer(static_cast<std::uint32_t>(points.width * scale), static_cast<std::uint32_t>(points.height * scale));
+    jpt::ResizeRenderer(static_cast<std::uint32_t>(points.width * scale), 
+                        static_cast<std::uint32_t>(points.height * scale));
 }
 
 @end
