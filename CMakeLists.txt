@@ -7,8 +7,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_MODULE_STD ON)
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 
-# --- Apple: everything that must happen BEFORE project() ---
-# Homebrew LLVM lives at <root>/bin/clang++ with its libc++ at <root>/lib/c++.
+# --- Apple ---
+# Must precede project(): CMAKE_CXX_STDLIB_MODULES_JSON is only read during compiler detection.
 if(APPLE)
     get_filename_component(_cxx_bin  "${CMAKE_CXX_COMPILER}" DIRECTORY)
     get_filename_component(_cxx_root "${_cxx_bin}" DIRECTORY)
@@ -17,9 +17,7 @@ if(APPLE)
         set(CMAKE_CXX_STDLIB_MODULES_JSON "${_cxx_root}/lib/c++/libc++.modules.json")
     endif()
 
-    # ObjC++ platform layer. Every .mm is globbed on every Apple target and guards its own
-    # body with #if IS_PLATFORM_MACOS / IS_PLATFORM_IOS, so there is no per-platform source
-    # list. Globbed here purely to keep the Apple logic together.
+    # Each .mm guards its own body with #if IS_PLATFORM_*, so one glob covers every target.
     file(GLOB_RECURSE JUPITER_OBJCXX_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/Source/*.mm")
 endif()
 
@@ -90,7 +88,6 @@ file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/
 
 add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
-# Lets any unit include platform headers by path from Source/, e.g. #include "Platform/Apple/AppleWindow.h"
 target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
 
 target_sources(JupiterEngine
@@ -104,8 +101,8 @@ target_sources(JupiterEngine
 if(APPLE)
     target_compile_options(JupiterEngine PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
 
-    # Foundation is not optional here: Homebrew clang does not auto-link libobjc the way
-    # Apple clang does, so without it the link fails on _objc_release / _objc_autoreleasePool*.
+    # Foundation is required: Homebrew clang does not auto-link libobjc like Apple clang,
+    # so without it the link fails on _objc_release.
     if(JUPITER_PLATFORM STREQUAL "IOS")
         target_link_libraries(JupiterEngine PRIVATE
             "-framework UIKit" "-framework Foundation"
@@ -117,9 +114,8 @@ if(APPLE)
     endif()
 
     # --- App bundle ---
-    # iOS refuses to install anything that is not a bundle. On macOS a bundle is what gives
-    # the process a CFBundleIdentifier, without which the system logs a stream of
-    # "missing main bundle identifier" / intents-registration failures on every launch.
+    # iOS will not install a non-bundle. On macOS it supplies the CFBundleIdentifier, whose
+    # absence makes the system log registration failures on every launch.
     set(MACOSX_BUNDLE_EXECUTABLE_NAME      "JupiterEngine")
     set(MACOSX_BUNDLE_BUNDLE_NAME          "Jupiter Engine")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER       "com.jupitertechnologies.engine")
@@ -141,9 +137,7 @@ if(APPLE)
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${JUPITER_INFO_PLIST}")
 
-    # macOS links Homebrew's libc++, so it needs the rpath. iOS resolves against the
-    # system /usr/lib/libc++.1.dylib instead, where a Homebrew path would be dead weight
-    # baked into a bundle that ships to a device.
+    # iOS resolves libc++ from /usr/lib, so a Homebrew rpath would only be dead weight.
     if(NOT JUPITER_PLATFORM STREQUAL "IOS" AND EXISTS "${_cxx_root}/lib/c++/libc++.dylib")
         set_target_properties(JupiterEngine PROPERTIES
             BUILD_RPATH "${_cxx_root}/lib/c++"

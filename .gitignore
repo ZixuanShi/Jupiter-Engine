@@ -14,7 +14,6 @@ Scripts/__pycache__
 # Generated files
 .vscode/c_cpp_properties.json
 .vscode/launch.json
-compile_commands.json
 .vs/
 
 # CMake

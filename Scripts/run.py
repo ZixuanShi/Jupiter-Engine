@@ -7,13 +7,17 @@ import json
 import subprocess
 import sys
 
-from utils import SETUP_FILE, BUNDLE_ID, artifact_path
+from utils import SETUP_FILE, BUNDLE_ID, artifact_path, executable_path
 
 
 def run_steps(steps) -> int:
     """Run commands in order, stopping at the first failure."""
     for step in steps:
-        code = subprocess.run(step).returncode
+        try:
+            code = subprocess.run(step).returncode
+        except KeyboardInterrupt:
+            print("\nDetached. The app is still running.")
+            return 0
         if code != 0:
             return code
     return 0
@@ -55,6 +59,12 @@ def launch_steps(preset, artifact) -> list | None:
             print("No booted simulator. Boot one first, e.g.:")
             print("  xcrun simctl boot 'iPad Pro 13-inch (M4)' && open -a Simulator")
             return None
+
+        # Without this, launch returns the running instance's PID and the new build never
+        # starts. Kept out of the steps because terminate fails when nothing is running.
+        subprocess.run(["xcrun", "simctl", "terminate", udid, BUNDLE_ID],
+                       capture_output=True)
+
         return [
             ["xcrun", "simctl", "install", udid, str(artifact)],
             ["xcrun", "simctl", "launch", "--console-pty", udid, BUNDLE_ID],
@@ -75,8 +85,7 @@ def launch_steps(preset, artifact) -> list | None:
              "--device", udid, BUNDLE_ID],
         ]
 
-    # Desktop runs the executable directly rather than via `open`, so stdout stays attached
-    # to this terminal instead of disappearing into the system log.
+    # Run directly rather than via `open`, so stdout stays attached to this terminal.
     return [[str(artifact)]]
 
 
@@ -88,8 +97,8 @@ def main():
     preset = json.loads(SETUP_FILE.read_text())["preset"]
     artifact = artifact_path(preset)
 
-    if not artifact.exists():
-        print(f"Not built: {artifact}")
+    if not executable_path(preset).exists():
+        print(f"Not built: {executable_path(preset)}")
         print("Run: py Scripts/build.py")
         sys.exit(1)
 

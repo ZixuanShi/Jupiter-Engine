@@ -6,15 +6,25 @@ import sys
 from utils import ROOT, SETUP_FILE, CONFIGS, PLATFORMS, USAGE, host_platform, artifact_path
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
-COMPILE_COMMANDS_LINK = ROOT / "compile_commands.json"
+COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
 
 
 def write_launch_json(preset):
-    """Write the debugger config pointing at the active preset's artifact."""
-    program = artifact_path(preset)
-    relative = program.relative_to(ROOT).as_posix()
+    """Write the debugger config pointing at the active preset's artifact.
 
+    iOS gets no configuration: lldb cannot launch a simulator or device .app from the host,
+    so F5 would only ever fail. Those targets go through Scripts/run.py, which drives
+    simctl / devicectl instead.    
+    """
     LAUNCH_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    if preset.startswith("ios"):
+        LAUNCH_FILE.write_text(json.dumps({"version": "2.0.0", "configurations": []},
+                                          indent=4) + "\n")
+        print("Note: F5 is unavailable for iOS. Use the Run task or py Scripts/run.py")
+        return
+
+    relative = artifact_path(preset).relative_to(ROOT).as_posix()
     launch = {
         "version": "2.0.0",
         "configurations": [
@@ -32,11 +42,10 @@ def write_launch_json(preset):
 
 
 def link_compile_commands(preset):
-    """Point a stable repo-root path at the active preset's compilation database.
+    """Point a stable path at the active preset's compilation database.
 
-    IntelliSense needs this to know about IS_PLATFORM_* / IS_CONFIG_* and the include
-    paths; without it every #if IS_PLATFORM_MACOS block greys out as inactive. The link
-    keeps .vscode/settings.json free of the preset name, which changes per platform.
+    IntelliSense needs it to see IS_PLATFORM_* and the include paths; the fixed location
+    keeps the preset name out of .vscode/settings.json.
     """
     target = ROOT / "_ProjectFiles" / "build" / preset / "compile_commands.json"
 
@@ -77,7 +86,7 @@ def parse_args(argv) -> tuple:
 
 def main():
     config, platform = parse_args(sys.argv[1:])
-    preset = f"{platform}-{config}"
+    preset = f"{platform}_{config}"
 
     SETUP_FILE.parent.mkdir(parents=True, exist_ok=True)
     SETUP_FILE.write_text(

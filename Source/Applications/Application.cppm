@@ -24,6 +24,6 @@ export namespace jpt
         virtual void Update(float64 deltaSeconds);
         virtual void Terminate();
     
-        void Run();
+        void Run(int argc, char* argv[]);
     };
 }

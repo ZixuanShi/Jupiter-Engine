@@ -10,7 +10,7 @@ BUNDLE_ID = "com.jupitertechnologies.engine"
 CONFIGS = ("debug", "dev", "release")
 PLATFORMS = ("macos", "ios-sim", "ios-device", "windows", "linux")
 
-USAGE = f"Usage: py Scripts/setup.py [{' | '.join(CONFIGS)}] [{' | '.join(PLATFORMS)}]"
+USAGE = f"Usage: py Scripts/setup.py [{'|'.join(CONFIGS)}] [{'|'.join(PLATFORMS)}]"
 
 
 def host_platform() -> str:
@@ -31,8 +31,9 @@ def artifact_path(preset) -> Path:
     """Return the artifact to launch or install.
 
     macOS nests the executable inside the bundle; iOS bundles are flat and get installed
-    whole, so callers there want the .app itself. Every other platform is a bare binary.
+    whole, so callers there want the .app itself. Every other platform is a bare binary.    
     """
+    
     root = output_dir(preset)
 
     if preset.startswith("ios"):
@@ -42,3 +43,15 @@ def artifact_path(preset) -> Path:
 
     ext = ".exe" if sys.platform == "win32" else ""
     return root / f"{BINARY_NAME}{ext}"
+
+
+def executable_path(preset) -> Path:
+    """Return the compiled binary, which is what proves a build actually ran.
+
+    Differs from artifact_path on iOS: CMake writes the bundle's Info.plist during
+    configure, so the .app exists as a directory before anything is compiled.
+    """
+
+    if preset.startswith("ios"):
+        return artifact_path(preset) / BINARY_NAME
+    return artifact_path(preset)

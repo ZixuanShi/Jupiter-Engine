@@ -91,8 +91,10 @@ namespace jpt
         return true;
     }
 
-    void RunAppLoop()
+    void RunAppLoop([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     {
+        // AppKit reads the command line from the process itself, so these are only carried
+        // for iOS, where UIApplicationMain demands them.
         [NSApp run];
     }
 }

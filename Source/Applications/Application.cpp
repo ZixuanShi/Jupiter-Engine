@@ -47,8 +47,8 @@ namespace jpt
         Debug("Application Terminated.");
     }
 
-    void Application::Run()
+    void Application::Run(int argc, char* argv[])
     {
-        RunAppLoop();
+        RunAppLoop(argc, argv);
     }
 }
