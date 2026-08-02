@@ -14,48 +14,41 @@
 
 #include <cmath>
 
-namespace
-{
-    NS::SharedPtr<MTL::Device>       g_device;
-    NS::SharedPtr<MTL::CommandQueue> g_queue;
-    CA::MetalLayer*                  g_layer = nullptr;
-}
-
 namespace jpt
 {
-    bool InitRenderer(void* metalLayer)
+    bool MetalRenderer::Init(void* pMetalLayer)
     {
-        g_layer = reinterpret_cast<CA::MetalLayer*>(metalLayer);
+        m_pLayer = reinterpret_cast<CA::MetalLayer*>(pMetalLayer);
 
-        g_device = NS::TransferPtr(MTL::CreateSystemDefaultDevice());
-        if (!g_device)
+        m_pDevice = MTL::CreateSystemDefaultDevice();
+        if (m_pDevice == nullptr)
         {
             return false;
         }
 
-        g_queue = NS::TransferPtr(g_device->newCommandQueue());
+        m_pQueue = m_pDevice->newCommandQueue();
 
-        g_layer->setDevice(g_device.get());
-        g_layer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
+        m_pLayer->setDevice(m_pDevice);
+        m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
 
         // Promises render-only access, letting Core Animation pick faster memory.
-        g_layer->setFramebufferOnly(true);
+        m_pLayer->setFramebufferOnly(true);
 
-        return static_cast<bool>(g_queue);
+        return m_pQueue != nullptr;
     }
 
-    void ResizeRenderer(std::uint32_t pixelWidth, std::uint32_t pixelHeight)
+    void MetalRenderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
     {
-        if (g_layer == nullptr || pixelWidth == 0 || pixelHeight == 0)
+        if (m_pLayer == nullptr || pixelWidth == 0 || pixelHeight == 0)
         {
             return;
         }
-        g_layer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
+        m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
     }
 
-    void DrawFrame(double deltaSeconds)
+    void MetalRenderer::OnFrameDraw(float64 elapsedSeconds)
     {
-        if (g_layer == nullptr || !g_queue)
+        if (m_pLayer == nullptr || m_pQueue == nullptr)
         {
             return;
         }
@@ -65,41 +58,51 @@ namespace jpt
         NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
 
         // nullptr when every drawable is still in flight. Not an error.
-        CA::MetalDrawable* drawable = g_layer->nextDrawable();
-        if (drawable == nullptr)
+        CA::MetalDrawable* pDrawable = m_pLayer->nextDrawable();
+        if (pDrawable == nullptr)
         {
             return;
         }
 
-        const double r = 0.5 + 0.5 * std::sin(deltaSeconds);
-        const double g = 0.5 + 0.5 * std::sin(deltaSeconds + 2.0943951);
-        const double b = 0.5 + 0.5 * std::sin(deltaSeconds + 4.1887902);
+        const float64 r = 0.5 + 0.5 * std::sin(elapsedSeconds);
+        const float64 g = 0.5 + 0.5 * std::sin(elapsedSeconds + 2.0943951);
+        const float64 b = 0.5 + 0.5 * std::sin(elapsedSeconds + 4.1887902);
 
-        MTL::RenderPassDescriptor* pass = MTL::RenderPassDescriptor::renderPassDescriptor();
-        MTL::RenderPassColorAttachmentDescriptor* color = pass->colorAttachments()->object(0);
+        MTL::RenderPassDescriptor* pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
+        MTL::RenderPassColorAttachmentDescriptor* pColor = pPass->colorAttachments()->object(0);
 
-        color->setTexture(drawable->texture());
+        pColor->setTexture(pDrawable->texture());
 
         // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
-        color->setLoadAction(MTL::LoadActionClear);
-        color->setStoreAction(MTL::StoreActionStore);
-        color->setClearColor(MTL::ClearColor::Make(r, g, b, 1.0));
+        pColor->setLoadAction(MTL::LoadActionClear);
+        pColor->setStoreAction(MTL::StoreActionStore);
+        pColor->setClearColor(MTL::ClearColor::Make(r, g, b, 1.0));
 
-        MTL::CommandBuffer* commandBuffer = g_queue->commandBuffer();
+        MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
 
         // The clear is pass setup, not a command, so an empty encoder is enough.
-        MTL::RenderCommandEncoder* encoder = commandBuffer->renderCommandEncoder(pass);
-        encoder->endEncoding();
+        MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(pPass);
+        pEncoder->endEncoding();
 
-        commandBuffer->presentDrawable(drawable);
-        commandBuffer->commit();
+        pCommandBuffer->presentDrawable(pDrawable);
+        pCommandBuffer->commit();
     }
 
-    void ShutdownRenderer()
+    void MetalRenderer::Terminate()
     {
-        g_layer = nullptr;
-        g_queue.reset();
-        g_device.reset();
+        m_pLayer = nullptr;
+
+        // Init() took ownership of both, and there is no SharedPtr to do it here.
+        if (m_pQueue != nullptr)
+        {
+            m_pQueue->release();
+            m_pQueue = nullptr;
+        }
+        if (m_pDevice != nullptr)
+        {
+            m_pDevice->release();
+            m_pDevice = nullptr;
+        }
     }
 }
 

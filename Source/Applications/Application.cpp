@@ -2,6 +2,8 @@
 
 module;
 
+#include "Graphics/Renderer.h"
+
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
     #include "Window/Apple/AppleWindow.h"
 #endif
@@ -15,7 +17,7 @@ namespace jpt
 {
     bool Application::PreInit()
     {
-        jpt::Debug("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
+        Debug::Log("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
         return true;
     }
 
@@ -23,7 +25,7 @@ namespace jpt
     {
         if (!CreateAppWindow(1280, 720, "Jupiter Engine"))
         {
-            Debug("Failed to create the platform window.");
+            Debug::Log("Failed to create the platform window.");
             return false;
         }
 
@@ -31,24 +33,50 @@ namespace jpt
         return true;
     }
 
-    void Application::Update(float64 deltaSeconds)
+    void Application::Update([[maybe_unused]] float64 deltaSeconds)
     {
-        static float64 s_totalTime = 0.0;
-        s_totalTime += deltaSeconds;
-        if (s_totalTime > 5.0)
-        {
-            m_status = Status::Succeeded;
-            Debug("5 seconds elapsed, exiting.");
-        }
     }
 
     void Application::Terminate()
     {
-        Debug("Application Terminated.");
+        m_renderer.Terminate();
+        m_status = Status::Succeeded;
+        Debug::Log("Application Terminated.");
     }
 
     void Application::Run(int argc, char* argv[])
     {
         RunAppLoop(argc, argv);
+    }
+
+    bool Application::OnSurfaceReady(void* pMetalLayer)
+    {
+        if (!m_renderer.Init(pMetalLayer))
+        {
+            Debug::Log("Failed to initialise the renderer.");
+            return false;
+        }
+        return true;
+    }
+
+    void Application::OnResize(uint32 pixelWidth, uint32 pixelHeight)
+    {
+        m_renderer.OnResize(pixelWidth, pixelHeight);
+    }
+
+    void Application::OnFrameDraw()
+    {
+        if (m_status != Status::Running)
+        {
+            return;
+        }
+
+        m_frameTimer.BeginFrame();
+
+        // Drawing sits outside Update so an override cannot forget it.
+        Update(m_frameTimer.GetDeltaSeconds());
+        m_renderer.OnFrameDraw(m_frameTimer.GetElapsedSeconds());
+
+        m_frameTimer.EndFrame();
     }
 }

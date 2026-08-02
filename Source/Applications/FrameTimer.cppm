@@ -18,16 +18,20 @@ export namespace jpt
         std::chrono::high_resolution_clock::time_point m_frameStartTime = std::chrono::high_resolution_clock::now();
         float64 m_deltaSeconds = 0.0;
 
+        // Sum of the deltas, so it does not advance while frames are not being driven.
+        float64 m_elapsedSeconds = 0.0;
+
         // FPS
+        float64 m_fpsTimer = 0.0;
         uint32 m_frameCount = 0;
         uint32 m_fps = 0;
-        float64 m_fpsTimer = 0.0;
 
     public:
         void BeginFrame();
         void EndFrame();
 
         float64 GetDeltaSeconds() const { return m_deltaSeconds; }
+        float64 GetElapsedSeconds() const { return m_elapsedSeconds; }
         uint32 GetFPS() const { return m_fps; }
     };
 }

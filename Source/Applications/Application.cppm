@@ -2,6 +2,8 @@
 
 module;
 
+#include "Graphics/Renderer.h"
+
 export module jpt.Application;
 
 import jpt.TypeDefs;
@@ -14,6 +16,7 @@ export namespace jpt
     {
     private:
         FrameTimer m_frameTimer;
+        Renderer m_renderer;
         Status m_status = Status::Pending;
 
     public:
@@ -23,7 +26,16 @@ export namespace jpt
         virtual bool Init();
         virtual void Update(float64 deltaSeconds);
         virtual void Terminate();
-    
+
+    public:
         void Run(int argc, char* argv[]);
+
+    public:
+        bool OnSurfaceReady(void* pMetalLayer);
+        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
+        void OnFrameDraw();
+
+    public:
+        Renderer& GetRenderer() { return m_renderer; }
     };
 }

@@ -6,9 +6,15 @@
 
 namespace jpt
 {
+    // --- App -> platform ---
     bool CreateAppWindow(std::int32_t width, std::int32_t height, const char* title);
-
-    // argc/argv come straight from main: UIApplicationMain declares argv non-null, so
-    // passing nullptr trips -Wnonnull. macOS ignores them.
     void RunAppLoop(int argc, char* argv[]);
+
+    // --- Platform -> app ---
+    // std:: rather than jpt's aliases: the .mm files include this, and jpt.TypeDefs imports
+    // std, which clang refuses to load into an Objective-C++ translation unit.
+    bool OnSurfaceReady(void* pMetalLayer);
+    void OnResize(std::uint32_t pixelWidth, std::uint32_t pixelHeight);
+    void OnFrameDraw();
+    void OnTerminate();
 }

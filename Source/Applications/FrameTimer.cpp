@@ -15,6 +15,7 @@ namespace jpt
     {
         m_frameStartTime = std::chrono::high_resolution_clock::now();
         m_deltaSeconds = std::chrono::duration<float64>(m_frameStartTime - m_lastTime).count();
+        m_elapsedSeconds += m_deltaSeconds;
 
         ++m_frameCount;
         m_fpsTimer += m_deltaSeconds;
@@ -23,7 +24,7 @@ namespace jpt
             m_fps = m_frameCount;
             m_frameCount = 0;
             m_fpsTimer = 0.0;
-            Debug("FPS: {}", m_fps);
+            Debug::Log("FPS: {}", m_fps);
         }
     }
 

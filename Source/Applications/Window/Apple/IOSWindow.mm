@@ -6,7 +6,6 @@
 #import <QuartzCore/CAMetalLayer.h>
 
 #include "AppleWindow.h"
-#include "Graphics/Metal/MetalRenderer.h"
 
 @interface JupiterMetalView : UIView
 @end
@@ -27,8 +26,8 @@
     const CGSize points = self.bounds.size;
     const CGFloat scale = self.contentScaleFactor;
 
-    jpt::ResizeRenderer(static_cast<std::uint32_t>(points.width * scale), 
-                        static_cast<std::uint32_t>(points.height * scale));
+    jpt::OnResize(static_cast<std::uint32_t>(points.width * scale),
+                  static_cast<std::uint32_t>(points.height * scale));
 }
 
 @end
@@ -36,7 +35,6 @@
 @interface JupiterAppDelegate : NSObject <UIApplicationDelegate>
 @property (nonatomic, strong) UIWindow* window;
 @property (nonatomic, strong) CADisplayLink* displayLink;
-@property (nonatomic, assign) CFTimeInterval startTime;
 @end
 
 @implementation JupiterAppDelegate
@@ -57,14 +55,12 @@
 
     [self.window makeKeyAndVisible];
 
-    if (!jpt::InitRenderer((__bridge void*)metalView.layer))
+    if (!jpt::OnSurfaceReady((__bridge void*)metalView.layer))
     {
-        NSLog(@"Jupiter: Metal renderer failed to initialise");
         return YES;
     }
 
     // Silently never fires unless added to a run loop, and deallocs unless strongly held.
-    self.startTime = CACurrentMediaTime();
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onFrame:)];
     [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
 
@@ -74,15 +70,29 @@
 - (void)onFrame:(CADisplayLink*)sender
 {
     (void)sender;
-    jpt::DrawFrame(CACurrentMediaTime() - self.startTime);
+    jpt::OnFrameDraw();
 }
 
+// Presenting a drawable while backgrounded gets the app killed by the GPU watchdog.
+- (void)applicationDidEnterBackground:(UIApplication*)application
+{
+    (void)application;
+    self.displayLink.paused = YES;
+}
+
+- (void)applicationWillEnterForeground:(UIApplication*)application
+{
+    (void)application;
+    self.displayLink.paused = NO;
+}
+
+// Not delivered once the app is suspended, so pausing above is what actually keeps this safe.
 - (void)applicationWillTerminate:(UIApplication*)application
 {
     (void)application;
     [self.displayLink invalidate];
     self.displayLink = nil;
-    jpt::ShutdownRenderer();
+    jpt::OnTerminate();
 }
 
 @end

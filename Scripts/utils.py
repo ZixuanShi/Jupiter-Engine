@@ -1,3 +1,4 @@
+import json
 import sys
 from pathlib import Path
 
@@ -20,6 +21,15 @@ def host_platform() -> str:
     if sys.platform.startswith("linux"):
         return "linux"
     return "windows"
+
+
+def active_preset() -> str:
+    """Return the preset the last setup.py run configured, or exit if there is none."""
+    if not SETUP_FILE.exists():
+        print("No setup found. Run: py Scripts/setup.py")
+        sys.exit(1)
+
+    return json.loads(SETUP_FILE.read_text())["preset"]
 
 
 def output_dir(preset) -> Path:

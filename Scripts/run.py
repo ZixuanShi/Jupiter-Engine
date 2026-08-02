@@ -7,7 +7,7 @@ import json
 import subprocess
 import sys
 
-from utils import SETUP_FILE, BUNDLE_ID, artifact_path, executable_path
+from utils import BUNDLE_ID, active_preset, artifact_path, executable_path
 
 
 def run_steps(steps) -> int:
@@ -108,11 +108,7 @@ def main():
         print("Usage: py Scripts/run.py [--console]")
         sys.exit(1)
 
-    if not SETUP_FILE.exists():
-        print("No setup found. Run: py Scripts/setup.py")
-        sys.exit(1)
-
-    preset = json.loads(SETUP_FILE.read_text())["preset"]
+    preset = active_preset()
     artifact = artifact_path(preset)
 
     if not executable_path(preset).exists():

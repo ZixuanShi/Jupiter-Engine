@@ -2,19 +2,30 @@
 
 #pragma once
 
-#include <cstdint>
+import jpt.TypeDefs;
+
+// Forward declared so this header carries no metal-cpp dependency. The cost is that
+// NS::SharedPtr is unavailable, so Terminate() releases what Init() owns.
+namespace MTL { class Device; class CommandQueue; }
+namespace CA  { class MetalLayer; }
 
 namespace jpt
 {
-    /** Takes a CAMetalLayer* as an opaque handle so this header stays free of ObjC types
-        and can be included from plain C++ translation units. */
-    bool InitRenderer(void* metalLayer);
+    class MetalRenderer
+    {
+    private:
+        MTL::Device*       m_pDevice = nullptr;
+        MTL::CommandQueue* m_pQueue  = nullptr;
+        CA::MetalLayer*    m_pLayer  = nullptr;   // Borrowed from the view
 
-    /** Tells the renderer the drawable resized. Sizes are in pixels, not points. */
-    void ResizeRenderer(std::uint32_t pixelWidth, std::uint32_t pixelHeight);
+    public:
+        /** Takes a CAMetalLayer* as an opaque handle so the signature stays ObjC-free. */
+        bool Init(void* pMetalLayer);
 
-    /** Renders and presents one frame. elapsedSeconds drives the animation. */
-    void DrawFrame(double elapsedSeconds);
+        /** Sizes are in pixels, not points. */
+        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
-    void ShutdownRenderer();
+        void OnFrameDraw(float64 elapsedSeconds);
+        void Terminate();
+    };
 }

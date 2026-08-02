@@ -3,7 +3,6 @@
 #if IS_PLATFORM_MACOS
 
 #include "AppleWindow.h"
-#include "Graphics/Metal/MetalRenderer.h"
 
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -11,7 +10,6 @@
 
 @interface JupiterMetalView : NSView
 @property (nonatomic, strong) CADisplayLink* displayLink;
-@property (nonatomic, assign) CFTimeInterval startTime;
 @end
 
 @implementation JupiterMetalView
@@ -60,14 +58,13 @@
 
     // bounds is in points, the drawable in pixels.
     const NSSize points = self.bounds.size;
-    jpt::ResizeRenderer(static_cast<std::uint32_t>(points.width * scale),
-                        static_cast<std::uint32_t>(points.height * scale));
+    jpt::OnResize(static_cast<std::uint32_t>(points.width * scale),
+                  static_cast<std::uint32_t>(points.height * scale));
 }
 
 - (void)startRenderLoop
 {
     // Silently never fires unless added to a run loop, and deallocs unless strongly held.
-    self.startTime = CACurrentMediaTime();
     self.displayLink = [self displayLinkWithTarget:self selector:@selector(onFrame:)];
     [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
 }
@@ -81,7 +78,7 @@
 - (void)onFrame:(CADisplayLink*)sender
 {
     (void)sender;
-    jpt::DrawFrame(CACurrentMediaTime() - self.startTime);
+    jpt::OnFrameDraw();
 }
 
 @end
@@ -91,9 +88,9 @@
 
 namespace
 {
-    NSWindow*           g_window    = nil;
-    JupiterAppDelegate* g_delegate  = nil;
-    JupiterMetalView*   g_metalView = nil;
+    NSWindow*           g_pWindow    = nil;
+    JupiterAppDelegate* g_pDelegate  = nil;
+    JupiterMetalView*   g_pMetalView = nil;
 
     void BuildMenuBar()
     {
@@ -136,8 +133,8 @@ namespace
 - (void)applicationWillTerminate:(NSNotification*)notification
 {
     (void)notification;
-    [g_metalView stopRenderLoop];
-    jpt::ShutdownRenderer();
+    [g_pMetalView stopRenderLoop];
+    jpt::OnTerminate();
 }
 
 @end
@@ -150,8 +147,8 @@ namespace jpt
 
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
-        g_delegate = [[JupiterAppDelegate alloc] init];
-        [NSApp setDelegate:g_delegate];
+        g_pDelegate = [[JupiterAppDelegate alloc] init];
+        [NSApp setDelegate:g_pDelegate];
 
         BuildMenuBar();
 
@@ -161,35 +158,34 @@ namespace jpt
                                       | NSWindowStyleMaskMiniaturizable
                                       | NSWindowStyleMaskResizable;
 
-        g_window = [[NSWindow alloc] initWithContentRect:contentRect
+        g_pWindow = [[NSWindow alloc] initWithContentRect:contentRect
                                                styleMask:style
                                                  backing:NSBackingStoreBuffered
                                                    defer:NO];
-        if (g_window == nil)
+        if (g_pWindow == nil)
         {
             return false;
         }
 
-        [g_window setReleasedWhenClosed:NO];
+        [g_pWindow setReleasedWhenClosed:NO];
 
-        [g_window setTitle:[NSString stringWithUTF8String:title]];
-        [g_window center];
+        [g_pWindow setTitle:[NSString stringWithUTF8String:title]];
+        [g_pWindow center];
 
-        g_metalView = [[JupiterMetalView alloc] initWithFrame:contentRect];
-        [g_window setContentView:g_metalView];
+        g_pMetalView = [[JupiterMetalView alloc] initWithFrame:contentRect];
+        [g_pWindow setContentView:g_pMetalView];
 
-        [g_window makeKeyAndOrderFront:nil];
+        [g_pWindow makeKeyAndOrderFront:nil];
 
         [NSApp activate];
 
-        if (!jpt::InitRenderer((__bridge void*)g_metalView.layer))
+        if (!jpt::OnSurfaceReady((__bridge void*)g_pMetalView.layer))
         {
-            NSLog(@"Jupiter: Metal renderer failed to initialise");
             return false;
         }
 
-        [g_metalView updateDrawableSize];
-        [g_metalView startRenderLoop];
+        [g_pMetalView updateDrawableSize];
+        [g_pMetalView startRenderLoop];
 
         return true;
     }

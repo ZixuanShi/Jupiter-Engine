@@ -82,23 +82,14 @@ endif()
 # --- Output directories ---
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
 
-# --- Executable ---
+# --- Sources ---
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
 
+# --- Executable ---
 add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
 target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
-
-if(APPLE)
-    set(JUPITER_METAL_CPP "${CMAKE_SOURCE_DIR}/Vendor/Metal-Cpp/Include")
-    if(NOT EXISTS "${JUPITER_METAL_CPP}/Metal/Metal.hpp")
-        message(FATAL_ERROR "metal-cpp missing. See Vendor/Metal-Cpp/README.md")
-    endif()
-    # SYSTEM so -Wpedantic -Werror does not fire on metal-cpp's own headers, which use
-    # anonymous structs. Our sources keep the full warning set.
-    target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_METAL_CPP}")
-endif()
 
 target_sources(JupiterEngine
     PUBLIC
@@ -107,10 +98,21 @@ target_sources(JupiterEngine
             ${JUPITER_MODULE_SOURCES}
 )
 
-# --- Platform-specifics ---
+# --- Apple ---
 if(APPLE)
+    # Vendor -- metal-cpp
+    set(JUPITER_METAL_CPP "${CMAKE_SOURCE_DIR}/Vendor/Metal-Cpp/Include")
+    if(NOT EXISTS "${JUPITER_METAL_CPP}/Metal/Metal.hpp")
+        message(FATAL_ERROR "metal-cpp missing. See Vendor/Metal-Cpp/README.md")
+    endif()
+    # SYSTEM so -Wpedantic -Werror does not fire on metal-cpp's own headers, which use
+    # anonymous structs. Our sources keep the full warning set.
+    target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_METAL_CPP}")
+
+    # ARC
     target_compile_options(JupiterEngine PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
 
+    # Frameworks
     # Foundation is required: Homebrew clang does not auto-link libobjc like Apple clang,
     # so without it the link fails on _objc_release.
     if(JUPITER_PLATFORM STREQUAL "IOS")
@@ -123,7 +125,7 @@ if(APPLE)
             "-framework Metal" "-framework QuartzCore")
     endif()
 
-    # --- App bundle ---
+    # App bundle
     # iOS will not install a non-bundle. On macOS it supplies the CFBundleIdentifier, whose
     # absence makes the system log registration failures on every launch.
     set(MACOSX_BUNDLE_EXECUTABLE_NAME      "JupiterEngine")
@@ -147,6 +149,16 @@ if(APPLE)
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${JUPITER_INFO_PLIST}")
 
+    # Code signing
+    # A device refuses to launch an app without an embedded provisioning profile naming it.
+    # The simulator has no such check, so its bundles stay unsigned.
+    if(JUPITER_IOS_PLATFORM_NAME STREQUAL "iPhoneOS")
+        add_custom_command(TARGET JupiterEngine POST_BUILD
+            COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
+            COMMENT "Code-signing for device")
+    endif()
+
+    # rpath
     # iOS resolves libc++ from /usr/lib, so a Homebrew rpath would only be dead weight.
     if(NOT JUPITER_PLATFORM STREQUAL "IOS" AND EXISTS "${_cxx_root}/lib/c++/libc++.dylib")
         set_target_properties(JupiterEngine PROPERTIES
