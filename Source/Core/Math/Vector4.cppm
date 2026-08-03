@@ -3,69 +3,213 @@
 export module jpt.Vector4;
 
 import jpt.Concepts;
-import jpt.Constants;
-import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Vector3;
+import std;
 
 export namespace jpt
 {
     template<Numeric T>
     struct Vector4
     {
+    public:
         T x = static_cast<T>(0);
         T y = static_cast<T>(0);
         T z = static_cast<T>(0);
         T w = static_cast<T>(0);
 
-        constexpr Vector4() = default;
+    public:
+        [[nodiscard]] static consteval Vector4 Zero() noexcept { return Vector4(static_cast<T>(0)); }
+        [[nodiscard]] static consteval Vector4 One()  noexcept { return Vector4(static_cast<T>(1)); }
 
-        /** Broadcasts to all four. Legacy set w to 1 here, so the implicit Vector4(0.0f) built
-            (0,0,0,1) instead of zero -- inconsistent with Vector2/Vector3 and easy to miss. */
-        constexpr Vector4(T scalar) : x(scalar), y(scalar), z(scalar), w(scalar) {}
+    public:
+        constexpr Vector4() noexcept = default;
+        constexpr Vector4(T scalar) noexcept;
+        constexpr Vector4(T inX, T inY, T inZ, T inW) noexcept;
+        constexpr Vector4(const Vector3<T>& vector3, T inW) noexcept;
 
-        constexpr Vector4(T inX, T inY, T inZ, T inW) : x(inX), y(inY), z(inZ), w(inW) {}
-        constexpr Vector4(const Vector3<T>& v, T inW)  : x(v.x), y(v.y), z(v.z), w(inW) {}
+    public:
+        [[nodiscard]] constexpr T&       operator[](usize index) noexcept;
+        [[nodiscard]] constexpr const T& operator[](usize index) const noexcept;
 
-        static consteval Vector4 Zero() { return Vector4(static_cast<T>(0)); }
-        static consteval Vector4 One()  { return Vector4(static_cast<T>(1)); }
+        [[nodiscard]] constexpr Vector4 operator-() const noexcept;
 
-        [[nodiscard]] constexpr Vector3<T> XYZ() const { return Vector3<T>(x, y, z); }
+        [[nodiscard]] constexpr Vector4 operator+(const Vector4& other) const noexcept;
+        [[nodiscard]] constexpr Vector4 operator-(const Vector4& other) const noexcept;
+        [[nodiscard]] constexpr Vector4 operator*(T scalar) const noexcept;
+        [[nodiscard]] constexpr Vector4 operator/(T scalar) const noexcept;
 
-        /** A switch rather than legacy's (&x)[index]: pointer arithmetic past the first member
-            is undefined, and is rejected outright during constant evaluation. */
-        constexpr T& operator[](usize index)
-        {
-            switch (index) { case 0: return x; case 1: return y; case 2: return z; default: return w; }
-        }
-        constexpr const T& operator[](usize index) const
-        {
-            switch (index) { case 0: return x; case 1: return y; case 2: return z; default: return w; }
-        }
+        constexpr Vector4& operator+=(const Vector4& other) noexcept;
+        constexpr Vector4& operator-=(const Vector4& other) noexcept;
+        constexpr Vector4& operator*=(T scalar) noexcept;
+        constexpr Vector4& operator/=(T scalar) noexcept;
 
-        constexpr Vector4 operator-() const { return Vector4(-x, -y, -z, -w); }
+        [[nodiscard]] constexpr bool operator==(const Vector4& other) const noexcept = default;
 
-        constexpr Vector4 operator+(const Vector4& o) const { return Vector4(x + o.x, y + o.y, z + o.z, w + o.w); }
-        constexpr Vector4 operator-(const Vector4& o) const { return Vector4(x - o.x, y - o.y, z - o.z, w - o.w); }
-        constexpr Vector4 operator*(T scalar)         const { return Vector4(x * scalar, y * scalar, z * scalar, w * scalar); }
-        constexpr Vector4 operator/(T scalar)         const { return Vector4(x / scalar, y / scalar, z / scalar, w / scalar); }
+    public:
+        [[nodiscard]] constexpr Vector3<T> XYZ() const noexcept;
 
-        constexpr Vector4& operator+=(const Vector4& o) { x += o.x; y += o.y; z += o.z; w += o.w; return *this; }
-        constexpr Vector4& operator-=(const Vector4& o) { x -= o.x; y -= o.y; z -= o.z; w -= o.w; return *this; }
-        constexpr Vector4& operator*=(T scalar)         { x *= scalar; y *= scalar; z *= scalar; w *= scalar; return *this; }
-        constexpr Vector4& operator/=(T scalar)         { x /= scalar; y /= scalar; z /= scalar; w /= scalar; return *this; }
-
-        constexpr bool operator==(const Vector4& o) const = default;
-
-        /** All four components, unlike legacy's Length()/Dot() which silently dropped w. */
-        [[nodiscard]] constexpr T Dot(const Vector4& o) const { return x * o.x + y * o.y + z * o.z + w * o.w; }
-        [[nodiscard]] constexpr T Length2() const { return Dot(*this); }
-
-        [[nodiscard]] T Length() const requires Floating<T> { return Sqrt(Length2()); }
+        [[nodiscard]] constexpr T Dot(const Vector4& other) const noexcept;
+        [[nodiscard]] constexpr T Length2() const noexcept;
+        [[nodiscard]] T Length() const noexcept requires Floating<T>;
     };
 
+    // ------------------------------------------------------------------------------------------------
+    // Non-Member functions
+    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr Vector4<T> operator*(T scalar, const Vector4<T>& v) { return v * scalar; }
+    [[nodiscard]] constexpr Vector4<T> operator*(T scalar, const Vector4<T>& vector4) noexcept
+    {
+        return vector4 * scalar;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Member functions
+    // ------------------------------------------------------------------------------------------------
+    template<Numeric T>
+    constexpr Vector4<T>::Vector4(T scalar) noexcept
+        : x(scalar)
+        , y(scalar)
+        , z(scalar)
+        , w(scalar)
+    {
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>::Vector4(T inX, T inY, T inZ, T inW) noexcept
+        : x(inX)
+        , y(inY)
+        , z(inZ)
+        , w(inW)
+    {
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>::Vector4(const Vector3<T>& vector3, T inW) noexcept
+        : x(vector3.x)
+        , y(vector3.y)
+        , z(vector3.z)
+        , w(inW)
+    {
+    }
+
+    template<Numeric T>
+    constexpr T& Vector4<T>::operator[](usize index) noexcept
+    {
+        switch (index)
+        {
+            case 0:  return x;
+            case 1:  return y;
+            case 2:  return z;
+            default: return w;
+        }
+    }
+
+    template<Numeric T>
+    constexpr const T& Vector4<T>::operator[](usize index) const noexcept
+    {
+        switch (index)
+        {
+            case 0:  return x;
+            case 1:  return y;
+            case 2:  return z;
+            default: return w;
+        }
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Vector4<T>::operator-() const noexcept
+    {
+        return Vector4(-x, -y, -z, -w);
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Vector4<T>::operator+(const Vector4& other) const noexcept
+    {
+        return Vector4(x + other.x, y + other.y, z + other.z, w + other.w);
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Vector4<T>::operator-(const Vector4& other) const noexcept
+    {
+        return Vector4(x - other.x, y - other.y, z - other.z, w - other.w);
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Vector4<T>::operator*(T scalar) const noexcept
+    {
+        return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Vector4<T>::operator/(T scalar) const noexcept
+    {
+        return Vector4(x / scalar, y / scalar, z / scalar, w / scalar);
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>& Vector4<T>::operator+=(const Vector4& other) noexcept
+    {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        w += other.w;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>& Vector4<T>::operator-=(const Vector4& other) noexcept
+    {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        w -= other.w;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>& Vector4<T>::operator*=(T scalar) noexcept
+    {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T>& Vector4<T>::operator/=(T scalar) noexcept
+    {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector4<T>::XYZ() const noexcept
+    {
+        return Vector3<T>(x, y, z);
+    }
+
+    template<Numeric T>
+    constexpr T Vector4<T>::Dot(const Vector4& other) const noexcept
+    {
+        return x * other.x + y * other.y + z * other.z + w * other.w;
+    }
+
+    template<Numeric T>
+    constexpr T Vector4<T>::Length2() const noexcept
+    {
+        return Dot(*this);
+    }
+
+    template<Numeric T>
+    T Vector4<T>::Length() const noexcept requires Floating<T>
+    {
+        return std::sqrt(Length2());
+    }
 
     using Vec4  = Vector4<float32>;
     using Vec4d = Vector4<float64>;

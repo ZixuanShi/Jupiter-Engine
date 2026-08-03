@@ -4,83 +4,208 @@ export module jpt.Vector3;
 
 import jpt.Concepts;
 import jpt.Constants;
-import jpt.Math;
 import jpt.TypeDefs;
+import std;
 
 export namespace jpt
 {
     template<Numeric T>
     struct Vector3
     {
-        T x = static_cast<T>(0);
-        T y = static_cast<T>(0);
-        T z = static_cast<T>(0);
+    public:
+        T x = static_cast<T>(0);    /**< i, right */
+        T y = static_cast<T>(0);    /**< j, up */
+        T z = static_cast<T>(0);    /**< k, backward -- forward is -z */
 
-        constexpr Vector3() = default;
-        constexpr Vector3(T scalar) : x(scalar), y(scalar), z(scalar) {}
-        constexpr Vector3(T inX, T inY, T inZ) : x(inX), y(inY), z(inZ) {}
+    public:
+        [[nodiscard]] static consteval Vector3 Zero() noexcept { return Vector3(static_cast<T>(0)); }
+        [[nodiscard]] static consteval Vector3 One()  noexcept { return Vector3(static_cast<T>(1)); }
 
-        /** Right-handed, Y up, forward -Z -- the glTF 2.0 and Maya convention, so meshes import
-            with no axis conversion. Legacy declared forward as +Z while its LookAt and rotations
-            were right-handed; the contradiction forced call sites to negate their right axis. */
-        static consteval Vector3 Right()    { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
-        static consteval Vector3 Left()     { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
-        static consteval Vector3 Up()       { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
-        static consteval Vector3 Down()     { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
-        static consteval Vector3 Forward()  { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
-        static consteval Vector3 Backward() { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
-        static consteval Vector3 Zero()     { return Vector3(static_cast<T>( 0)); }
-        static consteval Vector3 One()      { return Vector3(static_cast<T>( 1)); }
+        /** Right-handed, Y up, forward -Z */
+        [[nodiscard]] static consteval Vector3 Right()    noexcept { return Vector3(static_cast<T>( 1), static_cast<T>( 0), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Left()     noexcept { return Vector3(static_cast<T>(-1), static_cast<T>( 0), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Up()       noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 1), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Down()     noexcept { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
+        [[nodiscard]] static consteval Vector3 Forward()  noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
+        [[nodiscard]] static consteval Vector3 Backward() noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
 
-        constexpr Vector3 operator-() const { return Vector3(-x, -y, -z); }
+    public:
+        constexpr Vector3() noexcept = default;
+        constexpr Vector3(T scalar) noexcept;
+        constexpr Vector3(T inX, T inY, T inZ) noexcept;
 
-        constexpr Vector3 operator+(const Vector3& o) const { return Vector3(x + o.x, y + o.y, z + o.z); }
-        constexpr Vector3 operator-(const Vector3& o) const { return Vector3(x - o.x, y - o.y, z - o.z); }
-        constexpr Vector3 operator*(T scalar)         const { return Vector3(x * scalar, y * scalar, z * scalar); }
-        constexpr Vector3 operator/(T scalar)         const { return Vector3(x / scalar, y / scalar, z / scalar); }
+    public:
+        [[nodiscard]] constexpr Vector3 operator-() const noexcept;
 
-        constexpr Vector3& operator+=(const Vector3& o) { x += o.x; y += o.y; z += o.z; return *this; }
-        constexpr Vector3& operator-=(const Vector3& o) { x -= o.x; y -= o.y; z -= o.z; return *this; }
-        constexpr Vector3& operator*=(T scalar)         { x *= scalar; y *= scalar; z *= scalar; return *this; }
-        constexpr Vector3& operator/=(T scalar)         { x /= scalar; y /= scalar; z /= scalar; return *this; }
+        [[nodiscard]] constexpr Vector3 operator+(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator-(const Vector3& other) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator*(T scalar) const noexcept;
+        [[nodiscard]] constexpr Vector3 operator/(T scalar) const noexcept;
 
-        constexpr bool operator==(const Vector3& o) const = default;
+        constexpr Vector3& operator+=(const Vector3& other) noexcept;
+        constexpr Vector3& operator-=(const Vector3& other) noexcept;
+        constexpr Vector3& operator*=(T scalar) noexcept;
+        constexpr Vector3& operator/=(T scalar) noexcept;
 
-        [[nodiscard]] constexpr T Dot(const Vector3& o) const { return x * o.x + y * o.y + z * o.z; }
+        [[nodiscard]] constexpr bool operator==(const Vector3& other) const noexcept = default;
+
+    public:
+        [[nodiscard]] constexpr T Dot(const Vector3& other) const noexcept;
 
         /** Right-handed: Right().Cross(Up()) == Backward(), so the basis follows x cross y = z. */
-        [[nodiscard]] constexpr Vector3 Cross(const Vector3& o) const
-        {
-            return Vector3(y * o.z - z * o.y,
-                           z * o.x - x * o.z,
-                           x * o.y - y * o.x);
-        }
+        [[nodiscard]] constexpr Vector3 Cross(const Vector3& other) const noexcept;
 
-        [[nodiscard]] constexpr T Length2() const { return Dot(*this); }
-
-        [[nodiscard]] T Length() const requires Floating<T> { return Sqrt(Length2()); }
-
-        [[nodiscard]] T Distance(const Vector3& o) const requires Floating<T> { return (*this - o).Length(); }
+        [[nodiscard]] constexpr T Length2() const noexcept;
+        [[nodiscard]] T Length() const noexcept requires Floating<T>;
+        [[nodiscard]] T Distance(const Vector3& other) const noexcept requires Floating<T>;
 
         /** Guards against kEpsilon rather than exact zero: a denormal length divides to inf. */
-        void Normalize() requires Floating<T>
-        {
-            if (const T length = Length(); length > kEpsilon<T>)
-            {
-                *this /= length;
-            }
-        }
-
-        [[nodiscard]] Vector3 Normalized() const requires Floating<T>
-        {
-            Vector3 result = *this;
-            result.Normalize();
-            return result;
-        }
+        void Normalize() noexcept requires Floating<T>;
+        [[nodiscard]] Vector3 Normalized() const noexcept requires Floating<T>;
     };
 
+    // ------------------------------------------------------------------------------------------------
+    // Non-Member functions
+    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    constexpr Vector3<T> operator*(T scalar, const Vector3<T>& v) { return v * scalar; }
+    [[nodiscard]] constexpr Vector3<T> operator*(T scalar, const Vector3<T>& vector3) noexcept
+    {
+        return vector3 * scalar;
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Member functions
+    // ------------------------------------------------------------------------------------------------
+    template<Numeric T>
+    constexpr Vector3<T>::Vector3(T scalar) noexcept
+        : x(scalar)
+        , y(scalar)
+        , z(scalar)
+    {
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>::Vector3(T inX, T inY, T inZ) noexcept
+        : x(inX)
+        , y(inY)
+        , z(inZ)
+    {
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::operator-() const noexcept
+    {
+        return Vector3(-x, -y, -z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::operator+(const Vector3& other) const noexcept
+    {
+        return Vector3(x + other.x, y + other.y, z + other.z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::operator-(const Vector3& other) const noexcept
+    {
+        return Vector3(x - other.x, y - other.y, z - other.z);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::operator*(T scalar) const noexcept
+    {
+        return Vector3(x * scalar, y * scalar, z * scalar);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::operator/(T scalar) const noexcept
+    {
+        return Vector3(x / scalar, y / scalar, z / scalar);
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>& Vector3<T>::operator+=(const Vector3& other) noexcept
+    {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>& Vector3<T>::operator-=(const Vector3& other) noexcept
+    {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>& Vector3<T>::operator*=(T scalar) noexcept
+    {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T>& Vector3<T>::operator/=(T scalar) noexcept
+    {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr T Vector3<T>::Dot(const Vector3& other) const noexcept
+    {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Vector3<T>::Cross(const Vector3& other) const noexcept
+    {
+        return Vector3(y * other.z - z * other.y,
+                       z * other.x - x * other.z,
+                       x * other.y - y * other.x);
+    }
+
+    template<Numeric T>
+    constexpr T Vector3<T>::Length2() const noexcept
+    {
+        return Dot(*this);
+    }
+
+    template<Numeric T>
+    T Vector3<T>::Length() const noexcept requires Floating<T>
+    {
+        return std::sqrt(Length2());
+    }
+
+    template<Numeric T>
+    T Vector3<T>::Distance(const Vector3& other) const noexcept requires Floating<T>
+    {
+        return (*this - other).Length();
+    }
+
+    template<Numeric T>
+    void Vector3<T>::Normalize() noexcept requires Floating<T>
+    {
+        if (const T length = Length(); length > kEpsilon<T>)
+        {
+            *this /= length;
+        }
+    }
+
+    template<Numeric T>
+    Vector3<T> Vector3<T>::Normalized() const noexcept requires Floating<T>
+    {
+        Vector3 result = *this;
+        result.Normalize();
+        return result;
+    }
 
     using Vec3  = Vector3<float32>;
     using Vec3d = Vector3<float64>;

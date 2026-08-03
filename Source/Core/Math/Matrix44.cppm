@@ -8,6 +8,8 @@ import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Vector3;
 import jpt.Vector4;
+import std;
+
 
 export namespace jpt
 {
@@ -17,187 +19,201 @@ export namespace jpt
     template<Numeric T>
     struct Matrix44
     {
+    public:
         Vector4<T> m[4];
 
-        constexpr Matrix44()
-            : m{ { 1, 0, 0, 0 },
-                 { 0, 1, 0, 0 },
-                 { 0, 0, 1, 0 },
-                 { 0, 0, 0, 1 } }
-        {
-        }
-
-        constexpr Matrix44(const Vector4<T>& c0, const Vector4<T>& c1, const Vector4<T>& c2, const Vector4<T>& c3)
-            : m{ c0, c1, c2, c3 }
-        {
-        }
-
-        static consteval Matrix44 Identity() { return Matrix44(); }
-        static consteval Matrix44 Zero()
+    public:
+        [[nodiscard]] static consteval Matrix44 Identity() noexcept { return Matrix44(); }
+        [[nodiscard]] static consteval Matrix44 Zero() noexcept
         {
             return Matrix44(Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero());
         }
 
-        [[nodiscard]] constexpr Vector3<T> GetTranslation() const { return m[3].XYZ(); }
+    public:
+        constexpr Matrix44() noexcept;
+        constexpr Matrix44(const Vector4<T>& c0, const Vector4<T>& c1, const Vector4<T>& c2, const Vector4<T>& c3) noexcept;
 
-        // ------------------------------------------------------------------------------------
-        // Transforms
-        // ------------------------------------------------------------------------------------
-        [[nodiscard]] static constexpr Matrix44 Translate(const Vector3<T>& v)
-        {
-            Matrix44 result;
-            result.m[3] = Vector4<T>(v, static_cast<T>(1));
-            return result;
-        }
+    public:
+        [[nodiscard]] constexpr Matrix44 operator*(const Matrix44& rhs) const noexcept;
+        [[nodiscard]] constexpr Vector4<T> operator*(const Vector4<T>& rhs) const noexcept;
+        constexpr Matrix44& operator*=(const Matrix44& rhs) noexcept;
 
-        [[nodiscard]] static constexpr Matrix44 Scale(const Vector3<T>& v)
-        {
-            Matrix44 result;
-            result.m[0].x = v.x;
-            result.m[1].y = v.y;
-            result.m[2].z = v.z;
-            return result;
-        }
+        [[nodiscard]] constexpr bool operator==(const Matrix44& other) const noexcept = default;
 
-        // Right-handed rotations: positive angle turns counter-clockwise looking down the axis
-        // toward the origin. This is what every standard derivation assumes.
-        [[nodiscard]] static Matrix44 RotateX(T radians)
-        {
-            const T c = Cos(radians);
-            const T s = Sin(radians);
+        // Translation
+        [[nodiscard]] constexpr Vector3<T> GetTranslation() const noexcept;
+        [[nodiscard]] static constexpr Matrix44 Translate(const Vector3<T>& v) noexcept;
 
-            Matrix44 result;
-            result.m[1] = Vector4<T>(0,  c, s, 0);
-            result.m[2] = Vector4<T>(0, -s, c, 0);
-            return result;
-        }
+        // Rotation
+        [[nodiscard]] static Matrix44 RotateX(T radians) noexcept;
+        [[nodiscard]] static Matrix44 RotateY(T radians) noexcept;
+        [[nodiscard]] static Matrix44 RotateZ(T radians) noexcept;
 
-        [[nodiscard]] static Matrix44 RotateY(T radians)
-        {
-            const T c = Cos(radians);
-            const T s = Sin(radians);
-
-            Matrix44 result;
-            result.m[0] = Vector4<T>(c, 0, -s, 0);
-            result.m[2] = Vector4<T>(s, 0,  c, 0);
-            return result;
-        }
-
-        [[nodiscard]] static Matrix44 RotateZ(T radians)
-        {
-            const T c = Cos(radians);
-            const T s = Sin(radians);
-
-            Matrix44 result;
-            result.m[0] = Vector4<T>( c, s, 0, 0);
-            result.m[1] = Vector4<T>(-s, c, 0, 0);
-            return result;
-        }
+        // Scale
+        [[nodiscard]] static constexpr Matrix44 Scale(const Vector3<T>& v) noexcept;
 
         /** X * Y * Z, so Z is applied to the vector first. */
-        [[nodiscard]] static Matrix44 FromEulerAngles(const Vector3<T>& radians)
-        {
-            return RotateX(radians.x) * RotateY(radians.y) * RotateZ(radians.z);
-        }
-
-        [[nodiscard]] static constexpr Matrix44 Transpose(const Matrix44& mat)
-        {
-            return Matrix44(Vector4<T>(mat.m[0].x, mat.m[1].x, mat.m[2].x, mat.m[3].x),
-                            Vector4<T>(mat.m[0].y, mat.m[1].y, mat.m[2].y, mat.m[3].y),
-                            Vector4<T>(mat.m[0].z, mat.m[1].z, mat.m[2].z, mat.m[3].z),
-                            Vector4<T>(mat.m[0].w, mat.m[1].w, mat.m[2].w, mat.m[3].w));
-        }
-
-        /** Returns Identity for a singular matrix, but says so first -- legacy returned it
-            silently, which turns a broken transform into a subtly wrong one. */
-        [[nodiscard]] static Matrix44 Inverse(const Matrix44& mat) requires Floating<T>;
-
-        // ------------------------------------------------------------------------------------
-        // Camera and projection
-        // ------------------------------------------------------------------------------------
+        [[nodiscard]] static Matrix44 FromEulerAngles(const Vector3<T>& radians) noexcept;
+        [[nodiscard]] static constexpr Matrix44 Transpose(const Matrix44& mat) noexcept;
+        [[nodiscard]] static Matrix44 Inverse(const Matrix44& mat) noexcept requires Floating<T>;
 
         /** Right-handed: the camera looks down -Z in view space, matching Vector3::Forward(). */
         [[nodiscard]] static Matrix44 LookAt(const Vector3<T>& eye,
                                              const Vector3<T>& center,
-                                             const Vector3<T>& up = Vector3<T>::Up()) requires Floating<T>
-        {
-            const Vector3<T> forward = (center - eye).Normalized();
-            const Vector3<T> right   = forward.Cross(up).Normalized();
-            const Vector3<T> newUp   = right.Cross(forward);
+                                             const Vector3<T>& up = Vector3<T>::Up()) noexcept requires Floating<T>;
 
-            return Matrix44(Vector4<T>(right.x, newUp.x, -forward.x, 0),
-                            Vector4<T>(right.y, newUp.y, -forward.y, 0),
-                            Vector4<T>(right.z, newUp.z, -forward.z, 0),
-                            Vector4<T>(-right.Dot(eye), -newUp.Dot(eye), forward.Dot(eye), 1));
-        }
-
-        /** Right-handed, depth mapped to **[0, 1]** -- what Metal, Vulkan and D3D all clip
-            against. Legacy emitted the OpenGL [-1, 1] form, which silently discards everything
-            from the near plane to the middle of the frustum.
-
-            No y-flip here: Metal's NDC is +Y up and Vulkan's is +Y down, so that correction
-            belongs to whichever backend needs it, not to the shared matrix.
-
-            @param fovY  Vertical field of view, in radians. */
-        [[nodiscard]] static Matrix44 Perspective(T fovY, T aspect, T zNear, T zFar) requires Floating<T>
-        {
-            const T tanHalfFovY = Tan(fovY / static_cast<T>(2));
-
-            Matrix44 result = Zero();
-            result.m[0].x = static_cast<T>(1) / (aspect * tanHalfFovY);
-            result.m[1].y = static_cast<T>(1) / tanHalfFovY;
-            result.m[2].z = zFar / (zNear - zFar);
-            result.m[2].w = static_cast<T>(-1);
-            result.m[3].z = (zFar * zNear) / (zNear - zFar);
-            return result;
-        }
-
-        // ------------------------------------------------------------------------------------
-        // Operators
-        // ------------------------------------------------------------------------------------
-        [[nodiscard]] constexpr Matrix44 operator*(const Matrix44& rhs) const
-        {
-            Matrix44 result;
-            for (usize col = 0; col < 4; ++col)
-            {
-                for (usize row = 0; row < 4; ++row)
-                {
-                    result.m[col][row] = m[0][row] * rhs.m[col][0] +
-                                         m[1][row] * rhs.m[col][1] +
-                                         m[2][row] * rhs.m[col][2] +
-                                         m[3][row] * rhs.m[col][3];
-                }
-            }
-            return result;
-        }
-
-        [[nodiscard]] constexpr Vector4<T> operator*(const Vector4<T>& rhs) const
-        {
-            Vector4<T> result;
-            for (usize row = 0; row < 4; ++row)
-            {
-                result[row] = m[0][row] * rhs[0] +
-                              m[1][row] * rhs[1] +
-                              m[2][row] * rhs[2] +
-                              m[3][row] * rhs[3];
-            }
-            return result;
-        }
-
-        constexpr Matrix44& operator*=(const Matrix44& rhs) { *this = *this * rhs; return *this; }
-
-        constexpr bool operator==(const Matrix44& rhs) const = default;
+        /** Right-handed: the camera looks down -Z in view space, matching Vector3::Forward(). */
+        [[nodiscard]] static Matrix44 Perspective(T fovY, T aspect, T zNear, T zFar) noexcept requires Floating<T>;
     };
+
+    // ------------------------------------------------------------------------------------------------
+    // Non-Member functions
+    // ------------------------------------------------------------------------------------------------
 
     /** Treats the vector as a position (w = 1) and drops w after the transform. */
     template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator*(const Matrix44<T>& mat, const Vector3<T>& v)
+    [[nodiscard]] constexpr Vector3<T> operator*(const Matrix44<T>& mat, const Vector3<T>& v) noexcept
     {
         return (mat * Vector4<T>(v, static_cast<T>(1))).XYZ();
     }
 
+    // ------------------------------------------------------------------------------------------------
+    // Member functions
+    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
-    Matrix44<T> Matrix44<T>::Inverse(const Matrix44& mat) requires Floating<T>
+    constexpr Matrix44<T>::Matrix44() noexcept
+        : m{ { 1, 0, 0, 0 },
+             { 0, 1, 0, 0 },
+             { 0, 0, 1, 0 },
+             { 0, 0, 0, 1 } }
+    {
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T>::Matrix44(const Vector4<T>& c0, const Vector4<T>& c1, const Vector4<T>& c2, const Vector4<T>& c3) noexcept
+        : m{ c0, c1, c2, c3 }
+    {
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T> Matrix44<T>::operator*(const Matrix44& rhs) const noexcept
+    {
+        Matrix44 result;
+
+        for (usize col = 0; col < 4; ++col)
+        {
+            for (usize row = 0; row < 4; ++row)
+            {
+                result.m[col][row] = m[0][row] * rhs.m[col][0] +
+                                     m[1][row] * rhs.m[col][1] +
+                                     m[2][row] * rhs.m[col][2] +
+                                     m[3][row] * rhs.m[col][3];
+            }
+        }
+
+        return result;
+    }
+
+    template<Numeric T>
+    constexpr Vector4<T> Matrix44<T>::operator*(const Vector4<T>& rhs) const noexcept
+    {
+        Vector4<T> result;
+
+        for (usize row = 0; row < 4; ++row)
+        {
+            result[row] = m[0][row] * rhs[0] +
+                          m[1][row] * rhs[1] +
+                          m[2][row] * rhs[2] +
+                          m[3][row] * rhs[3];
+        }
+
+        return result;
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T>& Matrix44<T>::operator*=(const Matrix44& rhs) noexcept
+    {
+        *this = *this * rhs;
+        return *this;
+    }
+
+    template<Numeric T>
+    constexpr Vector3<T> Matrix44<T>::GetTranslation() const noexcept
+    {
+        return m[3].XYZ();
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T> Matrix44<T>::Translate(const Vector3<T>& v) noexcept
+    {
+        Matrix44 result;
+        result.m[3] = Vector4<T>(v, static_cast<T>(1));
+        return result;
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::RotateX(T radians) noexcept
+    {
+        const T cos = std::cos(radians);
+        const T sin = std::sin(radians);
+
+        Matrix44 result;
+        result.m[1] = Vector4<T>(0,  cos, sin, 0);
+        result.m[2] = Vector4<T>(0, -sin, cos, 0);
+        return result;
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::RotateY(T radians) noexcept
+    {
+        const T cos = std::cos(radians);
+        const T sin = std::sin(radians);
+
+        Matrix44 result;
+        result.m[0] = Vector4<T>(cos, 0, -sin, 0);
+        result.m[2] = Vector4<T>(sin, 0,  cos, 0);
+        return result;
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::RotateZ(T radians) noexcept
+    {
+        const T cos = std::cos(radians);
+        const T sin = std::sin(radians);
+
+        Matrix44 result;
+        result.m[0] = Vector4<T>( cos, sin, 0, 0);
+        result.m[1] = Vector4<T>(-sin, cos, 0, 0);
+        return result;
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T> Matrix44<T>::Scale(const Vector3<T>& v) noexcept
+    {
+        Matrix44 result;
+        result.m[0].x = v.x;
+        result.m[1].y = v.y;
+        result.m[2].z = v.z;
+        return result;
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::FromEulerAngles(const Vector3<T>& radians) noexcept
+    {
+        return RotateX(radians.x) * RotateY(radians.y) * RotateZ(radians.z);
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T> Matrix44<T>::Transpose(const Matrix44& mat) noexcept
+    {
+        return Matrix44(Vector4<T>(mat.m[0].x, mat.m[1].x, mat.m[2].x, mat.m[3].x),
+                        Vector4<T>(mat.m[0].y, mat.m[1].y, mat.m[2].y, mat.m[3].y),
+                        Vector4<T>(mat.m[0].z, mat.m[1].z, mat.m[2].z, mat.m[3].z),
+                        Vector4<T>(mat.m[0].w, mat.m[1].w, mat.m[2].w, mat.m[3].w));
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::Inverse(const Matrix44& mat) noexcept requires Floating<T>
     {
         // Flattened column-major, so n[col * 4 + row] -- the layout the standard cofactor
         // expansion below is written against.
@@ -244,6 +260,35 @@ export namespace jpt
                 result.m[col][row] = inv[col * 4 + row] * invDet;
             }
         }
+        return result;
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::LookAt(const Vector3<T>& eye,
+                                    const Vector3<T>& center,
+                                    const Vector3<T>& up) noexcept requires Floating<T>
+    {
+        const Vector3<T> forward = (center - eye).Normalized();
+        const Vector3<T> right   = forward.Cross(up).Normalized();
+        const Vector3<T> newUp   = right.Cross(forward);
+
+        return Matrix44(Vector4<T>(right.x, newUp.x, -forward.x, 0),
+                        Vector4<T>(right.y, newUp.y, -forward.y, 0),
+                        Vector4<T>(right.z, newUp.z, -forward.z, 0),
+                        Vector4<T>(-right.Dot(eye), -newUp.Dot(eye), forward.Dot(eye), 1));
+    }
+
+    template<Numeric T>
+    Matrix44<T> Matrix44<T>::Perspective(T fovY, T aspect, T zNear, T zFar) noexcept requires Floating<T>
+    {
+        const T tanHalfFovY = std::tan(fovY / static_cast<T>(2));
+
+        Matrix44 result = Zero();
+        result.m[0].x = static_cast<T>(1) / (aspect * tanHalfFovY);
+        result.m[1].y = static_cast<T>(1) / tanHalfFovY;
+        result.m[2].z = zFar / (zNear - zFar);
+        result.m[2].w = static_cast<T>(-1);
+        result.m[3].z = (zFar * zNear) / (zNear - zFar);
         return result;
     }
 
