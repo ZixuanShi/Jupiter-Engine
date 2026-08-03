@@ -2,6 +2,7 @@
 
 #pragma once
 
+import jpt.RendererBase;
 import jpt.TypeDefs;
 
 // Forward declared so this header carries no metal-cpp dependency. The cost is that
@@ -11,7 +12,7 @@ namespace CA  { class MetalLayer; }
 
 namespace jpt
 {
-    class MetalRenderer
+    class MetalRenderer : public RendererBase
     {
     public:
         using SurfaceHandle = CA::MetalLayer*;
@@ -30,7 +31,7 @@ namespace jpt
 
     public:
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
-        void OnFrameDraw(float64 elapsedSeconds);
+        void OnFrame();
 
     private:
         bool CreatePipeline();

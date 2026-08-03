@@ -26,6 +26,7 @@ export namespace jpt
 
         virtual bool PreInit();
         virtual bool Init();
+        virtual void Update();
         virtual void Terminate();
 
     public:
@@ -37,6 +38,9 @@ export namespace jpt
         void OnFrame();
     
     public:
+        // m_frameTimer is private, so without this an override of Update() has no delta time.
+        [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
+
         [[nodiscard]] Window& GetWindow() noexcept { return m_window; }
         [[nodiscard]] const Window& GetWindow() const noexcept { return m_window; }
         [[nodiscard]] Renderer& GetRenderer() noexcept { return m_renderer; }

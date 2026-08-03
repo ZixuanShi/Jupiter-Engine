@@ -2,13 +2,16 @@
 
 export module jpt.Vertex;
 
-import jpt.TypeDefs;
+import jpt.LinearColor;
+import jpt.Vector2;
 
 export namespace jpt
 {
+    /** Must stay an aggregate and standard-layout: MetalRenderer::CreatePipeline builds the
+        vertex descriptor from offsetof/sizeof of these members. */
     struct Vertex
     {
-        float32 position[2];
-        float32 color[3];
+        Vec2        position;
+        LinearColor color;
     };
 }

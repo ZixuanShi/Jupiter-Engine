@@ -10,13 +10,13 @@ using namespace metal;
 struct VertexIn
 {
     float2 position [[attribute(0)]];
-    float3 color    [[attribute(1)]];
+    float4 color    [[attribute(1)]];
 };
 
 struct VertexOut
 {
     float4 position [[position]];
-    float3 color;
+    float4 color;
 };
 
 vertex VertexOut TriangleVertex(VertexIn in [[stage_in]])
@@ -30,7 +30,9 @@ vertex VertexOut TriangleVertex(VertexIn in [[stage_in]])
     return out;
 }
 
+// Linear out. The attachment is an _sRGB format, so the hardware encodes this on write -- doing
+// it here with a pow() would double-encode, and would put any future blending in the wrong space.
 fragment float4 TriangleFragment(VertexOut in [[stage_in]])
 {
-    return float4(in.color, 1.0);
+    return in.color;
 }

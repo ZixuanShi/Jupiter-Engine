@@ -7,9 +7,11 @@ module;
 
 module jpt.Application;
 
+import jpt.Constants;
 import jpt.LaunchArgs;
 import jpt.Logger;
 import jpt.Utils;
+import std;
 
 #if !IS_CONFIG_RELEASE
     import jpt.MathTests;
@@ -53,10 +55,21 @@ namespace jpt
         return true;
     }
 
+    void Application::Update()
+    {
+        const float32 elapsed = static_cast<float32>(m_frameTimer.GetElapsedSeconds());
+        constexpr float32 kPhase = kTwoPi<float32> / 3.0f;
+
+        m_renderer.SetClearColor({ 0.5f + 0.5f * std::sin(elapsed),
+                                   0.5f + 0.5f * std::sin(elapsed + kPhase),
+                                   0.5f + 0.5f * std::sin(elapsed + kPhase * 2.0f) });
+    }
+
     void Application::Terminate()
     {
         m_renderer.Terminate();
         m_window.Terminate();
+        
         m_status = Status::Succeeded;
         Debug::Info("Application Terminated.");
     }
@@ -89,7 +102,10 @@ namespace jpt
         }
 
         m_frameTimer.BeginFrame();
-        m_renderer.OnFrameDraw(m_frameTimer.GetElapsedSeconds());
+        
+        Update();
+        m_renderer.OnFrame();
+
         m_frameTimer.EndFrame();
     }
 }

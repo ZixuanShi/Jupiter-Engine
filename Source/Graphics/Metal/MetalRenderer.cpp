@@ -9,7 +9,6 @@
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
-#include <cmath>
 #include <cstddef>
 
 #include "Graphics/ShaderTypes.h"
@@ -42,7 +41,7 @@ namespace jpt
         m_pLayer = pMetalLayer;
 
         m_pLayer->setDevice(m_pDevice);
-        m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);        
+        m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm_sRGB);
         m_pLayer->setFramebufferOnly(true); // Promises render-only access, letting Core Animation pick faster memory.
 
         NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
@@ -76,7 +75,7 @@ namespace jpt
         pVertexDesc->attributes()->object(0)->setOffset(offsetof(Vertex, position));
         pVertexDesc->attributes()->object(0)->setBufferIndex(0);
 
-        pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat3);
+        pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat4);
         pVertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, color));
         pVertexDesc->attributes()->object(1)->setBufferIndex(0);
 
@@ -126,7 +125,7 @@ namespace jpt
         m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
     }
 
-    void MetalRenderer::OnFrameDraw(float64 elapsedSeconds)
+    void MetalRenderer::OnFrame()
     {
         if (!m_pLayer || !m_pQueue || !m_pPipeline)
         {
@@ -144,28 +143,20 @@ namespace jpt
             return;
         }
 
-        const float64 r = 0.5 + 0.5 * std::sin(elapsedSeconds);
-        const float64 g = 0.5 + 0.5 * std::sin(elapsedSeconds + 2.0943951);
-        const float64 b = 0.5 + 0.5 * std::sin(elapsedSeconds + 4.1887902);
-
         MTL::RenderPassDescriptor* pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
         MTL::RenderPassColorAttachmentDescriptor* pColor = pPass->colorAttachments()->object(0);
 
         pColor->setTexture(pDrawable->texture());
-
-        // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
-        pColor->setLoadAction(MTL::LoadActionClear);
+        pColor->setLoadAction(MTL::LoadActionClear);    // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
         pColor->setStoreAction(MTL::StoreActionStore);
-        pColor->setClearColor(MTL::ClearColor::Make(r, g, b, 1.0));
+        pColor->setClearColor(MTL::ClearColor::Make(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
 
         MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
-
         MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(pPass);
 
         pEncoder->setRenderPipelineState(m_pPipeline);
         pEncoder->setVertexBuffer(m_pVertices, 0, 0);
         pEncoder->drawPrimitives(MTL::PrimitiveTypeTriangle, NS::UInteger(0), NS::UInteger(3));
-
         pEncoder->endEncoding();
 
         pCommandBuffer->presentDrawable(pDrawable);
