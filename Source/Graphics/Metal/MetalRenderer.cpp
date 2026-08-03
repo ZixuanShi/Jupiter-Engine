@@ -10,12 +10,18 @@
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 #include <cstddef>
+#include <cstring>
 
 #include "Graphics/ShaderTypes.h"
 #include "MetalRenderer.h"
 
 import jpt.Logger;
+import jpt.Matrix44;
+import jpt.Vector3;
 import jpt.Vertex;
+
+// What lets the matrix cross to the GPU by memcpy: both are 16 column-major floats.
+static_assert(sizeof(jpt::Mat44) == sizeof(simd_float4x4));
 
 namespace jpt
 {
@@ -154,8 +160,17 @@ namespace jpt
         MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
         MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(pPass);
 
+        const CGSize drawable = m_pLayer->drawableSize();
+        const float32 aspect  = (drawable.height > 0.0) ? static_cast<float32>(drawable.width) / static_cast<float32>(drawable.height) : 1.0f;
+
+        Uniforms uniforms;
+        const Mat44 aspectCorrection = Mat44::Scale(Vec3(1.0f / aspect, 1.0f, 1.0f));
+        std::memcpy(&uniforms.modelViewProjection, &aspectCorrection, sizeof(aspectCorrection));
+
         pEncoder->setRenderPipelineState(m_pPipeline);
         pEncoder->setVertexBuffer(m_pVertices, 0, 0);
+        pEncoder->setVertexBytes(&uniforms, sizeof(uniforms), 1);
+
         pEncoder->drawPrimitives(MTL::PrimitiveTypeTriangle, NS::UInteger(0), NS::UInteger(3));
         pEncoder->endEncoding();
 

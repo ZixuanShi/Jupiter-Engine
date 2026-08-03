@@ -4,9 +4,11 @@
 
 #include <cstdint>
 
+#include "Applications/Window/WindowBase.h"
+
 namespace jpt
 {
-    class IOSWindow
+    class IOSWindow : public WindowBase
     {
     private:
         struct Impl;

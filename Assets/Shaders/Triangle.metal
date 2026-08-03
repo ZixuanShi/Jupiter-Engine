@@ -19,12 +19,13 @@ struct VertexOut
     float4 color;
 };
 
-vertex VertexOut TriangleVertex(VertexIn in [[stage_in]])
+// buffer(1), because the vertex descriptor already owns buffer(0).
+vertex VertexOut TriangleVertex(VertexIn in [[stage_in]],
+                                constant jpt::Uniforms& uniforms [[buffer(1)]])
 {
     VertexOut out;
 
-    // Already in clip space: no matrices yet, so nothing here can be the reason for a blank screen.
-    out.position = float4(in.position, 0.0, 1.0);
+    out.position = uniforms.modelViewProjection * float4(in.position, 0.0, 1.0);
     out.color    = in.color;
 
     return out;

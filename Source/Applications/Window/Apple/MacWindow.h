@@ -4,9 +4,11 @@
 
 #include <cstdint>
 
+#include "Applications/Window/WindowBase.h"
+
 namespace jpt
 {
-    class MacWindow
+    class MacWindow : public WindowBase
     {
     private:
         /** Defined in MacWindow.mm, where ARC applies. Declaring the AppKit members here

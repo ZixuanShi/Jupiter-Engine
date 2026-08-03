@@ -91,6 +91,7 @@ namespace jpt
 
     void Application::OnResize(uint32 pixelWidth, uint32 pixelHeight)
     {
+        m_window.OnResize(pixelWidth, pixelHeight);
         m_renderer.OnResize(pixelWidth, pixelHeight);
     }
 
