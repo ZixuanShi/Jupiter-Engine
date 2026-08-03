@@ -137,17 +137,59 @@ if(APPLE)
     if(JUPITER_PLATFORM STREQUAL "IOS")
         if(CMAKE_OSX_SYSROOT MATCHES "[Ss]imulator")
             set(JUPITER_IOS_PLATFORM_NAME "iPhoneSimulator")
+            set(JUPITER_METAL_SDK "iphonesimulator")
+            set(JUPITER_METAL_MIN_OS "-mios-simulator-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         else()
             set(JUPITER_IOS_PLATFORM_NAME "iPhoneOS")
+            set(JUPITER_METAL_SDK "iphoneos")
+            set(JUPITER_METAL_MIN_OS "-mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         endif()
         set(JUPITER_INFO_PLIST "${CMAKE_SOURCE_DIR}/Build/Apple/IOSInfo.plist.in")
     else()
+        set(JUPITER_METAL_SDK "macosx")
+        set(JUPITER_METAL_MIN_OS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         set(JUPITER_INFO_PLIST "${CMAKE_SOURCE_DIR}/Build/Apple/MacOSInfo.plist.in")
     endif()
 
     set_target_properties(JupiterEngine PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${JUPITER_INFO_PLIST}")
+
+    # Shaders
+    # Every .metal file links into one default.metallib, so adding a shader needs no edit here.
+    # Note modern Xcode ships no separate `metallib` tool -- `metal` links .air files itself.
+    #
+    # The version-min flag is not optional. Unlike clang, `metal` ignores CMAKE_OSX_DEPLOYMENT_TARGET
+    # and targets the SDK version, stamping the library with an AIR version the deployment target
+    # never promised. Loading it on an older OS then fails as a *nil* newDefaultLibrary() rather
+    # than an error, so the app runs on with a dead renderer.
+    file(GLOB JUPITER_SHADERS CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Assets/Shaders/*.metal")
+
+    set(JUPITER_AIR_FILES "")
+    foreach(_shader ${JUPITER_SHADERS})
+        get_filename_component(_shader_name "${_shader}" NAME_WE)
+        set(_air "${CMAKE_CURRENT_BINARY_DIR}/Shaders/${_shader_name}.air")
+
+        add_custom_command(OUTPUT "${_air}"
+            COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS} -c "${_shader}" -o "${_air}"
+            DEPENDS "${_shader}"
+            COMMENT "Compiling ${_shader_name}.metal")
+
+        list(APPEND JUPITER_AIR_FILES "${_air}")
+    endforeach()
+
+    set(JUPITER_METALLIB "${CMAKE_CURRENT_BINARY_DIR}/Shaders/default.metallib")
+    add_custom_command(OUTPUT "${JUPITER_METALLIB}"
+        COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS} ${JUPITER_AIR_FILES} -o "${JUPITER_METALLIB}"
+        DEPENDS ${JUPITER_AIR_FILES}
+        COMMENT "Linking default.metallib")
+
+    # Where newDefaultLibrary() looks. CMake resolves "Resources" to Contents/Resources on
+    # macOS and to the bundle root on iOS, which is what each platform expects.
+    target_sources(JupiterEngine PRIVATE "${JUPITER_METALLIB}")
+    set_source_files_properties("${JUPITER_METALLIB}" PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources
+        GENERATED TRUE)
 
     # Code signing
     # A device refuses to launch an app without an embedded provisioning profile naming it.

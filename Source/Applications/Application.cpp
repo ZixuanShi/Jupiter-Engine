@@ -15,18 +15,18 @@ namespace jpt
 {
     bool Application::PreInit()
     {
-        Debug::Log("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
+        Debug::Info("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
 
         const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
         if (!m_window.PreInit(launchArgs.GetCount(), launchArgs.GetValues()))
         {
-            Debug::Log("Failed to pre-initialise the window.");
+            Debug::Error("Failed to pre-initialise the window.");
             return false;
         }
 
         if (!m_renderer.PreInit())
         {
-            Debug::Log("Failed to pre-initialise the renderer.");
+            Debug::Error("Failed to pre-initialise the renderer.");
             return false;
         }
 
@@ -37,7 +37,7 @@ namespace jpt
     {
         if (!m_window.Init())
         {
-            Debug::Log("Failed to initialise the window.");
+            Debug::Error("Failed to initialise the window.");
             return false;
         }
 
@@ -50,7 +50,7 @@ namespace jpt
         m_renderer.Terminate();
         m_window.Terminate();
         m_status = Status::Succeeded;
-        Debug::Log("Application Terminated.");
+        Debug::Info("Application Terminated.");
     }
 
     void Application::Run()
@@ -62,7 +62,7 @@ namespace jpt
     {
         if (!m_renderer.Init(surface))
         {
-            Debug::Log("Failed to initialise the renderer.");
+            Debug::Error("Failed to initialise the renderer.");
             return false;
         }
         return true;
