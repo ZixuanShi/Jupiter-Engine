@@ -9,6 +9,8 @@
 #endif
 
 import jpt.LinearColor;
+import jpt.Matrix44;
+import jpt.Mesh;
 import jpt.TypeDefs;
 import std;
 
@@ -18,15 +20,19 @@ namespace jpt
     template<typename T>
     concept RendererType = requires(T renderer, typename T::SurfaceHandle surface,
                                     uint32 width, uint32 height,
-                                    const LinearColor& color)
+                                    const LinearColor& color, const Mesh& mesh, const Mat44& matrix)
     {
-        { renderer.PreInit() }               -> std::same_as<bool>;
-        { renderer.Init(surface) }           -> std::same_as<bool>;
-        { renderer.Terminate() }             -> std::same_as<void>;
+        { renderer.PreInit() }                  -> std::same_as<bool>;
+        { renderer.Init(surface) }              -> std::same_as<bool>;
+        { renderer.Terminate() }                -> std::same_as<void>;
 
-        { renderer.OnResize(width, height) } -> std::same_as<void>;
-        { renderer.Draw() }                 -> std::same_as<void>;
-        { renderer.SetClearColor(color) }    -> std::same_as<void>;
+        { renderer.OnResize(width, height) }    -> std::same_as<void>;
+        { renderer.Draw() }                     -> std::same_as<void>;
+
+        { renderer.SetMesh(mesh) }              -> std::same_as<bool>;
+        { renderer.SetClearColor(color) }       -> std::same_as<void>;
+        { renderer.SetModel(matrix) }           -> std::same_as<void>;
+        { renderer.SetViewProjection(matrix) }  -> std::same_as<void>;
     };
 
     using Renderer = MetalRenderer;

@@ -266,7 +266,7 @@ export namespace jpt
     template<Numeric T>
     Matrix44<T> Matrix44<T>::LookAt(const Vector3<T>& eye,
                                     const Vector3<T>& center,
-                                    const Vector3<T>& up) noexcept requires Floating<T>
+                                    const Vector3<T>& up /* = Vector3<T>::Up()*/) noexcept requires Floating<T>
     {
         const Vector3<T> forward = (center - eye).Normalized();
         const Vector3<T> right   = forward.Cross(up).Normalized();
