@@ -102,11 +102,8 @@ namespace jpt
             return;
         }
 
-        m_frameTimer.BeginFrame();
-        
+        m_frameTimer.OnFrame();
         Update();
         m_renderer.OnFrame();
-
-        m_frameTimer.EndFrame();
     }
 }

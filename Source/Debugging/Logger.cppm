@@ -5,19 +5,16 @@ export module jpt.Logger;
 import jpt.DebugContext;
 import std;
 
-export namespace jpt::Debug
+namespace jpt::Debug
 {
     enum class Level
     {
-        Log,        // Verbose logging, for development and debugging. Excluded for production.
-        Info,       // Important information, included in production.
+        Log,
+        Info,
         Warning,
         Error,
     };
-}
 
-namespace jpt::Debug
-{
     template<typename... Args>
     void Impl(Context<std::type_identity_t<Args>...> context, Level level, Args&&... args)
     {

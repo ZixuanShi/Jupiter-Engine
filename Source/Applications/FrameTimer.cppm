@@ -15,7 +15,6 @@ export namespace jpt
     private:
         // Delta Seconds
         std::chrono::high_resolution_clock::time_point m_lastTime = std::chrono::high_resolution_clock::now();
-        std::chrono::high_resolution_clock::time_point m_frameStartTime = std::chrono::high_resolution_clock::now();
         float64 m_deltaSeconds = 0.0;
 
         // Sum of the deltas, so it does not advance while frames are not being driven.
@@ -27,8 +26,7 @@ export namespace jpt
         uint32 m_fps = 0;
 
     public:
-        void BeginFrame();
-        void EndFrame();
+        void OnFrame();
 
         [[nodiscard]] float64 GetDeltaSeconds() const noexcept { return m_deltaSeconds; }
         [[nodiscard]] float64 GetElapsedSeconds() const noexcept { return m_elapsedSeconds; }

@@ -17,16 +17,7 @@ export namespace jpt
         float32 a = 1.0f;
 
     public:
-        [[nodiscard]] static consteval LinearColor Black()   noexcept { return LinearColor(0.0f, 0.0f, 0.0f); }
-        [[nodiscard]] static consteval LinearColor White()   noexcept { return LinearColor(1.0f, 1.0f, 1.0f); }
-        [[nodiscard]] static consteval LinearColor Red()     noexcept { return LinearColor(1.0f, 0.0f, 0.0f); }
-        [[nodiscard]] static consteval LinearColor Green()   noexcept { return LinearColor(0.0f, 1.0f, 0.0f); }
-        [[nodiscard]] static consteval LinearColor Blue()    noexcept { return LinearColor(0.0f, 0.0f, 1.0f); }
-        [[nodiscard]] static consteval LinearColor Yellow()  noexcept { return LinearColor(1.0f, 1.0f, 0.0f); }
-        [[nodiscard]] static consteval LinearColor Magenta() noexcept { return LinearColor(1.0f, 0.0f, 1.0f); }
-        [[nodiscard]] static consteval LinearColor Cyan()    noexcept { return LinearColor(0.0f, 1.0f, 1.0f); }
-        [[nodiscard]] static consteval LinearColor Gray() noexcept { return LinearColor(0.5f, 0.5f, 0.5f); }
-        [[nodiscard]] static consteval LinearColor Transparent() noexcept { return LinearColor(0.0f, 0.0f, 0.0f, 0.0f); }
+        [[nodiscard]] static consteval LinearColor Black() noexcept { return LinearColor(0.0f, 0.0f, 0.0f); }
 
     public:
         constexpr LinearColor() noexcept = default;

@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
+from pathlib import Path
 
 from utils import BUNDLE_ID, active_preset, artifact_path, executable_path
 
@@ -35,16 +37,25 @@ def booted_simulator() -> str | None:
 
 
 def connected_device() -> str | None:
-    """Return the UDID of the first connected physical device, or None."""
-    result = subprocess.run(["xcrun", "devicectl", "list", "devices"],
-                            capture_output=True, text=True)
+    """Return the identifier of the first paired, reachable device, or None.
 
-    for line in result.stdout.splitlines():
-        if "unavailable" in line or "available" not in line:
-            continue
-        for token in line.split():
-            if len(token) == 36 and token.count("-") == 4:
-                return token
+    Reads the JSON rather than the printed table, which has no stable columns. The state to
+    match is not one string: devicectl reports tunnelState as "connected" over USB and
+    "available" over the network, so this rejects "unavailable" instead of listing the rest.
+    """
+    with tempfile.TemporaryDirectory() as directory:
+        output = Path(directory) / "devices.json"
+        subprocess.run(["xcrun", "devicectl", "list", "devices", "--json-output", str(output)],
+                       capture_output=True)
+        if not output.exists():
+            return None
+        devices = json.loads(output.read_text())["result"]["devices"]
+
+    for device in devices:
+        connection = device.get("connectionProperties", {})
+        if (connection.get("pairingState") == "paired"
+                and connection.get("tunnelState") != "unavailable"):
+            return device["identifier"]
     return None
 
 

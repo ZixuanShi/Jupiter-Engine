@@ -36,14 +36,5 @@ export namespace jpt
         bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
         void OnFrame();
-    
-    public:
-        // m_frameTimer is private, so without this an override of Update() has no delta time.
-        [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
-
-        [[nodiscard]] Window& GetWindow() noexcept { return m_window; }
-        [[nodiscard]] const Window& GetWindow() const noexcept { return m_window; }
-        [[nodiscard]] Renderer& GetRenderer() noexcept { return m_renderer; }
-        [[nodiscard]] const Renderer& GetRenderer() const noexcept { return m_renderer; }
     };
 }
