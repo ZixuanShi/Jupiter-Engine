@@ -7,11 +7,12 @@ module;
 
 module jpt.Application;
 
-import jpt.Constants;
+import jpt.Environment;
 import jpt.LaunchArgs;
 import jpt.Logger;
-import jpt.Utils;
-import std;
+import jpt.Matrix44;
+import jpt.ObjLoader;
+import jpt.Vector3;
 
 #if !IS_CONFIG_RELEASE
     import jpt.MathTests;
@@ -51,6 +52,11 @@ namespace jpt
             return false;
         }
 
+        m_renderer.SetClearColor({ 0.05f, 0.06f, 0.09f });
+
+        m_camera.SetPosition(Vec3(1.6f, 1.4f, 2.4f));
+        m_camera.SetTarget(Vec3::Zero());
+
         m_status = Status::Running;
         return true;
     }
@@ -58,11 +64,9 @@ namespace jpt
     void Application::Update()
     {
         const float32 elapsed = static_cast<float32>(m_frameTimer.GetElapsedSeconds());
-        constexpr float32 kPhase = kTwoPi<float32> / 3.0f;
 
-        m_renderer.SetClearColor({ 0.5f + 0.5f * std::sin(elapsed),
-                                   0.5f + 0.5f * std::sin(elapsed + kPhase),
-                                   0.5f + 0.5f * std::sin(elapsed + kPhase * 2.0f) });
+        m_renderer.SetModel(Mat44::RotateY(elapsed * 0.8f));
+        m_renderer.SetViewProjection(m_camera.GetViewProjection(m_window.GetAspectRatio()));
     }
 
     void Application::Terminate()
@@ -86,6 +90,13 @@ namespace jpt
             Debug::Error("Failed to initialise the renderer.");
             return false;
         }
+
+        if (!m_renderer.SetMesh(LoadObj("Assets/Meshes/Pyramid.obj")))
+        {
+            Debug::Error("Failed to upload the mesh.");
+            return false;
+        }
+
         return true;
     }
 

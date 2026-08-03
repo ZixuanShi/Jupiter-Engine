@@ -64,6 +64,11 @@ export namespace jpt
 
         /** Right-handed: the camera looks down -Z in view space, matching Vector3::Forward(). */
         [[nodiscard]] static Matrix44 Perspective(T fovY, T aspect, T zNear, T zFar) noexcept requires Floating<T>;
+
+        /** Right-handed, depth in [0, 1], matching Perspective. The box is centred on the view
+            axis, which is what a camera wants; an off-centre box -- shadow cascades -- needs the
+            six-plane form, which can be added when something asks for it. */
+        [[nodiscard]] static constexpr Matrix44 Orthographic(T width, T height, T zNear, T zFar) noexcept requires Floating<T>;
     };
 
     // ------------------------------------------------------------------------------------------------
@@ -289,6 +294,19 @@ export namespace jpt
         result.m[2].z = zFar / (zNear - zFar);
         result.m[2].w = static_cast<T>(-1);
         result.m[3].z = (zFar * zNear) / (zNear - zFar);
+        return result;
+    }
+
+    template<Numeric T>
+    constexpr Matrix44<T> Matrix44<T>::Orthographic(T width, T height, T zNear, T zFar) noexcept requires Floating<T>
+    {
+        // Identity rather than Zero, which is the whole difference from Perspective: w is left
+        // at 1, so the perspective divide is a no-op and parallel lines stay parallel.
+        Matrix44 result;
+        result.m[0].x = static_cast<T>(2) / width;
+        result.m[1].y = static_cast<T>(2) / height;
+        result.m[2].z = static_cast<T>(1) / (zNear - zFar);
+        result.m[3].z = zNear / (zNear - zFar);
         return result;
     }
 

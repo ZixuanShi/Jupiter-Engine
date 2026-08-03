@@ -8,6 +8,7 @@ module;
 export module jpt.Application;
 
 import jpt.TypeDefs;
+import jpt.Camera;
 import jpt.FrameTimer;
 
 export namespace jpt
@@ -19,6 +20,7 @@ export namespace jpt
         FrameTimer m_frameTimer;
         Window m_window;
         Renderer m_renderer;
+        Camera m_camera;
         Status m_status = Status::Pending;
 
     public:

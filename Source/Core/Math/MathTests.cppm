@@ -221,6 +221,40 @@ export namespace jpt
                           "Perspective depth is not monotonically increasing");
         }
 
+        // --------------------------------------------------------------------------------
+        // Matrix44 -- Orthographic. The same [0, 1] depth range as Perspective, but w stays 1,
+        // so nothing converges with distance.
+        // --------------------------------------------------------------------------------
+        {
+            constexpr float32 zNear  = 0.1f;
+            constexpr float32 zFar   = 100.0f;
+            constexpr float32 height = 4.0f;
+            constexpr float32 aspect = 16.0f / 9.0f;
+
+            const Mat44 proj = Mat44::Orthographic(height * aspect, height, zNear, zFar);
+
+            const Vec4 atNear = proj * Vec4(0, 0, -zNear, 1);
+            const Vec4 atFar  = proj * Vec4(0, 0, -zFar,  1);
+
+            Debug::Assert(AreValuesClose(atNear.z, 0.0f, kTolerance), "Orthographic near maps to {}, expected 0", atNear.z);
+            Debug::Assert(AreValuesClose(atFar.z,  1.0f, kTolerance), "Orthographic far maps to {}, expected 1", atFar.z);
+
+            // w untouched, so the perspective divide does nothing. This is the definition.
+            Debug::Assert(AreValuesClose(atFar.w, 1.0f), "Orthographic w is {}, expected 1", atFar.w);
+
+            // The box edges map to +1, and to the same place at any depth -- which is exactly
+            // what Perspective would not do.
+            const Vec4 near = proj * Vec4(height * aspect * 0.5f, height * 0.5f,  -1.0f, 1);
+            const Vec4 far  = proj * Vec4(height * aspect * 0.5f, height * 0.5f, -50.0f, 1);
+
+            Debug::Assert(AreValuesClose(near.x, 1.0f, kTolerance), "Orthographic right edge maps to {}, expected +1", near.x);
+            Debug::Assert(AreValuesClose(near.y, 1.0f, kTolerance), "Orthographic top edge maps to {}, expected +1", near.y);
+            Debug::Assert(AreValuesClose(near.x, far.x, kTolerance), "Orthographic x converges with depth");
+
+            // Depth must still increase with distance, or the depth test compares backwards.
+            Debug::Assert(atNear.z < far.z && far.z < atFar.z, "Orthographic depth is not monotonically increasing");
+        }
+
         Debug::Log("Math tests passed.");
     }
 }

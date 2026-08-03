@@ -12,12 +12,11 @@
 #include <cstddef>
 #include <cstring>
 
-#include "Graphics/ShaderTypes.h"
+#include "Graphics/Shader/ShaderTypes.h"
 #include "MetalRenderer.h"
 
 import jpt.Logger;
 import jpt.Matrix44;
-import jpt.Vector3;
 import jpt.Vertex;
 
 // What lets the matrix cross to the GPU by memcpy: both are 16 column-major floats.
@@ -25,6 +24,21 @@ static_assert(sizeof(jpt::Mat44) == sizeof(simd_float4x4));
 
 namespace jpt
 {
+    constexpr MTL::PixelFormat kDepthFormat = MTL::PixelFormatDepth32Float;
+
+    namespace
+    {
+        template<typename T>
+        void Release(T*& pObject)
+        {
+            if (pObject)
+            {
+                pObject->release();
+                pObject = nullptr;
+            }
+        }
+    }
+
     bool MetalRenderer::PreInit()
     {
         m_pDevice = MTL::CreateSystemDefaultDevice();
@@ -51,7 +65,7 @@ namespace jpt
         m_pLayer->setFramebufferOnly(true); // Promises render-only access, letting Core Animation pick faster memory.
 
         NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
-        return CreatePipeline() && CreateGeometry();
+        return CreatePipeline();
     }
 
     bool MetalRenderer::CreatePipeline()
@@ -63,8 +77,8 @@ namespace jpt
             return false;
         }
 
-        MTL::Function* pVertexFn   = pLibrary->newFunction(NS::String::string("TriangleVertex", NS::UTF8StringEncoding));
-        MTL::Function* pFragmentFn = pLibrary->newFunction(NS::String::string("TriangleFragment", NS::UTF8StringEncoding));
+        MTL::Function* pVertexFn   = pLibrary->newFunction(NS::String::string("MeshVertex", NS::UTF8StringEncoding));
+        MTL::Function* pFragmentFn = pLibrary->newFunction(NS::String::string("MeshFragment", NS::UTF8StringEncoding));
         pLibrary->release();
 
         if (!pVertexFn || !pFragmentFn)
@@ -77,12 +91,12 @@ namespace jpt
         // VkPipelineVertexInputStateCreateInfo -- so this survives into the RHI unchanged.
         MTL::VertexDescriptor* pVertexDesc = MTL::VertexDescriptor::vertexDescriptor();
 
-        pVertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormatFloat2);
+        pVertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormatFloat3);
         pVertexDesc->attributes()->object(0)->setOffset(offsetof(Vertex, position));
         pVertexDesc->attributes()->object(0)->setBufferIndex(0);
 
-        pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat4);
-        pVertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, color));
+        pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat3);
+        pVertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, normal));
         pVertexDesc->attributes()->object(1)->setBufferIndex(0);
 
         pVertexDesc->layouts()->object(0)->setStride(sizeof(Vertex));
@@ -92,6 +106,7 @@ namespace jpt
         pDesc->setFragmentFunction(pFragmentFn);
         pDesc->setVertexDescriptor(pVertexDesc);
         pDesc->colorAttachments()->object(0)->setPixelFormat(m_pLayer->pixelFormat());
+        pDesc->setDepthAttachmentPixelFormat(kDepthFormat);
 
         NS::Error* pError = nullptr;
         m_pPipeline = m_pDevice->newRenderPipelineState(pDesc, &pError);
@@ -105,20 +120,50 @@ namespace jpt
             return false;
         }
 
-        return true;
+        MTL::DepthStencilDescriptor* pDepthDesc = MTL::DepthStencilDescriptor::alloc()->init()->autorelease();
+        pDepthDesc->setDepthCompareFunction(MTL::CompareFunctionLess);  // Perspective maps near to 0, far to 1. Metal's range, not OpenGL's -1..1.
+        pDepthDesc->setDepthWriteEnabled(true);
+
+        m_pDepthState = m_pDevice->newDepthStencilState(pDepthDesc);
+        return m_pDepthState;
     }
 
-    bool MetalRenderer::CreateGeometry()
+    bool MetalRenderer::EnsureDepthTexture(uint32 pixelWidth, uint32 pixelHeight)
     {
-        const Vertex vertices[] =
+        if (m_pDepthTexture && m_pDepthTexture->width() == pixelWidth && m_pDepthTexture->height() == pixelHeight)
         {
-            { {  0.0f,  0.5f }, { 1.0f, 0.0f, 0.0f } },
-            { { -0.5f, -0.5f }, { 0.0f, 1.0f, 0.0f } },
-            { {  0.5f, -0.5f }, { 0.0f, 0.0f, 1.0f } },
-        };
+            return true;
+        }
 
-        m_pVertices = m_pDevice->newBuffer(vertices, sizeof(vertices), MTL::ResourceStorageModeShared);
-        return m_pVertices;
+        Release(m_pDepthTexture);
+
+        MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(kDepthFormat, pixelWidth, pixelHeight, false);
+        pDesc->setUsage(MTL::TextureUsageRenderTarget);
+
+        // Memoryless keeps the buffer in tile memory and never backs it with DRAM, which is
+        // free here because depth is produced and consumed inside the one pass. Apple-family
+        // GPUs only -- an Intel Mac has no tile memory to put it in.
+        pDesc->setStorageMode(m_pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
+
+        m_pDepthTexture = m_pDevice->newTexture(pDesc);
+        return m_pDepthTexture;
+    }
+
+    bool MetalRenderer::SetMesh(const Mesh& mesh)
+    {
+        if (mesh.vertices.empty() || mesh.indices.empty())
+        {
+            return false;
+        }
+
+        Release(m_pVertices);
+        Release(m_pIndices);
+
+        m_pVertices  = m_pDevice->newBuffer(mesh.vertices.data(), mesh.vertices.size() * sizeof(Vertex), MTL::ResourceStorageModeShared);
+        m_pIndices   = m_pDevice->newBuffer(mesh.indices.data(),  mesh.indices.size()  * sizeof(uint32), MTL::ResourceStorageModeShared);
+        m_indexCount = static_cast<uint32>(mesh.indices.size());
+
+        return m_pVertices && m_pIndices;
     }
 
     void MetalRenderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
@@ -133,7 +178,7 @@ namespace jpt
 
     void MetalRenderer::Draw()
     {
-        if (!m_pLayer || !m_pQueue || !m_pPipeline)
+        if (!m_pLayer || !m_pQueue || !m_pPipeline || m_indexCount == 0)
         {
             return;
         }
@@ -149,29 +194,43 @@ namespace jpt
             return;
         }
 
-        MTL::RenderPassDescriptor* pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
-        MTL::RenderPassColorAttachmentDescriptor* pColor = pPass->colorAttachments()->object(0);
+        // Sized from the drawable rather than the last OnResize, because Metal rejects a pass
+        // whose attachments disagree -- and only one of the two is the texture being drawn to.
+        MTL::Texture* pColorTexture = pDrawable->texture();
+        if (!EnsureDepthTexture(static_cast<uint32>(pColorTexture->width()), static_cast<uint32>(pColorTexture->height())))
+        {
+            return;
+        }
 
-        pColor->setTexture(pDrawable->texture());
+        MTL::RenderPassDescriptor* pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
+
+        MTL::RenderPassColorAttachmentDescriptor* pColor = pPass->colorAttachments()->object(0);
+        pColor->setTexture(pColorTexture);
         pColor->setLoadAction(MTL::LoadActionClear);    // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
         pColor->setStoreAction(MTL::StoreActionStore);
         pColor->setClearColor(MTL::ClearColor::Make(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
 
+        MTL::RenderPassDepthAttachmentDescriptor* pDepth = pPass->depthAttachment();
+        pDepth->setTexture(m_pDepthTexture);
+        pDepth->setLoadAction(MTL::LoadActionClear);
+        pDepth->setClearDepth(1.0);
+        pDepth->setStoreAction(MTL::StoreActionDontCare);   // Mandatory for a memoryless texture: there is nowhere to store it to.
+
         MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
         MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(pPass);
 
-        const CGSize drawable = m_pLayer->drawableSize();
-        const float32 aspect  = (drawable.height > 0.0) ? static_cast<float32>(drawable.width) / static_cast<float32>(drawable.height) : 1.0f;
-
         Uniforms uniforms;
-        const Mat44 aspectCorrection = Mat44::Scale(Vec3(1.0f / aspect, 1.0f, 1.0f));
-        std::memcpy(&uniforms.modelViewProjection, &aspectCorrection, sizeof(aspectCorrection));
+        const Mat44 modelViewProjection = m_viewProjection * m_model;
+        std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
+        std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
 
         pEncoder->setRenderPipelineState(m_pPipeline);
+        pEncoder->setDepthStencilState(m_pDepthState);
+        pEncoder->setCullMode(MTL::CullModeBack);
+        pEncoder->setFrontFacingWinding(MTL::WindingClockwise);   // Y flips to framebuffer space, so CCW-authored faces land clockwise.
         pEncoder->setVertexBuffer(m_pVertices, 0, 0);
-        pEncoder->setVertexBytes(&uniforms, sizeof(uniforms), 1);
-
-        pEncoder->drawPrimitives(MTL::PrimitiveTypeTriangle, NS::UInteger(0), NS::UInteger(3));
+        pEncoder->setVertexBytes(&uniforms, sizeof(uniforms), 1); // Fast path for small per-draw constants. Vulkan's push constants.
+        pEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, m_indexCount, MTL::IndexTypeUInt32, m_pIndices, NS::UInteger(0));
         pEncoder->endEncoding();
 
         pCommandBuffer->presentDrawable(pDrawable);
@@ -182,26 +241,13 @@ namespace jpt
     {
         m_pLayer = nullptr;
 
-        if (m_pVertices)
-        {
-            m_pVertices->release();
-            m_pVertices = nullptr;
-        }
-        if (m_pPipeline)
-        {
-            m_pPipeline->release();
-            m_pPipeline = nullptr;
-        }
-        if (m_pQueue)
-        {
-            m_pQueue->release();
-            m_pQueue = nullptr;
-        }
-        if (m_pDevice)
-        {
-            m_pDevice->release();
-            m_pDevice = nullptr;
-        }
+        Release(m_pIndices);
+        Release(m_pVertices);
+        Release(m_pDepthTexture);
+        Release(m_pDepthState);
+        Release(m_pPipeline);
+        Release(m_pQueue);
+        Release(m_pDevice);
     }
 }
 

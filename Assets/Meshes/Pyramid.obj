@@ -1,0 +1,22 @@
+# Jupiter Engine -- unit pyramid, square base, faceted normals.
+# Faces are wound counter-clockwise seen from outside, the OBJ convention.
+
+v -0.5 -0.5  0.5
+v  0.5 -0.5  0.5
+v  0.5 -0.5 -0.5
+v -0.5 -0.5 -0.5
+v  0.0  0.5  0.0
+
+vn  0.0000000  0.4472136  0.8944272
+vn  0.8944272  0.4472136  0.0000000
+vn  0.0000000  0.4472136 -0.8944272
+vn -0.8944272  0.4472136  0.0000000
+vn  0.0000000 -1.0000000  0.0000000
+
+f 1//1 2//1 5//1
+f 2//2 3//2 5//2
+f 3//3 4//3 5//3
+f 4//4 1//4 5//4
+
+# A quad, so the loader's fan triangulation gets exercised.
+f 1//5 4//5 3//5 2//5
