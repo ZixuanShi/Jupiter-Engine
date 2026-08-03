@@ -2,8 +2,7 @@
 
 export module jpt.Vertex;
 
-import jpt.LinearColor;
-import jpt.Vector2;
+import jpt.Vector3;
 
 export namespace jpt
 {
@@ -11,7 +10,7 @@ export namespace jpt
         vertex descriptor from offsetof/sizeof of these members. */
     struct Vertex
     {
-        Vec2        position;
-        LinearColor color;
+        Vec3 position;
+        Vec3 normal;
     };
 }

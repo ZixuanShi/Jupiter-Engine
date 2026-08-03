@@ -15,8 +15,9 @@ namespace jpt
     struct Uniforms
     {
         simd_float4x4 modelViewProjection;
+        simd_float4x4 model;
     };
 }
 
 // The whole reason this header is shared rather than duplicated. Evaluated on both sides.
-static_assert(sizeof(jpt::Uniforms) == 64, "Uniforms must match the shader's layout");
+static_assert(sizeof(jpt::Uniforms) == 128, "Uniforms must match the shader's layout");
