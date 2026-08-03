@@ -21,8 +21,8 @@ IDENTITY = "Apple Development"
 
 REMINT = """No valid provisioning profile for {bundle}.
 
-Free personal-team profiles expire after 7 days. To mint a fresh one, open the throwaway
-Xcode project whose bundle identifier is {bundle} and run it once on the device."""
+Free personal-team profiles expire after 7 days. Mint a fresh one with:
+  py Scripts/provision.py"""
 
 
 def decode(profile) -> dict:
