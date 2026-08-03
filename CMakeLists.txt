@@ -98,6 +98,29 @@ target_sources(JupiterEngine
             ${JUPITER_MODULE_SOURCES}
 )
 
+# --- Assets ---
+# Everything under Assets/ ships beside the binary in the layout it has in the repo, so one
+# relative string means the same thing to jpt::Path here and at run time. Only the destination
+# is platform-dependent, and it is the build-side mirror of jpt::GetRoot().
+if(JUPITER_PLATFORM STREQUAL "MACOS")
+    set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:JupiterEngine>/Resources/Assets")
+elseif(JUPITER_PLATFORM STREQUAL "IOS")
+    set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:JupiterEngine>/Assets")
+else()
+    set(JUPITER_ASSET_DIR "$<TARGET_FILE_DIR:JupiterEngine>/Assets")
+endif()
+
+# Staged by a script, not target_sources: routing content through the latter invites CMake to
+# interpret it, and a Wavefront .obj gets EXTERNAL_OBJECT stamped on by extension alone and
+# lands on the link line. `cmake -E copy_directory` avoids that but can exclude nothing, and
+# shader sources and .DS_Store must not reach a signed bundle. A target rather than a POST_BUILD
+# rule, so staging precedes the executable's own post-build steps.
+add_custom_target(JupiterAssets
+    COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/stage_assets.py" "${JUPITER_ASSET_DIR}"
+    COMMENT "Staging Assets")
+
+add_dependencies(JupiterEngine JupiterAssets)
+
 # --- Apple ---
 if(APPLE)
     # Vendor -- metal-cpp
@@ -195,10 +218,17 @@ if(APPLE)
     # Code signing
     # A device refuses to launch an app without an embedded provisioning profile naming it.
     # The simulator has no such check, so its bundles stay unsigned.
+    #
+    # Its own target rather than a POST_BUILD rule on the executable, because a signature seals
+    # the staged assets too and those change without the executable ever relinking -- which used
+    # to leave the bundle sealed against a file it no longer held, and a device rejects that.
+    # Signing takes ~0.1s, so it runs every build rather than guessing when it is needed.
     if(JUPITER_IOS_PLATFORM_NAME STREQUAL "iPhoneOS")
-        add_custom_command(TARGET JupiterEngine POST_BUILD
+        add_custom_target(JupiterSign ALL
             COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
             COMMENT "Code-signing for device")
+
+        add_dependencies(JupiterSign JupiterEngine JupiterAssets)
     endif()
 
     # rpath
