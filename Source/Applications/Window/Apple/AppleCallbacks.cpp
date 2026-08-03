@@ -2,16 +2,12 @@
 
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
 
-#include "AppleWindow.h"
+#include "AppleCallbacks.h"
 #include "Applications/AppClient.h"
 
-// A plain translation unit, not part of jpt.Application: these are declared in a header the
-// .mm files include, so they belong to the global module. Defining them inside a module's
-// purview is ill-formed -- "declaration in module jpt.Application follows declaration in the
-// global module" -- because the definition would attach to the module instead.
 namespace jpt
 {
-    bool OnSurfaceReady(void* pMetalLayer)
+    bool OnSurfaceReady(CA::MetalLayer* pMetalLayer)
     {
         return GetApplication().OnSurfaceReady(pMetalLayer);
     }
@@ -21,9 +17,9 @@ namespace jpt
         GetApplication().OnResize(pixelWidth, pixelHeight);
     }
 
-    void OnFrameDraw()
+    void OnFrame()
     {
-        GetApplication().OnFrameDraw();
+        GetApplication().OnFrame();
     }
 
     void OnTerminate()

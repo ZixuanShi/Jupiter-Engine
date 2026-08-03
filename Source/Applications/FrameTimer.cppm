@@ -30,8 +30,8 @@ export namespace jpt
         void BeginFrame();
         void EndFrame();
 
-        float64 GetDeltaSeconds() const { return m_deltaSeconds; }
-        float64 GetElapsedSeconds() const { return m_elapsedSeconds; }
-        uint32 GetFPS() const { return m_fps; }
+        [[nodiscard]] float64 GetDeltaSeconds() const noexcept { return m_deltaSeconds; }
+        [[nodiscard]] float64 GetElapsedSeconds() const noexcept { return m_elapsedSeconds; }
+        [[nodiscard]] uint32 GetFPS() const noexcept { return m_fps; }
     };
 }

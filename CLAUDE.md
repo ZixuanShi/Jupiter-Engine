@@ -16,7 +16,22 @@ Each translation unit needs **its own global module fragment**. A GMF is private
 
 **Exception — the platform layer.** `Source/Platform/**` holds plain ObjC++ (`.mm`) / C++ (`.cpp`) translation units, because CMake's module scanner does not scan `OBJCXX` sources and they therefore cannot be modules. Each exposes a narrow plain-C++ header that a `jpt.<Name>` module wraps; keep the ObjC types behind an opaque handle or pimpl so they never appear in the header. This is the only place standalone TUs belong.
 
-**Hard constraint: `.mm` files must never `import std;`** — use `#include` instead. Clang refuses to load a C++-built `std.pcm` into an Objective-C++ translation unit (`error: Objective-C was disabled in precompiled file 'std.pcm' but is currently enabled`). Only pure-C++ `.cppm` modules import std.
+### Module attachment across the platform boundary
+
+An entity's **module attachment is fixed by its first declaration, and every definition must match it.** Clang enforces this at compile time, and it constrains the platform seam in both directions:
+
+- A function declared in a plain header (global module) **cannot be defined inside a module purview** — `error: declaration of 'X' in module jpt.Foo follows declaration in the global module`. This is why the platform→app callbacks in `Window/Apple/AppleCallbacks.h` are defined in their own plain `.cpp` that does `import jpt.Application;`, not in `Application.cpp`.
+- Conversely an `export`ed function **can only be defined by its own module**, so a client cannot supply it. `jpt::GetApplication()` therefore lives in the plain `Applications/AppClient.h`, letting `Main.cpp` own the instance (the clang-compatible form of legacy's `JPT_SYNC_CLIENT`).
+
+Note MSVC is more permissive here; legacy Jupiter code that compiled on Windows may not compile on clang.
+
+### Headers and `import`
+
+Clang accepts `import` inside a global module fragment, so a plain header may `import jpt.TypeDefs;` and use `uint32`/`float64` even when included from a `.cppm`. Two rules bound that:
+
+**Hard constraint: `.mm` files must never `import std;`, directly or transitively** — Clang refuses to load a C++-built `std.pcm` into an Objective-C++ translation unit (`error: Objective-C was disabled in precompiled file 'std.pcm' but is currently enabled`). Since `jpt.TypeDefs` imports std, **any header a `.mm` includes must be import-free** and spell types as `std::uint32_t` / `double`. That currently covers `AppleCallbacks.h`, `MacWindow.h`, and `IOSWindow.h`. Headers never included by a `.mm` (`Window.h`, `Renderer.h`) use the `jpt` aliases.
+
+**Include textual headers before headers that import.** A TU that mixes `import std` with textual libc++ headers must see the textual copies first, or the module's declarations win and the later includes are a redefinition: `error: type alias template redefinition with different types` in `__promote.h`. See the ordering comment at the top of `Graphics/Metal/MetalRenderer.cpp`.
 
 ## Build flow
 

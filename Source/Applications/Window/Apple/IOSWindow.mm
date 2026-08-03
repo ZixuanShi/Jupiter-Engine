@@ -2,10 +2,11 @@
 
 #if IS_PLATFORM_IOS
 
+#include "IOSWindow.h"
+#include "AppleCallbacks.h"
+
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAMetalLayer.h>
-
-#include "AppleWindow.h"
 
 @interface JupiterMetalView : UIView
 @end
@@ -55,7 +56,9 @@
 
     [self.window makeKeyAndVisible];
 
-    if (!jpt::OnSurfaceReady((__bridge void*)metalView.layer))
+    // metal-cpp types are typed views over the same ObjC object, so the bridge to void* and
+    // back is how a CAMetalLayer* becomes a CA::MetalLayer*.
+    if (!jpt::OnSurfaceReady(reinterpret_cast<CA::MetalLayer*>((__bridge void*)metalView.layer)))
     {
         return YES;
     }
@@ -70,7 +73,7 @@
 - (void)onFrame:(CADisplayLink*)sender
 {
     (void)sender;
-    jpt::OnFrameDraw();
+    jpt::OnFrame();
 }
 
 // Presenting a drawable while backgrounded gets the app killed by the GPU watchdog.
@@ -99,22 +102,42 @@
 
 namespace jpt
 {
-    // UIKit owns window creation and has not started yet -- the delegate above does the work.
-    bool CreateAppWindow([[maybe_unused]] std::int32_t width,
-                         [[maybe_unused]] std::int32_t height,
-                         [[maybe_unused]] const char* title)
+    struct IOSWindow::Impl
+    {
+        std::int32_t argc = 0;
+        char** ppArgv = nullptr;
+    };
+
+    bool IOSWindow::PreInit(std::int32_t argc, char* ppArgv[])
+    {
+        m_pImpl = new Impl();
+        m_pImpl->argc = argc;
+        m_pImpl->ppArgv = ppArgv;
+        return true;
+    }
+
+    // UIKit owns window creation and has not started yet -- the delegate above does the work
+    // once Run() hands control over.
+    bool IOSWindow::Init()
     {
         return true;
     }
 
-    void RunAppLoop(int argc, char* argv[])
+    void IOSWindow::Run()
     {
         @autoreleasepool
         {
             // argv must be non-null: passing nullptr trips -Wnonnull, fatal under -Werror.
             // Never returns.
-            UIApplicationMain(argc, argv, nil, NSStringFromClass([JupiterAppDelegate class]));
+            UIApplicationMain(m_pImpl->argc, m_pImpl->ppArgv, nil,
+                              NSStringFromClass([JupiterAppDelegate class]));
         }
+    }
+
+    void IOSWindow::Terminate()
+    {
+        delete m_pImpl;
+        m_pImpl = nullptr;
     }
 }
 

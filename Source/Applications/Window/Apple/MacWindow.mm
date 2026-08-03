@@ -2,7 +2,8 @@
 
 #if IS_PLATFORM_MACOS
 
-#include "AppleWindow.h"
+#include "MacWindow.h"
+#include "AppleCallbacks.h"
 
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -78,20 +79,36 @@
 - (void)onFrame:(CADisplayLink*)sender
 {
     (void)sender;
-    jpt::OnFrameDraw();
+    jpt::OnFrame();
 }
 
 @end
 
+// weak, not strong: the view is owned by the window's content-view hierarchy.
 @interface JupiterAppDelegate : NSObject <NSApplicationDelegate>
+@property (nonatomic, weak) JupiterMetalView* metalView;
+@end
+
+@implementation JupiterAppDelegate
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)app
+{
+    (void)app;
+    return YES;
+}
+
+// Unlike the code after Run() in main, this does run: AppKit posts it before exit().
+- (void)applicationWillTerminate:(NSNotification*)notification
+{
+    (void)notification;
+    [self.metalView stopRenderLoop];
+    jpt::OnTerminate();
+}
+
 @end
 
 namespace
 {
-    NSWindow*           g_pWindow    = nil;
-    JupiterAppDelegate* g_pDelegate  = nil;
-    JupiterMetalView*   g_pMetalView = nil;
-
     void BuildMenuBar()
     {
         NSMenu* menuBar = [[NSMenu alloc] init];
@@ -121,78 +138,84 @@ namespace
     }
 }
 
-@implementation JupiterAppDelegate
-
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)app
-{
-    (void)app;
-    return YES;
-}
-
-// Unlike the code after Run() in main, this does run: AppKit posts it before exit().
-- (void)applicationWillTerminate:(NSNotification*)notification
-{
-    (void)notification;
-    [g_pMetalView stopRenderLoop];
-    jpt::OnTerminate();
-}
-
-@end
-
 namespace jpt
 {
-    bool CreateAppWindow(std::int32_t width, std::int32_t height, const char* title)
+    struct MacWindow::Impl
     {
-        [NSApplication sharedApplication];
+        NSWindow*           pWindow   = nil;
+        JupiterAppDelegate* pDelegate = nil;
+        JupiterMetalView*   pView     = nil;
+    };
 
+    bool MacWindow::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
+    {
+        m_pImpl = new Impl();
+
+        [NSApplication sharedApplication];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
-        g_pDelegate = [[JupiterAppDelegate alloc] init];
-        [NSApp setDelegate:g_pDelegate];
+        m_pImpl->pDelegate = [[JupiterAppDelegate alloc] init];
+        [NSApp setDelegate:m_pImpl->pDelegate];
 
         BuildMenuBar();
 
-        const NSRect contentRect = NSMakeRect(0.0, 0.0, width, height);
+        return true;
+    }
+
+    bool MacWindow::Init()
+    {
+        const NSRect contentRect = NSMakeRect(0.0, 0.0, 1280.0, 720.0);
         const NSWindowStyleMask style = NSWindowStyleMaskTitled
                                       | NSWindowStyleMaskClosable
                                       | NSWindowStyleMaskMiniaturizable
                                       | NSWindowStyleMaskResizable;
 
-        g_pWindow = [[NSWindow alloc] initWithContentRect:contentRect
-                                               styleMask:style
-                                                 backing:NSBackingStoreBuffered
-                                                   defer:NO];
-        if (g_pWindow == nil)
+        m_pImpl->pWindow = [[NSWindow alloc] initWithContentRect:contentRect
+                                                       styleMask:style
+                                                         backing:NSBackingStoreBuffered
+                                                           defer:NO];
+        if (m_pImpl->pWindow == nil)
         {
             return false;
         }
 
-        [g_pWindow setReleasedWhenClosed:NO];
+        [m_pImpl->pWindow setReleasedWhenClosed:NO];
+        [m_pImpl->pWindow setTitle:@"Jupiter Engine"];
+        [m_pImpl->pWindow center];
 
-        [g_pWindow setTitle:[NSString stringWithUTF8String:title]];
-        [g_pWindow center];
+        m_pImpl->pView = [[JupiterMetalView alloc] initWithFrame:contentRect];
+        m_pImpl->pDelegate.metalView = m_pImpl->pView;
 
-        g_pMetalView = [[JupiterMetalView alloc] initWithFrame:contentRect];
-        [g_pWindow setContentView:g_pMetalView];
+        // Resizes the view to fill the window, so OnResize fires before the layer exists.
+        [m_pImpl->pWindow setContentView:m_pImpl->pView];
 
-        [g_pWindow makeKeyAndOrderFront:nil];
-
+        [m_pImpl->pWindow makeKeyAndOrderFront:nil];
         [NSApp activate];
 
-        if (!jpt::OnSurfaceReady((__bridge void*)g_pMetalView.layer))
+        // metal-cpp types are typed views over the same ObjC object, so the bridge to void*
+        // and back is how a CAMetalLayer* becomes a CA::MetalLayer*.
+        if (!jpt::OnSurfaceReady(reinterpret_cast<CA::MetalLayer*>((__bridge void*)m_pImpl->pView.layer)))
         {
             return false;
         }
 
-        [g_pMetalView updateDrawableSize];
-        [g_pMetalView startRenderLoop];
+        // No resize event fires for the initial size.
+        [m_pImpl->pView updateDrawableSize];
+        [m_pImpl->pView startRenderLoop];
 
         return true;
     }
 
-    void RunAppLoop([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
+    void MacWindow::Run()
     {
+        // Never returns: AppKit owns the loop and exits the process on terminate:.
         [NSApp run];
+    }
+
+    void MacWindow::Terminate()
+    {
+        delete m_pImpl;
+        m_pImpl = nullptr;
     }
 }
 

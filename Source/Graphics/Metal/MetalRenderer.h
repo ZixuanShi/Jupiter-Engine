@@ -19,13 +19,18 @@ namespace jpt
         CA::MetalLayer*    m_pLayer  = nullptr;   // Borrowed from the view
 
     public:
-        /** Takes a CAMetalLayer* as an opaque handle so the signature stays ObjC-free. */
-        bool Init(void* pMetalLayer);
+        /** What this backend needs to bind a surface. RendererType reads it off the type, so
+            the seam stays fully typed: VulkanRenderer would declare VkSurfaceKHR here. */
+        using SurfaceHandle = CA::MetalLayer*;
 
-        /** Sizes are in pixels, not points. */
-        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
-
-        void OnFrameDraw(float64 elapsedSeconds);
+        /** Device and queue need no surface, so they are created before a window exists.
+            This is where Vulkan will create its instance and device. */
+        bool PreInit();
+        bool Init(SurfaceHandle pMetalLayer);
         void Terminate();
+
+    public:
+        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
+        void OnFrameDraw(float64 elapsedSeconds);
     };
 }

@@ -6,20 +6,18 @@
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
 
+// Order matters, do not sort.
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
+#include <cmath>
 
 #include "MetalRenderer.h"
 
-#include <cmath>
-
 namespace jpt
 {
-    bool MetalRenderer::Init(void* pMetalLayer)
+    bool MetalRenderer::PreInit()
     {
-        m_pLayer = reinterpret_cast<CA::MetalLayer*>(pMetalLayer);
-
         m_pDevice = MTL::CreateSystemDefaultDevice();
         if (m_pDevice == nullptr)
         {
@@ -27,6 +25,17 @@ namespace jpt
         }
 
         m_pQueue = m_pDevice->newCommandQueue();
+        return m_pQueue != nullptr;
+    }
+
+    bool MetalRenderer::Init(SurfaceHandle pMetalLayer)
+    {
+        if (pMetalLayer == nullptr)
+        {
+            return false;
+        }
+
+        m_pLayer = pMetalLayer;
 
         m_pLayer->setDevice(m_pDevice);
         m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
@@ -34,7 +43,7 @@ namespace jpt
         // Promises render-only access, letting Core Animation pick faster memory.
         m_pLayer->setFramebufferOnly(true);
 
-        return m_pQueue != nullptr;
+        return true;
     }
 
     void MetalRenderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
@@ -92,7 +101,6 @@ namespace jpt
     {
         m_pLayer = nullptr;
 
-        // Init() took ownership of both, and there is no SharedPtr to do it here.
         if (m_pQueue != nullptr)
         {
             m_pQueue->release();

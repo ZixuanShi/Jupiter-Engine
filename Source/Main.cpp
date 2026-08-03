@@ -1,5 +1,7 @@
 #include "Applications/AppClient.h"
 
+import jpt.LaunchArgs;
+
 namespace jpt
 {
     Application& GetApplication()
@@ -11,11 +13,12 @@ namespace jpt
 
 int main(int argc, char* argv[])
 {
+    jpt::LaunchArgs::GetInstance().Set(argc, argv);
     jpt::Application& app = jpt::GetApplication();
 
     if (app.PreInit() && app.Init())
     {
-        app.Run(argc, argv);
+        app.Run();
     }
 
     app.Terminate();

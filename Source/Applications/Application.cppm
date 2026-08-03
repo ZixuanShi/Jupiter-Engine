@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
 export module jpt.Application;
@@ -16,6 +17,7 @@ export namespace jpt
     {
     private:
         FrameTimer m_frameTimer;
+        Window m_window;
         Renderer m_renderer;
         Status m_status = Status::Pending;
 
@@ -24,18 +26,20 @@ export namespace jpt
 
         virtual bool PreInit();
         virtual bool Init();
-        virtual void Update(float64 deltaSeconds);
         virtual void Terminate();
 
     public:
-        void Run(int argc, char* argv[]);
+        void Run();
 
     public:
-        bool OnSurfaceReady(void* pMetalLayer);
+        bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
-        void OnFrameDraw();
-
+        void OnFrame();
+    
     public:
-        Renderer& GetRenderer() { return m_renderer; }
+        [[nodiscard]] Window& GetWindow() noexcept { return m_window; }
+        [[nodiscard]] const Window& GetWindow() const noexcept { return m_window; }
+        [[nodiscard]] Renderer& GetRenderer() noexcept { return m_renderer; }
+        [[nodiscard]] const Renderer& GetRenderer() const noexcept { return m_renderer; }
     };
 }

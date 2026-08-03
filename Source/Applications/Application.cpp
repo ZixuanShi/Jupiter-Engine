@@ -2,14 +2,12 @@
 
 module;
 
+#include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
-
-#if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
-    #include "Window/Apple/AppleWindow.h"
-#endif
 
 module jpt.Application;
 
+import jpt.LaunchArgs;
 import jpt.Logger;
 import jpt.Utils;
 
@@ -18,14 +16,28 @@ namespace jpt
     bool Application::PreInit()
     {
         Debug::Log("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
+
+        const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
+        if (!m_window.PreInit(launchArgs.GetCount(), launchArgs.GetValues()))
+        {
+            Debug::Log("Failed to pre-initialise the window.");
+            return false;
+        }
+
+        if (!m_renderer.PreInit())
+        {
+            Debug::Log("Failed to pre-initialise the renderer.");
+            return false;
+        }
+
         return true;
     }
 
     bool Application::Init()
     {
-        if (!CreateAppWindow(1280, 720, "Jupiter Engine"))
+        if (!m_window.Init())
         {
-            Debug::Log("Failed to create the platform window.");
+            Debug::Log("Failed to initialise the window.");
             return false;
         }
 
@@ -33,25 +45,22 @@ namespace jpt
         return true;
     }
 
-    void Application::Update([[maybe_unused]] float64 deltaSeconds)
-    {
-    }
-
     void Application::Terminate()
     {
         m_renderer.Terminate();
+        m_window.Terminate();
         m_status = Status::Succeeded;
         Debug::Log("Application Terminated.");
     }
 
-    void Application::Run(int argc, char* argv[])
+    void Application::Run()
     {
-        RunAppLoop(argc, argv);
+        m_window.Run();
     }
 
-    bool Application::OnSurfaceReady(void* pMetalLayer)
+    bool Application::OnSurfaceReady(Renderer::SurfaceHandle surface)
     {
-        if (!m_renderer.Init(pMetalLayer))
+        if (!m_renderer.Init(surface))
         {
             Debug::Log("Failed to initialise the renderer.");
             return false;
@@ -64,7 +73,7 @@ namespace jpt
         m_renderer.OnResize(pixelWidth, pixelHeight);
     }
 
-    void Application::OnFrameDraw()
+    void Application::OnFrame()
     {
         if (m_status != Status::Running)
         {
@@ -72,11 +81,7 @@ namespace jpt
         }
 
         m_frameTimer.BeginFrame();
-
-        // Drawing sits outside Update so an override cannot forget it.
-        Update(m_frameTimer.GetDeltaSeconds());
         m_renderer.OnFrameDraw(m_frameTimer.GetElapsedSeconds());
-
         m_frameTimer.EndFrame();
     }
 }
