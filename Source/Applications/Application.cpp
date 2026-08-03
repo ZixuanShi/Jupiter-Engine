@@ -102,8 +102,13 @@ namespace jpt
             return;
         }
 
-        m_frameTimer.OnFrame();
+        m_frameTimer.Update();
+
+        // TODO: Read input 
+        
         Update();
-        m_renderer.OnFrame();
+        PostUpdate();
+
+        m_renderer.Draw();
     }
 }

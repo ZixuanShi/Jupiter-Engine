@@ -25,7 +25,7 @@ namespace jpt
         { renderer.Terminate() }             -> std::same_as<void>;
 
         { renderer.OnResize(width, height) } -> std::same_as<void>;
-        { renderer.OnFrame() }               -> std::same_as<void>;
+        { renderer.Draw() }                 -> std::same_as<void>;
         { renderer.SetClearColor(color) }    -> std::same_as<void>;
     };
 

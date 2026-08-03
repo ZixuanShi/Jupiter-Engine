@@ -66,7 +66,7 @@
 - (void)startRenderLoop
 {
     // Silently never fires unless added to a run loop, and deallocs unless strongly held.
-    self.displayLink = [self displayLinkWithTarget:self selector:@selector(onFrame:)];
+    self.displayLink = [self displayLinkWithTarget:self selector:@selector(OnFrame:)];
     [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
 }
 
@@ -76,7 +76,7 @@
     self.displayLink = nil;
 }
 
-- (void)onFrame:(CADisplayLink*)sender
+- (void)OnFrame:(CADisplayLink*)sender
 {
     (void)sender;
     jpt::OnFrame();

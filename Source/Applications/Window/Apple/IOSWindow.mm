@@ -64,13 +64,13 @@
     }
 
     // Silently never fires unless added to a run loop, and deallocs unless strongly held.
-    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(onFrame:)];
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(OnFrame:)];
     [self.displayLink addToRunLoop:NSRunLoop.mainRunLoop forMode:NSRunLoopCommonModes];
 
     return YES;
 }
 
-- (void)onFrame:(CADisplayLink*)sender
+- (void)OnFrame:(CADisplayLink*)sender
 {
     (void)sender;
     jpt::OnFrame();
@@ -127,8 +127,6 @@ namespace jpt
     {
         @autoreleasepool
         {
-            // argv must be non-null: passing nullptr trips -Wnonnull, fatal under -Werror.
-            // Never returns.
             UIApplicationMain(m_pImpl->argc, m_pImpl->ppArgv, nil,
                               NSStringFromClass([JupiterAppDelegate class]));
         }

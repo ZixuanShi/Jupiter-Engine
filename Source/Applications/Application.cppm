@@ -26,8 +26,9 @@ export namespace jpt
 
         virtual bool PreInit();
         virtual bool Init();
-        virtual void Update();
         virtual void Terminate();
+        virtual void Update();          // Game logic
+        virtual void PostUpdate() {}    // Camera
 
     public:
         void Run();

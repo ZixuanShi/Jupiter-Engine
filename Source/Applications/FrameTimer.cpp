@@ -10,7 +10,7 @@ import jpt.Logger;
 
 namespace jpt
 {
-    void FrameTimer::OnFrame()
+    void FrameTimer::Update()
     {
         const std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
 

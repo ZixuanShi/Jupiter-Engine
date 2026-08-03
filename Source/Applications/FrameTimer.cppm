@@ -26,7 +26,7 @@ export namespace jpt
         uint32 m_fps = 0;
 
     public:
-        void OnFrame();
+        void Update();
 
         [[nodiscard]] float64 GetDeltaSeconds() const noexcept { return m_deltaSeconds; }
         [[nodiscard]] float64 GetElapsedSeconds() const noexcept { return m_elapsedSeconds; }

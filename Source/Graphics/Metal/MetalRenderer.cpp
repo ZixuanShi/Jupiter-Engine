@@ -131,7 +131,7 @@ namespace jpt
         m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
     }
 
-    void MetalRenderer::OnFrame()
+    void MetalRenderer::Draw()
     {
         if (!m_pLayer || !m_pQueue || !m_pPipeline)
         {

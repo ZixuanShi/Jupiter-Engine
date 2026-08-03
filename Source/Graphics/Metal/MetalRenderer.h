@@ -31,7 +31,7 @@ namespace jpt
 
     public:
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
-        void OnFrame();
+        void Draw();
 
     private:
         bool CreatePipeline();
