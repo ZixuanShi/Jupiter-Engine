@@ -171,7 +171,8 @@ if(APPLE)
         set(_air "${CMAKE_CURRENT_BINARY_DIR}/Shaders/${_shader_name}.air")
 
         add_custom_command(OUTPUT "${_air}"
-            COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS} -c "${_shader}" -o "${_air}"
+            COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS}
+                    -I "${CMAKE_SOURCE_DIR}/Source" -c "${_shader}" -o "${_air}"
             DEPENDS "${_shader}"
             COMMENT "Compiling ${_shader_name}.metal")
 

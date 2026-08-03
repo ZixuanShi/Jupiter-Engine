@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstddef>
 
+#include "Graphics/ShaderTypes.h"
 #include "MetalRenderer.h"
 
 import jpt.Logger;

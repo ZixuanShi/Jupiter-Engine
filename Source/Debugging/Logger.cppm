@@ -2,10 +2,10 @@
 
 export module jpt.Logger;
 
-import jpt.TypeDefs;
+import jpt.DebugContext;
 import std;
 
-namespace jpt::Debug
+export namespace jpt::Debug
 {
     enum class Level
     {
@@ -14,30 +14,14 @@ namespace jpt::Debug
         Warning,
         Error,
     };
+}
 
-    template<typename... Args>
-    struct Context
-    {
-        std::format_string<Args...> format;
-        std::source_location location;
-
-        template<typename TString>
-        consteval Context(const TString& str, std::source_location inLocation = std::source_location::current())
-                : format(str)
-                , location(inLocation)
-            {
-            }
-    };
-
+namespace jpt::Debug
+{
     template<typename... Args>
     void Impl(Context<std::type_identity_t<Args>...> context, Level level, Args&&... args)
     {
-        std::string_view fileName = context.location.file_name();
-        if (const usize pos = fileName.find("Source/"); pos != std::string_view::npos)
-        {
-            fileName = fileName.substr(pos);
-        }
-
+        const std::string_view fileName = TrimFileName(context.location.file_name());
         const std::string contextStr = std::format("{}({})", fileName, context.location.line());
         const std::string message = std::format(context.format, std::forward<Args>(args)...);
 

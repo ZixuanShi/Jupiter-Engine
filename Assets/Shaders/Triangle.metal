@@ -3,6 +3,10 @@
 #include <metal_stdlib>
 using namespace metal;
 
+// Not used by this shader yet. Included so the C++ <-> MSL layout contract, and the -I Source
+// path that makes it reachable, are proven by the build rather than discovered in step 2.
+#include "Graphics/ShaderTypes.h"
+
 // [[attribute(n)]] indices match the MTLVertexDescriptor built in MetalRenderer::CreatePipeline.
 // The descriptor owns the layout, so this struct never needs to agree on offsets or stride.
 struct VertexIn

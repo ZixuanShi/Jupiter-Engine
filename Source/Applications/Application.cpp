@@ -11,11 +11,19 @@ import jpt.LaunchArgs;
 import jpt.Logger;
 import jpt.Utils;
 
+#if !IS_CONFIG_RELEASE
+    import jpt.MathTests;
+#endif
+
 namespace jpt
 {
     bool Application::PreInit()
     {
         Debug::Info("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
+
+#if !IS_CONFIG_RELEASE
+        RunMathTests();
+#endif
 
         const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
         if (!m_window.PreInit(launchArgs.GetCount(), launchArgs.GetValues()))
