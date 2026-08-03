@@ -15,6 +15,7 @@ import jpt.ObjLoader;
 import jpt.Vector3;
 
 #if !IS_CONFIG_RELEASE
+    import jpt.EditorUI;
     import jpt.MathTests;
 #endif
 
@@ -115,11 +116,22 @@ namespace jpt
 
         m_frameTimer.Update();
 
-        // TODO: Read input 
-        
+        // TODO: Read input
+
         Update();
         PostUpdate();
 
-        m_renderer.Draw();
+        if (m_renderer.BeginFrame())
+        {
+            DrawUI();
+            m_renderer.EndFrame();
+        }
+    }
+
+    void Application::DrawUI()
+    {
+#if !IS_CONFIG_RELEASE
+        DrawEditorUI(m_camera);
+#endif
     }
 }

@@ -4,6 +4,7 @@
 
 #include "IOSWindow.h"
 #include "AppleCallbacks.h"
+#include "Graphics/ImGui/ImGuiLayer.h"
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -17,6 +18,44 @@
 + (Class)layerClass
 {
     return [CAMetalLayer class];
+}
+
+// UIKit has no ImGui backend -- imgui_impl_osx is AppKit-only -- so a single touch is mapped
+// onto ImGui's mouse here. This is also where a real input system will tap in; until then the
+// UI is the only consumer, so the events go straight to it.
+- (void)reportTouch:(NSSet<UITouch*>*)touches isDown:(BOOL)isDown
+{
+    const CGPoint point = [touches.anyObject locationInView:self];
+
+    // Points, not pixels: ImGui works in points and scales by DisplayFramebufferScale.
+    jpt::ImGuiOnPointerMoved(static_cast<float>(point.x), static_cast<float>(point.y));
+    jpt::ImGuiOnPointerButton(isDown);
+}
+
+- (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
+{
+    (void)event;
+    [self reportTouch:touches isDown:YES];
+}
+
+- (void)touchesMoved:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
+{
+    (void)event;
+    [self reportTouch:touches isDown:YES];
+}
+
+- (void)touchesEnded:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
+{
+    (void)event;
+    [self reportTouch:touches isDown:NO];
+}
+
+// A touch dragged off-screen or interrupted by a call never gets touchesEnded, and ImGui would
+// be left holding the button down forever.
+- (void)touchesCancelled:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
+{
+    (void)event;
+    [self reportTouch:touches isDown:NO];
 }
 
 - (void)layoutSubviews
@@ -62,6 +101,10 @@
     {
         return YES;
     }
+
+    // After OnSurfaceReady, which creates the ImGui context. On iOS this only records the view
+    // and sizes the fonts for touch; the events come from the handlers above.
+    jpt::ImGuiInitPlatform((__bridge void*)metalView);
 
     // Silently never fires unless added to a run loop, and deallocs unless strongly held.
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(OnFrame:)];

@@ -23,7 +23,7 @@ export namespace jpt
     class Camera
     {
     private:
-        static constexpr ProjectionMode kProjectionMode = ProjectionMode::Perspective;
+        ProjectionMode m_projectionMode = ProjectionMode::Perspective;
 
         Vec3 m_position = Vec3::Zero();
         Vec3 m_target   = Vec3::Forward();
@@ -38,6 +38,19 @@ export namespace jpt
     public:
         void SetPosition(const Vec3& position) noexcept;
         void SetTarget(const Vec3& target) noexcept;
+
+        void SetProjectionMode(ProjectionMode mode) noexcept;
+        void SetFovY(float32 radians) noexcept;
+        void SetOrthoHeight(float32 worldUnits) noexcept;
+
+        /** Together, because a near plane past the far plane inverts depth silently. */
+        void SetNearFar(float32 zNear, float32 zFar) noexcept;
+
+        [[nodiscard]] ProjectionMode GetProjectionMode() const noexcept { return m_projectionMode; }
+        [[nodiscard]] float32 GetFovY()        const noexcept { return m_fovY; }
+        [[nodiscard]] float32 GetOrthoHeight() const noexcept { return m_orthoHeight; }
+        [[nodiscard]] float32 GetNear()        const noexcept { return m_zNear; }
+        [[nodiscard]] float32 GetFar()         const noexcept { return m_zFar; }
 
         [[nodiscard]] Mat44 GetViewProjection(float32 aspect) const noexcept;
     };

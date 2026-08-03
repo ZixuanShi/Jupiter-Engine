@@ -4,6 +4,7 @@
 
 #include "MacWindow.h"
 #include "AppleCallbacks.h"
+#include "Graphics/ImGui/ImGuiLayer.h"
 
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -198,6 +199,10 @@ namespace jpt
         {
             return false;
         }
+
+        // After OnSurfaceReady, which is where the ImGui context is created. The AppKit backend
+        // installs its own NSEvent monitors on this view, so no engine input path is involved.
+        jpt::ImGuiInitPlatform((__bridge void*)m_pImpl->pView);
 
         // No resize event fires for the initial size.
         [m_pImpl->pView updateDrawableSize];

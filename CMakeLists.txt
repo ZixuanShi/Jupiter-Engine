@@ -86,10 +86,24 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
 
+# The editor is a development tool: its panels, and the ImGui they are built on, are absent from
+# a Release binary entirely rather than compiled and left unreachable.
+if(JUPITER_CONFIG STREQUAL "RELEASE")
+    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "/Source/Editor/")
+    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/")
+endif()
+
 # --- Executable ---
 add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
 target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
+
+# Where editor preferences and logs go. Deliberately absent on iOS, whose sandbox forbids any
+# path outside the app container, and in Release, which ships to machines that have no repo --
+# GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
+if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS")
+    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${CMAKE_SOURCE_DIR}/_Saved")
+endif()
 
 target_sources(JupiterEngine
     PUBLIC
@@ -131,6 +145,46 @@ if(APPLE)
     # SYSTEM so -Wpedantic -Werror does not fire on metal-cpp's own headers, which use
     # anonymous structs. Our sources keep the full warning set.
     target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_METAL_CPP}")
+
+    # Vendor -- Dear ImGui
+    # Its own library, not loose sources on JupiterEngine, for three reasons: -w, because ImGui
+    # does not survive our warning set; CXX_SCAN_FOR_MODULES OFF, so clang-scan-deps never walks
+    # vendor code; and Release skips the whole target rather than compiling it unreachable.
+    if(NOT JUPITER_CONFIG STREQUAL "RELEASE")
+        set(JUPITER_IMGUI "${CMAKE_SOURCE_DIR}/Vendor/ImGui/Source")
+        if(NOT EXISTS "${JUPITER_IMGUI}/imgui.cpp")
+            message(FATAL_ERROR "Dear ImGui missing. See Vendor/ImGui/README.md")
+        endif()
+
+        set(JUPITER_IMGUI_SOURCES
+            "${JUPITER_IMGUI}/imgui.cpp"
+            "${JUPITER_IMGUI}/imgui_draw.cpp"
+            "${JUPITER_IMGUI}/imgui_tables.cpp"
+            "${JUPITER_IMGUI}/imgui_widgets.cpp"
+            "${JUPITER_IMGUI}/imgui_demo.cpp"
+            "${JUPITER_IMGUI}/backends/imgui_impl_metal.mm")
+
+        # imgui_impl_osx.mm is the AppKit *input* backend and is macOS-only. The Metal backend
+        # above is plain Metal and builds for both; iOS input is hand-written in IOSWindow.mm.
+        if(NOT JUPITER_PLATFORM STREQUAL "IOS")
+            list(APPEND JUPITER_IMGUI_SOURCES "${JUPITER_IMGUI}/backends/imgui_impl_osx.mm")
+        endif()
+
+        add_library(JupiterImGui STATIC ${JUPITER_IMGUI_SOURCES})
+        set_target_properties(JupiterImGui PROPERTIES CXX_SCAN_FOR_MODULES OFF)
+        target_include_directories(JupiterImGui PUBLIC "${JUPITER_IMGUI}" "${JUPITER_IMGUI}/backends")
+        target_compile_options(JupiterImGui PRIVATE -w $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
+
+        # GameController is imgui_impl_osx's own dependency -- it reads GCController for gamepad
+        # navigation -- so it belongs on this target rather than on the engine's framework list.
+        if(NOT JUPITER_PLATFORM STREQUAL "IOS")
+            target_link_libraries(JupiterImGui PUBLIC "-framework GameController")
+        endif()
+
+        # SYSTEM on the consuming side too, so imgui.h never trips -Wpedantic -Werror in our code.
+        target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_IMGUI}" "${JUPITER_IMGUI}/backends")
+        target_link_libraries(JupiterEngine PRIVATE JupiterImGui)
+    endif()
 
     # ARC
     target_compile_options(JupiterEngine PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)

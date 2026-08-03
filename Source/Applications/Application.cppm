@@ -31,6 +31,7 @@ export namespace jpt
         virtual void Terminate();
         virtual void Update();          // Game logic
         virtual void PostUpdate() {}    // Camera
+        virtual void DrawUI();          // Editor panels. Runs with the render pass open.
 
     public:
         void Run();

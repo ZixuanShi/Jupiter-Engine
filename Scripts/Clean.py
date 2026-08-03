@@ -27,10 +27,8 @@ def remove(path):
 
 def main():
     remove(ROOT / "_Output")
-
-    # compile_commands.json is a symlink inside _ProjectFiles, so this takes it too.
     remove(ROOT / "_ProjectFiles")
-
+    remove(ROOT / "_Saved")
     remove(ROOT / ".vscode" / "launch.json")
 
 

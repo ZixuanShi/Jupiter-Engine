@@ -18,11 +18,32 @@ namespace jpt
         m_target = target;
     }
 
+    void Camera::SetProjectionMode(ProjectionMode mode) noexcept
+    {
+        m_projectionMode = mode;
+    }
+
+    void Camera::SetFovY(float32 radians) noexcept
+    {
+        m_fovY = radians;
+    }
+
+    void Camera::SetOrthoHeight(float32 worldUnits) noexcept
+    {
+        m_orthoHeight = worldUnits;
+    }
+
+    void Camera::SetNearFar(float32 zNear, float32 zFar) noexcept
+    {
+        m_zNear = zNear;
+        m_zFar  = zFar;
+    }
+
     Mat44 Camera::GetViewProjection(float32 aspect) const noexcept
     {
         Mat44 projection;
 
-        if constexpr (kProjectionMode == ProjectionMode::Perspective)
+        if (m_projectionMode == ProjectionMode::Perspective)
         {
             projection = Mat44::Perspective(m_fovY, aspect, m_zNear, m_zFar);
         }

@@ -21,4 +21,32 @@ namespace jpt
         #error "No Jupiter root for this platform"
 #endif
     }
+
+    const std::filesystem::path& GetSavedDir()
+    {
+        static const std::filesystem::path saved = []
+        {
+#ifdef JUPITER_SAVED_DIR
+            // A desktop dev build: the repo's _Saved, so clean.py can wipe it and the files sit
+            // somewhere you can actually look at them.
+            std::filesystem::path directory(JUPITER_SAVED_DIR);
+    #elif IS_PLATFORM_MACOS || IS_PLATFORM_IOS
+            // $HOME rather than NSFileManager, which metal-cpp's Foundation subset does not
+            // bind. It lands in the same place: the user's home on macOS, and the app's own
+            // container on iOS -- the only writable root a sandboxed app has.
+            const char* pHome = std::getenv("HOME");
+            std::filesystem::path directory(pHome ? pHome : ".");
+            directory /= "Library/Application Support/JupiterEngine";
+    #else
+            #error "No saved directory for this platform"
+            
+#endif // JUPITER_SAVED_DIR
+
+            std::error_code error;
+            std::filesystem::create_directories(directory, error);
+            return directory;
+        }();
+
+        return saved;
+    }
 }

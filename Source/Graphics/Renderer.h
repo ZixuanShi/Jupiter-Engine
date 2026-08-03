@@ -27,7 +27,11 @@ namespace jpt
         { renderer.Terminate() }                -> std::same_as<void>;
 
         { renderer.OnResize(width, height) }    -> std::same_as<void>;
-        { renderer.Draw() }                     -> std::same_as<void>;
+
+        // Two halves rather than one Draw(), so UI can be built while the pass is open. False
+        // from BeginFrame means the frame was dropped and EndFrame must not follow.
+        { renderer.BeginFrame() }               -> std::same_as<bool>;
+        { renderer.EndFrame() }                 -> std::same_as<void>;
 
         { renderer.SetMesh(mesh) }              -> std::same_as<bool>;
         { renderer.SetClearColor(color) }       -> std::same_as<void>;

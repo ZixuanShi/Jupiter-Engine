@@ -12,12 +12,15 @@
 #include <cstddef>
 #include <cstring>
 
+#include "Graphics/ImGui/ImGuiLayer.h"
 #include "Graphics/Shader/ShaderTypes.h"
 #include "MetalRenderer.h"
 
 import jpt.Logger;
 import jpt.Matrix44;
+import jpt.PlatformPaths;
 import jpt.Vertex;
+import std;
 
 // What lets the matrix cross to the GPU by memcpy: both are 16 column-major floats.
 static_assert(sizeof(jpt::Mat44) == sizeof(simd_float4x4));
@@ -65,7 +68,155 @@ namespace jpt
         m_pLayer->setFramebufferOnly(true); // Promises render-only access, letting Core Animation pick faster memory.
 
         NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
-        return CreatePipeline();
+        if (!CreatePipeline())
+        {
+            return false;
+        }
+
+        // Layout persistence lives with the rest of the editor's preferences. In Release this
+        // is a no-op stub and ImGui is not linked at all.
+        const std::filesystem::path iniPath = GetSavedDir() / "Preferences" / "imgui.ini";
+
+        std::error_code error;
+        std::filesystem::create_directories(iniPath.parent_path(), error);
+
+        return ImGuiInit(m_pDevice, iniPath.string().c_str());
+    }
+
+    bool MetalRenderer::BeginFrame()
+    {
+        if (!m_pLayer || !m_pQueue || !m_pPipeline)
+        {
+            return false;
+        }
+
+        // Drawables are autoreleased. Without a pool draining each frame the finite pool
+        // exhausts and the app stalls within seconds. Raw rather than NS::SharedPtr, because
+        // the header only forward-declares metal-cpp and SharedPtr needs the complete type.
+        m_pFramePool = NS::AutoreleasePool::alloc()->init();
+
+        // nullptr when every drawable is still in flight. Not an error -- but the pool still
+        // has to drain, or a dropped frame leaks everything it autoreleased.
+        m_pDrawable = m_pLayer->nextDrawable();
+        if (!m_pDrawable)
+        {
+            EndFramePool();
+            return false;
+        }
+
+        // Sized from the drawable rather than the last OnResize, because Metal rejects a pass
+        // whose attachments disagree -- and only one of the two is the texture being drawn to.
+        MTL::Texture* pColorTexture = m_pDrawable->texture();
+        if (!EnsureDepthTexture(static_cast<uint32>(pColorTexture->width()), static_cast<uint32>(pColorTexture->height())))
+        {
+            EndFramePool();
+            return false;
+        }
+
+        m_pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
+
+        MTL::RenderPassColorAttachmentDescriptor* pColor = m_pPass->colorAttachments()->object(0);
+        pColor->setTexture(pColorTexture);
+        pColor->setLoadAction(MTL::LoadActionClear);    // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
+        pColor->setStoreAction(MTL::StoreActionStore);
+        pColor->setClearColor(MTL::ClearColor::Make(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
+
+        MTL::RenderPassDepthAttachmentDescriptor* pDepth = m_pPass->depthAttachment();
+        pDepth->setTexture(m_pDepthTexture);
+        pDepth->setLoadAction(MTL::LoadActionClear);
+        pDepth->setClearDepth(1.0);
+        pDepth->setStoreAction(MTL::StoreActionDontCare);   // Mandatory for a memoryless texture: there is nowhere to store it to.
+
+        // Must see the live descriptor: the backend takes its pipeline's attachment formats off
+        // the attached textures, which is why UI cannot be built before the pass exists.
+        ImGuiBeginFrame(m_pPass);
+        return true;
+    }
+
+    void MetalRenderer::EndFrame()
+    {
+        MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
+        MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(m_pPass);
+
+        if (m_indexCount > 0)
+        {
+            Uniforms uniforms;
+            const Mat44 modelViewProjection = m_viewProjection * m_model;
+            std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
+            std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
+
+            pEncoder->setRenderPipelineState(m_pPipeline);
+            pEncoder->setDepthStencilState(m_pDepthState);
+            pEncoder->setCullMode(MTL::CullModeBack);
+            pEncoder->setFrontFacingWinding(MTL::WindingClockwise);   // Y flips to framebuffer space, so CCW-authored faces land clockwise.
+            pEncoder->setVertexBuffer(m_pVertices, 0, 0);
+            pEncoder->setVertexBytes(&uniforms, sizeof(uniforms), 1); // Fast path for small per-draw constants. Vulkan's push constants.
+            pEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, m_indexCount, MTL::IndexTypeUInt32, m_pIndices, NS::UInteger(0));
+        }
+
+        // ImGui binds its own pipeline but never a depth state, so it would inherit the scene's
+        // and write depth for 2D geometry. Sits on top of the scene by construction, not by luck.
+        pEncoder->setDepthStencilState(m_pUIDepthState);
+        pEncoder->setCullMode(MTL::CullModeNone);
+        ImGuiEndFrame(pCommandBuffer, pEncoder);
+
+        pEncoder->endEncoding();
+
+        pCommandBuffer->presentDrawable(m_pDrawable);
+        pCommandBuffer->commit();
+
+        EndFramePool();
+    }
+
+    void MetalRenderer::EndFramePool()
+    {
+        m_pPass     = nullptr;      // Autoreleased; the pool below owns them.
+        m_pDrawable = nullptr;
+
+        Release(m_pFramePool);      // Draining the pool is what releases everything above.
+    }
+
+    void MetalRenderer::Terminate()
+    {
+        ImGuiTerminate();
+
+        m_pLayer = nullptr;
+
+        Release(m_pIndices);
+        Release(m_pVertices);
+        Release(m_pDepthTexture);
+        Release(m_pUIDepthState);
+        Release(m_pDepthState);
+        Release(m_pPipeline);
+        Release(m_pQueue);
+        Release(m_pDevice);
+    }
+
+    void MetalRenderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
+    {
+        if (!m_pLayer || pixelWidth == 0 || pixelHeight == 0)
+        {
+            return;
+        }
+
+        m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
+    }
+
+    bool MetalRenderer::SetMesh(const Mesh& mesh)
+    {
+        if (mesh.vertices.empty() || mesh.indices.empty())
+        {
+            return false;
+        }
+
+        Release(m_pVertices);
+        Release(m_pIndices);
+
+        m_pVertices  = m_pDevice->newBuffer(mesh.vertices.data(), mesh.vertices.size() * sizeof(Vertex), MTL::ResourceStorageModeShared);
+        m_pIndices   = m_pDevice->newBuffer(mesh.indices.data(),  mesh.indices.size()  * sizeof(uint32), MTL::ResourceStorageModeShared);
+        m_indexCount = static_cast<uint32>(mesh.indices.size());
+
+        return m_pVertices && m_pIndices;
     }
 
     bool MetalRenderer::CreatePipeline()
@@ -125,7 +276,14 @@ namespace jpt
         pDepthDesc->setDepthWriteEnabled(true);
 
         m_pDepthState = m_pDevice->newDepthStencilState(pDepthDesc);
-        return m_pDepthState;
+
+        // Always + no write: UI is composited over the finished scene and has no depth of its own.
+        MTL::DepthStencilDescriptor* pUIDepthDesc = MTL::DepthStencilDescriptor::alloc()->init()->autorelease();
+        pUIDepthDesc->setDepthCompareFunction(MTL::CompareFunctionAlways);
+        pUIDepthDesc->setDepthWriteEnabled(false);
+
+        m_pUIDepthState = m_pDevice->newDepthStencilState(pUIDepthDesc);
+        return m_pDepthState && m_pUIDepthState;
     }
 
     bool MetalRenderer::EnsureDepthTexture(uint32 pixelWidth, uint32 pixelHeight)
@@ -147,107 +305,6 @@ namespace jpt
 
         m_pDepthTexture = m_pDevice->newTexture(pDesc);
         return m_pDepthTexture;
-    }
-
-    bool MetalRenderer::SetMesh(const Mesh& mesh)
-    {
-        if (mesh.vertices.empty() || mesh.indices.empty())
-        {
-            return false;
-        }
-
-        Release(m_pVertices);
-        Release(m_pIndices);
-
-        m_pVertices  = m_pDevice->newBuffer(mesh.vertices.data(), mesh.vertices.size() * sizeof(Vertex), MTL::ResourceStorageModeShared);
-        m_pIndices   = m_pDevice->newBuffer(mesh.indices.data(),  mesh.indices.size()  * sizeof(uint32), MTL::ResourceStorageModeShared);
-        m_indexCount = static_cast<uint32>(mesh.indices.size());
-
-        return m_pVertices && m_pIndices;
-    }
-
-    void MetalRenderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
-    {
-        if (!m_pLayer || pixelWidth == 0 || pixelHeight == 0)
-        {
-            return;
-        }
-
-        m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
-    }
-
-    void MetalRenderer::Draw()
-    {
-        if (!m_pLayer || !m_pQueue || !m_pPipeline || m_indexCount == 0)
-        {
-            return;
-        }
-
-        // Drawables are autoreleased. Without a pool draining each frame the finite pool
-        // exhausts and the app stalls within seconds.
-        NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
-
-        // nullptr when every drawable is still in flight. Not an error.
-        CA::MetalDrawable* pDrawable = m_pLayer->nextDrawable();
-        if (!pDrawable)
-        {
-            return;
-        }
-
-        // Sized from the drawable rather than the last OnResize, because Metal rejects a pass
-        // whose attachments disagree -- and only one of the two is the texture being drawn to.
-        MTL::Texture* pColorTexture = pDrawable->texture();
-        if (!EnsureDepthTexture(static_cast<uint32>(pColorTexture->width()), static_cast<uint32>(pColorTexture->height())))
-        {
-            return;
-        }
-
-        MTL::RenderPassDescriptor* pPass = MTL::RenderPassDescriptor::renderPassDescriptor();
-
-        MTL::RenderPassColorAttachmentDescriptor* pColor = pPass->colorAttachments()->object(0);
-        pColor->setTexture(pColorTexture);
-        pColor->setLoadAction(MTL::LoadActionClear);    // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
-        pColor->setStoreAction(MTL::StoreActionStore);
-        pColor->setClearColor(MTL::ClearColor::Make(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
-
-        MTL::RenderPassDepthAttachmentDescriptor* pDepth = pPass->depthAttachment();
-        pDepth->setTexture(m_pDepthTexture);
-        pDepth->setLoadAction(MTL::LoadActionClear);
-        pDepth->setClearDepth(1.0);
-        pDepth->setStoreAction(MTL::StoreActionDontCare);   // Mandatory for a memoryless texture: there is nowhere to store it to.
-
-        MTL::CommandBuffer* pCommandBuffer = m_pQueue->commandBuffer();
-        MTL::RenderCommandEncoder* pEncoder = pCommandBuffer->renderCommandEncoder(pPass);
-
-        Uniforms uniforms;
-        const Mat44 modelViewProjection = m_viewProjection * m_model;
-        std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
-        std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
-
-        pEncoder->setRenderPipelineState(m_pPipeline);
-        pEncoder->setDepthStencilState(m_pDepthState);
-        pEncoder->setCullMode(MTL::CullModeBack);
-        pEncoder->setFrontFacingWinding(MTL::WindingClockwise);   // Y flips to framebuffer space, so CCW-authored faces land clockwise.
-        pEncoder->setVertexBuffer(m_pVertices, 0, 0);
-        pEncoder->setVertexBytes(&uniforms, sizeof(uniforms), 1); // Fast path for small per-draw constants. Vulkan's push constants.
-        pEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, m_indexCount, MTL::IndexTypeUInt32, m_pIndices, NS::UInteger(0));
-        pEncoder->endEncoding();
-
-        pCommandBuffer->presentDrawable(pDrawable);
-        pCommandBuffer->commit();
-    }
-
-    void MetalRenderer::Terminate()
-    {
-        m_pLayer = nullptr;
-
-        Release(m_pIndices);
-        Release(m_pVertices);
-        Release(m_pDepthTexture);
-        Release(m_pDepthState);
-        Release(m_pPipeline);
-        Release(m_pQueue);
-        Release(m_pDevice);
     }
 }
 
