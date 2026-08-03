@@ -17,7 +17,7 @@
 #endif
 
 #include "imgui.h"
-#include "imgui_impl_metal.h"
+#include "imgui_impl_metal4.h"
 
 namespace
 {
@@ -36,11 +36,9 @@ namespace
     // scrollbars -- scales by this.
     constexpr float kTouchScale = 2.0f;
 #endif
-}
 
-namespace jpt
-{
-    bool ImGuiInit(MTL::Device* pDevice, const char* pIniPath)
+    /** Everything the two backends share, which is all of it up to the backend's own init. */
+    void CreateContext(const char* pIniPath)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -51,10 +49,58 @@ namespace jpt
 
         g_iniPath = pIniPath ? pIniPath : "";
         io.IniFilename = g_iniPath.empty() ? nullptr : g_iniPath.c_str();
+    }
 
-        // The same object seen through two type systems: metal-cpp is a typed view over
+    /** The half of the frame that is platform rather than renderer, and so is backend-agnostic. */
+    void NewFramePlatform()
+    {
+#if IS_PLATFORM_MACOS
+        ImGui_ImplOSX_NewFrame((__bridge NSView*)g_pNativeView);
+#else
+        UIView* pView = (__bridge UIView*)g_pNativeView;
+        ImGuiIO& io = ImGui::GetIO();
+
+        const CGSize points = pView.bounds.size;
+        const float scale = static_cast<float>(pView.contentScaleFactor);
+        io.DisplaySize = ImVec2(static_cast<float>(points.width), static_cast<float>(points.height));
+        io.DisplayFramebufferScale = ImVec2(scale, scale);
+
+        const double now = CACurrentMediaTime();
+        io.DeltaTime = (g_lastTime > 0.0) ? static_cast<float>(now - g_lastTime) : 1.0f / 60.0f;
+        g_lastTime = now;
+#endif
+
+        ImGui::NewFrame();
+    }
+}
+
+namespace jpt
+{
+    bool ImGuiInit(MTL::Device* pDevice, MTL4::CommandQueue* pQueue, int framesInFlight, const char* pIniPath)
+    {
+        CreateContext(pIniPath);
+
+        // The same objects seen through two type systems: metal-cpp is a typed view over
         // objc_msgSend, so the bridge is a cast and nothing else.
-        return ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(void*)pDevice);
+        return ImGui_ImplMetal4_Init((__bridge id<MTLDevice>)(void*)pDevice,
+                                     (__bridge id<MTL4CommandQueue>)(void*)pQueue,
+                                     framesInFlight);
+    }
+
+    void ImGuiBeginFrame(MTL4::RenderPassDescriptor* pPass, int frameIndex)
+    {
+        // Needs the live descriptor: the backend reads the attachment formats off the attached
+        // textures, so a format-only descriptor would give it MTLPixelFormatInvalid.
+        ImGui_ImplMetal4_NewFrame((__bridge MTL4RenderPassDescriptor*)(void*)pPass, frameIndex);
+        NewFramePlatform();
+    }
+
+    void ImGuiEndFrame(MTL4::CommandBuffer* pCommandBuffer, MTL4::RenderCommandEncoder* pEncoder)
+    {
+        ImGui::Render();
+        ImGui_ImplMetal4_RenderDrawData(ImGui::GetDrawData(),
+                                        (__bridge id<MTL4CommandBuffer>)(void*)pCommandBuffer,
+                                        (__bridge id<MTL4RenderCommandEncoder>)(void*)pEncoder);
     }
 
     void ImGuiInitPlatform(void* pNativeView)
@@ -86,41 +132,8 @@ namespace jpt
 #if IS_PLATFORM_MACOS
         ImGui_ImplOSX_Shutdown();
 #endif
-        ImGui_ImplMetal_Shutdown();
+        ImGui_ImplMetal4_Shutdown();
         ImGui::DestroyContext();
-    }
-
-    void ImGuiBeginFrame(MTL::RenderPassDescriptor* pPass)
-    {
-        // Needs the live descriptor: the backend reads the attachment formats off the attached
-        // textures, so a format-only descriptor would give it MTLPixelFormatInvalid.
-        ImGui_ImplMetal_NewFrame((__bridge MTLRenderPassDescriptor*)(void*)pPass);
-
-#if IS_PLATFORM_MACOS
-        ImGui_ImplOSX_NewFrame((__bridge NSView*)g_pNativeView);
-#else
-        UIView* pView = (__bridge UIView*)g_pNativeView;
-        ImGuiIO& io = ImGui::GetIO();
-
-        const CGSize points = pView.bounds.size;
-        const float scale = static_cast<float>(pView.contentScaleFactor);
-        io.DisplaySize = ImVec2(static_cast<float>(points.width), static_cast<float>(points.height));
-        io.DisplayFramebufferScale = ImVec2(scale, scale);
-
-        const double now = CACurrentMediaTime();
-        io.DeltaTime = (g_lastTime > 0.0) ? static_cast<float>(now - g_lastTime) : 1.0f / 60.0f;
-        g_lastTime = now;
-#endif
-
-        ImGui::NewFrame();
-    }
-
-    void ImGuiEndFrame(MTL::CommandBuffer* pCommandBuffer, MTL::RenderCommandEncoder* pEncoder)
-    {
-        ImGui::Render();
-        ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(),
-                                       (__bridge id<MTLCommandBuffer>)(void*)pCommandBuffer,
-                                       (__bridge id<MTLRenderCommandEncoder>)(void*)pEncoder);
     }
 
     void ImGuiOnPointerMoved(float x, float y)
@@ -138,13 +151,13 @@ namespace jpt
 
 namespace jpt
 {
-    bool ImGuiInit(MTL::Device*, const char*)                            { return true; }
-    void ImGuiInitPlatform(void*)                                        {}
-    void ImGuiTerminate()                                                {}
-    void ImGuiBeginFrame(MTL::RenderPassDescriptor*)                     {}
-    void ImGuiEndFrame(MTL::CommandBuffer*, MTL::RenderCommandEncoder*)  {}
-    void ImGuiOnPointerMoved(float, float)                               {}
-    void ImGuiOnPointerButton(bool)                                      {}
+    bool ImGuiInit(MTL::Device*, MTL4::CommandQueue*, int, const char*)   { return true; }
+    void ImGuiInitPlatform(void*)                                         {}
+    void ImGuiTerminate()                                                 {}
+    void ImGuiBeginFrame(MTL4::RenderPassDescriptor*, int)                {}
+    void ImGuiEndFrame(MTL4::CommandBuffer*, MTL4::RenderCommandEncoder*) {}
+    void ImGuiOnPointerMoved(float, float)                                {}
+    void ImGuiOnPointerButton(bool)                                       {}
 }
 
 #endif

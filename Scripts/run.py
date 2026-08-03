@@ -25,17 +25,6 @@ def run_steps(steps) -> int:
     return 0
 
 
-def booted_simulator() -> str | None:
-    """Return the UDID of the first booted simulator, or None."""
-    result = subprocess.run(["xcrun", "simctl", "list", "devices", "booted", "-j"],
-                            capture_output=True, text=True)
-
-    for devices in json.loads(result.stdout).get("devices", {}).values():
-        for device in devices:
-            return device["udid"]
-    return None
-
-
 def connected_device() -> str | None:
     """Return the identifier of the first paired, reachable device, or None.
 
@@ -64,30 +53,6 @@ def launch_steps(preset, artifact, console) -> list | None:
 
     None means the target is not reachable; the reason has already been printed.
     """
-    if preset.startswith("ios-sim"):
-        udid = booted_simulator()
-        if udid is None:
-            print("No booted simulator. Boot one first, e.g.:")
-            print("  xcrun simctl boot 'iPad Pro 13-inch (M4)' && open -a Simulator")
-            return None
-
-        # Without this, launch returns the running instance's PID and the new build never
-        # starts. Kept out of the steps because terminate fails when nothing is running.
-        subprocess.run(["xcrun", "simctl", "terminate", udid, BUNDLE_ID],
-                       capture_output=True)
-
-        # --console-pty streams stdout but ties the app's lifetime to this terminal:
-        # interrupting the stream kills the app. Detached is the default so the app keeps
-        # running and the shell comes back.
-        launch = ["xcrun", "simctl", "launch", udid, BUNDLE_ID]
-        if console:
-            launch.insert(3, "--console-pty")
-
-        return [
-            ["xcrun", "simctl", "install", udid, str(artifact)],
-            launch,
-        ]
-
     if preset.startswith("ios-device"):
         udid = connected_device()
         if udid is None:

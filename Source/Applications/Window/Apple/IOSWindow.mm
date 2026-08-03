@@ -85,11 +85,20 @@
     (void)application;
     (void)launchOptions;
 
-    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    // Deprecated as of the iOS 26 deployment target, which the Metal 4 migration forced. The real
+    // fix is adopting the UIScene lifecycle -- a UIApplicationSceneManifest, a UIWindowSceneDelegate
+    // that builds the window with initWithWindowScene:, and moving the background/foreground
+    // handlers below onto the scene. That is a separate change with its own device testing, so the
+    // deprecation is scoped and named here rather than silenced project-wide.
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    const CGRect screenBounds = UIScreen.mainScreen.bounds;
+    self.window = [[UIWindow alloc] initWithFrame:screenBounds];
+    #pragma clang diagnostic pop
 
     // A UIWindow with no rootViewController renders black.
     UIViewController* viewController = [[UIViewController alloc] init];
-    JupiterMetalView* metalView = [[JupiterMetalView alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    JupiterMetalView* metalView = [[JupiterMetalView alloc] initWithFrame:screenBounds];
     viewController.view = metalView;
     self.window.rootViewController = viewController;
 

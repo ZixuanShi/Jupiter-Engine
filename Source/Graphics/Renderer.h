@@ -3,7 +3,7 @@
 #pragma once
 
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
-    #include "Metal/MetalRenderer.h"
+    #include "Metal/Metal4Renderer.h"
 #else
     #error "No Renderer backend for this platform"
 #endif
@@ -39,7 +39,7 @@ namespace jpt
         { renderer.SetViewProjection(matrix) }  -> std::same_as<void>;
     };
 
-    using Renderer = MetalRenderer;
+    using Renderer = Metal4Renderer;
 
     static_assert(RendererType<Renderer>);
     static_assert(!std::is_polymorphic_v<Renderer>, "Renderer must stay vtable-free");

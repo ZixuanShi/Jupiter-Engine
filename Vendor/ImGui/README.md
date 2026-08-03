@@ -13,7 +13,7 @@ Immediate-mode GUI, used for the editor panels under `Source/Editor/`.
 git clone --depth 1 --branch docking https://github.com/ocornut/imgui.git /tmp/imgui
 mkdir -p Vendor/ImGui/Source/backends
 cp /tmp/imgui/{imconfig.h,imgui.cpp,imgui.h,imgui_demo.cpp,imgui_draw.cpp,imgui_internal.h,imgui_tables.cpp,imgui_widgets.cpp,imstb_rectpack.h,imstb_textedit.h,imstb_truetype.h} Vendor/ImGui/Source/
-cp /tmp/imgui/backends/imgui_impl_{metal,osx}.{h,mm} Vendor/ImGui/Source/backends/
+cp /tmp/imgui/backends/imgui_impl_{metal4,osx}.{h,mm} Vendor/ImGui/Source/backends/
 ```
 
 ## Notes
@@ -32,5 +32,8 @@ metal-cpp is a typed view over `objc_msgSend` — so `Source/Graphics/ImGui/ImGu
 with `(__bridge id<MTLDevice>)(void*)pDevice`, the same trick `MacWindow.mm` uses in the other
 direction on `CA::MetalLayer`.
 
-`imgui_impl_metal4.mm` (the Metal 4 backend) is deliberately not vendored; nothing else in the
-engine targets Metal 4 yet.
+**`imgui_impl_metal4.mm`, not `imgui_impl_metal.mm`** -- the engine renders through Metal 4, and the
+classic backend encodes into an `MTLRenderCommandEncoder` the renderer never creates. It needs two
+things the classic one does not: the command queue at init, and a frame-in-flight index per frame,
+because it sizes its own vertex/index/constant buffers off them. `Metal4Renderer` passes it the
+same `kFramesInFlight` and the same ring slot it used for the command allocator; they must agree.

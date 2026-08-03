@@ -6,7 +6,7 @@ import jpt.Vector3;
 
 export namespace jpt
 {
-    /** Must stay an aggregate and standard-layout: MetalRenderer::CreatePipeline builds the
+    /** Must stay an aggregate and standard-layout: Metal4Renderer::CreatePipeline builds the
         vertex descriptor from offsetof/sizeof of these members. */
     struct Vertex
     {

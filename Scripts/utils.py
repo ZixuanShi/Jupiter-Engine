@@ -9,7 +9,7 @@ BINARY_NAME = "JupiterEngine"
 BUNDLE_ID = "com.jupitertechnologies.engine"
 
 CONFIGS = ("debug", "dev", "release")
-PLATFORMS = ("macos", "ios-sim", "ios-device", "windows", "linux")
+PLATFORMS = ("macos", "ios-device", "windows", "linux")
 
 USAGE = f"Usage: py Scripts/setup.py [{'|'.join(CONFIGS)}] [{'|'.join(PLATFORMS)}]"
 

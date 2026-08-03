@@ -39,7 +39,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
                 "CMAKE_OBJCXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
-                "CMAKE_OSX_DEPLOYMENT_TARGET": "14.0"
+                "CMAKE_OSX_DEPLOYMENT_TARGET": "26.0"
             }
         },
         {
@@ -56,15 +56,7 @@
                 "CMAKE_OBJCXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
                 "CMAKE_SYSTEM_NAME": "iOS",
                 "CMAKE_OSX_ARCHITECTURES": "arm64",
-                "CMAKE_OSX_DEPLOYMENT_TARGET": "17.0"
-            }
-        },
-        {
-            "name": "ios-sim-base",
-            "hidden": true,
-            "inherits": "ios-base",
-            "cacheVariables": {
-                "CMAKE_OSX_SYSROOT": "iphonesimulator"
+                "CMAKE_OSX_DEPLOYMENT_TARGET": "26.0"
             }
         },
         {
@@ -131,31 +123,6 @@
             "name": "macos_release",
             "displayName": "macOS Release",
             "inherits": "macos-base",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "ios-sim_debug",
-            "displayName": "iOS Simulator Debug",
-            "inherits": "ios-sim-base",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "ios-sim_dev",
-            "displayName": "iOS Simulator Dev",
-            "inherits": "ios-sim-base",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O3 -g -DNDEBUG"
-            }
-        },
-        {
-            "name": "ios-sim_release",
-            "displayName": "iOS Simulator Release",
-            "inherits": "ios-sim-base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
@@ -235,18 +202,6 @@
         {
             "name": "macos_release",
             "configurePreset": "macos_release"
-        },
-        {
-            "name": "ios-sim_debug",
-            "configurePreset": "ios-sim_debug"
-        },
-        {
-            "name": "ios-sim_dev",
-            "configurePreset": "ios-sim_dev"
-        },
-        {
-            "name": "ios-sim_release",
-            "configurePreset": "ios-sim_release"
         },
         {
             "name": "ios-device_debug",

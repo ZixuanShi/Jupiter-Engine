@@ -93,6 +93,7 @@ if(JUPITER_CONFIG STREQUAL "RELEASE")
     list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/")
 endif()
 
+
 # --- Executable ---
 add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
@@ -162,7 +163,7 @@ if(APPLE)
             "${JUPITER_IMGUI}/imgui_tables.cpp"
             "${JUPITER_IMGUI}/imgui_widgets.cpp"
             "${JUPITER_IMGUI}/imgui_demo.cpp"
-            "${JUPITER_IMGUI}/backends/imgui_impl_metal.mm")
+            "${JUPITER_IMGUI}/backends/imgui_impl_metal4.mm")
 
         # imgui_impl_osx.mm is the AppKit *input* backend and is macOS-only. The Metal backend
         # above is plain Metal and builds for both; iOS input is hand-written in IOSWindow.mm.
@@ -211,16 +212,10 @@ if(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_VERSION       "1")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0")
 
+    # Device only -- there is no Simulator preset, because its SDK declares no MTL4 protocols.
     if(JUPITER_PLATFORM STREQUAL "IOS")
-        if(CMAKE_OSX_SYSROOT MATCHES "[Ss]imulator")
-            set(JUPITER_IOS_PLATFORM_NAME "iPhoneSimulator")
-            set(JUPITER_METAL_SDK "iphonesimulator")
-            set(JUPITER_METAL_MIN_OS "-mios-simulator-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        else()
-            set(JUPITER_IOS_PLATFORM_NAME "iPhoneOS")
-            set(JUPITER_METAL_SDK "iphoneos")
-            set(JUPITER_METAL_MIN_OS "-mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        endif()
+        set(JUPITER_METAL_SDK "iphoneos")
+        set(JUPITER_METAL_MIN_OS "-mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
         set(JUPITER_INFO_PLIST "${CMAKE_SOURCE_DIR}/Build/Apple/IOSInfo.plist.in")
     else()
         set(JUPITER_METAL_SDK "macosx")
@@ -277,7 +272,7 @@ if(APPLE)
     # the staged assets too and those change without the executable ever relinking -- which used
     # to leave the bundle sealed against a file it no longer held, and a device rejects that.
     # Signing takes ~0.1s, so it runs every build rather than guessing when it is needed.
-    if(JUPITER_IOS_PLATFORM_NAME STREQUAL "iPhoneOS")
+    if(JUPITER_PLATFORM STREQUAL "IOS")
         add_custom_target(JupiterSign ALL
             COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
             COMMENT "Code-signing for device")

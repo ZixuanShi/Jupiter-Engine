@@ -2,7 +2,7 @@
 
 module;
 
-// Textual first, then the imports: the rule that already governs MetalRenderer.cpp. imgui.h is
+// Textual first, then the imports: the rule that already governs Metal4Renderer.cpp. imgui.h is
 // plain C++ and includes no STL, so it costs little here -- measured before wrapping it.
 #include "imgui.h"
 

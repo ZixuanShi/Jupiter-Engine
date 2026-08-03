@@ -4,7 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project intent
 
-JupiterEngine is a cross-platform Vulkan/Metal game engine. It compiles to a **single executable** (`JupiterEngine`) built from `Source/Main.cpp`. Target platforms: Windows, Linux, macOS, Android, iOS — using Vulkan (Win/Linux/Android) and Metal (macOS/iOS). Only windows/macos/linux are wired up in `CMakePresets.json` today; Android/iOS presets are future work.
+JupiterEngine is a cross-platform Vulkan/Metal game engine. It compiles to a **single executable** (`JupiterEngine`) built from `Source/Main.cpp`. Target platforms: Windows, Linux, macOS, Android, iOS — using Vulkan (Win/Linux/Android) and **Metal 4** (macOS/iOS). `CMakePresets.json` wires up `macos`, `ios-device`, `windows` and `linux`; Android is future work.
+
+### Metal 4, and why there is no iOS Simulator
+
+The renderer is `Source/Graphics/Metal/Metal4Renderer.{h,cpp}` — the Metal 4 API (`MTL4::CommandQueue`, `CommandAllocator`, `ArgumentTable`, `Compiler`), not classic Metal. That sets a hard floor of **macOS 26 / iOS 26**, which is why `CMAKE_OSX_DEPLOYMENT_TARGET` is `26.0` on both platforms.
+
+**There is deliberately no `ios-sim` preset.** The iOS Simulator SDK ships the `MTL4*.h` headers but declares none of the protocols inside them — `iPhoneOS26.5.sdk` has `@protocol MTL4ArgumentTable`, `iPhoneSimulator26.5.sdk` does not — so a Metal 4 build cannot compile against it. Testing happens on a physical device, which is the better test anyway: the Simulator never modelled TBDR, tile memory, or `StorageModeMemoryless` depth, all of which this renderer depends on.
+
+Three consequences worth knowing before touching the renderer:
+
+- **`setVertexBytes` does not exist.** Everything the shader reads is a GPU address in an `MTL4::ArgumentTable`, so per-frame constants need a real buffer. `Metal4Renderer` rings `kFramesInFlight` (3) uniform slots and command allocators behind a `std::counting_semaphore` released from the commit feedback handler. `ImGuiInit` is handed the same count, and `ImGuiBeginFrame` the same slot index, because the backend sizes its own buffers off them.
+- **Residency is manual.** Anything the GPU reaches by raw address must be in an `MTL::ResidencySet`. A miss is a GPU fault, not a validation error. Memoryless textures must **not** be added — there is no memory to make resident, and the validation layer asserts. Render-pass attachments do not need it; they are bound by the descriptor.
+- **The pipeline has no depth attachment format.** `MTL4::RenderPipelineDescriptor` decouples it; depth comes from the render pass at encode time.
+
+Run with `MTL_DEBUG_LAYER=1` when changing the renderer — it caught the memoryless-residency assertion immediately.
 
 When extending CMake, assume one binary named `JupiterEngine`. Do not introduce multi-executable abstractions or per-file `add_executable` loops.
 
@@ -31,7 +45,7 @@ Clang accepts `import` inside a global module fragment, so a plain header may `i
 
 **Hard constraint: `.mm` files must never `import std;`, directly or transitively** — Clang refuses to load a C++-built `std.pcm` into an Objective-C++ translation unit (`error: Objective-C was disabled in precompiled file 'std.pcm' but is currently enabled`). Since `jpt.TypeDefs` imports std, **any header a `.mm` includes must be import-free** and spell types as `std::uint32_t` / `double`. That currently covers `AppleCallbacks.h`, `MacWindow.h`, and `IOSWindow.h`. Headers never included by a `.mm` (`Window.h`, `Renderer.h`) use the `jpt` aliases.
 
-**Include textual headers before headers that import.** A TU that mixes `import std` with textual libc++ headers must see the textual copies first, or the module's declarations win and the later includes are a redefinition: `error: type alias template redefinition with different types` in `__promote.h`. See the ordering comment at the top of `Graphics/Metal/MetalRenderer.cpp`.
+**Include textual headers before headers that import.** A TU that mixes `import std` with textual libc++ headers must see the textual copies first, or the module's declarations win and the later includes are a redefinition: `error: type alias template redefinition with different types` in `__promote.h`. See the ordering comment at the top of `Graphics/Metal/Metal4Renderer.cpp`.
 
 ## Build flow
 
