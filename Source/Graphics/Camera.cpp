@@ -10,7 +10,7 @@ namespace jpt
 {
     bool Camera::PreInit() noexcept
     {
-        m_position = Vec3(1.6f, 1.4f, 2.4f);
+        m_position = Vec3(1.6f, 2.0f, 2.4f);
         m_target = Vec3::Zero();
         return true;
     }

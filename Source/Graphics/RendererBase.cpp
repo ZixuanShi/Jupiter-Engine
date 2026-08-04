@@ -18,7 +18,7 @@ namespace jpt
     bool RendererBase::PreInit() noexcept
     {
     #if IS_PLATFORM_MACOS
-        m_clearColor = LinearColor(0.1f, 0.1f, 0.0f);
+        m_clearColor = LinearColor(0.01f, 0.01f, 0.0f);
     #elif IS_PLATFORM_IOS
         m_clearColor = LinearColor(0.0f, 0.1f, 0.1f);
     #endif

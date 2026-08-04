@@ -231,7 +231,7 @@ namespace jpt
             pEncoder->setRenderPipelineState(m_pPipeline);
             pEncoder->setDepthStencilState(m_pDepthState);
             pEncoder->setCullMode(MTL::CullModeBack);
-            pEncoder->setFrontFacingWinding(MTL::WindingClockwise);   // Y flips to framebuffer space, so CCW-authored faces land clockwise.
+            pEncoder->setFrontFacingWinding(MTL::WindingCounterClockwise);   // Matches the OBJ convention: CCW seen from outside.
             pEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, m_indexCount, MTL::IndexTypeUInt32,
                                             m_pIndices->gpuAddress(), m_indexCount * sizeof(uint32));
         }
