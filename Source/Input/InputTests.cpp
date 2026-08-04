@@ -23,7 +23,6 @@ import jpt.InputEvents;
 import jpt.Logger;
 import jpt.Matrix44;
 import jpt.Quaternion;
-import jpt.Scene;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -386,6 +385,17 @@ namespace jpt
             // And pitch stops short of vertical rather than tipping over onto its head.
             Debug::Assert(camera.Up().y > 0.0f, "Pitch passed vertical: up.y is {}", camera.Up().y);
 
+            // LookAt sets aim and orbit distance together, which is the point of it: setting the
+            // direction alone would leave Zoom and the drag projection on a stale depth.
+            camera.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+            camera.LookAt(Vec3(0.0f, 0.0f, 2.0f));
+            Debug::Assert(AreValuesClose(camera.Forward(), Vec3::Forward(), 1e-4f), "LookAt aimed at ({}, {}, {})", camera.Forward().x, camera.Forward().y, camera.Forward().z);
+            Debug::Assert(AreValuesClose(camera.GetDistance(), 8.0f, 1e-4f), "LookAt left the orbit distance at {}, expected 8", camera.GetDistance());
+
+            // Which is to say the orbit point lands exactly on what it was aimed at.
+            const Vec3 orbit = camera.GetPosition() + camera.Forward() * camera.GetDistance();
+            Debug::Assert(AreValuesClose(orbit, Vec3(0.0f, 0.0f, 2.0f), 1e-4f), "The orbit point landed at ({}, {}, {})", orbit.x, orbit.y, orbit.z);
+
             // The view matrix now comes from the rotation's conjugate instead of LookAt. The two
             // must agree wherever LookAt is defined, which is what makes this a refactor.
             camera.SetPosition(Vec3(3.0f, 4.0f, 5.0f));
@@ -519,7 +529,7 @@ namespace jpt
         }
         {
             // Modifiers arrive as a whole mask, never down/up, so this path translates separately.
-            Input& input = GetApplication().GetInput();
+            const Input& input = GetApplication().GetInput();
 
             constexpr std::uint32_t kLeftShiftBit = 0x0002;         // Hardware-dependent, has a side.
             constexpr std::uint32_t kCapsLockFlag = 1u << 16;       // NSEventModifierFlagCapsLock.

@@ -3,11 +3,14 @@
 module;
 
 #include "Applications/AppClient.h"
+#include "Applications/Window/Window.h"
 
 module jpt.Camera;
 
 import jpt.Constants;
+import jpt.FrameTimer;
 import jpt.Input;
+import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.GestureRecognizer;
 import jpt.Matrix44;
@@ -18,9 +21,42 @@ import std;
 
 namespace jpt
 {
-    Camera::Camera() noexcept
+    Vec3 GetMoveAxis(const Input& input) noexcept
     {
-        SetDirection(-m_position);   // Aimed at the origin from wherever m_position starts.
+        Vec3 axis = Vec3::Zero();
+
+        if (input.IsKeyDown(KeyCode::D) || input.IsKeyDown(KeyCode::RightArrow))
+        {
+            axis.x += 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::A) || input.IsKeyDown(KeyCode::LeftArrow))
+        {
+            axis.x -= 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::E))
+        {
+            axis.y += 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::Q))
+        {
+            axis.y -= 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::S) || input.IsKeyDown(KeyCode::DownArrow))
+        {
+            axis.z += 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::W) || input.IsKeyDown(KeyCode::UpArrow))
+        {
+            axis.z -= 1.0f;
+        }
+
+        // Normalized, or holding two keys moves 1.41x as fast as holding one.
+        if (axis != Vec3::Zero())
+        {
+            axis = axis.Normalized();
+        }
+
+        return axis;
     }
 
     bool Camera::Init()
@@ -41,7 +77,59 @@ namespace jpt
                 Zoom(std::exp(-event.delta.y * rate));
             });
 
+        input.OnMouseMove().Add([this](const MouseMoveEvent& event)
+            {
+                if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Right))
+                {
+                    Look(event.delta);
+                }
+            });
+
+        // Driven by the transition, not polled: AppKit counts hide against unhide, so calling
+        // either every frame would sink the counter and strand the pointer.
+        input.OnMouseButton().Add([](const MouseButtonEvent& event)
+            {
+                if (event.button == MouseButton::Right)
+                {
+                    GetApplication().GetWindow().SetCursorCaptured(event.isDown);
+                }
+            });
+
         return true;
+    }
+
+    void Camera::Update()
+    {
+        const Application& app = GetApplication();
+
+        const Vec3 axis = GetMoveAxis(app.GetInput());
+        if (axis == Vec3::Zero())
+        {
+            return;
+        }
+
+        const FrameTimer& timer = app.GetFrameTimer();
+        const float32 deltaSeconds = static_cast<float32>(timer.GetDeltaSeconds());
+
+        // Per second, not per frame, so the speed does not follow the frame rate.
+        constexpr float32 kSpeed = 4.0f;
+        MoveLocal(axis * deltaSeconds * kSpeed);
+    }
+
+    void Camera::Look(const Vec2& deltaPixels)
+    {
+        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        if (height < 1.0f)
+        {
+            return;
+        }
+
+        // Both negated: dragging right turns right, which is a negative yaw about world up, and
+        // screen Y is down while a positive pitch looks up. A full-height drag is a half turn.
+        const float32 yaw   = -deltaPixels.x / height * kPi<float32>;
+        const float32 pitch = -deltaPixels.y / height * kPi<float32>;
+
+        RotateLocal(pitch, yaw);
     }
 
     void Camera::Zoom(float32 factor) noexcept
@@ -73,7 +161,7 @@ namespace jpt
     {
         // Past vertical the view axis meets the yaw axis and heading stops being defined, so the
         // camera would flip over rather than keep tipping.
-        constexpr float32 kMaxPitch = 1.5533f;   // 89 degrees.
+        constexpr float32 kMaxPitch = ToRadians(89.0f);
 
         const float32 pitch = std::asin(std::clamp(Forward().y, -1.0f, 1.0f));
         const float32 applied = std::clamp(pitch + pitchRadians, -kMaxPitch, kMaxPitch) - pitch;
@@ -120,6 +208,19 @@ namespace jpt
         const float32 yaw   = std::atan2(-aim.x, -aim.z);
 
         m_rotation = Quat::FromAxisAngle(Vec3::Up(), yaw) * Quat::FromAxisAngle(Vec3::Right(), pitch);
+    }
+
+    void Camera::LookAt(const Vec3& point) noexcept
+    {
+        const Vec3 toPoint = point - m_position;
+        const float32 distance = toPoint.Length();
+        if (distance < kEpsilon<float32>)
+        {
+            return;
+        }
+
+        SetDirection(toPoint);
+        SetDistance(distance);
     }
 
     void Camera::SetDistance(float32 distance) noexcept

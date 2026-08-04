@@ -49,5 +49,6 @@ export namespace jpt
         [[nodiscard]] Renderer& GetRenderer()                 noexcept { return m_renderer; }
         [[nodiscard]] Scene& GetScene()                       noexcept { return m_scene; }
         [[nodiscard]] Input& GetInput()                       noexcept { return m_input; }
+        [[nodiscard]] const Input& GetInput() const           noexcept { return m_input; }
     };
 }

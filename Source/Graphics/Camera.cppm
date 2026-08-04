@@ -2,6 +2,7 @@
 
 export module jpt.Camera;
 
+import jpt.Input;
 import jpt.Math;
 import jpt.Matrix44;
 import jpt.Quaternion;
@@ -11,6 +12,12 @@ import jpt.Vector3;
 
 export namespace jpt
 {
+    /** WASD, QE and the arrows in the camera's own axes: x right, y up, z backward, so W is -z.
+        Local throughout -- E rises along the camera's up, which is only world up while it is
+        looking level. Free and taking Input rather than reading it inside Camera, so the key
+        mapping is testable without an Application. */
+    [[nodiscard]] Vec3 GetMoveAxis(const Input& input) noexcept;
+
     enum class ProjectionMode : uint8
     {
         Perspective,    // Converges with distance. What a game view wants.
@@ -24,37 +31,31 @@ export namespace jpt
         The distance alongside them is not bookkeeping: it is the radius Zoom scales and clamps,
         and the depth a screen drag is projected through.
 
+        Defaults are neutral on purpose. Where a viewer starts is a fact about a particular scene
+        -- it is only sensible relative to what is in the world -- so the scene places it.
+
         The rotation is always yaw-then-pitch and never carries roll -- see RotateLocal. */
     class Camera
     {
     private:
         ProjectionMode m_projectionMode = ProjectionMode::Perspective;
-        Vec3 m_position       = Vec3(1.6f, 2.0f, 2.4f);
-        Quat m_rotation       = Quat::Identity();   // The constructor aims it at the origin.
-        float32 m_distance    = 3.5099f;            // |m_position|, so the orbit point is the origin.
+        Vec3 m_position       = Vec3::Zero();
+        Quat m_rotation       = Quat::Identity();   // Looking down -Z.
+        float32 m_distance    = 1.0f;
         float32 m_fovY        = ToRadians(60.0f);
         float32 m_orthoHeight = 3.7f;           // World units top to bottom. Matches fovY at ~3.2 units out.
         float32 m_zNear       = 0.1f;
         float32 m_zFar        = 100.0f;
 
     public:
-        Camera() noexcept;
-
         bool Init();
+        void Update();
 
     public:
-        /** Along the camera's own axes: x right, y up, z backward. */
         void MoveLocal(const Vec3& offset) noexcept;
-
-        /** Pitch about the camera's own right, yaw about world up. Deliberately not both local:
-            composing two local-axis rotations accumulates roll, which is the exact defect the
-            pyramid's drag-to-rotate hit. Pitch is clamped just shy of vertical, where yaw has no
-            defined heading. */
         void RotateLocal(float32 pitchRadians, float32 yawRadians) noexcept;
-
-        /** Scales the orbit distance, and orthoHeight with it so a mode switch keeps the framing.
-            Clamped, so a fast pinch cannot bury the camera in what it is looking at. */
         void Zoom(float32 factor) noexcept;
+        void LookAt(const Vec3& point) noexcept;
 
         /** The camera's world-space axes. Screen right and screen up, and where it looks. */
         [[nodiscard]] Vec3 Right()    const noexcept { return m_rotation.Right(); }
@@ -88,5 +89,8 @@ export namespace jpt
         [[nodiscard]] float32 GetFar()         const noexcept { return m_zFar; }
 
         [[nodiscard]] Mat44 GetViewProjection(float32 aspect) const noexcept;
+
+    private:
+        void Look(const Vec2& deltaPixels);
     };
 }
