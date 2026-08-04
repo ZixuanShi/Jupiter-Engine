@@ -37,29 +37,29 @@ namespace jpt
             {
                 if (event.fingerCount == 1)      
                 { 
-                    Rotate(event.delta); 
+                    RotatePyramid(event.delta); 
                 }
                 else if (event.fingerCount == 3) 
                 { 
-                    Translate(event.delta); 
+                    TranslatePyramid(event.delta); 
                 }
             });
         input.OnMouseMove().Add([this](const MouseMoveEvent& event)
             {
                 if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
                 {
-                    Rotate(event.delta);
+                    RotatePyramid(event.delta);
                 }
                 else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
                 {
-                    Translate(event.delta);
+                    TranslatePyramid(event.delta);
                 }
             });
 
         return true;
     }
 
-    void Scene::Rotate(const Vec2& deltaPixels)
+    void Scene::RotatePyramid(const Vec2& deltaPixels)
     {
         const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
         if (height < 1.0f)
@@ -78,17 +78,13 @@ namespace jpt
         m_camera.Update();
     }
 
-    void Scene::Translate(const Vec2& deltaPixels)
-    {
-        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
-        Move(m_camera.ScreenDeltaToWorld(deltaPixels, height));
-    }
-
-    void Scene::Move(const Vec3& worldOffset)
+    void Scene::TranslatePyramid(const Vec2& deltaPixels)
     {
         constexpr float32 kRange = 3.0f;
 
-        Vec3 position = m_pyramid.position + worldOffset;
+        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+
+        Vec3 position = m_pyramid.position + m_camera.ScreenDeltaToWorld(deltaPixels, height);
         position.x = std::clamp(position.x, -kRange, kRange);
         position.y = std::clamp(position.y, -kRange, kRange);
         position.z = std::clamp(position.z, -kRange, kRange);

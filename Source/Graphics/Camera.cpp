@@ -107,6 +107,10 @@ namespace jpt
         {
             return;
         }
+        if (!app.GetInput().IsMouseButtonDown(MouseButton::Right))
+        {
+            return;
+        }
 
         const FrameTimer& timer = app.GetFrameTimer();
         const float32 deltaSeconds = static_cast<float32>(timer.GetDeltaSeconds());

@@ -28,8 +28,7 @@ export namespace jpt
         [[nodiscard]] Transform& GetPyramid() noexcept { return m_pyramid; }
 
     private:
-        void Rotate(const Vec2& deltaPixels);
-        void Translate(const Vec2& deltaPixels);
-        void Move(const Vec3& worldOffset);
+        void RotatePyramid(const Vec2& deltaPixels);
+        void TranslatePyramid(const Vec2& deltaPixels);
     };
 }
