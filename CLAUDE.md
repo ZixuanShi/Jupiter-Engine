@@ -78,6 +78,50 @@ The same four steps are exposed as VS Code tasks (`Setup`, `Build`, `Run`, `Clea
 - On Apple platforms the compiler must be **Homebrew LLVM** (`/opt/homebrew/opt/llvm/bin/clang++`), for both `CXX` and `OBJCXX`. Apple clang cannot build C++ modules at all: Xcode ships no `clang-scan-deps`, so CMake fails with *"the compiler does not provide a way to discover the import graph dependencies"*, and it has no `libc++.modules.json` for `import std`. Homebrew clang cross-compiles ObjC++ against the Apple SDKs and links the **system** `/usr/lib/libc++.1.dylib`, so nothing needs embedding in an iOS bundle.
 - Shell-based scripts have been deliberately replaced with cross-platform Python (commit `827a515`); keep new automation in Python and route it through the existing `setup → build → run` scripts rather than adding `.sh`/`.bat`.
 
+### Coordinate system
+
+**Right-handed, +X right, +Y up, −Z forward**, because a right-handed basis is defined by
+`X × Y = Z`. `Vector3::Forward()` is `(0, 0, -1)` and `Backward()` is `(0, 0, +1)`.
+
+**"+X right, +Y up, +Z forward" is left-handed and was considered and rejected.** It cannot coexist
+with a right-handed basis: an object facing +Z has its right hand toward −X. Do not re-open this
+without reading the rest of this section — the ask usually comes from wanting an intuitive editor,
+which this convention already gives.
+
+The basis is self-consistent for **objects**, not just cameras: something facing `Forward()` has its
+right hand along `Right()`. So a translate gizmo is just
+
+```cpp
+const Vec3 right   = rotation * Vec3::Right();
+const Vec3 up      = rotation * Vec3::Up();
+const Vec3 forward = rotation * Vec3::Forward();   // points where the object faces
+```
+
+and the user never sees a sign. Axis-label ergonomics are a UI-layer concern, not a math one.
+
+Right-handed is worth keeping because glTF 2.0, Maya and USD are all RH/+Y-up, so meshes import with
+no conversion matrix — and a handedness conversion is *not* "negate Z", it also flips triangle
+winding and mirrors normals and tangents. Reference formulas apply verbatim, and quaternions are
+natively RH, which is where legacy's two known `Quaternion` bugs came from.
+
+**Two different "forwards", and this is the one that bites.** *View forward* is −Z — what a camera
+looks along, and what `LookAt` and `Perspective` are built around. *Model front* is however the mesh
+was authored, and **glTF authors assets facing local +Z** so an unrotated model faces an unrotated
+camera. Import a glTF character and rotate nothing, and it faces away from `Forward()`. Pick a rule —
+rotate 180° at import as Godot does, or author to −Z — and record it here when it comes up.
+
+**Clip space.** Depth is `z ∈ [0, 1]`, which Metal and Vulkan agree on and which is why the legacy
+OpenGL `[-1, 1]` projection was replaced; `Perspective` and `Orthographic` are both verified to give
+near→0.0 and far→1.0. Metal's NDC has **+Y up**; Vulkan's has **+Y down**, so the Vulkan backend
+applies the flip — preferably a negative viewport height, which leaves the matrix byte-identical
+across backends.
+
+**Any Y flip inverts triangle orientation in framebuffer space, so the front-face winding must flip
+with it.** Metal is verified as `WindingCounterClockwise` for the CCW-from-outside geometry the OBJ
+loader produces. Do not port that value to another backend — verify it there. Getting this wrong
+does not look like a culling bug; it looks like an inverted camera, because you end up seeing the
+model's interior.
+
 ### Lifecycle convention
 
 Every subsystem — `Window`, `Renderer`, `Camera` — exposes the same five functions, and `Application`

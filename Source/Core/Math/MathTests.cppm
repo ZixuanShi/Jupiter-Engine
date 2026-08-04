@@ -87,6 +87,12 @@ export namespace jpt
             Debug::Assert(AreClose(Vec3::Up().Cross(Vec3::Right()), Vec3::Forward()), "Up x Right != Forward");
 
             Debug::Assert(AreClose(Vec3::Forward(), -Vec3::Backward()), "Forward != -Backward");
+
+            // The basis holds for objects, not only cameras: something facing Forward() has its
+            // right hand along Right(). This is also why "+X right, +Y up, +Z forward" cannot be
+            // adopted -- facing +Z puts right at -X, which is a left-handed basis.
+            Debug::Assert(AreClose(Vec3::Forward().Cross(Vec3::Up()), Vec3::Right()), "Forward x Up != Right");
+            Debug::Assert(AreClose(Vec3::Backward().Cross(Vec3::Up()), Vec3::Left()), "Backward x Up != Left");
             Debug::Assert(AreValuesClose(Vec3::Right().Dot(Vec3::Up()), 0.0f), "Basis is not orthogonal");
 
             const Vec3 normalized = Vec3(3.0f, 0.0f, 4.0f).Normalized();
@@ -180,6 +186,21 @@ export namespace jpt
 
             // The camera itself maps to the view-space origin.
             Debug::Assert(AreClose(view * eye, Vec3(0, 0, 0)), "LookAt does not map the eye to the origin");
+
+            // Straight down: forward is parallel to the default up, so right = forward x up is the
+            // zero vector. Normalized() guards its divide, so the failure is not NaN -- right and
+            // up come back zero and the basis silently loses rank. Assert unit length, because the
+            // translation column stays correct either way and a target check passes on the bug.
+            const Mat44 topDown = Mat44::LookAt(Vec3(0, 3, 0), Vec3::Zero());
+
+            const Vec3 downRight(topDown.m[0].x, topDown.m[1].x, topDown.m[2].x);
+            const Vec3 downUp   (topDown.m[0].y, topDown.m[1].y, topDown.m[2].y);
+            const Vec3 downBack (topDown.m[0].z, topDown.m[1].z, topDown.m[2].z);
+
+            Debug::Assert(AreValuesClose(downRight.Length(), 1.0f), "LookAt straight down: right axis has length {}", downRight.Length());
+            Debug::Assert(AreValuesClose(downUp.Length(), 1.0f), "LookAt straight down: up axis has length {}", downUp.Length());
+            Debug::Assert(AreValuesClose(downBack.Length(), 1.0f), "LookAt straight down: back axis has length {}", downBack.Length());
+            Debug::Assert(AreValuesClose(downRight.Dot(downUp), 0.0f), "LookAt straight down: basis is not orthogonal");
         }
 
         // --------------------------------------------------------------------------------

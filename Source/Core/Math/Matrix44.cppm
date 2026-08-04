@@ -4,6 +4,7 @@ export module jpt.Matrix44;
 
 import jpt.Assert;
 import jpt.Concepts;
+import jpt.Constants;
 import jpt.Math;
 import jpt.TypeDefs;
 import jpt.Vector3;
@@ -274,8 +275,21 @@ export namespace jpt
                                     const Vector3<T>& up /* = Vector3<T>::Up()*/) noexcept requires Floating<T>
     {
         const Vector3<T> forward = (center - eye).Normalized();
-        const Vector3<T> right   = forward.Cross(up).Normalized();
-        const Vector3<T> newUp   = right.Cross(forward);
+
+        // A view direction parallel to up leaves no plane to derive right from, and the cross
+        // product comes out zero. Normalized() guards its divide, so this is not NaN -- it is
+        // worse: right and newUp stay zero, the translation column still looks correct, and the
+        // matrix silently collapses the scene through a rank-deficient basis. Reachable by any
+        // top-down camera, because Camera has no up member and takes the default.
+        // Backward() is perpendicular to up for every caller that does.
+        Vector3<T> right = forward.Cross(up);
+        if (right.Length2() < kEpsilon<T>)
+        {
+            right = forward.Cross(Vector3<T>::Backward());
+        }
+        right = right.Normalized();
+
+        const Vector3<T> newUp = right.Cross(forward);
 
         return Matrix44(Vector4<T>(right.x, newUp.x, -forward.x, 0),
                         Vector4<T>(right.y, newUp.y, -forward.y, 0),
