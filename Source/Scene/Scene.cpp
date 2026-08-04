@@ -24,7 +24,7 @@ namespace jpt
     bool Scene::Init()
     {
         // Camera
-        m_camera.SetPosition(Vec3(1.6f, 2.0f, 2.4f));
+        m_camera.SetPosition(Vec3(1.09f, 1.36f, 1.64f));
         m_camera.LookAt(m_model.position);
         if (!m_camera.Init())
         {
