@@ -8,7 +8,6 @@ module;
 export module jpt.Application;
 
 import jpt.TypeDefs;
-import jpt.Camera;
 import jpt.FrameTimer;
 import jpt.Input;
 import jpt.Scene;
@@ -22,7 +21,6 @@ export namespace jpt
         FrameTimer m_frameTimer;
         Window m_window;
         Renderer m_renderer;
-        Camera m_camera;
         Scene m_scene;
         Input m_input;
         Status m_status = Status::Pending;
@@ -48,7 +46,6 @@ export namespace jpt
     public:
         [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
         [[nodiscard]] const Window& GetWindow()         const noexcept { return m_window; }
-        [[nodiscard]] Camera& GetCamera()                     noexcept { return m_camera; }
         [[nodiscard]] Renderer& GetRenderer()                 noexcept { return m_renderer; }
         [[nodiscard]] Scene& GetScene()                       noexcept { return m_scene; }
         [[nodiscard]] Input& GetInput()                       noexcept { return m_input; }

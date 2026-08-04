@@ -156,6 +156,14 @@ export namespace jpt
         Count,
     };
 
+    enum class TouchPhase : uint8
+    {
+        Began,
+        Moved,
+        Ended,
+        Cancelled,
+    };
+
     [[nodiscard]] const char* ToString(KeyCode key) noexcept;
     [[nodiscard]] const char* ToString(MouseButton button) noexcept;
 }

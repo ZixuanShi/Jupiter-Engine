@@ -39,6 +39,11 @@ namespace jpt
         return true;
     }
 
+    void Input::Update()
+    {
+        m_gestures.Update();
+    }
+
     bool Input::IsKeyDown(KeyCode key) const noexcept
     {
         return m_keysDown[static_cast<usize>(key)];
@@ -78,5 +83,10 @@ namespace jpt
     void Input::PostMouseScroll(const Vec2& delta, bool isPrecise)
     {
         m_onMouseScroll.Dispatch(MouseScrollEvent{ .delta = delta, .isPrecise = isPrecise });
+    }
+
+    void Input::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds)
+    {
+        m_gestures.PostTouch(phase, id, position, timeSeconds);
     }
 }

@@ -1,18 +1,82 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Applications/AppClient.h"
+
 module jpt.Camera;
 
+import jpt.Constants;
+import jpt.Input;
+import jpt.InputEvents;
+import jpt.GestureRecognizer;
 import jpt.Matrix44;
 import jpt.TypeDefs;
+import jpt.Vector2;
 import jpt.Vector3;
+import std;
 
 namespace jpt
 {
-    bool Camera::PreInit() noexcept
+    bool Camera::Init()
     {
-        m_position = Vec3(1.6f, 2.0f, 2.4f);
-        m_target = Vec3::Zero();
+        Input& input = GetApplication().GetInput();
+
+        input.OnPinch().Add([this](const PinchEvent& event)
+            {
+                // Fingers separating means a larger scale, which means moving closer.
+                Zoom(1.0f / event.scale);
+            });
+
+        input.OnMouseScroll().Add([this](const MouseScrollEvent& event)
+            {
+                // exp keeps the factor positive and makes the zoom multiplicative, so equal
+                // scroll in each direction lands back where it started.
+                const float32 rate = event.isPrecise ? 0.01f : 0.1f;
+                Zoom(std::exp(-event.delta.y * rate));
+            });
+
         return true;
+    }
+
+    void Camera::Zoom(float32 factor) noexcept
+    {
+        constexpr float32 kMinDistance = 0.5f;
+        constexpr float32 kMaxDistance = 50.0f;
+
+        const Vec3 toEye = m_position - m_target;
+        const float32 distance = toEye.Length();
+        if (distance < kEpsilon<float32>)
+        {
+            return;
+        }
+
+        // Apply the clamped factor to both, so a clamp does not desync orthoHeight from distance.
+        const float32 applied = std::clamp(distance * factor, kMinDistance, kMaxDistance) / distance;
+        m_position = m_target + toEye * applied;
+        m_orthoHeight *= applied;
+    }
+
+    Vec3 Camera::ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept
+    {
+        const float32 distance = (m_target - m_position).Length();
+        if (viewportHeight < 1.0f || distance < kEpsilon<float32>)
+        {
+            return Vec3::Zero();
+        }
+
+        // The rows of the view rotation are the camera basis in world space, and LookAt already
+        // guards the degenerate top-down case rather than this repeating the guard.
+        const Mat44 view = Mat44::LookAt(m_position, m_target);
+        const Vec3 right(view.m[0].x, view.m[1].x, view.m[2].x);
+        const Vec3 up   (view.m[0].y, view.m[1].y, view.m[2].y);
+
+        const float32 worldPerPixel = (m_projectionMode == ProjectionMode::Perspective)
+            ? (2.0f * distance * std::tan(m_fovY * 0.5f)) / viewportHeight
+            : m_orthoHeight / viewportHeight;
+
+        // Screen Y is down, world Y is up.
+        return right * (deltaPixels.x * worldPerPixel) - up * (deltaPixels.y * worldPerPixel);
     }
 
     void Camera::SetPosition(const Vec3& position) noexcept

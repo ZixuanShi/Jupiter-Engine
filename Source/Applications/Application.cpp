@@ -53,17 +53,18 @@ namespace jpt
             return false;
         }
 
-        if (!m_camera.PreInit())
-        {
-            Debug::Error("Failed to pre-initialize the camera.");
-            return false;
-        }
-
         return true;
     }
 
     bool Application::Init()
     {
+        // Before the window: Window::Init() hands control to AppKit and events start arriving.
+        if (!m_scene.Init())
+        {
+            Debug::Error("Failed to initialize the scene.");
+            return false;
+        }
+
         if (!m_window.Init())
         {
             Debug::Error("Failed to initialize the window.");
@@ -76,8 +77,8 @@ namespace jpt
 
     void Application::Update()
     {
-        m_scene.Update();
-        m_renderer.Update();    // Reads the transform the scene just wrote.
+        m_input.Update();       // Recognizes gestures, whose handlers write the scene.
+        m_renderer.Update();
     }
 
     void Application::Terminate()

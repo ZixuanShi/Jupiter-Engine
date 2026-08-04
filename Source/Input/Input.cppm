@@ -3,6 +3,7 @@
 export module jpt.Input;
 
 import jpt.EventDispatcher;
+import jpt.GestureRecognizer;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.TypeDefs;
@@ -25,8 +26,11 @@ export namespace jpt
         EventDispatcher<MouseMoveEvent> m_onMouseMove;
         EventDispatcher<MouseScrollEvent> m_onMouseScroll;
 
+        GestureRecognizer m_gestures;
+
     public:
         bool PreInit();
+        void Update();
 
     public:
         [[nodiscard]] bool IsKeyDown(KeyCode key) const noexcept;
@@ -39,6 +43,8 @@ export namespace jpt
         [[nodiscard]] EventDispatcher<MouseButtonEvent>& OnMouseButton() noexcept { return m_onMouseButton; }
         [[nodiscard]] EventDispatcher<MouseMoveEvent>& OnMouseMove() noexcept { return m_onMouseMove; }
         [[nodiscard]] EventDispatcher<MouseScrollEvent>& OnMouseScroll() noexcept { return m_onMouseScroll; }
+        [[nodiscard]] EventDispatcher<PanEvent>& OnPan() noexcept { return m_gestures.OnPan(); }
+        [[nodiscard]] EventDispatcher<PinchEvent>& OnPinch() noexcept { return m_gestures.OnPinch(); }
 
     public:
         // Platform -> engine.
@@ -47,5 +53,6 @@ export namespace jpt
         void PostMouseButton(MouseButton button, bool isDown, const Vec2& position);
         void PostMouseMove(const Vec2& position);
         void PostMouseScroll(const Vec2& delta, bool isPrecise);
+        void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds);
     };
 }

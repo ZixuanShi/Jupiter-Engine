@@ -20,9 +20,9 @@ namespace jpt
     bool RendererBase::PreInit() noexcept
     {
     #if IS_PLATFORM_MACOS
-        m_clearColor = LinearColor(0.01f, 0.01f, 0.0f);
+        m_clearColor = LinearColor(0.05f, 0.05f, 0.0f);
     #elif IS_PLATFORM_IOS
-        m_clearColor = LinearColor(0.0f, 0.1f, 0.1f);
+        m_clearColor = LinearColor(0.0f, 0.05f, 0.05f);
     #endif
 
         return true;
@@ -33,10 +33,10 @@ namespace jpt
         Application& app = GetApplication();
         const FrameTimer& frameTimer = app.GetFrameTimer();
         const Window& window = app.GetWindow();
-        const Camera& camera = app.GetCamera();
+        Scene& scene = app.GetScene();
 
-        m_model = app.GetScene().GetPyramid().ToMatrix();
-        m_viewProjection = camera.GetViewProjection(window.GetAspectRatio());
+        m_model = scene.GetPyramid().ToMatrix();
+        m_viewProjection = scene.GetCamera().GetViewProjection(window.GetAspectRatio());
         m_time = static_cast<float32>(frameTimer.GetElapsedSeconds());
     }
 }

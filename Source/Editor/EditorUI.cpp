@@ -13,6 +13,7 @@ module jpt.EditorUI;
 import jpt.Camera;
 import jpt.LinearColor;
 import jpt.Math;
+import jpt.Scene;
 import jpt.TypeDefs;
 import std;
 
@@ -94,7 +95,7 @@ namespace jpt
 
         if (ImGui::Begin("Dev Menu"))
         {
-            DrawCameraSection(app.GetCamera());
+            DrawCameraSection(app.GetScene().GetCamera());
             DrawBackgroundSection(app.GetRenderer());
         }
 

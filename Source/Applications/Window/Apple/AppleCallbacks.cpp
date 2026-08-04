@@ -4,7 +4,10 @@
 
 // Textual before the header that imports. The Carbon umbrella, because
 // <Carbon/HIToolbox/Events.h> does not resolve on its own; ~180 ms per TU.
-#include <Carbon/Carbon.h>
+// macOS only: there is no Carbon in the iOS SDK.
+#if IS_PLATFORM_MACOS
+    #include <Carbon/Carbon.h>
+#endif
 
 #include "AppleCallbacks.h"
 #include "Applications/AppClient.h"
@@ -16,6 +19,7 @@ import jpt.Vector2;
 
 namespace jpt
 {
+#if IS_PLATFORM_MACOS
     namespace
     {
         // kVK_* are positional, not layout-dependent, so WASD keeps its shape on AZERTY.
@@ -178,6 +182,7 @@ namespace jpt
             }
         }
     }
+#endif // IS_PLATFORM_MACOS
 
     bool OnSurfaceReady(CA::MetalLayer* pMetalLayer)
     {
@@ -199,6 +204,7 @@ namespace jpt
         GetApplication().Terminate();
     }
 
+#if IS_PLATFORM_MACOS
     void OnKeyDown(std::uint16_t platformKeyCode, bool isRepeat)
     {
         GetApplication().GetInput().PostKeyDown(ToKeyCode(platformKeyCode), isRepeat);
@@ -243,6 +249,37 @@ namespace jpt
     {
         GetApplication().GetInput().PostMouseScroll(Vec2(deltaX, deltaY), isPrecise);
     }
+#endif // IS_PLATFORM_MACOS
+
+#if IS_PLATFORM_IOS
+    namespace
+    {
+        void PostTouch(TouchPhase phase, std::uint64_t touchId, float x, float y, double timeSeconds)
+        {
+            GetApplication().GetInput().PostTouch(phase, touchId, Vec2(x, y), timeSeconds);
+        }
+    }
+
+    void OnTouchBegan(std::uint64_t touchId, float x, float y, double timeSeconds)
+    {
+        PostTouch(TouchPhase::Began, touchId, x, y, timeSeconds);
+    }
+
+    void OnTouchMoved(std::uint64_t touchId, float x, float y, double timeSeconds)
+    {
+        PostTouch(TouchPhase::Moved, touchId, x, y, timeSeconds);
+    }
+
+    void OnTouchEnded(std::uint64_t touchId, float x, float y, double timeSeconds)
+    {
+        PostTouch(TouchPhase::Ended, touchId, x, y, timeSeconds);
+    }
+
+    void OnTouchCancelled(std::uint64_t touchId, float x, float y, double timeSeconds)
+    {
+        PostTouch(TouchPhase::Cancelled, touchId, x, y, timeSeconds);
+    }
+#endif // IS_PLATFORM_IOS
 }
 
 #endif // IS_PLATFORM_MACOS || IS_PLATFORM_IOS

@@ -5,6 +5,7 @@ export module jpt.Camera;
 import jpt.Math;
 import jpt.Matrix44;
 import jpt.TypeDefs;
+import jpt.Vector2;
 import jpt.Vector3;
 
 export namespace jpt
@@ -25,8 +26,8 @@ export namespace jpt
     private:
         ProjectionMode m_projectionMode = ProjectionMode::Perspective;
 
-        Vec3 m_position = Vec3::Zero();
-        Vec3 m_target   = Vec3::Forward();
+        Vec3 m_position = Vec3(1.6f, 2.0f, 2.4f);
+        Vec3 m_target   = Vec3::Zero();
 
         // Both modes are driven by a vertical extent and derive the horizontal from aspect, so
         // switching between them keeps the framing and changes only the convergence.
@@ -36,7 +37,16 @@ export namespace jpt
         float32 m_zFar        = 100.0f;
 
     public:
-        bool PreInit() noexcept;
+        bool Init();
+
+    public:
+        /** Scales the distance to the target, and orthoHeight with it so a mode switch keeps
+            the framing. Clamped, so a fast pinch cannot bury the camera in the target. */
+        void Zoom(float32 factor) noexcept;
+
+        /** World offset for a screen drag at the target's depth, so a dragged object tracks the
+            pointer. deltaPixels and viewportHeight must be the same unit. */
+        [[nodiscard]] Vec3 ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept;
 
     public:
         void SetPosition(const Vec3& position) noexcept;

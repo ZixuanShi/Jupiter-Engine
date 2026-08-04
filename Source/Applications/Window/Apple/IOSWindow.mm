@@ -20,41 +20,73 @@
     return [CAMetalLayer class];
 }
 
-// UIKit has no ImGui backend, so a single touch is mapped onto ImGui's mouse here.
-// Where jpt::Input will tap in.
-- (void)reportTouch:(NSSet<UITouch*>*)touches isDown:(BOOL)isDown
+// UIKit has no ImGui backend, so the primary touch is mapped onto ImGui's mouse. Every touch
+// also goes to jpt::Input, which recognizes the gestures.
+//
+// UITouchPhase rather than an engine enum: this is a .mm, so the platform's own type is the one
+// it can name, and the four jpt::OnTouch* functions are what cross the import-free boundary.
+- (void)reportTouches:(NSSet<UITouch*>*)touches phase:(UITouchPhase)phase
 {
-    const CGPoint point = [touches.anyObject locationInView:self];
+    const CGFloat scale = self.contentScaleFactor;
 
-    // Points, not pixels: ImGui works in points and scales by DisplayFramebufferScale.
-    jpt::ImGuiOnPointerMoved(static_cast<float>(point.x), static_cast<float>(point.y));
-    jpt::ImGuiOnPointerButton(isDown);
+    for (UITouch* touch in touches)
+    {
+        const CGPoint point = [touch locationInView:self];
+        const std::uint64_t touchId = reinterpret_cast<std::uintptr_t>(touch);
+
+        // Pixels for the engine, which measures its viewport in pixels.
+        const float x = static_cast<float>(point.x * scale);
+        const float y = static_cast<float>(point.y * scale);
+
+        switch (phase)
+        {
+        case UITouchPhaseBegan:
+            // Only Began is gated. Once a finger is in the gesture table it must be tracked to
+            // its end, or a touch that strays over the panel is never removed and holds the
+            // gesture open forever.
+            if (!jpt::ImGuiWantsMouse()) { jpt::OnTouchBegan(touchId, x, y, touch.timestamp); }
+            break;
+
+        case UITouchPhaseMoved:     jpt::OnTouchMoved(touchId, x, y, touch.timestamp);     break;
+        case UITouchPhaseEnded:     jpt::OnTouchEnded(touchId, x, y, touch.timestamp);     break;
+        case UITouchPhaseCancelled: jpt::OnTouchCancelled(touchId, x, y, touch.timestamp); break;
+        default: break;
+        }
+    }
+
+    // ImGui gets one finger, in points -- it scales by DisplayFramebufferScale itself.
+    UITouch* primary = touches.anyObject;
+    if (primary != nil)
+    {
+        const CGPoint point = [primary locationInView:self];
+        jpt::ImGuiOnPointerMoved(static_cast<float>(point.x), static_cast<float>(point.y));
+        jpt::ImGuiOnPointerButton(phase == UITouchPhaseBegan || phase == UITouchPhaseMoved);
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
 {
     (void)event;
-    [self reportTouch:touches isDown:YES];
+    [self reportTouches:touches phase:UITouchPhaseBegan];
 }
 
 - (void)touchesMoved:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
 {
     (void)event;
-    [self reportTouch:touches isDown:YES];
+    [self reportTouches:touches phase:UITouchPhaseMoved];
 }
 
 - (void)touchesEnded:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
 {
     (void)event;
-    [self reportTouch:touches isDown:NO];
+    [self reportTouches:touches phase:UITouchPhaseEnded];
 }
 
-// A touch dragged off-screen or interrupted by a call never gets touchesEnded, and ImGui would
-// be left holding the button down forever.
+// A touch dragged off-screen or interrupted by a call never gets touchesEnded.
 - (void)touchesCancelled:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event
 {
     (void)event;
-    [self reportTouch:touches isDown:NO];
+    [self reportTouches:touches phase:UITouchPhaseCancelled];
 }
 
 - (void)layoutSubviews
@@ -95,6 +127,9 @@
     // A UIWindow with no rootViewController renders black.
     UIViewController* viewController = [[UIViewController alloc] init];
     JupiterMetalView* metalView = [[JupiterMetalView alloc] initWithFrame:screenBounds];
+
+    // UIView defaults this to NO, and without it touchesBegan: never carries a second finger.
+    metalView.multipleTouchEnabled = YES;
     viewController.view = metalView;
     self.window.rootViewController = viewController;
 

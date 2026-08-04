@@ -127,10 +127,13 @@ namespace
         return [NSEvent addLocalMonitorForEventsMatchingMask:mask
                                                      handler:^NSEvent* _Nullable(NSEvent* event)
         {
-            // locationInWindow is bottom-left. Flip to top-left once, here.
+            // locationInWindow is points, bottom-left. Flip to top-left and scale to pixels
+            // once, here: the engine measures the viewport in pixels, and a drag delta is only
+            // meaningful against it in the same unit.
             const NSPoint inView = [pView convertPoint:event.locationInWindow fromView:nil];
-            const float x = static_cast<float>(inView.x);
-            const float y = static_cast<float>(pView.bounds.size.height - inView.y);
+            const CGFloat scale = pView.window ? pView.window.backingScaleFactor : 1.0;
+            const float x = static_cast<float>(inView.x * scale);
+            const float y = static_cast<float>((pView.bounds.size.height - inView.y) * scale);
 
             switch (event.type)
             {

@@ -12,14 +12,18 @@ module;
 module jpt.InputTests;
 
 import jpt.Assert;
+import jpt.Camera;
+import jpt.Math;
 import jpt.Constants;
 import jpt.EventDispatcher;
+import jpt.GestureRecognizer;
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.Logger;
 import jpt.TypeDefs;
 import jpt.Vector2;
+import jpt.Vector3;
 import std;
 
 namespace jpt
@@ -150,6 +154,109 @@ namespace jpt
 
             input.PostMouseMove(Vec2(20.0f, 30.0f));
             Debug::Assert(receivedDelta == Vec2(8.0f, -4.0f), "Mouse delta is ({}, {}), expected (8, -4)", receivedDelta.x, receivedDelta.y);
+        }
+
+        // Gestures. The only coverage they can get: there is no iOS Simulator in this project
+        // and synthetic touches need assistive access, so UIKit's delivery is untestable here.
+        {
+            Input input;
+
+            uint32 panFingers = 0;
+            Vec2 panDelta = Vec2::Zero();
+            uint32 panCount = 0;
+            input.OnPan().Add([&](const PanEvent& event)
+                {
+                    panFingers = event.fingerCount;
+                    panDelta = event.delta;
+                    ++panCount;
+                });
+
+            float32 pinchScale = 1.0f;
+            uint32 pinchCount = 0;
+            input.OnPinch().Add([&](const PinchEvent& event) { pinchScale = event.scale; ++pinchCount; });
+
+            // One finger down. The first Update only establishes the baseline.
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0);
+            input.Update();
+            Debug::Assert(panCount == 0, "A touch landing emitted a pan before it moved");
+
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016);
+            input.Update();
+            Debug::Assert(panCount == 1, "A one-finger drag emitted {} pans, expected 1", panCount);
+            Debug::Assert(panFingers == 1, "Pan reported {} fingers, expected 1", panFingers);
+            Debug::Assert(panDelta == Vec2(30.0f, 20.0f), "Pan delta is ({}, {}), expected (30, 20)", panDelta.x, panDelta.y);
+
+            // A second finger landing mid-drag jumps the centroid. It must not emit a pan --
+            // this is the bug that teleports the object the moment you add a finger.
+            panCount = 0;
+            input.PostTouch(TouchPhase::Began, 2, Vec2(330.0f, 120.0f), 0.032);
+            input.Update();
+            Debug::Assert(panCount == 0, "A finger landing mid-drag emitted a pan");
+
+            // Two fingers separating: pinch out, and the centroid holds still so no pan.
+            panCount = 0;
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(80.0f, 120.0f), 0.048);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(380.0f, 120.0f), 0.048);
+            input.Update();
+            Debug::Assert(pinchCount == 1, "Separating two fingers emitted {} pinches, expected 1", pinchCount);
+            Debug::Assert(pinchScale > 1.0f, "Pinch out gave scale {}, expected > 1", pinchScale);
+            Debug::Assert(panCount == 0, "A symmetric pinch moved the centroid");
+
+            // Lifting back to one finger rebases again rather than reporting the centroid jump.
+            panCount = 0;
+            input.PostTouch(TouchPhase::Ended, 2, Vec2(380.0f, 120.0f), 0.064);
+            input.Update();
+            Debug::Assert(panCount == 0, "A finger lifting emitted a pan");
+
+            // Cancelled must remove the touch too. A call interrupting a gesture never sends
+            // Ended, and a finger left in the table holds the gesture open forever.
+            input.PostTouch(TouchPhase::Cancelled, 1, Vec2(80.0f, 120.0f), 0.080);
+            input.Update();
+            input.PostTouch(TouchPhase::Began, 3, Vec2(500.0f, 500.0f), 0.096);
+            input.Update();
+            input.PostTouch(TouchPhase::Moved, 3, Vec2(510.0f, 500.0f), 0.112);
+            panCount = 0;
+            input.Update();
+            Debug::Assert(panFingers == 1, "A cancelled touch stayed active: pan reports {} fingers", panFingers);
+        }
+
+        // Camera, as input drives it.
+        {
+            Camera camera;
+            camera.SetPosition(Vec3(0.0f, 0.0f, 5.0f));
+            camera.SetTarget(Vec3::Zero());
+            camera.SetFovY(ToRadians(60.0f));
+
+            // Looking down -Z from +Z, the basis is the world's: right is +X, up is +Y.
+            // worldPerPixel = 2 * 5 * tan(30 deg) / 1000, so 100 px is 0.5774 world units.
+            const Vec3 right = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
+            Debug::Assert(AreValuesClose(right, Vec3(0.57735f, 0.0f, 0.0f), 1e-4f),
+                          "A rightward drag mapped to ({}, {}, {})", right.x, right.y, right.z);
+
+            // Screen Y is down and world Y is up, so the sign flips.
+            const Vec3 down = camera.ScreenDeltaToWorld(Vec2(0.0f, 100.0f), 1000.0f);
+            Debug::Assert(AreValuesClose(down, Vec3(0.0f, -0.57735f, 0.0f), 1e-4f),
+                          "A downward drag mapped to ({}, {}, {})", down.x, down.y, down.z);
+
+            // Twice as far means the same drag covers twice the world, or the object stops
+            // tracking the finger as you zoom out.
+            camera.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+            const Vec3 farther = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
+            Debug::Assert(AreValuesClose(farther.x, right.x * 2.0f, 1e-4f),
+                          "Doubling the distance scaled the drag by {}", farther.x / right.x);
+
+            // Zoom is multiplicative, so opposite factors cancel.
+            camera.Zoom(0.5f);
+            const Vec3 halved = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
+            Debug::Assert(AreValuesClose(halved.x, right.x, 1e-4f), "Zoom(0.5) from 10 units did not land at 5");
+            camera.Zoom(2.0f);
+            const Vec3 restored = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
+            Debug::Assert(AreValuesClose(restored.x, farther.x, 1e-4f), "Zoom(2) did not undo Zoom(0.5)");
+
+            // And it clamps, so a fast pinch cannot bury the camera in the target.
+            camera.Zoom(0.0001f);
+            const Vec3 clamped = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
+            Debug::Assert(clamped.x > 0.0f, "Zoom collapsed the camera onto its target");
         }
 
         // Name tables. Checked at both ends, because a short table only misbehaves at the end.
