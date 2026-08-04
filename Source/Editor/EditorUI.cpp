@@ -2,20 +2,28 @@
 
 module;
 
-// Textual before the imports. AppClient.h here would close a cycle in EditorUI.cppm, but an
-// implementation unit may reach the application.
+// Textual before the imports, and ShaderTypes.h before Renderer.h for the same reason: it pulls
+// <simd/simd.h>, and a libc++ header included after a module has declared it is a redefinition.
+// AppClient.h here would close a cycle in EditorUI.cppm, but an implementation unit may reach
+// the application.
 #include "imgui.h"
+#include "Graphics/Shader/ShaderTypes.h"
 #include "Applications/AppClient.h"
+#include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
 module jpt.EditorUI;
 
 import jpt.Camera;
+import jpt.Light;
 import jpt.LinearColor;
+import jpt.Material;
 import jpt.Math;
+import jpt.Matrix44;
 import jpt.Scene;
 import jpt.TypeDefs;
 import jpt.Vector3;
+import jpt.Vector4;
 import std;
 
 namespace jpt
@@ -34,9 +42,6 @@ namespace jpt
             ImGui::Text("At   %6.2f %6.2f %6.2f", position.x, position.y, position.z);
             ImGui::Text("Look %6.2f %6.2f %6.2f", forward.x, forward.y, forward.z);
 
-            // Relative, not absolute: each field sits at zero, a drag applies that frame's delta
-            // along the camera's own axes, and it returns to zero. Editing a world-space position
-            // meant a drag on X slid the camera along world X no matter where it was pointing.
             Vec3 move = Vec3::Zero();
             if (ImGui::DragFloat3("Move", &move.x, 0.02f))
             {
@@ -97,17 +102,99 @@ namespace jpt
             }
         }
 
-        void DrawBackgroundSection(Renderer& renderer)
+        void DrawRenderingSection(Material& material, AmbientLight& ambient)
         {
-            if (!ImGui::CollapsingHeader("Background", ImGuiTreeNodeFlags_DefaultOpen))
+            if (!ImGui::CollapsingHeader("Rendering", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 return;
             }
 
-            LinearColor color = renderer.GetClearColor();
-            if (ImGui::ColorEdit3("Color", &color.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR))
+            // ShaderTypes.h owns the ordering, because the shader switches on it. This only names it.
+            static constexpr const char* kViewModes[] =
             {
-                renderer.SetClearColor(color);
+                "Final", "Base Color", "Normal", "Roughness", "Metallic",
+            };
+            static_assert(std::size(kViewModes) == static_cast<usize>(ViewMode::Count), "View mode names are out of sync");
+
+            // Isolating a term is what tells "the slider did nothing" apart from "the term is not
+            // reaching the shader at all" -- indistinguishable in the Final view.
+            int32 viewMode = static_cast<int32>(material.viewMode);
+            if (ImGui::Combo("View", &viewMode, kViewModes, IM_ARRAYSIZE(kViewModes)))
+            {
+                material.viewMode = static_cast<uint32>(viewMode);
+            }
+
+            ImGui::ColorEdit3("Base Color", &material.baseColor.r, ImGuiColorEditFlags_Float);
+            ImGui::SliderFloat("Roughness", &material.roughness, 0.0f, 1.0f);
+            ImGui::SliderFloat("Metallic", &material.metallic, 0.0f, 1.0f);
+            ImGui::SliderFloat("Ambient Occlusion", &material.occlusion, 0.0f, 1.0f);
+
+            // HDR, because the sky is an irradiance rather than a colour and may exceed 1.
+            ImGui::ColorEdit3("Sky Color", &ambient.sky.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR);
+            ImGui::ColorEdit3("Ground Color", &ambient.ground.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR);
+        }
+
+        void DrawPointLightSection(PointLight& light, usize index)
+        {
+            if (!ImGui::CollapsingHeader(std::format("Light {}", index + 1).c_str()))
+            {
+                return;
+            }
+
+            // ImGui keys a widget by its label, so three sections of identically named sliders
+            // would be one slider driving all three lights.
+            ImGui::PushID(static_cast<int32>(index));
+
+            ImGui::Checkbox("Enabled", &light.enabled);
+            ImGui::DragFloat("Intensity", &light.intensity, 1.0f, 0.0f, 1000.0f, "%.0f");
+            ImGui::ColorEdit3("Color", &light.color.r, ImGuiColorEditFlags_Float);
+            ImGui::DragFloat3("Position", &light.position.x, 0.02f);
+
+            ImGui::PopID();
+        }
+
+        /** A marker per light: where it is, whether it is on, and which one it is */
+        void DrawPointLightGizmos(const Camera& camera, std::span<const PointLight> lights, float32 aspect)
+        {
+            // Behind every ImGui window, so the Dev Menu covers the markers rather than the reverse.
+            ImDrawList* pDrawList = ImGui::GetBackgroundDrawList();
+            const Mat44 viewProjection = camera.GetViewProjection(aspect);
+
+            // ImGui works in points and the engine's window is pixels. Using the window size here
+            // puts every marker at twice its position on a Retina display.
+            const ImVec2 display = ImGui::GetIO().DisplaySize;
+
+            constexpr float32 kRadius = 6.0f;
+
+            for (usize i = 0; i < lights.size(); ++i)
+            {
+                const PointLight& light = lights[i];
+                const Vec4 clip = viewProjection * Vec4(light.position, 1.0f);
+
+                // Behind the eye. The perspective divide would fold it back onto the screen,
+                // mirrored, which reads as a light sitting exactly where it is not.
+                if (clip.w <= 0.0f)
+                {
+                    continue;
+                }
+
+                // Metal's NDC is +Y up and a screen is +Y down, so y is the only axis that flips.
+                const float32 invW = 1.0f / clip.w;
+                const ImVec2 screen((clip.x * invW * 0.5f + 0.5f) * display.x,
+                                    (0.5f - clip.y * invW * 0.5f) * display.y);
+
+                const ImU32 color = ImGui::GetColorU32(ImVec4(light.color.r, light.color.g, light.color.b, 1.0f));
+
+                // Solid when on, hollow when off. A six-pixel dot is too small for a dimmed one to
+                // read as anything but a dimmer light.
+                if (light.enabled)
+                {
+                    pDrawList->AddCircleFilled(screen, kRadius, color);
+                }
+
+                pDrawList->AddCircle(screen, kRadius, color, 0, 2.0f);
+                pDrawList->AddText(ImVec2(screen.x + kRadius + 4.0f, screen.y - ImGui::GetFontSize() * 0.5f),
+                                   color, std::format("{}", i + 1).c_str());
             }
         }
     }
@@ -122,10 +209,20 @@ namespace jpt
 
         if (ImGui::Begin("Dev Menu"))
         {
-            DrawCameraSection(app.GetScene().GetCamera());
-            DrawBackgroundSection(app.GetRenderer());
+            Scene& scene = app.GetScene();
+
+            DrawCameraSection(scene.GetCamera());
+            DrawRenderingSection(scene.GetMaterial(), scene.GetAmbient());
+
+            for (usize i = 0; i < scene.GetPointLights().size(); ++i)
+            {
+                DrawPointLightSection(scene.GetPointLights()[i], i);
+            }
         }
 
         ImGui::End();
+
+        // Outside the panel: it draws into the background list, not into a window.
+        DrawPointLightGizmos(app.GetScene().GetCamera(), app.GetScene().GetPointLights(), app.GetWindow().GetAspectRatio());
     }
 }

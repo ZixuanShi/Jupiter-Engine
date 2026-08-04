@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Graphics/GraphicsConstants.h"
+
 import jpt.Mesh;
 import jpt.RendererBase;
 import jpt.Texture;
@@ -10,17 +12,40 @@ import std;
 
 // Forward declared so this header carries no metal-cpp dependency. The cost is that
 // NS::SharedPtr is unavailable, so Terminate() releases what Init() owns.
-namespace MTL  { class Device; class RenderPipelineState; class DepthStencilState; class Texture; class Buffer; class ResidencySet; class SamplerState; }
-namespace MTL4 { class CommandQueue; class CommandAllocator; class CommandBuffer; class RenderPassDescriptor; class ArgumentTable; class Compiler; }
-namespace CA   { class MetalLayer; class MetalDrawable; }
-namespace NS   { class AutoreleasePool; }
+namespace MTL  
+{ 
+    class Device; 
+    class RenderPipelineState; 
+    class DepthStencilState; 
+    class Texture; 
+    class Buffer; 
+    class ResidencySet; 
+    class SamplerState; 
+}
+
+namespace MTL4 
+{ 
+    class CommandQueue; 
+    class CommandAllocator; 
+    class CommandBuffer; 
+    class RenderPassDescriptor; 
+    class ArgumentTable; 
+    class Compiler; 
+}
+
+namespace CA   
+{ 
+    class MetalLayer; 
+    class MetalDrawable; 
+}
+
+namespace NS   
+{ 
+    class AutoreleasePool; 
+}
 
 namespace jpt
 {
-    /** Frames the CPU may run ahead by. Metal 4 hands back both the command allocator and the
-        uniform storage, so a slot reused before its frame completes is memory the GPU is reading. */
-    constexpr uint32 kFramesInFlight = 3;
-
     class Metal4Renderer : public RendererBase
     {
     public:

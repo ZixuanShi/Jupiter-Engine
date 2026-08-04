@@ -16,9 +16,13 @@
 #include "Graphics/Shader/ShaderTypes.h"
 #include "Metal4Renderer.h"
 
+import jpt.Light;
+import jpt.LinearColor;
 import jpt.Logger;
+import jpt.Material;
 import jpt.Matrix44;
 import jpt.PlatformPaths;
+import jpt.Vector3;
 import jpt.Vertex;
 
 import std;
@@ -34,7 +38,7 @@ namespace jpt
 
     // Metal 4 binds constants by raw GPU address, whose alignment requirement is coarser than
     // sizeof(Uniforms), so the slots are strided rather than packed.
-    constexpr uint32 kUniformStride = 256;
+    constexpr uint32 kUniformStride = 512;
     static_assert(sizeof(Uniforms) <= kUniformStride, "A slot must hold one whole Uniforms");
 
     namespace
@@ -64,6 +68,21 @@ namespace jpt
         [[nodiscard]] uint32 MipLevelCount(uint32 width, uint32 height) noexcept
         {
             return static_cast<uint32>(std::bit_width(std::max(width, height)));
+        }
+
+        [[nodiscard]] simd_float4 ToFloat4(const Vec3& vector, float32 w) noexcept
+        {
+            return simd_make_float4(vector.x, vector.y, vector.z, w);
+        }
+
+        [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color) noexcept
+        {
+            return simd_make_float4(color.r, color.g, color.b, color.a);
+        }
+
+        [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color, float32 w) noexcept
+        {
+            return simd_make_float4(color.r, color.g, color.b, w);
         }
     }
 
@@ -230,7 +249,24 @@ namespace jpt
             const Mat44 modelViewProjection = m_viewProjection * m_model;
             std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
             std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
-            uniforms.time = m_time;
+
+            uniforms.cameraPosition = ToFloat4(m_cameraPosition, 1.0f);
+            uniforms.baseColor      = ToFloat4(m_material.baseColor);
+            uniforms.skyColor       = ToFloat4(m_ambient.sky);
+            uniforms.groundColor    = ToFloat4(m_ambient.ground);
+
+            for (usize i = 0; i < m_pointLights.size(); ++i)
+            {
+                uniforms.pointLights[i].position = ToFloat4(m_pointLights[i].position, m_pointLights[i].enabled ? 1.0f : 0.0f);
+                uniforms.pointLights[i].color    = ToFloat4(m_pointLights[i].color, m_pointLights[i].intensity);
+            }
+
+            uniforms.roughness = m_material.roughness;
+            uniforms.metallic  = m_material.metallic;
+            uniforms.occlusion = m_material.occlusion;
+            uniforms.time      = m_time;
+            uniforms.viewMode  = static_cast<ViewMode>(m_material.viewMode);
+
             std::memcpy(static_cast<std::byte*>(m_pUniforms->contents()) + uniformOffset, &uniforms, sizeof(uniforms));
 
             // Metal 4 has no setVertexBytes: everything the shader reads is a GPU address in the
@@ -396,11 +432,6 @@ namespace jpt
 
     void Metal4Renderer::GenerateMipmaps()
     {
-        // Outlives this call and is never reset: the commands live in its memory, commit is
-        // asynchronous, and nothing here can wait for the GPU -- SetTextures runs before
-        // [NSApp run], so a commit feedback handler would never be dispatched. Freeing it early
-        // leaves every level above 0 unwritten, and an unwritten mip samples black rather than
-        // stale. Streaming textures later would need a fence around a reset.
         if (!m_pUploadAllocator)
         {
             m_pUploadAllocator = m_pDevice->newCommandAllocator();

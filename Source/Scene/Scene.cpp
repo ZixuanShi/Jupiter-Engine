@@ -13,6 +13,8 @@ import jpt.GestureRecognizer;
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
+import jpt.Light;
+import jpt.LinearColor;
 import jpt.Quaternion;
 import jpt.TypeDefs;
 import jpt.Vector2;
@@ -30,6 +32,11 @@ namespace jpt
         {
             return false;
         }
+
+        // Lights
+        m_pointLights[0] = PointLight{ Vec3( 2.0f, 2.5f,  2.0f), LinearColor(1.00f, 0.96f, 0.88f), 100.0f };
+        m_pointLights[1] = PointLight{ Vec3(-2.5f, 0.8f,  1.5f), LinearColor(0.72f, 0.80f, 1.00f),  40.0f };
+        m_pointLights[2] = PointLight{ Vec3(-1.0f, 1.5f, -2.5f), LinearColor(1.00f, 0.88f, 0.78f),  60.0f };
 
         // Input callbacks
         Input& input = GetApplication().GetInput();
