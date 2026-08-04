@@ -28,9 +28,21 @@ export namespace jpt
 
         GestureRecognizer m_gestures;
 
+        bool m_keyboardCaptured = false;
+        bool m_mouseCaptured = false;
+
     public:
         bool PreInit();
         void Update();
+
+        /** Something outside the game -- a UI panel -- holds focus. The bitsets keep tracking the
+            hardware regardless, so a key released while captured is not left stuck down when focus
+            returns; only reads and dispatch are suppressed.
+
+            The contract that follows: while captured the game receives no input events at all, so
+            a press dispatched before capture gets no matching release. Held state is what IsKeyDown
+            is for, and it is correct across the transition; do not pair Down/Up to derive it. */
+        void SetCaptured(bool keyboard, bool mouse) noexcept;
 
     public:
         [[nodiscard]] bool IsKeyDown(KeyCode key) const noexcept;

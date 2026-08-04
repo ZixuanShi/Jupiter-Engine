@@ -111,8 +111,12 @@
 namespace
 {
     /** A monitor, not responder overrides: imgui_impl_osx makes its own KeyEventResponder the
-        window's first responder, so a keyDown: override here would never fire. Returns the event,
-        so ImGui still sees it -- hence the ImGuiWants* gate. */
+        window's first responder, so a keyDown: override here would never fire.
+
+        Reports every event unconditionally. ImGui is not downstream of this -- it installs its own
+        monitor and its own responder, so it sees the stream whatever we do, and there is nothing
+        here to route. Whether the *engine* acts on an event is Input's decision, because dropping
+        one here would desynchronise its key state from the hardware. */
     id InstallEventMonitor(NSView* pView)
     {
         const NSEventMask mask = NSEventMaskKeyDown | NSEventMaskKeyUp | NSEventMaskFlagsChanged
@@ -138,16 +142,9 @@ namespace
             switch (event.type)
             {
             case NSEventTypeKeyDown:
-                if (!jpt::ImGuiWantsKeyboard())
-                {
-                    jpt::OnKeyDown(event.keyCode, event.isARepeat);
-                }
+                jpt::OnKeyDown(event.keyCode, event.isARepeat);
                 break;
 
-            // Releases are never gated. A release is bookkeeping, not input to compete over: drop
-            // one because ImGui took focus mid-press and the key stays down forever, which a
-            // polled IsKeyDown reads as held. Presses stay gated, so typing still cannot drive
-            // the game.
             case NSEventTypeKeyUp:
                 jpt::OnKeyUp(event.keyCode);
                 break;
@@ -159,38 +156,26 @@ namespace
             case NSEventTypeLeftMouseDown:
             case NSEventTypeRightMouseDown:
             case NSEventTypeOtherMouseDown:
-                if (!jpt::ImGuiWantsMouse())
-                {
-                    jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), true, x, y);
-                }
+                jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), true, x, y);
                 break;
 
             case NSEventTypeLeftMouseUp:
             case NSEventTypeRightMouseUp:
             case NSEventTypeOtherMouseUp:
-                if (!jpt::ImGuiWantsMouse())
-                {
-                    jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), false, x, y);
-                }
+                jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), false, x, y);
                 break;
 
             case NSEventTypeMouseMoved:
             case NSEventTypeLeftMouseDragged:
             case NSEventTypeRightMouseDragged:
             case NSEventTypeOtherMouseDragged:
-                if (!jpt::ImGuiWantsMouse())
-                {
-                    jpt::OnMouseMove(x, y);
-                }
+                jpt::OnMouseMove(x, y);
                 break;
 
             case NSEventTypeScrollWheel:
-                if (!jpt::ImGuiWantsMouse())
-                {
-                    jpt::OnMouseScroll(static_cast<float>(event.scrollingDeltaX),
-                                       static_cast<float>(event.scrollingDeltaY),
-                                       event.hasPreciseScrollingDeltas);
-                }
+                jpt::OnMouseScroll(static_cast<float>(event.scrollingDeltaX), 
+                                   static_cast<float>(event.scrollingDeltaY), 
+                                   event.hasPreciseScrollingDeltas);
                 break;
 
             default:
@@ -299,7 +284,6 @@ namespace jpt
         // installs its own NSEvent monitors on this view, so no engine input path is involved.
         jpt::ImGuiInitPlatform((__bridge void*)m_pImpl->pView);
 
-        // After ImGuiInitPlatform: the ImGuiWants* gate needs a context.
         m_pImpl->pMonitor = InstallEventMonitor(m_pImpl->pView);
 
         // No resize event fires for the initial size.

@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Graphics/ImGui/ImGuiLayer.h"
+
 module jpt.Input;
 
 import jpt.Logger;
@@ -41,48 +45,82 @@ namespace jpt
 
     void Input::Update()
     {
+        // Pulled rather than pushed, so Application::Update stays a list of calls. One frame stale
+        // by construction: ImGui computes WantCapture* in NewFrame, which runs inside the
+        // renderer's BeginFrame -- after this. Every ImGui integration has that gap.
+        SetCaptured(ImGuiWantsKeyboard(), ImGuiWantsMouse());
+
         m_gestures.Update();
+    }
+
+    void Input::SetCaptured(bool keyboard, bool mouse) noexcept
+    {
+        m_keyboardCaptured = keyboard;
+        m_mouseCaptured = mouse;
     }
 
     bool Input::IsKeyDown(KeyCode key) const noexcept
     {
-        return m_keysDown[static_cast<usize>(key)];
+        return !m_keyboardCaptured && m_keysDown[static_cast<usize>(key)];
     }
 
     bool Input::IsMouseButtonDown(MouseButton button) const noexcept
     {
-        return m_buttonsDown[static_cast<usize>(button)];
+        return !m_mouseCaptured && m_buttonsDown[static_cast<usize>(button)];
     }
 
+    // Every Post below writes its state before testing capture. That order is the whole point:
+    // the platform reports the hardware unconditionally, and capture decides only who hears it.
     void Input::PostKeyDown(KeyCode key, bool isRepeat)
     {
         m_keysDown.set(static_cast<usize>(key));
-        m_onKeyDown.Dispatch(KeyEvent{ .key = key, .isRepeat = isRepeat });
+
+        if (!m_keyboardCaptured)
+        {
+            m_onKeyDown.Dispatch(KeyEvent{ .key = key, .isRepeat = isRepeat });
+        }
     }
 
     void Input::PostKeyUp(KeyCode key)
     {
         m_keysDown.reset(static_cast<usize>(key));
-        m_onKeyUp.Dispatch(KeyEvent{ .key = key });
+
+        if (!m_keyboardCaptured)
+        {
+            m_onKeyUp.Dispatch(KeyEvent{ .key = key });
+        }
     }
 
     void Input::PostMouseButton(MouseButton button, bool isDown, const Vec2& position)
     {
         m_buttonsDown.set(static_cast<usize>(button), isDown);
         m_mousePosition = position;
-        m_onMouseButton.Dispatch(MouseButtonEvent{ .button = button, .isDown = isDown, .position = position });
+
+        if (!m_mouseCaptured)
+        {
+            m_onMouseButton.Dispatch(MouseButtonEvent{ .button = button, .isDown = isDown, .position = position });
+        }
     }
 
     void Input::PostMouseMove(const Vec2& position)
     {
+        // Tracked through capture, or crossing the panel and back would deliver the whole
+        // excursion as one delta the moment focus returned.
         const Vec2 delta = position - m_mousePosition;
         m_mousePosition = position;
-        m_onMouseMove.Dispatch(MouseMoveEvent{ .position = position, .delta = delta });
+
+        if (!m_mouseCaptured)
+        {
+            m_onMouseMove.Dispatch(MouseMoveEvent{ .position = position, .delta = delta });
+        }
     }
 
     void Input::PostMouseScroll(const Vec2& delta, bool isPrecise)
     {
-        m_onMouseScroll.Dispatch(MouseScrollEvent{ .delta = delta, .isPrecise = isPrecise });
+        if (!m_mouseCaptured)
+        {
+            m_onMouseScroll.Dispatch(MouseScrollEvent{ .delta = delta, .isPrecise = isPrecise });
+        }
     }
 
     void Input::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds)

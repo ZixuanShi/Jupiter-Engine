@@ -22,18 +22,11 @@ export namespace jpt
     private:
         Camera m_camera;
         Transform m_pyramid;
-
-        // The drag is kept as angles and the rotation rebuilt from them each time. Composing onto
-        // the previous rotation instead lets roll accumulate: two drags about different axes
-        // compose to include a twist, and the pyramid tips out of upright and never recovers.
         float32 m_yaw   = 0.0f;
         float32 m_pitch = 0.0f;
 
     public:
         bool Init();
-
-        /** Held keys are polled, not dispatched: "is W down right now" is one array read, while
-            deriving it from down/up pairs makes every consumer track its own state. */
         void Update();
 
         [[nodiscard]] Camera& GetCamera() noexcept { return m_camera; }

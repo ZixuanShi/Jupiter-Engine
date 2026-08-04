@@ -299,6 +299,58 @@ namespace jpt
             }
         }
 
+        // Capture. The platform seam reports everything now, so this is the only gate, and the
+        // case that matters is focus changing *between* a press and its release.
+        {
+            Input input;
+
+            uint32 downCount = 0;
+            uint32 upCount = 0;
+            input.OnKeyDown().Add([&downCount](const KeyEvent&) { ++downCount; });
+            input.OnKeyUp().Add([&upCount](const KeyEvent&) { ++upCount; });
+
+            input.PostKeyDown(KeyCode::W, false);
+            Debug::Assert(input.IsKeyDown(KeyCode::W) && downCount == 1, "An uncaptured press did not reach the game");
+
+            // Focus moves to a panel mid-press: the game must stop seeing the key as held.
+            input.SetCaptured(true, false);
+            Debug::Assert(!input.IsKeyDown(KeyCode::W), "A captured keyboard still reported W held");
+
+            // Released while captured. Nothing is dispatched, but the state must still track it.
+            input.PostKeyUp(KeyCode::W);
+            Debug::Assert(upCount == 0, "A captured release was dispatched to the game");
+            input.SetCaptured(false, false);
+            Debug::Assert(!input.IsKeyDown(KeyCode::W), "W stuck down: the release was lost while captured");
+
+            // Typing while captured must not leak in either.
+            input.SetCaptured(true, false);
+            input.PostKeyDown(KeyCode::A, false);
+            Debug::Assert(downCount == 1, "A captured press was dispatched to the game");
+            Debug::Assert(!input.IsKeyDown(KeyCode::A), "A captured press was readable by the game");
+
+            // Still physically held when focus returns, so it must read as held again.
+            input.SetCaptured(false, false);
+            Debug::Assert(input.IsKeyDown(KeyCode::A), "A key held across a capture cycle was forgotten");
+            input.PostKeyUp(KeyCode::A);
+
+            // Buttons are the same story, on their own flag.
+            input.PostMouseButton(MouseButton::Left, true, Vec2(10.0f, 10.0f));
+            input.SetCaptured(false, true);
+            Debug::Assert(!input.IsMouseButtonDown(MouseButton::Left), "A captured mouse still reported Left held");
+            input.PostMouseButton(MouseButton::Left, false, Vec2(90.0f, 90.0f));
+            input.SetCaptured(false, false);
+            Debug::Assert(!input.IsMouseButtonDown(MouseButton::Left), "Left stuck down: the release was lost while captured");
+
+            // Position tracks through capture, or crossing the panel and back arrives as one jump.
+            Vec2 movedDelta = Vec2::Zero();
+            input.OnMouseMove().Add([&movedDelta](const MouseMoveEvent& event) { movedDelta = event.delta; });
+            input.SetCaptured(false, true);
+            input.PostMouseMove(Vec2(500.0f, 90.0f));
+            input.SetCaptured(false, false);
+            input.PostMouseMove(Vec2(510.0f, 90.0f));
+            Debug::Assert(movedDelta == Vec2(10.0f, 0.0f), "Crossing a panel delivered a ({}, {}) jump", movedDelta.x, movedDelta.y);
+        }
+
         // Keyboard movement. Synthetic keystrokes are blocked on this machine, so the mapping is
         // driven through Input directly -- which covers everything but AppKit's delivery.
         {
