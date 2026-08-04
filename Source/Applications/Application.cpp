@@ -10,7 +10,6 @@ module jpt.Application;
 import jpt.Environment;
 import jpt.LaunchArgs;
 import jpt.Logger;
-import jpt.Matrix44;
 import jpt.ObjLoader;
 import jpt.Vector3;
 
@@ -32,13 +31,19 @@ namespace jpt
         const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
         if (!m_window.PreInit(launchArgs.GetCount(), launchArgs.GetValues()))
         {
-            Debug::Error("Failed to pre-initialise the window.");
+            Debug::Error("Failed to pre-initialize the window.");
             return false;
         }
 
         if (!m_renderer.PreInit())
         {
-            Debug::Error("Failed to pre-initialise the renderer.");
+            Debug::Error("Failed to pre-initialize the renderer.");
+            return false;
+        }
+
+        if (!m_camera.PreInit())
+        {
+            Debug::Error("Failed to pre-initialize the camera.");
             return false;
         }
 
@@ -49,14 +54,9 @@ namespace jpt
     {
         if (!m_window.Init())
         {
-            Debug::Error("Failed to initialise the window.");
+            Debug::Error("Failed to initialize the window.");
             return false;
         }
-
-        m_renderer.SetClearColor({ 0.05f, 0.06f, 0.09f });
-
-        m_camera.SetPosition(Vec3(1.6f, 1.4f, 2.4f));
-        m_camera.SetTarget(Vec3::Zero());
 
         m_status = Status::Running;
         return true;
@@ -64,11 +64,7 @@ namespace jpt
 
     void Application::Update()
     {
-        const float32 elapsed = static_cast<float32>(m_frameTimer.GetElapsedSeconds());
-
-        m_renderer.SetModel(Mat44::RotateY(elapsed * 0.8f));
-        m_renderer.SetViewProjection(m_camera.GetViewProjection(m_window.GetAspectRatio()));
-        m_renderer.SetTime(elapsed);
+        m_renderer.Update();
     }
 
     void Application::Terminate()
@@ -89,7 +85,7 @@ namespace jpt
     {
         if (!m_renderer.Init(surface))
         {
-            Debug::Error("Failed to initialise the renderer.");
+            Debug::Error("Failed to initialize the renderer.");
             return false;
         }
 

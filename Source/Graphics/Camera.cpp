@@ -8,6 +8,13 @@ import jpt.Vector3;
 
 namespace jpt
 {
+    bool Camera::PreInit() noexcept
+    {
+        m_position = Vec3(1.6f, 1.4f, 2.4f);
+        m_target = Vec3::Zero();
+        return true;
+    }
+
     void Camera::SetPosition(const Vec3& position) noexcept
     {
         m_position = position;

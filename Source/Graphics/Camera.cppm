@@ -36,14 +36,15 @@ export namespace jpt
         float32 m_zFar        = 100.0f;
 
     public:
+        bool PreInit() noexcept;
+
+    public:
         void SetPosition(const Vec3& position) noexcept;
         void SetTarget(const Vec3& target) noexcept;
 
         void SetProjectionMode(ProjectionMode mode) noexcept;
         void SetFovY(float32 radians) noexcept;
         void SetOrthoHeight(float32 worldUnits) noexcept;
-
-        /** Together, because a near plane past the far plane inverts depth silently. */
         void SetNearFar(float32 zNear, float32 zFar) noexcept;
 
         [[nodiscard]] ProjectionMode GetProjectionMode() const noexcept { return m_projectionMode; }

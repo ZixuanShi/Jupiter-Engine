@@ -55,6 +55,11 @@ namespace jpt
 
     bool Metal4Renderer::PreInit()
     {
+        if (!RendererBase::PreInit())
+        {
+            return false;
+        }
+
         m_pDevice = MTL::CreateSystemDefaultDevice();
         if (!m_pDevice)
         {

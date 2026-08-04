@@ -40,5 +40,10 @@ export namespace jpt
         bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
         void OnFrame();
+    
+    public:
+        [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
+        [[nodiscard]] const Window& GetWindow()         const noexcept { return m_window; }
+        [[nodiscard]] Camera& GetCamera()                     noexcept { return m_camera; }
     };
 }

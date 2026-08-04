@@ -1,30 +1,43 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include "Applications/AppClient.h"
+#include "Applications/Window/Window.h"
+
 module jpt.RendererBase;
 
+import jpt.Camera;
+import jpt.FrameTimer;
 import jpt.LinearColor;
 import jpt.Matrix44;
 import jpt.TypeDefs;
 
 namespace jpt
 {
-    void RendererBase::SetClearColor(const LinearColor& color) noexcept
+    bool RendererBase::PreInit() noexcept
     {
-        m_clearColor = color;
+    #if IS_PLATFORM_MACOS
+        m_clearColor = LinearColor(0.1f, 0.1f, 0.0f);
+    #elif IS_PLATFORM_IOS
+        m_clearColor = LinearColor(0.0f, 0.1f, 0.1f);
+    #endif
+
+        return true;
     }
 
-    void RendererBase::SetModel(const Mat44& model) noexcept
+    void RendererBase::Update()
     {
-        m_model = model;
-    }
+        Application& app = GetApplication();
+        const FrameTimer& frameTimer = app.GetFrameTimer();
+        const Window& window = app.GetWindow();
+        const Camera& camera = app.GetCamera();
 
-    void RendererBase::SetViewProjection(const Mat44& viewProjection) noexcept
-    {
-        m_viewProjection = viewProjection;
-    }
+        const float32 elapsed = static_cast<float32>(frameTimer.GetElapsedSeconds());
 
-    void RendererBase::SetTime(float32 seconds) noexcept
-    {
-        m_time = seconds;
+        // Scene data, parked here until something owns the objects in the world.
+        m_model = Mat44::RotateY(elapsed * 0.8f);
+        m_viewProjection = camera.GetViewProjection(window.GetAspectRatio());
+        m_time = elapsed;
     }
 }

@@ -17,9 +17,7 @@ export namespace jpt
         float32 m_time           = 0.0f;
 
     public:
-        void SetClearColor(const LinearColor& color) noexcept;
-        void SetModel(const Mat44& model) noexcept;
-        void SetViewProjection(const Mat44& viewProjection) noexcept;
-        void SetTime(float32 seconds) noexcept;
+        bool PreInit() noexcept;
+        void Update();
     };
 }

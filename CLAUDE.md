@@ -78,6 +78,66 @@ The same four steps are exposed as VS Code tasks (`Setup`, `Build`, `Run`, `Clea
 - On Apple platforms the compiler must be **Homebrew LLVM** (`/opt/homebrew/opt/llvm/bin/clang++`), for both `CXX` and `OBJCXX`. Apple clang cannot build C++ modules at all: Xcode ships no `clang-scan-deps`, so CMake fails with *"the compiler does not provide a way to discover the import graph dependencies"*, and it has no `libc++.modules.json` for `import std`. Homebrew clang cross-compiles ObjC++ against the Apple SDKs and links the **system** `/usr/lib/libc++.1.dylib`, so nothing needs embedding in an iOS bundle.
 - Shell-based scripts have been deliberately replaced with cross-platform Python (commit `827a515`); keep new automation in Python and route it through the existing `setup → build → run` scripts rather than adding `.sh`/`.bat`.
 
+### Lifecycle convention
+
+Every subsystem — `Window`, `Renderer`, `Camera` — exposes the same five functions, and `Application`
+drives them in this order. A subsystem implements only the ones it needs; there are no empty overrides.
+
+| | When | May touch |
+|---|---|---|
+| `PreInit()` | once, before anything else exists | **itself only** |
+| `Init()` | once, after every subsystem has pre-initialised | itself **and** other systems |
+| `Update()` | every frame | anything |
+| `PostUpdate()` | every frame, after every `Update()` | anything |
+| `Terminate()` | once, on exit | anything |
+
+The split between `PreInit` and `Init` is the whole point of having two: `PreInit` may not reach for
+another subsystem, because the order in which they pre-initialise is not a contract. By `Init` they
+all exist, so cross-system wiring is legal there and nowhere earlier. `PostUpdate` exists for work
+that must observe every `Update` — a camera reading a transform the game logic just wrote.
+
+`PreInit`/`Init` return `bool`; `Application` logs and aborts startup on false. `Update`/`PostUpdate`/
+`Terminate` return `void`. Signatures are otherwise parameterless — the one exception is
+`Window::PreInit(argc, ppArgv)`, which exists because `UIApplicationMain` demands them.
+
+`Application` carries the same five as `virtual`s for a game to override, and they are the only
+virtuals in the lifecycle. As of now `PostUpdate()` is implemented on `Application` alone; subsystems
+add it when they have work that must observe every `Update`.
+
+**Subsystems pull, they do not get pushed.** A subsystem's `Update()` fetches what it needs through
+`GetApplication()` (`Applications/AppClient.h`) rather than having `Application` push values in — see
+`RendererBase::Update()`, which reads the camera and the frame timer itself. That keeps
+`Application::Update()` a list of calls instead of a list of wiring, and ordering stays explicit
+because `Application` still decides the call order.
+
+Two hard constraints on that, both learned from build failures:
+
+- **Only an implementation unit may reach the application.** `jpt.Application` imports the subsystem
+  modules, so `AppClient.h` in a `.cppm` closes a cycle — CMake reports *"Circular dependency detected
+  in the C++ module import graph"*. A `.cpp` implementation unit is fine, because it never feeds its
+  own module's BMI. A plain non-module `.cpp` (`Metal4Renderer.cpp`) is fine for the same reason.
+- **An implementation unit's includes belong in its global module fragment** (`module;` … `module
+  jpt.Foo;`), or their declarations attach to `jpt.Foo` and clang rejects them as redeclarations of
+  the global module. A plain `.cpp` has no module declaration, so it escapes this.
+- An `import` is **not** re-exported. `import jpt.Application` gives you `Application`, but calling
+  `app.GetCamera().GetViewProjection(...)` still needs `import jpt.Camera;` of its own.
+
+**There are no virtuals below `Application`.** A backend's `PreInit()` *hides* the base's rather than
+overriding it — `static_assert(!std::is_polymorphic_v<Renderer>)` in `Graphics/Renderer.h` enforces
+the absence of a vtable. So a derived implementation calls the base half explicitly and by name:
+
+```cpp
+bool Metal4Renderer::PreInit()
+{
+    if (!RendererBase::PreInit()) { return false; }
+    ...
+}
+```
+
+That call resolves at compile time and inlines. Nothing enforces it, so a backend that forgets the
+base call silently loses the shared half — worth checking first when a new backend behaves as if its
+base state was never set.
+
 ### Python style (`Scripts/`)
 
 - **Docstrings, per [PEP 257](https://peps.python.org/pep-0257/).** Document a function with a `"""..."""` as the first statement in its body — one line for simple cases, or a summary line plus a blank line and detail. Do not use banner comments above `def`; they leave `__doc__` as `None`, so doc generators and any programmatic introspection see nothing.
