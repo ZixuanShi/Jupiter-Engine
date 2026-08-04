@@ -334,9 +334,18 @@ namespace jpt
         // changed costs more code than re-adding all of them.
         m_pResidencySet->removeAllAllocations();
 
-        if (m_pVertices) { m_pResidencySet->addAllocation(m_pVertices); }
-        if (m_pIndices)  { m_pResidencySet->addAllocation(m_pIndices); }
-        if (m_pUniforms) { m_pResidencySet->addAllocation(m_pUniforms); }
+        if (m_pVertices)
+        {
+            m_pResidencySet->addAllocation(m_pVertices);
+        }
+        if (m_pIndices)
+        {
+            m_pResidencySet->addAllocation(m_pIndices);
+        }
+        if (m_pUniforms)
+        {
+            m_pResidencySet->addAllocation(m_pUniforms);
+        }
 
         // Depth is absent on purpose: residency covers raw addresses, and a memoryless texture
         // has no memory to make resident -- the validation layer asserts on it.

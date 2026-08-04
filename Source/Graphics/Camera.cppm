@@ -25,12 +25,8 @@ export namespace jpt
     {
     private:
         ProjectionMode m_projectionMode = ProjectionMode::Perspective;
-
-        Vec3 m_position = Vec3(1.6f, 2.0f, 2.4f);
-        Vec3 m_target   = Vec3::Zero();
-
-        // Both modes are driven by a vertical extent and derive the horizontal from aspect, so
-        // switching between them keeps the framing and changes only the convergence.
+        Vec3 m_position       = Vec3(1.6f, 2.0f, 2.4f);
+        Vec3 m_target         = Vec3::Zero();
         float32 m_fovY        = ToRadians(60.0f);
         float32 m_orthoHeight = 3.7f;           // World units top to bottom. Matches fovY at ~3.2 units out.
         float32 m_zNear       = 0.1f;
@@ -43,6 +39,10 @@ export namespace jpt
         /** Scales the distance to the target, and orthoHeight with it so a mode switch keeps
             the framing. Clamped, so a fast pinch cannot bury the camera in the target. */
         void Zoom(float32 factor) noexcept;
+
+        /** The camera's world-space axes: screen right and screen up. */
+        [[nodiscard]] Vec3 GetRight() const noexcept;
+        [[nodiscard]] Vec3 GetUp() const noexcept;
 
         /** World offset for a screen drag at the target's depth, so a dragged object tracks the
             pointer. deltaPixels and viewportHeight must be the same unit. */

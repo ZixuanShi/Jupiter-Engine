@@ -44,7 +44,10 @@
             // Only Began is gated. Once a finger is in the gesture table it must be tracked to
             // its end, or a touch that strays over the panel is never removed and holds the
             // gesture open forever.
-            if (!jpt::ImGuiWantsMouse()) { jpt::OnTouchBegan(touchId, x, y, touch.timestamp); }
+            if (!jpt::ImGuiWantsMouse())
+            {
+                jpt::OnTouchBegan(touchId, x, y, touch.timestamp);
+            }
             break;
 
         case UITouchPhaseMoved:     jpt::OnTouchMoved(touchId, x, y, touch.timestamp);     break;

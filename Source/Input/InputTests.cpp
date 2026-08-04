@@ -21,6 +21,8 @@ import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.Logger;
+import jpt.Quaternion;
+import jpt.Scene;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -230,20 +232,17 @@ namespace jpt
             // Looking down -Z from +Z, the basis is the world's: right is +X, up is +Y.
             // worldPerPixel = 2 * 5 * tan(30 deg) / 1000, so 100 px is 0.5774 world units.
             const Vec3 right = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
-            Debug::Assert(AreValuesClose(right, Vec3(0.57735f, 0.0f, 0.0f), 1e-4f),
-                          "A rightward drag mapped to ({}, {}, {})", right.x, right.y, right.z);
+            Debug::Assert(AreValuesClose(right, Vec3(0.57735f, 0.0f, 0.0f), 1e-4f), "A rightward drag mapped to ({}, {}, {})", right.x, right.y, right.z);
 
             // Screen Y is down and world Y is up, so the sign flips.
             const Vec3 down = camera.ScreenDeltaToWorld(Vec2(0.0f, 100.0f), 1000.0f);
-            Debug::Assert(AreValuesClose(down, Vec3(0.0f, -0.57735f, 0.0f), 1e-4f),
-                          "A downward drag mapped to ({}, {}, {})", down.x, down.y, down.z);
+            Debug::Assert(AreValuesClose(down, Vec3(0.0f, -0.57735f, 0.0f), 1e-4f), "A downward drag mapped to ({}, {}, {})", down.x, down.y, down.z);
 
             // Twice as far means the same drag covers twice the world, or the object stops
             // tracking the finger as you zoom out.
             camera.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
             const Vec3 farther = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
-            Debug::Assert(AreValuesClose(farther.x, right.x * 2.0f, 1e-4f),
-                          "Doubling the distance scaled the drag by {}", farther.x / right.x);
+            Debug::Assert(AreValuesClose(farther.x, right.x * 2.0f, 1e-4f), "Doubling the distance scaled the drag by {}", farther.x / right.x);
 
             // Zoom is multiplicative, so opposite factors cancel.
             camera.Zoom(0.5f);
@@ -259,15 +258,83 @@ namespace jpt
             Debug::Assert(clamped.x > 0.0f, "Zoom collapsed the camera onto its target");
         }
 
+        // The camera basis, which is the axis a one-finger drag rotates about. Off-axis on
+        // purpose: the block above looks straight down -Z, where the camera basis equals the
+        // world's and a world-axis mistake cannot show.
+        {
+            Camera camera;
+            camera.SetPosition(Vec3(1.6f, 2.0f, 2.4f));
+            camera.SetTarget(Vec3::Zero());
+
+            const Vec3 right = camera.GetRight();
+            const Vec3 up    = camera.GetUp();
+
+            Debug::Assert(AreValuesClose(right.Length(), 1.0f, 1e-4f), "Camera right is {} long", right.Length());
+            Debug::Assert(AreValuesClose(up.Length(), 1.0f, 1e-4f), "Camera up is {} long", up.Length());
+            Debug::Assert(AreValuesClose(right.Dot(up), 0.0f, 1e-4f), "Camera right and up are {} apart", right.Dot(up));
+
+            // The premise of the assertion below, so it cannot pass by being vacuous.
+            Debug::Assert(!AreValuesClose(right.Dot(Vec3::Right()), 1.0f, 1e-3f), "This camera is on-axis, so it cannot tell world X from screen right");
+
+            // A vertical drag must not move the object sideways on screen. Screen-X of a world
+            // vector is its dot with the camera's right, and a rotation leaves the component along
+            // its own axis alone -- so pitching about the camera's right holds it at zero. About
+            // world X it reaches -0.39 here, which is the tumble.
+            const Vec3 tipped = Quat::FromAxisAngle(right, ToRadians(45.0f)).Up();
+            Debug::Assert(AreValuesClose(tipped.Dot(right), 0.0f, 1e-4f), "A vertical drag slid the object {} sideways on screen", tipped.Dot(right));
+
+            // And it must still hold after a sequence of drags, which is what rebuilding from two
+            // accumulated angles buys. Composing each drag onto the previous rotation instead
+            // passes the single-drag case above and then rolls to 0.92 by the sixth -- the pyramid
+            // lying on its side -- because two rotations about different axes compose to a twist.
+            float32 yaw = 0.0f;
+            float32 pitch = 0.0f;
+            for (int32 i = 0; i < 6; ++i)
+            {
+                ((i % 2) == 0 ? pitch : yaw) += ToRadians(30.0f);
+
+                const Quat rotation = Quat::FromAxisAngle(right, pitch) * Quat::FromAxisAngle(Vec3::Up(), yaw);
+                const float32 rolled = rotation.Up().Dot(right);
+                Debug::Assert(AreValuesClose(rolled, 0.0f, 1e-4f), "The pyramid rolled {} sideways after {} drags", rolled, i + 1);
+            }
+        }
+
+        // Keyboard movement. Synthetic keystrokes are blocked on this machine, so the mapping is
+        // driven through Input directly -- which covers everything but AppKit's delivery.
+        {
+            Input input;
+            Debug::Assert(GetMoveAxis(input) == Vec2::Zero(), "An idle keyboard asked the pyramid to move");
+
+            input.PostKeyDown(KeyCode::D, false);
+            Debug::Assert(GetMoveAxis(input) == Vec2(1.0f, 0.0f), "D did not map to +X");
+            input.PostKeyUp(KeyCode::D);
+
+            input.PostKeyDown(KeyCode::W, false);
+            Debug::Assert(GetMoveAxis(input) == Vec2(0.0f, 1.0f), "W did not map to +Y");
+
+            // Arrows are the same axis, so a held W and a held UpArrow must not stack.
+            input.PostKeyDown(KeyCode::UpArrow, false);
+            Debug::Assert(GetMoveAxis(input) == Vec2(0.0f, 1.0f), "W and UpArrow stacked into a double-speed press");
+            input.PostKeyUp(KeyCode::UpArrow);
+
+            // Opposing keys cancel rather than fighting over the last one pressed.
+            input.PostKeyDown(KeyCode::S, false);
+            Debug::Assert(GetMoveAxis(input) == Vec2::Zero(), "W and S did not cancel");
+            input.PostKeyUp(KeyCode::S);
+
+            // A diagonal is normalized, or holding two keys is 1.41x faster than holding one.
+            input.PostKeyDown(KeyCode::A, false);
+            const Vec2 diagonal = GetMoveAxis(input);
+            Debug::Assert(AreValuesClose(diagonal.Length(), 1.0f, 1e-4f), "A diagonal press moves at {}, expected 1", diagonal.Length());
+            Debug::Assert(diagonal.x < 0.0f && diagonal.y > 0.0f, "A+W pointed ({}, {}), expected up and left", diagonal.x, diagonal.y);
+        }
+
         // Name tables. Checked at both ends, because a short table only misbehaves at the end.
         {
             Debug::Assert(std::string_view(ToString(KeyCode::A)) == "A", "KeyCode::A is named {}", ToString(KeyCode::A));
-            Debug::Assert(std::string_view(ToString(KeyCode::KeypadClear)) == "KeypadClear",
-                          "The last KeyCode is named {}", ToString(KeyCode::KeypadClear));
-            Debug::Assert(std::string_view(ToString(KeyCode::LeftSuper)) == "LeftSuper",
-                          "KeyCode::LeftSuper is named {}", ToString(KeyCode::LeftSuper));
-            Debug::Assert(std::string_view(ToString(MouseButton::Middle)) == "Middle",
-                          "MouseButton::Middle is named {}", ToString(MouseButton::Middle));
+            Debug::Assert(std::string_view(ToString(KeyCode::KeypadClear)) == "KeypadClear", "The last KeyCode is named {}", ToString(KeyCode::KeypadClear));
+            Debug::Assert(std::string_view(ToString(KeyCode::LeftSuper)) == "LeftSuper", "KeyCode::LeftSuper is named {}", ToString(KeyCode::LeftSuper));
+            Debug::Assert(std::string_view(ToString(MouseButton::Middle)) == "Middle", "MouseButton::Middle is named {}", ToString(MouseButton::Middle));
         }
 
 #if IS_PLATFORM_MACOS

@@ -57,6 +57,20 @@ namespace jpt
         m_orthoHeight *= applied;
     }
 
+    // The rows of the view rotation are the camera basis in world space, and LookAt already guards
+    // the degenerate top-down case rather than these repeating the guard.
+    Vec3 Camera::GetRight() const noexcept
+    {
+        const Mat44 view = Mat44::LookAt(m_position, m_target);
+        return Vec3(view.m[0].x, view.m[1].x, view.m[2].x);
+    }
+
+    Vec3 Camera::GetUp() const noexcept
+    {
+        const Mat44 view = Mat44::LookAt(m_position, m_target);
+        return Vec3(view.m[0].y, view.m[1].y, view.m[2].y);
+    }
+
     Vec3 Camera::ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept
     {
         const float32 distance = (m_target - m_position).Length();
@@ -65,15 +79,12 @@ namespace jpt
             return Vec3::Zero();
         }
 
-        // The rows of the view rotation are the camera basis in world space, and LookAt already
-        // guards the degenerate top-down case rather than this repeating the guard.
-        const Mat44 view = Mat44::LookAt(m_position, m_target);
-        const Vec3 right(view.m[0].x, view.m[1].x, view.m[2].x);
-        const Vec3 up   (view.m[0].y, view.m[1].y, view.m[2].y);
+        const Vec3 right = GetRight();
+        const Vec3 up    = GetUp();
 
         const float32 worldPerPixel = (m_projectionMode == ProjectionMode::Perspective)
-            ? (2.0f * distance * std::tan(m_fovY * 0.5f)) / viewportHeight
-            : m_orthoHeight / viewportHeight;
+                                      ? (2.0f * distance * std::tan(m_fovY * 0.5f)) / viewportHeight
+                                      : m_orthoHeight / viewportHeight;
 
         // Screen Y is down, world Y is up.
         return right * (deltaPixels.x * worldPerPixel) - up * (deltaPixels.y * worldPerPixel);

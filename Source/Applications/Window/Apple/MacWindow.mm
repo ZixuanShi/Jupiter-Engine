@@ -138,37 +138,50 @@ namespace
             switch (event.type)
             {
             case NSEventTypeKeyDown:
-                if (!jpt::ImGuiWantsKeyboard()) { jpt::OnKeyDown(event.keyCode, event.isARepeat); }
+                if (!jpt::ImGuiWantsKeyboard())
+                {
+                    jpt::OnKeyDown(event.keyCode, event.isARepeat);
+                }
                 break;
 
+            // Releases are never gated. A release is bookkeeping, not input to compete over: drop
+            // one because ImGui took focus mid-press and the key stays down forever, which a
+            // polled IsKeyDown reads as held. Presses stay gated, so typing still cannot drive
+            // the game.
             case NSEventTypeKeyUp:
-                if (!jpt::ImGuiWantsKeyboard()) { jpt::OnKeyUp(event.keyCode); }
+                jpt::OnKeyUp(event.keyCode);
                 break;
 
             case NSEventTypeFlagsChanged:
-                if (!jpt::ImGuiWantsKeyboard())
-                {
-                    jpt::OnModifierChanged(event.keyCode, static_cast<std::uint32_t>(event.modifierFlags));
-                }
+                jpt::OnModifierChanged(event.keyCode, static_cast<std::uint32_t>(event.modifierFlags));
                 break;
 
             case NSEventTypeLeftMouseDown:
             case NSEventTypeRightMouseDown:
             case NSEventTypeOtherMouseDown:
-                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), true, x, y); }
+                if (!jpt::ImGuiWantsMouse())
+                {
+                    jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), true, x, y);
+                }
                 break;
 
             case NSEventTypeLeftMouseUp:
             case NSEventTypeRightMouseUp:
             case NSEventTypeOtherMouseUp:
-                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), false, x, y); }
+                if (!jpt::ImGuiWantsMouse())
+                {
+                    jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), false, x, y);
+                }
                 break;
 
             case NSEventTypeMouseMoved:
             case NSEventTypeLeftMouseDragged:
             case NSEventTypeRightMouseDragged:
             case NSEventTypeOtherMouseDragged:
-                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseMove(x, y); }
+                if (!jpt::ImGuiWantsMouse())
+                {
+                    jpt::OnMouseMove(x, y);
+                }
                 break;
 
             case NSEventTypeScrollWheel:

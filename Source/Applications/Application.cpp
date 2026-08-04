@@ -78,6 +78,7 @@ namespace jpt
     void Application::Update()
     {
         m_input.Update();       // Recognizes gestures, whose handlers write the scene.
+        m_scene.Update();       // Polls held keys, which a one-shot gesture event cannot express.
         m_renderer.Update();
     }
 
