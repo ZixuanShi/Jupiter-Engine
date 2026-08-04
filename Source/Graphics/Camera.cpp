@@ -18,6 +18,11 @@ import std;
 
 namespace jpt
 {
+    Camera::Camera() noexcept
+    {
+        SetDirection(-m_position);   // Aimed at the origin from wherever m_position starts.
+    }
+
     bool Camera::Init()
     {
         Input& input = GetApplication().GetInput();
@@ -44,50 +49,55 @@ namespace jpt
         constexpr float32 kMinDistance = 0.5f;
         constexpr float32 kMaxDistance = 50.0f;
 
-        const Vec3 toEye = m_position - m_target;
-        const float32 distance = toEye.Length();
-        if (distance < kEpsilon<float32>)
+        if (m_distance < kEpsilon<float32>)
         {
             return;
         }
 
-        // Apply the clamped factor to both, so a clamp does not desync orthoHeight from distance.
-        const float32 applied = std::clamp(distance * factor, kMinDistance, kMaxDistance) / distance;
-        m_position = m_target + toEye * applied;
+        const float32 distance = std::clamp(m_distance * factor, kMinDistance, kMaxDistance);
+
+        // Along the view axis, so what the camera orbits stays put and only the radius changes.
+        // Apply the clamped factor to orthoHeight too, or a clamp desyncs it from the distance.
+        const float32 applied = distance / m_distance;
+        m_position += Forward() * (m_distance - distance);
+        m_distance = distance;
         m_orthoHeight *= applied;
     }
 
-    // The rows of the view rotation are the camera basis in world space, and LookAt already guards
-    // the degenerate top-down case rather than these repeating the guard.
-    Vec3 Camera::GetRight() const noexcept
+    void Camera::MoveLocal(const Vec3& offset) noexcept
     {
-        const Mat44 view = Mat44::LookAt(m_position, m_target);
-        return Vec3(view.m[0].x, view.m[1].x, view.m[2].x);
+        m_position += Right() * offset.x + Up() * offset.y + Backward() * offset.z;
     }
 
-    Vec3 Camera::GetUp() const noexcept
+    void Camera::RotateLocal(float32 pitchRadians, float32 yawRadians) noexcept
     {
-        const Mat44 view = Mat44::LookAt(m_position, m_target);
-        return Vec3(view.m[0].y, view.m[1].y, view.m[2].y);
+        // Past vertical the view axis meets the yaw axis and heading stops being defined, so the
+        // camera would flip over rather than keep tipping.
+        constexpr float32 kMaxPitch = 1.5533f;   // 89 degrees.
+
+        const float32 pitch = std::asin(std::clamp(Forward().y, -1.0f, 1.0f));
+        const float32 applied = std::clamp(pitch + pitchRadians, -kMaxPitch, kMaxPitch) - pitch;
+
+        m_rotation = Quat::FromAxisAngle(Vec3::Up(), yawRadians)
+                   * m_rotation
+                   * Quat::FromAxisAngle(Vec3::Right(), applied);
+        m_rotation.Normalize();
     }
 
     Vec3 Camera::ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept
     {
-        const float32 distance = (m_target - m_position).Length();
+        const float32 distance = m_distance;
         if (viewportHeight < 1.0f || distance < kEpsilon<float32>)
         {
             return Vec3::Zero();
         }
-
-        const Vec3 right = GetRight();
-        const Vec3 up    = GetUp();
 
         const float32 worldPerPixel = (m_projectionMode == ProjectionMode::Perspective)
                                       ? (2.0f * distance * std::tan(m_fovY * 0.5f)) / viewportHeight
                                       : m_orthoHeight / viewportHeight;
 
         // Screen Y is down, world Y is up.
-        return right * (deltaPixels.x * worldPerPixel) - up * (deltaPixels.y * worldPerPixel);
+        return Right() * (deltaPixels.x * worldPerPixel) - Up() * (deltaPixels.y * worldPerPixel);
     }
 
     void Camera::SetPosition(const Vec3& position) noexcept
@@ -95,9 +105,26 @@ namespace jpt
         m_position = position;
     }
 
-    void Camera::SetTarget(const Vec3& target) noexcept
+    void Camera::SetDirection(const Vec3& direction) noexcept
     {
-        m_target = target;
+        // A dragged ImGui slider passes through zero on its way across, so a bad value is normal
+        // input rather than a caller error: keep the last good aim instead of asserting.
+        const float32 length = direction.Length();
+        if (length < kEpsilon<float32>)
+        {
+            return;
+        }
+
+        const Vec3 aim = direction / length;
+        const float32 pitch = std::asin(std::clamp(aim.y, -1.0f, 1.0f));
+        const float32 yaw   = std::atan2(-aim.x, -aim.z);
+
+        m_rotation = Quat::FromAxisAngle(Vec3::Up(), yaw) * Quat::FromAxisAngle(Vec3::Right(), pitch);
+    }
+
+    void Camera::SetDistance(float32 distance) noexcept
+    {
+        m_distance = std::max(distance, kEpsilon<float32>);
     }
 
     void Camera::SetProjectionMode(ProjectionMode mode) noexcept
@@ -134,6 +161,7 @@ namespace jpt
             projection = Mat44::Orthographic(m_orthoHeight * aspect, m_orthoHeight, m_zNear, m_zFar);
         }
 
-        return projection * Mat44::LookAt(m_position, m_target);
+        const Mat44 view = m_rotation.Conjugate().ToMatrix() * Mat44::Translate(-m_position);
+        return projection * view;
     }
 }

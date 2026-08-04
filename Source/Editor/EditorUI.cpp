@@ -15,6 +15,7 @@ import jpt.LinearColor;
 import jpt.Math;
 import jpt.Scene;
 import jpt.TypeDefs;
+import jpt.Vector3;
 import std;
 
 namespace jpt
@@ -26,6 +27,32 @@ namespace jpt
             if (!ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 return;
+            }
+
+            const Vec3& position = camera.GetPosition();
+            const Vec3 forward = camera.Forward();
+            ImGui::Text("At   %6.2f %6.2f %6.2f", position.x, position.y, position.z);
+            ImGui::Text("Look %6.2f %6.2f %6.2f", forward.x, forward.y, forward.z);
+
+            // Relative, not absolute: each field sits at zero, a drag applies that frame's delta
+            // along the camera's own axes, and it returns to zero. Editing a world-space position
+            // meant a drag on X slid the camera along world X no matter where it was pointing.
+            Vec3 move = Vec3::Zero();
+            if (ImGui::DragFloat3("Move", &move.x, 0.02f))
+            {
+                camera.MoveLocal(move);   // x right, y up, z backward.
+            }
+
+            float32 pitch = 0.0f;
+            if (ImGui::DragFloat("Pitch", &pitch, 0.25f, 0.0f, 0.0f, "%.1f deg"))
+            {
+                camera.RotateLocal(ToRadians(pitch), 0.0f);
+            }
+
+            float32 yaw = 0.0f;
+            if (ImGui::DragFloat("Yaw", &yaw, 0.25f, 0.0f, 0.0f, "%.1f deg"))
+            {
+                camera.RotateLocal(0.0f, ToRadians(yaw));
             }
 
             // The enum's order is the combo's order, so the cast is the index.

@@ -11,9 +11,11 @@ import jpt.Vector3;
 
 export namespace jpt
 {
-    /** WASD and the arrows as a -1..1 pair, x right and y up. Free and taking Input rather than
-        reading it inside Scene, so the key mapping is testable without an Application. */
-    [[nodiscard]] Vec2 GetMoveAxis(const Input& input) noexcept;
+    /** WASD, QE and the arrows in the camera's own axes: x right, y up, z backward, so W is -z.
+        Local throughout -- E rises along the camera's up, which is only world up while it is
+        looking level. Free and taking Input rather than reading it inside Scene, so the key
+        mapping is testable without an Application. */
+    [[nodiscard]] Vec3 GetMoveAxis(const Input& input) noexcept;
 
     /** The objects in the world. The camera is one of them: it is world-space state, not
         machinery like the window or the renderer. */
@@ -36,5 +38,6 @@ export namespace jpt
         void Rotate(const Vec2& deltaPixels);
         void Translate(const Vec2& deltaPixels);
         void Move(const Vec3& worldOffset);
+        void Look(const Vec2& deltaPixels);
     };
 }

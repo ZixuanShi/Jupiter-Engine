@@ -21,6 +21,7 @@ import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.Logger;
+import jpt.Matrix44;
 import jpt.Quaternion;
 import jpt.Scene;
 import jpt.TypeDefs;
@@ -226,7 +227,8 @@ namespace jpt
         {
             Camera camera;
             camera.SetPosition(Vec3(0.0f, 0.0f, 5.0f));
-            camera.SetTarget(Vec3::Zero());
+            camera.SetDirection(Vec3::Forward());
+            camera.SetDistance(5.0f);
             camera.SetFovY(ToRadians(60.0f));
 
             // Looking down -Z from +Z, the basis is the world's: right is +X, up is +Y.
@@ -240,9 +242,17 @@ namespace jpt
 
             // Twice as far means the same drag covers twice the world, or the object stops
             // tracking the finger as you zoom out.
-            camera.SetPosition(Vec3(0.0f, 0.0f, 10.0f));
+            camera.SetDistance(10.0f);
             const Vec3 farther = camera.ScreenDeltaToWorld(Vec2(100.0f, 0.0f), 1000.0f);
             Debug::Assert(AreValuesClose(farther.x, right.x * 2.0f, 1e-4f), "Doubling the distance scaled the drag by {}", farther.x / right.x);
+
+            // Zoom moves the camera, not what it orbits. Position and distance are separate fields
+            // now, so nothing else here would notice the position half of Zoom going wrong.
+            const Vec3 pivotBefore = camera.GetPosition() + camera.GetDirection() * camera.GetDistance();
+            camera.Zoom(0.4f);
+            const Vec3 pivotAfter = camera.GetPosition() + camera.GetDirection() * camera.GetDistance();
+            Debug::Assert(AreValuesClose(pivotBefore, pivotAfter, 1e-4f), "Zoom dragged the orbit point from ({}, {}, {}) to ({}, {}, {})", pivotBefore.x, pivotBefore.y, pivotBefore.z, pivotAfter.x, pivotAfter.y, pivotAfter.z);
+            camera.Zoom(1.0f / 0.4f);
 
             // Zoom is multiplicative, so opposite factors cancel.
             camera.Zoom(0.5f);
@@ -264,10 +274,10 @@ namespace jpt
         {
             Camera camera;
             camera.SetPosition(Vec3(1.6f, 2.0f, 2.4f));
-            camera.SetTarget(Vec3::Zero());
+            camera.SetDirection(-Vec3(1.6f, 2.0f, 2.4f));
 
-            const Vec3 right = camera.GetRight();
-            const Vec3 up    = camera.GetUp();
+            const Vec3 right = camera.Right();
+            const Vec3 up    = camera.Up();
 
             Debug::Assert(AreValuesClose(right.Length(), 1.0f, 1e-4f), "Camera right is {} long", right.Length());
             Debug::Assert(AreValuesClose(up.Length(), 1.0f, 1e-4f), "Camera up is {} long", up.Length());
@@ -351,34 +361,76 @@ namespace jpt
             Debug::Assert(movedDelta == Vec2(10.0f, 0.0f), "Crossing a panel delivered a ({}, {}) jump", movedDelta.x, movedDelta.y);
         }
 
+        // Local move and rotate, which the Dev Menu drives.
+        {
+            Camera camera;
+            camera.SetPosition(Vec3::Zero());
+            camera.SetDirection(Vec3::Forward());
+
+            // Yaw 90 deg about world up leaves the camera facing -X, so its own right is -Z.
+            camera.RotateLocal(0.0f, ToRadians(90.0f));
+            Debug::Assert(AreValuesClose(camera.Forward(), Vec3(-1.0f, 0.0f, 0.0f), 1e-4f), "Yaw 90 aimed at ({}, {}, {})", camera.Forward().x, camera.Forward().y, camera.Forward().z);
+
+            // Move is along the camera's axes, not the world's: +x is its right, which is now -Z.
+            camera.MoveLocal(Vec3(2.0f, 0.0f, 0.0f));
+            Debug::Assert(AreValuesClose(camera.GetPosition(), Vec3(0.0f, 0.0f, -2.0f), 1e-4f), "Local +x moved to ({}, {}, {}), expected (0, 0, -2)", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+
+            // The horizon must stay level through any mix of pitch and yaw. Composing about two
+            // local axes instead would roll, exactly as the pyramid's rotation did.
+            for (int32 i = 0; i < 8; ++i)
+            {
+                camera.RotateLocal(ToRadians(17.0f), ToRadians(23.0f));
+                Debug::Assert(AreValuesClose(camera.Right().y, 0.0f, 1e-4f), "The camera rolled: right.y is {} after {} rotations", camera.Right().y, i + 1);
+            }
+
+            // And pitch stops short of vertical rather than tipping over onto its head.
+            Debug::Assert(camera.Up().y > 0.0f, "Pitch passed vertical: up.y is {}", camera.Up().y);
+
+            // The view matrix now comes from the rotation's conjugate instead of LookAt. The two
+            // must agree wherever LookAt is defined, which is what makes this a refactor.
+            camera.SetPosition(Vec3(3.0f, 4.0f, 5.0f));
+            camera.SetDirection(Vec3(-0.3f, -0.5f, -0.8f));
+            const Mat44 viaLookAt = Mat44::Perspective(camera.GetFovY(), 1.5f, camera.GetNear(), camera.GetFar()) * Mat44::LookAt(camera.GetPosition(), camera.GetPosition() + camera.Forward());
+            Debug::Assert(AreValuesClose(camera.GetViewProjection(1.5f), viaLookAt, 1e-3f), "The quaternion view matrix disagrees with LookAt");
+        }
+
         // Keyboard movement. Synthetic keystrokes are blocked on this machine, so the mapping is
         // driven through Input directly -- which covers everything but AppKit's delivery.
         {
             Input input;
-            Debug::Assert(GetMoveAxis(input) == Vec2::Zero(), "An idle keyboard asked the pyramid to move");
+            Debug::Assert(GetMoveAxis(input) == Vec3::Zero(), "An idle keyboard asked the camera to move");
 
             input.PostKeyDown(KeyCode::D, false);
-            Debug::Assert(GetMoveAxis(input) == Vec2(1.0f, 0.0f), "D did not map to +X");
+            Debug::Assert(GetMoveAxis(input) == Vec3(1.0f, 0.0f, 0.0f), "D did not map to the camera's right");
             input.PostKeyUp(KeyCode::D);
 
+            // Local up, not world up: MoveLocal scales these by the camera's own axes.
+            input.PostKeyDown(KeyCode::E, false);
+            Debug::Assert(GetMoveAxis(input) == Vec3(0.0f, 1.0f, 0.0f), "E did not map to the camera's up");
+            input.PostKeyUp(KeyCode::E);
+
+            input.PostKeyDown(KeyCode::Q, false);
+            Debug::Assert(GetMoveAxis(input) == Vec3(0.0f, -1.0f, 0.0f), "Q did not map to the camera's down");
+            input.PostKeyUp(KeyCode::Q);
+
             input.PostKeyDown(KeyCode::W, false);
-            Debug::Assert(GetMoveAxis(input) == Vec2(0.0f, 1.0f), "W did not map to +Y");
+            Debug::Assert(GetMoveAxis(input) == Vec3(0.0f, 0.0f, -1.0f), "W did not map to the camera's forward");
 
             // Arrows are the same axis, so a held W and a held UpArrow must not stack.
             input.PostKeyDown(KeyCode::UpArrow, false);
-            Debug::Assert(GetMoveAxis(input) == Vec2(0.0f, 1.0f), "W and UpArrow stacked into a double-speed press");
+            Debug::Assert(GetMoveAxis(input) == Vec3(0.0f, 0.0f, -1.0f), "W and UpArrow stacked into a double-speed press");
             input.PostKeyUp(KeyCode::UpArrow);
 
             // Opposing keys cancel rather than fighting over the last one pressed.
             input.PostKeyDown(KeyCode::S, false);
-            Debug::Assert(GetMoveAxis(input) == Vec2::Zero(), "W and S did not cancel");
+            Debug::Assert(GetMoveAxis(input) == Vec3::Zero(), "W and S did not cancel");
             input.PostKeyUp(KeyCode::S);
 
             // A diagonal is normalized, or holding two keys is 1.41x faster than holding one.
             input.PostKeyDown(KeyCode::A, false);
-            const Vec2 diagonal = GetMoveAxis(input);
+            const Vec3 diagonal = GetMoveAxis(input);
             Debug::Assert(AreValuesClose(diagonal.Length(), 1.0f, 1e-4f), "A diagonal press moves at {}, expected 1", diagonal.Length());
-            Debug::Assert(diagonal.x < 0.0f && diagonal.y > 0.0f, "A+W pointed ({}, {}), expected up and left", diagonal.x, diagonal.y);
+            Debug::Assert(diagonal.x < 0.0f && diagonal.z < 0.0f, "A+W pointed ({}, {}, {}), expected forward and left", diagonal.x, diagonal.y, diagonal.z);
         }
 
         // Name tables. Checked at both ends, because a short table only misbehaves at the end.

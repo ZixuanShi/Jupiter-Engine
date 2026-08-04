@@ -21,9 +21,9 @@ import std;
 
 namespace jpt
 {
-    Vec2 GetMoveAxis(const Input& input) noexcept
+    Vec3 GetMoveAxis(const Input& input) noexcept
     {
-        Vec2 axis = Vec2::Zero();
+        Vec3 axis = Vec3::Zero();
 
         if (input.IsKeyDown(KeyCode::D) || input.IsKeyDown(KeyCode::RightArrow))
         {
@@ -33,17 +33,25 @@ namespace jpt
         {
             axis.x -= 1.0f;
         }
-        if (input.IsKeyDown(KeyCode::W) || input.IsKeyDown(KeyCode::UpArrow))
+        if (input.IsKeyDown(KeyCode::E))
         {
             axis.y += 1.0f;
         }
-        if (input.IsKeyDown(KeyCode::S) || input.IsKeyDown(KeyCode::DownArrow))
+        if (input.IsKeyDown(KeyCode::Q))
         {
             axis.y -= 1.0f;
         }
+        if (input.IsKeyDown(KeyCode::S) || input.IsKeyDown(KeyCode::DownArrow))
+        {
+            axis.z += 1.0f;
+        }
+        if (input.IsKeyDown(KeyCode::W) || input.IsKeyDown(KeyCode::UpArrow))
+        {
+            axis.z -= 1.0f;
+        }
 
         // Normalized, or holding two keys moves 1.41x as fast as holding one.
-        if (axis != Vec2::Zero())
+        if (axis != Vec3::Zero())
         {
             axis = axis.Normalized();
         }
@@ -82,6 +90,10 @@ namespace jpt
                 {
                     Translate(event.delta);
                 }
+                else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Right))
+                {
+                    Look(event.delta);
+                }
             });
 
         return true;
@@ -97,7 +109,7 @@ namespace jpt
 
         m_yaw   += deltaPixels.x / height * kTwoPi<float32>;
         m_pitch += deltaPixels.y / height * kTwoPi<float32>;
-        m_pyramid.rotation = Quat::FromAxisAngle(m_camera.GetRight(), m_pitch) 
+        m_pyramid.rotation = Quat::FromAxisAngle(m_camera.Right(), m_pitch) 
                            * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
     }
 
@@ -105,19 +117,33 @@ namespace jpt
     {
         Application& app = GetApplication();
 
-        const Vec2 axis = GetMoveAxis(app.GetInput());
-        if (axis == Vec2::Zero())
+        const Vec3 axis = GetMoveAxis(app.GetInput());
+        if (axis == Vec3::Zero())
         {
             return;
         }
 
         // Per second, not per frame, so the speed does not follow the frame rate.
-        constexpr float32 kSpeed = 2.0f;
+        constexpr float32 kSpeed = 4.0f;
         const float32 distance = static_cast<float32>(app.GetFrameTimer().GetDeltaSeconds()) * kSpeed;
 
-        // The world XY plane, so a key always means the same direction no matter where the camera
-        // is -- unlike the three-finger drag, which tracks the fingers and so must be camera-relative.
-        Move(Vec3(axis.x * distance, axis.y * distance, 0.0f));
+        m_camera.MoveLocal(axis * distance);
+    }
+
+    void Scene::Look(const Vec2& deltaPixels)
+    {
+        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        if (height < 1.0f)
+        {
+            return;
+        }
+
+        // Both negated: dragging right turns right, which is a negative yaw about world up, and
+        // screen Y is down while a positive pitch looks up. A full-height drag is a half turn.
+        const float32 yaw   = -deltaPixels.x / height * kPi<float32>;
+        const float32 pitch = -deltaPixels.y / height * kPi<float32>;
+
+        m_camera.RotateLocal(pitch, yaw);
     }
 
     void Scene::Translate(const Vec2& deltaPixels)
