@@ -197,17 +197,16 @@ if(APPLE)
     # Frameworks
     # Foundation is required: Homebrew clang does not auto-link libobjc like Apple clang,
     # so without it the link fails on _objc_release.
-    # ImageIO decodes the PBR maps; it is a plain C API, so ImageLoader.cpp needs no ObjC++.
+    # ImageIO decodes the PBR maps; it is a plain C API, so TextureLoader.cpp needs no ObjC++.
+    target_link_libraries(JupiterEngine PRIVATE
+        "-framework Foundation" "-framework Metal" "-framework QuartzCore"
+        "-framework ImageIO" "-framework CoreGraphics")
+
+    # Windowing is the only framework the two Apple platforms disagree on.
     if(JUPITER_PLATFORM STREQUAL "IOS")
-        target_link_libraries(JupiterEngine PRIVATE
-            "-framework UIKit" "-framework Foundation"
-            "-framework Metal" "-framework QuartzCore"
-            "-framework ImageIO" "-framework CoreGraphics")
+        target_link_libraries(JupiterEngine PRIVATE "-framework UIKit")
     else()
-        target_link_libraries(JupiterEngine PRIVATE
-            "-framework Cocoa" "-framework Foundation"
-            "-framework Metal" "-framework QuartzCore"
-            "-framework ImageIO" "-framework CoreGraphics")
+        target_link_libraries(JupiterEngine PRIVATE "-framework Cocoa")
     endif()
 
     # App bundle
