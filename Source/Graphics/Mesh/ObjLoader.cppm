@@ -7,8 +7,9 @@ import jpt.Path;
 
 export namespace jpt
 {
-    /** Wavefront OBJ. Reads v/vn and triangulates every f as a fan, which is exact for the
-        convex faces exporters emit. Materials, groups and texture coordinates are skipped.
+    /** Wavefront OBJ. Reads v/vt/vn -- including the `v x y z r g b` vertex-colour extension,
+        whose values are taken as linear -- and triangulates every f as a fan, which is exact
+        for the convex faces exporters emit. Materials and groups are skipped.
 
         Returns an empty Mesh on any failure -- the caller already has to handle a file that
         parsed to nothing, so a second error channel would buy nothing. */

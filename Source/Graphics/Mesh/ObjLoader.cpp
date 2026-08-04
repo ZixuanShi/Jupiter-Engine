@@ -2,11 +2,13 @@
 
 module jpt.ObjLoader;
 
+import jpt.LinearColor;
 import jpt.Logger;
 import jpt.Mesh;
 import jpt.Path;
 import jpt.StringUtils;
 import jpt.TypeDefs;
+import jpt.Vector2;
 import jpt.Vector3;
 import jpt.Vertex;
 import std;
@@ -15,7 +17,39 @@ namespace jpt
 {
     namespace
     {
-        constexpr uint32 kNoNormal = ~0u;
+        constexpr uint32 kNoIndex = ~0u;
+
+        /** A face corner as authored: three independent indices, kNoIndex where the face omitted
+            the field. Two corners share one GPU vertex only when all three agree -- a position
+            quoted with two normals is two vertices, and so is one quoted with two UVs. Colour is
+            absent by design: it rides on the `v` line, so it follows the position index and can
+            never disagree. */
+        struct VertexKey
+        {
+            uint32 position = kNoIndex;
+            uint32 texCoord = kNoIndex;
+            uint32 normal   = kNoIndex;
+
+            [[nodiscard]] constexpr bool operator==(const VertexKey&) const noexcept = default;
+        };
+
+        /** Handed to unordered_map explicitly rather than specialising std::hash: this is a module
+            implementation unit and the key has internal linkage, which is a corner of the standard
+            with nothing to gain over one extra template argument.
+            FNV-1a over the three words rather than their bytes -- the same mixing, a third of the
+            steps, and the key is never hashed across a process boundary. */
+        struct VertexKeyHash
+        {
+            [[nodiscard]] usize operator()(const VertexKey& key) const noexcept
+            {
+                uint64 hash = 14695981039346656037ull;
+                for (const uint32 index : { key.position, key.texCoord, key.normal })
+                {
+                    hash = (hash ^ index) * 1099511628211ull;
+                }
+                return static_cast<usize>(hash);
+            }
+        };
 
         void SkipBlanks(std::string_view& text) noexcept
         {
@@ -110,10 +144,13 @@ namespace jpt
             return true;
         }
 
-        /** One face corner: "12", "12/3", "12//4" or "12/3/4". */
-        [[nodiscard]] bool ParseCorner(std::string_view& text, int32& position, int32& normal) noexcept
+        /** One face corner: "12", "12/3", "12//4" or "12/3/4". An omitted field comes back 0,
+            which is never a valid OBJ index -- they are 1-based, and a negative one counts back
+            from the end. */
+        [[nodiscard]] bool ParseCorner(std::string_view& text, int32& position, int32& texCoord, int32& normal) noexcept
         {
-            normal = 0;
+            texCoord = 0;
+            normal   = 0;
 
             if (!Parse(text, position))
             {
@@ -123,9 +160,7 @@ namespace jpt
             if (text.starts_with('/'))
             {
                 text.remove_prefix(1);
-
-                int32 texCoord = 0;
-                (void)Parse(text, texCoord);
+                (void)Parse(text, texCoord);   // "12//4": the parse fails on '/' and leaves the 0.
 
                 if (text.starts_with('/'))
                 {
@@ -193,11 +228,14 @@ namespace jpt
 
         std::vector<Vec3> positions;
         std::vector<Vec3> normals;
+        std::vector<Vec2> texCoords;
+        std::vector<LinearColor> colors;   // Parallel to positions: the colour extension is on `v`.
 
-        // (position, normal) -> index into mesh.vertices. A shared corner with two different
-        // normals is two GPU vertices; with no normals at all the key collapses to position,
-        // which is exactly the sharing GenerateNormals below wants.
-        std::unordered_map<uint64, uint32> unique;
+        // Corner -> index into mesh.vertices. With neither normals nor UVs the key collapses to
+        // position, which is exactly the sharing GenerateNormals below wants. Note the converse:
+        // a file with UVs but no normals now splits along its UV seams *before* GenerateNormals
+        // runs, so seam vertices come out faceted rather than smoothed.
+        std::unordered_map<VertexKey, uint32, VertexKeyHash> unique;
 
         Mesh mesh;
         std::vector<uint32> corners;
@@ -223,6 +261,24 @@ namespace jpt
                 if (Parse(line, position.x) && Parse(line, position.y) && Parse(line, position.z))
                 {
                     positions.push_back(position);
+
+                    // The `v x y z r g b` vertex-colour extension. All three or none, so the
+                    // spec's optional fourth `w` component cannot be mistaken for a red channel.
+                    float32 r = 0.0f;
+                    float32 g = 0.0f;
+                    float32 b = 0.0f;
+                    const bool hasColor = Parse(line, r) && Parse(line, g) && Parse(line, b);
+                    colors.push_back(hasColor ? LinearColor(r, g, b) : LinearColor::White());
+                }
+            }
+            else if (line.starts_with("vt "))
+            {
+                line.remove_prefix(2);
+
+                Vec2 texCoord;
+                if (Parse(line, texCoord.x) && Parse(line, texCoord.y))
+                {
+                    texCoords.push_back(texCoord);
                 }
             }
             else if (line.starts_with("vn "))
@@ -240,7 +296,7 @@ namespace jpt
                 line.remove_prefix(1);
                 corners.clear();
 
-                for (int32 position = 0, normal = 0; ParseCorner(line, position, normal); )
+                for (int32 position = 0, texCoord = 0, normal = 0; ParseCorner(line, position, texCoord, normal); )
                 {
                     const usize positionIndex = Resolve(position, positions.size());
                     if (positionIndex == positions.size())
@@ -249,15 +305,27 @@ namespace jpt
                         return {};
                     }
 
-                    const usize normalIndex = (normal != 0) ? Resolve(normal, normals.size()) : normals.size();
-                    const uint32 packedNormal = (normalIndex < normals.size()) ? static_cast<uint32>(normalIndex) : kNoNormal;
-                    const uint64 key = (static_cast<uint64>(positionIndex) << 32) | packedNormal;
+                    VertexKey key;
+                    key.position = static_cast<uint32>(positionIndex);
+
+                    // Unlike the position, an out-of-range UV or normal is treated as absent
+                    // rather than fatal -- the vertex still has somewhere to be.
+                    if (const usize index = Resolve(texCoord, texCoords.size()); index < texCoords.size())
+                    {
+                        key.texCoord = static_cast<uint32>(index);
+                    }
+                    if (const usize index = Resolve(normal, normals.size()); index < normals.size())
+                    {
+                        key.normal = static_cast<uint32>(index);
+                    }
 
                     const auto [it, inserted] = unique.try_emplace(key, static_cast<uint32>(mesh.vertices.size()));
                     if (inserted)
                     {
-                        mesh.vertices.emplace_back(positions[positionIndex],
-                                                   (packedNormal != kNoNormal) ? normals[packedNormal] : Vec3::Zero());
+                        mesh.vertices.emplace_back(positions[key.position],
+                                                   (key.normal   != kNoIndex) ? normals[key.normal]     : Vec3::Zero(),
+                                                   (key.texCoord != kNoIndex) ? texCoords[key.texCoord] : Vec2::Zero(),
+                                                   colors[key.position]);
                     }
 
                     corners.push_back(it->second);

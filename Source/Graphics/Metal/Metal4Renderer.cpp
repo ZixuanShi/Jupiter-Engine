@@ -24,14 +24,17 @@ import std;
 
 // What lets the matrix cross to the GPU by memcpy: both are 16 column-major floats.
 static_assert(sizeof(jpt::Mat44) == sizeof(simd_float4x4));
+static_assert(std::is_standard_layout_v<jpt::Vertex>, "offsetof requires it");
+static_assert(sizeof(jpt::Vertex) == 48, "Vertex layout is the vertex descriptor's contract");
 
 namespace jpt
 {
     constexpr MTL::PixelFormat kDepthFormat = MTL::PixelFormatDepth32Float;
 
-    // Metal 4 binds constants by raw GPU address, whose alignment requirement is coarser than the
-    // 128 bytes Uniforms occupies, so the slots are strided rather than packed.
+    // Metal 4 binds constants by raw GPU address, whose alignment requirement is coarser than
+    // sizeof(Uniforms), so the slots are strided rather than packed.
     constexpr uint32 kUniformStride = 256;
+    static_assert(sizeof(Uniforms) <= kUniformStride, "A slot must hold one whole Uniforms");
 
     namespace
     {
@@ -205,10 +208,11 @@ namespace jpt
         {
             const uint32 uniformOffset = m_frameIndex * kUniformStride;
 
-            Uniforms uniforms;
+            Uniforms uniforms{};   // Value-initialised: the tail padding is memcpy'd to the GPU too.
             const Mat44 modelViewProjection = m_viewProjection * m_model;
             std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
             std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
+            uniforms.time = m_time;
             std::memcpy(static_cast<std::byte*>(m_pUniforms->contents()) + uniformOffset, &uniforms, sizeof(uniforms));
 
             // Metal 4 has no setVertexBytes: everything the shader reads is a GPU address in the
@@ -216,7 +220,9 @@ namespace jpt
             m_pArgumentTable->setAddress(m_pVertices->gpuAddress(), sizeof(Vertex), 0);
             m_pArgumentTable->setAddress(m_pUniforms->gpuAddress() + uniformOffset, 1);
 
-            pEncoder->setArgumentTable(m_pArgumentTable, MTL::RenderStageVertex);
+            // Both stages: the table is per-stage state, and the fragment shader reads the same
+            // slot 1 for uniforms.time. A stage with no table bound reads an undefined address.
+            pEncoder->setArgumentTable(m_pArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
             pEncoder->setRenderPipelineState(m_pPipeline);
             pEncoder->setDepthStencilState(m_pDepthState);
             pEncoder->setCullMode(MTL::CullModeBack);
@@ -377,6 +383,16 @@ namespace jpt
         pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat3);
         pVertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, normal));
         pVertexDesc->attributes()->object(1)->setBufferIndex(0);
+
+        pVertexDesc->attributes()->object(2)->setFormat(MTL::VertexFormatFloat2);
+        pVertexDesc->attributes()->object(2)->setOffset(offsetof(Vertex, uv));
+        pVertexDesc->attributes()->object(2)->setBufferIndex(0);
+
+        // Float4 rather than a packed UChar4Normalized: LinearColor is already four floats, so
+        // this costs no conversion on either side, and 16 bytes a vertex is not yet worth code.
+        pVertexDesc->attributes()->object(3)->setFormat(MTL::VertexFormatFloat4);
+        pVertexDesc->attributes()->object(3)->setOffset(offsetof(Vertex, color));
+        pVertexDesc->attributes()->object(3)->setBufferIndex(0);
 
         pVertexDesc->layouts()->object(0)->setStride(sizeof(Vertex));
 

@@ -68,6 +68,7 @@ namespace jpt
 
         m_renderer.SetModel(Mat44::RotateY(elapsed * 0.8f));
         m_renderer.SetViewProjection(m_camera.GetViewProjection(m_window.GetAspectRatio()));
+        m_renderer.SetTime(elapsed);
     }
 
     void Application::Terminate()

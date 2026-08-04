@@ -19,7 +19,7 @@ namespace jpt
     /** The contract every backend satisfies. Compile-time polymorphism */
     template<typename T>
     concept RendererType = requires(T renderer, typename T::SurfaceHandle surface,
-                                    uint32 width, uint32 height,
+                                    uint32 width, uint32 height, float32 seconds,
                                     const LinearColor& color, const Mesh& mesh, const Mat44& matrix)
     {
         { renderer.PreInit() }                  -> std::same_as<bool>;
@@ -37,6 +37,7 @@ namespace jpt
         { renderer.SetClearColor(color) }       -> std::same_as<void>;
         { renderer.SetModel(matrix) }           -> std::same_as<void>;
         { renderer.SetViewProjection(matrix) }  -> std::same_as<void>;
+        { renderer.SetTime(seconds) }           -> std::same_as<void>;
     };
 
     using Renderer = Metal4Renderer;

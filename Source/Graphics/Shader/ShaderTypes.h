@@ -16,8 +16,9 @@ namespace jpt
     {
         simd_float4x4 modelViewProjection;
         simd_float4x4 model;
+        float time;     // seconds since the application started
     };
 }
 
 // The whole reason this header is shared rather than duplicated. Evaluated on both sides.
-static_assert(sizeof(jpt::Uniforms) == 128, "Uniforms must match the shader's layout");
+static_assert(sizeof(jpt::Uniforms) == 144, "Uniforms must match the shader's layout");

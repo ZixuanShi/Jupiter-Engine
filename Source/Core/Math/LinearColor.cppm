@@ -18,6 +18,7 @@ export namespace jpt
 
     public:
         [[nodiscard]] static consteval LinearColor Black() noexcept { return LinearColor(0.0f, 0.0f, 0.0f); }
+        [[nodiscard]] static consteval LinearColor White() noexcept { return LinearColor(1.0f, 1.0f, 1.0f); }
 
     public:
         constexpr LinearColor() noexcept = default;

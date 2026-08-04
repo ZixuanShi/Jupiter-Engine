@@ -4,6 +4,7 @@ module jpt.RendererBase;
 
 import jpt.LinearColor;
 import jpt.Matrix44;
+import jpt.TypeDefs;
 
 namespace jpt
 {
@@ -20,5 +21,10 @@ namespace jpt
     void RendererBase::SetViewProjection(const Mat44& viewProjection) noexcept
     {
         m_viewProjection = viewProjection;
+    }
+
+    void RendererBase::SetTime(float32 seconds) noexcept
+    {
+        m_time = seconds;
     }
 }

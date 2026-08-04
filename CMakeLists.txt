@@ -242,10 +242,16 @@ if(APPLE)
         get_filename_component(_shader_name "${_shader}" NAME_WE)
         set(_air "${CMAKE_CURRENT_BINARY_DIR}/Shaders/${_shader_name}.air")
 
+        # The depfile is not optional either. ShaderTypes.h is compiled by clang *and* by metal,
+        # so without it a change to the uniform struct rebuilds only the C++ half and the shader
+        # goes on reading the old layout -- no compile error, and the static_assert that exists to
+        # catch exactly this never re-evaluates. -MMD over -MD so an Xcode update does not
+        # invalidate every shader through <metal_stdlib>.
         add_custom_command(OUTPUT "${_air}"
             COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS}
-                    -I "${CMAKE_SOURCE_DIR}/Source" -c "${_shader}" -o "${_air}"
+                    -I "${CMAKE_SOURCE_DIR}/Source" -MMD -MF "${_air}.d" -c "${_shader}" -o "${_air}"
             DEPENDS "${_shader}"
+            DEPFILE "${_air}.d"
             COMMENT "Compiling ${_shader_name}.metal")
 
         list(APPEND JUPITER_AIR_FILES "${_air}")
