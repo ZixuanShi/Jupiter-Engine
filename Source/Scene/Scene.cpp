@@ -96,6 +96,16 @@ namespace jpt
                 }
             });
 
+        // Driven by the transition, not polled: AppKit counts hide against unhide, so calling
+        // either every frame would sink the counter and strand the pointer.
+        input.OnMouseButton().Add([](const MouseButtonEvent& event)
+            {
+                if (event.button == MouseButton::Right)
+                {
+                    GetApplication().GetWindow().SetCursorCaptured(event.isDown);
+                }
+            });
+
         return true;
     }
 

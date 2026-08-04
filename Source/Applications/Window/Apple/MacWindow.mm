@@ -85,6 +85,12 @@
 
 @end
 
+// Defined with the rest of the cursor state below; the delegate above the namespace needs it.
+namespace
+{
+    void ApplyCursorCapture(bool captured);
+}
+
 // weak, not strong: the view is owned by the window's content-view hierarchy.
 @interface JupiterAppDelegate : NSObject <NSApplicationDelegate>
 @property (nonatomic, weak) JupiterMetalView* metalView;
@@ -96,6 +102,14 @@
 {
     (void)app;
     return YES;
+}
+
+// Cmd-Tabbing away mid-look would otherwise leave the pointer hidden and pinned system-wide,
+// with the button-up that would release it delivered to somebody else.
+- (void)applicationWillResignActive:(NSNotification*)notification
+{
+    (void)notification;
+    ApplyCursorCapture(false);
 }
 
 // Unlike the code after Run() in main, this does run: AppKit posts it before exit().
@@ -112,6 +126,39 @@ namespace
 {
     NSMutableDictionary<id<NSObject, NSCopying>, NSNumber*>* g_pTouchIds = nil;
     std::uint64_t g_nextTouchId = 1;
+
+    // While captured the cursor is hidden and frozen in place, so locationInWindow stops moving
+    // and only the event deltas carry the motion. This is the position reported to the engine:
+    // real while free, accumulated while captured, so the engine keeps differencing positions and
+    // never has to know which mode it is in.
+    bool  g_cursorCaptured = false;
+    float g_reportedX = 0.0f;
+    float g_reportedY = 0.0f;
+
+    /** Process-global, because NSCursor's hide count and the CG association both are. Idempotent:
+        AppKit counts hide against unhide, so an unmatched call strands the pointer system-wide. */
+    void ApplyCursorCapture(bool captured)
+    {
+        if (captured == g_cursorCaptured)
+        {
+            return;
+        }
+
+        g_cursorCaptured = captured;
+
+        // Disassociating pins the cursor where it is, so a long look cannot walk it into a screen
+        // edge and stall. Deltas keep arriving regardless.
+        CGAssociateMouseAndMouseCursorPosition(!captured);
+
+        if (captured)
+        {
+            [NSCursor hide];
+        }
+        else
+        {
+            [NSCursor unhide];
+        }
+    }
 
     void ForwardTrackpadTouches(NSEvent* event, NSView* pView)
     {
@@ -236,7 +283,19 @@ namespace
             case NSEventTypeLeftMouseDragged:
             case NSEventTypeRightMouseDragged:
             case NSEventTypeOtherMouseDragged:
-                jpt::OnMouseMove(x, y);
+                if (g_cursorCaptured)
+                {
+                    // Measured, not assumed: a warp of +80 CG-x and +80 CG-y reports deltaX +80
+                    // and deltaY +80, so both already run the way this engine's pixels do.
+                    g_reportedX += static_cast<float>(event.deltaX * scale);
+                    g_reportedY += static_cast<float>(event.deltaY * scale);
+                }
+                else
+                {
+                    g_reportedX = x;
+                    g_reportedY = y;
+                }
+                jpt::OnMouseMove(g_reportedX, g_reportedY);
                 break;
 
             case NSEventTypeScrollWheel:
@@ -291,6 +350,11 @@ namespace jpt
         JupiterMetalView*   pView     = nil;
         id                  pMonitor  = nil;
     };
+
+    void MacWindow::SetCursorCaptured(bool captured)
+    {
+        ApplyCursorCapture(captured);
+    }
 
     bool MacWindow::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
     {

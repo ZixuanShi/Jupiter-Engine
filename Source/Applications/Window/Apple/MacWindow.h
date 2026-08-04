@@ -22,5 +22,10 @@ namespace jpt
         bool Init();
         void Run();
         void Terminate();
+
+        /** Hides the pointer and pins it in place, so a look drag cannot walk it into a screen
+            edge and stall. Idempotent, because AppKit counts hide against unhide rather than
+            latching: an unmatched call strands the pointer for the rest of the session. */
+        void SetCursorCaptured(bool captured);
     };
 }

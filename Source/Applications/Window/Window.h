@@ -30,6 +30,7 @@ namespace jpt
         { window.Terminate() }           -> std::same_as<void>;
 
         { window.OnResize(width, height) } -> std::same_as<void>;
+        { window.SetCursorCaptured(true) } -> std::same_as<void>;
     };
 
 #if IS_PLATFORM_MACOS

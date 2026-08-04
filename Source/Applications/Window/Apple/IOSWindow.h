@@ -19,5 +19,7 @@ namespace jpt
         bool Init();
         void Run();
         void Terminate();
+
+        void SetCursorCaptured(bool captured);   // No pointer to capture on a touchscreen.
     };
 }
