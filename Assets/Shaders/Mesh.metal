@@ -40,29 +40,20 @@ vertex VertexOut MeshVertex(VertexIn in [[stage_in]],
 
 // Linear out. The attachment is an _sRGB format, so the hardware encodes this on write -- doing
 // it here with a pow() would double-encode, and would put any future blending in the wrong space.
+// The base colour map is _sRGB too, so its sample arrives linear for the same reason.
 fragment float4 MeshFragment(VertexOut in [[stage_in]],
-                             constant jpt::Uniforms& uniforms [[buffer(1)]])
+                             constant jpt::Uniforms& uniforms [[buffer(1)]],
+                             texture2d<float> baseColorMap [[texture(0)]],
+                             sampler mapSampler [[sampler(0)]])
 {
-    // Deliberately off-axis, so no two faces of the pyramid catch it equally -- a symmetric
-    // light would shade the facets identically and hide whether normals arrived at all.
     constexpr float3 kLightDirection = float3(-0.398, 0.697, 0.597);
-
-    constexpr float kBandFrequency = 12.0;   // radians per UV unit: ~3 bands across a side face
-    constexpr float kScrollSpeed   = 4.0;    // radians per second: a shade under one band a second
+    constexpr float  kAmbient = 0.12;
 
     // Renormalize: the rasterizer interpolates the corner normals linearly, which shortens
     // the result everywhere except at the corners themselves.
     const float3 normal  = normalize(in.worldNormal);
     const float  diffuse = saturate(dot(normal, kLightDirection));
 
-    // Diagonal, so one band crosses both UV axes -- a UV wrong on only one axis still shows.
-    // The trough only dims the vertex colour rather than erasing it, but it has to dim it hard:
-    // this is multiplied by the diffuse term, which is already below 0.3 on the shaded faces.
-    const float wave  = sin((in.uv.x + in.uv.y) * kBandFrequency - uniforms.time * kScrollSpeed);
-    const float bands = mix(0.45, 1.0, wave * 0.5 + 0.5);
-
-    // Ambient as a fraction of albedo, so an unlit face is a dark version of the surface
-    // rather than a colour of its own.
-    const float3 albedo = in.color.rgb * bands;
-    return float4(albedo * (diffuse + 0.12), in.color.a);
+    const float4 baseColor = baseColorMap.sample(mapSampler, in.uv) * in.color;
+    return float4(baseColor.rgb * (diffuse + kAmbient), baseColor.a);
 }

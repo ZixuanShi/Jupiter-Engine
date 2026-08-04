@@ -20,6 +20,7 @@ import jpt.Logger;
 import jpt.Matrix44;
 import jpt.PlatformPaths;
 import jpt.Vertex;
+
 import std;
 
 // What lets the matrix cross to the GPU by memcpy: both are 16 column-major floats.
@@ -51,6 +52,19 @@ namespace jpt
         // Not a member: Metal4Renderer.h is included by Application.cppm's global module fragment,
         // and a semaphore member would drag `import std` in with it.
         std::counting_semaphore<kFramesInFlight> g_frameSemaphore{ kFramesInFlight };
+
+        // Base colour is the only map that carries colour, so it is the only one the sampler may
+        // decode. Reading roughness or a normal through the sRGB curve bends the value silently.
+        [[nodiscard]] MTL::PixelFormat FormatOf(TextureSlot slot) noexcept
+        {
+            return (slot == TextureSlot::BaseColor) ? MTL::PixelFormatRGBA8Unorm_sRGB
+                                                    : MTL::PixelFormatRGBA8Unorm;
+        }
+
+        [[nodiscard]] uint32 MipLevelCount(uint32 width, uint32 height) noexcept
+        {
+            return static_cast<uint32>(std::bit_width(std::max(width, height)));
+        }
     }
 
     bool Metal4Renderer::PreInit()
@@ -121,7 +135,7 @@ namespace jpt
             return false;
         }
 
-        if (!CreatePipeline())
+        if (!CreatePipeline() || !CreateSampler())
         {
             return false;
         }
@@ -224,6 +238,14 @@ namespace jpt
             m_pArgumentTable->setAddress(m_pVertices->gpuAddress(), sizeof(Vertex), 0);
             m_pArgumentTable->setAddress(m_pUniforms->gpuAddress() + uniformOffset, 1);
 
+            // Textures and samplers bind by ResourceID rather than address -- the one place Metal 4
+            // still hands out a handle instead of a pointer.
+            for (usize slot = 0; slot < kTextureSlotCount; ++slot)
+            {
+                m_pArgumentTable->setTexture(m_pTextures[slot]->gpuResourceID(), slot);
+            }
+            m_pArgumentTable->setSamplerState(m_pSampler->gpuResourceID(), 0);
+
             // Both stages: the table is per-stage state, and the fragment shader reads the same
             // slot 1 for uniforms.time. A stage with no table bound reads an undefined address.
             pEncoder->setArgumentTable(m_pArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
@@ -281,6 +303,14 @@ namespace jpt
             Release(m_pAllocators[i]);
         }
 
+        Release(m_pUploadAllocator);
+
+        for (MTL::Texture*& pTexture : m_pTextures)
+        {
+            Release(pTexture);
+        }
+
+        Release(m_pSampler);
         Release(m_pResidencySet);
         Release(m_pArgumentTable);
         Release(m_pUniforms);
@@ -323,6 +353,99 @@ namespace jpt
         return m_pVertices && m_pIndices;
     }
 
+    bool Metal4Renderer::SetTextures(std::span<const Texture> textures)
+    {
+        if (textures.size() != kTextureSlotCount)
+        {
+            return false;
+        }
+
+        for (usize slot = 0; slot < kTextureSlotCount; ++slot)
+        {
+            const Texture& texture = textures[slot];
+            if (texture.IsEmpty())
+            {
+                return false;
+            }
+
+            Release(m_pTextures[slot]);
+
+            MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(
+                FormatOf(static_cast<TextureSlot>(slot)), texture.Width(), texture.Height(), true);
+            pDesc->setMipmapLevelCount(MipLevelCount(texture.Width(), texture.Height()));
+            pDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
+            pDesc->setStorageMode(MTL::StorageModeShared);
+
+            m_pTextures[slot] = m_pDevice->newTexture(pDesc);
+            if (!m_pTextures[slot])
+            {
+                return false;
+            }
+
+            const MTL::Region region = MTL::Region::Make2D(0, 0, texture.Width(), texture.Height());
+            m_pTextures[slot]->replaceRegion(region, 0, texture.Data(), texture.RowPitch());
+        }
+
+        // Residency first: the mip pass reaches these textures on the GPU, and a resource the
+        // GPU touches before it is resident is a fault, not an error -- here it showed up as a
+        // black mip chain with only the most-magnified texels surviving at level 0.
+        UpdateResidency();
+        GenerateMipmaps();
+        return true;
+    }
+
+    void Metal4Renderer::GenerateMipmaps()
+    {
+        // Outlives this call and is never reset: the commands live in its memory, commit is
+        // asynchronous, and nothing here can wait for the GPU -- SetTextures runs before
+        // [NSApp run], so a commit feedback handler would never be dispatched. Freeing it early
+        // leaves every level above 0 unwritten, and an unwritten mip samples black rather than
+        // stale. Streaming textures later would need a fence around a reset.
+        if (!m_pUploadAllocator)
+        {
+            m_pUploadAllocator = m_pDevice->newCommandAllocator();
+        }
+
+        // Metal 4 has no blit encoder -- generateMipmaps moved onto the compute encoder.
+        MTL4::CommandBuffer* pCommandBuffer = m_pDevice->newCommandBuffer();
+        pCommandBuffer->beginCommandBuffer(m_pUploadAllocator);
+
+        MTL4::ComputeCommandEncoder* pEncoder = pCommandBuffer->computeCommandEncoder();
+        for (MTL::Texture* pTexture : m_pTextures)
+        {
+            pEncoder->generateMipmaps(pTexture);
+        }
+        pEncoder->endEncoding();
+
+        pCommandBuffer->endCommandBuffer();
+
+        // Same queue as every frame, so ordering alone guarantees the chain is written before
+        // anything samples it.
+        m_pQueue->commit(&pCommandBuffer, 1);
+        pCommandBuffer->release();
+    }
+
+    bool Metal4Renderer::CreateSampler()
+    {
+        MTL::SamplerDescriptor* pDesc = MTL::SamplerDescriptor::alloc()->init()->autorelease();
+
+        // Repeat, not ClampToEdge: 22% of Mug.obj's UVs fall outside the unit square, and clamping
+        // smears those islands into streaks rather than wrapping them.
+        pDesc->setSAddressMode(MTL::SamplerAddressModeRepeat);
+        pDesc->setTAddressMode(MTL::SamplerAddressModeRepeat);
+        pDesc->setMinFilter(MTL::SamplerMinMagFilterLinear);
+        pDesc->setMagFilter(MTL::SamplerMinMagFilterLinear);
+        pDesc->setMipFilter(MTL::SamplerMipFilterLinear);
+        pDesc->setMaxAnisotropy(8);
+
+        // Without this the sampler has no gpuResourceID to put in the argument table, and the
+        // failure is a GPU fault rather than an error.
+        pDesc->setSupportArgumentBuffers(true);
+
+        m_pSampler = m_pDevice->newSamplerState(pDesc);
+        return m_pSampler;
+    }
+
     void Metal4Renderer::UpdateResidency()
     {
         if (!m_pResidencySet)
@@ -345,6 +468,14 @@ namespace jpt
         if (m_pUniforms)
         {
             m_pResidencySet->addAllocation(m_pUniforms);
+        }
+
+        for (MTL::Texture* pTexture : m_pTextures)
+        {
+            if (pTexture)
+            {
+                m_pResidencySet->addAllocation(pTexture);
+            }
         }
 
         // Depth is absent on purpose: residency covers raw addresses, and a memoryless texture
@@ -388,21 +519,21 @@ namespace jpt
         MTL::VertexDescriptor* pVertexDesc = MTL::VertexDescriptor::vertexDescriptor();
 
         pVertexDesc->attributes()->object(0)->setFormat(MTL::VertexFormatFloat3);
-        pVertexDesc->attributes()->object(0)->setOffset(offsetof(Vertex, position));
+        pVertexDesc->attributes()->object(0)->setOffset(Vertex::PositionOffset());
         pVertexDesc->attributes()->object(0)->setBufferIndex(0);
 
         pVertexDesc->attributes()->object(1)->setFormat(MTL::VertexFormatFloat3);
-        pVertexDesc->attributes()->object(1)->setOffset(offsetof(Vertex, normal));
+        pVertexDesc->attributes()->object(1)->setOffset(Vertex::NormalOffset());
         pVertexDesc->attributes()->object(1)->setBufferIndex(0);
 
         pVertexDesc->attributes()->object(2)->setFormat(MTL::VertexFormatFloat2);
-        pVertexDesc->attributes()->object(2)->setOffset(offsetof(Vertex, uv));
+        pVertexDesc->attributes()->object(2)->setOffset(Vertex::UVOffset());
         pVertexDesc->attributes()->object(2)->setBufferIndex(0);
 
         // Float4 rather than a packed UChar4Normalized: LinearColor is already four floats, so
         // this costs no conversion on either side, and 16 bytes a vertex is not yet worth code.
         pVertexDesc->attributes()->object(3)->setFormat(MTL::VertexFormatFloat4);
-        pVertexDesc->attributes()->object(3)->setOffset(offsetof(Vertex, color));
+        pVertexDesc->attributes()->object(3)->setOffset(Vertex::ColorOffset());
         pVertexDesc->attributes()->object(3)->setBufferIndex(0);
 
         pVertexDesc->layouts()->object(0)->setStride(sizeof(Vertex));
@@ -426,6 +557,8 @@ namespace jpt
 
         MTL4::ArgumentTableDescriptor* pTableDesc = MTL4::ArgumentTableDescriptor::alloc()->init();
         pTableDesc->setMaxBufferBindCount(2);           // Vertices at 0, uniforms at 1.
+        pTableDesc->setMaxTextureBindCount(kTextureSlotCount);
+        pTableDesc->setMaxSamplerStateBindCount(1);
         pTableDesc->setSupportAttributeStrides(true);   // Required for the strided binding [[stage_in]] reads.
 
         m_pArgumentTable = m_pDevice->newArgumentTable(pTableDesc, &pError);
