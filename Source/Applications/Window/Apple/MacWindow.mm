@@ -110,17 +110,6 @@
 
 namespace
 {
-    /** A monitor, not responder overrides: imgui_impl_osx makes its own KeyEventResponder the
-        window's first responder, so a keyDown: override here would never fire.
-
-        Reports every event unconditionally. ImGui is not downstream of this -- it installs its own
-        monitor and its own responder, so it sees the stream whatever we do, and there is nothing
-        here to route. Whether the *engine* acts on an event is Input's decision, because dropping
-        one here would desynchronise its key state from the hardware. */
-    // identity is documented as a dictionary key compared with isEqual:, not as a stable pointer,
-    // so the engine's id is minted here rather than cast from the object. Membership doubles as
-    // "already reported", which is what lets a finger that was held below the threshold enter as
-    // Began the moment a second one lands.
     NSMutableDictionary<id<NSObject, NSCopying>, NSNumber*>* g_pTouchIds = nil;
     std::uint64_t g_nextTouchId = 1;
 
@@ -137,9 +126,6 @@ namespace
             }
         }
 
-        // One finger on a trackpad moves the cursor; the drag it would imply on a touchscreen is
-        // already the mouse button. Below two, report nothing and retire whatever was open, or a
-        // finger left in the table would hold the gesture forever.
         if (touching < 2)
         {
             for (NSNumber* id in g_pTouchIds.allValues)
@@ -161,9 +147,6 @@ namespace
                 continue;
             }
 
-            // Trackpad height maps to viewport height, and width scales by the same factor rather
-            // than to viewport width, so a diagonal swipe stays diagonal on a trackpad that is far
-            // wider than it is tall. normalizedPosition is bottom-left, the engine is top-left.
             const CGFloat perPoint = viewHeight / device.height;
             const float x = static_cast<float>(touch.normalizedPosition.x * device.width * perPoint);
             const float y = static_cast<float>((1.0 - touch.normalizedPosition.y) * viewHeight);

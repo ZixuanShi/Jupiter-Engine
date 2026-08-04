@@ -438,6 +438,32 @@ namespace jpt
             jpt::OnKeyUp(kVK_JIS_Kana);
 
             input.OnKeyDown().Remove(handle);
+
+            // Button numbers through the same real callback. Middle is the one that drives
+            // translation, and AppKit numbers it 2 -- nothing else in the engine says so.
+            MouseButton receivedButton = MouseButton::Left;
+            const auto buttonHandle = input.OnMouseButton().Add([&receivedButton](const MouseButtonEvent& event) { receivedButton = event.button; });
+
+            const struct { std::int32_t number; MouseButton expected; } kButtons[] =
+            {
+                { 0, MouseButton::Left },
+                { 1, MouseButton::Right },
+                { 2, MouseButton::Middle },
+            };
+
+            for (const auto& testCase : kButtons)
+            {
+                // Position stays at the origin it already holds, so this leaves no phantom delta
+                // behind for the first real mouse move.
+                jpt::OnMouseButton(testCase.number, true, 0.0f, 0.0f);
+                Debug::Assert(receivedButton == testCase.expected, "Button {} translated to {}, expected {}", testCase.number, ToString(receivedButton), ToString(testCase.expected));
+                Debug::Assert(input.IsMouseButtonDown(testCase.expected), "Button {} did not register as down", testCase.number);
+
+                jpt::OnMouseButton(testCase.number, false, 0.0f, 0.0f);
+                Debug::Assert(!input.IsMouseButtonDown(testCase.expected), "Button {} stayed down after release", testCase.number);
+            }
+
+            input.OnMouseButton().Remove(buttonHandle);
         }
         {
             // Modifiers arrive as a whole mask, never down/up, so this path translates separately.

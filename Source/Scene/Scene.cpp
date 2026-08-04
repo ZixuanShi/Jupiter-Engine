@@ -72,13 +72,15 @@ namespace jpt
                 }
             });
 
-        // The desktop equivalent of a one-finger drag. Reuses the polled button state rather
-        // than tracking its own.
         input.OnMouseMove().Add([this](const MouseMoveEvent& event)
             {
                 if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
                 {
                     Rotate(event.delta);
+                }
+                else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
+                {
+                    Translate(event.delta);
                 }
             });
 
