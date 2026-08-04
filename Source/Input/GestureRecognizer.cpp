@@ -3,7 +3,6 @@
 module jpt.GestureRecognizer;
 
 import jpt.Constants;
-import jpt.Logger;
 import jpt.Math;
 import jpt.TypeDefs;
 import std;
@@ -20,6 +19,7 @@ namespace jpt
             if (it == m_touches.end())
             {
                 m_touches.emplace_back(id, position, timeSeconds);
+                ++m_generation;
             }
             break;
 
@@ -37,6 +37,7 @@ namespace jpt
             if (it != m_touches.end())
             {
                 m_touches.erase(it);
+                ++m_generation;
             }
             break;
         }
@@ -47,23 +48,21 @@ namespace jpt
         const uint32 fingerCount = static_cast<uint32>(m_touches.size());
         if (fingerCount == 0)
         {
-            m_lastFingerCount = 0;
             return;
         }
 
         const Vec2 centroid = Centroid();
         const float32 spread = Spread(centroid);
+        const float32 angle = (fingerCount == 2) ? Angle() : 0.0f;
 
-        // A finger landing or lifting jumps both quantities. Rebase and emit nothing, or the
-        // object teleports the moment a second finger touches down.
-        if (fingerCount != m_lastFingerCount)
+        // A finger landing or lifting jumps all three. Rebase and emit nothing, or the object
+        // teleports the moment a second finger touches down.
+        if (m_generation != m_lastGeneration)
         {
-#if !IS_CONFIG_RELEASE
-            Debug::Log("Fingers: {}", fingerCount);
-#endif
-            m_lastFingerCount = fingerCount;
+            m_lastGeneration = m_generation;
             m_lastCentroid = centroid;
             m_lastSpread = spread;
+            m_lastAngle = angle;
             return;
         }
 
@@ -84,10 +83,21 @@ namespace jpt
             {
                 m_onPinch.Dispatch(PinchEvent{ .center = centroid, .scale = scale });
             }
+
+            // remainder wraps to [-pi, pi], which a plain subtraction does not: a twist crossing
+            // atan2's branch cut would otherwise read as a full turn in one frame.
+            constexpr float32 kTwistDeadZone = ToRadians(0.15f);
+
+            const float32 twist = std::remainder(angle - m_lastAngle, kTwoPi<float32>);
+            if (std::abs(twist) > kTwistDeadZone)
+            {
+                m_onTwist.Dispatch(TwistEvent{ .center = centroid, .radians = twist });
+            }
         }
 
         m_lastCentroid = centroid;
         m_lastSpread = spread;
+        m_lastAngle = angle;
     }
 
     Vec2 GestureRecognizer::Centroid() const noexcept
@@ -108,5 +118,11 @@ namespace jpt
             sum += (touch.position - centroid).Length();
         }
         return sum / static_cast<float32>(m_touches.size());
+    }
+
+    float32 GestureRecognizer::Angle() const noexcept
+    {
+        const Vec2 axis = m_touches[1].position - m_touches[0].position;
+        return std::atan2(axis.y, axis.x);
     }
 }

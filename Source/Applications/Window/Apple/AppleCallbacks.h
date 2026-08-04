@@ -17,8 +17,6 @@ namespace jpt
     void OnTerminate();
 
 #if IS_PLATFORM_MACOS
-    // Raw platform values: translating them needs jpt::KeyCode, and a .mm may not reach a module.
-    // Coordinates are points, top-left origin. macOS only -- iOS is touch, and that is its own set.
     void OnKeyDown(std::uint16_t platformKeyCode, bool isRepeat);
     void OnKeyUp(std::uint16_t platformKeyCode);
 
@@ -32,11 +30,7 @@ namespace jpt
 
     // touchId is a stable handle for the finger, minted by the platform layer. timeSeconds is the
     // event's own timestamp, not the engine clock.
-    //
-    // Both platforms: iOS from the screen, macOS from the trackpad. Coordinates are pixels in the
-    // view's space either way, so the gesture layer above needs no idea which it is -- except that
-    // macOS never reports a single finger, because one finger on a trackpad is cursor motion
-    // rather than a drag.
+    // Both platforms: iOS from the screen, macOS from the trackpad. 
     void OnTouchBegan(std::uint64_t touchId, float x, float y, double timeSeconds);
     void OnTouchMoved(std::uint64_t touchId, float x, float y, double timeSeconds);
     void OnTouchEnded(std::uint64_t touchId, float x, float y, double timeSeconds);

@@ -19,6 +19,7 @@ export namespace jpt
         Transform m_model;
         float32 m_yaw   = 0.0f;
         float32 m_pitch = 0.0f;
+        float32 m_roll  = 0.0f;
 
     public:
         bool Init();
@@ -29,6 +30,8 @@ export namespace jpt
 
     private:
         void RotateModel(const Vec2& deltaPixels);
+        void TwistModel(float32 radians);
         void TranslateModel(const Vec2& deltaPixels);
+        void ApplyRotation();
     };
 }

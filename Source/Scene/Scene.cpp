@@ -44,6 +44,10 @@ namespace jpt
                     TranslateModel(event.delta); 
                 }
             });
+        input.OnTwist().Add([this](const TwistEvent& event)
+            {
+                TwistModel(event.radians);
+            });
         input.OnMouseMove().Add([this](const MouseMoveEvent& event)
             {
                 if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
@@ -69,7 +73,21 @@ namespace jpt
 
         m_yaw   += deltaPixels.x / height * kTwoPi<float32>;
         m_pitch += deltaPixels.y / height * kTwoPi<float32>;
-        m_model.rotation = Quat::FromAxisAngle(m_camera.Right(), m_pitch) 
+        ApplyRotation();
+    }
+
+    void Scene::TwistModel(float32 radians)
+    {
+        m_roll += radians;
+        ApplyRotation();
+    }
+
+    void Scene::ApplyRotation()
+    {
+        // Roll outermost: a twist spins what is already on screen, about the axis you look along,
+        // so it applies after yaw and pitch have placed the model.
+        m_model.rotation = Quat::FromAxisAngle(m_camera.Forward(), m_roll)
+                           * Quat::FromAxisAngle(m_camera.Right(), m_pitch)
                            * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
     }
 

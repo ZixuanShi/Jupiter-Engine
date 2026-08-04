@@ -31,6 +31,12 @@ export namespace jpt
         float32 scale = 1.0f;               // This frame over last, so around 1.
     };
 
+    struct TwistEvent
+    {
+        Vec2 center = Vec2::Zero();
+        float32 radians = 0.0f;             // This frame's change, so near 0. Positive is clockwise on screen.
+    };
+
     /** Platform-agnostic: it sees only ids, positions, phases and timestamps, which is what UIKit
         and Android's MotionEvent both provide.
 
@@ -43,10 +49,16 @@ export namespace jpt
 
         Vec2 m_lastCentroid = Vec2::Zero();
         float32 m_lastSpread = 0.0f;
-        uint32 m_lastFingerCount = 0;
+        float32 m_lastAngle = 0.0f;
+
+        // Bumped whenever a touch is added or removed. Swapping one finger for another inside a
+        // frame holds the count at 2 while jumping everything measured from them.
+        uint32 m_generation = 0;
+        uint32 m_lastGeneration = 0;
 
         EventDispatcher<PanEvent> m_onPan;
         EventDispatcher<PinchEvent> m_onPinch;
+        EventDispatcher<TwistEvent> m_onTwist;
 
     public:
         void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds);
@@ -55,11 +67,13 @@ export namespace jpt
     public:
         [[nodiscard]] EventDispatcher<PanEvent>& OnPan() noexcept { return m_onPan; }
         [[nodiscard]] EventDispatcher<PinchEvent>& OnPinch() noexcept { return m_onPinch; }
-
-        [[nodiscard]] usize GetTouchCount() const noexcept { return m_touches.size(); }
+        [[nodiscard]] EventDispatcher<TwistEvent>& OnTwist() noexcept { return m_onTwist; }
 
     private:
         [[nodiscard]] Vec2 Centroid() const noexcept;
         [[nodiscard]] float32 Spread(const Vec2& centroid) const noexcept;
+
+        /** The two-finger axis. Pixels are y-down, so this increases clockwise on screen. */
+        [[nodiscard]] float32 Angle() const noexcept;
     };
 }

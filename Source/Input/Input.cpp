@@ -45,9 +45,6 @@ namespace jpt
 
     void Input::Update()
     {
-        // Pulled rather than pushed, so Application::Update stays a list of calls. One frame stale
-        // by construction: ImGui computes WantCapture* in NewFrame, which runs inside the
-        // renderer's BeginFrame -- after this. Every ImGui integration has that gap.
         SetCaptured(ImGuiWantsKeyboard(), ImGuiWantsMouse());
 
         m_gestures.Update();

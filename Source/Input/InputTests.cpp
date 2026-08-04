@@ -222,6 +222,62 @@ namespace jpt
             Debug::Assert(panFingers == 1, "A cancelled touch stayed active: pan reports {} fingers", panFingers);
         }
 
+        // Twist. Rotating about the pair's own midpoint holds the centroid and the spread, so a
+        // pure twist must reach exactly one of the three recognisers.
+        {
+            Input input;
+
+            uint32 panCount = 0;
+            uint32 pinchCount = 0;
+            uint32 twistCount = 0;
+            float32 twistRadians = 0.0f;
+            input.OnPan().Add([&panCount](const PanEvent&) { ++panCount; });
+            input.OnPinch().Add([&pinchCount](const PinchEvent&) { ++pinchCount; });
+            input.OnTwist().Add([&](const TwistEvent& event)
+                {
+                    twistRadians = event.radians;
+                    ++twistCount;
+                });
+
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0);
+            input.PostTouch(TouchPhase::Began, 2, Vec2(300.0f, 100.0f), 0.0);
+            input.Update();
+
+            // A quarter turn clockwise about the midpoint (200, 100). Pixels are y-down, so
+            // clockwise on screen is the positive direction.
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(200.0f,   0.0f), 0.016);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(200.0f, 200.0f), 0.016);
+            input.Update();
+            Debug::Assert(twistCount == 1, "A quarter turn emitted {} twists, expected 1", twistCount);
+            Debug::Assert(AreValuesClose(twistRadians, kHalfPi<float32>, 1e-4f), "A quarter turn reported {} rad", twistRadians);
+            Debug::Assert(panCount == 0, "A twist about the midpoint moved the centroid");
+            Debug::Assert(pinchCount == 0, "A twist about the midpoint changed the spread");
+
+            // Park the pair just short of atan2's +/-pi branch cut, then step 20 degrees across it.
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f,  82.635f), 0.032);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f, 117.365f), 0.032);
+            input.Update();
+
+            twistCount = 0;
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f, 117.365f), 0.048);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f,  82.635f), 0.048);
+            input.Update();
+            Debug::Assert(twistCount == 1, "The step across the branch cut emitted {} twists, expected 1", twistCount);
+            Debug::Assert(AreValuesClose(twistRadians, ToRadians(20.0f), 1e-3f), "Crossing +/-pi reported {} rad, expected 0.349 -- the delta was not wrapped", twistRadians);
+
+            // Trading one finger for another inside a frame holds the count at 2 while swinging
+            // the pair's axis. Rebasing on the count alone would report that swing as a twist.
+            panCount = 0;
+            pinchCount = 0;
+            twistCount = 0;
+            input.PostTouch(TouchPhase::Ended, 1, Vec2(298.481f, 117.365f), 0.064);
+            input.PostTouch(TouchPhase::Began, 3, Vec2(101.519f, 500.0f), 0.064);
+            input.Update();
+            Debug::Assert(twistCount == 0, "Swapping a finger mid-gesture emitted a twist of {} rad", twistRadians);
+            Debug::Assert(panCount == 0, "Swapping a finger mid-gesture emitted a pan");
+            Debug::Assert(pinchCount == 0, "Swapping a finger mid-gesture emitted a pinch");
+        }
+
         // Camera, as input drives it.
         {
             Camera camera;
@@ -306,6 +362,16 @@ namespace jpt
                 const float32 rolled = rotation.Up().Dot(right);
                 Debug::Assert(AreValuesClose(rolled, 0.0f, 1e-4f), "The model rolled {} sideways after {} drags", rolled, i + 1);
             }
+
+            // A two-finger twist rolls about the axis the camera looks along, so it cannot change
+            // how far anything sits along that axis. World +Z is 47 degrees off it here and shifts
+            // this by 0.36 -- the same class of mistake as pitching about world X above.
+            const Vec3 forward = camera.Forward();
+            Debug::Assert(!AreValuesClose(forward.Dot(Vec3::Forward()), 1.0f, 1e-3f), "This camera looks down -Z, so it cannot tell world Z from the view axis");
+
+            const float32 depthBefore = Vec3::Up().Dot(forward);
+            const float32 depthAfter  = Quat::FromAxisAngle(forward, ToRadians(35.0f)).Up().Dot(forward);
+            Debug::Assert(AreValuesClose(depthAfter, depthBefore, 1e-4f), "A twist moved the model {} along the view axis", depthAfter - depthBefore);
         }
 
         // Capture. The platform seam reports everything now, so this is the only gate, and the
