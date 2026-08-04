@@ -39,6 +39,16 @@
     return YES;
 }
 
+- (void)keyDown:(NSEvent*)event
+{
+    (void)event;
+}
+
+- (void)keyUp:(NSEvent*)event
+{
+    (void)event;
+}
+
 // A window can move to a display of different scale without changing size, so this is a
 // separate event from setFrameSize:.
 - (void)viewDidChangeBackingProperties
