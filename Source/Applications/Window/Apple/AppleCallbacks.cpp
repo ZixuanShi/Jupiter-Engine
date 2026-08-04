@@ -251,7 +251,6 @@ namespace jpt
     }
 #endif // IS_PLATFORM_MACOS
 
-#if IS_PLATFORM_IOS
     namespace
     {
         void PostTouch(TouchPhase phase, std::uint64_t touchId, float x, float y, double timeSeconds)
@@ -279,7 +278,6 @@ namespace jpt
     {
         PostTouch(TouchPhase::Cancelled, touchId, x, y, timeSeconds);
     }
-#endif // IS_PLATFORM_IOS
 }
 
 #endif // IS_PLATFORM_MACOS || IS_PLATFORM_IOS

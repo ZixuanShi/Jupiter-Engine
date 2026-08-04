@@ -3,6 +3,7 @@
 module jpt.GestureRecognizer;
 
 import jpt.Constants;
+import jpt.Logger;
 import jpt.Math;
 import jpt.TypeDefs;
 import std;
@@ -57,6 +58,9 @@ namespace jpt
         // object teleports the moment a second finger touches down.
         if (fingerCount != m_lastFingerCount)
         {
+#if !IS_CONFIG_RELEASE
+            Debug::Log("Fingers: {}", fingerCount);
+#endif
             m_lastFingerCount = fingerCount;
             m_lastCentroid = centroid;
             m_lastSpread = spread;
@@ -71,8 +75,12 @@ namespace jpt
 
         if (fingerCount == 2 && m_lastSpread > kEpsilon<float32> && spread > kEpsilon<float32>)
         {
+            // A real dead zone, not an epsilon: two fingers sliding to scroll wobble by a fraction
+            // of a millimetre every frame, and at epsilon every one of those is a zoom.
+            constexpr float32 kDeadZone = 0.005f;
+
             const float32 scale = spread / m_lastSpread;
-            if (!AreValuesClose(scale, 1.0f))
+            if (std::abs(scale - 1.0f) > kDeadZone)
             {
                 m_onPinch.Dispatch(PinchEvent{ .center = centroid, .scale = scale });
             }

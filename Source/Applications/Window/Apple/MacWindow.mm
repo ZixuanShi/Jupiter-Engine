@@ -117,9 +117,89 @@ namespace
         monitor and its own responder, so it sees the stream whatever we do, and there is nothing
         here to route. Whether the *engine* acts on an event is Input's decision, because dropping
         one here would desynchronise its key state from the hardware. */
+    // identity is documented as a dictionary key compared with isEqual:, not as a stable pointer,
+    // so the engine's id is minted here rather than cast from the object. Membership doubles as
+    // "already reported", which is what lets a finger that was held below the threshold enter as
+    // Began the moment a second one lands.
+    NSMutableDictionary<id<NSObject, NSCopying>, NSNumber*>* g_pTouchIds = nil;
+    std::uint64_t g_nextTouchId = 1;
+
+    void ForwardTrackpadTouches(NSEvent* event, NSView* pView)
+    {
+        NSSet<NSTouch*>* touches = [event touchesMatchingPhase:NSTouchPhaseAny inView:nil];
+
+        NSUInteger touching = 0;
+        for (NSTouch* touch in touches)
+        {
+            if ((touch.phase & NSTouchPhaseTouching) != 0)
+            {
+                ++touching;
+            }
+        }
+
+        // One finger on a trackpad moves the cursor; the drag it would imply on a touchscreen is
+        // already the mouse button. Below two, report nothing and retire whatever was open, or a
+        // finger left in the table would hold the gesture forever.
+        if (touching < 2)
+        {
+            for (NSNumber* id in g_pTouchIds.allValues)
+            {
+                jpt::OnTouchEnded(id.unsignedLongLongValue, 0.0f, 0.0f, event.timestamp);
+            }
+            [g_pTouchIds removeAllObjects];
+            return;
+        }
+
+        const CGFloat backing = pView.window ? pView.window.backingScaleFactor : 1.0;
+        const CGFloat viewHeight = pView.bounds.size.height * backing;
+
+        for (NSTouch* touch in touches)
+        {
+            const NSSize device = touch.deviceSize;
+            if (device.height < 1.0)
+            {
+                continue;
+            }
+
+            // Trackpad height maps to viewport height, and width scales by the same factor rather
+            // than to viewport width, so a diagonal swipe stays diagonal on a trackpad that is far
+            // wider than it is tall. normalizedPosition is bottom-left, the engine is top-left.
+            const CGFloat perPoint = viewHeight / device.height;
+            const float x = static_cast<float>(touch.normalizedPosition.x * device.width * perPoint);
+            const float y = static_cast<float>((1.0 - touch.normalizedPosition.y) * viewHeight);
+
+            NSNumber* existing = [g_pTouchIds objectForKey:touch.identity];
+
+            if ((touch.phase & (NSTouchPhaseEnded | NSTouchPhaseCancelled)) != 0)
+            {
+                if (existing)
+                {
+                    jpt::OnTouchEnded(existing.unsignedLongLongValue, x, y, event.timestamp);
+                    [g_pTouchIds removeObjectForKey:touch.identity];
+                }
+            }
+            else if (existing)
+            {
+                jpt::OnTouchMoved(existing.unsignedLongLongValue, x, y, event.timestamp);
+            }
+            else
+            {
+                const std::uint64_t touchId = g_nextTouchId++;
+                [g_pTouchIds setObject:@(touchId) forKey:touch.identity];
+                jpt::OnTouchBegan(touchId, x, y, event.timestamp);
+            }
+        }
+    }
+
     id InstallEventMonitor(NSView* pView)
     {
-        const NSEventMask mask = NSEventMaskKeyDown | NSEventMaskKeyUp | NSEventMaskFlagsChanged
+        // Raw trackpad touches ride on NSEventTypeGesture, which a monitor can see -- the responder
+        // methods would not fire, since imgui_impl_osx holds first responder.
+        pView.allowedTouchTypes = NSTouchTypeMaskIndirect;
+        g_pTouchIds = [NSMutableDictionary dictionary];
+
+        const NSEventMask mask = NSEventMaskGesture
+                               | NSEventMaskKeyDown | NSEventMaskKeyUp | NSEventMaskFlagsChanged
                                | NSEventMaskLeftMouseDown  | NSEventMaskLeftMouseUp
                                | NSEventMaskRightMouseDown | NSEventMaskRightMouseUp
                                | NSEventMaskOtherMouseDown | NSEventMaskOtherMouseUp
@@ -141,6 +221,10 @@ namespace
 
             switch (event.type)
             {
+            case NSEventTypeGesture:
+                ForwardTrackpadTouches(event, pView);
+                break;
+
             case NSEventTypeKeyDown:
                 jpt::OnKeyDown(event.keyCode, event.isARepeat);
                 break;

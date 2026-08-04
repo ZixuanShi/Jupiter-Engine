@@ -30,12 +30,15 @@ namespace jpt
     void OnMouseScroll(float deltaX, float deltaY, bool isPrecise);
 #endif
 
-#if IS_PLATFORM_IOS
-    // touchId is the platform's own stable handle for the finger: UITouch* on iOS, pointerId on
-    // Android. timeSeconds is the event's own timestamp, not the engine clock.
+    // touchId is a stable handle for the finger, minted by the platform layer. timeSeconds is the
+    // event's own timestamp, not the engine clock.
+    //
+    // Both platforms: iOS from the screen, macOS from the trackpad. Coordinates are pixels in the
+    // view's space either way, so the gesture layer above needs no idea which it is -- except that
+    // macOS never reports a single finger, because one finger on a trackpad is cursor motion
+    // rather than a drag.
     void OnTouchBegan(std::uint64_t touchId, float x, float y, double timeSeconds);
     void OnTouchMoved(std::uint64_t touchId, float x, float y, double timeSeconds);
     void OnTouchEnded(std::uint64_t touchId, float x, float y, double timeSeconds);
     void OnTouchCancelled(std::uint64_t touchId, float x, float y, double timeSeconds);
-#endif
 }
