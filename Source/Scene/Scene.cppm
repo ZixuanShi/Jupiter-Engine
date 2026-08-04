@@ -16,7 +16,7 @@ export namespace jpt
     {
     private:
         Camera m_camera;
-        Transform m_pyramid;
+        Transform m_model;
         float32 m_yaw   = 0.0f;
         float32 m_pitch = 0.0f;
 
@@ -25,10 +25,10 @@ export namespace jpt
         void Update();
 
         [[nodiscard]] Camera& GetCamera() noexcept { return m_camera; }
-        [[nodiscard]] Transform& GetPyramid() noexcept { return m_pyramid; }
+        [[nodiscard]] Transform& GetModel() noexcept { return m_model; }
 
     private:
-        void RotatePyramid(const Vec2& deltaPixels);
-        void TranslatePyramid(const Vec2& deltaPixels);
+        void RotateModel(const Vec2& deltaPixels);
+        void TranslateModel(const Vec2& deltaPixels);
     };
 }

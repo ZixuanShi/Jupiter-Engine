@@ -35,7 +35,7 @@ namespace jpt
         const Window& window = app.GetWindow();
         Scene& scene = app.GetScene();
 
-        m_model = scene.GetPyramid().ToMatrix();
+        m_model = scene.GetModel().ToMatrix();
         m_viewProjection = scene.GetCamera().GetViewProjection(window.GetAspectRatio());
         m_time = static_cast<float32>(frameTimer.GetElapsedSeconds());
     }

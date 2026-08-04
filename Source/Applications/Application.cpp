@@ -104,7 +104,7 @@ namespace jpt
             return false;
         }
 
-        if (!m_renderer.SetMesh(LoadObj("Assets/Meshes/Pyramid.obj")))
+        if (!m_renderer.SetMesh(LoadObj("Assets/Meshes/Mug.obj")))
         {
             Debug::Error("Failed to upload the mesh.");
             return false;

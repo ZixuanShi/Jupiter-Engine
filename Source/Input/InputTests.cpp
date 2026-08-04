@@ -294,7 +294,7 @@ namespace jpt
 
             // And it must still hold after a sequence of drags, which is what rebuilding from two
             // accumulated angles buys. Composing each drag onto the previous rotation instead
-            // passes the single-drag case above and then rolls to 0.92 by the sixth -- the pyramid
+            // passes the single-drag case above and then rolls to 0.92 by the sixth -- the model
             // lying on its side -- because two rotations about different axes compose to a twist.
             float32 yaw = 0.0f;
             float32 pitch = 0.0f;
@@ -304,7 +304,7 @@ namespace jpt
 
                 const Quat rotation = Quat::FromAxisAngle(right, pitch) * Quat::FromAxisAngle(Vec3::Up(), yaw);
                 const float32 rolled = rotation.Up().Dot(right);
-                Debug::Assert(AreValuesClose(rolled, 0.0f, 1e-4f), "The pyramid rolled {} sideways after {} drags", rolled, i + 1);
+                Debug::Assert(AreValuesClose(rolled, 0.0f, 1e-4f), "The model rolled {} sideways after {} drags", rolled, i + 1);
             }
         }
 
@@ -375,7 +375,7 @@ namespace jpt
             Debug::Assert(AreValuesClose(camera.GetPosition(), Vec3(0.0f, 0.0f, -2.0f), 1e-4f), "Local +x moved to ({}, {}, {}), expected (0, 0, -2)", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
             // The horizon must stay level through any mix of pitch and yaw. Composing about two
-            // local axes instead would roll, exactly as the pyramid's rotation did.
+            // local axes instead would roll, exactly as the model's rotation did.
             for (int32 i = 0; i < 8; ++i)
             {
                 camera.RotateLocal(ToRadians(17.0f), ToRadians(23.0f));

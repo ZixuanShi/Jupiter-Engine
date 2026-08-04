@@ -25,7 +25,7 @@ namespace jpt
     {
         // Camera
         m_camera.SetPosition(Vec3(1.6f, 2.0f, 2.4f));
-        m_camera.LookAt(m_pyramid.position);
+        m_camera.LookAt(m_model.position);
         if (!m_camera.Init())
         {
             return false;
@@ -37,29 +37,29 @@ namespace jpt
             {
                 if (event.fingerCount == 1)      
                 { 
-                    RotatePyramid(event.delta); 
+                    RotateModel(event.delta); 
                 }
                 else if (event.fingerCount == 3) 
                 { 
-                    TranslatePyramid(event.delta); 
+                    TranslateModel(event.delta); 
                 }
             });
         input.OnMouseMove().Add([this](const MouseMoveEvent& event)
             {
                 if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
                 {
-                    RotatePyramid(event.delta);
+                    RotateModel(event.delta);
                 }
                 else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
                 {
-                    TranslatePyramid(event.delta);
+                    TranslateModel(event.delta);
                 }
             });
 
         return true;
     }
 
-    void Scene::RotatePyramid(const Vec2& deltaPixels)
+    void Scene::RotateModel(const Vec2& deltaPixels)
     {
         const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
         if (height < 1.0f)
@@ -69,7 +69,7 @@ namespace jpt
 
         m_yaw   += deltaPixels.x / height * kTwoPi<float32>;
         m_pitch += deltaPixels.y / height * kTwoPi<float32>;
-        m_pyramid.rotation = Quat::FromAxisAngle(m_camera.Right(), m_pitch) 
+        m_model.rotation = Quat::FromAxisAngle(m_camera.Right(), m_pitch) 
                            * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
     }
 
@@ -78,17 +78,17 @@ namespace jpt
         m_camera.Update();
     }
 
-    void Scene::TranslatePyramid(const Vec2& deltaPixels)
+    void Scene::TranslateModel(const Vec2& deltaPixels)
     {
         constexpr float32 kRange = 3.0f;
 
         const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
 
-        Vec3 position = m_pyramid.position + m_camera.ScreenDeltaToWorld(deltaPixels, height);
+        Vec3 position = m_model.position + m_camera.ScreenDeltaToWorld(deltaPixels, height);
         position.x = std::clamp(position.x, -kRange, kRange);
         position.y = std::clamp(position.y, -kRange, kRange);
         position.z = std::clamp(position.z, -kRange, kRange);
 
-        m_pyramid.position = position;
+        m_model.position = position;
     }
 }
