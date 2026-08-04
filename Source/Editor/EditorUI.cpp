@@ -4,11 +4,16 @@ module;
 
 // Textual first, then the imports: the rule that already governs Metal4Renderer.cpp. imgui.h is
 // plain C++ and includes no STL, so it costs little here -- measured before wrapping it.
+// Reaching the application from an implementation unit is legal; the same include in EditorUI.cppm
+// would close a cycle, because jpt.Application imports jpt.EditorUI.
 #include "imgui.h"
+#include "Applications/AppClient.h"
+#include "Graphics/Renderer.h"
 
 module jpt.EditorUI;
 
 import jpt.Camera;
+import jpt.LinearColor;
 import jpt.Math;
 import jpt.TypeDefs;
 import std;
@@ -65,17 +70,34 @@ namespace jpt
                 camera.SetNearFar(zNear, std::max(zFar, zNear + kMinRange));
             }
         }
+
+        void DrawBackgroundSection(Renderer& renderer)
+        {
+            if (!ImGui::CollapsingHeader("Background", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                return;
+            }
+
+            LinearColor color = renderer.GetClearColor();
+            if (ImGui::ColorEdit3("Color", &color.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR))
+            {
+                renderer.SetClearColor(color);
+            }
+        }
     }
 
-    void DrawEditorUI(Camera& camera)
+    void DrawEditorUI()
     {
+        Application& app = GetApplication();
+
         const float fontSize = ImGui::GetFontSize();
         ImGui::SetNextWindowPos(ImVec2(fontSize, fontSize), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowSize(ImVec2(fontSize * 26.0f, 0.0f), ImGuiCond_FirstUseEver);   // 0 height: fit to content.
 
         if (ImGui::Begin("Dev Menu"))
         {
-            DrawCameraSection(camera);
+            DrawCameraSection(app.GetCamera());
+            DrawBackgroundSection(app.GetRenderer());
         }
 
         ImGui::End();

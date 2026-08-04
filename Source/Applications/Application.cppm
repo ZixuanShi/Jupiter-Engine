@@ -45,5 +45,6 @@ export namespace jpt
         [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
         [[nodiscard]] const Window& GetWindow()         const noexcept { return m_window; }
         [[nodiscard]] Camera& GetCamera()                     noexcept { return m_camera; }
+        [[nodiscard]] Renderer& GetRenderer()                 noexcept { return m_renderer; }
     };
 }

@@ -19,5 +19,9 @@ export namespace jpt
     public:
         bool PreInit() noexcept;
         void Update();
+
+    public:
+        [[nodiscard]] const LinearColor& GetClearColor() const noexcept { return m_clearColor; }
+        void SetClearColor(const LinearColor& color) noexcept { m_clearColor = color; }
     };
 }

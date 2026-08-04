@@ -128,7 +128,7 @@ namespace jpt
     void Application::DrawUI()
     {
 #if !IS_CONFIG_RELEASE
-        DrawEditorUI(m_camera);
+        DrawEditorUI();
 #endif
     }
 }
