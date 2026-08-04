@@ -15,6 +15,7 @@ import jpt.Vector3;
 
 #if !IS_CONFIG_RELEASE
     import jpt.EditorUI;
+    import jpt.InputTests;
     import jpt.MathTests;
 #endif
 
@@ -26,6 +27,17 @@ namespace jpt
 
 #if !IS_CONFIG_RELEASE
         RunMathTests();
+#endif
+
+        // Before the window, which starts delivering events.
+        if (!m_input.PreInit())
+        {
+            Debug::Error("Failed to pre-initialize input.");
+            return false;
+        }
+
+#if !IS_CONFIG_RELEASE
+        RunInputTests();
 #endif
 
         const LaunchArgs& launchArgs = LaunchArgs::GetInstance();

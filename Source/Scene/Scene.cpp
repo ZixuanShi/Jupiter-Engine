@@ -18,7 +18,7 @@ namespace jpt
         const FrameTimer& frameTimer = GetApplication().GetFrameTimer();
         const float32 elapsed = static_cast<float32>(frameTimer.GetElapsedSeconds());
 
-        // Placeholder motion, moved here from the renderer. Input replaces it next.
+        // Placeholder until input drives it.
         m_pyramid.rotation = Quat::FromAxisAngle(Vec3::Up(), elapsed * 0.8f);
     }
 }

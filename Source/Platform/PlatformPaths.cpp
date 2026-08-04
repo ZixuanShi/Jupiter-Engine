@@ -31,9 +31,8 @@ namespace jpt
             // somewhere you can actually look at them.
             std::filesystem::path directory(JUPITER_SAVED_DIR);
     #elif IS_PLATFORM_MACOS || IS_PLATFORM_IOS
-            // $HOME rather than NSFileManager, which metal-cpp's Foundation subset does not
-            // bind. It lands in the same place: the user's home on macOS, and the app's own
-            // container on iOS -- the only writable root a sandboxed app has.
+            // $HOME, because metal-cpp's Foundation subset does not bind NSFileManager. Same
+            // place either way: the home directory, or the app container on iOS.
             const char* pHome = std::getenv("HOME");
             std::filesystem::path directory(pHome ? pHome : ".");
             directory /= "Library/Application Support/JupiterEngine";

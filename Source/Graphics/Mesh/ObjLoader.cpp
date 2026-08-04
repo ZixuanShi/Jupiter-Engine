@@ -231,10 +231,8 @@ namespace jpt
         std::vector<Vec2> texCoords;
         std::vector<LinearColor> colors;   // Parallel to positions: the colour extension is on `v`.
 
-        // Corner -> index into mesh.vertices. With neither normals nor UVs the key collapses to
-        // position, which is exactly the sharing GenerateNormals below wants. Note the converse:
-        // a file with UVs but no normals now splits along its UV seams *before* GenerateNormals
-        // runs, so seam vertices come out faceted rather than smoothed.
+        // Corner -> index. A file with UVs but no normals splits at its UV seams *before*
+        // GenerateNormals runs, so those seams come out faceted.
         std::unordered_map<VertexKey, uint32, VertexKeyHash> unique;
 
         Mesh mesh;

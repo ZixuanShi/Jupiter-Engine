@@ -151,9 +151,8 @@ namespace jpt
         // feedback handler in EndFrame, or explicitly below when the frame never gets that far.
         g_frameSemaphore.acquire();
 
-        // Drawables are autoreleased. Without a pool draining each frame the finite pool
-        // exhausts and the app stalls within seconds. Raw rather than NS::SharedPtr, because
-        // the header only forward-declares metal-cpp and SharedPtr needs the complete type.
+        // Drawables are autoreleased and the pool is finite: without a drain the app stalls.
+        // Raw, because SharedPtr needs a complete type the header only forward-declares.
         m_pFramePool = NS::AutoreleasePool::alloc()->init();
 
         m_frameIndex = (m_frameIndex + 1) % kFramesInFlight;
@@ -245,9 +244,8 @@ namespace jpt
         pEncoder->endEncoding();
         m_pCommandBuffer->endCommandBuffer();
 
-        // Presentation is explicit in Metal 4: wait for the drawable to be writable, submit, then
-        // signal that the GPU is finished with it. Classic Metal folded all three into
-        // presentDrawable, which is the swapchain-semaphore pair Vulkan makes you write out.
+        // Explicit in Metal 4: wait for writable, submit, signal done. Classic Metal folded all
+        // three into presentDrawable.
         m_pQueue->wait(m_pDrawable);
 
         MTL4::CommitOptions* pOptions = MTL4::CommitOptions::alloc()->init()->autorelease();
@@ -340,9 +338,8 @@ namespace jpt
         if (m_pIndices)  { m_pResidencySet->addAllocation(m_pIndices); }
         if (m_pUniforms) { m_pResidencySet->addAllocation(m_pUniforms); }
 
-        // The depth texture is deliberately absent. Residency covers what the GPU reaches by raw
-        // address; an attachment is bound by the pass descriptor instead -- and a memoryless one
-        // has no memory to make resident at all, which the validation layer asserts on.
+        // Depth is absent on purpose: residency covers raw addresses, and a memoryless texture
+        // has no memory to make resident -- the validation layer asserts on it.
         m_pResidencySet->commit();
         m_pResidencySet->requestResidency();
     }
@@ -458,9 +455,8 @@ namespace jpt
         MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(kDepthFormat, pixelWidth, pixelHeight, false);
         pDesc->setUsage(MTL::TextureUsageRenderTarget);
 
-        // Memoryless keeps the buffer in tile memory and never backs it with DRAM, which is
-        // free here because depth is produced and consumed inside the one pass. Apple-family
-        // GPUs only -- an Intel Mac has no tile memory to put it in.
+        // Tile memory, never DRAM -- free here because depth lives and dies inside the one pass.
+        // Apple-family only; an Intel Mac has no tile memory.
         pDesc->setStorageMode(m_pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
 
         m_pDepthTexture = m_pDevice->newTexture(pDesc);

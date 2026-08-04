@@ -110,6 +110,81 @@
 
 namespace
 {
+    /** A monitor, not responder overrides: imgui_impl_osx makes its own KeyEventResponder the
+        window's first responder, so a keyDown: override here would never fire. Returns the event,
+        so ImGui still sees it -- hence the ImGuiWants* gate. */
+    id InstallEventMonitor(NSView* pView)
+    {
+        const NSEventMask mask = NSEventMaskKeyDown | NSEventMaskKeyUp | NSEventMaskFlagsChanged
+                               | NSEventMaskLeftMouseDown  | NSEventMaskLeftMouseUp
+                               | NSEventMaskRightMouseDown | NSEventMaskRightMouseUp
+                               | NSEventMaskOtherMouseDown | NSEventMaskOtherMouseUp
+                               | NSEventMaskMouseMoved
+                               | NSEventMaskLeftMouseDragged | NSEventMaskRightMouseDragged
+                               | NSEventMaskOtherMouseDragged
+                               | NSEventMaskScrollWheel;
+
+        return [NSEvent addLocalMonitorForEventsMatchingMask:mask
+                                                     handler:^NSEvent* _Nullable(NSEvent* event)
+        {
+            // locationInWindow is bottom-left. Flip to top-left once, here.
+            const NSPoint inView = [pView convertPoint:event.locationInWindow fromView:nil];
+            const float x = static_cast<float>(inView.x);
+            const float y = static_cast<float>(pView.bounds.size.height - inView.y);
+
+            switch (event.type)
+            {
+            case NSEventTypeKeyDown:
+                if (!jpt::ImGuiWantsKeyboard()) { jpt::OnKeyDown(event.keyCode, event.isARepeat); }
+                break;
+
+            case NSEventTypeKeyUp:
+                if (!jpt::ImGuiWantsKeyboard()) { jpt::OnKeyUp(event.keyCode); }
+                break;
+
+            case NSEventTypeFlagsChanged:
+                if (!jpt::ImGuiWantsKeyboard())
+                {
+                    jpt::OnModifierChanged(event.keyCode, static_cast<std::uint32_t>(event.modifierFlags));
+                }
+                break;
+
+            case NSEventTypeLeftMouseDown:
+            case NSEventTypeRightMouseDown:
+            case NSEventTypeOtherMouseDown:
+                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), true, x, y); }
+                break;
+
+            case NSEventTypeLeftMouseUp:
+            case NSEventTypeRightMouseUp:
+            case NSEventTypeOtherMouseUp:
+                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseButton(static_cast<std::int32_t>(event.buttonNumber), false, x, y); }
+                break;
+
+            case NSEventTypeMouseMoved:
+            case NSEventTypeLeftMouseDragged:
+            case NSEventTypeRightMouseDragged:
+            case NSEventTypeOtherMouseDragged:
+                if (!jpt::ImGuiWantsMouse()) { jpt::OnMouseMove(x, y); }
+                break;
+
+            case NSEventTypeScrollWheel:
+                if (!jpt::ImGuiWantsMouse())
+                {
+                    jpt::OnMouseScroll(static_cast<float>(event.scrollingDeltaX),
+                                       static_cast<float>(event.scrollingDeltaY),
+                                       event.hasPreciseScrollingDeltas);
+                }
+                break;
+
+            default:
+                break;
+            }
+
+            return event;
+        }];
+    }
+
     void BuildMenuBar()
     {
         NSMenu* menuBar = [[NSMenu alloc] init];
@@ -146,6 +221,7 @@ namespace jpt
         NSWindow*           pWindow   = nil;
         JupiterAppDelegate* pDelegate = nil;
         JupiterMetalView*   pView     = nil;
+        id                  pMonitor  = nil;
     };
 
     bool MacWindow::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
@@ -190,6 +266,9 @@ namespace jpt
         // Resizes the view to fill the window, so OnResize fires before the layer exists.
         [m_pImpl->pWindow setContentView:m_pImpl->pView];
 
+        // Without this, NSEventMaskMouseMoved is never generated at all.
+        [m_pImpl->pWindow setAcceptsMouseMovedEvents:YES];
+
         [m_pImpl->pWindow makeKeyAndOrderFront:nil];
         [NSApp activate];
 
@@ -203,6 +282,9 @@ namespace jpt
         // After OnSurfaceReady, which is where the ImGui context is created. The AppKit backend
         // installs its own NSEvent monitors on this view, so no engine input path is involved.
         jpt::ImGuiInitPlatform((__bridge void*)m_pImpl->pView);
+
+        // After ImGuiInitPlatform: the ImGuiWants* gate needs a context.
+        m_pImpl->pMonitor = InstallEventMonitor(m_pImpl->pView);
 
         // No resize event fires for the initial size.
         [m_pImpl->pView updateDrawableSize];
@@ -219,6 +301,12 @@ namespace jpt
 
     void MacWindow::Terminate()
     {
+        if (m_pImpl->pMonitor != nil)
+        {
+            [NSEvent removeMonitor:m_pImpl->pMonitor];
+            m_pImpl->pMonitor = nil;
+        }
+
         delete m_pImpl;
         m_pImpl = nullptr;
     }

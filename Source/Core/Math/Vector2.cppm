@@ -58,9 +58,7 @@ export namespace jpt
         [[nodiscard]] Vector2 Normalized() const noexcept requires Floating<T>;
     };
 
-    // ------------------------------------------------------------------------------------------------
     // Non-Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
     [[nodiscard]] constexpr Vector2<T> operator*(T scalar, const Vector2<T>& vector2) noexcept
     {
@@ -74,9 +72,7 @@ export namespace jpt
                AreValuesClose(a.y, b.y, tolerance);
     }
 
-    // ------------------------------------------------------------------------------------------------
     // Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
     constexpr Vector2<T>::Vector2(T scalar) noexcept
         : x(scalar)

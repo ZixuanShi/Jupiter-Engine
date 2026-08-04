@@ -2,10 +2,8 @@
 
 module;
 
-// Textual first, then the imports: the rule that already governs Metal4Renderer.cpp. imgui.h is
-// plain C++ and includes no STL, so it costs little here -- measured before wrapping it.
-// Reaching the application from an implementation unit is legal; the same include in EditorUI.cppm
-// would close a cycle, because jpt.Application imports jpt.EditorUI.
+// Textual before the imports. AppClient.h here would close a cycle in EditorUI.cppm, but an
+// implementation unit may reach the application.
 #include "imgui.h"
 #include "Applications/AppClient.h"
 #include "Graphics/Renderer.h"

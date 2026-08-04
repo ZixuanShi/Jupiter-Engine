@@ -2,12 +2,9 @@
 
 #pragma once
 
-// Compiled by both clang and the Metal compiler, so it must stay free of `import` -- a .metal
-// translation unit cannot load a C++-built std.pcm. Keep this file to plain declarations.
-//
-// simd gives one spelling that means the same layout in both languages. A 3-component vector
-// must never appear here: MSL's float3 is 16 bytes while a plain `float x, y, z` is 12, and
-// nothing warns when they disagree. Use float4 and pack the spare component, or don't use it.
+// Compiled by clang *and* the Metal compiler, so no `import` and plain declarations only.
+// Never a 3-component vector: MSL's float3 is 16 bytes, a plain `float x, y, z` is 12, and
+// nothing warns. Use float4 and pack the spare component.
 #include <simd/simd.h>
 
 namespace jpt

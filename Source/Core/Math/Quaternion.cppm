@@ -70,9 +70,7 @@ export namespace jpt
         [[nodiscard]] constexpr Matrix44<T> ToMatrix() const noexcept;
     };
 
-    // ------------------------------------------------------------------------------------------------
     // Non-Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Floating T>
     [[nodiscard]] constexpr Quaternion<T> operator+(const Quaternion<T>& lhs, const Quaternion<T>& rhs) noexcept
     {
@@ -97,8 +95,7 @@ export namespace jpt
         return Quaternion<T>(q.x / scalar, q.y / scalar, q.z / scalar, q.w / scalar);
     }
 
-    /** Component-wise, so it separates q from -q -- which are the same orientation. Compare
-        ToMatrix() instead when the two sides were not built the same way. */
+    // Component-wise, so it separates q from -q. Compare ToMatrix() for orientation equality.
     template<Floating T>
     [[nodiscard]] constexpr bool AreValuesClose(const Quaternion<T>& a, const Quaternion<T>& b, T tolerance = kEpsilon<T>) noexcept
     {
@@ -108,9 +105,7 @@ export namespace jpt
                AreValuesClose(a.w, b.w, tolerance);
     }
 
-    // ------------------------------------------------------------------------------------------------
     // Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Floating T>
     constexpr Quaternion<T>::Quaternion(T inX, T inY, T inZ, T inW) noexcept
         : x(inX)
@@ -206,7 +201,7 @@ export namespace jpt
     {
         T dot = start.Dot(end);
 
-        // q and -q are the same orientation, so negate to take the shorter arc.
+        // q and -q are the same orientation: negate to take the shorter arc.
         Quaternion adjustedEnd = end;
         if (dot < static_cast<T>(0))
         {

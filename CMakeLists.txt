@@ -88,9 +88,13 @@ file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/
 
 # The editor is a development tool: its panels, and the ImGui they are built on, are absent from
 # a Release binary entirely rather than compiled and left unreachable.
+#
+# *Tests.cppm goes the same way. Their call sites are already #if !IS_CONFIG_RELEASE, but the
+# modules were still compiled and linked -- nm found jpt::RunMathTests in the Release binary -- and
+# InputTests pulls the whole Carbon umbrella in with it.
 if(JUPITER_CONFIG STREQUAL "RELEASE")
-    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "/Source/Editor/")
-    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/")
+    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "/Source/Editor/|Tests\\.cpp$")
+    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/|Tests\\.cppm$")
 endif()
 
 

@@ -17,12 +17,9 @@ import std;
 
 namespace
 {
-    // Looser than kEpsilon, because these compare against hand-written expectations rather than
-    // against another float computation.
+    // Looser than kEpsilon: these compare against hand-written expectations.
     constexpr float32 kTolerance = 1e-4f;
 
-    /** Binds the test tolerance once. The comparisons themselves live beside the types they
-        compare, so anything outside the tests can reach them. */
     template<typename T>
     [[nodiscard]] constexpr bool AreClose(const T& a, const T& b) noexcept
     {
@@ -36,9 +33,7 @@ export namespace jpt
         reach std::tan and std::sqrt, which are not constexpr before C++26. */
     void RunMathTests()
     {
-        // --------------------------------------------------------------------------------
         // Vector2
-        // --------------------------------------------------------------------------------
         {
             Debug::Assert(AreValuesClose(Vec2::Right().Dot(Vec2::Up()), 0.0f), "Vector2 basis is not orthogonal");
 
@@ -51,9 +46,7 @@ export namespace jpt
             Debug::Assert(std::isfinite(tiny.x) && std::isfinite(tiny.y), "Normalizing a near-zero Vector2 produced inf");
         }
 
-        // --------------------------------------------------------------------------------
         // Vector3 -- the basis must be right-handed, x cross y = z
-        // --------------------------------------------------------------------------------
         {
             Debug::Assert(AreClose(Vec3::Right().Cross(Vec3::Up()), Vec3::Backward()), "Right x Up != Backward");
             Debug::Assert(AreClose(Vec3::Up().Cross(Vec3::Backward()), Vec3::Right()), "Up x Backward != Right");
@@ -64,9 +57,8 @@ export namespace jpt
 
             Debug::Assert(AreClose(Vec3::Forward(), -Vec3::Backward()), "Forward != -Backward");
 
-            // The basis holds for objects, not only cameras: something facing Forward() has its
-            // right hand along Right(). This is also why "+X right, +Y up, +Z forward" cannot be
-            // adopted -- facing +Z puts right at -X, which is a left-handed basis.
+            // Holds for objects, not only cameras -- and why "+X right, +Y up, +Z forward" cannot
+            // be adopted: facing +Z puts right at -X.
             Debug::Assert(AreClose(Vec3::Forward().Cross(Vec3::Up()), Vec3::Right()), "Forward x Up != Right");
             Debug::Assert(AreClose(Vec3::Backward().Cross(Vec3::Up()), Vec3::Left()), "Backward x Up != Left");
             Debug::Assert(AreValuesClose(Vec3::Right().Dot(Vec3::Up()), 0.0f), "Basis is not orthogonal");
@@ -76,9 +68,7 @@ export namespace jpt
             Debug::Assert(AreValuesClose(Vec3(3.0f, 0.0f, 4.0f).Length(), 5.0f), "Length 3-4-5 is wrong");
         }
 
-        // --------------------------------------------------------------------------------
         // Vector4
-        // --------------------------------------------------------------------------------
         {
             // Legacy dropped w here, which silently broke any 4-component dot product.
             Debug::Assert(AreValuesClose(Vec4(1, 2, 3, 4).Dot(Vec4(1, 1, 1, 1)), 10.0f), "Vector4::Dot ignores w");
@@ -86,9 +76,7 @@ export namespace jpt
             Debug::Assert(AreClose(Vec4(Vec3(1, 2, 3), 4.0f).XYZ(), Vec3(1, 2, 3)), "Vector4::XYZ is wrong");
         }
 
-        // --------------------------------------------------------------------------------
         // Matrix44 -- transforms
-        // --------------------------------------------------------------------------------
         {
             const Vec3 translated = Mat44::Translate(Vec3(1, 2, 3)) * Vec3(0, 0, 0);
             Debug::Assert(AreClose(translated, Vec3(1, 2, 3)), "Translate is wrong");
@@ -104,10 +92,8 @@ export namespace jpt
             Debug::Assert(AreClose(Mat44::Inverse(m) * m, Mat44::Identity()), "Inverse(M) * M is not identity");
         }
 
-        // --------------------------------------------------------------------------------
         // Matrix44 -- right-handed rotations. A positive angle about an axis carries the
         // next basis vector in the cyclic order X -> Y -> Z(backward) -> X.
-        // --------------------------------------------------------------------------------
         {
             constexpr float32 quarter = kHalfPi<float32>;
 
@@ -135,9 +121,7 @@ export namespace jpt
             Debug::Assert(AreClose((a * b) * v, a * (b * v)), "Matrix product is not associative with M * v");
         }
 
-        // --------------------------------------------------------------------------------
         // Matrix44 -- LookAt. Right-handed, so view space looks down -Z.
-        // --------------------------------------------------------------------------------
         {
             const Vec3 eye(0, 0, 5);
             const Mat44 view = Mat44::LookAt(eye, Vec3(0, 0, 0));
@@ -163,10 +147,8 @@ export namespace jpt
             // The camera itself maps to the view-space origin.
             Debug::Assert(AreClose(view * eye, Vec3(0, 0, 0)), "LookAt does not map the eye to the origin");
 
-            // Straight down: forward is parallel to the default up, so right = forward x up is the
-            // zero vector. Normalized() guards its divide, so the failure is not NaN -- right and
-            // up come back zero and the basis silently loses rank. Assert unit length, because the
-            // translation column stays correct either way and a target check passes on the bug.
+            // Forward parallel to up: the basis loses rank without going NaN, and the translation
+            // column stays correct, so only unit length catches it.
             const Mat44 topDown = Mat44::LookAt(Vec3(0, 3, 0), Vec3::Zero());
 
             const Vec3 downRight(topDown.m[0].x, topDown.m[1].x, topDown.m[2].x);
@@ -179,10 +161,8 @@ export namespace jpt
             Debug::Assert(AreValuesClose(downRight.Dot(downUp), 0.0f), "LookAt straight down: basis is not orthogonal");
         }
 
-        // --------------------------------------------------------------------------------
         // Matrix44 -- Perspective. Right-handed with depth in [0, 1], which is what Metal,
         // Vulkan and D3D clip against. Legacy emitted OpenGL's [-1, 1].
-        // --------------------------------------------------------------------------------
         {
             constexpr float32 zNear  = 0.1f;
             constexpr float32 zFar   = 100.0f;
@@ -218,10 +198,8 @@ export namespace jpt
                           "Perspective depth is not monotonically increasing");
         }
 
-        // --------------------------------------------------------------------------------
         // Matrix44 -- Orthographic. The same [0, 1] depth range as Perspective, but w stays 1,
         // so nothing converges with distance.
-        // --------------------------------------------------------------------------------
         {
             constexpr float32 zNear  = 0.1f;
             constexpr float32 zFar   = 100.0f;
@@ -252,9 +230,7 @@ export namespace jpt
             Debug::Assert(atNear.z < far.z && far.z < atFar.z, "Orthographic depth is not monotonically increasing");
         }
 
-        // --------------------------------------------------------------------------------
         // Quaternion -- must agree with Matrix44, which the sections above already pin.
-        // --------------------------------------------------------------------------------
         {
             Debug::Assert(AreClose(Quat::Identity().Right(),   Vec3::Right()),   "Quaternion identity right");
             Debug::Assert(AreClose(Quat::Identity().Up(),      Vec3::Up()),      "Quaternion identity up");
@@ -283,9 +259,7 @@ export namespace jpt
             Debug::Assert(AreValuesClose(Quat::Slerp(a, b, 0.5f).Length(), 1.0f), "Slerp does not stay unit length");
         }
 
-        // --------------------------------------------------------------------------------
         // Transform
-        // --------------------------------------------------------------------------------
         {
             Debug::Assert(AreClose(Transform{}.ToMatrix(), Mat44::Identity()), "Transform identity");
 

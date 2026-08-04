@@ -145,6 +145,16 @@ namespace jpt
     {
         ImGui::GetIO().AddMouseButtonEvent(0, isDown);
     }
+
+    bool ImGuiWantsMouse()
+    {
+        return ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().WantCaptureMouse;
+    }
+
+    bool ImGuiWantsKeyboard()
+    {
+        return ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().WantCaptureKeyboard;
+    }
 }
 
 #else // Release, or a platform with no ImGui backend
@@ -158,6 +168,8 @@ namespace jpt
     void ImGuiEndFrame(MTL4::CommandBuffer*, MTL4::RenderCommandEncoder*) {}
     void ImGuiOnPointerMoved(float, float)                                {}
     void ImGuiOnPointerButton(bool)                                       {}
+    bool ImGuiWantsMouse()                                                { return false; }
+    bool ImGuiWantsKeyboard()                                             { return false; }
 }
 
 #endif

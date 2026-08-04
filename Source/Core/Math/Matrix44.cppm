@@ -72,9 +72,7 @@ export namespace jpt
         [[nodiscard]] static constexpr Matrix44 Orthographic(T width, T height, T zNear, T zFar) noexcept requires Floating<T>;
     };
 
-    // ------------------------------------------------------------------------------------------------
     // Non-Member functions
-    // ------------------------------------------------------------------------------------------------
 
     /** Treats the vector as a position (w = 1) and drops w after the transform. */
     template<Numeric T>
@@ -96,9 +94,7 @@ export namespace jpt
         return true;
     }
 
-    // ------------------------------------------------------------------------------------------------
     // Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
     constexpr Matrix44<T>::Matrix44() noexcept
         : m{ { 1, 0, 0, 0 },
@@ -289,12 +285,8 @@ export namespace jpt
     {
         const Vector3<T> forward = (center - eye).Normalized();
 
-        // A view direction parallel to up leaves no plane to derive right from, and the cross
-        // product comes out zero. Normalized() guards its divide, so this is not NaN -- it is
-        // worse: right and newUp stay zero, the translation column still looks correct, and the
-        // matrix silently collapses the scene through a rank-deficient basis. Reachable by any
-        // top-down camera, because Camera has no up member and takes the default.
-        // Backward() is perpendicular to up for every caller that does.
+        // Parallel forward and up leave no plane to derive right from. Not NaN -- worse: the
+        // basis silently loses rank while the translation column still looks correct.
         Vector3<T> right = forward.Cross(up);
         if (right.Length2() < kEpsilon<T>)
         {

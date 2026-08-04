@@ -38,17 +38,13 @@ export namespace jpt
         [[nodiscard]] constexpr bool operator==(const LinearColor& other) const noexcept = default;
     };
 
-    // ------------------------------------------------------------------------------------------------
     // Non-Member functions
-    // ------------------------------------------------------------------------------------------------
     [[nodiscard]] constexpr LinearColor operator*(float32 scalar, const LinearColor& color) noexcept
     {
         return color * scalar;
     }
 
-    // ------------------------------------------------------------------------------------------------
     // Member functions
-    // ------------------------------------------------------------------------------------------------
     constexpr LinearColor::LinearColor(float32 inR, float32 inG, float32 inB, float32 inA) noexcept
         : r(inR)
         , g(inG)

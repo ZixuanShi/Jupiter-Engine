@@ -56,9 +56,7 @@ export namespace jpt
         [[nodiscard]] T Length() const noexcept requires Floating<T>;
     };
 
-    // ------------------------------------------------------------------------------------------------
     // Non-Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
     [[nodiscard]] constexpr Vector4<T> operator*(T scalar, const Vector4<T>& vector4) noexcept
     {
@@ -74,9 +72,7 @@ export namespace jpt
                AreValuesClose(a.w, b.w, tolerance);
     }
 
-    // ------------------------------------------------------------------------------------------------
     // Member functions
-    // ------------------------------------------------------------------------------------------------
     template<Numeric T>
     constexpr Vector4<T>::Vector4(T scalar) noexcept
         : x(scalar)

@@ -20,9 +20,8 @@
     return [CAMetalLayer class];
 }
 
-// UIKit has no ImGui backend -- imgui_impl_osx is AppKit-only -- so a single touch is mapped
-// onto ImGui's mouse here. This is also where a real input system will tap in; until then the
-// UI is the only consumer, so the events go straight to it.
+// UIKit has no ImGui backend, so a single touch is mapped onto ImGui's mouse here.
+// Where jpt::Input will tap in.
 - (void)reportTouch:(NSSet<UITouch*>*)touches isDown:(BOOL)isDown
 {
     const CGPoint point = [touches.anyObject locationInView:self];
@@ -85,11 +84,8 @@
     (void)application;
     (void)launchOptions;
 
-    // Deprecated as of the iOS 26 deployment target, which the Metal 4 migration forced. The real
-    // fix is adopting the UIScene lifecycle -- a UIApplicationSceneManifest, a UIWindowSceneDelegate
-    // that builds the window with initWithWindowScene:, and moving the background/foreground
-    // handlers below onto the scene. That is a separate change with its own device testing, so the
-    // deprecation is scoped and named here rather than silenced project-wide.
+    // Deprecated since the iOS 26 target. The real fix is adopting the UIScene lifecycle -- its
+    // own change, so the deprecation is scoped here rather than silenced project-wide.
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     const CGRect screenBounds = UIScreen.mainScreen.bounds;
