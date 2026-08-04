@@ -7,6 +7,8 @@ import jpt.Constants;
 import jpt.Logger;
 import jpt.Math;
 import jpt.Matrix44;
+import jpt.Quaternion;
+import jpt.Transform;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -15,42 +17,16 @@ import std;
 
 namespace
 {
+    // Looser than kEpsilon, because these compare against hand-written expectations rather than
+    // against another float computation.
     constexpr float32 kTolerance = 1e-4f;
 
-    [[nodiscard]] bool AreClose(const jpt::Vec2& a, const jpt::Vec2& b) noexcept
+    /** Binds the test tolerance once. The comparisons themselves live beside the types they
+        compare, so anything outside the tests can reach them. */
+    template<typename T>
+    [[nodiscard]] constexpr bool AreClose(const T& a, const T& b) noexcept
     {
-        return jpt::AreValuesClose(a.x, b.x, kTolerance) &&
-               jpt::AreValuesClose(a.y, b.y, kTolerance);
-    }
-
-    [[nodiscard]] bool AreClose(const jpt::Vec3& a, const jpt::Vec3& b) noexcept
-    {
-        return jpt::AreValuesClose(a.x, b.x, kTolerance) &&
-               jpt::AreValuesClose(a.y, b.y, kTolerance) &&
-               jpt::AreValuesClose(a.z, b.z, kTolerance);
-    }
-
-    [[nodiscard]] bool AreClose(const jpt::Vec4& a, const jpt::Vec4& b) noexcept
-    {
-        return jpt::AreValuesClose(a.x, b.x, kTolerance) &&
-               jpt::AreValuesClose(a.y, b.y, kTolerance) &&
-               jpt::AreValuesClose(a.z, b.z, kTolerance) &&
-               jpt::AreValuesClose(a.w, b.w, kTolerance);
-    }
-
-    [[nodiscard]] bool AreClose(const jpt::Mat44& a, const jpt::Mat44& b) noexcept
-    {
-        for (usize col = 0; col < 4; ++col)
-        {
-            for (usize row = 0; row < 4; ++row)
-            {
-                if (!jpt::AreValuesClose(a.m[col][row], b.m[col][row], kTolerance))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return jpt::AreValuesClose(a, b, kTolerance);
     }
 }
 
@@ -274,6 +250,52 @@ export namespace jpt
 
             // Depth must still increase with distance, or the depth test compares backwards.
             Debug::Assert(atNear.z < far.z && far.z < atFar.z, "Orthographic depth is not monotonically increasing");
+        }
+
+        // --------------------------------------------------------------------------------
+        // Quaternion -- must agree with Matrix44, which the sections above already pin.
+        // --------------------------------------------------------------------------------
+        {
+            Debug::Assert(AreClose(Quat::Identity().Right(),   Vec3::Right()),   "Quaternion identity right");
+            Debug::Assert(AreClose(Quat::Identity().Up(),      Vec3::Up()),      "Quaternion identity up");
+            Debug::Assert(AreClose(Quat::Identity().Forward(), Vec3::Forward()), "Quaternion identity forward");
+
+            // Legacy's Right() and Up() carried the opposite w signs -- the transpose, which is
+            // the inverse rotation -- and its Forward() was +Z. This is where that shows.
+            const Quat yaw = Quat::FromAxisAngle(Vec3::Up(), kHalfPi<float32>);
+            Debug::Assert(AreClose(yaw.Right(), Vec3::Forward()), "Quaternion right after 90 deg yaw");
+            Debug::Assert(AreClose(yaw.ToMatrix(), Mat44::RotateY(kHalfPi<float32>)), "Quaternion does not match RotateY");
+
+            // Off-axis on all three, so an XYZ-order mismatch between the two paths cannot cancel.
+            const Vec3 euler(ToRadians(20.0f), ToRadians(35.0f), ToRadians(50.0f));
+            Debug::Assert(AreClose(Quat::FromEulerAngles(euler).ToMatrix(), Mat44::FromEulerAngles(euler)),
+                          "Quaternion and Matrix44 Euler conventions disagree");
+
+            // A sign error in operator* stays invisible until two rotations are chained.
+            const Quat a = Quat::FromAxisAngle(Vec3::Up(), ToRadians(40.0f));
+            const Quat b = Quat::FromAxisAngle(Vec3::Right(), ToRadians(25.0f));
+            Debug::Assert(AreClose((a * b).ToMatrix(), a.ToMatrix() * b.ToMatrix()), "Quaternion product order is wrong");
+
+            Debug::Assert(AreClose(a * a.Inverse(), Quat::Identity()), "q * q.Inverse() is not identity");
+
+            Debug::Assert(AreClose(Quat::Slerp(a, b, 0.0f), a), "Slerp at t=0 is not the start");
+            Debug::Assert(AreClose(Quat::Slerp(a, b, 1.0f), b), "Slerp at t=1 is not the end");
+            Debug::Assert(AreValuesClose(Quat::Slerp(a, b, 0.5f).Length(), 1.0f), "Slerp does not stay unit length");
+        }
+
+        // --------------------------------------------------------------------------------
+        // Transform
+        // --------------------------------------------------------------------------------
+        {
+            Debug::Assert(AreClose(Transform{}.ToMatrix(), Mat44::Identity()), "Transform identity");
+
+            // Pins all three orderings at once: +X scales to (2,0,0), yaws to (0,0,-2),
+            // translates to (0,0,3). Swapping any pair moves the result.
+            const Transform transform{ .position = Vec3(0.0f, 0.0f, 5.0f),
+                                       .rotation = Quat::FromAxisAngle(Vec3::Up(), kHalfPi<float32>),
+                                       .scale    = Vec3(2.0f) };
+            Debug::Assert(AreClose(transform.ToMatrix() * Vec3::Right(), Vec3(0.0f, 0.0f, 3.0f)),
+                          "Transform does not compose scale, then rotation, then translation");
         }
 
         Debug::Log("Math tests passed.");

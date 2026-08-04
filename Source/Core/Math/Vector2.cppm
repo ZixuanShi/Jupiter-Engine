@@ -4,6 +4,7 @@ export module jpt.Vector2;
 
 import jpt.Concepts;
 import jpt.Constants;
+import jpt.Math;
 import jpt.TypeDefs;
 import std;
 
@@ -64,6 +65,13 @@ export namespace jpt
     [[nodiscard]] constexpr Vector2<T> operator*(T scalar, const Vector2<T>& vector2) noexcept
     {
         return vector2 * scalar;
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Vector2<T>& a, const Vector2<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        return AreValuesClose(a.x, b.x, tolerance) &&
+               AreValuesClose(a.y, b.y, tolerance);
     }
 
     // ------------------------------------------------------------------------------------------------

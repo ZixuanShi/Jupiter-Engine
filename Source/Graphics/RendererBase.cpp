@@ -11,6 +11,8 @@ import jpt.Camera;
 import jpt.FrameTimer;
 import jpt.LinearColor;
 import jpt.Matrix44;
+import jpt.Scene;
+import jpt.Transform;
 import jpt.TypeDefs;
 
 namespace jpt
@@ -33,11 +35,8 @@ namespace jpt
         const Window& window = app.GetWindow();
         const Camera& camera = app.GetCamera();
 
-        const float32 elapsed = static_cast<float32>(frameTimer.GetElapsedSeconds());
-
-        // Scene data, parked here until something owns the objects in the world.
-        m_model = Mat44::RotateY(elapsed * 0.8f);
+        m_model = app.GetScene().GetPyramid().ToMatrix();
         m_viewProjection = camera.GetViewProjection(window.GetAspectRatio());
-        m_time = elapsed;
+        m_time = static_cast<float32>(frameTimer.GetElapsedSeconds());
     }
 }

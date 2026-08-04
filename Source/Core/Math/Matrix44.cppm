@@ -83,6 +83,19 @@ export namespace jpt
         return (mat * Vector4<T>(v, static_cast<T>(1))).XYZ();
     }
 
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Matrix44<T>& a, const Matrix44<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        for (usize col = 0; col < 4; ++col)
+        {
+            if (!AreValuesClose(a.m[col], b.m[col], tolerance))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // ------------------------------------------------------------------------------------------------
     // Member functions
     // ------------------------------------------------------------------------------------------------

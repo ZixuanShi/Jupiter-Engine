@@ -64,7 +64,8 @@ namespace jpt
 
     void Application::Update()
     {
-        m_renderer.Update();
+        m_scene.Update();
+        m_renderer.Update();    // Reads the transform the scene just wrote.
     }
 
     void Application::Terminate()
