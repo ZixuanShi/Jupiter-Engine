@@ -11,7 +11,7 @@ namespace jpt::Debug
     {
         Log,
         Info,
-        Warning,
+        Warn,
         Error,
     };
 
@@ -27,15 +27,15 @@ namespace jpt::Debug
         {
             case Level::Log:     levelStr = "LOG";     break;
             case Level::Info:    levelStr = "INFO";    break;
-            case Level::Warning: levelStr = "WARNING"; break;
+            case Level::Warn:    levelStr = "WARN";    break;
             case Level::Error:   levelStr = "ERROR";   break;
         }
 
         std::println("{} [{}]: {}", contextStr, levelStr, message);
     }
 
-    export template<typename... Args> void Log    (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,     std::forward<Args>(args)...); }
-    export template<typename... Args> void Error  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Error,   std::forward<Args>(args)...); }
-    export template<typename... Args> void Warning(Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Warning, std::forward<Args>(args)...); }
-    export template<typename... Args> void Info   (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Info,    std::forward<Args>(args)...); }
+    export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,     std::forward<Args>(args)...); }
+    export template<typename... Args> void Error(Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Error,   std::forward<Args>(args)...); }
+    export template<typename... Args> void Warn (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Warn, std::forward<Args>(args)...); }
+    export template<typename... Args> void Info (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Info,    std::forward<Args>(args)...); }
 }
