@@ -101,6 +101,7 @@ namespace jpt
         {
             return simd_make_float4(color.r, color.g, color.b, w);
         }
+
     }
 
     bool Metal4Renderer::PreInit()
@@ -153,6 +154,7 @@ namespace jpt
 
         // Queue-wide rather than per command buffer: every frame uses the same allocations.
         m_pQueue->addResidencySet(m_pResidencySet);
+
         return true;
     }
 
@@ -238,6 +240,10 @@ namespace jpt
             EndFramePool();
             return false;
         }
+
+        // Past every path that returns false, because those never reach EndFrame and a capture
+        // opened there would never be closed.
+        m_capture.BeginFrame(m_pDevice);
 
         m_pPass = MTL4::RenderPassDescriptor::alloc()->init()->autorelease();
 
@@ -345,7 +351,14 @@ namespace jpt
         m_pQueue->signalDrawable(m_pDrawable);
         m_pDrawable->present();
 
+        m_capture.EndFrame();
+
         EndFramePool();
+    }
+
+    void Metal4Renderer::RequestCapture()
+    {
+        m_capture.RequestCapture();
     }
 
     void Metal4Renderer::EndFramePool()

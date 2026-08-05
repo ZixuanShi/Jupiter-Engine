@@ -154,8 +154,6 @@ namespace jpt
 
         m_frameTimer.Update();
 
-        // TODO: Read input
-
         Update();
         PostUpdate();
 

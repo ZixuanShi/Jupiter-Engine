@@ -28,6 +28,7 @@ namespace jpt
         { renderer.Terminate() }                -> std::same_as<void>;
 
         { renderer.OnResize(width, height) }    -> std::same_as<void>;
+        { renderer.RequestCapture() }           -> std::same_as<void>;
 
         // Two halves rather than one Draw(), so UI can be built while the pass is open. False
         // from BeginFrame means the frame was dropped and EndFrame must not follow.

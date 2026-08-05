@@ -4,19 +4,23 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
-import tempfile
-from pathlib import Path
 
-from utils import BUNDLE_ID, active_preset, artifact_path, executable_path
+from utils import (BUNDLE_ID, active_preset, artifact_path, connected_device, executable_path,
+                   no_device_help, pull_captures)
+
+# What the Dev Menu's Capture button needs. Measured on macOS 26: MTLCaptureEnabled in the
+# bundle's Info.plist does not work, even launched through LaunchServices -- only this does.
+CAPTURE_ENV = {"MTL_CAPTURE_ENABLED": "1"}
 
 
-def run_steps(steps) -> int:
+def run_steps(steps, environment) -> int:
     """Run commands in order, stopping at the first failure."""
     for step in steps:
         try:
-            code = subprocess.run(step).returncode
+            code = subprocess.run(step, env={**os.environ, **environment}).returncode
         except KeyboardInterrupt:
             print("\nDetached. The app is still running.")
             return 0
@@ -25,55 +29,24 @@ def run_steps(steps) -> int:
     return 0
 
 
-def connected_device() -> str | None:
-    """Return the identifier of the first paired, reachable device, or None.
+def launch_steps(udid, artifact, console, environment) -> list:
+    """Return the commands that install and launch the artifact."""
+    if udid is None:
+        # Run directly rather than via `open`, so stdout stays attached to this terminal.
+        return [[str(artifact)]]
 
-    Reads the JSON rather than the printed table, which has no stable columns. The state to
-    match is not one string: devicectl reports tunnelState as "connected" over USB and
-    "available" over the network, so this rejects "unavailable" instead of listing the rest.
-    """
-    with tempfile.TemporaryDirectory() as directory:
-        output = Path(directory) / "devices.json"
-        subprocess.run(["xcrun", "devicectl", "list", "devices", "--json-output", str(output)],
-                       capture_output=True)
-        if not output.exists():
-            return None
-        devices = json.loads(output.read_text())["result"]["devices"]
+    # devicectl launches on the device, so the environment travels as an argument rather than
+    # being inherited from this process.
+    launch = ["xcrun", "devicectl", "device", "process", "launch", "--device", udid,
+              "--environment-variables", json.dumps(environment)]
+    if console:
+        launch.append("--console")
+    launch.append(BUNDLE_ID)
 
-    for device in devices:
-        connection = device.get("connectionProperties", {})
-        if (connection.get("pairingState") == "paired"
-                and connection.get("tunnelState") != "unavailable"):
-            return device["identifier"]
-    return None
-
-
-def launch_steps(preset, artifact, console) -> list | None:
-    """Return the commands that install and launch the artifact.
-
-    None means the target is not reachable; the reason has already been printed.
-    """
-    if preset.startswith("ios-device"):
-        udid = connected_device()
-        if udid is None:
-            print("No available device. Check that the iPad is:")
-            print("  - connected or on the same network, and unlocked")
-            print("  - trusting this Mac")
-            print("  - in Developer Mode (Settings > Privacy & Security > Developer Mode)")
-            print("Then: xcrun devicectl list devices")
-            return None
-        launch = ["xcrun", "devicectl", "device", "process", "launch",
-                  "--device", udid, BUNDLE_ID]
-        if console:
-            launch.insert(5, "--console")
-
-        return [
-            ["xcrun", "devicectl", "device", "install", "app", "--device", udid, str(artifact)],
-            launch,
-        ]
-
-    # Run directly rather than via `open`, so stdout stays attached to this terminal.
-    return [[str(artifact)]]
+    return [
+        ["xcrun", "devicectl", "device", "install", "app", "--device", udid, str(artifact)],
+        launch,
+    ]
 
 
 def main():
@@ -92,8 +65,23 @@ def main():
         print("Run: py Scripts/build.py")
         sys.exit(1)
 
-    steps = launch_steps(preset, artifact, console)
-    sys.exit(1 if steps is None else run_steps(steps))
+    udid = None
+    if preset.startswith("ios-device"):
+        udid = connected_device()
+        if udid is None:
+            no_device_help()
+            sys.exit(1)
+
+    environment = {} if "release" in preset else CAPTURE_ENV
+    code = run_steps(launch_steps(udid, artifact, console, environment), environment)
+
+    # Convenience only -- with --console this is where the session ends, so it collects what you
+    # just captured. Otherwise devicectl returns at launch and this gets the previous session.
+    # Either way Scripts/pull_captures.py fetches on demand, and neither re-copies.
+    if udid is not None:
+        pull_captures(udid)
+
+    sys.exit(code)
 
 
 if __name__ == "__main__":

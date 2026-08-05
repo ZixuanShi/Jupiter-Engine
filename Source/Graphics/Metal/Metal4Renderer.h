@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Graphics/GraphicsConstants.h"
+#include "GpuCapture.h"
 
 import jpt.Mesh;
 import jpt.RendererBase;
@@ -80,6 +81,8 @@ namespace jpt
         uint32 m_frameIndex = 0;
         uint32 m_indexCount = 0;
 
+        GpuCapture m_capture;
+
         // Live only between BeginFrame and EndFrame, and owned by that frame's autorelease pool
         // rather than by this object -- so EndFrame nulls them and releases nothing but the pool.
         NS::AutoreleasePool*        m_pFramePool     = nullptr;
@@ -101,6 +104,9 @@ namespace jpt
     public:
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
+        /** Writes the next frame to GetSavedDir()/Traces as a .gputrace, to open in Xcode. */
+        void RequestCapture();
+
     public:
         bool SetMesh(const Mesh& mesh);
 
@@ -111,8 +117,6 @@ namespace jpt
     private:
         bool CreatePipeline();
         bool CreateSampler();
-        /** The multisampled colour and depth attachments, sized from the drawable. Transient: both
-            live and die inside one pass, so neither is ever written to DRAM. */
         bool EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight);
         void GenerateMipmaps();
 

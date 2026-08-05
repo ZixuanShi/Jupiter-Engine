@@ -205,6 +205,11 @@ namespace jpt
 
         if (ImGui::Begin("Dev Menu"))
         {
+            if (ImGui::Button("Capture GPU Frame"))
+            {
+                app.GetRenderer().RequestCapture();
+            }
+
             Scene& scene = app.GetScene();
 
             DrawCameraSection(scene.GetCamera());
