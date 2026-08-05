@@ -383,7 +383,7 @@ namespace jpt
 
     bool MacWindow::Init()
     {
-        const NSRect contentRect = NSMakeRect(0.0, 0.0, 1280.0, 720.0);
+        const NSRect contentRect = NSMakeRect(0.0, 0.0, 1920.0, 1080.0);
         const NSWindowStyleMask style = NSWindowStyleMaskTitled
                                       | NSWindowStyleMaskClosable
                                       | NSWindowStyleMaskMiniaturizable

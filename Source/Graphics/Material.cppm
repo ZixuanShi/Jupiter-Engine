@@ -11,9 +11,9 @@ export namespace jpt
     struct Material
     {
         LinearColor baseColor = LinearColor::White();   // Multiplies the base colour map
-        float32 roughness = 0.35f;
+        float32 roughness = 0.5f;
         float32 metallic  = 0.0f;
-        float32 occlusion = 1.0f;
+        float32 occlusion = 0.0f;
 
         /** Which term to show on its own. jpt::ViewMode in Graphics/Shader/ShaderTypes.h owns the
             ordering; a plain index keeps that header, which only the Metal side can include, out
