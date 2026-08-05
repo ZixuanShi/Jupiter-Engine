@@ -39,7 +39,9 @@ namespace jpt
         {
             DrawPerformance();
             DrawRendering();
-            for (usize i = 0; i < GetApplication().GetScene().GetPointLights().size(); ++i)
+
+            const std::array<PointLight, kMaxPointLights>& lights = GetApplication().GetScene().GetPointLights();
+            for (usize i = 0; i < lights.size(); ++i)
             {
                 DrawPointLight(i);
             }
@@ -61,11 +63,21 @@ namespace jpt
             return;
         }
 
+        Renderer& renderer = GetApplication().GetRenderer();
+
         ImGui::Checkbox("Show Metrics", &m_showMetrics);
+
+#if IS_PLATFORM_MACOS
+        bool vsync = renderer.IsVSyncEnabled();
+        if (ImGui::Checkbox("VSync", &vsync))
+        {
+            renderer.SetVSync(vsync);
+        }
+#endif
 
         if (ImGui::Button("Capture GPU Frame"))
         {
-            GetApplication().GetRenderer().RequestCapture();
+            renderer.RequestCapture();
         }
     }
 

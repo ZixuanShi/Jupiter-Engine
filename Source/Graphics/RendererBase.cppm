@@ -40,6 +40,7 @@ export namespace jpt
         AmbientLight m_ambient;
         std::array<PointLight, kMaxPointLights> m_pointLights;
         float32 m_time           = 0.0f;
+        bool m_vsync             = true;
         RenderStats m_stats;
 
     public:
@@ -48,7 +49,11 @@ export namespace jpt
 
     public:
         [[nodiscard]] const RenderStats& GetStats() const noexcept { return m_stats; }
+        
         [[nodiscard]] const LinearColor& GetClearColor() const noexcept { return m_clearColor; }
         void SetClearColor(const LinearColor& color) noexcept { m_clearColor = color; }
+
+        [[nodiscard]] bool IsVSyncEnabled() const noexcept { return m_vsync; }
+        void SetVSync(bool enabled) noexcept { m_vsync = enabled; }
     };
 }

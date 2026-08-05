@@ -17,6 +17,8 @@ namespace jpt
     void OnTerminate();
 
 #if IS_PLATFORM_MACOS
+    bool IsVSyncEnabled();
+
     void OnKeyDown(std::uint16_t platformKeyCode, bool isRepeat);
     void OnKeyUp(std::uint16_t platformKeyCode);
 

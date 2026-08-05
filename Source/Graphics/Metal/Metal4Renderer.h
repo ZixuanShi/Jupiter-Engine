@@ -101,19 +101,16 @@ namespace jpt
         bool Init(SurfaceHandle pMetalLayer);
         void Terminate();
 
-    public:
-        /** Acquires a frame slot and the drawable, and opens the pass. False when no drawable was
-            free, in which case EndFrame must not be called -- the frame is simply dropped. */
         bool BeginFrame();
         void EndFrame();
 
     public:
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
+        void SetVSync(bool enabled) noexcept;
 
         /** Writes the next frame to GetSavedDir()/Traces as a .gputrace, to open in Xcode. */
         void RequestCapture();
 
-    public:
         bool SetMesh(const Mesh& mesh);
 
         /** One per TextureSlot, in slot order. All of them at once, so a single command buffer

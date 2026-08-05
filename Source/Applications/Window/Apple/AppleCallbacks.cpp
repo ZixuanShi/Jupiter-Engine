@@ -11,6 +11,7 @@
 
 #include "AppleCallbacks.h"
 #include "Applications/AppClient.h"
+#include "Graphics/Renderer.h"
 
 // An import is not re-exported, so AppClient.h's own do not cover these.
 import jpt.Input;
@@ -180,6 +181,11 @@ namespace jpt
             case 1:  return MouseButton::Right;
             default: return MouseButton::Middle;
             }
+        }
+
+        bool IsVSyncEnabled()
+        {
+            return GetApplication().GetRenderer().IsVSyncEnabled();
         }
     }
 #endif // IS_PLATFORM_MACOS

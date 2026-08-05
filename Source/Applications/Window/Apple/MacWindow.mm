@@ -91,6 +91,19 @@
 {
     (void)sender;
     jpt::OnFrame();
+
+    // VSync off, Vulkan-style: the display link pauses and the loop reschedules itself, so frames
+    // run back to back instead of once per refresh. The async hop lets AppKit drain input events
+    // between frames, which is what keeps the checkbox clickable to turn it back on.
+    const bool uncapped = !jpt::IsVSyncEnabled();
+    if (self.displayLink.paused != uncapped)
+    {
+        self.displayLink.paused = uncapped;
+    }
+    if (uncapped)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{ [self OnFrame:nil]; });
+    }
 }
 
 @end

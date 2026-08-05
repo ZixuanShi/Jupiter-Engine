@@ -16,7 +16,7 @@ export namespace jpt
     class EditorUI
     {
     private:
-        bool m_showMetrics = false;
+        bool m_showMetrics = true;
 
     public:
         void Draw();

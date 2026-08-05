@@ -171,6 +171,10 @@ namespace jpt
         m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm_sRGB);
         m_pLayer->setFramebufferOnly(true); // Promises render-only access, letting Core Animation pick faster memory.
 
+#if IS_PLATFORM_MACOS
+        m_pLayer->setDisplaySyncEnabled(m_vsync);
+#endif
+
         NS::SharedPtr<NS::AutoreleasePool> pool = NS::TransferPtr(NS::AutoreleasePool::alloc()->init());
 
         // One buffer, kFramesInFlight slots. Shared storage because the CPU writes it every frame
@@ -390,6 +394,20 @@ namespace jpt
     void Metal4Renderer::RequestCapture()
     {
         m_capture.RequestCapture();
+    }
+
+    void Metal4Renderer::SetVSync(bool enabled) noexcept
+    {
+        RendererBase::SetVSync(enabled);
+
+#if IS_PLATFORM_MACOS
+        if (m_pLayer)
+        {
+            m_pLayer->setDisplaySyncEnabled(enabled);
+        }
+#elif IS_PLATFORM_IOS
+        Debug::Warn("VSync is always enabled on iOS, so SetVSync has no effect.");
+#endif
     }
 
     void Metal4Renderer::EndFramePool()
