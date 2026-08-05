@@ -5,9 +5,6 @@ using namespace metal;
 
 #include "Graphics/Shader/ShaderTypes.h"
 
-// [[attribute(n)]] indices match the MTLVertexDescriptor built in Metal4Renderer::CreatePipeline.
-// The descriptor owns the layout, so this struct never needs to agree on offsets or stride --
-// and float3 costing 16 bytes here rather than 12 is harmless for the same reason.
 struct VertexIn
 {
     float3 position [[attribute(0)]];
@@ -20,7 +17,7 @@ struct VertexOut
 {
     float4 position [[position]];
     float3 worldPosition;
-    float3 modelPosition;   // The dissolve samples noise here, so the pattern rotates with the mesh
+    float3 modelPosition;   // For noise sampling in model space, so the dissolve effect is consistent across models.
     float3 worldNormal;
     float2 uv;
     float4 color;
@@ -61,13 +58,7 @@ Surface ReadSurface(VertexOut in, constant jpt::Uniforms& uniforms,
 {
     Surface surface;
     surface.albedo = (baseColorMap.sample(mapSampler, in.uv) * uniforms.baseColor * in.color).rgb;
-
-    // Renormalize: the rasterizer interpolates the corner normals linearly, which shortens
-    // the result everywhere except at the corners themselves.
     surface.normal = normalize(in.worldNormal);
-
-    // A perfect mirror is a delta function, which no finite sample count can integrate -- so the
-    // slider's zero end is the smoothest surface that still has a highlight with area.
     surface.roughness = clamp(uniforms.roughness, 0.03, 1.0);
     surface.metallic  = uniforms.metallic;
     surface.occlusion = uniforms.occlusion;
@@ -172,8 +163,6 @@ constant float kDissolveScale = 6.0;    // Noise cells per model unit; the mug i
 constant float kDissolveGlow  = 4.0;    // Overdriven past 1 so the rim reads as emissive
 
 // Model-space noise against a threshold: below it the fragment is gone, just above it burns.
-// The remap keeps the threshold under every noise value at progress 0 -- an idle mug must show
-// no rim speckle at its darkest cells -- and over every one at progress 1.
 float3 ApplyDissolve(float3 color, float3 modelPosition, constant jpt::Uniforms& uniforms)
 {
     const float3 samplePosition = modelPosition * kDissolveScale;

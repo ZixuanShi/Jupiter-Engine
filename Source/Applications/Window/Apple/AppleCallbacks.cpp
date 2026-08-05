@@ -183,10 +183,11 @@ namespace jpt
             }
         }
 
-        bool IsVSyncEnabled()
-        {
-            return GetApplication().GetRenderer().IsVSyncEnabled();
-        }
+    }
+
+    bool IsVSyncEnabled()
+    {
+        return GetApplication().GetRenderer().IsVSyncEnabled();
     }
 #endif // IS_PLATFORM_MACOS
 
