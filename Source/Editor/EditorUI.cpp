@@ -32,7 +32,7 @@ namespace jpt
     {
         void DrawCameraSection(Camera& camera)
         {
-            if (!ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+            if (!ImGui::CollapsingHeader("Camera"))
             {
                 return;
             }
@@ -104,7 +104,7 @@ namespace jpt
 
         void DrawRenderingSection(Material& material, AmbientLight& ambient)
         {
-            if (!ImGui::CollapsingHeader("Rendering", ImGuiTreeNodeFlags_DefaultOpen))
+            if (!ImGui::CollapsingHeader("Rendering"))
             {
                 return;
             }
