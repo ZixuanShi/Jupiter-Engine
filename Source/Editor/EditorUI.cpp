@@ -15,6 +15,7 @@ module;
 module jpt.EditorUI;
 
 import jpt.Camera;
+import jpt.FrameTimer;
 import jpt.Light;
 import jpt.LinearColor;
 import jpt.Material;
@@ -36,11 +37,7 @@ namespace jpt
 
         if (ImGui::Begin("Dev Menu"))
         {
-            if (ImGui::Button("Capture GPU Frame"))
-            {
-                GetApplication().GetRenderer().RequestCapture();
-            }
-
+            DrawPerformance();
             DrawRendering();
             for (usize i = 0; i < GetApplication().GetScene().GetPointLights().size(); ++i)
             {
@@ -53,6 +50,63 @@ namespace jpt
 
         // Outside the panel: it draws into the background list, not into a window.
         DrawPointLightGizmos();
+        DrawOverlay();
+    }
+
+    void EditorUI::DrawPerformance()
+    {
+        if (!ImGui::CollapsingHeader("Performance"))
+        {
+            return;
+        }
+
+        ImGui::Checkbox("Show Metrics", &m_showMetrics);
+
+        if (ImGui::Button("Capture GPU Frame"))
+        {
+            GetApplication().GetRenderer().RequestCapture();
+        }
+    }
+
+    void EditorUI::DrawOverlay()
+    {
+        if (!m_showMetrics)
+        {
+            return;
+        }
+
+        Application& app = GetApplication();
+        const FrameTimer& timer = app.GetFrameTimer();
+        const RenderStats& stats = app.GetRenderer().GetStats();
+
+        constexpr ImGuiWindowFlags kFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove
+                                          | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing
+                                          | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_AlwaysAutoResize
+                                          | ImGuiWindowFlags_NoInputs;
+
+        // Pinned to the top right, so it never sits under the Dev Menu at its default position.
+        const float pad = ImGui::GetFontSize();
+        ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - pad, pad), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+        ImGui::SetNextWindowBgAlpha(0.35f);
+
+        if (ImGui::Begin("Metrics", nullptr, kFlags))
+        {
+            ImGui::Text("FPS         %u", timer.GetFPS());
+            ImGui::Text("Frame       %6.2f ms", timer.GetDeltaSeconds() * 1000.0);
+
+            // CPU spans the whole frame including the drawable block, so CPU minus Wait is the
+            // work actually done.
+            ImGui::Text("CPU         %6.2f ms", timer.GetCpuSeconds() * 1000.0);
+            ImGui::Text("GPU         %6.2f ms", stats.gpuMs);
+            ImGui::Text("Wait        %6.2f ms", stats.waitMs);
+
+            ImGui::Separator();
+            ImGui::Text("Draw Calls  %u", stats.drawCalls);
+            ImGui::Text("Triangles   %u", stats.triangles);
+            ImGui::Text("Memory      %6.1f MiB", static_cast<float64>(stats.memoryBytes) / (1024.0 * 1024.0));
+        }
+
+        ImGui::End();
     }
 
     void EditorUI::DrawCamera()

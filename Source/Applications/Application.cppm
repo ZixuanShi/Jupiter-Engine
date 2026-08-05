@@ -12,6 +12,10 @@ import jpt.FrameTimer;
 import jpt.Input;
 import jpt.Scene;
 
+#if !IS_CONFIG_RELEASE
+    import jpt.EditorUI;
+#endif
+
 export namespace jpt
 {
     /** Base class every executable (Editor, and each Projects/<Name> App) derives from. */
@@ -25,6 +29,10 @@ export namespace jpt
         Input m_input;
         Status m_status = Status::Pending;
 
+#if !IS_CONFIG_RELEASE
+        EditorUI m_editorUI;
+#endif
+
     public:
         virtual ~Application() = default;
 
@@ -33,7 +41,6 @@ export namespace jpt
         virtual void Terminate();
         virtual void Update();          // Game logic
         virtual void PostUpdate() {}    // Camera
-        virtual void DrawUI();          // Editor panels. Runs with the render pass open.
 
     public:
         void Run();

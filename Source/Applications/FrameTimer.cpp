@@ -6,8 +6,6 @@ module;
 
 module jpt.FrameTimer;
 
-import jpt.Logger;
-
 namespace jpt
 {
     void FrameTimer::Update()
@@ -25,7 +23,12 @@ namespace jpt
             m_fps = m_frameCount;
             m_frameCount = 0;
             m_fpsTimer = 0.0;
-            Debug::Log("FPS: {}", m_fps);
         }
+    }
+
+    void FrameTimer::EndFrame()
+    {
+        // m_lastTime is this frame's start, stamped by Update() above.
+        m_cpuSeconds = std::chrono::duration<float64>(std::chrono::high_resolution_clock::now() - m_lastTime).count();
     }
 }

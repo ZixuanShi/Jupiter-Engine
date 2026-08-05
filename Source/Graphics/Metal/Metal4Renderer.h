@@ -81,6 +81,12 @@ namespace jpt
         uint32 m_frameIndex = 0;
         uint32 m_indexCount = 0;
 
+        // Written by the commit feedback handler, which Metal runs on its own thread.
+        std::atomic<float64> m_gpuMilliseconds{ 0.0 };
+
+        // Taken in BeginFrame, published into m_stats at EndFrame -- see the comment there.
+        float64 m_waitMilliseconds = 0.0;
+
         GpuCapture m_capture;
 
         // Live only between BeginFrame and EndFrame, and owned by that frame's autorelease pool

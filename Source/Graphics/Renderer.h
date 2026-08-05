@@ -10,6 +10,7 @@
 
 import jpt.LinearColor;
 import jpt.Mesh;
+import jpt.RendererBase;   // RenderStats. Metal4Renderer.h imports it too, but that is not re-exported.
 import jpt.Texture;
 import jpt.TypeDefs;
 import std;
@@ -29,6 +30,7 @@ namespace jpt
 
         { renderer.OnResize(width, height) }    -> std::same_as<void>;
         { renderer.RequestCapture() }           -> std::same_as<void>;
+        { renderer.GetStats() }                 -> std::same_as<const RenderStats&>;
 
         // Two halves rather than one Draw(), so UI can be built while the pass is open. False
         // from BeginFrame means the frame was dropped and EndFrame must not follow.

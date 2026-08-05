@@ -17,6 +17,18 @@ import std;
 
 export namespace jpt
 {
+    /** What one frame cost. Backend-neutral: a Vulkan backend fills the same fields from a
+        VkQueryPool. gpuMs arrives from the GPU after the frame that produced it has been drawn,
+        so it is always one frame behind. */
+    struct RenderStats
+    {
+        uint32  drawCalls   = 0;
+        uint32  triangles   = 0;
+        float64 gpuMs       = 0.0;
+        float64 waitMs      = 0.0;   // Blocked waiting for a free drawable
+        usize   memoryBytes = 0;
+    };
+
     class RendererBase
     {
     protected:
@@ -28,12 +40,14 @@ export namespace jpt
         AmbientLight m_ambient;
         std::array<PointLight, kMaxPointLights> m_pointLights;
         float32 m_time           = 0.0f;
+        RenderStats m_stats;
 
     public:
         bool PreInit() noexcept;
         void Update();
 
     public:
+        [[nodiscard]] const RenderStats& GetStats() const noexcept { return m_stats; }
         [[nodiscard]] const LinearColor& GetClearColor() const noexcept { return m_clearColor; }
         void SetClearColor(const LinearColor& color) noexcept { m_clearColor = color; }
     };

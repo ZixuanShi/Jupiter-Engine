@@ -223,7 +223,13 @@ namespace jpt
 
         // nullptr when every drawable is still in flight. Not an error -- but the pool still has
         // to drain and the slot has to go back, or a dropped frame leaks and the ring deadlocks.
+        const std::chrono::steady_clock::time_point waitStart = std::chrono::steady_clock::now();
         m_pDrawable = m_pLayer->nextDrawable();
+
+        // The compositor throttling us, which is separate from the semaphore above throttling the
+        // CPU ring. A healthy frame blocks here: that is the back-pressure bounding latency.
+        m_waitMilliseconds = std::chrono::duration<float64, std::milli>(std::chrono::steady_clock::now() - waitStart).count();
+
         if (!m_pDrawable)
         {
             local::g_frameSemaphore.release();
@@ -274,6 +280,14 @@ namespace jpt
 
     void Metal4Renderer::EndFrame()
     {
+        // Every field is published here rather than where it is taken, because the editor draws
+        // between BeginFrame and EndFrame: it therefore reads one whole frame's numbers, not a
+        // mix of this frame's wait and last frame's CPU -- which made Wait look larger than CPU
+        // even though the wait happens inside it.
+        m_stats.drawCalls = 0;
+        m_stats.triangles = 0;
+        m_stats.waitMs    = m_waitMilliseconds;
+
         MTL4::RenderCommandEncoder* pEncoder = m_pCommandBuffer->renderCommandEncoder(m_pPass);
 
         if (m_indexCount > 0)
@@ -326,6 +340,10 @@ namespace jpt
             pEncoder->setFrontFacingWinding(MTL::WindingCounterClockwise);   // Matches the OBJ convention: CCW seen from outside.
             pEncoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle, m_indexCount, MTL::IndexTypeUInt32,
                                             m_pIndices->gpuAddress(), m_indexCount * sizeof(uint32));
+
+            ++m_stats.drawCalls;
+            m_stats.triangles += m_indexCount / 3;
+
         }
 
         // ImGui binds its own pipeline but never a depth state, so it would inherit the scene's
@@ -342,14 +360,25 @@ namespace jpt
         m_pQueue->wait(m_pDrawable);
 
         MTL4::CommitOptions* pOptions = MTL4::CommitOptions::alloc()->init()->autorelease();
-        pOptions->addFeedbackHandler([](MTL4::CommitFeedback*)
+        pOptions->addFeedbackHandler([this](MTL4::CommitFeedback* pFeedback)
         {
+            // Metal runs this on its own thread, hence the atomic. It fires after the frame that
+            // produced it was already drawn, so the reading is always one frame behind -- inherent
+            // to asking the GPU when it finished, not a bug to fix.
+            m_gpuMilliseconds.store((pFeedback->GPUEndTime() - pFeedback->GPUStartTime()) * 1000.0,
+                                    std::memory_order_relaxed);
             local::g_frameSemaphore.release();
         });
 
         m_pQueue->commit(&m_pCommandBuffer, 1, pOptions);
         m_pQueue->signalDrawable(m_pDrawable);
         m_pDrawable->present();
+
+        m_stats.gpuMs = m_gpuMilliseconds.load(std::memory_order_relaxed);
+
+        // Everything this device holds, which is what Xcode's Memory view reports. On unified
+        // memory that is device-wide rather than per-allocation-owner.
+        m_stats.memoryBytes = static_cast<usize>(m_pDevice->currentAllocatedSize());
 
         m_capture.EndFrame();
 

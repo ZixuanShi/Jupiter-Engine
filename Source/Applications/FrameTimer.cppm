@@ -25,11 +25,17 @@ export namespace jpt
         uint32 m_frameCount = 0;
         uint32 m_fps = 0;
 
+        // Work done between Update() and EndFrame(), so it excludes whatever the app was idle for
+        // between frames. Includes the block in nextDrawable -- subtract RenderStats::waitMs.
+        float64 m_cpuSeconds = 0.0;
+
     public:
         void Update();
+        void EndFrame();
 
         [[nodiscard]] float64 GetDeltaSeconds() const noexcept { return m_deltaSeconds; }
         [[nodiscard]] float64 GetElapsedSeconds() const noexcept { return m_elapsedSeconds; }
+        [[nodiscard]] float64 GetCpuSeconds() const noexcept { return m_cpuSeconds; }
         [[nodiscard]] uint32 GetFPS() const noexcept { return m_fps; }
     };
 }

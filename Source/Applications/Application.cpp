@@ -159,18 +159,12 @@ namespace jpt
 
         if (m_renderer.BeginFrame())
         {
-            DrawUI();
+#if !IS_CONFIG_RELEASE
+            m_editorUI.Draw();
+#endif
             m_renderer.EndFrame();
         }
-    }
 
-    void Application::DrawUI()
-    {
-#if !IS_CONFIG_RELEASE
-        // Local because it carries no state: every value it edits lives in Scene. It becomes an
-        // Application member the day it needs to remember something between frames.
-        EditorUI editorUI;
-        editorUI.Draw();
-#endif
+        m_frameTimer.EndFrame();
     }
 }

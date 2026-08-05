@@ -15,13 +15,21 @@ export namespace jpt
         import of Camera, Material or PointLight. */
     class EditorUI
     {
+    private:
+        bool m_showMetrics = true;
+
     public:
         void Draw();
 
     private:
+        void DrawPerformance();
         void DrawRendering();
         void DrawPointLight(usize index);
         void DrawPointLightGizmos();
         void DrawCamera();
+
+        /** Every metric, in its own corner window rather than in the panel, so the numbers stay
+            visible while the Dev Menu is collapsed or dragged away. */
+        void DrawOverlay();
     };
 }
