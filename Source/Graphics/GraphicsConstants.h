@@ -9,4 +9,7 @@ namespace jpt
 
     /** Frames the CPU may run ahead by.  */
     enum : unsigned int { kFramesInFlight = 3 };
+
+    /** MXAA Sample count per pixel */
+    enum : unsigned int { kSampleCount = 4 };
 }

@@ -59,6 +59,7 @@ namespace jpt
         MTL::RenderPipelineState* m_pPipeline      = nullptr;
         MTL::DepthStencilState*   m_pDepthState    = nullptr;
         MTL::DepthStencilState*   m_pUIDepthState  = nullptr;   // Depth off, for UI drawn over the scene
+        MTL::Texture*             m_pMsaaColor     = nullptr;   // Rendered into, then resolved to the drawable
         MTL::Texture*             m_pDepthTexture  = nullptr;
         MTL::Buffer*              m_pVertices      = nullptr;
         MTL::Buffer*              m_pIndices       = nullptr;
@@ -110,7 +111,9 @@ namespace jpt
     private:
         bool CreatePipeline();
         bool CreateSampler();
-        bool EnsureDepthTexture(uint32 pixelWidth, uint32 pixelHeight);
+        /** The multisampled colour and depth attachments, sized from the drawable. Transient: both
+            live and die inside one pass, so neither is ever written to DRAM. */
+        bool EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight);
         void GenerateMipmaps();
 
         /** Metal 4 does not track what a GPU address points at, so everything reached that way has

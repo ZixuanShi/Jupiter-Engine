@@ -102,7 +102,7 @@ namespace jpt
             }
         }
 
-        void DrawRenderingSection(Material& material, AmbientLight& ambient)
+        void DrawRenderingSection(Material& material)
         {
             if (!ImGui::CollapsingHeader("Rendering"))
             {
@@ -128,15 +128,11 @@ namespace jpt
             ImGui::SliderFloat("Roughness", &material.roughness, 0.0f, 1.0f);
             ImGui::SliderFloat("Metallic", &material.metallic, 0.0f, 1.0f);
             ImGui::SliderFloat("Ambient Occlusion", &material.occlusion, 0.0f, 1.0f);
-
-            // HDR, because the sky is an irradiance rather than a colour and may exceed 1.
-            ImGui::ColorEdit3("Sky Color", &ambient.sky.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR);
-            ImGui::ColorEdit3("Ground Color", &ambient.ground.r, ImGuiColorEditFlags_Float | ImGuiColorEditFlags_HDR);
         }
 
         void DrawPointLightSection(PointLight& light, usize index)
         {
-            if (!ImGui::CollapsingHeader(std::format("Light {}", index + 1).c_str()))
+            if (!ImGui::CollapsingHeader(std::format("PointLight {}", index + 1).c_str()))
             {
                 return;
             }
@@ -212,7 +208,7 @@ namespace jpt
             Scene& scene = app.GetScene();
 
             DrawCameraSection(scene.GetCamera());
-            DrawRenderingSection(scene.GetMaterial(), scene.GetAmbient());
+            DrawRenderingSection(scene.GetMaterial());
 
             for (usize i = 0; i < scene.GetPointLights().size(); ++i)
             {

@@ -70,6 +70,23 @@ namespace jpt
             return static_cast<uint32>(std::bit_width(std::max(width, height)));
         }
 
+        /** A multisampled render target that never leaves the GPU. Memoryless where there is tile
+            memory to hold it -- both attachments are cleared, used and resolved inside one pass, so
+            neither needs a DRAM allocation. Apple-family only; an Intel Mac has no tile memory. */
+        [[nodiscard]] MTL::Texture* NewAttachment(MTL::Device* pDevice, MTL::PixelFormat format,
+                                                  uint32 pixelWidth, uint32 pixelHeight) noexcept
+        {
+            MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(format, pixelWidth, pixelHeight, false);
+
+            // The type must change with the sample count; a count alone is rejected.
+            pDesc->setTextureType(MTL::TextureType2DMultisample);
+            pDesc->setSampleCount(kSampleCount);
+            pDesc->setUsage(MTL::TextureUsageRenderTarget);
+            pDesc->setStorageMode(pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
+
+            return pDevice->newTexture(pDesc);
+        }
+
         [[nodiscard]] simd_float4 ToFloat4(const Vec3& vector, float32 w) noexcept
         {
             return simd_make_float4(vector.x, vector.y, vector.z, w);
@@ -103,6 +120,14 @@ namespace jpt
         if (!m_pQueue)
         {
             Debug::Error("Metal 4 is unavailable on this device.");
+            return false;
+        }
+
+        // No 1x fallback path: the Metal 4 floor makes every target Apple silicon, where this
+        // always holds. A second attachment path with no reachable caller would be worse.
+        if (!m_pDevice->supportsTextureSampleCount(kSampleCount))
+        {
+            Debug::Error("{}x MSAA is unavailable on this device.", static_cast<uint32>(kSampleCount));
             return false;
         }
 
@@ -207,7 +232,7 @@ namespace jpt
         // Sized from the drawable rather than the last OnResize, because Metal rejects a pass
         // whose attachments disagree -- and only one of the two is the texture being drawn to.
         MTL::Texture* pColorTexture = m_pDrawable->texture();
-        if (!EnsureDepthTexture(static_cast<uint32>(pColorTexture->width()), static_cast<uint32>(pColorTexture->height())))
+        if (!EnsureFrameTextures(static_cast<uint32>(pColorTexture->width()), static_cast<uint32>(pColorTexture->height())))
         {
             g_frameSemaphore.release();
             EndFramePool();
@@ -217,9 +242,13 @@ namespace jpt
         m_pPass = MTL4::RenderPassDescriptor::alloc()->init()->autorelease();
 
         MTL::RenderPassColorAttachmentDescriptor* pColor = m_pPass->colorAttachments()->object(0);
-        pColor->setTexture(pColorTexture);
+        pColor->setTexture(m_pMsaaColor);
+        pColor->setResolveTexture(pColorTexture);
         pColor->setLoadAction(MTL::LoadActionClear);    // On a tile-based GPU, Clear skips reading the previous framebuffer from DRAM.
-        pColor->setStoreAction(MTL::StoreActionStore);
+
+        // Resolve rather than StoreAndMultisampleResolve: nothing reads the multisampled image
+        // after the pass, so it is never written out -- which is what lets it be memoryless.
+        pColor->setStoreAction(MTL::StoreActionMultisampleResolve);
         pColor->setClearColor(MTL::ClearColor::Make(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a));
 
         MTL::RenderPassDepthAttachmentDescriptor* pDepth = m_pPass->depthAttachment();
@@ -353,6 +382,7 @@ namespace jpt
         Release(m_pIndices);
         Release(m_pVertices);
         Release(m_pDepthTexture);
+        Release(m_pMsaaColor);
         Release(m_pUIDepthState);
         Release(m_pDepthState);
         Release(m_pPipeline);
@@ -509,8 +539,8 @@ namespace jpt
             }
         }
 
-        // Depth is absent on purpose: residency covers raw addresses, and a memoryless texture
-        // has no memory to make resident -- the validation layer asserts on it.
+        // The frame attachments are absent on purpose: residency covers raw addresses, and a
+        // memoryless texture has no memory to make resident -- the validation layer asserts on it.
         m_pResidencySet->commit();
         m_pResidencySet->requestResidency();
     }
@@ -574,6 +604,7 @@ namespace jpt
         pDesc->setFragmentFunctionDescriptor(pFragmentFn);
         pDesc->setVertexDescriptor(pVertexDesc);
         pDesc->colorAttachments()->object(0)->setPixelFormat(m_pLayer->pixelFormat());
+        pDesc->setRasterSampleCount(kSampleCount);   // Must match the attachments, or the pass will not validate.
 
         // No depth attachment format here, unlike classic Metal: Metal 4 decouples it from the
         // pipeline and takes it from the render pass at encode time.
@@ -616,24 +647,20 @@ namespace jpt
         return m_pDepthState && m_pUIDepthState;
     }
 
-    bool Metal4Renderer::EnsureDepthTexture(uint32 pixelWidth, uint32 pixelHeight)
+    bool Metal4Renderer::EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight)
     {
         if (m_pDepthTexture && m_pDepthTexture->width() == pixelWidth && m_pDepthTexture->height() == pixelHeight)
         {
             return true;
         }
 
+        Release(m_pMsaaColor);
         Release(m_pDepthTexture);
 
-        MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(kDepthFormat, pixelWidth, pixelHeight, false);
-        pDesc->setUsage(MTL::TextureUsageRenderTarget);
+        m_pMsaaColor    = NewAttachment(m_pDevice, m_pLayer->pixelFormat(), pixelWidth, pixelHeight);
+        m_pDepthTexture = NewAttachment(m_pDevice, kDepthFormat, pixelWidth, pixelHeight);
 
-        // Tile memory, never DRAM -- free here because depth lives and dies inside the one pass.
-        // Apple-family only; an Intel Mac has no tile memory.
-        pDesc->setStorageMode(m_pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
-
-        m_pDepthTexture = m_pDevice->newTexture(pDesc);
-        return m_pDepthTexture;
+        return m_pMsaaColor && m_pDepthTexture;
     }
 }
 
