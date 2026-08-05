@@ -2,13 +2,26 @@
 
 export module jpt.EditorUI;
 
+import jpt.TypeDefs;
+
 export namespace jpt
 {
-    /** The editor's inspector. Called with the render pass already open, so it may only build
-        ImGui windows -- no drawing of its own.
+    /** The editor's inspector. Draw() runs with the render pass already open, so it may only
+        build ImGui windows -- nothing here draws.
 
         Excluded from Release by CMake, along with ImGui itself, rather than compiled and left
-        unreachable. Takes nothing: sections reach what they edit through GetApplication(), the
-        same way subsystems do, so adding one costs no signature change here. */
-    void DrawEditorUI();
+        unreachable. Every section reaches what it edits through GetApplication(), the same way
+        subsystems do, which is why none of these take parameters and why this unit needs no
+        import of Camera, Material or PointLight. */
+    class EditorUI
+    {
+    public:
+        void Draw();
+
+    private:
+        void DrawRendering();
+        void DrawPointLight(usize index);
+        void DrawPointLightGizmos();
+        void DrawCamera();
+    };
 }

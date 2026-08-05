@@ -30,7 +30,7 @@ import std;
 
 namespace jpt
 {
-    namespace
+    namespace local
     {
         struct TestEvent
         {
@@ -44,24 +44,24 @@ namespace jpt
     {
         // EventDispatcher -- registration
         {
-            TestDispatcher dispatcher;
+            local::TestDispatcher dispatcher;
 
             int32 firstCount = 0;
             int32 secondCount = 0;
 
-            const TestDispatcher::Handle first = dispatcher.Add([&firstCount](const TestEvent&) { ++firstCount; });
-            const TestDispatcher::Handle second = dispatcher.Add([&secondCount](const TestEvent&) { ++secondCount; });
+            const local::TestDispatcher::Handle first = dispatcher.Add([&firstCount](const local::TestEvent&) { ++firstCount; });
+            const local::TestDispatcher::Handle second = dispatcher.Add([&secondCount](const local::TestEvent&) { ++secondCount; });
 
             Debug::Assert(first != second, "Add returned the same handle twice");
-            Debug::Assert(first != kInvalid<TestDispatcher::Handle>, "Add returned the invalid handle");
+            Debug::Assert(first != kInvalid<local::TestDispatcher::Handle>, "Add returned the invalid handle");
             Debug::Assert(dispatcher.GetCount() == 2, "Dispatcher holds {} handlers, expected 2", dispatcher.GetCount());
 
-            dispatcher.Dispatch(TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
             Debug::Assert(firstCount == 1 && secondCount == 1, "Dispatch reached {} and {}, expected 1 and 1", firstCount, secondCount);
 
             // Remove must stop exactly one handler.
             dispatcher.Remove(first);
-            dispatcher.Dispatch(TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
             Debug::Assert(firstCount == 1, "Removed handler still fired, count is {}", firstCount);
             Debug::Assert(secondCount == 2, "Surviving handler stopped firing, count is {}", secondCount);
 
@@ -72,40 +72,40 @@ namespace jpt
 
         // EventDispatcher -- re-entrancy. Legacy's Send was undefined behaviour here.
         {
-            TestDispatcher dispatcher;
+            local::TestDispatcher dispatcher;
 
             // Removing itself destroys the std::function it is executing in, unless Remove defers.
             int32 selfCount = 0;
-            TestDispatcher::Handle self = kInvalid<TestDispatcher::Handle>;
-            self = dispatcher.Add([&dispatcher, &selfCount, &self](const TestEvent&)
+            local::TestDispatcher::Handle self = kInvalid<local::TestDispatcher::Handle>;
+            self = dispatcher.Add([&dispatcher, &selfCount, &self](const local::TestEvent&)
                 {
                     ++selfCount;
                     dispatcher.Remove(self);
                 });
 
-            dispatcher.Dispatch(TestEvent{});
-            dispatcher.Dispatch(TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
             Debug::Assert(selfCount == 1, "Self-removing handler fired {} times, expected 1", selfCount);
         }
         {
-            TestDispatcher dispatcher;
+            local::TestDispatcher dispatcher;
 
             // Adding grows the container; the new handler must not see the in-flight event.
             int32 addedCount = 0;
             int32 adderCount = 0;
-            dispatcher.Add([&dispatcher, &addedCount, &adderCount](const TestEvent&)
+            dispatcher.Add([&dispatcher, &addedCount, &adderCount](const local::TestEvent&)
                 {
                     ++adderCount;
                     if (adderCount == 1)
                     {
-                        dispatcher.Add([&addedCount](const TestEvent&) { ++addedCount; });
+                        dispatcher.Add([&addedCount](const local::TestEvent&) { ++addedCount; });
                     }
                 });
 
-            dispatcher.Dispatch(TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
             Debug::Assert(addedCount == 0, "Handler added mid-dispatch received the in-flight event");
 
-            dispatcher.Dispatch(TestEvent{});
+            dispatcher.Dispatch(local::TestEvent{});
             Debug::Assert(addedCount == 1, "Handler added mid-dispatch never fired, count is {}", addedCount);
         }
 

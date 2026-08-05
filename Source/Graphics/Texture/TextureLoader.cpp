@@ -15,7 +15,7 @@ import std;
 
 namespace jpt
 {
-    namespace
+    namespace local
     {
         struct CFDeleter
         {
@@ -36,21 +36,21 @@ namespace jpt
     {
         const std::string file = path.GetAbsolute().string();
 
-        const CFPtr<CFURLRef> url{ CFURLCreateFromFileSystemRepresentation(
+        const local::CFPtr<CFURLRef> url{ CFURLCreateFromFileSystemRepresentation(
             nullptr, reinterpret_cast<const UInt8*>(file.c_str()), file.size(), false) };
         if (!url)
         {
             return {};
         }
 
-        const CFPtr<CGImageSourceRef> source{ CGImageSourceCreateWithURL(url.get(), nullptr) };
+        const local::CFPtr<CGImageSourceRef> source{ CGImageSourceCreateWithURL(url.get(), nullptr) };
         if (!source)
         {
             Debug::Error("Cannot open image: {}", file);
             return {};
         }
 
-        const CFPtr<CGImageRef> decoded{ CGImageSourceCreateImageAtIndex(source.get(), 0, nullptr) };
+        const local::CFPtr<CGImageRef> decoded{ CGImageSourceCreateImageAtIndex(source.get(), 0, nullptr) };
         if (!decoded)
         {
             Debug::Error("Cannot decode image: {}", file);
@@ -67,9 +67,9 @@ namespace jpt
         // matching space is a copy rather than a colour conversion, and the data maps -- roughness,
         // metallic, AO -- reach the GPU byte-exact. Whether their values are *read* as sRGB is the
         // texture format's job, not this one's.
-        const CFPtr<CGColorSpaceRef> colorSpace{ CGColorSpaceCreateWithName(kCGColorSpaceSRGB) };
-        const CFPtr<CGContextRef> context{ CGBitmapContextCreate(
-            texture.Data(), width, height, 8, texture.RowPitch(), colorSpace.get(), kRGBA8) };
+        const local::CFPtr<CGColorSpaceRef> colorSpace{ CGColorSpaceCreateWithName(kCGColorSpaceSRGB) };
+        const local::CFPtr<CGContextRef> context{ CGBitmapContextCreate(
+            texture.Data(), width, height, 8, texture.RowPitch(), colorSpace.get(), local::kRGBA8) };
 
         if (!context)
         {

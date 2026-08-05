@@ -170,6 +170,38 @@ base state was never set is the symptom.
 - Comment only what the code cannot say. Prefer a short trailing comment over a block that splits a
   run of related calls.
 
+### Prefer a class over free functions
+
+**A group of free functions that share state, a lifecycle, or a subject is a class.** One public
+entry point, everything else private — `EditorUI::Draw()` and `GpuCapture` are the shape. A reader
+then learns the type once instead of tracing which file-scope variable each function mutates, and
+the compiler stops anything outside from reaching the parts.
+
+The tell is *shared state*: a `g_` variable that two functions read, or a parameter threaded by
+reference through a chain of calls because it is really a cursor. Both were free functions here
+before they were classes, and both were harder to follow for it.
+
+Free is still right for these, so do not convert them:
+
+- **Pure functions of their arguments** that touch no `this` — `ToFloat4`, `MipLevelCount`,
+  `AreValuesClose`, `ToString(KeyCode)`. As private members they would gain access to state they
+  must not use.
+- **Operators**, which C++ requires to be free to allow the left-hand conversion.
+- **The platform seam.** `AppleCallbacks.h`'s functions and `jpt::GetApplication()` are free
+  because module attachment forbids anything else — see the Modules section.
+
+Prefer pulling over parameters when the method is already inside the engine: `EditorUI`'s sections
+take no arguments and reach what they edit through `GetApplication()`, which is what keeps
+`EditorUI.cppm` free of `Camera`, `Material` and `PointLight` imports.
+
+**`namespace local` is where a `.cpp`'s own helpers live** — the ones that are not members of the
+type the file implements. It replaces the anonymous namespace, so call sites read
+`local::ParseDigits(...)` and every parked helper is one grep away. Two consequences worth knowing:
+a named namespace has no implicit using-directive, so references must be qualified; and it does not
+give internal linkage the way an anonymous one does, so in a plain `.cpp` two files sharing a name
+is a duplicate-symbol link error. A module implementation unit is unaffected — its declarations
+already have module linkage.
+
 ### Python (`Scripts/`)
 
 - Docstrings per [PEP 257](https://peps.python.org/pep-0257/) — a `"""..."""` as the first statement,

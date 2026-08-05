@@ -14,7 +14,7 @@ import std;
 
 namespace jpt
 {
-    namespace
+    namespace local
     {
         [[nodiscard]] std::string Timestamp()
         {
@@ -38,7 +38,7 @@ namespace jpt
             return;
         }
 
-        m_path = GetSavedDir() / "Traces" / (Timestamp() + ".gputrace");
+        m_path = GetSavedDir() / "Traces" / (local::Timestamp() + ".gputrace");
 
         std::error_code error;
         std::filesystem::create_directories(m_path.parent_path(), error);

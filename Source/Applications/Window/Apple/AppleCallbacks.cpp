@@ -20,7 +20,7 @@ import jpt.Vector2;
 namespace jpt
 {
 #if IS_PLATFORM_MACOS
-    namespace
+    namespace local
     {
         // kVK_* are positional, not layout-dependent, so WASD keeps its shape on AZERTY.
         [[nodiscard]] KeyCode ToKeyCode(std::uint16_t platformKeyCode) noexcept
@@ -207,18 +207,18 @@ namespace jpt
 #if IS_PLATFORM_MACOS
     void OnKeyDown(std::uint16_t platformKeyCode, bool isRepeat)
     {
-        GetApplication().GetInput().PostKeyDown(ToKeyCode(platformKeyCode), isRepeat);
+        GetApplication().GetInput().PostKeyDown(local::ToKeyCode(platformKeyCode), isRepeat);
     }
 
     void OnKeyUp(std::uint16_t platformKeyCode)
     {
-        GetApplication().GetInput().PostKeyUp(ToKeyCode(platformKeyCode));
+        GetApplication().GetInput().PostKeyUp(local::ToKeyCode(platformKeyCode));
     }
 
     void OnModifierChanged(std::uint16_t platformKeyCode, std::uint32_t modifierFlags)
     {
-        const KeyCode key = ToKeyCode(platformKeyCode);
-        const std::uint32_t mask = ModifierMask(key);
+        const KeyCode key = local::ToKeyCode(platformKeyCode);
+        const std::uint32_t mask = local::ModifierMask(key);
         if (mask == 0)
         {
             return;     // fn, whose flag cannot be trusted.
@@ -237,7 +237,7 @@ namespace jpt
 
     void OnMouseButton(std::int32_t buttonNumber, bool isDown, float x, float y)
     {
-        GetApplication().GetInput().PostMouseButton(ToMouseButton(buttonNumber), isDown, Vec2(x, y));
+        GetApplication().GetInput().PostMouseButton(local::ToMouseButton(buttonNumber), isDown, Vec2(x, y));
     }
 
     void OnMouseMove(float x, float y)
@@ -251,7 +251,7 @@ namespace jpt
     }
 #endif // IS_PLATFORM_MACOS
 
-    namespace
+    namespace local
     {
         void PostTouch(TouchPhase phase, std::uint64_t touchId, float x, float y, double timeSeconds)
         {
@@ -261,22 +261,22 @@ namespace jpt
 
     void OnTouchBegan(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        PostTouch(TouchPhase::Began, touchId, x, y, timeSeconds);
+        local::PostTouch(TouchPhase::Began, touchId, x, y, timeSeconds);
     }
 
     void OnTouchMoved(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        PostTouch(TouchPhase::Moved, touchId, x, y, timeSeconds);
+        local::PostTouch(TouchPhase::Moved, touchId, x, y, timeSeconds);
     }
 
     void OnTouchEnded(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        PostTouch(TouchPhase::Ended, touchId, x, y, timeSeconds);
+        local::PostTouch(TouchPhase::Ended, touchId, x, y, timeSeconds);
     }
 
     void OnTouchCancelled(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        PostTouch(TouchPhase::Cancelled, touchId, x, y, timeSeconds);
+        local::PostTouch(TouchPhase::Cancelled, touchId, x, y, timeSeconds);
     }
 }
 

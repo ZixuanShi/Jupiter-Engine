@@ -15,7 +15,7 @@ import std;
 
 namespace jpt
 {
-    namespace
+    namespace local
     {
         constexpr uint32 kNoIndex = ~0u;
 
@@ -220,7 +220,7 @@ namespace jpt
     Mesh LoadObj(const Path& path)
     {
         std::string text;
-        if (!ReadFile(path.GetAbsolute(), text))
+        if (!local::ReadFile(path.GetAbsolute(), text))
         {
             Debug::Error("Cannot read {}", path.GetAbsolute().string());
             return {};
@@ -232,8 +232,8 @@ namespace jpt
         std::vector<LinearColor> colors;   // Parallel to positions: the colour extension is on `v`.
 
         // Corner -> index. A file with UVs but no normals splits at its UV seams *before*
-        // GenerateNormals runs, so those seams come out faceted.
-        std::unordered_map<VertexKey, uint32, VertexKeyHash> unique;
+        // local::GenerateNormals runs, so those seams come out faceted.
+        std::unordered_map<local::VertexKey, uint32, local::VertexKeyHash> unique;
 
         Mesh mesh;
         std::vector<uint32> corners;
@@ -249,14 +249,14 @@ namespace jpt
             {
                 line.remove_suffix(1);
             }
-            SkipBlanks(line);
+            local::SkipBlanks(line);
 
             if (line.starts_with("v "))
             {
                 line.remove_prefix(1);
 
                 Vec3 position;
-                if (Parse(line, position.x) && Parse(line, position.y) && Parse(line, position.z))
+                if (local::Parse(line, position.x) && local::Parse(line, position.y) && local::Parse(line, position.z))
                 {
                     positions.push_back(position);
 
@@ -265,7 +265,7 @@ namespace jpt
                     float32 r = 0.0f;
                     float32 g = 0.0f;
                     float32 b = 0.0f;
-                    const bool hasColor = Parse(line, r) && Parse(line, g) && Parse(line, b);
+                    const bool hasColor = local::Parse(line, r) && local::Parse(line, g) && local::Parse(line, b);
                     colors.push_back(hasColor ? LinearColor(r, g, b) : LinearColor::White());
                 }
             }
@@ -274,7 +274,7 @@ namespace jpt
                 line.remove_prefix(2);
 
                 Vec2 texCoord;
-                if (Parse(line, texCoord.x) && Parse(line, texCoord.y))
+                if (local::Parse(line, texCoord.x) && local::Parse(line, texCoord.y))
                 {
                     texCoords.push_back(texCoord);
                 }
@@ -284,7 +284,7 @@ namespace jpt
                 line.remove_prefix(2);
 
                 Vec3 normal;
-                if (Parse(line, normal.x) && Parse(line, normal.y) && Parse(line, normal.z))
+                if (local::Parse(line, normal.x) && local::Parse(line, normal.y) && local::Parse(line, normal.z))
                 {
                     normals.push_back(normal);
                 }
@@ -294,25 +294,25 @@ namespace jpt
                 line.remove_prefix(1);
                 corners.clear();
 
-                for (int32 position = 0, texCoord = 0, normal = 0; ParseCorner(line, position, texCoord, normal); )
+                for (int32 position = 0, texCoord = 0, normal = 0; local::ParseCorner(line, position, texCoord, normal); )
                 {
-                    const usize positionIndex = Resolve(position, positions.size());
+                    const usize positionIndex = local::Resolve(position, positions.size());
                     if (positionIndex == positions.size())
                     {
                         Debug::Error("{}: face references vertex {}, which does not exist.", path.GetFileName(), position);
                         return {};
                     }
 
-                    VertexKey key;
+                    local::VertexKey key;
                     key.position = static_cast<uint32>(positionIndex);
 
                     // Unlike the position, an out-of-range UV or normal is treated as absent
                     // rather than fatal -- the vertex still has somewhere to be.
-                    if (const usize index = Resolve(texCoord, texCoords.size()); index < texCoords.size())
+                    if (const usize index = local::Resolve(texCoord, texCoords.size()); index < texCoords.size())
                     {
                         key.texCoord = static_cast<uint32>(index);
                     }
-                    if (const usize index = Resolve(normal, normals.size()); index < normals.size())
+                    if (const usize index = local::Resolve(normal, normals.size()); index < normals.size())
                     {
                         key.normal = static_cast<uint32>(index);
                     }
@@ -321,8 +321,8 @@ namespace jpt
                     if (inserted)
                     {
                         mesh.vertices.emplace_back(positions[key.position],
-                                                   (key.normal   != kNoIndex) ? normals[key.normal]     : Vec3::Zero(),
-                                                   (key.texCoord != kNoIndex) ? texCoords[key.texCoord] : Vec2::Zero(),
+                                                   (key.normal   != local::kNoIndex) ? normals[key.normal]     : Vec3::Zero(),
+                                                   (key.texCoord != local::kNoIndex) ? texCoords[key.texCoord] : Vec2::Zero(),
                                                    colors[key.position]);
                     }
 
@@ -338,7 +338,7 @@ namespace jpt
 
         if (normals.empty())
         {
-            GenerateNormals(mesh);
+            local::GenerateNormals(mesh);
         }
 
         Debug::Info("Loaded {}: {} vertices, {} triangles.", path.GetFileName(), mesh.vertices.size(), mesh.indices.size() / 3);
