@@ -33,7 +33,7 @@ export namespace jpt
         void Update();
         void EndFrame();
 
-        [[nodiscard]] float64 GetDeltaSeconds() const noexcept { return m_deltaSeconds; }
+        [[nodiscard]] float32 GetDeltaSeconds() const noexcept { return static_cast<float32>(m_deltaSeconds); }
         [[nodiscard]] float64 GetElapsedSeconds() const noexcept { return m_elapsedSeconds; }
         [[nodiscard]] float64 GetCpuSeconds() const noexcept { return m_cpuSeconds; }
         [[nodiscard]] uint32 GetFPS() const noexcept { return m_fps; }

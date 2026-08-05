@@ -104,7 +104,8 @@ namespace jpt
     {
         m_camera.Update();
 
-        const float32 step = m_material.dissolveSpeed * static_cast<float32>(GetApplication().GetFrameTimer().GetDeltaSeconds());
+        const float32 deltaSeconds = GetApplication().GetFrameTimer().GetDeltaSeconds();
+        const float32 step = m_material.dissolveSpeed * deltaSeconds;
         m_material.dissolvePct = std::clamp(m_material.dissolvePct + (m_material.dissolving ? step : -step), 0.0f, 1.0f);
     }
 

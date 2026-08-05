@@ -112,12 +112,9 @@ namespace jpt
             return;
         }
 
-        const FrameTimer& timer = app.GetFrameTimer();
-        const float32 deltaSeconds = static_cast<float32>(timer.GetDeltaSeconds());
-
-        // Per second, not per frame, so the speed does not follow the frame rate.
         constexpr float32 kSpeed = 4.0f;
-        MoveLocal(axis * deltaSeconds * kSpeed);
+        const FrameTimer& timer = app.GetFrameTimer();
+        MoveLocal(axis * timer.GetDeltaSeconds() * kSpeed);
     }
 
     void Camera::Look(const Vec2& deltaPixels)
