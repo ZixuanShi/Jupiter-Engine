@@ -9,12 +9,14 @@ module jpt.Scene;
 
 import jpt.Camera;
 import jpt.Constants;
+import jpt.FrameTimer;
 import jpt.GestureRecognizer;
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.Light;
 import jpt.LinearColor;
+import jpt.Material;
 import jpt.Quaternion;
 import jpt.TypeDefs;
 import jpt.Vector2;
@@ -101,6 +103,9 @@ namespace jpt
     void Scene::Update()
     {
         m_camera.Update();
+
+        const float32 step = m_material.dissolveSpeed * static_cast<float32>(GetApplication().GetFrameTimer().GetDeltaSeconds());
+        m_material.dissolvePct = std::clamp(m_material.dissolvePct + (m_material.dissolving ? step : -step), 0.0f, 1.0f);
     }
 
     void Scene::TranslateModel(const Vec2& deltaPixels)

@@ -37,14 +37,16 @@ namespace jpt
         simd_float4   baseColor;
         simd_float4   skyColor;         // Hemisphere irradiance, straight up
         simd_float4   groundColor;      // ... and straight down
+        simd_float4   dissolveColor;    // rgb burn rim, w = dissolve progress 0..1
         GpuPointLight pointLights[kMaxPointLights];
         float roughness;
         float metallic;
         float occlusion;
+        float dissolveEdge;             // Burning rim width, in noise units
         float time;                     // Seconds since launch, for experimental effects
         ViewMode viewMode;
     };
 }
 
 // The whole reason this header is shared rather than duplicated. Evaluated on both sides.
-static_assert(sizeof(jpt::Uniforms) == 320, "Uniforms must match the shader's layout");
+static_assert(sizeof(jpt::Uniforms) == 336, "Uniforms must match the shader's layout");

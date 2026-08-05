@@ -43,6 +43,7 @@ namespace jpt
             {
                 DrawPointLight(i);
             }
+            DrawVfx();
             DrawCamera();
         }
 
@@ -68,45 +69,55 @@ namespace jpt
         }
     }
 
-    void EditorUI::DrawOverlay()
+    void EditorUI::DrawPointLight(usize index)
     {
-        if (!m_showMetrics)
+        if (!ImGui::CollapsingHeader(std::format("PointLight {}", index + 1).c_str()))
         {
             return;
         }
 
-        Application& app = GetApplication();
-        const FrameTimer& timer = app.GetFrameTimer();
-        const RenderStats& stats = app.GetRenderer().GetStats();
+        PointLight& light = GetApplication().GetScene().GetPointLights()[index];
 
-        constexpr ImGuiWindowFlags kFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove
-                                          | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing
-                                          | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_AlwaysAutoResize
-                                          | ImGuiWindowFlags_NoInputs;
+        // ImGui keys a widget by its label, so three sections of identically named sliders
+        // would be one slider driving all three lights.
+        ImGui::PushID(static_cast<int32>(index));
 
-        // Pinned to the top right, so it never sits under the Dev Menu at its default position.
-        const float pad = ImGui::GetFontSize();
-        ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - pad, pad), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
-        ImGui::SetNextWindowBgAlpha(0.35f);
+        ImGui::Checkbox("Enabled", &light.enabled);
+        ImGui::DragFloat("Intensity", &light.intensity, 1.0f, 0.0f, 1000.0f, "%.0f");
+        ImGui::ColorEdit3("Color", &light.color.r, ImGuiColorEditFlags_Float);
+        ImGui::DragFloat3("Position", &light.position.x, 0.02f);
 
-        if (ImGui::Begin("Metrics", nullptr, kFlags))
+        ImGui::PopID();
+    }
+
+    void EditorUI::DrawRendering()
+    {
+        if (!ImGui::CollapsingHeader("Rendering"))
         {
-            ImGui::Text("FPS         %u", timer.GetFPS());
-            ImGui::Text("Frame       %6.2f ms", timer.GetDeltaSeconds() * 1000.0);
-
-            // CPU spans the whole frame including the drawable block, so CPU minus Wait is the
-            // work actually done.
-            ImGui::Text("CPU         %6.2f ms", timer.GetCpuSeconds() * 1000.0);
-            ImGui::Text("GPU         %6.2f ms", stats.gpuMs);
-            ImGui::Text("Wait        %6.2f ms", stats.waitMs);
-
-            ImGui::Separator();
-            ImGui::Text("Draw Calls  %u", stats.drawCalls);
-            ImGui::Text("Triangles   %u", stats.triangles);
-            ImGui::Text("Memory      %6.1f MiB", static_cast<float64>(stats.memoryBytes) / (1024.0 * 1024.0));
+            return;
         }
 
-        ImGui::End();
+        Material& material = GetApplication().GetScene().GetMaterial();
+
+        // ShaderTypes.h owns the ordering, because the shader switches on it. This only names it.
+        static constexpr const char* kViewModes[] =
+        {
+            "Final", "Base Color", "Normal", "Roughness", "Metallic",
+        };
+        static_assert(std::size(kViewModes) == static_cast<usize>(ViewMode::Count), "View mode names are out of sync");
+
+        // Isolating a term is what tells "the slider did nothing" apart from "the term is not
+        // reaching the shader at all" -- indistinguishable in the Final view.
+        int32 viewMode = static_cast<int32>(material.viewMode);
+        if (ImGui::Combo("View", &viewMode, kViewModes, IM_ARRAYSIZE(kViewModes)))
+        {
+            material.viewMode = static_cast<uint32>(viewMode);
+        }
+
+        ImGui::ColorEdit3("Base Color", &material.baseColor.r, ImGuiColorEditFlags_Float);
+        ImGui::SliderFloat("Roughness", &material.roughness, 0.0f, 1.0f);
+        ImGui::SliderFloat("Metallic", &material.metallic, 0.0f, 1.0f);
+        ImGui::SliderFloat("Ambient Occlusion", &material.occlusion, 0.0f, 1.0f);
     }
 
     void EditorUI::DrawCamera()
@@ -183,55 +194,23 @@ namespace jpt
         }
     }
 
-    void EditorUI::DrawRendering()
+    void EditorUI::DrawVfx()
     {
-        if (!ImGui::CollapsingHeader("Rendering"))
+        if (!ImGui::CollapsingHeader("VFX"))
         {
             return;
         }
 
         Material& material = GetApplication().GetScene().GetMaterial();
 
-        // ShaderTypes.h owns the ordering, because the shader switches on it. This only names it.
-        static constexpr const char* kViewModes[] =
+        if (ImGui::Button("Play"))
         {
-            "Final", "Base Color", "Normal", "Roughness", "Metallic",
-        };
-        static_assert(std::size(kViewModes) == static_cast<usize>(ViewMode::Count), "View mode names are out of sync");
-
-        // Isolating a term is what tells "the slider did nothing" apart from "the term is not
-        // reaching the shader at all" -- indistinguishable in the Final view.
-        int32 viewMode = static_cast<int32>(material.viewMode);
-        if (ImGui::Combo("View", &viewMode, kViewModes, IM_ARRAYSIZE(kViewModes)))
-        {
-            material.viewMode = static_cast<uint32>(viewMode);
+            material.dissolving = !material.dissolving;
         }
 
-        ImGui::ColorEdit3("Base Color", &material.baseColor.r, ImGuiColorEditFlags_Float);
-        ImGui::SliderFloat("Roughness", &material.roughness, 0.0f, 1.0f);
-        ImGui::SliderFloat("Metallic", &material.metallic, 0.0f, 1.0f);
-        ImGui::SliderFloat("Ambient Occlusion", &material.occlusion, 0.0f, 1.0f);
-    }
-
-    void EditorUI::DrawPointLight(usize index)
-    {
-        if (!ImGui::CollapsingHeader(std::format("PointLight {}", index + 1).c_str()))
-        {
-            return;
-        }
-
-        PointLight& light = GetApplication().GetScene().GetPointLights()[index];
-
-        // ImGui keys a widget by its label, so three sections of identically named sliders
-        // would be one slider driving all three lights.
-        ImGui::PushID(static_cast<int32>(index));
-
-        ImGui::Checkbox("Enabled", &light.enabled);
-        ImGui::DragFloat("Intensity", &light.intensity, 1.0f, 0.0f, 1000.0f, "%.0f");
-        ImGui::ColorEdit3("Color", &light.color.r, ImGuiColorEditFlags_Float);
-        ImGui::DragFloat3("Position", &light.position.x, 0.02f);
-
-        ImGui::PopID();
+        ImGui::SliderFloat("Speed", &material.dissolveSpeed, 0.1f, 5.0f, "%.1fx");
+        ImGui::SliderFloat("Edge Width", &material.dissolveEdge, 0.005f, 0.2f, "%.3f");
+        ImGui::ColorEdit3("Color", &material.dissolveColor.r, ImGuiColorEditFlags_Float);
     }
 
     /** A marker per light: where it is, whether it is on, and which one it is */
@@ -280,5 +259,46 @@ namespace jpt
             pDrawList->AddText(ImVec2(screen.x + kRadius + 4.0f, screen.y - ImGui::GetFontSize() * 0.5f),
                                color, std::format("{}", i + 1).c_str());
         }
+    }
+
+    void EditorUI::DrawOverlay()
+    {
+        if (!m_showMetrics)
+        {
+            return;
+        }
+
+        Application& app = GetApplication();
+        const FrameTimer& timer = app.GetFrameTimer();
+        const RenderStats& stats = app.GetRenderer().GetStats();
+
+        constexpr ImGuiWindowFlags kFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove
+                                          | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing
+                                          | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_AlwaysAutoResize
+                                          | ImGuiWindowFlags_NoInputs;
+
+        // Pinned to the top right, so it never sits under the Dev Menu at its default position.
+        const float pad = ImGui::GetFontSize();
+        ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - pad, pad), ImGuiCond_Always, ImVec2(1.0f, 0.0f));
+        ImGui::SetNextWindowBgAlpha(0.35f);
+
+        if (ImGui::Begin("Metrics", nullptr, kFlags))
+        {
+            ImGui::Text("FPS         %u", timer.GetFPS());
+            ImGui::Text("Frame       %6.2f ms", timer.GetDeltaSeconds() * 1000.0);
+
+            // CPU spans the whole frame including the drawable block, so CPU minus Wait is the
+            // work actually done.
+            ImGui::Text("CPU         %6.2f ms", timer.GetCpuSeconds() * 1000.0);
+            ImGui::Text("GPU         %6.2f ms", stats.gpuMs);
+            ImGui::Text("Wait        %6.2f ms", stats.waitMs);
+
+            ImGui::Separator();
+            ImGui::Text("Draw Calls  %u", stats.drawCalls);
+            ImGui::Text("Triangles   %u", stats.triangles);
+            ImGui::Text("Memory      %6.1f MiB", static_cast<float64>(stats.memoryBytes) / (1024.0 * 1024.0));
+        }
+
+        ImGui::End();
     }
 }

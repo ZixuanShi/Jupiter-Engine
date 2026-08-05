@@ -303,6 +303,7 @@ namespace jpt
             uniforms.baseColor      = local::ToFloat4(m_material.baseColor);
             uniforms.skyColor       = local::ToFloat4(m_ambient.sky);
             uniforms.groundColor    = local::ToFloat4(m_ambient.ground);
+            uniforms.dissolveColor  = local::ToFloat4(m_material.dissolveColor, m_material.dissolvePct);
 
             for (usize i = 0; i < m_pointLights.size(); ++i)
             {
@@ -310,9 +311,10 @@ namespace jpt
                 uniforms.pointLights[i].color    = local::ToFloat4(m_pointLights[i].color, m_pointLights[i].intensity);
             }
 
-            uniforms.roughness = m_material.roughness;
-            uniforms.metallic  = m_material.metallic;
-            uniforms.occlusion = m_material.occlusion;
+            uniforms.roughness    = m_material.roughness;
+            uniforms.metallic     = m_material.metallic;
+            uniforms.occlusion    = m_material.occlusion;
+            uniforms.dissolveEdge = m_material.dissolveEdge;
             uniforms.time      = m_time;
             uniforms.viewMode  = static_cast<ViewMode>(m_material.viewMode);
 

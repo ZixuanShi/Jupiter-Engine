@@ -20,6 +20,7 @@ struct VertexOut
 {
     float4 position [[position]];
     float3 worldPosition;
+    float3 modelPosition;   // The dissolve samples noise here, so the pattern rotates with the mesh
     float3 worldNormal;
     float2 uv;
     float4 color;
@@ -33,6 +34,7 @@ vertex VertexOut MeshVertex(VertexIn in [[stage_in]],
 
     out.position      = uniforms.modelViewProjection * float4(in.position, 1.0);
     out.worldPosition = (uniforms.model * float4(in.position, 1.0)).xyz;
+    out.modelPosition = in.position;
     out.worldNormal   = (uniforms.model * float4(in.normal, 0.0)).xyz;   // w = 0: a direction does not translate.
     out.uv            = in.uv;
     out.color         = in.color;
@@ -147,6 +149,49 @@ float3 IndirectLight(Surface surface, float3 viewDirection, float3 sky, float3 g
     return ((1.0 - F) * diffuse + F * specular) * surface.occlusion;
 }
 
+float Hash(float3 cell)
+{
+    cell  = fract(cell * 0.1031);
+    cell += dot(cell, cell.zyx + 31.32);
+    return fract((cell.x + cell.y) * cell.z);
+}
+
+float ValueNoise(float3 position)
+{
+    const float3 cell = floor(position);
+    const float3 t = fract(position);
+    const float3 f = t * t * (3.0 - 2.0 * t);   // Hermite, so cell boundaries have no creases
+
+    return mix(mix(mix(Hash(cell + float3(0, 0, 0)), Hash(cell + float3(1, 0, 0)), f.x),
+                   mix(Hash(cell + float3(0, 1, 0)), Hash(cell + float3(1, 1, 0)), f.x), f.y),
+               mix(mix(Hash(cell + float3(0, 0, 1)), Hash(cell + float3(1, 0, 1)), f.x),
+                   mix(Hash(cell + float3(0, 1, 1)), Hash(cell + float3(1, 1, 1)), f.x), f.y), f.z);
+}
+
+constant float kDissolveScale = 6.0;    // Noise cells per model unit; the mug is one unit tall
+constant float kDissolveGlow  = 4.0;    // Overdriven past 1 so the rim reads as emissive
+
+// Model-space noise against a threshold: below it the fragment is gone, just above it burns.
+// The remap keeps the threshold under every noise value at progress 0 -- an idle mug must show
+// no rim speckle at its darkest cells -- and over every one at progress 1.
+float3 ApplyDissolve(float3 color, float3 modelPosition, constant jpt::Uniforms& uniforms)
+{
+    const float3 samplePosition = modelPosition * kDissolveScale;
+
+    // Two octaves: the first places the holes, the second frays their edges.
+    const float noise = 0.7 * ValueNoise(samplePosition) + 0.3 * ValueNoise(samplePosition * 3.07);
+
+    const float edge = uniforms.dissolveEdge;
+    const float threshold = uniforms.dissolveColor.w * (1.0 + edge) - edge;
+    if (noise < threshold)
+    {
+        discard_fragment();
+    }
+
+    const float rim = 1.0 - smoothstep(0.0, edge, noise - threshold);
+    return mix(color, uniforms.dissolveColor.rgb * kDissolveGlow, rim);
+}
+
 float3 Resolve(jpt::ViewMode viewMode, Surface surface, float3 direct, float3 indirect)
 {
     switch (viewMode)
@@ -178,5 +223,6 @@ fragment float4 MeshFragment(VertexOut in [[stage_in]],
 
     const float3 indirect = IndirectLight(surface, viewDirection, uniforms.skyColor.rgb, uniforms.groundColor.rgb);
 
-    return float4(Resolve(uniforms.viewMode, surface, direct, indirect), 1.0);
+    const float3 resolved = Resolve(uniforms.viewMode, surface, direct, indirect);
+    return float4(ApplyDissolve(resolved, in.modelPosition, uniforms), 1.0);
 }

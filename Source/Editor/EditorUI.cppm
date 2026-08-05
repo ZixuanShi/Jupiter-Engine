@@ -16,7 +16,7 @@ export namespace jpt
     class EditorUI
     {
     private:
-        bool m_showMetrics = true;
+        bool m_showMetrics = false;
 
     public:
         void Draw();
@@ -25,11 +25,11 @@ export namespace jpt
         void DrawPerformance();
         void DrawRendering();
         void DrawPointLight(usize index);
-        void DrawPointLightGizmos();
+        void DrawVfx();
         void DrawCamera();
 
-        /** Every metric, in its own corner window rather than in the panel, so the numbers stay
-            visible while the Dev Menu is collapsed or dragged away. */
+    private:
+        void DrawPointLightGizmos();
         void DrawOverlay();
     };
 }
