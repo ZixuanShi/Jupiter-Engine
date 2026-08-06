@@ -128,15 +128,10 @@ float3 HemisphereIrradiance(float3 direction, float3 sky, float3 ground)
 float3 IndirectLight(Surface surface, float3 viewDirection, float3 sky, float3 ground)
 {
     const float3 F = FresnelSchlick(saturate(dot(surface.normal, viewDirection)), surface.F0);
-
-    // Roughness blurs a reflection by bending the mirror direction back toward the normal, which
-    // is as much as a two-colour environment can express.
     const float3 reflected = normalize(mix(reflect(-viewDirection, surface.normal), surface.normal, surface.roughness));
-
     const float3 diffuse  = HemisphereIrradiance(surface.normal, sky, ground) * surface.albedo * (1.0 - surface.metallic);
     const float3 specular = HemisphereIrradiance(reflected, sky, ground);
 
-    // Occlusion belongs to the indirect term alone: a shadow map is what hides direct light.
     return ((1.0 - F) * diffuse + F * specular) * surface.occlusion;
 }
 
@@ -166,10 +161,7 @@ constant float kDissolveGlow  = 4.0;    // Overdriven past 1 so the rim reads as
 float3 ApplyDissolve(float3 color, float3 modelPosition, constant jpt::Uniforms& uniforms)
 {
     const float3 samplePosition = modelPosition * kDissolveScale;
-
-    // Two octaves: the first places the holes, the second frays their edges.
     const float noise = 0.7 * ValueNoise(samplePosition) + 0.3 * ValueNoise(samplePosition * 3.07);
-
     const float edge = uniforms.dissolveEdge;
     const float threshold = uniforms.dissolveColor.w * (1.0 + edge) - edge;
     if (noise < threshold)

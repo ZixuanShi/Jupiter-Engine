@@ -34,8 +34,8 @@ namespace jpt::Debug
         std::println("{} [{}]: {}", contextStr, levelStr, message);
     }
 
-    export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,     std::forward<Args>(args)...); }
-    export template<typename... Args> void Error(Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Error,   std::forward<Args>(args)...); }
-    export template<typename... Args> void Warn (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Warn, std::forward<Args>(args)...); }
-    export template<typename... Args> void Info (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Info,    std::forward<Args>(args)...); }
+    export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,   std::forward<Args>(args)...); }
+    export template<typename... Args> void Error(Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Error, std::forward<Args>(args)...); }
+    export template<typename... Args> void Warn (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Warn,  std::forward<Args>(args)...); }
+    export template<typename... Args> void Info (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Info,  std::forward<Args>(args)...); }
 }

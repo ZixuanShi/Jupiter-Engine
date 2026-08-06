@@ -12,10 +12,6 @@ import jpt.Vector3;
 
 export namespace jpt
 {
-    /** WASD, QE and the arrows in the camera's own axes: x right, y up, z backward, so W is -z.
-        Local throughout -- E rises along the camera's up, which is only world up while it is
-        looking level. Free and taking Input rather than reading it inside Camera, so the key
-        mapping is testable without an Application. */
     [[nodiscard]] Vec3 GetMoveAxis(const Input& input) noexcept;
 
     enum class ProjectionMode : uint8
@@ -24,17 +20,6 @@ export namespace jpt
         Orthographic,   // Parallel lines stay parallel. What an editor's front/side/top wants.
     };
 
-    /** Right-handed, looking down -Z. Aspect is not a member: it belongs to the surface being
-        drawn to rather than to the camera, so it arrives per call.
-
-        Position and rotation, which is a Transform minus the scale a camera has no meaning for.
-        The distance alongside them is not bookkeeping: it is the radius Zoom scales and clamps,
-        and the depth a screen drag is projected through.
-
-        Defaults are neutral on purpose. Where a viewer starts is a fact about a particular scene
-        -- it is only sensible relative to what is in the world -- so the scene places it.
-
-        The rotation is always yaw-then-pitch and never carries roll -- see RotateLocal. */
     class Camera
     {
     private:
