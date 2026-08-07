@@ -7,7 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_MODULE_STD ON)
 set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "d0edc3af-4c50-42ea-a356-e2862fe7a444")
 
-# --- Apple ---
+# --- Apple toolchain ---
 # Must precede project(): CMAKE_CXX_STDLIB_MODULES_JSON is only read during compiler detection.
 if(APPLE)
     get_filename_component(_cxx_bin  "${CMAKE_CXX_COMPILER}" DIRECTORY)
@@ -16,17 +16,27 @@ if(APPLE)
     if(EXISTS "${_cxx_root}/lib/c++/libc++.modules.json")
         set(CMAKE_CXX_STDLIB_MODULES_JSON "${_cxx_root}/lib/c++/libc++.modules.json")
     endif()
-
-    # Each .mm guards its own body with #if IS_PLATFORM_*, so one glob covers every target.
-    file(GLOB_RECURSE JUPITER_OBJCXX_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/Source/*.mm")
 endif()
 
 # --- Project ---
 project(JupiterEngine LANGUAGES CXX OBJCXX)
 option(JUPITER_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
 
-# --- Platform defines ---
+# --- Compile defines ---
+# Every name gets a define, 0 or 1, so `#if IS_PLATFORM_MACOS` is always a valid expression --
+# an `#ifdef` spelling would silently take the false branch on a typo.
+function(jpt_define_flags prefix active)
+    foreach(_name ${ARGN})
+        if(_name STREQUAL active)
+            add_compile_definitions(${prefix}${_name}=1)
+        else()
+            add_compile_definitions(${prefix}${_name}=0)
+        endif()
+    endforeach()
+endfunction()
+
 set(JUPITER_PLATFORMS WINDOWS MACOS IOS ANDROID LINUX)
+set(JUPITER_CONFIGS   DEBUG DEV RELEASE)
 
 if(WIN32)
     set(JUPITER_PLATFORM WINDOWS)
@@ -42,17 +52,6 @@ elseif(UNIX)
     set(JUPITER_PLATFORM LINUX)
 endif()
 
-foreach(_platform ${JUPITER_PLATFORMS})
-    if(_platform STREQUAL JUPITER_PLATFORM)
-        add_compile_definitions(IS_PLATFORM_${_platform}=1)
-    else()
-        add_compile_definitions(IS_PLATFORM_${_platform}=0)
-    endif()
-endforeach()
-
-# --- Config defines ---
-set(JUPITER_CONFIGS DEBUG DEV RELEASE)
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(JUPITER_CONFIG DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
@@ -61,13 +60,24 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(JUPITER_CONFIG RELEASE)
 endif()
 
-foreach(_config ${JUPITER_CONFIGS})
-    if(_config STREQUAL JUPITER_CONFIG)
-        add_compile_definitions(IS_CONFIG_${_config}=1)
-    else()
-        add_compile_definitions(IS_CONFIG_${_config}=0)
-    endif()
-endforeach()
+# Quoted, so an undetected platform stays an empty argument rather than shifting the list along
+# and crowning WINDOWS the active one.
+jpt_define_flags(IS_PLATFORM_ "${JUPITER_PLATFORM}" ${JUPITER_PLATFORMS})
+jpt_define_flags(IS_CONFIG_   "${JUPITER_CONFIG}"   ${JUPITER_CONFIGS})
+
+# Form factor, not capability: a phone is touch-first and a desktop is pointer-first, which is what
+# UI sizing keys off. Whether a keyboard or mouse is attached is a runtime question -- an iPad takes
+# both -- so nothing about input belongs behind these.
+set(JUPITER_PC_PLATFORMS     WINDOWS MACOS LINUX)
+set(JUPITER_MOBILE_PLATFORMS IOS ANDROID)
+
+if(JUPITER_PLATFORM IN_LIST JUPITER_PC_PLATFORMS)
+    add_compile_definitions(IS_PC=1 IS_MOBILE=0)
+elseif(JUPITER_PLATFORM IN_LIST JUPITER_MOBILE_PLATFORMS)
+    add_compile_definitions(IS_PC=0 IS_MOBILE=1)
+else()
+    message(FATAL_ERROR "Platform '${JUPITER_PLATFORM}' is in neither JUPITER_PC_PLATFORMS nor JUPITER_MOBILE_PLATFORMS")
+endif()
 
 # --- Compiler flags ---
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -79,12 +89,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     endif()
 endif()
 
-# --- Output directories ---
+# --- Output directory ---
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
 
 # --- Sources ---
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
+
+# Each .mm guards its own body with #if IS_PLATFORM_*, so one glob covers every target.
+if(APPLE)
+    file(GLOB_RECURSE JUPITER_OBJCXX_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.mm")
+endif()
 
 # The editor is a development tool: its panels, and the ImGui they are built on, are absent from
 # a Release binary entirely rather than compiled and left unreachable.
@@ -97,18 +112,10 @@ if(JUPITER_CONFIG STREQUAL "RELEASE")
     list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/|Tests\\.cppm$")
 endif()
 
-
 # --- Executable ---
 add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 
 target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
-
-# Where editor preferences and logs go. Deliberately absent on iOS, whose sandbox forbids any
-# path outside the app container, and in Release, which ships to machines that have no repo --
-# GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
-if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS")
-    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${CMAKE_SOURCE_DIR}/_Saved")
-endif()
 
 target_sources(JupiterEngine
     PUBLIC
@@ -116,6 +123,13 @@ target_sources(JupiterEngine
         FILES
             ${JUPITER_MODULE_SOURCES}
 )
+
+# Where editor preferences and logs go. Deliberately absent on iOS, whose sandbox forbids any
+# path outside the app container, and in Release, which ships to machines that have no repo --
+# GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
+if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS")
+    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${CMAKE_SOURCE_DIR}/_Saved")
+endif()
 
 # --- Assets ---
 # Everything under Assets/ ships beside the binary in the layout it has in the repo, so one
@@ -142,7 +156,21 @@ add_dependencies(JupiterEngine JupiterAssets)
 
 # --- Apple ---
 if(APPLE)
-    # Vendor -- metal-cpp
+    # Everything the two Apple platforms disagree on, in one place.
+    # Device only -- there is no Simulator preset, because its SDK declares no MTL4 protocols.
+    if(JUPITER_PLATFORM STREQUAL "IOS")
+        set(JUPITER_WINDOW_FRAMEWORK "-framework UIKit")
+        set(JUPITER_METAL_SDK        "iphoneos")
+        set(JUPITER_METAL_MIN_OS     "-mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        set(JUPITER_INFO_PLIST       "${CMAKE_SOURCE_DIR}/Build/Apple/IOSInfo.plist.in")
+    else()
+        set(JUPITER_WINDOW_FRAMEWORK "-framework Cocoa")
+        set(JUPITER_METAL_SDK        "macosx")
+        set(JUPITER_METAL_MIN_OS     "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        set(JUPITER_INFO_PLIST       "${CMAKE_SOURCE_DIR}/Build/Apple/MacOSInfo.plist.in")
+    endif()
+
+    # --- Vendor -- metal-cpp ---
     set(JUPITER_METAL_CPP "${CMAKE_SOURCE_DIR}/Vendor/Metal-Cpp/Include")
     if(NOT EXISTS "${JUPITER_METAL_CPP}/Metal/Metal.hpp")
         message(FATAL_ERROR "metal-cpp missing. See Vendor/Metal-Cpp/README.md")
@@ -151,7 +179,7 @@ if(APPLE)
     # anonymous structs. Our sources keep the full warning set.
     target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_METAL_CPP}")
 
-    # Vendor -- Dear ImGui
+    # --- Vendor -- Dear ImGui ---
     # Its own library, not loose sources on JupiterEngine, for three reasons: -w, because ImGui
     # does not survive our warning set; CXX_SCAN_FOR_MODULES OFF, so clang-scan-deps never walks
     # vendor code; and Release skips the whole target rather than compiling it unreachable.
@@ -191,25 +219,18 @@ if(APPLE)
         target_link_libraries(JupiterEngine PRIVATE JupiterImGui)
     endif()
 
-    # ARC
+    # --- Frameworks ---
     target_compile_options(JupiterEngine PRIVATE $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
 
-    # Frameworks
     # Foundation is required: Homebrew clang does not auto-link libobjc like Apple clang,
     # so without it the link fails on _objc_release.
     # ImageIO decodes the PBR maps; it is a plain C API, so TextureLoader.cpp needs no ObjC++.
     target_link_libraries(JupiterEngine PRIVATE
         "-framework Foundation" "-framework Metal" "-framework QuartzCore"
-        "-framework ImageIO" "-framework CoreGraphics")
+        "-framework ImageIO" "-framework CoreGraphics"
+        "${JUPITER_WINDOW_FRAMEWORK}")
 
-    # Windowing is the only framework the two Apple platforms disagree on.
-    if(JUPITER_PLATFORM STREQUAL "IOS")
-        target_link_libraries(JupiterEngine PRIVATE "-framework UIKit")
-    else()
-        target_link_libraries(JupiterEngine PRIVATE "-framework Cocoa")
-    endif()
-
-    # App bundle
+    # --- App bundle ---
     # iOS will not install a non-bundle. On macOS it supplies the CFBundleIdentifier, whose
     # absence makes the system log registration failures on every launch.
     set(MACOSX_BUNDLE_EXECUTABLE_NAME      "JupiterEngine")
@@ -218,22 +239,11 @@ if(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_VERSION       "1")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0")
 
-    # Device only -- there is no Simulator preset, because its SDK declares no MTL4 protocols.
-    if(JUPITER_PLATFORM STREQUAL "IOS")
-        set(JUPITER_METAL_SDK "iphoneos")
-        set(JUPITER_METAL_MIN_OS "-mios-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        set(JUPITER_INFO_PLIST "${CMAKE_SOURCE_DIR}/Build/Apple/IOSInfo.plist.in")
-    else()
-        set(JUPITER_METAL_SDK "macosx")
-        set(JUPITER_METAL_MIN_OS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
-        set(JUPITER_INFO_PLIST "${CMAKE_SOURCE_DIR}/Build/Apple/MacOSInfo.plist.in")
-    endif()
-
     set_target_properties(JupiterEngine PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${JUPITER_INFO_PLIST}")
 
-    # Shaders
+    # --- Shaders ---
     # Every .metal file links into one default.metallib, so adding a shader needs no edit here.
     # Note modern Xcode ships no separate `metallib` tool -- `metal` links .air files itself.
     #
@@ -276,7 +286,7 @@ if(APPLE)
         MACOSX_PACKAGE_LOCATION Resources
         GENERATED TRUE)
 
-    # Code signing
+    # --- Code signing ---
     # A device refuses to launch an app without an embedded provisioning profile naming it.
     # The simulator has no such check, so its bundles stay unsigned.
     #
@@ -292,7 +302,7 @@ if(APPLE)
         add_dependencies(JupiterSign JupiterEngine JupiterAssets)
     endif()
 
-    # rpath
+    # --- rpath ---
     # iOS resolves libc++ from /usr/lib, so a Homebrew rpath would only be dead weight.
     if(NOT JUPITER_PLATFORM STREQUAL "IOS" AND EXISTS "${_cxx_root}/lib/c++/libc++.dylib")
         set_target_properties(JupiterEngine PROPERTIES

@@ -31,9 +31,11 @@ namespace
 #if IS_PLATFORM_IOS
     // No AppKit backend on iOS, so the clock and the display metrics are ours to feed.
     double g_lastTime = 0.0;
+#endif
 
-    // Widgets sized for a mouse are unusable under a fingertip. Everything -- font, padding,
-    // scrollbars -- scales by this.
+// Form factor rather than platform: widgets sized for a mouse are unusable under a fingertip,
+// whichever OS the finger belongs to. Everything -- font, padding, scrollbars -- scales by this.
+#if IS_MOBILE
     constexpr float kTouchScale = 2.0f;
 #endif
 
