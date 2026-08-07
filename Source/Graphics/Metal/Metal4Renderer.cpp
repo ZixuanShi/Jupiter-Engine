@@ -18,14 +18,12 @@
 #include "Graphics/Shader/ShaderTypes.h"
 #include "Metal4Renderer.h"
 
-import jpt.Light;
 import jpt.LinearColor;
 import jpt.Logger;
 import jpt.Material;
 import jpt.Matrix44;
 import jpt.Metal4Helpers;
 import jpt.PlatformPaths;
-import jpt.Vector3;
 import jpt.Vertex;
 
 import std;
@@ -162,11 +160,7 @@ namespace jpt
 
         Release(m_pUploadAllocator);
 
-        for (MTL::Texture*& pTexture : m_pTextures)
-        {
-            Release(pTexture);
-        }
-
+        Release(m_pBaseColor);
         Release(m_pSampler);
         Release(m_pResidencySet);
         Release(m_pArgumentTable);
@@ -279,26 +273,10 @@ namespace jpt
             Uniforms uniforms{};   // Value-initialised: the tail padding is memcpy'd to the GPU too.
             const Mat44 modelViewProjection = m_viewProjection * m_model;
             std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
-            std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
 
-            uniforms.cameraPosition = ToFloat4(m_cameraPosition, 1.0f);
-            uniforms.baseColor      = ToFloat4(m_material.baseColor);
-            uniforms.skyColor       = ToFloat4(m_ambient.sky);
-            uniforms.groundColor    = ToFloat4(m_ambient.ground);
-            uniforms.dissolveColor  = ToFloat4(m_material.dissolveColor, m_material.dissolvePct);
-
-            for (usize i = 0; i < m_pointLights.size(); ++i)
-            {
-                uniforms.pointLights[i].position = ToFloat4(m_pointLights[i].position, m_pointLights[i].enabled ? 1.0f : 0.0f);
-                uniforms.pointLights[i].color    = ToFloat4(m_pointLights[i].color, m_pointLights[i].intensity);
-            }
-
-            uniforms.roughness    = m_material.roughness;
-            uniforms.metallic     = m_material.metallic;
-            uniforms.occlusion    = m_material.occlusion;
-            uniforms.dissolveEdge = m_material.dissolveEdge;
-            uniforms.time      = m_time;
-            uniforms.viewMode  = static_cast<ViewMode>(m_material.viewMode);
+            uniforms.baseColor     = ToFloat4(m_material.baseColor);
+            uniforms.dissolveColor = ToFloat4(m_material.dissolveColor, m_material.dissolvePct);
+            uniforms.dissolveEdge  = m_material.dissolveEdge;
 
             std::memcpy(static_cast<std::byte*>(m_pUniforms->contents()) + uniformOffset, &uniforms, sizeof(uniforms));
 
@@ -309,14 +287,11 @@ namespace jpt
 
             // Textures and samplers bind by ResourceID rather than address -- the one place Metal 4
             // still hands out a handle instead of a pointer.
-            for (usize slot = 0; slot < kTextureSlotCount; ++slot)
-            {
-                m_pArgumentTable->setTexture(m_pTextures[slot]->gpuResourceID(), slot);
-            }
+            m_pArgumentTable->setTexture(m_pBaseColor->gpuResourceID(), 0);
             m_pArgumentTable->setSamplerState(m_pSampler->gpuResourceID(), 0);
 
             // Both stages: the table is per-stage state, and the fragment shader reads the same
-            // slot 1 for uniforms.time. A stage with no table bound reads an undefined address.
+            // slot 1 for the dissolve uniforms. A stage with no table bound reads an undefined address.
             pEncoder->setArgumentTable(m_pArgumentTable, MTL::RenderStageVertex | MTL::RenderStageFragment);
             pEncoder->setRenderPipelineState(m_pPipeline);
             pEncoder->setDepthStencilState(m_pDepthState);
@@ -421,40 +396,33 @@ namespace jpt
         return m_pVertices && m_pIndices;
     }
 
-    bool Metal4Renderer::SetTextures(std::span<const Texture> textures)
+    bool Metal4Renderer::SetTexture(const Texture& texture)
     {
-        if (textures.size() != kTextureSlotCount)
+        if (texture.IsEmpty())
         {
             return false;
         }
 
-        for (usize slot = 0; slot < kTextureSlotCount; ++slot)
+        Release(m_pBaseColor);
+
+        // _sRGB: the base colour map is the one input that carries colour, so the sampler decodes
+        // it to linear. A data map (roughness, a normal) would use the plain format instead.
+        MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(
+            MTL::PixelFormatRGBA8Unorm_sRGB, texture.Width(), texture.Height(), true);
+        pDesc->setMipmapLevelCount(MipLevelCount(texture.Width(), texture.Height()));
+        pDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
+        pDesc->setStorageMode(MTL::StorageModeShared);
+
+        m_pBaseColor = m_pDevice->newTexture(pDesc);
+        if (!m_pBaseColor)
         {
-            const Texture& texture = textures[slot];
-            if (texture.IsEmpty())
-            {
-                return false;
-            }
-
-            Release(m_pTextures[slot]);
-
-            MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(
-                FormatOf(static_cast<TextureSlot>(slot)), texture.Width(), texture.Height(), true);
-            pDesc->setMipmapLevelCount(MipLevelCount(texture.Width(), texture.Height()));
-            pDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
-            pDesc->setStorageMode(MTL::StorageModeShared);
-
-            m_pTextures[slot] = m_pDevice->newTexture(pDesc);
-            if (!m_pTextures[slot])
-            {
-                return false;
-            }
-
-            const MTL::Region region = MTL::Region::Make2D(0, 0, texture.Width(), texture.Height());
-            m_pTextures[slot]->replaceRegion(region, 0, texture.Data(), texture.RowPitch());
+            return false;
         }
 
-        // Residency first: the mip pass reaches these textures on the GPU, and a resource the
+        const MTL::Region region = MTL::Region::Make2D(0, 0, texture.Width(), texture.Height());
+        m_pBaseColor->replaceRegion(region, 0, texture.Data(), texture.RowPitch());
+
+        // Residency first: the mip pass reaches the texture on the GPU, and a resource the
         // GPU touches before it is resident is a fault, not an error -- here it showed up as a
         // black mip chain with only the most-magnified texels surviving at level 0.
         UpdateResidency();
@@ -536,7 +504,7 @@ namespace jpt
 
         MTL4::ArgumentTableDescriptor* pTableDesc = MTL4::ArgumentTableDescriptor::alloc()->init();
         pTableDesc->setMaxBufferBindCount(2);           // Vertices at 0, uniforms at 1.
-        pTableDesc->setMaxTextureBindCount(kTextureSlotCount);
+        pTableDesc->setMaxTextureBindCount(1);          // The base colour map.
         pTableDesc->setMaxSamplerStateBindCount(1);
         pTableDesc->setSupportAttributeStrides(true);   // Required for the strided binding [[stage_in]] reads.
 
@@ -613,10 +581,7 @@ namespace jpt
         pCommandBuffer->beginCommandBuffer(m_pUploadAllocator);
 
         MTL4::ComputeCommandEncoder* pEncoder = pCommandBuffer->computeCommandEncoder();
-        for (MTL::Texture* pTexture : m_pTextures)
-        {
-            pEncoder->generateMipmaps(pTexture);
-        }
+        pEncoder->generateMipmaps(m_pBaseColor);
         pEncoder->endEncoding();
 
         pCommandBuffer->endCommandBuffer();
@@ -651,12 +616,9 @@ namespace jpt
             m_pResidencySet->addAllocation(m_pUniforms);
         }
 
-        for (MTL::Texture* pTexture : m_pTextures)
+        if (m_pBaseColor)
         {
-            if (pTexture)
-            {
-                m_pResidencySet->addAllocation(pTexture);
-            }
+            m_pResidencySet->addAllocation(m_pBaseColor);
         }
 
         // The frame attachments are absent on purpose: residency covers raw addresses, and a

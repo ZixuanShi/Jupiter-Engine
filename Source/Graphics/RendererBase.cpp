@@ -8,8 +8,6 @@ module;
 module jpt.RendererBase;
 
 import jpt.Camera;
-import jpt.FrameTimer;
-import jpt.Light;
 import jpt.LinearColor;
 import jpt.Material;
 import jpt.Matrix44;
@@ -28,16 +26,11 @@ namespace jpt
     void RendererBase::Update()
     {
         Application& app = GetApplication();
-        const FrameTimer& frameTimer = app.GetFrameTimer();
         const Window& window = app.GetWindow();
         Scene& scene = app.GetScene();
 
         m_model = scene.GetModel().ToMatrix();
         m_viewProjection = scene.GetCamera().GetViewProjection(window.GetAspectRatio());
-        m_cameraPosition = scene.GetCamera().GetPosition();
         m_material = scene.GetMaterial();
-        m_ambient = scene.GetAmbient();
-        m_pointLights = scene.GetPointLights();
-        m_time = static_cast<float32>(frameTimer.GetElapsedSeconds());
     }
 }

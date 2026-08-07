@@ -20,12 +20,6 @@ import std;
 
 namespace jpt
 {
-    MTL::PixelFormat FormatOf(TextureSlot slot) noexcept
-    {
-        return (slot == TextureSlot::BaseColor) ? MTL::PixelFormatRGBA8Unorm_sRGB
-                                                : MTL::PixelFormatRGBA8Unorm;
-    }
-
     uint32 MipLevelCount(uint32 width, uint32 height) noexcept
     {
         return static_cast<uint32>(std::bit_width(std::max(width, height)));
@@ -43,11 +37,6 @@ namespace jpt
         pDesc->setStorageMode(pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
 
         return pDevice->newTexture(pDesc);
-    }
-
-    simd_float4 ToFloat4(const Vec3& vector, float32 w) noexcept
-    {
-        return simd_make_float4(vector.x, vector.y, vector.z, w);
     }
 
     simd_float4 ToFloat4(const LinearColor& color) noexcept

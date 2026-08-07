@@ -68,8 +68,7 @@ namespace jpt
         MTL4::ArgumentTable*      m_pArgumentTable = nullptr;
         MTL::ResidencySet*        m_pResidencySet  = nullptr;
         MTL::SamplerState*        m_pSampler       = nullptr;
-
-        MTL::Texture* m_pTextures[kTextureSlotCount] = {};
+        MTL::Texture*             m_pBaseColor     = nullptr;
 
         // One per frame in flight, because reset() frees the commands of every buffer it has
         // allocated -- the GPU must be done with slot i before frame i+kFramesInFlight resets it.
@@ -114,9 +113,8 @@ namespace jpt
 
         bool SetMesh(const Mesh& mesh);
 
-        /** One per TextureSlot, in slot order. All of them at once, so a single command buffer
-            generates every mip chain. */
-        bool SetTextures(std::span<const Texture> textures);
+        /** Uploads the base colour map and generates its mip chain. */
+        bool SetTexture(const Texture& texture);
 
     private:
         bool CreatePipeline();

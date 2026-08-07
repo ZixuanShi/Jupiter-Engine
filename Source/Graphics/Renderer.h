@@ -22,7 +22,7 @@ namespace jpt
     concept RendererType = requires(T renderer, typename T::SurfaceHandle surface,
                                     uint32 width, uint32 height,
                                     const LinearColor& color, const Mesh& mesh,
-                                    std::span<const Texture> textures)
+                                    const Texture& texture)
     {
         { renderer.PreInit() }                  -> std::same_as<bool>;
         { renderer.Init(surface) }              -> std::same_as<bool>;
@@ -42,7 +42,7 @@ namespace jpt
         // than one setter per input.
         { renderer.Update() }                   -> std::same_as<void>;
         { renderer.SetMesh(mesh) }              -> std::same_as<bool>;
-        { renderer.SetTextures(textures) }      -> std::same_as<bool>;
+        { renderer.SetTexture(texture) }        -> std::same_as<bool>;
     };
 
     using Renderer = Metal4Renderer;

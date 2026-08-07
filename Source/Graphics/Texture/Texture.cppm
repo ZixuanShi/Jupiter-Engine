@@ -8,21 +8,6 @@ import std;
 
 export namespace jpt
 {
-    /** Binding order. The renderer indexes its texture array by this, and the shader's
-        [[texture(n)]] indices match. */
-    enum class TextureSlot : uint8
-    {
-        BaseColor,
-        Normal,
-        Roughness,
-        Metallic,
-        Occlusion,
-
-        Count,
-    };
-
-    constexpr usize kTextureSlotCount = static_cast<usize>(TextureSlot::Count);
-
     /** Backend-neutral pixels: what a loader produces and a renderer uploads, mirroring Mesh.
         The GPU-side object lives inside the backend, as vertex and index buffers do.
 

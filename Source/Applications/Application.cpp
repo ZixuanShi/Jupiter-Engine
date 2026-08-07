@@ -118,25 +118,9 @@ namespace jpt
             return false;
         }
 
-        // Indexed by TextureSlot, so the order here is the [[texture(n)]] order in the shader.
-        static constexpr const char* kMaps[kTextureSlotCount] =
+        if (!m_renderer.SetTexture(LoadTexture("Assets/Textures/Mug_BC.jpg")))
         {
-            "Assets/Textures/Mug_BC.jpg",
-            "Assets/Textures/Mug_Normal.png",
-            "Assets/Textures/Mug_Roughness.jpg",
-            "Assets/Textures/Mug_Metallic.jpg",
-            "Assets/Textures/Mug_AO.jpg",
-        };
-
-        std::array<Texture, kTextureSlotCount> textures;
-        for (usize slot = 0; slot < kTextureSlotCount; ++slot)
-        {
-            textures[slot] = LoadTexture(kMaps[slot]);
-        }
-
-        if (!m_renderer.SetTextures(textures))
-        {
-            Debug::Error("Failed to upload the material textures.");
+            Debug::Error("Failed to upload the base colour map.");
             return false;
         }
 

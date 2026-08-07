@@ -15,9 +15,7 @@ export module jpt.Metal4Helpers;
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
 
 import jpt.LinearColor;
-import jpt.Texture;
 import jpt.TypeDefs;
-import jpt.Vector3;
 
 export namespace jpt
 {
@@ -31,10 +29,6 @@ export namespace jpt
         }
     }
 
-    /** Base colour is the only map that carries colour, so it is the only one the sampler may
-        decode. Reading roughness or a normal through the sRGB curve bends the value silently. */
-    [[nodiscard]] MTL::PixelFormat FormatOf(TextureSlot slot) noexcept;
-
     [[nodiscard]] uint32 MipLevelCount(uint32 width, uint32 height) noexcept;
 
     /** A multisampled render target that never leaves the GPU. Memoryless where there is tile
@@ -43,7 +37,6 @@ export namespace jpt
     [[nodiscard]] MTL::Texture* NewAttachment(MTL::Device* pDevice, MTL::PixelFormat format,
                                               uint32 pixelWidth, uint32 pixelHeight) noexcept;
 
-    [[nodiscard]] simd_float4 ToFloat4(const Vec3& vector, float32 w) noexcept;
     [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color) noexcept;
     [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color, float32 w) noexcept;
 }
