@@ -244,6 +244,20 @@ give internal linkage the way an anonymous one does, so in a plain `.cpp` two fi
 is a duplicate-symbol link error. A module implementation unit is unaffected — its declarations
 already have module linkage.
 
+**In a module, `local` is declared in the `.cppm` — outside the `export` block — and defined in the
+`.cpp`.** `ObjLoader.cppm` is the shape: opening the interface shows the module's whole vocabulary,
+contract first and machinery below it, instead of having to read a `.cpp` to learn what the helpers
+are. Not exporting them keeps them unreachable by an importer, which clang enforces —
+*"declaration of 'ParseCorner' must be imported from module"*. It is also the only plain way two
+implementation units of one module can share a helper, since one `.cpp` cannot see another's
+declarations.
+
+The cost is rebuild fan-out: editing a `.cpp` rebuilds one TU, editing its `.cppm` rebuilds the
+module and every importer — measured at 1 vs 3 for `jpt.ObjLoader`, and 26 for `jpt.Vector3`. Worth
+it for a handful of helpers; if a module is widely imported and its `local` churns, keep it in the
+`.cpp`. A plain `.cpp` with no interface unit — `Metal4Renderer.cpp`, `AppleCallbacks.cpp` — keeps
+`local` where it is, since its header is included by others and is not the place for private helpers.
+
 ### Python (`Scripts/`)
 
 - Docstrings per [PEP 257](https://peps.python.org/pep-0257/) — a `"""..."""` as the first statement,

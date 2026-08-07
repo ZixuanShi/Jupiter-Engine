@@ -15,91 +15,6 @@ import std;
 
 namespace jpt
 {
-    namespace local
-    {
-        constexpr uint32 kNoIndex = ~0u;
-
-        /** A face corner as authored: three independent indices, kNoIndex where the face omitted
-            the field. Two corners share one GPU vertex only when all three agree -- a position
-            quoted with two normals is two vertices, and so is one quoted with two UVs. Colour is
-            absent by design: it rides on the `v` line, so it follows the position index and can
-            never disagree. */
-        struct VertexKey
-        {
-            uint32 position = kNoIndex;
-            uint32 texCoord = kNoIndex;
-            uint32 normal   = kNoIndex;
-
-            [[nodiscard]] constexpr bool operator==(const VertexKey&) const noexcept = default;
-        };
-
-        /** Handed to unordered_map explicitly rather than specialising std::hash: this is a module
-            implementation unit and the key has internal linkage, which is a corner of the standard
-            with nothing to gain over one extra template argument.
-            FNV-1a over the three words rather than their bytes -- the same mixing, a third of the
-            steps, and the key is never hashed across a process boundary. */
-        struct VertexKeyHash
-        {
-            [[nodiscard]] usize operator()(const VertexKey& key) const noexcept
-            {
-                uint64 hash = 14695981039346656037ull;
-                for (const uint32 index : { key.position, key.texCoord, key.normal })
-                {
-                    hash = (hash ^ index) * 1099511628211ull;
-                }
-                return static_cast<usize>(hash);
-            }
-        };
-
-        /** One face corner: "12", "12/3", "12//4" or "12/3/4". An omitted field comes back 0,
-            which is never a valid OBJ index -- they are 1-based, and a negative one counts back
-            from the end. */
-        [[nodiscard]] bool ParseCorner(TextScanner& scanner, int32& position, int32& texCoord, int32& normal) noexcept
-        {
-            texCoord = 0;
-            normal   = 0;
-
-            if (!scanner.Parse(position))
-            {
-                return false;
-            }
-
-            if (scanner.Consume('/'))
-            {
-                (void)scanner.Parse(texCoord);   // "12//4": the parse fails on '/' and leaves the 0.
-
-                if (scanner.Consume('/'))
-                {
-                    return scanner.Parse(normal);
-                }
-            }
-
-            return true;
-        }
-
-        /** OBJ indices are 1-based, and a negative one counts back from the end of the list as
-            it stands at this line. Returns count on anything out of range, which every caller
-            already has to bounds-check anyway. */
-        [[nodiscard]] usize Resolve(int32 index, usize count) noexcept
-        {
-            const int64 resolved = (index > 0) ? index - 1 : static_cast<int64>(count) + index;
-            return (index != 0 && resolved >= 0 && static_cast<usize>(resolved) < count) ? static_cast<usize>(resolved) : count;
-        }
-
-        [[nodiscard]] bool ReadFile(const std::filesystem::path& path, std::string& text)
-        {
-            std::ifstream file(path, std::ios::binary | std::ios::ate);
-            if (!file)
-            {
-                return false;
-            }
-
-            text.resize(static_cast<usize>(file.tellg()));
-            file.seekg(0);
-            return static_cast<bool>(file.read(text.data(), static_cast<std::streamsize>(text.size())));
-        }
-    }
-
     Mesh LoadObj(const Path& path)
     {
         std::string text;
@@ -221,5 +136,60 @@ namespace jpt
 
         Debug::Info("Loaded {}: {} vertices, {} triangles.", path.GetFileName(), mesh.vertices.size(), mesh.indices.size() / 3);
         return mesh;
+    }
+
+    namespace local
+    {
+        usize VertexKeyHash::operator()(const VertexKey& key) const noexcept
+        {
+            uint64 hash = 14695981039346656037ull;
+            for (const uint32 index : { key.position, key.texCoord, key.normal })
+            {
+                hash = (hash ^ index) * 1099511628211ull;
+            }
+            return static_cast<usize>(hash);
+        }
+
+        bool ParseCorner(TextScanner& scanner, int32& position, int32& texCoord, int32& normal) noexcept
+        {
+            texCoord = 0;
+            normal   = 0;
+
+            if (!scanner.Parse(position))
+            {
+                return false;
+            }
+
+            if (scanner.Consume('/'))
+            {
+                (void)scanner.Parse(texCoord);   // "12//4": the parse fails on '/' and leaves the 0.
+
+                if (scanner.Consume('/'))
+                {
+                    return scanner.Parse(normal);
+                }
+            }
+
+            return true;
+        }
+
+        usize Resolve(int32 index, usize count) noexcept
+        {
+            const int64 resolved = (index > 0) ? index - 1 : static_cast<int64>(count) + index;
+            return (index != 0 && resolved >= 0 && static_cast<usize>(resolved) < count) ? static_cast<usize>(resolved) : count;
+        }
+
+        bool ReadFile(const std::filesystem::path& path, std::string& text)
+        {
+            std::ifstream file(path, std::ios::binary | std::ios::ate);
+            if (!file)
+            {
+                return false;
+            }
+
+            text.resize(static_cast<usize>(file.tellg()));
+            file.seekg(0);
+            return static_cast<bool>(file.read(text.data(), static_cast<std::streamsize>(text.size())));
+        }
     }
 }

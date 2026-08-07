@@ -30,16 +30,6 @@ import std;
 
 namespace jpt
 {
-    namespace local
-    {
-        struct TestEvent
-        {
-            int32 value = 0;
-        };
-
-        using TestDispatcher = EventDispatcher<TestEvent>;
-    }
-
     void RunInputTests()
     {
         // EventDispatcher -- registration
