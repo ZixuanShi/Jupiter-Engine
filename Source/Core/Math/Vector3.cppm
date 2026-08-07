@@ -14,11 +14,6 @@ export namespace jpt
     struct Vector3
     {
     public:
-        T x = static_cast<T>(0);    /**< i, right */
-        T y = static_cast<T>(0);    /**< j, up */
-        T z = static_cast<T>(0);    /**< k, backward -- forward is -z */
-
-    public:
         [[nodiscard]] static consteval Vector3 Zero() noexcept { return Vector3(static_cast<T>(0)); }
         [[nodiscard]] static consteval Vector3 One()  noexcept { return Vector3(static_cast<T>(1)); }
 
@@ -29,6 +24,11 @@ export namespace jpt
         [[nodiscard]] static consteval Vector3 Down()     noexcept { return Vector3(static_cast<T>( 0), static_cast<T>(-1), static_cast<T>( 0)); }
         [[nodiscard]] static consteval Vector3 Forward()  noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>(-1)); }
         [[nodiscard]] static consteval Vector3 Backward() noexcept { return Vector3(static_cast<T>( 0), static_cast<T>( 0), static_cast<T>( 1)); }
+
+    public:
+        T x = static_cast<T>(0);    /**< i, right */
+        T y = static_cast<T>(0);    /**< j, up */
+        T z = static_cast<T>(0);    /**< k, backward -- forward is -z */
 
     public:
         constexpr Vector3() noexcept = default;
@@ -64,21 +64,6 @@ export namespace jpt
         void Normalize() noexcept requires Floating<T>;
         [[nodiscard]] Vector3 Normalized() const noexcept requires Floating<T>;
     };
-
-    // Non-Member functions
-    template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator*(T scalar, const Vector3<T>& vector3) noexcept
-    {
-        return vector3 * scalar;
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr bool AreValuesClose(const Vector3<T>& a, const Vector3<T>& b, T tolerance = kEpsilon<T>) noexcept
-    {
-        return AreValuesClose(a.x, b.x, tolerance) &&
-               AreValuesClose(a.y, b.y, tolerance) &&
-               AreValuesClose(a.z, b.z, tolerance);
-    }
 
     // Member functions
     template<Numeric T>
@@ -210,6 +195,21 @@ export namespace jpt
         Vector3 result = *this;
         result.Normalize();
         return result;
+    }
+
+    // Non-Member functions
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector3<T> operator*(T scalar, const Vector3<T>& vector3) noexcept
+    {
+        return vector3 * scalar;
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Vector3<T>& a, const Vector3<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        return AreValuesClose(a.x, b.x, tolerance) &&
+               AreValuesClose(a.y, b.y, tolerance) &&
+               AreValuesClose(a.z, b.z, tolerance);
     }
 
     using Vec3  = Vector3<float32>;

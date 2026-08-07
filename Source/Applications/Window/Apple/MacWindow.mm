@@ -374,11 +374,6 @@ namespace jpt
         id                  pMonitor  = nil;
     };
 
-    void MacWindow::SetCursorCaptured(bool captured)
-    {
-        ApplyCursorCapture(captured);
-    }
-
     bool MacWindow::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
     {
         m_pImpl = new Impl();
@@ -463,6 +458,11 @@ namespace jpt
 
         delete m_pImpl;
         m_pImpl = nullptr;
+    }
+
+    void MacWindow::SetCursorCaptured(bool captured)
+    {
+        ApplyCursorCapture(captured);
     }
 }
 

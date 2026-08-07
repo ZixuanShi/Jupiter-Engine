@@ -21,14 +21,14 @@ export namespace jpt
     struct Matrix44
     {
     public:
-        Vector4<T> m[4];
-
-    public:
         [[nodiscard]] static consteval Matrix44 Identity() noexcept { return Matrix44(); }
         [[nodiscard]] static consteval Matrix44 Zero() noexcept
         {
             return Matrix44(Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero(), Vector4<T>::Zero());
         }
+
+    public:
+        Vector4<T> m[4];
 
     public:
         constexpr Matrix44() noexcept;
@@ -71,28 +71,6 @@ export namespace jpt
             six-plane form, which can be added when something asks for it. */
         [[nodiscard]] static constexpr Matrix44 Orthographic(T width, T height, T zNear, T zFar) noexcept requires Floating<T>;
     };
-
-    // Non-Member functions
-
-    /** Treats the vector as a position (w = 1) and drops w after the transform. */
-    template<Numeric T>
-    [[nodiscard]] constexpr Vector3<T> operator*(const Matrix44<T>& mat, const Vector3<T>& v) noexcept
-    {
-        return (mat * Vector4<T>(v, static_cast<T>(1))).XYZ();
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr bool AreValuesClose(const Matrix44<T>& a, const Matrix44<T>& b, T tolerance = kEpsilon<T>) noexcept
-    {
-        for (usize col = 0; col < 4; ++col)
-        {
-            if (!AreValuesClose(a.m[col], b.m[col], tolerance))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     // Member functions
     template<Numeric T>
@@ -327,6 +305,28 @@ export namespace jpt
         result.m[2].z = static_cast<T>(1) / (zNear - zFar);
         result.m[3].z = zNear / (zNear - zFar);
         return result;
+    }
+
+    // Non-Member functions
+
+    /** Treats the vector as a position (w = 1) and drops w after the transform. */
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector3<T> operator*(const Matrix44<T>& mat, const Vector3<T>& v) noexcept
+    {
+        return (mat * Vector4<T>(v, static_cast<T>(1))).XYZ();
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Matrix44<T>& a, const Matrix44<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        for (usize col = 0; col < 4; ++col)
+        {
+            if (!AreValuesClose(a.m[col], b.m[col], tolerance))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     using Mat44  = Matrix44<float32>;

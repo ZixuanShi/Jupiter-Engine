@@ -53,18 +53,17 @@ export namespace jpt
         [[nodiscard]] Vec3 ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept;
 
     public:
-        void SetPosition(const Vec3& position) noexcept;
+        void SetPosition(const Vec3& position) noexcept { m_position = position; }
         void SetDirection(const Vec3& direction) noexcept;   // Normalized on the way in.
         void SetDistance(float32 distance) noexcept;
 
-        void SetProjectionMode(ProjectionMode mode) noexcept;
-        void SetFovY(float32 radians) noexcept;
-        void SetOrthoHeight(float32 worldUnits) noexcept;
+        void SetProjectionMode(ProjectionMode mode) noexcept { m_projectionMode = mode; }
+        void SetFovY(float32 radians) noexcept { m_fovY = radians; }
+        void SetOrthoHeight(float32 worldUnits) noexcept { m_orthoHeight = worldUnits; }
         void SetNearFar(float32 zNear, float32 zFar) noexcept;
 
         [[nodiscard]] const Vec3& GetPosition()  const noexcept { return m_position; }
         [[nodiscard]] const Quat& GetRotation()  const noexcept { return m_rotation; }
-        [[nodiscard]] Vec3 GetDirection()        const noexcept { return Forward(); }
         [[nodiscard]] float32 GetDistance()      const noexcept { return m_distance; }
 
         [[nodiscard]] ProjectionMode GetProjectionMode() const noexcept { return m_projectionMode; }

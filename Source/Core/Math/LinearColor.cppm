@@ -11,14 +11,14 @@ export namespace jpt
     struct LinearColor
     {
     public:
+        [[nodiscard]] static consteval LinearColor Black() noexcept { return LinearColor(0.0f, 0.0f, 0.0f); }
+        [[nodiscard]] static consteval LinearColor White() noexcept { return LinearColor(1.0f, 1.0f, 1.0f); }
+
+    public:
         float32 r = 0.0f;
         float32 g = 0.0f;
         float32 b = 0.0f;
         float32 a = 1.0f;
-
-    public:
-        [[nodiscard]] static consteval LinearColor Black() noexcept { return LinearColor(0.0f, 0.0f, 0.0f); }
-        [[nodiscard]] static consteval LinearColor White() noexcept { return LinearColor(1.0f, 1.0f, 1.0f); }
 
     public:
         constexpr LinearColor() noexcept = default;
@@ -37,12 +37,6 @@ export namespace jpt
 
         [[nodiscard]] constexpr bool operator==(const LinearColor& other) const noexcept = default;
     };
-
-    // Non-Member functions
-    [[nodiscard]] constexpr LinearColor operator*(float32 scalar, const LinearColor& color) noexcept
-    {
-        return color * scalar;
-    }
 
     // Member functions
     constexpr LinearColor::LinearColor(float32 inR, float32 inG, float32 inB, float32 inA) noexcept
@@ -107,5 +101,11 @@ export namespace jpt
         b /= scalar;
         a /= scalar;
         return *this;
+    }
+
+    // Non-Member functions
+    [[nodiscard]] constexpr LinearColor operator*(float32 scalar, const LinearColor& color) noexcept
+    {
+        return color * scalar;
     }
 }

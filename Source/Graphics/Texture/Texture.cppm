@@ -39,18 +39,18 @@ export namespace jpt
         /** Sets the dimensions and the pixel count together, so they cannot disagree. */
         void Resize(uint32 width, uint32 height);
 
-        [[nodiscard]] bool IsEmpty() const noexcept;
+        [[nodiscard]] bool IsEmpty() const noexcept { return m_pixels.empty(); }
 
         /** Bytes per row, which is the unit both CGBitmapContextCreate and replaceRegion want.
             The pixels are Colors rather than bytes, so this is the one place that crosses
             between the two counts. */
         [[nodiscard]] usize RowPitch() const noexcept;
 
-        [[nodiscard]] uint32 Width()  const noexcept;
-        [[nodiscard]] uint32 Height() const noexcept;
+        [[nodiscard]] uint32 Width()  const noexcept { return m_width; }
+        [[nodiscard]] uint32 Height() const noexcept { return m_height; }
 
         // Non-const for the decoder, which draws straight into this storage.
-        [[nodiscard]] Color* Data() noexcept;
-        [[nodiscard]] const Color* Data() const noexcept;
+        [[nodiscard]] Color* Data() noexcept { return m_pixels.data(); }
+        [[nodiscard]] const Color* Data() const noexcept { return m_pixels.data(); }
     };
 }

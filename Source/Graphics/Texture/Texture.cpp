@@ -15,33 +15,8 @@ namespace jpt
         m_pixels.resize(static_cast<usize>(width) * height);
     }
 
-    bool Texture::IsEmpty() const noexcept
-    {
-        return m_pixels.empty();
-    }
-
     usize Texture::RowPitch() const noexcept
     {
         return static_cast<usize>(m_width) * sizeof(Color);
-    }
-
-    uint32 Texture::Width() const noexcept
-    {
-        return m_width;
-    }
-
-    uint32 Texture::Height() const noexcept
-    {
-        return m_height;
-    }
-
-    Color* Texture::Data() noexcept
-    {
-        return m_pixels.data();
-    }
-
-    const Color* Texture::Data() const noexcept
-    {
-        return m_pixels.data();
     }
 }

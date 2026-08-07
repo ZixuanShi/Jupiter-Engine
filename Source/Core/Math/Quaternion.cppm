@@ -20,13 +20,13 @@ export namespace jpt
     struct Quaternion
     {
     public:
+        [[nodiscard]] static consteval Quaternion Identity() noexcept { return Quaternion(); }
+
+    public:
         T x = static_cast<T>(0);
         T y = static_cast<T>(0);
         T z = static_cast<T>(0);
         T w = static_cast<T>(1);    /**< Scalar */
-
-    public:
-        [[nodiscard]] static consteval Quaternion Identity() noexcept { return Quaternion(); }
 
     public:
         constexpr Quaternion() noexcept = default;
@@ -69,41 +69,6 @@ export namespace jpt
 
         [[nodiscard]] constexpr Matrix44<T> ToMatrix() const noexcept;
     };
-
-    // Non-Member functions
-    template<Floating T>
-    [[nodiscard]] constexpr Quaternion<T> operator+(const Quaternion<T>& lhs, const Quaternion<T>& rhs) noexcept
-    {
-        return Quaternion<T>(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr Quaternion<T> operator*(const Quaternion<T>& q, T scalar) noexcept
-    {
-        return Quaternion<T>(q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar);
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr Quaternion<T> operator*(T scalar, const Quaternion<T>& q) noexcept
-    {
-        return q * scalar;
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr Quaternion<T> operator/(const Quaternion<T>& q, T scalar) noexcept
-    {
-        return Quaternion<T>(q.x / scalar, q.y / scalar, q.z / scalar, q.w / scalar);
-    }
-
-    // Component-wise, so it separates q from -q. Compare ToMatrix() for orientation equality.
-    template<Floating T>
-    [[nodiscard]] constexpr bool AreValuesClose(const Quaternion<T>& a, const Quaternion<T>& b, T tolerance = kEpsilon<T>) noexcept
-    {
-        return AreValuesClose(a.x, b.x, tolerance) &&
-               AreValuesClose(a.y, b.y, tolerance) &&
-               AreValuesClose(a.z, b.z, tolerance) &&
-               AreValuesClose(a.w, b.w, tolerance);
-    }
 
     // Member functions
     template<Floating T>
@@ -287,6 +252,41 @@ export namespace jpt
                            Vector4<T>(Up(),       static_cast<T>(0)),
                            Vector4<T>(Backward(), static_cast<T>(0)),
                            Vector4<T>(static_cast<T>(0), static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)));
+    }
+
+    // Non-Member functions
+    template<Floating T>
+    [[nodiscard]] constexpr Quaternion<T> operator+(const Quaternion<T>& lhs, const Quaternion<T>& rhs) noexcept
+    {
+        return Quaternion<T>(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w);
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr Quaternion<T> operator*(const Quaternion<T>& q, T scalar) noexcept
+    {
+        return Quaternion<T>(q.x * scalar, q.y * scalar, q.z * scalar, q.w * scalar);
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr Quaternion<T> operator*(T scalar, const Quaternion<T>& q) noexcept
+    {
+        return q * scalar;
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr Quaternion<T> operator/(const Quaternion<T>& q, T scalar) noexcept
+    {
+        return Quaternion<T>(q.x / scalar, q.y / scalar, q.z / scalar, q.w / scalar);
+    }
+
+    // Component-wise, so it separates q from -q. Compare ToMatrix() for orientation equality.
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Quaternion<T>& a, const Quaternion<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        return AreValuesClose(a.x, b.x, tolerance) &&
+               AreValuesClose(a.y, b.y, tolerance) &&
+               AreValuesClose(a.z, b.z, tolerance) &&
+               AreValuesClose(a.w, b.w, tolerance);
     }
 
     using Quat  = Quaternion<float32>;

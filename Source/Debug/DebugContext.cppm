@@ -16,12 +16,16 @@ export namespace jpt::Debug
         std::source_location location;
 
         template<typename TString>
-        consteval Context(const TString& str, std::source_location inLocation = std::source_location::current())
-            : format(str)
-            , location(inLocation)
-        {
-        }
+        consteval Context(const TString& str, std::source_location inLocation = std::source_location::current());
     };
+
+    template<typename... Args>
+    template<typename TString>
+    consteval Context<Args...>::Context(const TString& str, std::source_location inLocation)
+        : format(str)
+        , location(inLocation)
+    {
+    }
 
     /** Trims the absolute path down to the repository-relative part. */
     constexpr std::string_view TrimFileName(std::string_view fileName)

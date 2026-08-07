@@ -35,12 +35,11 @@ export namespace jpt
         bool PreInit();
         void Update();
 
-        void SetCaptured(bool keyboard, bool mouse) noexcept;
-
     public:
         [[nodiscard]] bool IsKeyDown(KeyCode key) const noexcept;
         [[nodiscard]] bool IsMouseButtonDown(MouseButton button) const noexcept;
         [[nodiscard]] const Vec2& GetMousePosition() const noexcept { return m_mousePosition; }
+        void SetCaptured(bool keyboard, bool mouse) noexcept;
 
     public:
         [[nodiscard]] EventDispatcher<KeyEvent>& OnKeyDown() noexcept { return m_onKeyDown; }

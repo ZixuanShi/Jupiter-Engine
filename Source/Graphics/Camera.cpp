@@ -117,20 +117,24 @@ namespace jpt
         MoveLocal(axis * timer.GetDeltaSeconds() * kSpeed);
     }
 
-    void Camera::Look(const Vec2& deltaPixels)
+    void Camera::MoveLocal(const Vec3& offset) noexcept
     {
-        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
-        if (height < 1.0f)
-        {
-            return;
-        }
+        m_position += Right() * offset.x + Up() * offset.y + Backward() * offset.z;
+    }
 
-        // Both negated: dragging right turns right, which is a negative yaw about world up, and
-        // screen Y is down while a positive pitch looks up. A full-height drag is a half turn.
-        const float32 yaw   = -deltaPixels.x / height * kPi<float32>;
-        const float32 pitch = -deltaPixels.y / height * kPi<float32>;
+    void Camera::RotateLocal(float32 pitchRadians, float32 yawRadians) noexcept
+    {
+        // Past vertical the view axis meets the yaw axis and heading stops being defined, so the
+        // camera would flip over rather than keep tipping.
+        constexpr float32 kMaxPitch = ToRadians(89.0f);
 
-        RotateLocal(pitch, yaw);
+        const float32 pitch = std::asin(std::clamp(Forward().y, -1.0f, 1.0f));
+        const float32 applied = std::clamp(pitch + pitchRadians, -kMaxPitch, kMaxPitch) - pitch;
+
+        m_rotation = Quat::FromAxisAngle(Vec3::Up(), yawRadians)
+                   * m_rotation
+                   * Quat::FromAxisAngle(Vec3::Right(), applied);
+        m_rotation.Normalize();
     }
 
     void Camera::Zoom(float32 factor) noexcept
@@ -153,24 +157,17 @@ namespace jpt
         m_orthoHeight *= applied;
     }
 
-    void Camera::MoveLocal(const Vec3& offset) noexcept
+    void Camera::LookAt(const Vec3& point) noexcept
     {
-        m_position += Right() * offset.x + Up() * offset.y + Backward() * offset.z;
-    }
+        const Vec3 toPoint = point - m_position;
+        const float32 distance = toPoint.Length();
+        if (distance < kEpsilon<float32>)
+        {
+            return;
+        }
 
-    void Camera::RotateLocal(float32 pitchRadians, float32 yawRadians) noexcept
-    {
-        // Past vertical the view axis meets the yaw axis and heading stops being defined, so the
-        // camera would flip over rather than keep tipping.
-        constexpr float32 kMaxPitch = ToRadians(89.0f);
-
-        const float32 pitch = std::asin(std::clamp(Forward().y, -1.0f, 1.0f));
-        const float32 applied = std::clamp(pitch + pitchRadians, -kMaxPitch, kMaxPitch) - pitch;
-
-        m_rotation = Quat::FromAxisAngle(Vec3::Up(), yawRadians)
-                   * m_rotation
-                   * Quat::FromAxisAngle(Vec3::Right(), applied);
-        m_rotation.Normalize();
+        SetDirection(toPoint);
+        SetDistance(distance);
     }
 
     Vec3 Camera::ScreenDeltaToWorld(const Vec2& deltaPixels, float32 viewportHeight) const noexcept
@@ -187,11 +184,6 @@ namespace jpt
 
         // Screen Y is down, world Y is up.
         return Right() * (deltaPixels.x * worldPerPixel) - Up() * (deltaPixels.y * worldPerPixel);
-    }
-
-    void Camera::SetPosition(const Vec3& position) noexcept
-    {
-        m_position = position;
     }
 
     void Camera::SetDirection(const Vec3& direction) noexcept
@@ -211,37 +203,9 @@ namespace jpt
         m_rotation = Quat::FromAxisAngle(Vec3::Up(), yaw) * Quat::FromAxisAngle(Vec3::Right(), pitch);
     }
 
-    void Camera::LookAt(const Vec3& point) noexcept
-    {
-        const Vec3 toPoint = point - m_position;
-        const float32 distance = toPoint.Length();
-        if (distance < kEpsilon<float32>)
-        {
-            return;
-        }
-
-        SetDirection(toPoint);
-        SetDistance(distance);
-    }
-
     void Camera::SetDistance(float32 distance) noexcept
     {
         m_distance = std::max(distance, kEpsilon<float32>);
-    }
-
-    void Camera::SetProjectionMode(ProjectionMode mode) noexcept
-    {
-        m_projectionMode = mode;
-    }
-
-    void Camera::SetFovY(float32 radians) noexcept
-    {
-        m_fovY = radians;
-    }
-
-    void Camera::SetOrthoHeight(float32 worldUnits) noexcept
-    {
-        m_orthoHeight = worldUnits;
     }
 
     void Camera::SetNearFar(float32 zNear, float32 zFar) noexcept
@@ -265,5 +229,21 @@ namespace jpt
 
         const Mat44 view = m_rotation.Conjugate().ToMatrix() * Mat44::Translate(-m_position);
         return projection * view;
+    }
+
+    void Camera::Look(const Vec2& deltaPixels)
+    {
+        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        if (height < 1.0f)
+        {
+            return;
+        }
+
+        // Both negated: dragging right turns right, which is a negative yaw about world up, and
+        // screen Y is down while a positive pitch looks up. A full-height drag is a half turn.
+        const float32 yaw   = -deltaPixels.x / height * kPi<float32>;
+        const float32 pitch = -deltaPixels.y / height * kPi<float32>;
+
+        RotateLocal(pitch, yaw);
     }
 }

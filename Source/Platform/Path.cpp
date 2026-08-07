@@ -17,11 +17,6 @@ namespace jpt
     {
     }
 
-    const std::filesystem::path& Path::GetAbsolute() const noexcept
-    {
-        return m_absolute;
-    }
-
     std::string Path::GetFileName() const
     {
         return m_absolute.filename().string();

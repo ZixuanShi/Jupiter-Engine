@@ -15,8 +15,8 @@ namespace jpt
     public:
         void OnResize(std::uint32_t pixelWidth, std::uint32_t pixelHeight) noexcept;
 
-        [[nodiscard]] std::uint32_t GetWidth()  const noexcept;
-        [[nodiscard]] std::uint32_t GetHeight() const noexcept;
+        [[nodiscard]] std::uint32_t GetWidth()  const noexcept { return m_width; }
+        [[nodiscard]] std::uint32_t GetHeight() const noexcept { return m_height; }
         [[nodiscard]] float GetAspectRatio() const noexcept;
     };
 }

@@ -86,11 +86,15 @@ namespace jpt
         m_renderer.Update();
     }
 
+    void Application::PostUpdate()
+    {
+    }
+
     void Application::Terminate()
     {
         m_renderer.Terminate();
         m_window.Terminate();
-        
+
         m_status = Status::Succeeded;
         Debug::Info("Application Terminated.");
     }

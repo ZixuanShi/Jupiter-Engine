@@ -21,11 +21,7 @@ export namespace jpt
     public:
         JPT_DECLARE_SINGLETON(LaunchArgs)
 
-        void Set(int32 count, char* ppValues[]) 
-        { 
-            m_count = count;
-            m_ppValues = ppValues; 
-        }
+        void Set(int32 count, char* ppValues[]);
 
         [[nodiscard]] int32  GetCount()  const noexcept { return m_count; }
         [[nodiscard]] char** GetValues() const noexcept { return m_ppValues; }

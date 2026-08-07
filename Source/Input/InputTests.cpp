@@ -303,9 +303,9 @@ namespace jpt
 
             // Zoom moves the camera, not what it orbits. Position and distance are separate fields
             // now, so nothing else here would notice the position half of Zoom going wrong.
-            const Vec3 pivotBefore = camera.GetPosition() + camera.GetDirection() * camera.GetDistance();
+            const Vec3 pivotBefore = camera.GetPosition() + camera.Forward() * camera.GetDistance();
             camera.Zoom(0.4f);
-            const Vec3 pivotAfter = camera.GetPosition() + camera.GetDirection() * camera.GetDistance();
+            const Vec3 pivotAfter = camera.GetPosition() + camera.Forward() * camera.GetDistance();
             Debug::Assert(AreValuesClose(pivotBefore, pivotAfter, 1e-4f), "Zoom dragged the orbit point from ({}, {}, {}) to ({}, {}, {})", pivotBefore.x, pivotBefore.y, pivotBefore.z, pivotAfter.x, pivotAfter.y, pivotAfter.z);
             camera.Zoom(1.0f / 0.4f);
 

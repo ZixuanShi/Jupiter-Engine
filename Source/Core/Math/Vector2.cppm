@@ -14,10 +14,6 @@ export namespace jpt
     struct Vector2
     {
     public:
-        T x = static_cast<T>(0);
-        T y = static_cast<T>(0);
-
-    public:
         [[nodiscard]] static consteval Vector2 Zero() noexcept { return Vector2(static_cast<T>(0)); }
         [[nodiscard]] static consteval Vector2 One()  noexcept { return Vector2(static_cast<T>(1)); }
 
@@ -25,6 +21,10 @@ export namespace jpt
         [[nodiscard]] static consteval Vector2 Left()  noexcept { return Vector2(static_cast<T>(-1), static_cast<T>( 0)); }
         [[nodiscard]] static consteval Vector2 Up()    noexcept { return Vector2(static_cast<T>( 0), static_cast<T>( 1)); }
         [[nodiscard]] static consteval Vector2 Down()  noexcept { return Vector2(static_cast<T>( 0), static_cast<T>(-1)); }
+
+    public:
+        T x = static_cast<T>(0);
+        T y = static_cast<T>(0);
 
     public:
         constexpr Vector2() noexcept = default;
@@ -57,20 +57,6 @@ export namespace jpt
         void Normalize() noexcept requires Floating<T>;
         [[nodiscard]] Vector2 Normalized() const noexcept requires Floating<T>;
     };
-
-    // Non-Member functions
-    template<Numeric T>
-    [[nodiscard]] constexpr Vector2<T> operator*(T scalar, const Vector2<T>& vector2) noexcept
-    {
-        return vector2 * scalar;
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr bool AreValuesClose(const Vector2<T>& a, const Vector2<T>& b, T tolerance = kEpsilon<T>) noexcept
-    {
-        return AreValuesClose(a.x, b.x, tolerance) &&
-               AreValuesClose(a.y, b.y, tolerance);
-    }
 
     // Member functions
     template<Numeric T>
@@ -188,6 +174,20 @@ export namespace jpt
         Vector2 result = *this;
         result.Normalize();
         return result;
+    }
+
+    // Non-Member functions
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector2<T> operator*(T scalar, const Vector2<T>& vector2) noexcept
+    {
+        return vector2 * scalar;
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Vector2<T>& a, const Vector2<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        return AreValuesClose(a.x, b.x, tolerance) &&
+               AreValuesClose(a.y, b.y, tolerance);
     }
 
     using Vec2  = Vector2<float32>;

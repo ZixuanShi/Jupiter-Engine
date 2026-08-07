@@ -15,14 +15,14 @@ export namespace jpt
     struct Vector4
     {
     public:
+        [[nodiscard]] static consteval Vector4 Zero() noexcept { return Vector4(static_cast<T>(0)); }
+        [[nodiscard]] static consteval Vector4 One()  noexcept { return Vector4(static_cast<T>(1)); }
+
+    public:
         T x = static_cast<T>(0);
         T y = static_cast<T>(0);
         T z = static_cast<T>(0);
         T w = static_cast<T>(0);
-
-    public:
-        [[nodiscard]] static consteval Vector4 Zero() noexcept { return Vector4(static_cast<T>(0)); }
-        [[nodiscard]] static consteval Vector4 One()  noexcept { return Vector4(static_cast<T>(1)); }
 
     public:
         constexpr Vector4() noexcept = default;
@@ -55,22 +55,6 @@ export namespace jpt
         [[nodiscard]] constexpr T Length2() const noexcept;
         [[nodiscard]] T Length() const noexcept requires Floating<T>;
     };
-
-    // Non-Member functions
-    template<Numeric T>
-    [[nodiscard]] constexpr Vector4<T> operator*(T scalar, const Vector4<T>& vector4) noexcept
-    {
-        return vector4 * scalar;
-    }
-
-    template<Floating T>
-    [[nodiscard]] constexpr bool AreValuesClose(const Vector4<T>& a, const Vector4<T>& b, T tolerance = kEpsilon<T>) noexcept
-    {
-        return AreValuesClose(a.x, b.x, tolerance) &&
-               AreValuesClose(a.y, b.y, tolerance) &&
-               AreValuesClose(a.z, b.z, tolerance) &&
-               AreValuesClose(a.w, b.w, tolerance);
-    }
 
     // Member functions
     template<Numeric T>
@@ -216,6 +200,22 @@ export namespace jpt
     T Vector4<T>::Length() const noexcept requires Floating<T>
     {
         return std::sqrt(Length2());
+    }
+
+    // Non-Member functions
+    template<Numeric T>
+    [[nodiscard]] constexpr Vector4<T> operator*(T scalar, const Vector4<T>& vector4) noexcept
+    {
+        return vector4 * scalar;
+    }
+
+    template<Floating T>
+    [[nodiscard]] constexpr bool AreValuesClose(const Vector4<T>& a, const Vector4<T>& b, T tolerance = kEpsilon<T>) noexcept
+    {
+        return AreValuesClose(a.x, b.x, tolerance) &&
+               AreValuesClose(a.y, b.y, tolerance) &&
+               AreValuesClose(a.z, b.z, tolerance) &&
+               AreValuesClose(a.w, b.w, tolerance);
     }
 
     using Vec4  = Vector4<float32>;

@@ -15,9 +15,6 @@ export namespace jpt
         Vec3 scale    = Vec3::One();
 
         // Scale, then rotate, then translate.
-        [[nodiscard]] Mat44 ToMatrix() const noexcept
-        {
-            return Mat44::Translate(position) * rotation.ToMatrix() * Mat44::Scale(scale);
-        }
+        [[nodiscard]] Mat44 ToMatrix() const noexcept;
     };
 }

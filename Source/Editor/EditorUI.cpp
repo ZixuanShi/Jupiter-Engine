@@ -81,27 +81,6 @@ namespace jpt
         }
     }
 
-    void EditorUI::DrawPointLight(usize index)
-    {
-        if (!ImGui::CollapsingHeader(std::format("PointLight {}", index + 1).c_str()))
-        {
-            return;
-        }
-
-        PointLight& light = GetApplication().GetScene().GetPointLights()[index];
-
-        // ImGui keys a widget by its label, so three sections of identically named sliders
-        // would be one slider driving all three lights.
-        ImGui::PushID(static_cast<int32>(index));
-
-        ImGui::Checkbox("Enabled", &light.enabled);
-        ImGui::DragFloat("Intensity", &light.intensity, 1.0f, 0.0f, 1000.0f, "%.0f");
-        ImGui::ColorEdit3("Color", &light.color.r, ImGuiColorEditFlags_Float);
-        ImGui::DragFloat3("Position", &light.position.x, 0.02f);
-
-        ImGui::PopID();
-    }
-
     void EditorUI::DrawRendering()
     {
         if (!ImGui::CollapsingHeader("Rendering"))
@@ -130,6 +109,46 @@ namespace jpt
         ImGui::SliderFloat("Roughness", &material.roughness, 0.0f, 1.0f);
         ImGui::SliderFloat("Metallic", &material.metallic, 0.0f, 1.0f);
         ImGui::SliderFloat("Ambient Occlusion", &material.occlusion, 0.0f, 1.0f);
+    }
+
+    void EditorUI::DrawPointLight(usize index)
+    {
+        if (!ImGui::CollapsingHeader(std::format("PointLight {}", index + 1).c_str()))
+        {
+            return;
+        }
+
+        PointLight& light = GetApplication().GetScene().GetPointLights()[index];
+
+        // ImGui keys a widget by its label, so three sections of identically named sliders
+        // would be one slider driving all three lights.
+        ImGui::PushID(static_cast<int32>(index));
+
+        ImGui::Checkbox("Enabled", &light.enabled);
+        ImGui::DragFloat("Intensity", &light.intensity, 1.0f, 0.0f, 1000.0f, "%.0f");
+        ImGui::ColorEdit3("Color", &light.color.r, ImGuiColorEditFlags_Float);
+        ImGui::DragFloat3("Position", &light.position.x, 0.02f);
+
+        ImGui::PopID();
+    }
+
+    void EditorUI::DrawVfx()
+    {
+        if (!ImGui::CollapsingHeader("VFX"))
+        {
+            return;
+        }
+
+        Material& material = GetApplication().GetScene().GetMaterial();
+
+        if (ImGui::Button("Play"))
+        {
+            material.dissolving = !material.dissolving;
+        }
+
+        ImGui::SliderFloat("Speed", &material.dissolveSpeed, 0.1f, 5.0f, "%.1fx");
+        ImGui::SliderFloat("Edge Width", &material.dissolveEdge, 0.005f, 0.2f, "%.3f");
+        ImGui::ColorEdit3("Color", &material.dissolveColor.r, ImGuiColorEditFlags_Float);
     }
 
     void EditorUI::DrawCamera()
@@ -204,25 +223,6 @@ namespace jpt
             constexpr float32 kMinRange = 0.001f;
             camera.SetNearFar(zNear, std::max(zFar, zNear + kMinRange));
         }
-    }
-
-    void EditorUI::DrawVfx()
-    {
-        if (!ImGui::CollapsingHeader("VFX"))
-        {
-            return;
-        }
-
-        Material& material = GetApplication().GetScene().GetMaterial();
-
-        if (ImGui::Button("Play"))
-        {
-            material.dissolving = !material.dissolving;
-        }
-
-        ImGui::SliderFloat("Speed", &material.dissolveSpeed, 0.1f, 5.0f, "%.1fx");
-        ImGui::SliderFloat("Edge Width", &material.dissolveEdge, 0.005f, 0.2f, "%.3f");
-        ImGui::ColorEdit3("Color", &material.dissolveColor.r, ImGuiColorEditFlags_Float);
     }
 
     /** A marker per light: where it is, whether it is on, and which one it is */

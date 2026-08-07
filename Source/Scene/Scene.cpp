@@ -44,13 +44,13 @@ namespace jpt
         Input& input = GetApplication().GetInput();
         input.OnPan().Add([this](const PanEvent& event)
             {
-                if (event.fingerCount == 1)      
-                { 
-                    RotateModel(event.delta); 
+                if (event.fingerCount == 1)
+                {
+                    RotateModel(event.delta);
                 }
-                else if (event.fingerCount == 3) 
-                { 
-                    TranslateModel(event.delta); 
+                else if (event.fingerCount == 3)
+                {
+                    TranslateModel(event.delta);
                 }
             });
         input.OnTwist().Add([this](const TwistEvent& event)
@@ -72,6 +72,15 @@ namespace jpt
         return true;
     }
 
+    void Scene::Update()
+    {
+        m_camera.Update();
+
+        const float32 deltaSeconds = GetApplication().GetFrameTimer().GetDeltaSeconds();
+        const float32 step = m_material.dissolveSpeed * deltaSeconds;
+        m_material.dissolvePct = std::clamp(m_material.dissolvePct + (m_material.dissolving ? step : -step), 0.0f, 1.0f);
+    }
+
     void Scene::RotateModel(const Vec2& deltaPixels)
     {
         const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
@@ -91,24 +100,6 @@ namespace jpt
         ApplyRotation();
     }
 
-    void Scene::ApplyRotation()
-    {
-        // Roll outermost: a twist spins what is already on screen, about the axis you look along,
-        // so it applies after yaw and pitch have placed the model.
-        m_model.rotation = Quat::FromAxisAngle(m_camera.Forward(), m_roll)
-                           * Quat::FromAxisAngle(m_camera.Right(), m_pitch)
-                           * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
-    }
-
-    void Scene::Update()
-    {
-        m_camera.Update();
-
-        const float32 deltaSeconds = GetApplication().GetFrameTimer().GetDeltaSeconds();
-        const float32 step = m_material.dissolveSpeed * deltaSeconds;
-        m_material.dissolvePct = std::clamp(m_material.dissolvePct + (m_material.dissolving ? step : -step), 0.0f, 1.0f);
-    }
-
     void Scene::TranslateModel(const Vec2& deltaPixels)
     {
         constexpr float32 kRange = 3.0f;
@@ -121,5 +112,14 @@ namespace jpt
         position.z = std::clamp(position.z, -kRange, kRange);
 
         m_model.position = position;
+    }
+
+    void Scene::ApplyRotation()
+    {
+        // Roll outermost: a twist spins what is already on screen, about the axis you look along,
+        // so it applies after yaw and pitch have placed the model.
+        m_model.rotation = Quat::FromAxisAngle(m_camera.Forward(), m_roll)
+                           * Quat::FromAxisAngle(m_camera.Right(), m_pitch)
+                           * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
     }
 }

@@ -15,7 +15,7 @@ export namespace jpt
         Path(const char* pRelativePath);
         Path(std::string_view relativePath);
 
-        [[nodiscard]] const std::filesystem::path& GetAbsolute() const noexcept;
+        [[nodiscard]] const std::filesystem::path& GetAbsolute() const noexcept { return m_absolute; }
         [[nodiscard]] std::string GetFileName() const;
     };
 }

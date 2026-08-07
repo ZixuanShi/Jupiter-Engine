@@ -170,6 +170,48 @@ base state was never set is the symptom.
 - Comment only what the code cannot say. Prefer a short trailing comment over a block that splits a
   run of related calls.
 
+### Class layout
+
+Sections in this order, each opened by its own access specifier (repeat `public:`/`private:`
+freely; omit a section that would be empty):
+
+1. `public:` constants — `static constexpr k...`, `enum class`, type aliases, and the consteval
+   factories (`Zero()`, `Identity()`, `Black()`) that stand in for constants of the class's own type.
+2. `private:` data members (public data in a plain struct sits in this same slot).
+3. `public:` lifecycle — constructor, destructor, copy/move constructor and assignment, then
+   `PreInit`, `Init`, `Update`, `PostUpdate`, `Terminate` in call order.
+4. `public:` API — the `DoWork()` verbs, then event callbacks (`OnResize`, `OnKeyEvent`,
+   `OnTouchEvent`, ...), then getters/setters.
+5. `private:` functions — lifecycle helpers first in the same call order, then the rest.
+
+**No function bodies inside a class.** Declare in the class, define elsewhere: in the `.cpp` for a
+non-template, or at namespace scope below the class in the same `.cppm`/header when the definition
+must stay visible to importers (templates, `constexpr`/`consteval`). `= default` and `= delete`
+stay on the declaration, as does everything that C++ forbids repeating on a definition
+(`[[nodiscard]]`, `virtual`, `static`, `explicit`, default arguments). `LinearColor.cppm` shows the
+below-the-class split, `FrameTimer` the `.cppm`/`.cpp` split.
+
+**Exception — a trivial accessor keeps its body on the declaration.** Splitting a line that *is*
+the member costs a reader two files to learn nothing, so write it inline:
+
+```cpp
+[[nodiscard]] Renderer& GetRenderer() noexcept { return m_renderer; }
+void SetFovY(float32 radians) noexcept { m_fovY = radians; }
+[[nodiscard]] static consteval Vector3 Up() noexcept { return Vector3(0, 1, 0); }
+```
+
+Trivial means the whole body is one statement that returns a data member, forwards to that
+member's own accessor (`Camera::Right` → `m_rotation.Right()`), assigns a parameter to one, or
+names a constant of the class's own type. A cast on the way out is still trivial
+(`FrameTimer::GetDeltaSeconds`).
+
+Anything that **computes** is not, however short, and moves out under the rule above: arithmetic or
+a branch (`WindowBase::GetAspectRatio`, `Texture::RowPitch`, `Camera::SetDistance` clamping), a
+call that builds a new value (`Path::GetFileName`, `Transform::ToMatrix`), reading two members at
+once (`Input::IsKeyDown`), or a second statement (`LaunchArgs::Set`).
+
+**Definitions in the `.cpp` follow the class's declaration order.**
+
 ### Prefer a class over free functions
 
 **A group of free functions that share state, a lifecycle, or a subject is a class.** One public

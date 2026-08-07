@@ -204,6 +204,40 @@ namespace jpt
         return ImGuiInit(m_pDevice, m_pQueue, static_cast<int>(kFramesInFlight), iniPath.string().c_str());
     }
 
+    void Metal4Renderer::Terminate()
+    {
+        ImGuiTerminate();
+
+        m_pLayer = nullptr;
+
+        for (uint32 i = 0; i < kFramesInFlight; ++i)
+        {
+            local::Release(m_pAllocators[i]);
+        }
+
+        local::Release(m_pUploadAllocator);
+
+        for (MTL::Texture*& pTexture : m_pTextures)
+        {
+            local::Release(pTexture);
+        }
+
+        local::Release(m_pSampler);
+        local::Release(m_pResidencySet);
+        local::Release(m_pArgumentTable);
+        local::Release(m_pUniforms);
+        local::Release(m_pIndices);
+        local::Release(m_pVertices);
+        local::Release(m_pDepthTexture);
+        local::Release(m_pMsaaColor);
+        local::Release(m_pUIDepthState);
+        local::Release(m_pDepthState);
+        local::Release(m_pPipeline);
+        local::Release(m_pCompiler);
+        local::Release(m_pQueue);
+        local::Release(m_pDevice);
+    }
+
     bool Metal4Renderer::BeginFrame()
     {
         if (!m_pLayer || !m_pQueue || !m_pPipeline)
@@ -391,9 +425,14 @@ namespace jpt
         EndFramePool();
     }
 
-    void Metal4Renderer::RequestCapture()
+    void Metal4Renderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
     {
-        m_capture.RequestCapture();
+        if (!m_pLayer || pixelWidth == 0 || pixelHeight == 0)
+        {
+            return;
+        }
+
+        m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
     }
 
     void Metal4Renderer::SetVSync(bool enabled) noexcept
@@ -410,57 +449,9 @@ namespace jpt
 #endif
     }
 
-    void Metal4Renderer::EndFramePool()
+    void Metal4Renderer::RequestCapture()
     {
-        m_pPass          = nullptr;     // Autoreleased; the pool below owns them.
-        m_pDrawable      = nullptr;
-        m_pCommandBuffer = nullptr;
-
-        local::Release(m_pFramePool);          // Draining the pool is what releases everything above.
-    }
-
-    void Metal4Renderer::Terminate()
-    {
-        ImGuiTerminate();
-
-        m_pLayer = nullptr;
-
-        for (uint32 i = 0; i < kFramesInFlight; ++i)
-        {
-            local::Release(m_pAllocators[i]);
-        }
-
-        local::Release(m_pUploadAllocator);
-
-        for (MTL::Texture*& pTexture : m_pTextures)
-        {
-            local::Release(pTexture);
-        }
-
-        local::Release(m_pSampler);
-        local::Release(m_pResidencySet);
-        local::Release(m_pArgumentTable);
-        local::Release(m_pUniforms);
-        local::Release(m_pIndices);
-        local::Release(m_pVertices);
-        local::Release(m_pDepthTexture);
-        local::Release(m_pMsaaColor);
-        local::Release(m_pUIDepthState);
-        local::Release(m_pDepthState);
-        local::Release(m_pPipeline);
-        local::Release(m_pCompiler);
-        local::Release(m_pQueue);
-        local::Release(m_pDevice);
-    }
-
-    void Metal4Renderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
-    {
-        if (!m_pLayer || pixelWidth == 0 || pixelHeight == 0)
-        {
-            return;
-        }
-
-        m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
+        m_capture.RequestCapture();
     }
 
     bool Metal4Renderer::SetMesh(const Mesh& mesh)
@@ -520,91 +511,6 @@ namespace jpt
         UpdateResidency();
         GenerateMipmaps();
         return true;
-    }
-
-    void Metal4Renderer::GenerateMipmaps()
-    {
-        if (!m_pUploadAllocator)
-        {
-            m_pUploadAllocator = m_pDevice->newCommandAllocator();
-        }
-
-        // Metal 4 has no blit encoder -- generateMipmaps moved onto the compute encoder.
-        MTL4::CommandBuffer* pCommandBuffer = m_pDevice->newCommandBuffer();
-        pCommandBuffer->beginCommandBuffer(m_pUploadAllocator);
-
-        MTL4::ComputeCommandEncoder* pEncoder = pCommandBuffer->computeCommandEncoder();
-        for (MTL::Texture* pTexture : m_pTextures)
-        {
-            pEncoder->generateMipmaps(pTexture);
-        }
-        pEncoder->endEncoding();
-
-        pCommandBuffer->endCommandBuffer();
-
-        // Same queue as every frame, so ordering alone guarantees the chain is written before
-        // anything samples it.
-        m_pQueue->commit(&pCommandBuffer, 1);
-        pCommandBuffer->release();
-    }
-
-    bool Metal4Renderer::CreateSampler()
-    {
-        MTL::SamplerDescriptor* pDesc = MTL::SamplerDescriptor::alloc()->init()->autorelease();
-
-        // Repeat, not ClampToEdge: 22% of Mug.obj's UVs fall outside the unit square, and clamping
-        // smears those islands into streaks rather than wrapping them.
-        pDesc->setSAddressMode(MTL::SamplerAddressModeRepeat);
-        pDesc->setTAddressMode(MTL::SamplerAddressModeRepeat);
-        pDesc->setMinFilter(MTL::SamplerMinMagFilterLinear);
-        pDesc->setMagFilter(MTL::SamplerMinMagFilterLinear);
-        pDesc->setMipFilter(MTL::SamplerMipFilterLinear);
-        pDesc->setMaxAnisotropy(8);
-
-        // Without this the sampler has no gpuResourceID to put in the argument table, and the
-        // failure is a GPU fault rather than an error.
-        pDesc->setSupportArgumentBuffers(true);
-
-        m_pSampler = m_pDevice->newSamplerState(pDesc);
-        return m_pSampler;
-    }
-
-    void Metal4Renderer::UpdateResidency()
-    {
-        if (!m_pResidencySet)
-        {
-            return;
-        }
-
-        // Rebuilt wholesale rather than diffed: the set is three buffers, and tracking which one
-        // changed costs more code than re-adding all of them.
-        m_pResidencySet->removeAllAllocations();
-
-        if (m_pVertices)
-        {
-            m_pResidencySet->addAllocation(m_pVertices);
-        }
-        if (m_pIndices)
-        {
-            m_pResidencySet->addAllocation(m_pIndices);
-        }
-        if (m_pUniforms)
-        {
-            m_pResidencySet->addAllocation(m_pUniforms);
-        }
-
-        for (MTL::Texture* pTexture : m_pTextures)
-        {
-            if (pTexture)
-            {
-                m_pResidencySet->addAllocation(pTexture);
-            }
-        }
-
-        // The frame attachments are absent on purpose: residency covers raw addresses, and a
-        // memoryless texture has no memory to make resident -- the validation layer asserts on it.
-        m_pResidencySet->commit();
-        m_pResidencySet->requestResidency();
     }
 
     bool Metal4Renderer::CreatePipeline()
@@ -709,6 +615,27 @@ namespace jpt
         return m_pDepthState && m_pUIDepthState;
     }
 
+    bool Metal4Renderer::CreateSampler()
+    {
+        MTL::SamplerDescriptor* pDesc = MTL::SamplerDescriptor::alloc()->init()->autorelease();
+
+        // Repeat, not ClampToEdge: 22% of Mug.obj's UVs fall outside the unit square, and clamping
+        // smears those islands into streaks rather than wrapping them.
+        pDesc->setSAddressMode(MTL::SamplerAddressModeRepeat);
+        pDesc->setTAddressMode(MTL::SamplerAddressModeRepeat);
+        pDesc->setMinFilter(MTL::SamplerMinMagFilterLinear);
+        pDesc->setMagFilter(MTL::SamplerMinMagFilterLinear);
+        pDesc->setMipFilter(MTL::SamplerMipFilterLinear);
+        pDesc->setMaxAnisotropy(8);
+
+        // Without this the sampler has no gpuResourceID to put in the argument table, and the
+        // failure is a GPU fault rather than an error.
+        pDesc->setSupportArgumentBuffers(true);
+
+        m_pSampler = m_pDevice->newSamplerState(pDesc);
+        return m_pSampler;
+    }
+
     bool Metal4Renderer::EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight)
     {
         if (m_pDepthTexture && m_pDepthTexture->width() == pixelWidth && m_pDepthTexture->height() == pixelHeight)
@@ -723,6 +650,79 @@ namespace jpt
         m_pDepthTexture = local::NewAttachment(m_pDevice, kDepthFormat, pixelWidth, pixelHeight);
 
         return m_pMsaaColor && m_pDepthTexture;
+    }
+
+    void Metal4Renderer::GenerateMipmaps()
+    {
+        if (!m_pUploadAllocator)
+        {
+            m_pUploadAllocator = m_pDevice->newCommandAllocator();
+        }
+
+        // Metal 4 has no blit encoder -- generateMipmaps moved onto the compute encoder.
+        MTL4::CommandBuffer* pCommandBuffer = m_pDevice->newCommandBuffer();
+        pCommandBuffer->beginCommandBuffer(m_pUploadAllocator);
+
+        MTL4::ComputeCommandEncoder* pEncoder = pCommandBuffer->computeCommandEncoder();
+        for (MTL::Texture* pTexture : m_pTextures)
+        {
+            pEncoder->generateMipmaps(pTexture);
+        }
+        pEncoder->endEncoding();
+
+        pCommandBuffer->endCommandBuffer();
+
+        // Same queue as every frame, so ordering alone guarantees the chain is written before
+        // anything samples it.
+        m_pQueue->commit(&pCommandBuffer, 1);
+        pCommandBuffer->release();
+    }
+
+    void Metal4Renderer::UpdateResidency()
+    {
+        if (!m_pResidencySet)
+        {
+            return;
+        }
+
+        // Rebuilt wholesale rather than diffed: the set is three buffers, and tracking which one
+        // changed costs more code than re-adding all of them.
+        m_pResidencySet->removeAllAllocations();
+
+        if (m_pVertices)
+        {
+            m_pResidencySet->addAllocation(m_pVertices);
+        }
+        if (m_pIndices)
+        {
+            m_pResidencySet->addAllocation(m_pIndices);
+        }
+        if (m_pUniforms)
+        {
+            m_pResidencySet->addAllocation(m_pUniforms);
+        }
+
+        for (MTL::Texture* pTexture : m_pTextures)
+        {
+            if (pTexture)
+            {
+                m_pResidencySet->addAllocation(pTexture);
+            }
+        }
+
+        // The frame attachments are absent on purpose: residency covers raw addresses, and a
+        // memoryless texture has no memory to make resident -- the validation layer asserts on it.
+        m_pResidencySet->commit();
+        m_pResidencySet->requestResidency();
+    }
+
+    void Metal4Renderer::EndFramePool()
+    {
+        m_pPass          = nullptr;     // Autoreleased; the pool below owns them.
+        m_pDrawable      = nullptr;
+        m_pCommandBuffer = nullptr;
+
+        local::Release(m_pFramePool);          // Draining the pool is what releases everything above.
     }
 }
 

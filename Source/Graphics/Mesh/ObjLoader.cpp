@@ -6,7 +6,7 @@ import jpt.LinearColor;
 import jpt.Logger;
 import jpt.Mesh;
 import jpt.Path;
-import jpt.StringUtils;
+import jpt.TextScanner;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;
@@ -51,121 +51,26 @@ namespace jpt
             }
         };
 
-        void SkipBlanks(std::string_view& text) noexcept
-        {
-            const usize start = text.find_first_not_of(" \t");
-            text.remove_prefix(start == std::string_view::npos ? text.size() : start);
-        }
-
-        /** Consumes a leading '+' or '-' if there is one. */
-        [[nodiscard]] bool ParseSign(std::string_view& text) noexcept
-        {
-            const bool negative = text.starts_with('-');
-            if (negative || text.starts_with('+'))
-            {
-                text.remove_prefix(1);
-            }
-            return negative;
-        }
-
-        /** Consumes a run of digits into value, most significant first. Returns how many. */
-        usize ParseDigits(std::string_view& text, float64& value) noexcept
-        {
-            usize count = 0;
-            for (; !text.empty() && IsDigit(text.front()); ++count)
-            {
-                value = value * 10.0 + static_cast<float64>(text.front() - '0');
-                text.remove_prefix(1);
-            }
-            return count;
-        }
-
-        /** Every parser here stops at the first character that is not part of the number, which
-            is what lets one call read a field out of "12/3/4" and leave the separator behind. */
-        [[nodiscard]] bool Parse(std::string_view& text, int32& value) noexcept
-        {
-            SkipBlanks(text);
-
-            const std::from_chars_result result = std::from_chars(text.data(), text.data() + text.size(), value);
-            if (result.ec != std::errc{})
-            {
-                return false;
-            }
-
-            text.remove_prefix(static_cast<usize>(result.ptr - text.data()));
-            return true;
-        }
-
-        /** Hand-rolled because libc++ puts the floating-point from_chars in the dylib behind a
-            macOS 26 availability guard, which our deployment target does not clear. strtof is
-            no substitute: it reads the decimal point from a locale, and taking no end pointer
-            it would run off the end of one line and into the next. */
-        [[nodiscard]] bool Parse(std::string_view& text, float32& value) noexcept
-        {
-            SkipBlanks(text);
-
-            std::string_view cursor = text;
-            const bool negative = ParseSign(cursor);
-
-            // Accumulated as one integer and scaled once, rather than adding each fraction
-            // digit at its own magnitude -- half the rounding steps for the same digits.
-            float64 mantissa = 0.0;
-            usize digits = ParseDigits(cursor, mantissa);
-
-            if (cursor.starts_with('.'))
-            {
-                cursor.remove_prefix(1);
-
-                const usize beforeFraction = cursor.size();
-                digits += ParseDigits(cursor, mantissa);
-                mantissa /= std::pow(10.0, static_cast<float64>(beforeFraction - cursor.size()));
-            }
-
-            if (digits == 0)
-            {
-                return false;
-            }
-
-            if (cursor.starts_with('e') || cursor.starts_with('E'))
-            {
-                std::string_view exponentCursor = cursor.substr(1);
-                const bool exponentNegative = ParseSign(exponentCursor);
-
-                float64 exponent = 0.0;
-                if (ParseDigits(exponentCursor, exponent) > 0)
-                {
-                    mantissa *= std::pow(10.0, exponentNegative ? -exponent : exponent);
-                    cursor = exponentCursor;
-                }
-            }
-
-            value = static_cast<float32>(negative ? -mantissa : mantissa);
-            text = cursor;
-            return true;
-        }
-
         /** One face corner: "12", "12/3", "12//4" or "12/3/4". An omitted field comes back 0,
             which is never a valid OBJ index -- they are 1-based, and a negative one counts back
             from the end. */
-        [[nodiscard]] bool ParseCorner(std::string_view& text, int32& position, int32& texCoord, int32& normal) noexcept
+        [[nodiscard]] bool ParseCorner(TextScanner& scanner, int32& position, int32& texCoord, int32& normal) noexcept
         {
             texCoord = 0;
             normal   = 0;
 
-            if (!Parse(text, position))
+            if (!scanner.Parse(position))
             {
                 return false;
             }
 
-            if (text.starts_with('/'))
+            if (scanner.Consume('/'))
             {
-                text.remove_prefix(1);
-                (void)Parse(text, texCoord);   // "12//4": the parse fails on '/' and leaves the 0.
+                (void)scanner.Parse(texCoord);   // "12//4": the parse fails on '/' and leaves the 0.
 
-                if (text.starts_with('/'))
+                if (scanner.Consume('/'))
                 {
-                    text.remove_prefix(1);
-                    return Parse(text, normal);
+                    return scanner.Parse(normal);
                 }
             }
 
@@ -179,28 +84,6 @@ namespace jpt
         {
             const int64 resolved = (index > 0) ? index - 1 : static_cast<int64>(count) + index;
             return (index != 0 && resolved >= 0 && static_cast<usize>(resolved) < count) ? static_cast<usize>(resolved) : count;
-        }
-
-        /** Area-weighted: the raw cross product's length is twice the triangle's area, so
-            summing it unnormalized already gives larger faces a proportionally larger say. */
-        void GenerateNormals(Mesh& mesh) noexcept
-        {
-            for (usize i = 0; i + 2 < mesh.indices.size(); i += 3)
-            {
-                Vertex& a = mesh.vertices[mesh.indices[i]];
-                Vertex& b = mesh.vertices[mesh.indices[i + 1]];
-                Vertex& c = mesh.vertices[mesh.indices[i + 2]];
-
-                const Vec3 faceNormal = (b.position - a.position).Cross(c.position - a.position);
-                a.normal += faceNormal;
-                b.normal += faceNormal;
-                c.normal += faceNormal;
-            }
-
-            for (Vertex& vertex : mesh.vertices)
-            {
-                vertex.normal.Normalize();
-            }
         }
 
         [[nodiscard]] bool ReadFile(const std::filesystem::path& path, std::string& text)
@@ -232,7 +115,7 @@ namespace jpt
         std::vector<LinearColor> colors;   // Parallel to positions: the colour extension is on `v`.
 
         // Corner -> index. A file with UVs but no normals splits at its UV seams *before*
-        // local::GenerateNormals runs, so those seams come out faceted.
+        // GenerateNormals runs, so those seams come out faceted.
         std::unordered_map<local::VertexKey, uint32, local::VertexKeyHash> unique;
 
         Mesh mesh;
@@ -249,14 +132,14 @@ namespace jpt
             {
                 line.remove_suffix(1);
             }
-            local::SkipBlanks(line);
 
-            if (line.starts_with("v "))
+            TextScanner scanner(line);
+            scanner.SkipBlanks();
+
+            if (scanner.Consume("v "))
             {
-                line.remove_prefix(1);
-
                 Vec3 position;
-                if (local::Parse(line, position.x) && local::Parse(line, position.y) && local::Parse(line, position.z))
+                if (scanner.Parse(position.x) && scanner.Parse(position.y) && scanner.Parse(position.z))
                 {
                     positions.push_back(position);
 
@@ -265,36 +148,31 @@ namespace jpt
                     float32 r = 0.0f;
                     float32 g = 0.0f;
                     float32 b = 0.0f;
-                    const bool hasColor = local::Parse(line, r) && local::Parse(line, g) && local::Parse(line, b);
+                    const bool hasColor = scanner.Parse(r) && scanner.Parse(g) && scanner.Parse(b);
                     colors.push_back(hasColor ? LinearColor(r, g, b) : LinearColor::White());
                 }
             }
-            else if (line.starts_with("vt "))
+            else if (scanner.Consume("vt "))
             {
-                line.remove_prefix(2);
-
                 Vec2 texCoord;
-                if (local::Parse(line, texCoord.x) && local::Parse(line, texCoord.y))
+                if (scanner.Parse(texCoord.x) && scanner.Parse(texCoord.y))
                 {
                     texCoords.push_back(texCoord);
                 }
             }
-            else if (line.starts_with("vn "))
+            else if (scanner.Consume("vn "))
             {
-                line.remove_prefix(2);
-
                 Vec3 normal;
-                if (local::Parse(line, normal.x) && local::Parse(line, normal.y) && local::Parse(line, normal.z))
+                if (scanner.Parse(normal.x) && scanner.Parse(normal.y) && scanner.Parse(normal.z))
                 {
                     normals.push_back(normal);
                 }
             }
-            else if (line.starts_with("f "))
+            else if (scanner.Consume("f "))
             {
-                line.remove_prefix(1);
                 corners.clear();
 
-                for (int32 position = 0, texCoord = 0, normal = 0; local::ParseCorner(line, position, texCoord, normal); )
+                for (int32 position = 0, texCoord = 0, normal = 0; local::ParseCorner(scanner, position, texCoord, normal); )
                 {
                     const usize positionIndex = local::Resolve(position, positions.size());
                     if (positionIndex == positions.size())
@@ -338,7 +216,7 @@ namespace jpt
 
         if (normals.empty())
         {
-            local::GenerateNormals(mesh);
+            GenerateNormals(mesh);
         }
 
         Debug::Info("Loaded {}: {} vertices, {} triangles.", path.GetFileName(), mesh.vertices.size(), mesh.indices.size() / 3);

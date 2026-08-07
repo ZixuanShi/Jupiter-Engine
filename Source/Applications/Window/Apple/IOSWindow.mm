@@ -215,16 +215,16 @@ namespace jpt
         }
     }
 
-    void IOSWindow::SetCursorCaptured([[maybe_unused]] bool captured)
-    {
-        // A touchscreen has no pointer. Present so the Window contract holds on both platforms
-        // and callers need no #if.
-    }
-
     void IOSWindow::Terminate()
     {
         delete m_pImpl;
         m_pImpl = nullptr;
+    }
+
+    void IOSWindow::SetCursorCaptured([[maybe_unused]] bool captured)
+    {
+        // A touchscreen has no pointer. Present so the Window contract holds on both platforms
+        // and callers need no #if.
     }
 }
 

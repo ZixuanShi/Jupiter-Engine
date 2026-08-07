@@ -49,7 +49,7 @@ export namespace jpt
 
     public:
         [[nodiscard]] const RenderStats& GetStats() const noexcept { return m_stats; }
-        
+
         [[nodiscard]] const LinearColor& GetClearColor() const noexcept { return m_clearColor; }
         void SetClearColor(const LinearColor& color) noexcept { m_clearColor = color; }
 

@@ -50,12 +50,6 @@ namespace jpt
         m_gestures.Update();
     }
 
-    void Input::SetCaptured(bool keyboard, bool mouse) noexcept
-    {
-        m_keyboardCaptured = keyboard;
-        m_mouseCaptured = mouse;
-    }
-
     bool Input::IsKeyDown(KeyCode key) const noexcept
     {
         return !m_keyboardCaptured && m_keysDown[static_cast<usize>(key)];
@@ -64,6 +58,12 @@ namespace jpt
     bool Input::IsMouseButtonDown(MouseButton button) const noexcept
     {
         return !m_mouseCaptured && m_buttonsDown[static_cast<usize>(button)];
+    }
+
+    void Input::SetCaptured(bool keyboard, bool mouse) noexcept
+    {
+        m_keyboardCaptured = keyboard;
+        m_mouseCaptured = mouse;
     }
 
     // Every Post below writes its state before testing capture. That order is the whole point:
