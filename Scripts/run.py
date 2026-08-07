@@ -77,7 +77,7 @@ def main():
 
     # Convenience only -- with --console this is where the session ends, so it collects what you
     # just captured. Otherwise devicectl returns at launch and this gets the previous session.
-    # Either way Scripts/pull_captures.py fetches on demand, and neither re-copies.
+    # Either way Scripts/Debug/pull_captures.py fetches on demand, and neither re-copies.
     if udid is not None:
         pull_captures(udid)
 

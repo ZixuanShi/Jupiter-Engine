@@ -7,6 +7,10 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path
+
+# Scripts/ is the import root for utils, and it is no longer this file's own directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from utils import BUNDLE_ID, ROOT
 
@@ -58,7 +62,7 @@ def team_id() -> str:
 
 def main():
     if len(sys.argv) > 1:
-        print("Usage: py Scripts/provision.py")
+        print("Usage: py Scripts/Build/provision.py")
         sys.exit(1)
 
     team = team_id()

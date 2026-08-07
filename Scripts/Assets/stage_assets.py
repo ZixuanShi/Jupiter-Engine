@@ -8,6 +8,9 @@ import shutil
 import sys
 from pathlib import Path
 
+# Scripts/ is the import root for utils, and it is no longer this file's own directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from utils import ROOT
 
 ASSETS = ROOT / "Assets"
@@ -58,7 +61,7 @@ def prune(destination, keep) -> None:
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: py Scripts/stage_assets.py path/to/staged/Assets")
+        print("Usage: py Scripts/Assets/stage_assets.py path/to/staged/Assets")
         sys.exit(1)
 
     destination = Path(sys.argv[1])

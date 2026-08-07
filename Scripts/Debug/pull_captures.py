@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Copy GPU captures off the connected device into _Saved/Traces."""
 import sys
+from pathlib import Path
+
+# Scripts/ is the import root for utils, and it is no longer this file's own directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from utils import TRACES, connected_device, no_device_help, pull_captures
 
 
 def main() -> None:
     if sys.argv[1:]:
-        print("Usage: py Scripts/pull_captures.py")
+        print("Usage: py Scripts/Debug/pull_captures.py")
         sys.exit(1)
 
     # Deliberately not read from setup.json: you are normally on the macos preset by the time

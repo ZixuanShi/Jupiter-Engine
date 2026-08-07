@@ -149,7 +149,7 @@ endif()
 # shader sources and .DS_Store must not reach a signed bundle. A target rather than a POST_BUILD
 # rule, so staging precedes the executable's own post-build steps.
 add_custom_target(JupiterAssets
-    COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/stage_assets.py" "${JUPITER_ASSET_DIR}"
+    COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/Assets/stage_assets.py" "${JUPITER_ASSET_DIR}"
     COMMENT "Staging Assets")
 
 add_dependencies(JupiterEngine JupiterAssets)
@@ -296,7 +296,7 @@ if(APPLE)
     # Signing takes ~0.1s, so it runs every build rather than guessing when it is needed.
     if(JUPITER_PLATFORM STREQUAL "IOS")
         add_custom_target(JupiterSign ALL
-            COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
+            COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/Build/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
             COMMENT "Code-signing for device")
 
         add_dependencies(JupiterSign JupiterEngine JupiterAssets)

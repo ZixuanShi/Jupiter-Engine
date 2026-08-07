@@ -10,6 +10,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Scripts/ is the import root for utils, and it is no longer this file's own directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from utils import BUNDLE_ID, ROOT, active_preset, artifact_path
 
 PROFILE_DIR = Path.home() / "Library/Developer/Xcode/UserData/Provisioning Profiles"
@@ -22,7 +25,7 @@ IDENTITY = "Apple Development"
 REMINT = """No valid provisioning profile for {bundle}.
 
 Free personal-team profiles expire after 7 days. Mint a fresh one with:
-  py Scripts/provision.py"""
+  py Scripts/Build/provision.py"""
 
 
 def decode(profile) -> dict:
@@ -73,7 +76,7 @@ def sign(app) -> int:
 
 def main():
     if len(sys.argv) > 2:
-        print("Usage: py Scripts/sign.py [path/to/App.app]")
+        print("Usage: py Scripts/Build/sign.py [path/to/App.app]")
         sys.exit(1)
 
     # Defaults to the configured preset so the bundle can be re-signed after a profile

@@ -7,9 +7,12 @@ import math
 import sys
 from pathlib import Path
 
+# Scripts/ is the import root for utils, and it is no longer this file's own directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from utils import ROOT
 
-USAGE = "Usage: py Scripts/normalize_mesh.py Assets/Meshes/Model.obj"
+USAGE = "Usage: py Scripts/Assets/normalize_mesh.py Assets/Meshes/Model.obj"
 
 
 def parse(path) -> dict:
