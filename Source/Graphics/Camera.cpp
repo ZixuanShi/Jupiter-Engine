@@ -63,37 +63,10 @@ namespace jpt
     {
         Input& input = GetApplication().GetInput();
 
-        input.OnPinch().Add([this](const PinchEvent& event)
-            {
-                // Fingers separating means a larger scale, which means moving closer.
-                Zoom(1.0f / event.scale);
-            });
-
-        input.OnMouseScroll().Add([this](const MouseScrollEvent& event)
-            {
-                // exp keeps the factor positive and makes the zoom multiplicative, so equal
-                // scroll in each direction lands back where it started.
-                const float32 rate = event.isPrecise ? 0.01f : 0.1f;
-                Zoom(std::exp(-event.delta.y * rate));
-            });
-
-        input.OnMouseMove().Add([this](const MouseMoveEvent& event)
-            {
-                if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Right))
-                {
-                    Look(event.delta);
-                }
-            });
-
-        // Driven by the transition, not polled: AppKit counts hide against unhide, so calling
-        // either every frame would sink the counter and strand the pointer.
-        input.OnMouseButton().Add([](const MouseButtonEvent& event)
-            {
-                if (event.button == MouseButton::Right)
-                {
-                    GetApplication().GetWindow().SetCursorCaptured(event.isDown);
-                }
-            });
+        input.OnPinch().Add(this, &Camera::OnPinch);
+        input.OnMouseScroll().Add(this, &Camera::OnMouseScroll);
+        input.OnMouseMove().Add(this, &Camera::OnMouseMove);
+        input.OnMouseButton().Add(this, &Camera::OnMouseButton);
 
         return true;
     }
@@ -245,5 +218,37 @@ namespace jpt
         const float32 pitch = -deltaPixels.y / height * kPi<float32>;
 
         RotateLocal(pitch, yaw);
+    }
+
+    void Camera::OnPinch(const PinchEvent& event)
+    {
+        // Fingers separating means a larger scale, which means moving closer.
+        Zoom(1.0f / event.scale);
+    }
+
+    void Camera::OnMouseScroll(const MouseScrollEvent& event)
+    {
+        // exp keeps the factor positive and makes the zoom multiplicative, so equal
+        // scroll in each direction lands back where it started.
+        const float32 rate = event.isPrecise ? 0.01f : 0.1f;
+        Zoom(std::exp(-event.delta.y * rate));
+    }
+
+    void Camera::OnMouseMove(const MouseMoveEvent& event)
+    {
+        if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Right))
+        {
+            Look(event.delta);
+        }
+    }
+
+    void Camera::OnMouseButton(const MouseButtonEvent& event)
+    {
+        // Driven by the transition, not polled: AppKit counts hide against unhide, so calling
+        // either every frame would sink the counter and strand the pointer.
+        if (event.button == MouseButton::Right)
+        {
+            GetApplication().GetWindow().SetCursorCaptured(event.isDown);
+        }
     }
 }

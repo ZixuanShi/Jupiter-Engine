@@ -22,4 +22,11 @@ namespace jpt::local
     };
 
     using TestDispatcher = EventDispatcher<TestEvent>;
+
+    struct TestListener
+    {
+        int32 count = 0;
+
+        void OnEvent(const TestEvent& event);
+    };
 }

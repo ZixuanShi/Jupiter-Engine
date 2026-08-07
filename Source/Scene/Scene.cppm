@@ -8,6 +8,8 @@ module;
 export module jpt.Scene;
 
 import jpt.Camera;
+import jpt.GestureRecognizer;
+import jpt.InputEvents;
 import jpt.Light;
 import jpt.Material;
 import jpt.Transform;
@@ -47,5 +49,9 @@ export namespace jpt
         void TwistModel(float32 radians);
         void TranslateModel(const Vec2& deltaPixels);
         void ApplyRotation();
+
+        void OnPan(const PanEvent& event);
+        void OnTwist(const TwistEvent& event);
+        void OnMouseMove(const MouseMoveEvent& event);
     };
 }

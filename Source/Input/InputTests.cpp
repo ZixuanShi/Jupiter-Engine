@@ -28,6 +28,14 @@ import jpt.Vector2;
 import jpt.Vector3;
 import std;
 
+namespace jpt::local
+{
+    void TestListener::OnEvent(const TestEvent&)
+    {
+        ++count;
+    }
+}
+
 namespace jpt
 {
     void RunInputTests()
@@ -58,6 +66,20 @@ namespace jpt
             // Removing an unknown handle is a no-op, not a crash or a silent extra tombstone.
             dispatcher.Remove(first);
             Debug::Assert(dispatcher.GetCount() == 1, "Repeated Remove changed the count to {}", dispatcher.GetCount());
+        }
+
+        // EventDispatcher -- member function binding
+        {
+            local::TestDispatcher dispatcher;
+            local::TestListener listener;
+
+            const local::TestDispatcher::Handle handle = dispatcher.Add(&listener, &local::TestListener::OnEvent);
+            dispatcher.Dispatch(local::TestEvent{});
+            Debug::Assert(listener.count == 1, "Member handler fired {} times, expected 1", listener.count);
+
+            dispatcher.Remove(handle);
+            dispatcher.Dispatch(local::TestEvent{});
+            Debug::Assert(listener.count == 1, "Removed member handler still fired, count is {}", listener.count);
         }
 
         // EventDispatcher -- re-entrancy. Legacy's Send was undefined behaviour here.

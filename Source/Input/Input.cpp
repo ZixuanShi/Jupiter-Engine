@@ -14,30 +14,11 @@ namespace jpt
     bool Input::PreInit()
     {
 #if !IS_CONFIG_RELEASE
-        // Delete once something real listens.
-        m_onKeyDown.Add([](const KeyEvent& event)
-            {
-                Debug::Log("Key down: {}{}", ToString(event.key), event.isRepeat ? " (repeat)" : "");
-            });
-
-        m_onKeyUp.Add([](const KeyEvent& event)
-            {
-                Debug::Log("Key up: {}", ToString(event.key));
-            });
-
-        m_onMouseButton.Add([](const MouseButtonEvent& event)
-            {
-                Debug::Log("Mouse {} {} at ({:.1f}, {:.1f})", ToString(event.button),
-                           event.isDown ? "down" : "up", event.position.x, event.position.y);
-            });
-
-        m_onMouseScroll.Add([](const MouseScrollEvent& event)
-            {
-                Debug::Log("Scroll: ({:.3f}, {:.3f}){}", event.delta.x, event.delta.y,
-                           event.isPrecise ? " precise" : "");
-            });
-
-        // Mouse move is not logged: it would bury everything else.
+        // Delete once something real listens. Mouse move is not logged: it would bury everything else.
+        m_onKeyDown.Add(this, &Input::LogKeyDown);
+        m_onKeyUp.Add(this, &Input::LogKeyUp);
+        m_onMouseButton.Add(this, &Input::LogMouseButton);
+        m_onMouseScroll.Add(this, &Input::LogMouseScroll);
 #endif
 
         return true;
@@ -124,4 +105,28 @@ namespace jpt
     {
         m_gestures.PostTouch(phase, id, position, timeSeconds);
     }
+
+#if !IS_CONFIG_RELEASE
+    void Input::LogKeyDown(const KeyEvent& event)
+    {
+        Debug::Log("Key down: {}{}", ToString(event.key), event.isRepeat ? " (repeat)" : "");
+    }
+
+    void Input::LogKeyUp(const KeyEvent& event)
+    {
+        Debug::Log("Key up: {}", ToString(event.key));
+    }
+
+    void Input::LogMouseButton(const MouseButtonEvent& event)
+    {
+        Debug::Log("Mouse {} {} at ({:.1f}, {:.1f})", ToString(event.button),
+                   event.isDown ? "down" : "up", event.position.x, event.position.y);
+    }
+
+    void Input::LogMouseScroll(const MouseScrollEvent& event)
+    {
+        Debug::Log("Scroll: ({:.3f}, {:.3f}){}", event.delta.x, event.delta.y,
+                   event.isPrecise ? " precise" : "");
+    }
+#endif
 }

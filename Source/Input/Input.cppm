@@ -59,5 +59,13 @@ export namespace jpt
         void PostMouseMove(const Vec2& position);
         void PostMouseScroll(const Vec2& delta, bool isPrecise);
         void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds);
+
+#if !IS_CONFIG_RELEASE
+    private:
+        void LogKeyDown(const KeyEvent& event);
+        void LogKeyUp(const KeyEvent& event);
+        void LogMouseButton(const MouseButtonEvent& event);
+        void LogMouseScroll(const MouseScrollEvent& event);
+#endif
     };
 }

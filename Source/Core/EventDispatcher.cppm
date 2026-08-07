@@ -29,6 +29,10 @@ export namespace jpt
 
     public:
         Handle Add(Handler handler);
+
+        template<typename TObject>
+        Handle Add(TObject* pObject, void (TObject::* pMemberFunction)(const TEvent&));
+        
         void Remove(Handle handle);
 
         void Dispatch(const TEvent& event);
@@ -57,6 +61,13 @@ export namespace jpt
 
         m_slots.emplace_back(handle, std::move(handler));
         return handle;
+    }
+
+    template<typename TEvent>
+    template<typename TObject>
+    typename EventDispatcher<TEvent>::Handle EventDispatcher<TEvent>::Add(TObject* pObject, void (TObject::* pMemberFunction)(const TEvent&))
+    {
+        return Add([pObject, pMemberFunction](const TEvent& event) { (pObject->*pMemberFunction)(event); });
     }
 
     template<typename TEvent>
@@ -100,7 +111,10 @@ export namespace jpt
         usize count = 0;
         for (const Slot& slot : m_slots)
         {
-            count += (slot.handle != kInvalid<Handle>);
+            if (slot.handle != kInvalid<Handle>)
+            {
+                ++count;
+            }
         }
         return count;
     }

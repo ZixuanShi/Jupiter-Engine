@@ -2,7 +2,9 @@
 
 export module jpt.Camera;
 
+import jpt.GestureRecognizer;
 import jpt.Input;
+import jpt.InputEvents;
 import jpt.Math;
 import jpt.Matrix44;
 import jpt.Quaternion;
@@ -76,5 +78,10 @@ export namespace jpt
 
     private:
         void Look(const Vec2& deltaPixels);
+
+        void OnPinch(const PinchEvent& event);
+        void OnMouseScroll(const MouseScrollEvent& event);
+        void OnMouseMove(const MouseMoveEvent& event);
+        void OnMouseButton(const MouseButtonEvent& event);
     };
 }

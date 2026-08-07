@@ -42,32 +42,9 @@ namespace jpt
 
         // Input callbacks
         Input& input = GetApplication().GetInput();
-        input.OnPan().Add([this](const PanEvent& event)
-            {
-                if (event.fingerCount == 1)
-                {
-                    RotateModel(event.delta);
-                }
-                else if (event.fingerCount == 3)
-                {
-                    TranslateModel(event.delta);
-                }
-            });
-        input.OnTwist().Add([this](const TwistEvent& event)
-            {
-                TwistModel(event.radians);
-            });
-        input.OnMouseMove().Add([this](const MouseMoveEvent& event)
-            {
-                if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
-                {
-                    RotateModel(event.delta);
-                }
-                else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
-                {
-                    TranslateModel(event.delta);
-                }
-            });
+        input.OnPan().Add(this, &Scene::OnPan);
+        input.OnTwist().Add(this, &Scene::OnTwist);
+        input.OnMouseMove().Add(this, &Scene::OnMouseMove);
 
         return true;
     }
@@ -121,5 +98,34 @@ namespace jpt
         m_model.rotation = Quat::FromAxisAngle(m_camera.Forward(), m_roll)
                            * Quat::FromAxisAngle(m_camera.Right(), m_pitch)
                            * Quat::FromAxisAngle(Vec3::Up(), m_yaw);
+    }
+
+    void Scene::OnPan(const PanEvent& event)
+    {
+        if (event.fingerCount == 1)
+        {
+            RotateModel(event.delta);
+        }
+        else if (event.fingerCount == 3)
+        {
+            TranslateModel(event.delta);
+        }
+    }
+
+    void Scene::OnTwist(const TwistEvent& event)
+    {
+        TwistModel(event.radians);
+    }
+
+    void Scene::OnMouseMove(const MouseMoveEvent& event)
+    {
+        if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
+        {
+            RotateModel(event.delta);
+        }
+        else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
+        {
+            TranslateModel(event.delta);
+        }
     }
 }
