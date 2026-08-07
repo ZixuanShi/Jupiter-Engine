@@ -6,6 +6,8 @@
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
 
+// Textual headers before headers that import: past an import, the module's declarations win
+// and a later textual include is a redefinition (__promote.h).
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
@@ -192,7 +194,7 @@ namespace jpt
 
         UpdateResidency();
 
-        // Layout persistence lives with the rest of the editor's preferences. In local::Release this
+        // Layout persistence lives with the rest of the editor's preferences. In Release this
         // is a no-op stub and ImGui is not linked at all.
         const std::filesystem::path iniPath = GetSavedDir() / "Preferences" / "imgui.ini";
 
@@ -318,10 +320,9 @@ namespace jpt
 
     void Metal4Renderer::EndFrame()
     {
-        // Every field is published here rather than where it is taken, because the editor draws
-        // between BeginFrame and EndFrame: it therefore reads one whole frame's numbers, not a
-        // mix of this frame's wait and last frame's CPU -- which made Wait look larger than CPU
-        // even though the wait happens inside it.
+        // Published together here rather than where each is taken: the editor draws between
+        // BeginFrame and EndFrame, so it must read one whole frame's numbers -- mixing this
+        // frame's wait with last frame's CPU made Wait look larger than CPU.
         m_stats.drawCalls = 0;
         m_stats.triangles = 0;
         m_stats.waitMs    = m_waitMilliseconds;

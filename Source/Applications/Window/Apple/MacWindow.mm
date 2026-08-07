@@ -353,7 +353,6 @@ namespace
         [appMenu addItem:quitItem];
         [appMenuItem setSubmenu:appMenu];
 
-        // Test top menu
         NSMenuItem* testMenuItem = [[NSMenuItem alloc] init];
         [menuBar addItem:testMenuItem];
 

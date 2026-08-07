@@ -23,11 +23,11 @@ export namespace jpt
 {
     enum class Status : uint8
     {
-        Pending,        // Not started
-        Running,        // In progress
-        Succeeded,      // Completed successfully
-        Failed,         // Completed with errors
-        Warning,        // Completed with warnings
-        Canceled,       // Canceled by user
+        Pending,
+        Running,
+        Succeeded,
+        Failed,
+        Warning,        // Completed, despite warnings
+        Canceled,       // By the user
     };
 }
