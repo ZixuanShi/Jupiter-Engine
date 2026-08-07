@@ -47,6 +47,25 @@ namespace jpt
         m_framesUntil = 1;
     }
 
+    void GpuCapture::DeleteAll()
+    {
+        if (!m_path.empty())
+        {
+            return;   // A capture is scheduled to write there this frame.
+        }
+
+        std::error_code error;
+        uint32 deleted = 0;
+        for (const std::filesystem::directory_entry& entry :
+             std::filesystem::directory_iterator(GetSavedDir() / "Traces", error))
+        {
+            const bool isCapture = entry.path().extension() == ".gputrace";   // .DS_Store goes uncounted
+            deleted += (std::filesystem::remove_all(entry.path(), error) > 0) && isCapture;
+        }
+
+        Debug::Info("Deleted {} capture(s).", deleted);
+    }
+
     void GpuCapture::BeginFrame(MTL::Device* pDevice)
     {
         if (m_path.empty() || --m_framesUntil != 0)
@@ -78,7 +97,7 @@ namespace jpt
 
         MTL::CaptureManager::sharedCaptureManager()->stopCapture();
 
-        Debug::Info("GPU capture written to {}", m_path.string());   // capture_gpu.py waits on this
+        Debug::Info("GPU capture written to {}", m_path.string());   // On iOS, Scripts/Debug/pull_captures.py fetches it
         m_path.clear();
     }
 }

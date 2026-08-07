@@ -79,6 +79,12 @@ namespace jpt
         {
             renderer.RequestCapture();
         }
+
+        ImGui::SameLine();
+        if (ImGui::Button("Delete Traces"))   // Pull first on iOS: Scripts/Debug/pull_captures.py
+        {
+            renderer.DeleteCaptures();
+        }
     }
 
     void EditorUI::DrawRendering()

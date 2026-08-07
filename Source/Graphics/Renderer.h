@@ -30,6 +30,7 @@ namespace jpt
 
         { renderer.OnResize(width, height) }    -> std::same_as<void>;
         { renderer.RequestCapture() }           -> std::same_as<void>;
+        { renderer.DeleteCaptures() }           -> std::same_as<void>;
         { renderer.GetStats() }                 -> std::same_as<const RenderStats&>;
 
         // Two halves rather than one Draw(), so UI can be built while the pass is open. False

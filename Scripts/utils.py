@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -100,8 +99,12 @@ TRACES = ROOT / "_Saved" / "Traces"
 IOS_TRACES = "Library/Application Support/JupiterEngine/Traces"
 
 
-def device_traces(udid) -> list:
-    """Return the names of the .gputrace bundles sitting in the app's container."""
+def device_traces(udid) -> list | None:
+    """Return the names of the .gputrace bundles sitting in the app's container.
+
+    None when the listing itself failed -- the directory does not exist yet, or devicectl
+    errored -- which callers must not mistake for an empty directory.
+    """
     with tempfile.TemporaryDirectory() as directory:
         listing = Path(directory) / "files.json"
         subprocess.run(["xcrun", "devicectl", "device", "info", "files", "--device", udid,
@@ -109,52 +112,11 @@ def device_traces(udid) -> list:
                         "--subdirectory", IOS_TRACES, "--no-recurse",
                         "--json-output", str(listing)], capture_output=True)
         if not listing.exists():
-            return []
+            return None
         files = json.loads(listing.read_text()).get("result", {}).get("files", [])
 
     names = [Path(entry.get("path") or entry.get("name") or "").name for entry in files]
     return [name for name in names if name.endswith(".gputrace")]
-
-
-def pull_captures(udid) -> int:
-    """Copy captures the device has and this machine does not into _Saved/Traces.
-
-    Only iOS needs this. On macOS GetSavedDir() is _Saved, so a capture is already local the
-    moment the engine writes it. Returns how many were copied.
-    """
-    TRACES.mkdir(parents=True, exist_ok=True)
-    have = {path.name for path in TRACES.glob("*.gputrace")}
-
-    staging = TRACES / ".staging"
-
-    copied = 0
-    for name in device_traces(udid):
-        if name in have:
-            continue
-
-        # Staged, because a .gputrace is a directory bundle and devicectl unpacks a directory
-        # source *into* the destination rather than under it -- copying straight to TRACES
-        # scatters one trace's parts across it, and a second pull merges into the first.
-        # Inside TRACES so the renames below stay on one filesystem.
-        shutil.rmtree(staging, ignore_errors=True)
-        staging.mkdir(parents=True)
-
-        print(f"Pulling {name}")
-        subprocess.run(["xcrun", "devicectl", "device", "copy", "from", "--device", udid,
-                        "--domain-type", "appDataContainer", "--domain-identifier", BUNDLE_ID,
-                        "--source", f"{IOS_TRACES}/{name}", "--destination", str(staging)])
-
-        entries = list(staging.iterdir())
-        if len(entries) == 1 and entries[0].name == name:
-            entries[0].rename(TRACES / name)             # devicectl kept the bundle
-        elif entries:
-            (TRACES / name).mkdir()                      # it unpacked; rebuild the bundle
-            for entry in entries:
-                entry.rename(TRACES / name / entry.name)
-
-        shutil.rmtree(staging, ignore_errors=True)
-        copied += 1 if (TRACES / name).exists() else 0
-    return copied
 
 
 def executable_path(preset) -> Path:

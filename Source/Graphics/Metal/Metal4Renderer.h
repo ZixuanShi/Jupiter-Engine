@@ -110,6 +110,7 @@ namespace jpt
 
         /** Writes the next frame to GetSavedDir()/Traces as a .gputrace, to open in Xcode. */
         void RequestCapture();
+        void DeleteCaptures();
 
         bool SetMesh(const Mesh& mesh);
 

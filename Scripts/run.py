@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 from utils import (BUNDLE_ID, active_preset, artifact_path, connected_device, executable_path,
-                   no_device_help, pull_captures)
+                   no_device_help)
 
 # What the Dev Menu's Capture button needs. Measured on macOS 26: MTLCaptureEnabled in the
 # bundle's Info.plist does not work, even launched through LaunchServices -- only this does.
@@ -73,15 +73,7 @@ def main():
             sys.exit(1)
 
     environment = {} if "release" in preset else CAPTURE_ENV
-    code = run_steps(launch_steps(udid, artifact, console, environment), environment)
-
-    # Convenience only -- with --console this is where the session ends, so it collects what you
-    # just captured. Otherwise devicectl returns at launch and this gets the previous session.
-    # Either way Scripts/Debug/pull_captures.py fetches on demand, and neither re-copies.
-    if udid is not None:
-        pull_captures(udid)
-
-    sys.exit(code)
+    sys.exit(run_steps(launch_steps(udid, artifact, console, environment), environment))
 
 
 if __name__ == "__main__":

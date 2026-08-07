@@ -454,6 +454,11 @@ namespace jpt
         m_capture.RequestCapture();
     }
 
+    void Metal4Renderer::DeleteCaptures()
+    {
+        m_capture.DeleteAll();
+    }
+
     bool Metal4Renderer::SetMesh(const Mesh& mesh)
     {
         if (mesh.vertices.empty() || mesh.indices.empty())

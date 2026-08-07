@@ -28,6 +28,11 @@ namespace jpt
             the Dev Menu draws inside one -- so it can never be this frame. */
         void RequestCapture();
 
+        /** Deletes every capture under GetSavedDir()/Traces. In-app because it is the only
+            actor that can delete inside the iOS sandbox: devicectl has no delete command, and
+            its --remove-existing-content flag wipes the whole app container (measured). */
+        void DeleteAll();
+
         void BeginFrame(MTL::Device* pDevice);
         void EndFrame();
     };
