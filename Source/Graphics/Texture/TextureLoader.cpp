@@ -2,8 +2,7 @@
 
 module;
 
-// ImageIO is a plain C API, so this needs no .mm -- the same liberty AppleCallbacks.cpp takes
-// with Carbon. A GMF is per-file, hence the includes here rather than in the interface unit.
+// A GMF is per-file, hence the include again rather than inherited from the interface unit.
 #include <ImageIO/ImageIO.h>
 
 module jpt.TextureLoader;
@@ -15,23 +14,6 @@ import std;
 
 namespace jpt
 {
-    namespace local
-    {
-        struct CFDeleter
-        {
-            void operator()(CFTypeRef pRef) const noexcept { CFRelease(pRef); }
-        };
-
-        template<typename T>
-        using CFPtr = std::unique_ptr<std::remove_pointer_t<T>, CFDeleter>;
-
-        // R,G,B,unused in memory order, matching MTLPixelFormatRGBA8Unorm. None of these maps
-        // carries alpha. Cast through uint32 because clang rejects a bitwise OR between the two
-        // different CoreGraphics enums these constants come from.
-        constexpr CGBitmapInfo kRGBA8 = static_cast<CGBitmapInfo>(
-            static_cast<uint32>(kCGImageAlphaNoneSkipLast) | static_cast<uint32>(kCGBitmapByteOrder32Big));
-    }
-
     Texture LoadTexture(const Path& path)
     {
         const std::string file = path.GetAbsolute().string();
@@ -81,5 +63,13 @@ namespace jpt
 
         Debug::Info("Loaded {}: {}x{}", path.GetFileName(), width, height);
         return texture;
+    }
+
+    namespace local
+    {
+        void CFDeleter::operator()(CFTypeRef pRef) const noexcept
+        {
+            CFRelease(pRef);
+        }
     }
 }

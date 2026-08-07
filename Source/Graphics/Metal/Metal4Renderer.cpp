@@ -23,6 +23,7 @@ import jpt.LinearColor;
 import jpt.Logger;
 import jpt.Material;
 import jpt.Matrix44;
+import jpt.Metal4Helpers;
 import jpt.PlatformPaths;
 import jpt.Vector3;
 import jpt.Vertex;
@@ -45,65 +46,7 @@ namespace jpt
 
     namespace local
     {
-        template<typename T>
-        void Release(T*& pObject)
-        {
-            if (pObject)
-            {
-                pObject->release();
-                pObject = nullptr;
-            }
-        }
-
-        // Not a member: Metal4Renderer.h is included by Application.cppm's global module fragment,
-        // and a semaphore member would drag `import std` in with it.
         std::counting_semaphore<kFramesInFlight> g_frameSemaphore{ kFramesInFlight };
-
-        // Base colour is the only map that carries colour, so it is the only one the sampler may
-        // decode. Reading roughness or a normal through the sRGB curve bends the value silently.
-        [[nodiscard]] MTL::PixelFormat FormatOf(TextureSlot slot) noexcept
-        {
-            return (slot == TextureSlot::BaseColor) ? MTL::PixelFormatRGBA8Unorm_sRGB
-                                                    : MTL::PixelFormatRGBA8Unorm;
-        }
-
-        [[nodiscard]] uint32 MipLevelCount(uint32 width, uint32 height) noexcept
-        {
-            return static_cast<uint32>(std::bit_width(std::max(width, height)));
-        }
-
-        /** A multisampled render target that never leaves the GPU. Memoryless where there is tile
-            memory to hold it -- both attachments are cleared, used and resolved inside one pass, so
-            neither needs a DRAM allocation. Apple-family only; an Intel Mac has no tile memory. */
-        [[nodiscard]] MTL::Texture* NewAttachment(MTL::Device* pDevice, MTL::PixelFormat format,
-                                                  uint32 pixelWidth, uint32 pixelHeight) noexcept
-        {
-            MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(format, pixelWidth, pixelHeight, false);
-
-            // The type must change with the sample count; a count alone is rejected.
-            pDesc->setTextureType(MTL::TextureType2DMultisample);
-            pDesc->setSampleCount(kSampleCount);
-            pDesc->setUsage(MTL::TextureUsageRenderTarget);
-            pDesc->setStorageMode(pDevice->supportsFamily(MTL::GPUFamilyApple1) ? MTL::StorageModeMemoryless : MTL::StorageModePrivate);
-
-            return pDevice->newTexture(pDesc);
-        }
-
-        [[nodiscard]] simd_float4 ToFloat4(const Vec3& vector, float32 w) noexcept
-        {
-            return simd_make_float4(vector.x, vector.y, vector.z, w);
-        }
-
-        [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color) noexcept
-        {
-            return simd_make_float4(color.r, color.g, color.b, color.a);
-        }
-
-        [[nodiscard]] simd_float4 ToFloat4(const LinearColor& color, float32 w) noexcept
-        {
-            return simd_make_float4(color.r, color.g, color.b, w);
-        }
-
     }
 
     bool Metal4Renderer::PreInit()
@@ -214,30 +157,30 @@ namespace jpt
 
         for (uint32 i = 0; i < kFramesInFlight; ++i)
         {
-            local::Release(m_pAllocators[i]);
+            Release(m_pAllocators[i]);
         }
 
-        local::Release(m_pUploadAllocator);
+        Release(m_pUploadAllocator);
 
         for (MTL::Texture*& pTexture : m_pTextures)
         {
-            local::Release(pTexture);
+            Release(pTexture);
         }
 
-        local::Release(m_pSampler);
-        local::Release(m_pResidencySet);
-        local::Release(m_pArgumentTable);
-        local::Release(m_pUniforms);
-        local::Release(m_pIndices);
-        local::Release(m_pVertices);
-        local::Release(m_pDepthTexture);
-        local::Release(m_pMsaaColor);
-        local::Release(m_pUIDepthState);
-        local::Release(m_pDepthState);
-        local::Release(m_pPipeline);
-        local::Release(m_pCompiler);
-        local::Release(m_pQueue);
-        local::Release(m_pDevice);
+        Release(m_pSampler);
+        Release(m_pResidencySet);
+        Release(m_pArgumentTable);
+        Release(m_pUniforms);
+        Release(m_pIndices);
+        Release(m_pVertices);
+        Release(m_pDepthTexture);
+        Release(m_pMsaaColor);
+        Release(m_pUIDepthState);
+        Release(m_pDepthState);
+        Release(m_pPipeline);
+        Release(m_pCompiler);
+        Release(m_pQueue);
+        Release(m_pDevice);
     }
 
     bool Metal4Renderer::BeginFrame()
@@ -338,16 +281,16 @@ namespace jpt
             std::memcpy(&uniforms.modelViewProjection, &modelViewProjection, sizeof(modelViewProjection));
             std::memcpy(&uniforms.model, &m_model, sizeof(m_model));
 
-            uniforms.cameraPosition = local::ToFloat4(m_cameraPosition, 1.0f);
-            uniforms.baseColor      = local::ToFloat4(m_material.baseColor);
-            uniforms.skyColor       = local::ToFloat4(m_ambient.sky);
-            uniforms.groundColor    = local::ToFloat4(m_ambient.ground);
-            uniforms.dissolveColor  = local::ToFloat4(m_material.dissolveColor, m_material.dissolvePct);
+            uniforms.cameraPosition = ToFloat4(m_cameraPosition, 1.0f);
+            uniforms.baseColor      = ToFloat4(m_material.baseColor);
+            uniforms.skyColor       = ToFloat4(m_ambient.sky);
+            uniforms.groundColor    = ToFloat4(m_ambient.ground);
+            uniforms.dissolveColor  = ToFloat4(m_material.dissolveColor, m_material.dissolvePct);
 
             for (usize i = 0; i < m_pointLights.size(); ++i)
             {
-                uniforms.pointLights[i].position = local::ToFloat4(m_pointLights[i].position, m_pointLights[i].enabled ? 1.0f : 0.0f);
-                uniforms.pointLights[i].color    = local::ToFloat4(m_pointLights[i].color, m_pointLights[i].intensity);
+                uniforms.pointLights[i].position = ToFloat4(m_pointLights[i].position, m_pointLights[i].enabled ? 1.0f : 0.0f);
+                uniforms.pointLights[i].color    = ToFloat4(m_pointLights[i].color, m_pointLights[i].intensity);
             }
 
             uniforms.roughness    = m_material.roughness;
@@ -467,8 +410,8 @@ namespace jpt
             return false;
         }
 
-        local::Release(m_pVertices);
-        local::Release(m_pIndices);
+        Release(m_pVertices);
+        Release(m_pIndices);
 
         m_pVertices  = m_pDevice->newBuffer(mesh.vertices.data(), mesh.vertices.size() * sizeof(Vertex), MTL::ResourceStorageModeShared);
         m_pIndices   = m_pDevice->newBuffer(mesh.indices.data(),  mesh.indices.size()  * sizeof(uint32), MTL::ResourceStorageModeShared);
@@ -493,11 +436,11 @@ namespace jpt
                 return false;
             }
 
-            local::Release(m_pTextures[slot]);
+            Release(m_pTextures[slot]);
 
             MTL::TextureDescriptor* pDesc = MTL::TextureDescriptor::texture2DDescriptor(
-                local::FormatOf(static_cast<TextureSlot>(slot)), texture.Width(), texture.Height(), true);
-            pDesc->setMipmapLevelCount(local::MipLevelCount(texture.Width(), texture.Height()));
+                FormatOf(static_cast<TextureSlot>(slot)), texture.Width(), texture.Height(), true);
+            pDesc->setMipmapLevelCount(MipLevelCount(texture.Width(), texture.Height()));
             pDesc->setUsage(MTL::TextureUsageShaderRead | MTL::TextureUsageShaderWrite);
             pDesc->setStorageMode(MTL::StorageModeShared);
 
@@ -649,11 +592,11 @@ namespace jpt
             return true;
         }
 
-        local::Release(m_pMsaaColor);
-        local::Release(m_pDepthTexture);
+        Release(m_pMsaaColor);
+        Release(m_pDepthTexture);
 
-        m_pMsaaColor    = local::NewAttachment(m_pDevice, m_pLayer->pixelFormat(), pixelWidth, pixelHeight);
-        m_pDepthTexture = local::NewAttachment(m_pDevice, kDepthFormat, pixelWidth, pixelHeight);
+        m_pMsaaColor    = NewAttachment(m_pDevice, m_pLayer->pixelFormat(), pixelWidth, pixelHeight);
+        m_pDepthTexture = NewAttachment(m_pDevice, kDepthFormat, pixelWidth, pixelHeight);
 
         return m_pMsaaColor && m_pDepthTexture;
     }
@@ -728,7 +671,7 @@ namespace jpt
         m_pDrawable      = nullptr;
         m_pCommandBuffer = nullptr;
 
-        local::Release(m_pFramePool);          // Draining the pool is what releases everything above.
+        Release(m_pFramePool);          // Draining the pool is what releases everything above.
     }
 }
 

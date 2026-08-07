@@ -10,21 +10,11 @@
 
 import jpt.Logger;
 import jpt.PlatformPaths;
+import jpt.Time;
 import std;
 
 namespace jpt
 {
-    namespace local
-    {
-        [[nodiscard]] std::string Timestamp()
-        {
-            const std::time_t now = std::time(nullptr);
-            char text[32] = {};
-            std::strftime(text, sizeof(text), "%Y%m%d-%H%M%S", std::localtime(&now));
-            return text;
-        }
-    }
-
     void GpuCapture::RequestCapture()
     {
         if (!m_path.empty())
@@ -38,7 +28,7 @@ namespace jpt
             return;
         }
 
-        m_path = GetSavedDir() / "Traces" / (local::Timestamp() + ".gputrace");
+        m_path = GetSavedDir() / "Traces" / (Timestamp() + ".gputrace");
 
         std::error_code error;
         std::filesystem::create_directories(m_path.parent_path(), error);
