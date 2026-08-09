@@ -2,10 +2,10 @@
 
 module;
 
-// Textual before the imports. AppClient.h here would close a cycle in EditorUI.cppm, but an
+// Textual before the imports. App.h here would close a cycle in EditorUI.cppm, but an
 // implementation unit may reach the application.
 #include "imgui.h"
-#include "Applications/AppClient.h"
+#include "Applications/GetApp.h"
 #include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
@@ -49,7 +49,7 @@ namespace jpt
             return;
         }
 
-        Renderer& renderer = GetApplication().GetRenderer();
+        Renderer& renderer = GetApp().GetRenderer();
 
         ImGui::Checkbox("Show Metrics", &m_showMetrics);
 
@@ -80,7 +80,7 @@ namespace jpt
             return;
         }
 
-        Material& material = GetApplication().GetScene().GetMaterial();
+        Material& material = GetApp().GetScene().GetMaterial();
 
         ImGui::ColorEdit3("Base Color", &material.baseColor.r, ImGuiColorEditFlags_Float);
     }
@@ -92,7 +92,7 @@ namespace jpt
             return;
         }
 
-        Material& material = GetApplication().GetScene().GetMaterial();
+        Material& material = GetApp().GetScene().GetMaterial();
 
         if (ImGui::Button("Play"))
         {
@@ -111,7 +111,7 @@ namespace jpt
             return;
         }
 
-        Camera& camera = GetApplication().GetScene().GetCamera();
+        Camera& camera = GetApp().GetScene().GetCamera();
 
         const Vec3& position = camera.GetPosition();
         const Vec3 forward = camera.Forward();
@@ -185,7 +185,7 @@ namespace jpt
             return;
         }
 
-        Application& app = GetApplication();
+        ApplicationBase& app = GetApp();
         const FrameTimer& timer = app.GetFrameTimer();
         const RenderStats& stats = app.GetRenderer().GetStats();
 

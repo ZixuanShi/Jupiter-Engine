@@ -10,7 +10,7 @@ export namespace jpt
         build ImGui windows -- nothing here draws.
 
         Excluded from Release by CMake, along with ImGui itself, rather than compiled and left
-        unreachable. Every section reaches what it edits through GetApplication(), the same way
+        unreachable. Every section reaches what it edits through GetApp(), the same way
         subsystems do, which is why none of these take parameters and why this unit needs no
         import of Camera or Material. */
     class EditorUI

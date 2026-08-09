@@ -5,7 +5,7 @@ module;
 #if IS_PLATFORM_MACOS
     #include <Carbon/Carbon.h>
 
-    #include "Applications/AppClient.h"
+    #include "Applications/GetApp.h"
     #include "Applications/Window/Apple/AppleCallbacks.h"
 #endif
 
@@ -533,7 +533,7 @@ namespace jpt
         // The kVK_* translation, driven through the real callback the event monitor calls.
         // Only AppKit's delivery is left untested, and that cannot be scripted.
         {
-            Input& input = GetApplication().GetInput();
+            Input& input = GetApp().GetInput();
 
             KeyCode received = KeyCode::Unknown;
             const auto handle = input.OnKeyDown().Add([&received](const KeyEvent& event) { received = event.key; });
@@ -607,7 +607,7 @@ namespace jpt
         }
         {
             // Modifiers arrive as a whole mask, never down/up, so this path translates separately.
-            const Input& input = GetApplication().GetInput();
+            const Input& input = GetApp().GetInput();
 
             constexpr std::uint32_t kLeftShiftBit = 0x0002;         // Hardware-dependent, has a side.
             constexpr std::uint32_t kCapsLockFlag = 1u << 16;       // NSEventModifierFlagCapsLock.

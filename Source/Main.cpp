@@ -1,20 +1,13 @@
-#include "Applications/AppClient.h"
+// Copyright Jupiter Technologies, Inc. All Rights Reserved.
+
+#include "Applications/GetApp.h"
 
 import jpt.LaunchArgs;
-
-namespace jpt
-{
-    Application& GetApplication()
-    {
-        static Application s_app;
-        return s_app;
-    }
-}
 
 int main(int argc, char* argv[])
 {
     jpt::LaunchArgs::GetInstance().Set(argc, argv);
-    jpt::Application& app = jpt::GetApplication();
+    jpt::ApplicationBase& app = jpt::GetApp();
 
     if (app.PreInit() && app.Init())
     {

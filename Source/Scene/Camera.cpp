@@ -2,7 +2,7 @@
 
 module;
 
-#include "Applications/AppClient.h"
+#include "Applications/GetApp.h"
 #include "Applications/Window/Window.h"
 
 module jpt.Camera;
@@ -61,7 +61,7 @@ namespace jpt
 
     bool Camera::Init()
     {
-        Input& input = GetApplication().GetInput();
+        Input& input = GetApp().GetInput();
 
         input.OnPinch().Add(this, &Camera::OnPinch);
         input.OnMouseScroll().Add(this, &Camera::OnMouseScroll);
@@ -73,7 +73,7 @@ namespace jpt
 
     void Camera::Update()
     {
-        const Application& app = GetApplication();
+        const ApplicationBase& app = GetApp();
 
         const Vec3 axis = GetMoveAxis(app.GetInput());
         if (axis == Vec3::Zero())
@@ -206,7 +206,7 @@ namespace jpt
 
     void Camera::Look(const Vec2& deltaPixels)
     {
-        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        const float32 height = static_cast<float32>(GetApp().GetWindow().GetHeight());
         if (height < 1.0f)
         {
             return;
@@ -236,7 +236,7 @@ namespace jpt
 
     void Camera::OnMouseMove(const MouseMoveEvent& event)
     {
-        if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Right))
+        if (GetApp().GetInput().IsMouseButtonDown(MouseButton::Right))
         {
             Look(event.delta);
         }
@@ -248,7 +248,7 @@ namespace jpt
         // either every frame would sink the counter and strand the pointer.
         if (event.button == MouseButton::Right)
         {
-            GetApplication().GetWindow().SetCursorCaptured(event.isDown);
+            GetApp().GetWindow().SetCursorCaptured(event.isDown);
         }
     }
 }

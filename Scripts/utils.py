@@ -9,15 +9,18 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+# Engine-level state -- which project was configured last -- so it stays beside the engine even
+# though everything the build produces lands under the project.
 SETUP_FILE = ROOT / "_ProjectFiles" / "setup.json"
 
-BINARY_NAME = "JupiterEngine"
-BUNDLE_ID = "com.jupitertechnologies.engine"
+PROJECTS = ROOT / "Projects"
 
 CONFIGS = ("debug", "dev", "release")
 PLATFORMS = ("macos", "ios-device", "windows", "linux")
 
-USAGE = f"Usage: py Scripts/setup.py [{'|'.join(CONFIGS)}] [{'|'.join(PLATFORMS)}]"
+USAGE = (f"Usage: py Scripts/setup.py [{'|'.join(CONFIGS)}] [{'|'.join(PLATFORMS)}] "
+         f"<project name or path>")
 
 
 def host_platform() -> str:
@@ -29,18 +32,41 @@ def host_platform() -> str:
     return "windows"
 
 
-def active_preset() -> str:
-    """Return the preset the last setup.py run configured, or exit if there is none."""
+def active_setup() -> dict:
+    """Return what the last setup.py run recorded, or exit if there is none."""
     if not SETUP_FILE.exists():
         print("No setup found. Run: py Scripts/setup.py")
         sys.exit(1)
 
-    return json.loads(SETUP_FILE.read_text())["preset"]
+    return json.loads(SETUP_FILE.read_text())
+
+
+def active_preset() -> str:
+    """Return the preset the last setup.py run configured, or exit if there is none."""
+    return active_setup()["preset"]
+
+
+def project_dir() -> Path:
+    """Return the active project's directory, the root of its _Output/_ProjectFiles/_Saved."""
+    return ROOT / active_setup()["project"]
+
+
+def binary_name() -> str:
+    """Return the executable's name, which is the project directory's own."""
+    return project_dir().name
+
+
+def bundle_id() -> str:
+    """Return the app's bundle identifier.
+
+    Derived rather than stored, matching what Projects/<Name>/CMakeLists.txt spells for CMake.
+    """
+    return f"com.jupitertechnologies.{binary_name().lower()}"
 
 
 def output_dir(preset) -> Path:
     """Return the directory the build writes its final artifact into."""
-    return ROOT / "_Output" / preset
+    return project_dir() / "_Output" / preset
 
 
 def artifact_path(preset) -> Path:
@@ -51,14 +77,15 @@ def artifact_path(preset) -> Path:
     """
     
     root = output_dir(preset)
+    name = binary_name()
 
     if preset.startswith("ios"):
-        return root / f"{BINARY_NAME}.app"
+        return root / f"{name}.app"
     if preset.startswith("macos"):
-        return root / f"{BINARY_NAME}.app" / "Contents" / "MacOS" / BINARY_NAME
+        return root / f"{name}.app" / "Contents" / "MacOS" / name
 
     ext = ".exe" if sys.platform == "win32" else ""
-    return root / f"{BINARY_NAME}{ext}"
+    return root / f"{name}{ext}"
 
 
 def connected_device() -> str | None:
@@ -93,9 +120,13 @@ def no_device_help() -> None:
     print("Then: xcrun devicectl list devices")
 
 
-TRACES = ROOT / "_Saved" / "Traces"
+def traces_dir() -> Path:
+    """Return where pulled captures land, beside the ones a desktop run writes."""
+    return project_dir() / "_Saved" / "Traces"
 
-# GetSavedDir() on iOS, relative to the app data container devicectl addresses.
+
+# GetSavedDir() on iOS, relative to the app data container devicectl addresses. Still the engine's
+# name because PlatformPaths.cpp's fallback spells it; the two have to agree.
 IOS_TRACES = "Library/Application Support/JupiterEngine/Traces"
 
 
@@ -108,7 +139,7 @@ def device_traces(udid) -> list | None:
     with tempfile.TemporaryDirectory() as directory:
         listing = Path(directory) / "files.json"
         subprocess.run(["xcrun", "devicectl", "device", "info", "files", "--device", udid,
-                        "--domain-type", "appDataContainer", "--domain-identifier", BUNDLE_ID,
+                        "--domain-type", "appDataContainer", "--domain-identifier", bundle_id(),
                         "--subdirectory", IOS_TRACES, "--no-recurse",
                         "--json-output", str(listing)], capture_output=True)
         if not listing.exists():
@@ -127,5 +158,5 @@ def executable_path(preset) -> Path:
     """
 
     if preset.startswith("ios"):
-        return artifact_path(preset) / BINARY_NAME
+        return artifact_path(preset) / binary_name()
     return artifact_path(preset)

@@ -12,7 +12,7 @@ from pathlib import Path
 # Scripts/ is the import root for utils, and it is no longer this file's own directory.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from utils import BUNDLE_ID, ROOT
+from utils import ROOT, bundle_id
 
 # /usr/bin/python3 is an xcrun shim, so it exports SDKROOT pointing at the macOS SDK to every
 # child. CMake honours SDKROOT over CMAKE_SYSTEM_NAME, configuring this iOS project against
@@ -69,9 +69,9 @@ def main():
     PROJECT_DIR.mkdir(parents=True, exist_ok=True)
     (PROJECT_DIR / "stub.c").write_text(STUB)
     (PROJECT_DIR / "CMakeLists.txt").write_text(
-        CMAKELISTS.format(bundle=BUNDLE_ID, team=team))
+        CMAKELISTS.format(bundle=bundle_id(), team=team))
 
-    print(f"Minting a profile for {BUNDLE_ID} (team {team})")
+    print(f"Minting a profile for {bundle_id()} (team {team})")
 
     configure = subprocess.run(
         ["cmake", "-G", "Xcode", "-DCMAKE_SYSTEM_NAME=iOS",

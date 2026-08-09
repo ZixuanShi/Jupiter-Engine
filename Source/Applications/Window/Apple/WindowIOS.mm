@@ -2,7 +2,7 @@
 
 #if IS_PLATFORM_IOS
 
-#include "IOSWindow.h"
+#include "WindowIOS.h"
 #include "AppleCallbacks.h"
 #include "Graphics/ImGui/ImGuiLayer.h"
 
@@ -185,13 +185,13 @@
 
 namespace jpt
 {
-    struct IOSWindow::Impl
+    struct WindowIOS::Impl
     {
         std::int32_t argc = 0;
         char** ppArgv = nullptr;
     };
 
-    bool IOSWindow::PreInit(std::int32_t argc, char* ppArgv[])
+    bool WindowIOS::PreInit(std::int32_t argc, char* ppArgv[])
     {
         m_pImpl = new Impl();
         m_pImpl->argc = argc;
@@ -201,12 +201,12 @@ namespace jpt
 
     // UIKit owns window creation and has not started yet -- the delegate above does the work
     // once Run() hands control over.
-    bool IOSWindow::Init()
+    bool WindowIOS::Init()
     {
         return true;
     }
 
-    void IOSWindow::Run()
+    void WindowIOS::Run()
     {
         @autoreleasepool
         {
@@ -215,7 +215,7 @@ namespace jpt
         }
     }
 
-    void IOSWindow::Terminate()
+    void WindowIOS::Terminate()
     {
         delete m_pImpl;
         m_pImpl = nullptr;

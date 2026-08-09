@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import json
+import os
 import subprocess
 import sys
+from pathlib import Path
 
-from utils import ROOT, SETUP_FILE, CONFIGS, PLATFORMS, USAGE, host_platform, artifact_path
+from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE,
+                   host_platform, artifact_path, output_dir)
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
 COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
@@ -24,7 +27,15 @@ def write_launch_json(preset):
         print("Note: F5 is unavailable for iOS. Use the Run task or py Scripts/run.py")
         return
 
-    relative = artifact_path(preset).relative_to(ROOT).as_posix()
+    # A project outside the repo has no workspace-relative spelling, so it falls back to absolute.
+    artifact = artifact_path(preset)
+    try:
+        program = f"${{workspaceFolder}}/{artifact.relative_to(ROOT).as_posix()}"
+        cwd = f"${{workspaceFolder}}/{output_dir(preset).relative_to(ROOT).as_posix()}"
+    except ValueError:
+        program = artifact.as_posix()
+        cwd = output_dir(preset).as_posix()
+
     launch = {
         "version": "2.0.0",
         "configurations": [
@@ -32,8 +43,8 @@ def write_launch_json(preset):
                 "name": f"Launch ({preset})",
                 "type": "lldb",
                 "request": "launch",
-                "program": f"${{workspaceFolder}}/{relative}",
-                "cwd": f"${{workspaceFolder}}/_Output/{preset}",
+                "program": program,
+                "cwd": cwd,
                 "preLaunchTask": "Build"
             }
         ]
@@ -41,13 +52,25 @@ def write_launch_json(preset):
     LAUNCH_FILE.write_text(json.dumps(launch, indent=4) + "\n")
 
 
-def link_compile_commands(preset):
+def relative_project(project) -> str:
+    """Return how setup.json should spell a project path.
+
+    Relative to the repo for the ones under Projects/, so the file stays portable; absolute for
+    anything outside it, which pathlib rejoins unchanged.
+    """
+    try:
+        return project.relative_to(ROOT).as_posix()
+    except ValueError:
+        return project.as_posix()
+
+
+def link_compile_commands(preset, project):
     """Point a stable path at the active preset's compilation database.
 
     IntelliSense needs it to see IS_PLATFORM_* and the include paths; the fixed location
-    keeps the preset name out of .vscode/settings.json.
+    keeps the preset name -- and now the project -- out of .vscode/settings.json.
     """
-    target = ROOT / "_ProjectFiles" / "build" / preset / "compile_commands.json"
+    target = project / "_ProjectFiles" / "build" / preset / "compile_commands.json"
 
     if COMPILE_COMMANDS_LINK.is_symlink() or COMPILE_COMMANDS_LINK.exists():
         COMPILE_COMMANDS_LINK.unlink()
@@ -59,20 +82,44 @@ def link_compile_commands(preset):
         print(f"Could not link compile_commands.json ({error})")
 
 
-def parse_args(argv) -> tuple:
-    """Resolve argv into (config, platform), or exit with usage on bad input."""
-    args = [a.lower() for a in argv]
+def resolve_project(name) -> Path:
+    """Resolve a project argument to its directory, or exit if it names no project.
 
-    if not args:
+    A bare name is looked up under Projects/, which is where they normally live; anything with a
+    separator is taken as a path, so a project can sit outside the repo.
+    """
+    candidate = Path(name)
+    if candidate.parent == Path("."):
+        candidate = PROJECTS / name
+    elif not candidate.is_absolute():
+        candidate = ROOT / candidate
+
+    candidate = candidate.resolve()
+    if not (candidate / "CMakeLists.txt").exists():
+        print(f"No project at '{candidate}': a project needs a CMakeLists.txt")
+        sys.exit(1)
+
+    return candidate
+
+
+def parse_args(argv) -> tuple:
+    """Resolve argv into (config, platform, project dir), or exit with usage on bad input.
+
+    Config and platform are matched case-insensitively; the project keeps the case it was typed
+    in, because it is a path and only this filesystem is forgiving about that.
+    """
+    if not argv:
         print(USAGE)
         sys.exit(1)
 
-    config = next((a for a in args if a in CONFIGS), None)
-    platform = next((a for a in args if a in PLATFORMS), None)
-    unknown = [a for a in args if a not in CONFIGS and a not in PLATFORMS]
+    config = next((a.lower() for a in argv if a.lower() in CONFIGS), None)
+    platform = next((a.lower() for a in argv if a.lower() in PLATFORMS), None)
 
-    if unknown:
-        print(f"Unknown argument(s): {', '.join(unknown)}")
+    # Whatever is left is the project. Never inferred from the last run: which project you are
+    # building decides the binary, the bundle id and where _Output goes, so it is said every time.
+    rest = [a for a in argv if a.lower() not in CONFIGS and a.lower() not in PLATFORMS]
+    if len(rest) > 1:
+        print(f"Expected one project, got: {', '.join(rest)}")
         print(USAGE)
         sys.exit(1)
 
@@ -81,22 +128,31 @@ def parse_args(argv) -> tuple:
         print(USAGE)
         sys.exit(1)
 
-    return config, platform or host_platform()
+    if not rest:
+        print("Missing project.")
+        print(USAGE)
+        sys.exit(1)
+
+    return config, platform or host_platform(), resolve_project(rest[0])
 
 
 def main():
-    config, platform = parse_args(sys.argv[1:])
+    config, platform, project = parse_args(sys.argv[1:])
     preset = f"{platform}_{config}"
 
     SETUP_FILE.parent.mkdir(parents=True, exist_ok=True)
-    SETUP_FILE.write_text(
-        json.dumps({"config": config, "platform": platform, "preset": preset}, indent=2) + "\n")
+    SETUP_FILE.write_text(json.dumps({"config": config, "platform": platform, "preset": preset,
+                                      "project": relative_project(project)}, indent=2) + "\n")
     write_launch_json(preset)
-    print(f"Saved setup: {preset}")
+    print(f"Saved setup: {preset} ({project.name})")
 
-    result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev"], cwd=ROOT)
+    # The preset reads JUPITER_PROJECT_DIR to place the build tree; CMake itself reads the cache
+    # variable, so a ninja-triggered reconfigure needs no environment at all.
+    environment = {**os.environ, "JUPITER_PROJECT_DIR": str(project)}
+    result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev",
+                             f"-DJUPITER_PROJECT={project.as_posix()}"], cwd=ROOT, env=environment)
     if result.returncode == 0:
-        link_compile_commands(preset)
+        link_compile_commands(preset, project)
 
     sys.exit(result.returncode)
 

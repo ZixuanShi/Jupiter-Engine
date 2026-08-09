@@ -47,7 +47,7 @@ namespace NS
 
 namespace jpt
 {
-    class Metal4Renderer : public RendererBase
+    class RendererMetal4 : public RendererBase
     {
     public:
         using SurfaceHandle = CA::MetalLayer*;

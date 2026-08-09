@@ -2,7 +2,7 @@
 
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
 
-// Metal4Renderer.cpp owns the *_PRIVATE_IMPLEMENTATION defines; a second TU only includes.
+// RendererMetal4.cpp owns the *_PRIVATE_IMPLEMENTATION defines; a second TU only includes.
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 
