@@ -9,7 +9,8 @@ namespace MTL4 { class CommandQueue; class CommandBuffer; class RenderCommandEnc
 
 namespace jpt
 {
-    // No-ops in Release, where ImGui is not linked. Callers never guard.
+    // No-ops wherever IS_EDITOR is 0 and ImGui is not linked -- see ImGuiLayer.cpp.
+    // Callers never guard.
 
     void ImGuiTerminate();
 

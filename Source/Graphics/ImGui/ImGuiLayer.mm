@@ -2,7 +2,7 @@
 
 #include "ImGuiLayer.h"
 
-#if !IS_CONFIG_RELEASE && (IS_PLATFORM_MACOS || IS_PLATFORM_IOS)
+#if IS_EDITOR
 
 #include <string>
 
@@ -159,19 +159,4 @@ namespace jpt
     }
 }
 
-#else // Release, or a platform with no ImGui backend
-
-namespace jpt
-{
-    bool ImGuiInit(MTL::Device*, MTL4::CommandQueue*, int, const char*)   { return true; }
-    void ImGuiInitPlatform(void*)                                         {}
-    void ImGuiTerminate()                                                 {}
-    void ImGuiBeginFrame(MTL4::RenderPassDescriptor*, int)                {}
-    void ImGuiEndFrame(MTL4::CommandBuffer*, MTL4::RenderCommandEncoder*) {}
-    void ImGuiOnPointerMoved(float, float)                                {}
-    void ImGuiOnPointerButton(bool)                                       {}
-    bool ImGuiWantsMouse()                                                { return false; }
-    bool ImGuiWantsKeyboard()                                             { return false; }
-}
-
-#endif
+#endif // IS_EDITOR
