@@ -8,7 +8,7 @@ import os
 import subprocess
 import sys
 
-from utils import (BUNDLE_ID, active_preset, artifact_path, connected_device, executable_path,
+from utils import (active_preset, artifact_path, bundle_id, connected_device, executable_path,
                    no_device_help)
 
 # What the Dev Menu's Capture button needs. Measured on macOS 26: MTLCaptureEnabled in the
@@ -41,7 +41,7 @@ def launch_steps(udid, artifact, console, environment) -> list:
               "--environment-variables", json.dumps(environment)]
     if console:
         launch.append("--console")
-    launch.append(BUNDLE_ID)
+    launch.append(bundle_id())
 
     return [
         ["xcrun", "devicectl", "device", "install", "app", "--device", udid, str(artifact)],

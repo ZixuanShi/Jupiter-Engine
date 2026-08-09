@@ -2,7 +2,7 @@
 
 module;
 
-#include "Applications/AppClient.h"
+#include "Applications/GetApp.h"
 #include "Applications/Window/Window.h"
 
 module jpt.RendererBase;
@@ -25,7 +25,7 @@ namespace jpt
 
     void RendererBase::Update()
     {
-        Application& app = GetApplication();
+        ApplicationBase& app = GetApp();
         const Window& window = app.GetWindow();
         Scene& scene = app.GetScene();
 

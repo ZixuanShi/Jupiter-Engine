@@ -8,7 +8,7 @@
 
 namespace jpt
 {
-    class IOSWindow : public WindowBase
+    class WindowIOS : public WindowBase
     {
     private:
         struct Impl;

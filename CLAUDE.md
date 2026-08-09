@@ -16,21 +16,46 @@ apply, and a `LookAt` bug diagnosed as NaN when `Vector3::Normalize()` already g
 
 ## Project intent
 
-A cross-platform game engine compiling to a **single executable** (`JupiterEngine`) from
-`Source/Main.cpp`. Vulkan on Windows/Linux/Android, **Metal 4** on macOS/iOS. `CMakePresets.json`
-wires up `macos`, `ios-device`, `windows`, `linux`; Android is future work.
+A cross-platform game engine. Vulkan on Windows/Linux/Android, **Metal 4** on macOS/iOS.
+`CMakePresets.json` wires up `macos`, `ios-device`, `windows`, `linux`; Android is future work.
 
-When extending CMake, assume one binary. No multi-executable abstractions, no per-file
-`add_executable` loops.
+**Engine and app are separate targets.** `Source/**` builds the static library
+`_Output/<preset>/libJupiterEngine.a`; the executable comes from the active project under
+`Projects/<Name>/`, into that project's own `_Output/`, `_ProjectFiles/` and `_Saved/`. One project
+per build tree — the root `CMakeLists.txt` ends with `add_subdirectory(${JUPITER_PROJECT})`, and
+`setup.py` chooses it.
+
+`Source/Main.cpp` stays engine-owned but is compiled into the app target, not the archive:
+`JUPITER_MAIN_SOURCE` is removed from the engine glob and named again by the project. Keeping it in
+the archive would leave the entry point to whether the linker resolves `main` from a member.
+
+Assume one executable *per project*. Everything app-shaped — the bundle, the plist, asset staging,
+`default.metallib`, signing, rpath — lives in `Projects/<Name>/CMakeLists.txt`, because all of it
+names the app target. It is deliberately written out rather than hidden behind a `jpt_add_app()`
+helper: with one project there is no duplication to factor, and `MACOSX_BUNDLE_*` are read from the
+target's *directory* scope, so a `function()` would silently emit an empty Info.plist.
 
 ## Build
 
 ```
-py Scripts/setup.py <debug|dev|release> <macos|ios-device|windows|linux>   # writes _ProjectFiles/setup.json
+py Scripts/setup.py <debug|dev|release> <macos|ios-device|windows|linux> [project]
 py Scripts/build.py                                                        # builds the configured preset
 py Scripts/run.py
-py Scripts/clean.py                                                        # removes _Output, _ProjectFiles, _Saved
+py Scripts/clean.py                                                        # engine + every Projects/* underscore dir
 ```
+
+`setup.py` takes the project as a bare name resolved under `Projects/` (`Blank`) or as a path, and
+records it in `_ProjectFiles/setup.json` — which stays at the repo root, being engine-level state.
+**It is required, never inferred**, and `JUPITER_PROJECT` has no CMake default either: which project
+you are building decides the binary, the bundle id and where `_Output` goes, so guessing one would
+only produce a build nobody asked for. The binary name is the project directory's name and the
+bundle id is `com.jupitertechnologies.<name lowercased>`; `utils.py` derives both, and
+`Projects/<Name>/CMakeLists.txt` spells the same convention for CMake.
+
+The preset's `binaryDir` reads `$env{JUPITER_PROJECT_DIR}`, which `setup.py` and `build.py` export.
+A hand-run `cmake --preset` without it resolves to a bogus path, so go through the scripts. CMake
+itself reads the `JUPITER_PROJECT` cache variable, so a ninja-triggered reconfigure needs no
+environment.
 
 Those four are the whole command surface, so they are the only scripts in `Scripts/`. Everything
 else is a subfolder, invoked by CMake or by hand rather than as a step you run:
@@ -61,7 +86,12 @@ Final binary lands in `_Output/<preset>/`. Both `_ProjectFiles/` and `_Output/` 
 
 Engine subsystems are C++23 modules: `export module jpt.<Name>;`, contents in `namespace jpt`.
 `Main.cpp` is the single non-module entry point. Every `.cppm` under `Source/` is globbed
-automatically, so adding one needs no CMake edit; folder placement is loose grouping only.
+automatically, so adding one needs no CMake edit; folder placement is loose grouping only. A
+project's `Source/` is globbed the same way into its own target.
+
+**A module name is not a filename, and it cannot be macro-expanded.** That is why every project
+exports `jpt.App` whatever it calls the file or the class — a fixed name is the only way
+engine-owned `Main.cpp` can `import` a type the engine cannot name. See Lifecycle.
 
 A subsystem may split into the interface unit `Foo.cppm` and an implementation unit `Foo.cpp`
 (`module jpt.Foo;`, no `export`). The CMake file set is for **interface units only** — implementation
@@ -73,21 +103,21 @@ These rules each cost a build cycle when forgotten:
   unit's `#include`s belong between `module;` and `module jpt.Foo;`, or their declarations attach to
   `jpt.Foo` and clang rejects them as redeclarations of the global module. A plain non-module `.cpp`
   has no module declaration and escapes this.
-- **An `import` is not re-exported.** `import jpt.Application` gives you `Application`, but
+- **An `import` is not re-exported.** `import jpt.ApplicationBase` gives you `ApplicationBase`, but
   `app.GetCamera().GetViewProjection(...)` still needs `import jpt.Camera;` of its own.
 - **Imports must be contiguous** directly under the module declaration — an `#include` in the middle
   gives *"imports must immediately follow the module declaration"*.
 - **`.mm` files must never `import std;`, directly or transitively.** Clang refuses a C++-built
   `std.pcm` in an ObjC++ TU. Since `jpt.TypeDefs` imports std, **any header a `.mm` includes must be
-  import-free** and spell types `std::uint32_t`/`double` (`AppleCallbacks.h`, `MacWindow.h`,
-  `IOSWindow.h`). Headers no `.mm` includes may use the `jpt` aliases.
+  import-free** and spell types `std::uint32_t`/`double` (`AppleCallbacks.h`, `WindowMac.h`,
+  `WindowIOS.h`). Headers no `.mm` includes may use the `jpt` aliases.
 - **Include textual headers before headers that import**, or the module's declarations win and the
-  later include is a redefinition (`__promote.h`). See the ordering comment in `Metal4Renderer.cpp`.
+  later include is a redefinition (`__promote.h`). See the ordering comment in `RendererMetal4.cpp`.
 - **Module attachment is fixed by an entity's first declaration.** A function declared in a plain
   header cannot be defined in a module purview (why `AppleCallbacks.h`'s callbacks live in their own
-  plain `.cpp`); an `export`ed one can only be defined by its own module (why `jpt::GetApplication()`
-  lives in the plain `AppClient.h`, letting `Main.cpp` own the instance). MSVC is more permissive —
-  legacy code that built on Windows may not build on clang.
+  plain `.cpp`); an `export`ed one can only be defined by its own module. This is also what keeps a
+  project's `Application<Name>.cpp` a plain TU — see Lifecycle. MSVC is more permissive — legacy
+  code that built on Windows may not build on clang.
 
 **Exception — the platform layer.** `Source/Platform/**` and the Apple window code are plain
 `.mm`/`.cpp`, because CMake's scanner does not scan `OBJCXX`. Each exposes a narrow plain-C++ header
@@ -95,7 +125,7 @@ that a module wraps; keep ObjC types behind a pimpl. This is the only place stan
 
 ## Metal 4
 
-The renderer is `Source/Graphics/Metal/Metal4Renderer.{h,cpp}` — Metal 4 (`MTL4::CommandQueue`,
+The renderer is `Source/Graphics/Metal/RendererMetal4.{h,cpp}` — Metal 4 (`MTL4::CommandQueue`,
 `CommandAllocator`, `ArgumentTable`, `Compiler`), not classic Metal. Hard floor of **macOS 26 /
 iOS 26**, hence `CMAKE_OSX_DEPLOYMENT_TARGET 26.0`.
 
@@ -145,8 +175,8 @@ an inverted camera, because you see the model's interior.
 
 ## Lifecycle
 
-Every subsystem exposes the same five, driven by `Application` in this order. Implement only what is
-needed; no empty overrides.
+Every subsystem exposes the same five, driven by `ApplicationBase` in this order. Implement only
+what is needed; no empty overrides.
 
 | | When | May touch |
 |---|---|---|
@@ -160,19 +190,58 @@ The split is the point: `PreInit` may not reach another subsystem because pre-in
 contract. `PostUpdate` is for work that must observe every `Update`.
 
 `PreInit`/`Init` return `bool` and abort startup on false; the rest return `void`. Parameterless
-except `Window::PreInit(argc, ppArgv)`, which `UIApplicationMain` demands. `Application` carries all
-five as the only `virtual`s in the engine.
+except `Window::PreInit(argc, ppArgv)`, which `UIApplicationMain` demands.
 
-**Subsystems pull, they do not get pushed.** `Update()` fetches what it needs via `GetApplication()`
-(`Applications/AppClient.h`) — see `RendererBase::Update()`. `Application::Update()` stays a list of
-calls, and ordering stays explicit because it still decides the call order. **Only an implementation
-unit or a plain `.cpp` may do this**: `jpt.Application` imports the subsystem modules, so
-`AppClient.h` in a `.cppm` gives *"Circular dependency detected in the C++ module import graph"*.
+**Subsystems pull, they do not get pushed.** `Update()` fetches what it needs via `GetApp()`
+(`Applications/GetApp.h`) — see `RendererBase::Update()`. `ApplicationBase::Update()` stays a list
+of calls, and ordering stays explicit because it still decides the call order. **Only an
+implementation unit or a plain `.cpp` may do this**: `jpt.ApplicationBase` imports the subsystem
+modules, so `App.h` in a `.cppm` gives *"Circular dependency detected in the C++ module import
+graph"*.
 
-**There are no virtuals below `Application`** — `static_assert(!std::is_polymorphic_v<Renderer>)` in
-`Graphics/Renderer.h` enforces it. A backend's `PreInit()` *hides* the base's, so it must call
-`RendererBase::PreInit()` explicitly by name. Nothing enforces that; a backend behaving as if its
-base state was never set is the symptom.
+### `ApplicationBase` is the only virtual, and that exception is load-bearing
+
+`static_assert(!std::is_polymorphic_v<...>)` in `Graphics/Renderer.h` and `Window/Window.h` keeps
+everything *below* it vtable-free: a backend *hides* the base's function and must call it explicitly
+by name, `RendererBase::PreInit()`. Nothing enforces that; a backend behaving as if its base state
+was never set is the symptom.
+
+`ApplicationBase` is deliberately different. Its five lifecycle functions, its destructor and
+`OnSurfaceReady` are `virtual`, and a project writes `override`.
+
+**Devirtualizing it was tried and reverted.** Without `virtual`, engine code has to name the
+project's type to reach it, and a static library cannot -- importing the app target's BMI is a CMake
+cycle. Working around that took a macro of link-time thunks, a concept to catch the mistyped
+"overrides" that hiding makes silent, a second accessor, and splitting `OnFrame` into halves so the
+base never called down. All of it bought one vtable pointer in a single process-lifetime object and
+about four indirect calls per frame. Keep the exception.
+
+What it buys instead is the whole engine/app seam in one declaration plus one macro,
+`Applications/GetApp.h`:
+
+```cpp
+namespace jpt { ApplicationBase& GetApp(); }   // engine declares
+
+#define JPT_SYNC_APP(AppClass) ...                     // project defines, once
+```
+
+Engine code calls through `ApplicationBase&` and lands on the project's overrides, so nothing in
+`libJupiterEngine.a` names an app-target type. `AppleCallbacks.cpp` calls
+`GetApp().OnFrame()`, and `ApplicationBase::OnFrame()` calls its own `Update()` /
+`PostUpdate()` and gets the project's.
+
+A project is two files in `Projects/<Name>/Source/`: `Application<Name>.h` declaring
+`class Application<Name> final : public ApplicationBase` with its `override`s, and
+`Application<Name>.cpp` holding the bodies and, at the bottom, `JPT_SYNC_APP(Application<Name>)`.
+
+**Both are plain, not a module, and that is forced.** `GetApp()` is first declared in a
+plain header, so it is attached to the global module; expanding the macro in a module unit is
+*"declaration of 'GetApp' in module jpt.X follows declaration in the global module"* —
+measured, not assumed. It costs nothing: this is a leaf class with one consumer, and it is the same
+shape as `RendererMetal4.h`, a plain header whose class derives from the `jpt.RendererBase` module.
+Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
+
+`Projects/Blank` is the worked example.
 
 ## Conventions
 
@@ -244,11 +313,11 @@ Free is still right for these, so do not convert them:
   `AreValuesClose`, `ToString(KeyCode)`. As private members they would gain access to state they
   must not use.
 - **Operators**, which C++ requires to be free to allow the left-hand conversion.
-- **The platform seam.** `AppleCallbacks.h`'s functions and `jpt::GetApplication()` are free
+- **The platform seam.** `AppleCallbacks.h`'s functions and `jpt::GetApp()` are free
   because module attachment forbids anything else — see the Modules section.
 
 Prefer pulling over parameters when the method is already inside the engine: `EditorUI`'s sections
-take no arguments and reach what they edit through `GetApplication()`, which is what keeps
+take no arguments and reach what they edit through `GetApp()`, which is what keeps
 `EditorUI.cppm` free of `Camera`, `Material` and `PointLight` imports.
 
 **`namespace local` is where a file's own helpers live** — whatever is not a member of the type the

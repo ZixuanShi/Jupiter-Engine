@@ -10,7 +10,7 @@
             "name": "base",
             "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/_ProjectFiles/build/${presetName}",
+            "binaryDir": "$env{JUPITER_PROJECT_DIR}/_ProjectFiles/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_CXX_COMPILER": "clang++",

@@ -3,14 +3,14 @@
 #pragma once
 
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
-    #include "Metal/Metal4Renderer.h"
+    #include "Metal/RendererMetal4.h"
 #else
     #error "No Renderer backend for this platform"
 #endif
 
 import jpt.LinearColor;
 import jpt.Mesh;
-import jpt.RendererBase;   // RenderStats. Metal4Renderer.h imports it too, but that is not re-exported.
+import jpt.RendererBase;   // RenderStats. RendererMetal4.h imports it too, but that is not re-exported.
 import jpt.Texture;
 import jpt.TypeDefs;
 import std;
@@ -45,7 +45,7 @@ namespace jpt
         { renderer.SetTexture(texture) }        -> std::same_as<bool>;
     };
 
-    using Renderer = Metal4Renderer;
+    using Renderer = RendererMetal4;
 
     static_assert(RendererType<Renderer>);
     static_assert(!std::is_polymorphic_v<Renderer>, "Renderer must stay vtable-free");

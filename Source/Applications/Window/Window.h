@@ -5,9 +5,9 @@
 // Backend headers first: they include libc++ textually, and a translation unit must see the
 // textual copies before the module imports below.
 #if IS_PLATFORM_MACOS
-    #include "Apple/MacWindow.h"
+    #include "Apple/WindowMac.h"
 #elif IS_PLATFORM_IOS
-    #include "Apple/IOSWindow.h"
+    #include "Apple/WindowIOS.h"
 #else
     #error "No Window backend for this platform"
 #endif
@@ -34,9 +34,9 @@ namespace jpt
     };
 
 #if IS_PLATFORM_MACOS
-    using Window = MacWindow;
+    using Window = WindowMac;
 #elif IS_PLATFORM_IOS
-    using Window = IOSWindow;
+    using Window = WindowIOS;
 #endif
 
     static_assert(WindowType<Window>);

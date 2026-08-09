@@ -10,10 +10,10 @@
 #endif
 
 #include "AppleCallbacks.h"
-#include "Applications/AppClient.h"
+#include "Applications/GetApp.h"
 #include "Graphics/Renderer.h"
 
-// An import is not re-exported, so AppClient.h's own do not cover these.
+// An import is not re-exported, so App.h's own do not cover these.
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.Vector2;
@@ -30,39 +30,39 @@ namespace jpt
 
     bool IsVSyncEnabled()
     {
-        return GetApplication().GetRenderer().IsVSyncEnabled();
+        return GetApp().GetRenderer().IsVSyncEnabled();
     }
 #endif // IS_PLATFORM_MACOS
 
     bool OnSurfaceReady(CA::MetalLayer* pMetalLayer)
     {
-        return GetApplication().OnSurfaceReady(pMetalLayer);
+        return GetApp().OnSurfaceReady(pMetalLayer);
     }
 
     void OnResize(std::uint32_t pixelWidth, std::uint32_t pixelHeight)
     {
-        GetApplication().OnResize(pixelWidth, pixelHeight);
+        GetApp().OnResize(pixelWidth, pixelHeight);
     }
 
     void OnFrame()
     {
-        GetApplication().OnFrame();
+        GetApp().OnFrame();
     }
 
     void OnTerminate()
     {
-        GetApplication().Terminate();
+        GetApp().Terminate();
     }
 
 #if IS_PLATFORM_MACOS
     void OnKeyDown(std::uint16_t platformKeyCode, bool isRepeat)
     {
-        GetApplication().GetInput().PostKeyDown(local::ToKeyCode(platformKeyCode), isRepeat);
+        GetApp().GetInput().PostKeyDown(local::ToKeyCode(platformKeyCode), isRepeat);
     }
 
     void OnKeyUp(std::uint16_t platformKeyCode)
     {
-        GetApplication().GetInput().PostKeyUp(local::ToKeyCode(platformKeyCode));
+        GetApp().GetInput().PostKeyUp(local::ToKeyCode(platformKeyCode));
     }
 
     void OnModifierChanged(std::uint16_t platformKeyCode, std::uint32_t modifierFlags)
@@ -74,7 +74,7 @@ namespace jpt
             return;     // fn, whose flag cannot be trusted.
         }
 
-        Input& input = GetApplication().GetInput();
+        Input& input = GetApp().GetInput();
         if ((modifierFlags & mask) != 0)
         {
             input.PostKeyDown(key, false);
@@ -87,38 +87,38 @@ namespace jpt
 
     void OnMouseButton(std::int32_t buttonNumber, bool isDown, float x, float y)
     {
-        GetApplication().GetInput().PostMouseButton(local::ToMouseButton(buttonNumber), isDown, Vec2(x, y));
+        GetApp().GetInput().PostMouseButton(local::ToMouseButton(buttonNumber), isDown, Vec2(x, y));
     }
 
     void OnMouseMove(float x, float y)
     {
-        GetApplication().GetInput().PostMouseMove(Vec2(x, y));
+        GetApp().GetInput().PostMouseMove(Vec2(x, y));
     }
 
     void OnMouseScroll(float deltaX, float deltaY, bool isPrecise)
     {
-        GetApplication().GetInput().PostMouseScroll(Vec2(deltaX, deltaY), isPrecise);
+        GetApp().GetInput().PostMouseScroll(Vec2(deltaX, deltaY), isPrecise);
     }
 #endif // IS_PLATFORM_MACOS
 
     void OnTouchBegan(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        GetApplication().GetInput().PostTouch(TouchPhase::Began, touchId, Vec2(x, y), timeSeconds);
+        GetApp().GetInput().PostTouch(TouchPhase::Began, touchId, Vec2(x, y), timeSeconds);
     }
 
     void OnTouchMoved(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        GetApplication().GetInput().PostTouch(TouchPhase::Moved, touchId, Vec2(x, y), timeSeconds);
+        GetApp().GetInput().PostTouch(TouchPhase::Moved, touchId, Vec2(x, y), timeSeconds);
     }
 
     void OnTouchEnded(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        GetApplication().GetInput().PostTouch(TouchPhase::Ended, touchId, Vec2(x, y), timeSeconds);
+        GetApp().GetInput().PostTouch(TouchPhase::Ended, touchId, Vec2(x, y), timeSeconds);
     }
 
     void OnTouchCancelled(std::uint64_t touchId, float x, float y, double timeSeconds)
     {
-        GetApplication().GetInput().PostTouch(TouchPhase::Cancelled, touchId, Vec2(x, y), timeSeconds);
+        GetApp().GetInput().PostTouch(TouchPhase::Cancelled, touchId, Vec2(x, y), timeSeconds);
     }
 
 #if IS_PLATFORM_MACOS

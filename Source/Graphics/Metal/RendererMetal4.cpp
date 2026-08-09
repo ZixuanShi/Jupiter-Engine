@@ -16,7 +16,7 @@
 
 #include "Graphics/ImGui/ImGuiLayer.h"
 #include "Graphics/Shader/ShaderTypes.h"
-#include "Metal4Renderer.h"
+#include "RendererMetal4.h"
 
 import jpt.LinearColor;
 import jpt.Logger;
@@ -47,7 +47,7 @@ namespace jpt
         std::counting_semaphore<kFramesInFlight> g_frameSemaphore{ kFramesInFlight };
     }
 
-    bool Metal4Renderer::PreInit()
+    bool RendererMetal4::PreInit()
     {
         if (!RendererBase::PreInit())
         {
@@ -101,7 +101,7 @@ namespace jpt
         return true;
     }
 
-    bool Metal4Renderer::Init(SurfaceHandle pMetalLayer)
+    bool RendererMetal4::Init(SurfaceHandle pMetalLayer)
     {
         if (!pMetalLayer)
         {
@@ -147,7 +147,7 @@ namespace jpt
         return ImGuiInit(m_pDevice, m_pQueue, static_cast<int>(kFramesInFlight), iniPath.string().c_str());
     }
 
-    void Metal4Renderer::Terminate()
+    void RendererMetal4::Terminate()
     {
         ImGuiTerminate();
 
@@ -177,7 +177,7 @@ namespace jpt
         Release(m_pDevice);
     }
 
-    bool Metal4Renderer::BeginFrame()
+    bool RendererMetal4::BeginFrame()
     {
         if (!m_pLayer || !m_pQueue || !m_pPipeline)
         {
@@ -255,7 +255,7 @@ namespace jpt
         return true;
     }
 
-    void Metal4Renderer::EndFrame()
+    void RendererMetal4::EndFrame()
     {
         // Published together here rather than where each is taken: the editor draws between
         // BeginFrame and EndFrame, so it must read one whole frame's numbers -- mixing this
@@ -344,7 +344,7 @@ namespace jpt
         EndFramePool();
     }
 
-    void Metal4Renderer::OnResize(uint32 pixelWidth, uint32 pixelHeight)
+    void RendererMetal4::OnResize(uint32 pixelWidth, uint32 pixelHeight)
     {
         if (!m_pLayer || pixelWidth == 0 || pixelHeight == 0)
         {
@@ -354,7 +354,7 @@ namespace jpt
         m_pLayer->setDrawableSize(CGSizeMake(pixelWidth, pixelHeight));
     }
 
-    void Metal4Renderer::SetVSync(bool enabled) noexcept
+    void RendererMetal4::SetVSync(bool enabled) noexcept
     {
         RendererBase::SetVSync(enabled);
 
@@ -368,17 +368,17 @@ namespace jpt
 #endif
     }
 
-    void Metal4Renderer::RequestCapture()
+    void RendererMetal4::RequestCapture()
     {
         m_capture.RequestCapture();
     }
 
-    void Metal4Renderer::DeleteCaptures()
+    void RendererMetal4::DeleteCaptures()
     {
         m_capture.DeleteAll();
     }
 
-    bool Metal4Renderer::SetMesh(const Mesh& mesh)
+    bool RendererMetal4::SetMesh(const Mesh& mesh)
     {
         if (mesh.vertices.empty() || mesh.indices.empty())
         {
@@ -396,7 +396,7 @@ namespace jpt
         return m_pVertices && m_pIndices;
     }
 
-    bool Metal4Renderer::SetTexture(const Texture& texture)
+    bool RendererMetal4::SetTexture(const Texture& texture)
     {
         if (texture.IsEmpty())
         {
@@ -430,7 +430,7 @@ namespace jpt
         return true;
     }
 
-    bool Metal4Renderer::CreatePipeline()
+    bool RendererMetal4::CreatePipeline()
     {
         NS::Error* pError = nullptr;
 
@@ -532,7 +532,7 @@ namespace jpt
         return m_pDepthState && m_pUIDepthState;
     }
 
-    bool Metal4Renderer::CreateSampler()
+    bool RendererMetal4::CreateSampler()
     {
         MTL::SamplerDescriptor* pDesc = MTL::SamplerDescriptor::alloc()->init()->autorelease();
 
@@ -553,7 +553,7 @@ namespace jpt
         return m_pSampler;
     }
 
-    bool Metal4Renderer::EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight)
+    bool RendererMetal4::EnsureFrameTextures(uint32 pixelWidth, uint32 pixelHeight)
     {
         if (m_pDepthTexture && m_pDepthTexture->width() == pixelWidth && m_pDepthTexture->height() == pixelHeight)
         {
@@ -569,7 +569,7 @@ namespace jpt
         return m_pMsaaColor && m_pDepthTexture;
     }
 
-    void Metal4Renderer::GenerateMipmaps()
+    void RendererMetal4::GenerateMipmaps()
     {
         if (!m_pUploadAllocator)
         {
@@ -592,7 +592,7 @@ namespace jpt
         pCommandBuffer->release();
     }
 
-    void Metal4Renderer::UpdateResidency()
+    void RendererMetal4::UpdateResidency()
     {
         if (!m_pResidencySet)
         {
@@ -627,7 +627,7 @@ namespace jpt
         m_pResidencySet->requestResidency();
     }
 
-    void Metal4Renderer::EndFramePool()
+    void RendererMetal4::EndFramePool()
     {
         m_pPass          = nullptr;     // Autoreleased; the pool below owns them.
         m_pDrawable      = nullptr;

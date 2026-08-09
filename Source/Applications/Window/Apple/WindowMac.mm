@@ -2,7 +2,7 @@
 
 #if IS_PLATFORM_MACOS
 
-#include "MacWindow.h"
+#include "WindowMac.h"
 #include "AppleCallbacks.h"
 #include "Graphics/ImGui/ImGuiLayer.h"
 
@@ -365,7 +365,7 @@ namespace
 
 namespace jpt
 {
-    struct MacWindow::Impl
+    struct WindowMac::Impl
     {
         NSWindow*           pWindow   = nil;
         JupiterAppDelegate* pDelegate = nil;
@@ -373,7 +373,7 @@ namespace jpt
         id                  pMonitor  = nil;
     };
 
-    bool MacWindow::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
+    bool WindowMac::PreInit([[maybe_unused]] std::int32_t argc, [[maybe_unused]] char* ppArgv[])
     {
         m_pImpl = new Impl();
 
@@ -388,7 +388,7 @@ namespace jpt
         return true;
     }
 
-    bool MacWindow::Init()
+    bool WindowMac::Init()
     {
         const NSRect contentRect = NSMakeRect(0.0, 0.0, 1920.0, 1080.0);
         const NSWindowStyleMask style = NSWindowStyleMaskTitled
@@ -441,13 +441,13 @@ namespace jpt
         return true;
     }
 
-    void MacWindow::Run()
+    void WindowMac::Run()
     {
         // Never returns: AppKit owns the loop and exits the process on terminate:.
         [NSApp run];
     }
 
-    void MacWindow::Terminate()
+    void WindowMac::Terminate()
     {
         if (m_pImpl->pMonitor != nil)
         {
@@ -459,7 +459,7 @@ namespace jpt
         m_pImpl = nullptr;
     }
 
-    void MacWindow::SetCursorCaptured(bool captured)
+    void WindowMac::SetCursorCaptured(bool captured)
     {
         ApplyCursorCapture(captured);
     }

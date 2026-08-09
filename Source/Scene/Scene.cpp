@@ -2,7 +2,7 @@
 
 module;
 
-#include "Applications/AppClient.h"
+#include "Applications/GetApp.h"
 #include "Applications/Window/Window.h"
 
 module jpt.Scene;
@@ -34,7 +34,7 @@ namespace jpt
         }
 
         // Input callbacks
-        Input& input = GetApplication().GetInput();
+        Input& input = GetApp().GetInput();
         input.OnPan().Add(this, &Scene::OnPan);
         input.OnTwist().Add(this, &Scene::OnTwist);
         input.OnMouseMove().Add(this, &Scene::OnMouseMove);
@@ -46,14 +46,14 @@ namespace jpt
     {
         m_camera.Update();
 
-        const float32 deltaSeconds = GetApplication().GetFrameTimer().GetDeltaSeconds();
+        const float32 deltaSeconds = GetApp().GetFrameTimer().GetDeltaSeconds();
         const float32 step = m_material.dissolveSpeed * deltaSeconds;
         m_material.dissolvePct = std::clamp(m_material.dissolvePct + (m_material.dissolving ? step : -step), 0.0f, 1.0f);
     }
 
     void Scene::RotateModel(const Vec2& deltaPixels)
     {
-        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        const float32 height = static_cast<float32>(GetApp().GetWindow().GetHeight());
         if (height < 1.0f)
         {
             return;
@@ -74,7 +74,7 @@ namespace jpt
     {
         constexpr float32 kRange = 3.0f;
 
-        const float32 height = static_cast<float32>(GetApplication().GetWindow().GetHeight());
+        const float32 height = static_cast<float32>(GetApp().GetWindow().GetHeight());
 
         Vec3 position = m_model.position + m_camera.ScreenDeltaToWorld(deltaPixels, height);
         position.x = std::clamp(position.x, -kRange, kRange);
@@ -112,11 +112,11 @@ namespace jpt
 
     void Scene::OnMouseMove(const MouseMoveEvent& event)
     {
-        if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Left))
+        if (GetApp().GetInput().IsMouseButtonDown(MouseButton::Left))
         {
             RotateModel(event.delta);
         }
-        else if (GetApplication().GetInput().IsMouseButtonDown(MouseButton::Middle))
+        else if (GetApp().GetInput().IsMouseButtonDown(MouseButton::Middle))
         {
             TranslateModel(event.delta);
         }

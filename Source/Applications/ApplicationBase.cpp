@@ -5,14 +5,11 @@ module;
 #include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
-module jpt.Application;
+module jpt.ApplicationBase;
 
 import jpt.Environment;
 import jpt.LaunchArgs;
 import jpt.Logger;
-import jpt.ObjLoader;
-import jpt.Texture;
-import jpt.TextureLoader;
 import jpt.Vector3;
 
 import std;
@@ -25,7 +22,7 @@ import std;
 
 namespace jpt
 {
-    bool Application::PreInit()
+    bool ApplicationBase::PreInit()
     {
         Debug::Info("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
 
@@ -60,7 +57,7 @@ namespace jpt
         return true;
     }
 
-    bool Application::Init()
+    bool ApplicationBase::Init()
     {
         // Before the window: Window::Init() hands control to AppKit and events start arriving.
         if (!m_scene.Init())
@@ -79,18 +76,18 @@ namespace jpt
         return true;
     }
 
-    void Application::Update()
+    void ApplicationBase::Update()
     {
         m_input.Update();       // Recognizes gestures, whose handlers write the scene.
         m_scene.Update();       // Polls held keys, which a one-shot gesture event cannot express.
         m_renderer.Update();
     }
 
-    void Application::PostUpdate()
+    void ApplicationBase::PostUpdate()
     {
     }
 
-    void Application::Terminate()
+    void ApplicationBase::Terminate()
     {
         m_renderer.Terminate();
         m_window.Terminate();
@@ -99,41 +96,12 @@ namespace jpt
         Debug::Info("Application Terminated.");
     }
 
-    void Application::Run()
+    void ApplicationBase::Run()
     {
         m_window.Run();
     }
 
-    bool Application::OnSurfaceReady(Renderer::SurfaceHandle surface)
-    {
-        if (!m_renderer.Init(surface))
-        {
-            Debug::Error("Failed to initialize the renderer.");
-            return false;
-        }
-
-        if (!m_renderer.SetMesh(LoadObj("Assets/Meshes/Mug.obj")))
-        {
-            Debug::Error("Failed to upload the mesh.");
-            return false;
-        }
-
-        if (!m_renderer.SetTexture(LoadTexture("Assets/Textures/Mug_BC.jpg")))
-        {
-            Debug::Error("Failed to upload the base colour map.");
-            return false;
-        }
-
-        return true;
-    }
-
-    void Application::OnResize(uint32 pixelWidth, uint32 pixelHeight)
-    {
-        m_window.OnResize(pixelWidth, pixelHeight);
-        m_renderer.OnResize(pixelWidth, pixelHeight);
-    }
-
-    void Application::OnFrame()
+    void ApplicationBase::OnFrame()
     {
         if (m_status != Status::Running)
         {
@@ -154,5 +122,24 @@ namespace jpt
         }
 
         m_frameTimer.EndFrame();
+    }
+
+    bool ApplicationBase::OnSurfaceReady(Renderer::SurfaceHandle surface)
+    {
+        // Content is the client's: this is the first point at which a mesh can be uploaded, and on
+        // iOS it arrives well after Init(), so a client hides this and loads there.
+        if (!m_renderer.Init(surface))
+        {
+            Debug::Error("Failed to initialize the renderer.");
+            return false;
+        }
+
+        return true;
+    }
+
+    void ApplicationBase::OnResize(uint32 pixelWidth, uint32 pixelHeight)
+    {
+        m_window.OnResize(pixelWidth, pixelHeight);
+        m_renderer.OnResize(pixelWidth, pixelHeight);
     }
 }

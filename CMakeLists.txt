@@ -89,8 +89,18 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     endif()
 endif()
 
-# --- Output directory ---
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
+# --- Active project ---
+# One project per build tree. It supplies the executable, its own _Output/_ProjectFiles/_Saved,
+# and the jpt::GetApp() that JPT_SYNC_APP defines for the engine.
+set(JUPITER_PROJECT "" CACHE PATH "Active project directory")
+
+# No default. Which project is being built decides the binary, the bundle id and where _Output
+# goes, so guessing one would only produce a build nobody asked for.
+if(NOT JUPITER_PROJECT)
+    message(FATAL_ERROR "JUPITER_PROJECT is unset. Run: py Scripts/setup.py <config> <project>")
+elseif(NOT EXISTS "${JUPITER_PROJECT}/CMakeLists.txt")
+    message(FATAL_ERROR "No project at '${JUPITER_PROJECT}': a project needs a CMakeLists.txt")
+endif()
 
 # --- Sources ---
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
@@ -112,10 +122,21 @@ if(JUPITER_CONFIG STREQUAL "RELEASE")
     list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/|Tests\\.cppm$")
 endif()
 
-# --- Executable ---
-add_executable(JupiterEngine ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
+# --- Engine library ---
+# main() is engine code, but it belongs in the executable's own objects rather than in the archive,
+# where pulling it in would depend on the linker resolving the entry point from a member.
+set(JUPITER_MAIN_SOURCE "${CMAKE_SOURCE_DIR}/Source/Main.cpp")
+list(REMOVE_ITEM JUPITER_SOURCES "${JUPITER_MAIN_SOURCE}")
 
-target_include_directories(JupiterEngine PRIVATE "${CMAKE_SOURCE_DIR}/Source")
+add_library(JupiterEngine STATIC ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
+
+# PUBLIC, so the project's own sources reach Applications/GetApp.h and Graphics/Renderer.h.
+# Everything else stays PRIVATE: for a static library CMake re-exports private link dependencies
+# to consumers wrapped in $<LINK_ONLY:>, so the app's link line gets them regardless.
+target_include_directories(JupiterEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
+
+set_target_properties(JupiterEngine PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
 
 target_sources(JupiterEngine
     PUBLIC
@@ -128,31 +149,8 @@ target_sources(JupiterEngine
 # path outside the app container, and in Release, which ships to machines that have no repo --
 # GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
 if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS")
-    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${CMAKE_SOURCE_DIR}/_Saved")
+    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${JUPITER_PROJECT}/_Saved")
 endif()
-
-# --- Assets ---
-# Everything under Assets/ ships beside the binary in the layout it has in the repo, so one
-# relative string means the same thing to jpt::Path here and at run time. Only the destination
-# is platform-dependent, and it is the build-side mirror of jpt::GetRoot().
-if(JUPITER_PLATFORM STREQUAL "MACOS")
-    set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:JupiterEngine>/Resources/Assets")
-elseif(JUPITER_PLATFORM STREQUAL "IOS")
-    set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:JupiterEngine>/Assets")
-else()
-    set(JUPITER_ASSET_DIR "$<TARGET_FILE_DIR:JupiterEngine>/Assets")
-endif()
-
-# Staged by a script, not target_sources: routing content through the latter invites CMake to
-# interpret it, and a Wavefront .obj gets EXTERNAL_OBJECT stamped on by extension alone and
-# lands on the link line. `cmake -E copy_directory` avoids that but can exclude nothing, and
-# shader sources and .DS_Store must not reach a signed bundle. A target rather than a POST_BUILD
-# rule, so staging precedes the executable's own post-build steps.
-add_custom_target(JupiterAssets
-    COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/Assets/stage_assets.py" "${JUPITER_ASSET_DIR}"
-    COMMENT "Staging Assets")
-
-add_dependencies(JupiterEngine JupiterAssets)
 
 # --- Apple ---
 if(APPLE)
@@ -198,7 +196,7 @@ if(APPLE)
             "${JUPITER_IMGUI}/backends/imgui_impl_metal4.mm")
 
         # imgui_impl_osx.mm is the AppKit *input* backend and is macOS-only. The Metal backend
-        # above is plain Metal and builds for both; iOS input is hand-written in IOSWindow.mm.
+        # above is plain Metal and builds for both; iOS input is hand-written in WindowIOS.mm.
         if(NOT JUPITER_PLATFORM STREQUAL "IOS")
             list(APPEND JUPITER_IMGUI_SOURCES "${JUPITER_IMGUI}/backends/imgui_impl_osx.mm")
         endif()
@@ -230,83 +228,9 @@ if(APPLE)
         "-framework ImageIO" "-framework CoreGraphics"
         "${JUPITER_WINDOW_FRAMEWORK}")
 
-    # --- App bundle ---
-    # iOS will not install a non-bundle. On macOS it supplies the CFBundleIdentifier, whose
-    # absence makes the system log registration failures on every launch.
-    set(MACOSX_BUNDLE_EXECUTABLE_NAME      "JupiterEngine")
-    set(MACOSX_BUNDLE_BUNDLE_NAME          "Jupiter Engine")
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER       "com.jupitertechnologies.engine")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION       "1")
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "1.0")
-
-    set_target_properties(JupiterEngine PROPERTIES
-        MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${JUPITER_INFO_PLIST}")
-
-    # --- Shaders ---
-    # Every .metal file links into one default.metallib, so adding a shader needs no edit here.
-    # Note modern Xcode ships no separate `metallib` tool -- `metal` links .air files itself.
-    #
-    # The version-min flag is not optional. Unlike clang, `metal` ignores CMAKE_OSX_DEPLOYMENT_TARGET
-    # and targets the SDK version, stamping the library with an AIR version the deployment target
-    # never promised. Loading it on an older OS then fails as a *nil* newDefaultLibrary() rather
-    # than an error, so the app runs on with a dead renderer.
-    file(GLOB JUPITER_SHADERS CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Assets/Shaders/*.metal")
-
-    set(JUPITER_AIR_FILES "")
-    foreach(_shader ${JUPITER_SHADERS})
-        get_filename_component(_shader_name "${_shader}" NAME_WE)
-        set(_air "${CMAKE_CURRENT_BINARY_DIR}/Shaders/${_shader_name}.air")
-
-        # The depfile is not optional either. ShaderTypes.h is compiled by clang *and* by metal,
-        # so without it a change to the uniform struct rebuilds only the C++ half and the shader
-        # goes on reading the old layout -- no compile error, and the static_assert that exists to
-        # catch exactly this never re-evaluates. -MMD over -MD so an Xcode update does not
-        # invalidate every shader through <metal_stdlib>.
-        add_custom_command(OUTPUT "${_air}"
-            COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS}
-                    -I "${CMAKE_SOURCE_DIR}/Source" -MMD -MF "${_air}.d" -c "${_shader}" -o "${_air}"
-            DEPENDS "${_shader}"
-            DEPFILE "${_air}.d"
-            COMMENT "Compiling ${_shader_name}.metal")
-
-        list(APPEND JUPITER_AIR_FILES "${_air}")
-    endforeach()
-
-    set(JUPITER_METALLIB "${CMAKE_CURRENT_BINARY_DIR}/Shaders/default.metallib")
-    add_custom_command(OUTPUT "${JUPITER_METALLIB}"
-        COMMAND xcrun -sdk ${JUPITER_METAL_SDK} metal ${JUPITER_METAL_MIN_OS} ${JUPITER_AIR_FILES} -o "${JUPITER_METALLIB}"
-        DEPENDS ${JUPITER_AIR_FILES}
-        COMMENT "Linking default.metallib")
-
-    # Where newDefaultLibrary() looks. CMake resolves "Resources" to Contents/Resources on
-    # macOS and to the bundle root on iOS, which is what each platform expects.
-    target_sources(JupiterEngine PRIVATE "${JUPITER_METALLIB}")
-    set_source_files_properties("${JUPITER_METALLIB}" PROPERTIES
-        MACOSX_PACKAGE_LOCATION Resources
-        GENERATED TRUE)
-
-    # --- Code signing ---
-    # A device refuses to launch an app without an embedded provisioning profile naming it.
-    # The simulator has no such check, so its bundles stay unsigned.
-    #
-    # Its own target rather than a POST_BUILD rule on the executable, because a signature seals
-    # the staged assets too and those change without the executable ever relinking -- which used
-    # to leave the bundle sealed against a file it no longer held, and a device rejects that.
-    # Signing takes ~0.1s, so it runs every build rather than guessing when it is needed.
-    if(JUPITER_PLATFORM STREQUAL "IOS")
-        add_custom_target(JupiterSign ALL
-            COMMAND python3 "${CMAKE_SOURCE_DIR}/Scripts/Build/sign.py" "$<TARGET_BUNDLE_DIR:JupiterEngine>"
-            COMMENT "Code-signing for device")
-
-        add_dependencies(JupiterSign JupiterEngine JupiterAssets)
-    endif()
-
-    # --- rpath ---
-    # iOS resolves libc++ from /usr/lib, so a Homebrew rpath would only be dead weight.
-    if(NOT JUPITER_PLATFORM STREQUAL "IOS" AND EXISTS "${_cxx_root}/lib/c++/libc++.dylib")
-        set_target_properties(JupiterEngine PROPERTIES
-            BUILD_RPATH "${_cxx_root}/lib/c++"
-            INSTALL_RPATH "${_cxx_root}/lib/c++")
-    endif()
 endif()
+
+# --- Project ---
+# Last, so the project inherits every directory-scoped define, flag and JUPITER_* variable above.
+# The explicit binary dir is what allows a project outside this source tree.
+add_subdirectory("${JUPITER_PROJECT}" "${CMAKE_BINARY_DIR}/App")

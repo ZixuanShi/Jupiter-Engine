@@ -13,7 +13,7 @@ from pathlib import Path
 # Scripts/ is the import root for utils, and it is no longer this file's own directory.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from utils import BUNDLE_ID, ROOT, active_preset, artifact_path
+from utils import ROOT, active_preset, artifact_path, bundle_id
 
 PROFILE_DIR = Path.home() / "Library/Developer/Xcode/UserData/Provisioning Profiles"
 ENTITLEMENTS = ROOT / "_ProjectFiles" / "JupiterEngine.entitlements"
@@ -36,7 +36,7 @@ def decode(profile) -> dict:
 
 
 def find_profile() -> tuple | None:
-    """Return the newest unexpired (path, plist) provisioning BUNDLE_ID, or None."""
+    """Return the newest unexpired (path, plist) provisioning profile for this app, or None."""
     # Profile dates are naive UTC, so compare against a naive UTC now.
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     best = None
@@ -45,7 +45,7 @@ def find_profile() -> tuple | None:
         info = decode(path)
         app_id = info.get("Entitlements", {}).get("application-identifier", "")
 
-        if not app_id.endswith(f".{BUNDLE_ID}") or info["ExpirationDate"] < now:
+        if not app_id.endswith(f".{bundle_id()}") or info["ExpirationDate"] < now:
             continue
         if best is None or info["CreationDate"] > best[1]["CreationDate"]:
             best = (path, info)
@@ -57,7 +57,7 @@ def sign(app) -> int:
     """Embed the provisioning profile in the bundle and code-sign it."""
     found = find_profile()
     if found is None:
-        print(REMINT.format(bundle=BUNDLE_ID))
+        print(REMINT.format(bundle=bundle_id()))
         return 1
 
     profile, info = found

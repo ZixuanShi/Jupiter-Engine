@@ -5,7 +5,7 @@ module;
 #include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
-export module jpt.Application;
+export module jpt.ApplicationBase;
 
 import jpt.TypeDefs;
 import jpt.FrameTimer;
@@ -18,8 +18,14 @@ import jpt.Scene;
 
 export namespace jpt
 {
-    /** Base class every executable (Editor, and each Projects/<Name> App) derives from. */
-    class Application
+    /** The engine half of the application, shared by every Projects/<Name> App.
+
+        The one polymorphic type in the engine, and the only sanctioned `virtual` -- everything
+        below it is compile-time polymorphism a static_assert enforces. The exception is what buys
+        the Engine/App split its simplicity: engine code calls through ApplicationBase& and lands
+        on the App's overrides, so it never has to name a type the app target owns. One vtable in
+        one process-lifetime object is the whole cost. */
+    class ApplicationBase
     {
     private:
         FrameTimer m_frameTimer;
@@ -34,7 +40,7 @@ export namespace jpt
 #endif
 
     public:
-        virtual ~Application() = default;
+        virtual ~ApplicationBase() = default;
 
         virtual bool PreInit();
         virtual bool Init();
@@ -44,12 +50,13 @@ export namespace jpt
 
     public:
         void Run();
-
-    public:
-        bool OnSurfaceReady(Renderer::SurfaceHandle surface);
-        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
         void OnFrame();
-    
+
+        // Virtual because it is where content is uploaded, and content is the App's. On iOS the
+        // surface arrives long after Init(), so there is no earlier hook a project could use.
+        virtual bool OnSurfaceReady(Renderer::SurfaceHandle surface);
+        void OnResize(uint32 pixelWidth, uint32 pixelHeight);
+
     public:
         [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
         [[nodiscard]] Window& GetWindow()                     noexcept { return m_window; }
