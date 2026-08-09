@@ -9,7 +9,9 @@
 #elif IS_PLATFORM_IOS
     #include "Apple/WindowIOS.h"
 #else
-    #error "No Window backend for this platform"
+    // Windows and Linux, until WindowSDL3 lands. A backend is what a platform is missing, so the
+    // seam answers with one rather than with an #error the whole engine cannot get past.
+    #include "Null/WindowNull.h"
 #endif
 
 import jpt.TypeDefs;
@@ -37,6 +39,8 @@ namespace jpt
     using Window = WindowMac;
 #elif IS_PLATFORM_IOS
     using Window = WindowIOS;
+#else
+    using Window = WindowNull;
 #endif
 
     static_assert(WindowType<Window>);

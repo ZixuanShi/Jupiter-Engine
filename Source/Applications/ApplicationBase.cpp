@@ -2,6 +2,7 @@
 
 module;
 
+#include "Applications/GetApp.h"
 #include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
@@ -14,8 +15,11 @@ import jpt.Vector3;
 
 import std;
 
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
     import jpt.EditorUI;
+#endif
+
+#if !IS_CONFIG_RELEASE
     import jpt.InputTests;
     import jpt.MathTests;
 #endif
@@ -24,7 +28,7 @@ namespace jpt
 {
     bool ApplicationBase::PreInit()
     {
-        Debug::Info("Jupiter Engine from {}-{}", jpt::GetPlatformName(), jpt::GetConfigName());
+        Debug::Info("Jupiter Engine from {}-{}-{}", GetPlatformName(), GetConfigName(), GetAppName());
 
 #if !IS_CONFIG_RELEASE
         RunMathTests();
@@ -115,7 +119,7 @@ namespace jpt
 
         if (m_renderer.BeginFrame())
         {
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
             m_editorUI.Draw();
 #endif
             m_renderer.EndFrame();

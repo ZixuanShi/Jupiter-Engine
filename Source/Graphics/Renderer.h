@@ -5,7 +5,8 @@
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
     #include "Metal/RendererMetal4.h"
 #else
-    #error "No Renderer backend for this platform"
+    // Windows and Linux, until RendererVulkan lands. See the note in Window.h.
+    #include "Null/RendererNull.h"
 #endif
 
 import jpt.LinearColor;
@@ -45,7 +46,11 @@ namespace jpt
         { renderer.SetTexture(texture) }        -> std::same_as<bool>;
     };
 
+#if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
     using Renderer = RendererMetal4;
+#else
+    using Renderer = RendererNull;
+#endif
 
     static_assert(RendererType<Renderer>);
     static_assert(!std::is_polymorphic_v<Renderer>, "Renderer must stay vtable-free");

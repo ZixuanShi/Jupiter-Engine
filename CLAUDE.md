@@ -16,8 +16,10 @@ apply, and a `LookAt` bug diagnosed as NaN when `Vector3::Normalize()` already g
 
 ## Project intent
 
-A cross-platform game engine. Vulkan on Windows/Linux/Android, **Metal 4** on macOS/iOS.
-`CMakePresets.json` wires up `macos`, `ios-device`, `windows`, `linux`; Android is future work.
+A cross-platform game engine. **Metal 4** with native AppKit/UIKit on macOS/iOS; **SDL3 + Vulkan**
+on Windows/Linux/Android. `CMakePresets.json` wires up `macos`, `ios-device`, `windows`, `linux`;
+Android is future work. Windows builds, links and runs today on llvm-mingw clang + Ninja, but
+against the null backends — see Platform backends.
 
 **Engine and app are separate targets.** `Source/**` builds the static library
 `_Output/<preset>/libJupiterEngine.a`; the executable comes from the active project under
@@ -78,9 +80,17 @@ from the repo root, not the caller's cwd. The same four steps are VS Code tasks;
 
 Final binary lands in `_Output/<preset>/`. Both `_ProjectFiles/` and `_Output/` are gitignored.
 
-`CMakeLists.txt` defines `IS_PLATFORM_WINDOWS|MACOS|LINUX|ANDROID|IOS` and
-`IS_CONFIG_DEBUG|DEV|RELEASE` as `0`/`1` always, so use `#if IS_PLATFORM_MACOS` — never raw
-`_WIN32`/`__APPLE__`, never `#ifdef`.
+`CMakeLists.txt` defines `IS_PLATFORM_WINDOWS|MACOS|LINUX|ANDROID|IOS`,
+`IS_CONFIG_DEBUG|DEV|RELEASE` and `IS_EDITOR` as `0`/`1` always, so use `#if IS_PLATFORM_MACOS` —
+never raw `_WIN32`/`__APPLE__`, never `#ifdef`.
+
+**`IS_EDITOR` is not `!IS_CONFIG_RELEASE`.** It means the editor *and the Dear ImGui it draws
+through* are compiled in, which a dev build on a platform with no ImGui backend is not — today
+that is every non-Apple dev build. It gates `Source/Editor/` out of the glob, the `JupiterImGui`
+target, `ApplicationBase::m_editorUI`, and which half of `ImGuiLayer` defines the layer: the `.mm`
+holds the implementation, `ImGuiLayer.cpp` the no-ops that let every caller stay unguarded. Those
+no-ops must live in a plain `.cpp`: as the `#else` of the `.mm` they were unreachable on a platform
+that compiles no Objective-C++, which is a link error rather than a compile one.
 
 ## Modules
 
@@ -122,6 +132,23 @@ These rules each cost a build cycle when forgotten:
 **Exception — the platform layer.** `Source/Platform/**` and the Apple window code are plain
 `.mm`/`.cpp`, because CMake's scanner does not scan `OBJCXX`. Each exposes a narrow plain-C++ header
 that a module wraps; keep ObjC types behind a pimpl. This is the only place standalone TUs belong.
+
+## Platform backends
+
+Two seams pick one, both by `#if IS_PLATFORM_*`: `Applications/Window/Window.h` selects the
+`Window` type and `Graphics/Renderer.h` the `Renderer`. Each is checked against a concept
+(`WindowType`, `RendererType`) and a `static_assert(!std::is_polymorphic_v<...>)` — compile-time
+polymorphism, so a backend *hides* the base's function rather than overriding it.
+
+Off Apple the seams answer with `WindowNull` and `RendererNull` (`Window/Null/`, `Graphics/Null/`),
+**not** an `#error`. `ApplicationBase` holds both by value, so an `#error` there is not a missing
+backend, it is an engine that will not compile at all — and Windows/Linux then cannot run so much
+as a log line. `WindowNull::Run()` drives `OnFrame()` a fixed few times and returns; nothing calls
+`OnSurfaceReady`, because there is no surface, so `RendererNull::BeginFrame()` declines every frame.
+They are what **SDL3** and **Vulkan** replace, not extend.
+
+The same shape is what off-Apple `LoadTexture` still owes: it is declared unconditionally and
+returns an empty `Texture` with an error, pending stb_image or WIC.
 
 ## Metal 4
 
@@ -233,6 +260,13 @@ Engine code calls through `ApplicationBase&` and lands on the project's override
 A project is two files in `Projects/<Name>/Source/`: `Application<Name>.h` declaring
 `class Application<Name> final : public ApplicationBase` with its `override`s, and
 `Application<Name>.cpp` holding the bodies and, at the bottom, `JPT_SYNC_APP(Application<Name>)`.
+
+**`jpt::GetAppName()` cannot go through this seam**, and that is what makes it the seam's edge.
+It is `consteval`, and an immediate function must be *defined* in every TU that calls it: constant
+evaluation happens in the compiler, and the linker — the whole mechanism `GetApp()` relies on —
+has nothing to contribute to it. So the name arrives as `JUPITER_APP_NAME`, which the root
+`CMakeLists.txt` derives from the project directory, and the body lives in `GetApp.h`. Anything
+the engine needs from a project at *compile* time has to come the same way.
 
 **Both are plain, not a module, and that is forced.** `GetApp()` is first declared in a
 plain header, so it is attached to the global module; expanding the macro in a module unit is

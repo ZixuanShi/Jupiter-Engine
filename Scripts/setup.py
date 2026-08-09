@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -77,9 +78,19 @@ def link_compile_commands(preset, project):
 
     try:
         COMPILE_COMMANDS_LINK.symlink_to(target)
+        return
+    except OSError:
+        # WinError 1314: CreateSymbolicLinkW needs Developer Mode or elevation. A hard link is
+        # no use either -- CMake rewrites the database through a temp file and renames it, which
+        # leaves any extra hard link pointing at the previous contents.
+        pass
+
+    try:
+        shutil.copy2(target, COMPILE_COMMANDS_LINK)
+        print("Copied compile_commands.json (no symlink privilege). Re-run Setup after adding "
+              "or removing a source file.")
     except OSError as error:
-        # Windows needs Developer Mode or elevation for symlinks; not fatal.
-        print(f"Could not link compile_commands.json ({error})")
+        print(f"Could not publish compile_commands.json ({error})")
 
 
 def resolve_project(name) -> Path:

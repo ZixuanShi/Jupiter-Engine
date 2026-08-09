@@ -3,7 +3,9 @@
 module;
 
 // A GMF is per-file, hence the include again rather than inherited from the interface unit.
-#include <ImageIO/ImageIO.h>
+#if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
+    #include <ImageIO/ImageIO.h>
+#endif
 
 module jpt.TextureLoader;
 
@@ -11,6 +13,8 @@ import jpt.Color;
 import jpt.Logger;
 import jpt.TypeDefs;
 import std;
+
+#if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
 
 namespace jpt
 {
@@ -73,3 +77,16 @@ namespace jpt
         }
     }
 }
+
+#else // No decoder off Apple yet -- stb_image or WIC, alongside the Vulkan backend.
+
+namespace jpt
+{
+    Texture LoadTexture(const Path& path)
+    {
+        Debug::Error("No image decoder on this platform; {} was not loaded", path.GetFileName());
+        return {};
+    }
+}
+
+#endif // IS_PLATFORM_MACOS || IS_PLATFORM_IOS

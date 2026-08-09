@@ -19,8 +19,17 @@ if(APPLE)
 endif()
 
 # --- Project ---
-project(JupiterEngine LANGUAGES CXX OBJCXX)
+# OBJCXX only where a .mm is compiled. Enabling it everywhere costs a compiler detection pass on
+# platforms with no Objective-C++ at all, and hard-fails outright on a toolchain that has none.
+project(JupiterEngine LANGUAGES CXX)
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 option(JUPITER_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+
+# Asset staging and iOS signing run through it. `python3` is not a name Windows has.
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 # --- Compile defines ---
 # Every name gets a define, 0 or 1, so `#if IS_PLATFORM_MACOS` is always a valid expression --
@@ -79,6 +88,18 @@ else()
     message(FATAL_ERROR "Platform '${JUPITER_PLATFORM}' is in neither JUPITER_PC_PLATFORMS nor JUPITER_MOBILE_PLATFORMS")
 endif()
 
+# --- Editor ---
+# Whether the editor and the Dear ImGui it draws through are compiled in at all. Not the same
+# question as "is this a dev build": a dev build on a platform with no ImGui backend has no editor
+# either, and three files used to spell that predicate three different ways.
+if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND APPLE)
+    set(JUPITER_EDITOR 1)
+else()
+    set(JUPITER_EDITOR 0)
+endif()
+
+add_compile_definitions(IS_EDITOR=${JUPITER_EDITOR})
+
 # --- Compiler flags ---
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-fcolor-diagnostics -fansi-escape-codes)
@@ -102,6 +123,13 @@ elseif(NOT EXISTS "${JUPITER_PROJECT}/CMakeLists.txt")
     message(FATAL_ERROR "No project at '${JUPITER_PROJECT}': a project needs a CMakeLists.txt")
 endif()
 
+# The directory's name, which is already the binary's name too -- Scripts/utils.py derives both
+# the same way. Here rather than from JPT_SYNC_APP because jpt::GetAppName() is consteval, and an
+# immediate function has to be *defined* in every translation unit that calls it: the project's
+# definition is exactly what engine code cannot see.
+get_filename_component(JUPITER_APP_NAME "${JUPITER_PROJECT}" NAME)
+add_compile_definitions(JUPITER_APP_NAME="${JUPITER_APP_NAME}")
+
 # --- Sources ---
 file(GLOB_RECURSE JUPITER_SOURCES        CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE JUPITER_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.cppm")
@@ -111,15 +139,20 @@ if(APPLE)
     file(GLOB_RECURSE JUPITER_OBJCXX_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/Source/*.mm")
 endif()
 
-# The editor is a development tool: its panels, and the ImGui they are built on, are absent from
-# a Release binary entirely rather than compiled and left unreachable.
-#
-# *Tests.cppm goes the same way. Their call sites are already #if !IS_CONFIG_RELEASE, but the
-# modules were still compiled and linked -- nm found jpt::RunMathTests in the Release binary -- and
-# InputTests pulls the whole Carbon umbrella in with it.
+# The editor is a development tool: its panels, and the ImGui they are built on, are absent from a
+# binary that has no editor rather than compiled and left unreachable. EditorUI.cpp includes
+# imgui.h unguarded, so this is also what keeps it out of a build where ImGui was never compiled.
+if(NOT JUPITER_EDITOR)
+    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "/Source/Editor/")
+    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/")
+endif()
+
+# *Tests goes by config, not by editor: they run on any dev build. Their call sites are already
+# #if !IS_CONFIG_RELEASE, but the modules were still compiled and linked -- nm found
+# jpt::RunMathTests in the Release binary -- and InputTests pulls the whole Carbon umbrella in.
 if(JUPITER_CONFIG STREQUAL "RELEASE")
-    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "/Source/Editor/|Tests\\.cpp$")
-    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/|Tests\\.cppm$")
+    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "Tests\\.cpp$")
+    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "Tests\\.cppm$")
 endif()
 
 # --- Engine library ---
@@ -180,8 +213,8 @@ if(APPLE)
     # --- Vendor -- Dear ImGui ---
     # Its own library, not loose sources on JupiterEngine, for three reasons: -w, because ImGui
     # does not survive our warning set; CXX_SCAN_FOR_MODULES OFF, so clang-scan-deps never walks
-    # vendor code; and Release skips the whole target rather than compiling it unreachable.
-    if(NOT JUPITER_CONFIG STREQUAL "RELEASE")
+    # vendor code; and a build with no editor skips the target rather than compiling it unreachable.
+    if(JUPITER_EDITOR)
         set(JUPITER_IMGUI "${CMAKE_SOURCE_DIR}/Vendor/ImGui/Source")
         if(NOT EXISTS "${JUPITER_IMGUI}/imgui.cpp")
             message(FATAL_ERROR "Dear ImGui missing. See Vendor/ImGui/README.md")
