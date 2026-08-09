@@ -12,7 +12,7 @@ import jpt.FrameTimer;
 import jpt.Input;
 import jpt.Scene;
 
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
     import jpt.EditorUI;
 #endif
 
@@ -35,7 +35,7 @@ export namespace jpt
         Input m_input;
         Status m_status = Status::Pending;
 
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
         EditorUI m_editorUI;
 #endif
 

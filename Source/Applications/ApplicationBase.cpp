@@ -14,8 +14,11 @@ import jpt.Vector3;
 
 import std;
 
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
     import jpt.EditorUI;
+#endif
+
+#if !IS_CONFIG_RELEASE
     import jpt.InputTests;
     import jpt.MathTests;
 #endif
@@ -115,7 +118,7 @@ namespace jpt
 
         if (m_renderer.BeginFrame())
         {
-#if !IS_CONFIG_RELEASE
+#if IS_EDITOR
             m_editorUI.Draw();
 #endif
             m_renderer.EndFrame();
