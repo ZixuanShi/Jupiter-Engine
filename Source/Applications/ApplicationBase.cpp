@@ -3,17 +3,14 @@
 module;
 
 #include "Applications/GetApp.h"
-#include "Applications/Window/Window.h"
+#include "Graphics/ImGui/ImGuiLayer.h"
 #include "Graphics/Renderer.h"
 
 module jpt.ApplicationBase;
 
 import jpt.Environment;
-import jpt.LaunchArgs;
 import jpt.Logger;
-import jpt.Vector3;
-
-import std;
+import jpt.Window;
 
 #if IS_EDITOR
     import jpt.EditorUI;
@@ -28,6 +25,8 @@ namespace jpt
 {
     bool ApplicationBase::PreInit()
     {
+        Debug::PreInit();       // Before the first log line.
+
         Debug::Info("Jupiter Engine from {}-{}-{}", GetPlatformName(), GetConfigName(), GetAppName());
 
 #if !IS_CONFIG_RELEASE
@@ -45,8 +44,7 @@ namespace jpt
         RunInputTests();
 #endif
 
-        const LaunchArgs& launchArgs = LaunchArgs::GetInstance();
-        if (!m_window.PreInit(launchArgs.GetCount(), launchArgs.GetValues()))
+        if (!m_window.PreInit())
         {
             Debug::Error("Failed to pre-initialize the window.");
             return false;
@@ -63,7 +61,6 @@ namespace jpt
 
     bool ApplicationBase::Init()
     {
-        // Before the window: Window::Init() hands control to AppKit and events start arriving.
         if (!m_scene.Init())
         {
             Debug::Error("Failed to initialize the scene.");
@@ -75,6 +72,19 @@ namespace jpt
             Debug::Error("Failed to initialize the window.");
             return false;
         }
+
+        // After the window: the renderer overwrites what SDL set on the layer, and the pixel
+        // format it picks here is baked into every pipeline.
+        if (!OnSurfaceReady(m_window.GetSurface()))
+        {
+            return false;
+        }
+
+        // After the surface: OnResize is a no-op while the layer is null.
+        OnResize(m_window.GetWidth(), m_window.GetHeight());
+
+        // After OnSurfaceReady, where ImGuiInit creates the context this attaches to.
+        ImGuiInitPlatform(m_window.GetNativeHandle());
 
         m_status = Status::Running;
         return true;
@@ -93,16 +103,18 @@ namespace jpt
 
     void ApplicationBase::Terminate()
     {
+        // SDL_AppQuit runs even when SDL_AppInit failed. Measured: a second call does not crash,
+        // since every subsystem nulls its own handles -- this holds the single-banner contract.
+        if (m_status == Status::Succeeded)
+        {
+            return;
+        }
+        m_status = Status::Succeeded;
+
         m_renderer.Terminate();
         m_window.Terminate();
 
-        m_status = Status::Succeeded;
         Debug::Info("Application Terminated.");
-    }
-
-    void ApplicationBase::Run()
-    {
-        m_window.Run();
     }
 
     void ApplicationBase::OnFrame()
@@ -130,8 +142,7 @@ namespace jpt
 
     bool ApplicationBase::OnSurfaceReady(Renderer::SurfaceHandle surface)
     {
-        // Content is the client's: this is the first point at which a mesh can be uploaded, and on
-        // iOS it arrives well after Init(), so a client hides this and loads there.
+        // The first point at which a mesh can be uploaded, which is why a client hides this.
         if (!m_renderer.Init(surface))
         {
             Debug::Error("Failed to initialize the renderer.");
@@ -139,6 +150,14 @@ namespace jpt
         }
 
         return true;
+    }
+
+    void ApplicationBase::SetPaused(bool paused) noexcept
+    {
+        if (m_status == Status::Running || m_status == Status::Paused)
+        {
+            m_status = paused ? Status::Paused : Status::Running;
+        }
     }
 
     void ApplicationBase::OnResize(uint32 pixelWidth, uint32 pixelHeight)

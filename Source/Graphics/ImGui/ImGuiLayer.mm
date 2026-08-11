@@ -9,29 +9,16 @@
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
 
-#if IS_PLATFORM_MACOS
-    #import <Cocoa/Cocoa.h>
-    #include "imgui_impl_osx.h"
-#else
-    #import <UIKit/UIKit.h>
-#endif
+#include <SDL3/SDL.h>
 
 #include "imgui.h"
 #include "imgui_impl_metal4.h"
+#include "imgui_impl_sdl3.h"
 
 namespace
 {
     // ImGui stores the pointer rather than copying the string, so it has to outlive the context.
     std::string g_iniPath;
-
-    // Borrowed, like the layer: the view is owned by the window hierarchy. Kept as void* rather
-    // than a strong ObjC static so ARC cannot quietly extend its life past the window's.
-    void* g_pNativeView = nullptr;
-
-#if IS_PLATFORM_IOS
-    // No AppKit backend on iOS, so the clock and the display metrics are ours to feed.
-    double g_lastTime = 0.0;
-#endif
 
 // Form factor rather than platform: widgets sized for a mouse are unusable under a fingertip,
 // whichever OS the finger belongs to. Everything -- font, padding, scrollbars -- scales by this.
@@ -53,27 +40,6 @@ namespace
         io.IniFilename = g_iniPath.empty() ? nullptr : g_iniPath.c_str();
     }
 
-    /** The half of the frame that is platform rather than renderer, and so is backend-agnostic. */
-    void NewFramePlatform()
-    {
-#if IS_PLATFORM_MACOS
-        ImGui_ImplOSX_NewFrame((__bridge NSView*)g_pNativeView);
-#else
-        UIView* pView = (__bridge UIView*)g_pNativeView;
-        ImGuiIO& io = ImGui::GetIO();
-
-        const CGSize points = pView.bounds.size;
-        const float scale = static_cast<float>(pView.contentScaleFactor);
-        io.DisplaySize = ImVec2(static_cast<float>(points.width), static_cast<float>(points.height));
-        io.DisplayFramebufferScale = ImVec2(scale, scale);
-
-        const double now = CACurrentMediaTime();
-        io.DeltaTime = (g_lastTime > 0.0) ? static_cast<float>(now - g_lastTime) : 1.0f / 60.0f;
-        g_lastTime = now;
-#endif
-
-        ImGui::NewFrame();
-    }
 }
 
 namespace jpt
@@ -94,7 +60,8 @@ namespace jpt
         // Needs the live descriptor: the backend reads the attachment formats off the attached
         // textures, so a format-only descriptor would give it MTLPixelFormatInvalid.
         ImGui_ImplMetal4_NewFrame((__bridge MTL4RenderPassDescriptor*)(void*)pPass, frameIndex);
-        NewFramePlatform();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
     }
 
     void ImGuiEndFrame(MTL4::CommandBuffer* pCommandBuffer, MTL4::RenderCommandEncoder* pEncoder)
@@ -105,17 +72,13 @@ namespace jpt
                                         (__bridge id<MTL4RenderCommandEncoder>)(void*)pEncoder);
     }
 
-    void ImGuiInitPlatform(void* pNativeView)
+    void ImGuiInitPlatform(void* pSDLWindow)
     {
-        g_pNativeView = pNativeView;
+        SDL_Window* pWindow = static_cast<SDL_Window*>(pSDLWindow);
+        ImGui_ImplSDL3_InitForMetal(pWindow);
 
-#if IS_PLATFORM_MACOS
-        // Installs its own NSEvent monitors, so no engine input path is involved.
-        ImGui_ImplOSX_Init((__bridge NSView*)pNativeView);
-#else
-        UIView* pView = (__bridge UIView*)pNativeView;
-        const float scale = static_cast<float>(pView.contentScaleFactor);
-
+#if IS_MOBILE
+        const float scale = SDL_GetWindowPixelDensity(pWindow);
         ImGuiIO& io = ImGui::GetIO();
 
         // Rasterize at scale so the glyphs are sharp, then divide it back out so they occupy
@@ -129,23 +92,27 @@ namespace jpt
 #endif
     }
 
+    void ImGuiProcessEvent(const void* pSDLEvent)
+    {
+        // InputTests drives Window::OnEvent() from PreInit, long before the context exists.
+        if (ImGui::GetCurrentContext() == nullptr)
+        {
+            return;
+        }
+
+        ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event*>(pSDLEvent));
+    }
+
     void ImGuiTerminate()
     {
-#if IS_PLATFORM_MACOS
-        ImGui_ImplOSX_Shutdown();
-#endif
+        if (ImGui::GetCurrentContext() == nullptr)
+        {
+            return;
+        }
+
+        ImGui_ImplSDL3_Shutdown();
         ImGui_ImplMetal4_Shutdown();
         ImGui::DestroyContext();
-    }
-
-    void ImGuiOnPointerMoved(float x, float y)
-    {
-        ImGui::GetIO().AddMousePosEvent(x, y);
-    }
-
-    void ImGuiOnPointerButton(bool isDown)
-    {
-        ImGui::GetIO().AddMouseButtonEvent(0, isDown);
     }
 
     bool ImGuiWantsMouse()

@@ -16,10 +16,13 @@ apply, and a `LookAt` bug diagnosed as NaN when `Vector3::Normalize()` already g
 
 ## Project intent
 
-A cross-platform game engine. **Metal 4** with native AppKit/UIKit on macOS/iOS; **SDL3 + Vulkan**
-on Windows/Linux/Android. `CMakePresets.json` wires up `macos`, `ios-device`, `windows`, `linux`;
-Android is future work. Windows builds, links and runs today on llvm-mingw clang + Ninja, but
-against the null backends — see Platform backends.
+A cross-platform game engine. **SDL3** is the window, input and entry point on every platform;
+the renderer is **Metal 4** on macOS/iOS and **Vulkan** on Windows/Linux/Android.
+`CMakePresets.json` wires up `macos`, `ios-device`, `windows`, `linux`; Android is future work.
+**Windows opens a real window today and draws nothing** — verified end to end on 2026-08-10:
+lifecycle, resize and keyboard/mouse into `jpt::Input`, closing cleanly once. The renderer seam
+answers `RendererNull` there. **Linux does not build at all**, `PlatformPaths.cpp` being an
+`#error` for it; the preset exists, the platform does not. See Platform backends.
 
 **Engine and app are separate targets.** `Source/**` builds the static library
 `_Output/<preset>/libJupiterEngine.a`; the executable comes from the active project under
@@ -119,13 +122,14 @@ These rules each cost a build cycle when forgotten:
   gives *"imports must immediately follow the module declaration"*.
 - **`.mm` files must never `import std;`, directly or transitively.** Clang refuses a C++-built
   `std.pcm` in an ObjC++ TU. Since `jpt.TypeDefs` imports std, **any header a `.mm` includes must be
-  import-free** and spell types `std::uint32_t`/`double` (`AppleCallbacks.h`, `WindowMac.h`,
-  `WindowIOS.h`). Headers no `.mm` includes may use the `jpt` aliases.
+  import-free** and spell types `std::uint32_t`/`double` — today that is `ImGuiLayer.h` alone, since
+  `ImGuiLayer.mm` is the last `.mm`. Everything no `.mm` includes may use the `jpt` aliases, which
+  is what let the window headers become `jpt.Window`.
 - **Include textual headers before headers that import**, or the module's declarations win and the
   later include is a redefinition (`__promote.h`). See the ordering comment in `RendererMetal4.cpp`.
 - **Module attachment is fixed by an entity's first declaration.** A function declared in a plain
-  header cannot be defined in a module purview (why `AppleCallbacks.h`'s callbacks live in their own
-  plain `.cpp`); an `export`ed one can only be defined by its own module. This is also what keeps a
+  header cannot be defined in a module purview (why `ImGuiLayer.h`'s functions live in a plain
+  `.mm`/`.cpp` pair); an `export`ed one can only be defined by its own module. This is also what keeps a
   project's `Application<Name>.cpp` a plain TU — see Lifecycle. MSVC is more permissive — legacy
   code that built on Windows may not build on clang.
 
@@ -135,17 +139,35 @@ that a module wraps; keep ObjC types behind a pimpl. This is the only place stan
 
 ## Platform backends
 
-Two seams pick one, both by `#if IS_PLATFORM_*`: `Applications/Window/Window.h` selects the
-`Window` type and `Graphics/Renderer.h` the `Renderer`. Each is checked against a concept
-(`WindowType`, `RendererType`) and a `static_assert(!std::is_polymorphic_v<...>)` — compile-time
-polymorphism, so a backend *hides* the base's function rather than overriding it.
+**One seam is left**, and it is the renderer: `Graphics/Renderer.h` picks the `Renderer` by
+`#if IS_PLATFORM_*`, checked against the `RendererType` concept and a
+`static_assert(!std::is_polymorphic_v<...>)` — compile-time polymorphism, so a backend *hides* the
+base's function rather than overriding it.
 
-Off Apple the seams answer with `WindowNull` and `RendererNull` (`Window/Null/`, `Graphics/Null/`),
-**not** an `#error`. `ApplicationBase` holds both by value, so an `#error` there is not a missing
-backend, it is an engine that will not compile at all — and Windows/Linux then cannot run so much
-as a log line. `WindowNull::Run()` drives `OnFrame()` a fixed few times and returns; nothing calls
-`OnSurfaceReady`, because there is no surface, so `RendererNull::BeginFrame()` declines every frame.
-They are what **SDL3** and **Vulkan** replace, not extend.
+**The window seam is gone.** SDL3 is every platform's window, input and entry point, so there is
+one `jpt.Window` module and no base, no concept and no alias — a seam with one implementation only
+checks a type against itself. Only `Window::SurfaceHandle` is conditional: `CA::MetalLayer*` on
+Apple, `void*` elsewhere until a Vulkan surface exists. `ApplicationBase::Init()` takes the surface
+from the window and hands it to the renderer; `Source/Debug/StaticAsserts.cpp` is what holds the
+two independently chosen types to the same one. A console SDL does not cover is when the concept
+and the alias come back — public SDL3 has Xbox (GDK), PS2/PSP/Vita/3DS, while PS5 and Switch are
+NDA-gated private ports.
+
+Being a module rather than a plain header is what lets `Window::OnEvent` take a real
+`const SDL_Event&`: SDL's headers sit in the module's global module fragment, which importers never
+see. That was impossible while a `.mm` included the window header — none does now, `ImGuiLayer.mm`
+being the only Objective-C++ translation unit left.
+
+Off Apple the renderer seam still answers `RendererNull` (`Graphics/Null/`), **not** an `#error`.
+`ApplicationBase` holds it by value, so an `#error` there is not a missing backend, it is an engine
+that will not compile at all — and Windows/Linux then cannot run so much as a log line. Nothing
+gives it a surface, so `RendererNull::BeginFrame()` declines every frame. It is what **Vulkan**
+replaces, not extends.
+
+That has one measured consequence worth knowing before it is reported as a bug: **the frame loop is
+unthrottled there and spins a full core.** `SDL_AppIterate` is called as fast as it returns, and
+what paces a frame on Apple is the Metal present blocking on the display link — which a renderer
+that never presents cannot do. Frame pacing arrives with Vulkan; do not fake it in `RendererNull`.
 
 The same shape is what off-Apple `LoadTexture` still owes: it is declared unconditionally and
 returns an empty `Texture` with an error, pending stb_image or WIC.
@@ -216,8 +238,15 @@ what is needed; no empty overrides.
 The split is the point: `PreInit` may not reach another subsystem because pre-init order is not a
 contract. `PostUpdate` is for work that must observe every `Update`.
 
-`PreInit`/`Init` return `bool` and abort startup on false; the rest return `void`. Parameterless
-except `Window::PreInit(argc, ppArgv)`, which `UIApplicationMain` demands.
+`PreInit`/`Init` return `bool` and abort startup on false; the rest return `void`. All are
+parameterless — SDL owns the entry point, so nothing is handed `argc`/`argv`.
+
+**There is no `Run()`.** `Main.cpp` hands SDL four callbacks and never blocks:
+`SDL_AppInit` → `PreInit()` + `Init()`, `SDL_AppIterate` → `OnFrame()`, `SDL_AppEvent` →
+`Window::OnEvent()`, `SDL_AppQuit` → `Terminate()`. On iOS `SDL_AppIterate` *is* the display-link
+animation callback, which is why frame pacing survived the move off `CADisplayLink`.
+`SDL_AppQuit` runs even when `SDL_AppInit` failed, so `ApplicationBase::Terminate()` guards on
+`m_status` — releasing twice crashes in `ImGui::DestroyContext`.
 
 **Subsystems pull, they do not get pushed.** `Update()` fetches what it needs via `GetApp()`
 (`Applications/GetApp.h`) — see `RendererBase::Update()`. `ApplicationBase::Update()` stays a list
@@ -228,7 +257,7 @@ graph"*.
 
 ### `ApplicationBase` is the only virtual, and that exception is load-bearing
 
-`static_assert(!std::is_polymorphic_v<...>)` in `Graphics/Renderer.h` and `Window/Window.h` keeps
+`static_assert(!std::is_polymorphic_v<...>)` in `Graphics/Renderer.h` keeps
 everything *below* it vtable-free: a backend *hides* the base's function and must call it explicitly
 by name, `RendererBase::PreInit()`. Nothing enforces that; a backend behaving as if its base state
 was never set is the symptom.
@@ -253,7 +282,7 @@ namespace jpt { ApplicationBase& GetApp(); }   // engine declares
 ```
 
 Engine code calls through `ApplicationBase&` and lands on the project's overrides, so nothing in
-`libJupiterEngine.a` names an app-target type. `AppleCallbacks.cpp` calls
+`libJupiterEngine.a` names an app-target type. `Main.cpp`'s `SDL_AppIterate` calls
 `GetApp().OnFrame()`, and `ApplicationBase::OnFrame()` calls its own `Update()` /
 `PostUpdate()` and gets the project's.
 
@@ -283,6 +312,15 @@ Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 - On Apple, the compiler must be **Homebrew LLVM** (`/opt/homebrew/opt/llvm/bin/clang++`) for both
   `CXX` and `OBJCXX`. Apple clang cannot build C++ modules at all: no `clang-scan-deps`, no
   `libc++.modules.json`. Homebrew clang links the system `libc++`, so nothing is embedded in an iOS bundle.
+- On Windows, **llvm-mingw** (`clang++` on `PATH`), not clang-cl and not MSVC. What `import std;`
+  needs is already there and needs no preset entry: it ships libc++, and
+  `clang++ -print-file-name=libc++.modules.json` resolves to the per-target
+  `x86_64-w64-mingw32/lib/` copy, which is what the `if(APPLE)` `CMAKE_CXX_STDLIB_MODULES_JSON`
+  override exists to supply where that lookup fails. CMake 4.2 no longer gates `import std` behind
+  `CMAKE_EXPERIMENTAL_CXX_IMPORT_STD`, so that line at the top of `CMakeLists.txt` is inert there
+  and still load-bearing on an older CMake.
+- **The two toolchains are versions apart** — clang 20 on Windows against clang 22 on macOS. A
+  module or `import std` failure on one and not the other is that gap before it is the code.
 - Automation is cross-platform Python routed through `setup → build → run`. No `.sh`/`.bat`.
 - Pointers take a `p` prefix (`m_pDevice`, `pDrawable`).
 - Comment only what the code cannot say. Prefer a short trailing comment over a block that splits a
@@ -324,9 +362,9 @@ names a constant of the class's own type. A cast on the way out is still trivial
 (`FrameTimer::GetDeltaSeconds`).
 
 Anything that **computes** is not, however short, and moves out under the rule above: arithmetic or
-a branch (`WindowBase::GetAspectRatio`, `Texture::RowPitch`, `Camera::SetDistance` clamping), a
+a branch (`Window::GetAspectRatio`, `Texture::RowPitch`, `Camera::SetDistance` clamping), a
 call that builds a new value (`Path::GetFileName`, `Transform::ToMatrix`), reading two members at
-once (`Input::IsKeyDown`), or a second statement (`LaunchArgs::Set`).
+once (`Input::IsKeyDown`), or a second statement (`Window::SetCursorCaptured`).
 
 **Definitions in the `.cpp` follow the class's declaration order.**
 
@@ -347,8 +385,8 @@ Free is still right for these, so do not convert them:
   `AreValuesClose`, `ToString(KeyCode)`. As private members they would gain access to state they
   must not use.
 - **Operators**, which C++ requires to be free to allow the left-hand conversion.
-- **The platform seam.** `AppleCallbacks.h`'s functions and `jpt::GetApp()` are free
-  because module attachment forbids anything else — see the Modules section.
+- **The platform seam.** `ImGuiLayer.h`'s functions, `Main.cpp`'s four `SDL_App*` callbacks and
+  `jpt::GetApp()` are free because module attachment forbids anything else — see the Modules section.
 
 Prefer pulling over parameters when the method is already inside the engine: `EditorUI`'s sections
 take no arguments and reach what they edit through `GetApp()`, which is what keeps
@@ -367,7 +405,7 @@ first. In order of preference:
    of one module share a helper.
 3. **No interface unit, just a `.h`?** A shared header is no place for private helpers, so declare
    the `local` signatures at the top of the `.cpp` and define the bodies at its bottom
-   (`AppleCallbacks.cpp`).
+   (`Window.cpp`).
 
 Two mechanics: a named namespace has no implicit using-directive, so calls stay qualified
 `local::`; and it grants no internal linkage, so two plain `.cpp`s sharing a `local` name is a

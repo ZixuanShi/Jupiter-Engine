@@ -28,6 +28,8 @@ namespace jpt
     {
         SetCaptured(ImGuiWantsKeyboard(), ImGuiWantsMouse());
 
+        // Touch is the pointer on a phone, so capturing the mouse captures gestures too.
+        m_gestures.SetCaptured(m_mouseCaptured);
         m_gestures.Update();
     }
 
@@ -101,9 +103,9 @@ namespace jpt
         }
     }
 
-    void Input::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds)
+    void Input::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds, TouchDevice device)
     {
-        m_gestures.PostTouch(phase, id, position, timeSeconds);
+        m_gestures.PostTouch(phase, id, position, timeSeconds, device);
     }
 
 #if !IS_CONFIG_RELEASE

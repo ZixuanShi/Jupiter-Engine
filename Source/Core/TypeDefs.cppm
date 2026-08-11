@@ -25,6 +25,7 @@ export namespace jpt
     {
         Pending,
         Running,
+        Paused,         // Running, but not stepping: iOS in the background
         Succeeded,
         Failed,
         Warning,        // Completed, despite warnings

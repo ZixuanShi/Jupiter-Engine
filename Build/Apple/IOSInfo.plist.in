@@ -52,6 +52,12 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
 
+    <!-- An iPad takes a mouse or a trackpad, and without this UIKit delivers neither: SDL logs
+         "You need UIApplicationSupportsIndirectInputEvents in your Info.plist for mouse support"
+         and the pointer events never reach SDL_EVENT_MOUSE_*. Touch is unaffected either way. -->
+    <key>UIApplicationSupportsIndirectInputEvents</key>
+    <true/>
+
     <!-- Full screen, no status bar covering the render surface. -->
     <key>UIStatusBarHidden</key>
     <true/>

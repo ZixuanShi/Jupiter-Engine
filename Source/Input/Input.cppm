@@ -58,7 +58,7 @@ export namespace jpt
         void PostMouseButton(MouseButton button, bool isDown, const Vec2& position);
         void PostMouseMove(const Vec2& position);
         void PostMouseScroll(const Vec2& delta, bool isPrecise);
-        void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds);
+        void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds, TouchDevice device);
 
 #if !IS_CONFIG_RELEASE
     private:

@@ -5,7 +5,8 @@
 #if IS_PLATFORM_MACOS || IS_PLATFORM_IOS
     #include "Metal/RendererMetal4.h"
 #else
-    // Windows and Linux, until RendererVulkan lands. See the note in Window.h.
+    // Windows and Linux, until RendererVulkan lands. Not an #error: ApplicationBase holds the
+    // renderer by value, so one here would stop the engine compiling rather than stop it drawing.
     #include "Null/RendererNull.h"
 #endif
 

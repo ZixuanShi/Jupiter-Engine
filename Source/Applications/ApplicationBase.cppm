@@ -2,11 +2,11 @@
 
 module;
 
-#include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
 export module jpt.ApplicationBase;
 
+import jpt.Window;
 import jpt.TypeDefs;
 import jpt.FrameTimer;
 import jpt.Input;
@@ -49,13 +49,16 @@ export namespace jpt
         virtual void Terminate();
 
     public:
-        void Run();
         void OnFrame();
 
         // Virtual because it is where content is uploaded, and content is the App's. On iOS the
         // surface arrives long after Init(), so there is no earlier hook a project could use.
         virtual bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
+
+        /** iOS background/foreground. Toggles the Running/Paused pair only, so a foreground event
+            arriving after SDL_AppQuit cannot resurrect a terminated app. */
+        void SetPaused(bool paused) noexcept;
 
     public:
         [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }

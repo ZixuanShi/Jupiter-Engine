@@ -9,7 +9,7 @@ import std;
 
 namespace jpt
 {
-    void GestureRecognizer::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds)
+    void GestureRecognizer::PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds, TouchDevice device)
     {
         const auto it = std::ranges::find(m_touches, id, &TouchPoint::id);
 
@@ -19,6 +19,7 @@ namespace jpt
             if (it == m_touches.end())
             {
                 m_touches.emplace_back(id, position, timeSeconds);
+                m_device = device;
                 ++m_generation;
             }
             break;
@@ -66,8 +67,22 @@ namespace jpt
             return;
         }
 
+        // Rebase and emit nothing, rather than returning before the measurements: a stale
+        // baseline would deliver the whole captured excursion as one jump on release.
+        if (m_captured)
+        {
+            m_lastCentroid = centroid;
+            m_lastSpread = spread;
+            m_lastAngle = angle;
+            return;
+        }
+
+        // One finger on a trackpad is the cursor, not a gesture. Dragging it *pressed* still
+        // works: a trackpad click is a real mouse button. Pinch and twist need two by definition.
+        const bool isPointerNotGesture = (m_device != TouchDevice::Direct) && (fingerCount < 2);
+
         const Vec2 delta = centroid - m_lastCentroid;
-        if (delta != Vec2::Zero())
+        if (!isPointerNotGesture && delta != Vec2::Zero())
         {
             m_onPan.Dispatch(PanEvent{ .fingerCount = fingerCount, .position = centroid, .delta = delta });
         }

@@ -3,6 +3,7 @@
 export module jpt.InputCodes;
 
 import jpt.TypeDefs;
+import jpt.Vector2;
 import std;
 
 export namespace jpt
@@ -164,6 +165,21 @@ export namespace jpt
         Ended,
         Cancelled,
     };
+
+    /** Mirrors SDL's taxonomy, because it encodes two things and both are load-bearing: whether
+        one finger is a gesture (Direct only -- the others already move a cursor), and what the
+        coordinates are normalized over (the window, except IndirectAbsolute's own pad). */
+    enum class TouchDevice : uint8
+    {
+        Direct,             // Touch screen.
+        IndirectAbsolute,   // macOS trackpad, Linux touchpad.
+        IndirectRelative,   // iPad with a trackpad attached, X11.
+    };
+
+    /** A normalized touch coordinate into window pixels. Beside TouchDevice because what the
+        0..1 is measured over is a property of the device kind; the two must not drift. */
+    [[nodiscard]] Vec2 ToTouchPixels(float32 normalizedX, float32 normalizedY, TouchDevice device,
+                                     uint32 width, uint32 height) noexcept;
 
     [[nodiscard]] const char* ToString(KeyCode key) noexcept;
     [[nodiscard]] const char* ToString(MouseButton button) noexcept;
