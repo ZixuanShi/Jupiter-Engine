@@ -7,6 +7,13 @@ import std;
 
 namespace jpt::Debug
 {
+    /** Makes a log line leave the process as it is written rather than when a 4 KB block fills.
+        Two things depend on it: `devicectl --console` hands an iOS app a pipe, which is
+        block-buffered by default and showed nothing on device; and Debug::Assert traps immediately
+        after logging, so an unflushed message is one that never arrives. Which stdio mode delivers
+        that is per-platform -- see Logger.cpp. */
+    export void PreInit();
+
     enum class Level
     {
         Log,

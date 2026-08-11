@@ -11,9 +11,9 @@ _Saved
 _Baked
 Scripts/__pycache__
 
-# Vendored third-party sources (see Vendor/*/README.md to restore)
-Vendor/*/Include
-Vendor/*/Source
+# Vendored third-party sources are tracked, not restored by hand -- a pinned SHA in a README is a
+# promise, a committed tree is a fact, and `git clone` then setup/build is the whole onboarding.
+# See .gitattributes, which keeps them out of diffs and away from Windows line-ending conversion.
 
 # Generated files
 .vscode/c_cpp_properties.json

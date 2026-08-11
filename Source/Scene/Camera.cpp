@@ -3,10 +3,10 @@
 module;
 
 #include "Applications/GetApp.h"
-#include "Applications/Window/Window.h"
 
 module jpt.Camera;
 
+import jpt.Window;
 import jpt.Constants;
 import jpt.FrameTimer;
 import jpt.Input;

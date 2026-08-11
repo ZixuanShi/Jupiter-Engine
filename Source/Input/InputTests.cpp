@@ -2,15 +2,13 @@
 
 module;
 
-#if IS_PLATFORM_MACOS
-    #include <Carbon/Carbon.h>
+#include <SDL3/SDL.h>
 
-    #include "Applications/GetApp.h"
-    #include "Applications/Window/Apple/AppleCallbacks.h"
-#endif
+#include "Applications/GetApp.h"
 
 module jpt.InputTests;
 
+import jpt.Window;
 import jpt.Assert;
 import jpt.Camera;
 import jpt.Math;
@@ -190,11 +188,11 @@ namespace jpt
             input.OnPinch().Add([&](const PinchEvent& event) { pinchScale = event.scale; ++pinchCount; });
 
             // One finger down. The first Update only establishes the baseline.
-            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0);
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::Direct);
             input.Update();
             Debug::Assert(panCount == 0, "A touch landing emitted a pan before it moved");
 
-            input.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016);
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016, TouchDevice::Direct);
             input.Update();
             Debug::Assert(panCount == 1, "A one-finger drag emitted {} pans, expected 1", panCount);
             Debug::Assert(panFingers == 1, "Pan reported {} fingers, expected 1", panFingers);
@@ -203,14 +201,14 @@ namespace jpt
             // A second finger landing mid-drag jumps the centroid. It must not emit a pan --
             // this is the bug that teleports the object the moment you add a finger.
             panCount = 0;
-            input.PostTouch(TouchPhase::Began, 2, Vec2(330.0f, 120.0f), 0.032);
+            input.PostTouch(TouchPhase::Began, 2, Vec2(330.0f, 120.0f), 0.032, TouchDevice::Direct);
             input.Update();
             Debug::Assert(panCount == 0, "A finger landing mid-drag emitted a pan");
 
             // Two fingers separating: pinch out, and the centroid holds still so no pan.
             panCount = 0;
-            input.PostTouch(TouchPhase::Moved, 1, Vec2(80.0f, 120.0f), 0.048);
-            input.PostTouch(TouchPhase::Moved, 2, Vec2(380.0f, 120.0f), 0.048);
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(80.0f, 120.0f), 0.048, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(380.0f, 120.0f), 0.048, TouchDevice::Direct);
             input.Update();
             Debug::Assert(pinchCount == 1, "Separating two fingers emitted {} pinches, expected 1", pinchCount);
             Debug::Assert(pinchScale > 1.0f, "Pinch out gave scale {}, expected > 1", pinchScale);
@@ -218,20 +216,125 @@ namespace jpt
 
             // Lifting back to one finger rebases again rather than reporting the centroid jump.
             panCount = 0;
-            input.PostTouch(TouchPhase::Ended, 2, Vec2(380.0f, 120.0f), 0.064);
+            input.PostTouch(TouchPhase::Ended, 2, Vec2(380.0f, 120.0f), 0.064, TouchDevice::Direct);
             input.Update();
             Debug::Assert(panCount == 0, "A finger lifting emitted a pan");
 
             // Cancelled must remove the touch too. A call interrupting a gesture never sends
             // Ended, and a finger left in the table holds the gesture open forever.
-            input.PostTouch(TouchPhase::Cancelled, 1, Vec2(80.0f, 120.0f), 0.080);
+            input.PostTouch(TouchPhase::Cancelled, 1, Vec2(80.0f, 120.0f), 0.080, TouchDevice::Direct);
             input.Update();
-            input.PostTouch(TouchPhase::Began, 3, Vec2(500.0f, 500.0f), 0.096);
+            input.PostTouch(TouchPhase::Began, 3, Vec2(500.0f, 500.0f), 0.096, TouchDevice::Direct);
             input.Update();
-            input.PostTouch(TouchPhase::Moved, 3, Vec2(510.0f, 500.0f), 0.112);
+            input.PostTouch(TouchPhase::Moved, 3, Vec2(510.0f, 500.0f), 0.112, TouchDevice::Direct);
             panCount = 0;
             input.Update();
             Debug::Assert(panFingers == 1, "A cancelled touch stayed active: pan reports {} fingers", panFingers);
+        }
+
+        // Direct vs indirect. One finger on a trackpad is the cursor, so it must not pan -- that
+        // is a thumb resting there rotating the model. The same finger on a phone screen must,
+        // because there it is the only pointer the device has.
+        {
+            Input input;
+
+            uint32 panCount = 0;
+            uint32 panFingers = 0;
+            input.OnPan().Add([&](const PanEvent& event) { ++panCount; panFingers = event.fingerCount; });
+
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::IndirectAbsolute);
+            input.Update();
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016, TouchDevice::IndirectAbsolute);
+            input.Update();
+            Debug::Assert(panCount == 0, "One finger on an indirect device emitted {} pans, expected 0", panCount);
+
+            // A second finger makes it a gesture, and the pan resumes from there.
+            input.PostTouch(TouchPhase::Began, 2, Vec2(330.0f, 120.0f), 0.032, TouchDevice::IndirectAbsolute);
+            input.Update();
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(140.0f, 130.0f), 0.048, TouchDevice::IndirectAbsolute);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(340.0f, 130.0f), 0.048, TouchDevice::IndirectAbsolute);
+            input.Update();
+            Debug::Assert(panCount == 1, "Two fingers on an indirect device emitted {} pans, expected 1", panCount);
+            Debug::Assert(panFingers == 2, "Pan reported {} fingers, expected 2", panFingers);
+        }
+        {
+            Input input;
+
+            uint32 panCount = 0;
+            input.OnPan().Add([&panCount](const PanEvent&) { ++panCount; });
+
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::Direct);
+            input.Update();
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016, TouchDevice::Direct);
+            input.Update();
+            Debug::Assert(panCount == 1, "One finger on a direct device emitted {} pans, expected 1", panCount);
+        }
+
+        // Both Indirect kinds are cursors, so both need two fingers. Only the coordinate mapping
+        // distinguishes them, which is exercised through Window::OnEvent below.
+        {
+            GestureRecognizer gestures;
+
+            uint32 panCount = 0;
+            gestures.OnPan().Add([&panCount](const PanEvent&) { ++panCount; });
+
+            gestures.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::IndirectRelative);
+            gestures.Update();
+            gestures.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016, TouchDevice::IndirectRelative);
+            gestures.Update();
+            Debug::Assert(panCount == 0, "One finger on IndirectRelative emitted {} pans, expected 0", panCount);
+        }
+
+        // Coordinate mapping. A 0..1 touch is normalized over the window for Direct and
+        // IndirectRelative, and over the pad's own extents for IndirectAbsolute -- so only the
+        // last takes the aspect correction. A 2:1 window makes the two answers differ.
+        {
+            constexpr uint32 kWidth  = 1000;
+            constexpr uint32 kHeight = 500;
+
+            const Vec2 direct = ToTouchPixels(0.5f, 0.5f, TouchDevice::Direct, kWidth, kHeight);
+            Debug::Assert(direct == Vec2(500.0f, 250.0f), "Direct mapped to ({}, {}), expected (500, 250)", direct.x, direct.y);
+
+            // Window space, exactly as Direct -- SDL normalizes an indirect pointer over the
+            // window too. This is the assertion that fails if the aspect leaks onto it.
+            const Vec2 relative = ToTouchPixels(0.5f, 0.5f, TouchDevice::IndirectRelative, kWidth, kHeight);
+            Debug::Assert(relative == direct, "IndirectRelative mapped to ({}, {}), expected the same as Direct ({}, {})", relative.x, relative.y, direct.x, direct.y);
+
+            // Pad space: both axes take the height, and x carries the 1.6 pad aspect.
+            const Vec2 absolute = ToTouchPixels(0.5f, 0.5f, TouchDevice::IndirectAbsolute, kWidth, kHeight);
+            Debug::Assert(AreValuesClose(absolute.x, 400.0f), "IndirectAbsolute x is {}, expected 0.5 * 500 * 1.6 = 400", absolute.x);
+            Debug::Assert(AreValuesClose(absolute.y, 250.0f), "IndirectAbsolute y is {}, expected 0.5 * 500 = 250", absolute.y);
+
+            // The aspect must not touch y, or a twist reads skewed in the other direction.
+            const Vec2 tall = ToTouchPixels(0.0f, 1.0f, TouchDevice::IndirectAbsolute, kWidth, kHeight);
+            Debug::Assert(tall == Vec2(0.0f, 500.0f), "IndirectAbsolute scaled y by the aspect: ({}, {})", tall.x, tall.y);
+        }
+
+        // Capture. Touch is the pointer on a phone, so a drag on an ImGui panel must not also
+        // reach the scene. Driven on the recognizer directly: Input::Update() reads the live
+        // ImGui state, which a test has no context to set.
+        {
+            GestureRecognizer gestures;
+
+            uint32 panCount = 0;
+            Vec2 panDelta = Vec2::Zero();
+            gestures.OnPan().Add([&](const PanEvent& event) { ++panCount; panDelta = event.delta; });
+
+            gestures.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::Direct);
+            gestures.SetCaptured(true);
+            gestures.Update();
+
+            gestures.PostTouch(TouchPhase::Moved, 1, Vec2(130.0f, 120.0f), 0.016, TouchDevice::Direct);
+            gestures.Update();
+            Debug::Assert(panCount == 0, "A drag under capture emitted {} pans, expected 0", panCount);
+
+            // Releasing must not deliver the captured excursion as one jump: the baseline followed
+            // the finger, so only the movement after release counts.
+            gestures.PostTouch(TouchPhase::Moved, 1, Vec2(140.0f, 130.0f), 0.032, TouchDevice::Direct);
+            gestures.SetCaptured(false);
+            gestures.Update();
+            Debug::Assert(panCount == 1, "Releasing capture emitted {} pans, expected 1", panCount);
+            Debug::Assert(panDelta == Vec2(10.0f, 10.0f), "Pan after release is ({}, {}), expected (10, 10) -- the baseline went stale under capture", panDelta.x, panDelta.y);
         }
 
         // Twist. Rotating about the pair's own midpoint holds the centroid and the spread, so a
@@ -251,14 +354,14 @@ namespace jpt
                     ++twistCount;
                 });
 
-            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0);
-            input.PostTouch(TouchPhase::Began, 2, Vec2(300.0f, 100.0f), 0.0);
+            input.PostTouch(TouchPhase::Began, 1, Vec2(100.0f, 100.0f), 0.0, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Began, 2, Vec2(300.0f, 100.0f), 0.0, TouchDevice::Direct);
             input.Update();
 
             // A quarter turn clockwise about the midpoint (200, 100). Pixels are y-down, so
             // clockwise on screen is the positive direction.
-            input.PostTouch(TouchPhase::Moved, 1, Vec2(200.0f,   0.0f), 0.016);
-            input.PostTouch(TouchPhase::Moved, 2, Vec2(200.0f, 200.0f), 0.016);
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(200.0f,   0.0f), 0.016, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(200.0f, 200.0f), 0.016, TouchDevice::Direct);
             input.Update();
             Debug::Assert(twistCount == 1, "A quarter turn emitted {} twists, expected 1", twistCount);
             Debug::Assert(AreValuesClose(twistRadians, kHalfPi<float32>, 1e-4f), "A quarter turn reported {} rad", twistRadians);
@@ -266,13 +369,13 @@ namespace jpt
             Debug::Assert(pinchCount == 0, "A twist about the midpoint changed the spread");
 
             // Park the pair just short of atan2's +/-pi branch cut, then step 20 degrees across it.
-            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f,  82.635f), 0.032);
-            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f, 117.365f), 0.032);
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f,  82.635f), 0.032, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f, 117.365f), 0.032, TouchDevice::Direct);
             input.Update();
 
             twistCount = 0;
-            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f, 117.365f), 0.048);
-            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f,  82.635f), 0.048);
+            input.PostTouch(TouchPhase::Moved, 1, Vec2(298.481f, 117.365f), 0.048, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Moved, 2, Vec2(101.519f,  82.635f), 0.048, TouchDevice::Direct);
             input.Update();
             Debug::Assert(twistCount == 1, "The step across the branch cut emitted {} twists, expected 1", twistCount);
             Debug::Assert(AreValuesClose(twistRadians, ToRadians(20.0f), 1e-3f), "Crossing +/-pi reported {} rad, expected 0.349 -- the delta was not wrapped", twistRadians);
@@ -282,8 +385,8 @@ namespace jpt
             panCount = 0;
             pinchCount = 0;
             twistCount = 0;
-            input.PostTouch(TouchPhase::Ended, 1, Vec2(298.481f, 117.365f), 0.064);
-            input.PostTouch(TouchPhase::Began, 3, Vec2(101.519f, 500.0f), 0.064);
+            input.PostTouch(TouchPhase::Ended, 1, Vec2(298.481f, 117.365f), 0.064, TouchDevice::Direct);
+            input.PostTouch(TouchPhase::Began, 3, Vec2(101.519f, 500.0f), 0.064, TouchDevice::Direct);
             input.Update();
             Debug::Assert(twistCount == 0, "Swapping a finger mid-gesture emitted a twist of {} rad", twistRadians);
             Debug::Assert(panCount == 0, "Swapping a finger mid-gesture emitted a pan");
@@ -529,102 +632,107 @@ namespace jpt
             Debug::Assert(std::string_view(ToString(MouseButton::Middle)) == "Middle", "MouseButton::Middle is named {}", ToString(MouseButton::Middle));
         }
 
-#if IS_PLATFORM_MACOS
-        // The kVK_* translation, driven through the real callback the event monitor calls.
-        // Only AppKit's delivery is left untested, and that cannot be scripted.
+        // The SDL_Scancode translation, driven through the real Window::OnEvent that SDL_AppEvent
+        // calls. Only SDL's own delivery is left untested, and that cannot be scripted.
         {
             Input& input = GetApp().GetInput();
+            Window& window = GetApp().GetWindow();
 
             KeyCode received = KeyCode::Unknown;
             const auto handle = input.OnKeyDown().Add([&received](const KeyEvent& event) { received = event.key; });
 
-            const struct { std::uint16_t platform; KeyCode expected; const char* what; } kCases[] =
+            const struct { SDL_Scancode scancode; KeyCode expected; const char* what; } kCases[] =
             {
-                { kVK_ANSI_W,           KeyCode::W,           "W" },
-                { kVK_ANSI_A,           KeyCode::A,           "A" },
-                { kVK_ANSI_S,           KeyCode::S,           "S" },
-                { kVK_ANSI_D,           KeyCode::D,           "D" },
-                { kVK_ANSI_R,           KeyCode::R,           "R" },
-                { kVK_LeftArrow,        KeyCode::LeftArrow,   "LeftArrow" },
-                { kVK_UpArrow,          KeyCode::UpArrow,     "UpArrow" },
-                { kVK_Escape,           KeyCode::Escape,      "Escape" },
-                { kVK_Space,            KeyCode::Space,       "Space" },
-                { kVK_Delete,           KeyCode::Backspace,   "Backspace (kVK_Delete)" },
-                { kVK_ForwardDelete,    KeyCode::Delete,      "Delete (kVK_ForwardDelete)" },
-                { kVK_Shift,            KeyCode::LeftShift,   "LeftShift" },
-                { kVK_RightShift,       KeyCode::RightShift,  "RightShift" },
-                { kVK_Command,          KeyCode::LeftSuper,   "LeftSuper" },
-                { kVK_ANSI_Grave,       KeyCode::Grave,       "Grave" },
-                { kVK_ANSI_Slash,       KeyCode::Slash,       "Slash" },
-                { kVK_ANSI_Keypad9,     KeyCode::Keypad9,     "Keypad9" },
-                { kVK_ANSI_KeypadClear, KeyCode::KeypadClear, "KeypadClear" },
-                { kVK_F1,               KeyCode::F1,          "F1" },
-                { kVK_F20,              KeyCode::F20,         "F20" },
+                { SDL_SCANCODE_W,         KeyCode::W,           "W" },
+                { SDL_SCANCODE_A,         KeyCode::A,           "A" },
+                { SDL_SCANCODE_S,         KeyCode::S,           "S" },
+                { SDL_SCANCODE_D,         KeyCode::D,           "D" },
+                { SDL_SCANCODE_R,         KeyCode::R,           "R" },
+                { SDL_SCANCODE_LEFT,      KeyCode::LeftArrow,   "LeftArrow" },
+                { SDL_SCANCODE_UP,        KeyCode::UpArrow,     "UpArrow" },
+                { SDL_SCANCODE_ESCAPE,    KeyCode::Escape,      "Escape" },
+                { SDL_SCANCODE_SPACE,     KeyCode::Space,       "Space" },
+                { SDL_SCANCODE_BACKSPACE, KeyCode::Backspace,   "Backspace" },
+                { SDL_SCANCODE_DELETE,    KeyCode::Delete,      "Delete" },
+                { SDL_SCANCODE_LSHIFT,    KeyCode::LeftShift,   "LeftShift" },
+                { SDL_SCANCODE_RSHIFT,    KeyCode::RightShift,  "RightShift" },
+                { SDL_SCANCODE_LGUI,      KeyCode::LeftSuper,   "LeftSuper" },
+                { SDL_SCANCODE_GRAVE,     KeyCode::Grave,       "Grave" },
+                { SDL_SCANCODE_SLASH,     KeyCode::Slash,       "Slash" },
+                { SDL_SCANCODE_KP_9,      KeyCode::Keypad9,     "Keypad9" },
+                { SDL_SCANCODE_KP_CLEAR,  KeyCode::KeypadClear, "KeypadClear" },
+                { SDL_SCANCODE_F1,        KeyCode::F1,          "F1" },
+                { SDL_SCANCODE_F20,       KeyCode::F20,         "F20" },
             };
 
+            SDL_Event event{};
             for (const auto& testCase : kCases)
             {
                 received = KeyCode::Unknown;
-                jpt::OnKeyDown(testCase.platform, false);
-                Debug::Assert(received == testCase.expected, "kVK 0x{:X} translated to {}, expected {}",
-                              testCase.platform, ToString(received), testCase.what);
-                jpt::OnKeyUp(testCase.platform);
+                event.type = SDL_EVENT_KEY_DOWN;
+                event.key.scancode = testCase.scancode;
+                event.key.repeat = false;
+                (void)window.OnEvent(event);
+                Debug::Assert(received == testCase.expected, "Scancode {} translated to {}, expected {}",
+                              static_cast<int32>(testCase.scancode), ToString(received), testCase.what);
+
+                event.type = SDL_EVENT_KEY_UP;
+                (void)window.OnEvent(event);
             }
 
-            // A code with no row must land on Unknown rather than a neighbouring key.
+            // A scancode with no row must land on Unknown rather than a neighbouring key.
             received = KeyCode::A;
-            jpt::OnKeyDown(kVK_JIS_Kana, false);
-            Debug::Assert(received == KeyCode::Unknown, "An unmapped kVK translated to {}", ToString(received));
-            jpt::OnKeyUp(kVK_JIS_Kana);
+            event.type = SDL_EVENT_KEY_DOWN;
+            event.key.scancode = SDL_SCANCODE_LANG1;
+            (void)window.OnEvent(event);
+            Debug::Assert(received == KeyCode::Unknown, "An unmapped scancode translated to {}", ToString(received));
+            event.type = SDL_EVENT_KEY_UP;
+            (void)window.OnEvent(event);
 
             input.OnKeyDown().Remove(handle);
 
-            // Button numbers through the same real callback. Middle is the one that drives
-            // translation, and AppKit numbers it 2 -- nothing else in the engine says so.
+            // CapsLock is a plain key to SDL, where AppKit reported only a whole modifier mask.
+            // Down and up here still mean engaged and disengaged, not physically held.
+            event.key.scancode = SDL_SCANCODE_CAPSLOCK;
+            event.type = SDL_EVENT_KEY_DOWN;
+            (void)window.OnEvent(event);
+            Debug::Assert(input.IsKeyDown(KeyCode::CapsLock), "CapsLock did not register as engaged");
+            event.type = SDL_EVENT_KEY_UP;
+            (void)window.OnEvent(event);
+            Debug::Assert(!input.IsKeyDown(KeyCode::CapsLock), "CapsLock stayed engaged after its key up");
+
+            // SDL numbers left 1, middle 2 and right 3 -- the opposite of AppKit, which put right
+            // at 1 and middle at 2. Nothing else in the engine says so.
             MouseButton receivedButton = MouseButton::Left;
             const auto buttonHandle = input.OnMouseButton().Add([&receivedButton](const MouseButtonEvent& event) { receivedButton = event.button; });
 
-            const struct { std::int32_t number; MouseButton expected; } kButtons[] =
+            const struct { std::uint8_t number; MouseButton expected; } kButtons[] =
             {
-                { 0, MouseButton::Left },
-                { 1, MouseButton::Right },
-                { 2, MouseButton::Middle },
+                { SDL_BUTTON_LEFT,   MouseButton::Left },
+                { SDL_BUTTON_MIDDLE, MouseButton::Middle },
+                { SDL_BUTTON_RIGHT,  MouseButton::Right },
             };
 
             for (const auto& testCase : kButtons)
             {
                 // Position stays at the origin it already holds, so this leaves no phantom delta
                 // behind for the first real mouse move.
-                jpt::OnMouseButton(testCase.number, true, 0.0f, 0.0f);
+                event.type = SDL_EVENT_MOUSE_BUTTON_DOWN;
+                event.button.button = testCase.number;
+                event.button.which = 0;
+                event.button.x = 0.0f;
+                event.button.y = 0.0f;
+                (void)window.OnEvent(event);
                 Debug::Assert(receivedButton == testCase.expected, "Button {} translated to {}, expected {}", testCase.number, ToString(receivedButton), ToString(testCase.expected));
                 Debug::Assert(input.IsMouseButtonDown(testCase.expected), "Button {} did not register as down", testCase.number);
 
-                jpt::OnMouseButton(testCase.number, false, 0.0f, 0.0f);
+                event.type = SDL_EVENT_MOUSE_BUTTON_UP;
+                (void)window.OnEvent(event);
                 Debug::Assert(!input.IsMouseButtonDown(testCase.expected), "Button {} stayed down after release", testCase.number);
             }
 
             input.OnMouseButton().Remove(buttonHandle);
         }
-        {
-            // Modifiers arrive as a whole mask, never down/up, so this path translates separately.
-            const Input& input = GetApp().GetInput();
-
-            constexpr std::uint32_t kLeftShiftBit = 0x0002;         // Hardware-dependent, has a side.
-            constexpr std::uint32_t kCapsLockFlag = 1u << 16;       // NSEventModifierFlagCapsLock.
-
-            jpt::OnModifierChanged(kVK_Shift, kLeftShiftBit);
-            Debug::Assert(input.IsKeyDown(KeyCode::LeftShift), "A flags-changed event did not put LeftShift down");
-            jpt::OnModifierChanged(kVK_Shift, 0);
-            Debug::Assert(!input.IsKeyDown(KeyCode::LeftShift), "A cleared mask did not lift LeftShift");
-
-            // CapsLock has no left/right bit, which is exactly why it was silently dropped before.
-            // Down and up here mean engaged and disengaged, not physically held.
-            jpt::OnModifierChanged(kVK_CapsLock, kCapsLockFlag);
-            Debug::Assert(input.IsKeyDown(KeyCode::CapsLock), "CapsLock was dropped -- ModifierMask has no row for it");
-            jpt::OnModifierChanged(kVK_CapsLock, 0);
-            Debug::Assert(!input.IsKeyDown(KeyCode::CapsLock), "CapsLock stayed engaged after its flag cleared");
-        }
-#endif
 
         Debug::Log("Input tests passed.");
     }

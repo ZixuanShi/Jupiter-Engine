@@ -1,0 +1,9 @@
+# Vendored third-party sources. This has to exist *before* they are committed, or Git normalizes
+# them later and the fix becomes its own churn commit.
+#
+#   -text             Git for Windows defaults to core.autocrlf=true, which would rewrite every
+#                     one of these LF files to CRLF on checkout. Store and check out bytes as-is.
+#   -diff             a version bump touches ~1500 files; show "Binary files differ" instead.
+#   linguist-vendored keep GitHub's language stats about this engine, not about SDL.
+Vendor/*/Source/** -text -diff linguist-vendored
+Vendor/*/Include/** -text -diff linguist-vendored

@@ -114,6 +114,12 @@ namespace jpt
         m_pLayer->setPixelFormat(MTL::PixelFormatBGRA8Unorm_sRGB);
         m_pLayer->setFramebufferOnly(true); // Promises render-only access, letting Core Animation pick faster memory.
 
+        // Set rather than inherited. CAMetalLayer happens to default to 3, so the ring of
+        // kFramesInFlight allocators lined up with the drawable pool by coincidence. Fewer
+        // drawables than semaphore slots makes nextDrawable() return null every frame.
+        m_pLayer->setMaximumDrawableCount(kFramesInFlight);
+        Debug::Info("Drawables {}, frames in flight {}", m_pLayer->maximumDrawableCount(), static_cast<uint32>(kFramesInFlight));
+
 #if IS_PLATFORM_MACOS
         m_pLayer->setDisplaySyncEnabled(m_vsync);
 #endif

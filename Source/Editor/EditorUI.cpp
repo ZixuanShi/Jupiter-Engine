@@ -6,11 +6,11 @@ module;
 // implementation unit may reach the application.
 #include "imgui.h"
 #include "Applications/GetApp.h"
-#include "Applications/Window/Window.h"
 #include "Graphics/Renderer.h"
 
 module jpt.EditorUI;
 
+import jpt.Window;
 import jpt.Camera;
 import jpt.FrameTimer;
 import jpt.LinearColor;

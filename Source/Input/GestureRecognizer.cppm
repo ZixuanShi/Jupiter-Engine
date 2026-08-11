@@ -47,6 +47,13 @@ export namespace jpt
     private:
         std::vector<TouchPoint> m_touches;
 
+        // Set by whichever touch begins. Nothing mixes a trackpad and a touchscreen inside one
+        // gesture, so this does not need to be per-touch.
+        TouchDevice m_device = TouchDevice::Direct;
+
+        // The UI owns the pointer this frame, so recognition still runs but nothing is dispatched.
+        bool m_captured = false;
+
         Vec2 m_lastCentroid = Vec2::Zero();
         float32 m_lastSpread = 0.0f;
         float32 m_lastAngle = 0.0f;
@@ -61,8 +68,10 @@ export namespace jpt
         EventDispatcher<TwistEvent> m_onTwist;
 
     public:
-        void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds);
+        void PostTouch(TouchPhase phase, uint64 id, const Vec2& position, float64 timeSeconds, TouchDevice device);
         void Update();
+
+        void SetCaptured(bool captured) noexcept { m_captured = captured; }
 
     public:
         [[nodiscard]] EventDispatcher<PanEvent>& OnPan() noexcept { return m_onPan; }

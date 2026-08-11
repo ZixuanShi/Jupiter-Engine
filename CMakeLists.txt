@@ -19,10 +19,11 @@ if(APPLE)
 endif()
 
 # --- Project ---
-# OBJCXX only where a .mm is compiled. Enabling it everywhere costs a compiler detection pass on
-# platforms with no Objective-C++ at all, and hard-fails outright on a toolchain that has none.
-project(JupiterEngine LANGUAGES CXX)
+# C is SDL3's language on every platform. OBJC/OBJCXX only where Apple sources are compiled --
+# SDL enables OBJC itself, but doing it here is what makes the preset's pinned compiler apply.
+project(JupiterEngine LANGUAGES C CXX)
 if(APPLE)
+    enable_language(OBJC)
     enable_language(OBJCXX)
 endif()
 
@@ -101,12 +102,17 @@ endif()
 add_compile_definitions(IS_EDITOR=${JUPITER_EDITOR})
 
 # --- Compiler flags ---
+# Scoped to the languages this project writes. These are directory-scoped and inherited by every
+# add_subdirectory below, and vendored C does not survive them. One generator expression per flag:
+# a genex expanding to two flags arrives as a single quoted argument.
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-fcolor-diagnostics -fansi-escape-codes)
-    add_compile_options(-Wall -Wextra -Wpedantic)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Wall>
+                        $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Wextra>
+                        $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Wpedantic>)
 
     if(JUPITER_WARNINGS_AS_ERRORS)
-        add_compile_options(-Werror)
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Werror>)
     endif()
 endif()
 
@@ -185,6 +191,41 @@ if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS"
     target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${JUPITER_PROJECT}/_Saved")
 endif()
 
+# --- Vendor -- SDL3 ---
+# Outside every conditional: SDL is the window, the event loop and the entry point on all four
+# platforms and in every config, not a development tool like ImGui.
+#
+# Static, never shared. Scripts/Build/sign.py runs codesign without --deep, so a dylib nested in
+# the bundle would ship unsigned, and Projects/<Name>/CMakeLists.txt gives iOS no rpath to find
+# one with.
+set(JUPITER_SDL "${CMAKE_SOURCE_DIR}/Vendor/SDL3/Source")
+if(NOT EXISTS "${JUPITER_SDL}/include/SDL3/SDL.h")
+    message(FATAL_ERROR "SDL3 missing. See Vendor/SDL3/README.md")
+endif()
+
+set(SDL_STATIC       ON  CACHE BOOL "" FORCE)
+set(SDL_SHARED       OFF CACHE BOOL "" FORCE)
+set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+set(SDL_EXAMPLES     OFF CACHE BOOL "" FORCE)
+set(SDL_TESTS        OFF CACHE BOOL "" FORCE)
+set(SDL_INSTALL      OFF CACHE BOOL "" FORCE)
+
+# CMAKE_CXX_MODULE_STD initialises CXX_MODULE_STD on every C++ target created after it, so it has
+# to be off across the add_subdirectory rather than unset on the targets afterwards.
+set(JUPITER_MODULE_STD "${CMAKE_CXX_MODULE_STD}")
+set(CMAKE_CXX_MODULE_STD OFF)
+add_subdirectory("${JUPITER_SDL}" "${CMAKE_BINARY_DIR}/SDL3" EXCLUDE_FROM_ALL)
+set(CMAKE_CXX_MODULE_STD "${JUPITER_MODULE_STD}")
+
+# SYSTEM so SDL's headers never trip -Wpedantic -Werror in our sources; -w so its own C does not
+# have to survive a warning set it was never written for.
+set_target_properties(SDL3-static PROPERTIES CXX_SCAN_FOR_MODULES OFF SYSTEM TRUE)
+target_compile_options(SDL3-static PRIVATE -w)
+
+# PUBLIC, unlike every other dependency: Source/Main.cpp is compiled into the *app* target rather
+# than the archive, and it is the translation unit that includes SDL_main.h.
+target_link_libraries(JupiterEngine PUBLIC SDL3::SDL3-static)
+
 # --- Apple ---
 if(APPLE)
     # Everything the two Apple platforms disagree on, in one place.
@@ -226,24 +267,14 @@ if(APPLE)
             "${JUPITER_IMGUI}/imgui_tables.cpp"
             "${JUPITER_IMGUI}/imgui_widgets.cpp"
             "${JUPITER_IMGUI}/imgui_demo.cpp"
-            "${JUPITER_IMGUI}/backends/imgui_impl_metal4.mm")
-
-        # imgui_impl_osx.mm is the AppKit *input* backend and is macOS-only. The Metal backend
-        # above is plain Metal and builds for both; iOS input is hand-written in WindowIOS.mm.
-        if(NOT JUPITER_PLATFORM STREQUAL "IOS")
-            list(APPEND JUPITER_IMGUI_SOURCES "${JUPITER_IMGUI}/backends/imgui_impl_osx.mm")
-        endif()
+            "${JUPITER_IMGUI}/backends/imgui_impl_metal4.mm"
+            "${JUPITER_IMGUI}/backends/imgui_impl_sdl3.cpp")
 
         add_library(JupiterImGui STATIC ${JUPITER_IMGUI_SOURCES})
         set_target_properties(JupiterImGui PROPERTIES CXX_SCAN_FOR_MODULES OFF)
         target_include_directories(JupiterImGui PUBLIC "${JUPITER_IMGUI}" "${JUPITER_IMGUI}/backends")
         target_compile_options(JupiterImGui PRIVATE -w $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
-
-        # GameController is imgui_impl_osx's own dependency -- it reads GCController for gamepad
-        # navigation -- so it belongs on this target rather than on the engine's framework list.
-        if(NOT JUPITER_PLATFORM STREQUAL "IOS")
-            target_link_libraries(JupiterImGui PUBLIC "-framework GameController")
-        endif()
+        target_link_libraries(JupiterImGui PUBLIC SDL3::SDL3-static)
 
         # SYSTEM on the consuming side too, so imgui.h never trips -Wpedantic -Werror in our code.
         target_include_directories(JupiterEngine SYSTEM PRIVATE "${JUPITER_IMGUI}" "${JUPITER_IMGUI}/backends")

@@ -13,6 +13,7 @@
             "binaryDir": "$env{JUPITER_PROJECT_DIR}/_ProjectFiles/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
                 "JUPITER_PRESET": "${presetName}"
             }
@@ -37,7 +38,9 @@
                 "rhs": "Darwin"
             },
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
                 "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
+                "CMAKE_OBJC_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
                 "CMAKE_OBJCXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
                 "CMAKE_OSX_DEPLOYMENT_TARGET": "26.0"
             }
@@ -52,7 +55,9 @@
                 "rhs": "Darwin"
             },
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
                 "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
+                "CMAKE_OBJC_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
                 "CMAKE_OBJCXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
                 "CMAKE_SYSTEM_NAME": "iOS",
                 "CMAKE_OSX_ARCHITECTURES": "arm64",
