@@ -18,6 +18,7 @@ import UnitTests_Coding_RomanToInteger;
 import UnitTests_Coding_MaxSubArray;
 import UnitTests_Coding_DeleteDuplicatesFromList;
 import UnitTests_Coding_MergeCloseVertices;
+import UnitTests_Coding_MergeMinConflictsStrings;
 import UnitTests_Coding_BuildPalindromeWithRemains;
 import UnitTests_Coding_MaximumVisitableCities;
 import UnitTests_Coding_SearchSuggestions;
@@ -28,6 +29,7 @@ import UnitTests_Coding_RotateBits;
 import UnitTests_Coding_PrimeFactors;
 import UnitTests_Coding_KthLargestElement;
 import UnitTests_Coding_BestMeetingNode;
+import UnitTests_Coding_DistanceTree;
 
 export bool RunUnitTests_Coding()
 {
@@ -40,6 +42,7 @@ export bool RunUnitTests_Coding()
     JPT_ENSURE(UnitTests_Coding_MaxSubArray());
     JPT_ENSURE(UnitTests_Coding_DeleteDuplicatesFromList());
     JPT_ENSURE(UnitTests_Coding_MergeCloseVertices());
+    JPT_ENSURE(UnitTests_Coding_MergeMinConflictsStrings());
     JPT_ENSURE(UnitTests_Coding_BuildPalindromeWithRemains());
     JPT_ENSURE(UnitTests_Coding_MaximumVisitableCities());
     JPT_ENSURE(UnitTests_Coding_SearchSuggestions());
@@ -50,6 +53,7 @@ export bool RunUnitTests_Coding()
     JPT_ENSURE(UnitTests_Coding_PrimeFactors());
     JPT_ENSURE(UnitTests_Coding_KthLargestElement());
     JPT_ENSURE(UnitTests_Coding_BestMeetingNode());
+    JPT_ENSURE(UnitTests_Coding_DistanceTree());
 
     return true;
 }

@@ -64,11 +64,12 @@ namespace jpt
     template<Numeric T>
     constexpr Vector3<T> TLineSegment3<T>::Project(const Vector3<T>& point) const noexcept
     {
-        const Vector3<T> ab = b - a;
+        const Vector3<T> dir = Direction();
         const Vector3<T> ap = point - a;
-        T t = ab.Dot(ap) / ab.Dot(ab);
-        ClampTo(t, static_cast<T>(0), static_cast<T>(1));
-        return a + ab * t;
+        T dot = ap.Dot(dir);
+        ClampTo(dot, static_cast<T>(0), Length());
+        const Vector3<T> closestPoint = a + dir * dot;
+        return closestPoint;
     }
 
     template<Numeric T>
