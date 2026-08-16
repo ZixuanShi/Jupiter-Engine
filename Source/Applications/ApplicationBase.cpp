@@ -23,11 +23,11 @@ import jpt.Window;
 
 namespace jpt
 {
-    bool ApplicationBase::PreInit()
+    bool ApplicationBase::PreInit(int argc, char* argv[])
     {
-        Debug::PreInit();       // Before the first log line.
-
+        Debug::PreInit();
         Debug::Info("Jupiter Engine from {}-{}-{}", GetPlatformName(), GetConfigName(), GetAppName());
+        m_launchArgs.PreInit(argc, argv);
 
 #if !IS_CONFIG_RELEASE
         RunMathTests();

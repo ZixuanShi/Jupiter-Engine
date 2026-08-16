@@ -43,8 +43,7 @@ namespace jpt
             return false;
         }
 
-        Debug::Info("SDL {}.{}.{}", SDL_VERSIONNUM_MAJOR(SDL_GetVersion()),
-                    SDL_VERSIONNUM_MINOR(SDL_GetVersion()), SDL_VERSIONNUM_MICRO(SDL_GetVersion()));
+        Debug::Info("SDL {}.{}.{}", SDL_VERSIONNUM_MAJOR(SDL_GetVersion()), SDL_VERSIONNUM_MINOR(SDL_GetVersion()), SDL_VERSIONNUM_MICRO(SDL_GetVersion()));
         return true;
     }
 
@@ -93,13 +92,9 @@ namespace jpt
         // frames on its 1.0 fallback.
         OnResize(static_cast<uint32>(pixelSize.x), static_cast<uint32>(pixelSize.y));
 
-        Debug::Info("Window {}x{} pt, {}x{} px, density {:.2f}",
-                    pointSize.x, pointSize.y, pixelSize.x, pixelSize.y, m_pixelDensity);
-
         // The contract every mouse and touch coordinate rests on.
         Debug::Assert(pixelSize.x == static_cast<int32>(pointSize.x * m_pixelDensity + 0.5f),
-                      "Pixel density {} does not reconcile {} pt with {} px",
-                      m_pixelDensity, pointSize.x, pixelSize.x);
+                      "Pixel density {} does not reconcile {} pt with {} px", m_pixelDensity, pointSize.x, pixelSize.x);
 
         return true;
     }

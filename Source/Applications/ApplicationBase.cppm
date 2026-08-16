@@ -11,6 +11,7 @@ import jpt.TypeDefs;
 import jpt.FrameTimer;
 import jpt.Input;
 import jpt.Scene;
+import jpt.LaunchArgs;
 
 #if IS_EDITOR
     import jpt.EditorUI;
@@ -33,6 +34,7 @@ export namespace jpt
         Renderer m_renderer;
         Scene m_scene;
         Input m_input;
+        LaunchArgs m_launchArgs;
         Status m_status = Status::Pending;
 
 #if IS_EDITOR
@@ -42,7 +44,7 @@ export namespace jpt
     public:
         virtual ~ApplicationBase() = default;
 
-        virtual bool PreInit();
+        virtual bool PreInit(int argc, char* argv[]);
         virtual bool Init();
         virtual void Update();          // Game logic
         virtual void PostUpdate();      // Camera
@@ -67,5 +69,6 @@ export namespace jpt
         [[nodiscard]] Scene& GetScene()                       noexcept { return m_scene; }
         [[nodiscard]] Input& GetInput()                       noexcept { return m_input; }
         [[nodiscard]] const Input& GetInput() const           noexcept { return m_input; }
+        [[nodiscard]] const LaunchArgs& GetLaunchArgs() const noexcept { return m_launchArgs; }
     };
 }

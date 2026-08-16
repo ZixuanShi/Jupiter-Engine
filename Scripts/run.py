@@ -29,19 +29,36 @@ def run_steps(steps, environment) -> int:
     return 0
 
 
-def launch_steps(udid, artifact, console, environment) -> list:
+def flag_name(argument) -> str:
+    """Return a launch flag's name without its leading dashes, or "" if it is not a flag.
+
+    Mirrors LaunchArgs::PreInit, so what this script calls a flag is what the engine stores:
+    one or more '-' then a name.
+    """
+    name = argument.lstrip("-")
+    return name if name and name != argument else ""
+
+
+def launch_steps(udid, artifact, environment, app_args) -> list:
     """Return the commands that install and launch the artifact."""
     if udid is None:
         # Run directly rather than via `open`, so stdout stays attached to this terminal.
-        return [[str(artifact)]]
+        return [[str(artifact), *app_args]]
 
     # devicectl launches on the device, so the environment travels as an argument rather than
     # being inherited from this process.
     launch = ["xcrun", "devicectl", "device", "process", "launch", "--device", udid,
               "--environment-variables", json.dumps(environment)]
-    if console:
+
+    # The one launch arg this script reads rather than only forwarding: a device gives the app
+    # no terminal, so devicectl has to be asked to relay its output.
+    if any(flag_name(a) == "console" for a in app_args):
         launch.append("--console")
-    launch.append(bundle_id())
+
+    # devicectl's root parser claims its own global short options (-v -q -t -j -l) even out of the
+    # args meant for the app: "-console" holds an 'l', so it is read as --log-output and demands a
+    # path. "--" ends that scan, and before the bundle id it is consumed rather than forwarded.
+    launch += ["--", bundle_id(), *app_args]
 
     return [
         ["xcrun", "devicectl", "device", "install", "app", "--device", udid, str(artifact)],
@@ -50,18 +67,15 @@ def launch_steps(udid, artifact, console, environment) -> list:
 
 
 def main():
-    console = "--console" in sys.argv[1:]
-    unknown = [a for a in sys.argv[1:] if a != "--console"]
-    if unknown:
-        print(f"Unknown argument(s): {', '.join(unknown)}")
-        print("Usage: py Scripts/run.py [--console]")
-        sys.exit(1)
+    # Every argument is the app's. This script owns none of them, so what it acts on is exactly
+    # what LaunchArgs stores.
+    app_args = sys.argv[1:]
 
     preset = active_preset()
-    artifact = artifact_path(preset)
+    executable = executable_path(preset)
 
-    if not executable_path(preset).exists():
-        print(f"Not built: {executable_path(preset)}")
+    if not executable.exists():
+        print(f"Not built: {executable}")
         print("Run: py Scripts/build.py")
         sys.exit(1)
 
@@ -73,7 +87,8 @@ def main():
             sys.exit(1)
 
     environment = {} if "release" in preset else CAPTURE_ENV
-    sys.exit(run_steps(launch_steps(udid, artifact, console, environment), environment))
+    steps = launch_steps(udid, artifact_path(preset), environment, app_args)
+    sys.exit(run_steps(steps, environment))
 
 
 if __name__ == "__main__":

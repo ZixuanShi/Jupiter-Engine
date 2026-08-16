@@ -16,7 +16,6 @@ namespace jpt
             return false;
         }
 
-        Debug::Info("Hello World ApplicationBlank");
         return true;
     }
 
