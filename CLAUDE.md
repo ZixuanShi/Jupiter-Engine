@@ -57,6 +57,10 @@ only produce a build nobody asked for. The binary name is the project directory'
 bundle id is `com.jupitertechnologies.<name lowercased>`; `utils.py` derives both, and
 `Projects/<Name>/CMakeLists.txt` spells the same convention for CMake.
 
+There are two projects — `Blank` and `UnitTests` — and **only one is configured at a time**, since
+`setup.json` and the generated `.vscode/launch.json` each name exactly one. Switching between them
+is a re-run of Setup, not a build flag.
+
 The preset's `binaryDir` reads `$env{JUPITER_PROJECT_DIR}`, which `setup.py` and `build.py` export.
 A hand-run `cmake --preset` without it resolves to a bogus path, so go through the scripts. CMake
 itself reads the `JUPITER_PROJECT` cache variable, so a ninja-triggered reconfigure needs no
@@ -304,7 +308,11 @@ measured, not assumed. It costs nothing: this is a leaf class with one consumer,
 shape as `RendererMetal4.h`, a plain header whose class derives from the `jpt.RendererBase` module.
 Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 
-`Projects/Blank` is the worked example.
+`Projects/Blank` is the worked example. `Projects/UnitTests` is the second, and the one place a
+project ends its own run: nothing but an event stops the app, so `ApplicationUnitTests::Init()`
+pushes `SDL_EVENT_QUIT` for exit 0 and returns `false` for exit 1. Its suites still live in
+`Source/` and still run from `ApplicationBase::PreInit()` — moving them there, and giving them a
+runner that survives the first failure instead of `Debug::Assert`'s trap, is unfinished work.
 
 ## Conventions
 
