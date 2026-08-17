@@ -310,9 +310,22 @@ Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 
 `Projects/Blank` is the worked example. `Projects/UnitTests` is the second, and the one place a
 project ends its own run: nothing but an event stops the app, so `ApplicationUnitTests::Init()`
-pushes `SDL_EVENT_QUIT` for exit 0 and returns `false` for exit 1. Its suites still live in
-`Source/` and still run from `ApplicationBase::PreInit()` — moving them there, and giving them a
-runner that survives the first failure instead of `Debug::Assert`'s trap, is unfinished work.
+pushes `SDL_EVENT_QUIT` for exit 0 and returns `false` for exit 1.
+
+**The suites live there, not in the engine.** `MathTests` and `InputTests` used to be globbed into
+`libJupiterEngine.a` and called from `ApplicationBase::PreInit()`, so every project ran them; they
+are now `Projects/UnitTests/Source/{Core/Math,Input}/` and run from
+`ApplicationUnitTests::PreInit()` — after the base has pre-initialised `Input`, which `InputTests`
+asserts against, and before `Init()` opens a window, which it does not need. Nothing engine-side
+calls a test any more, which is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
+
+That strip had a second job, and `Projects/UnitTests/CMakeLists.txt` now does it with a
+`FATAL_ERROR`: `Debug::Assert` discards its body in Release, so a Release build of this project
+would log "passed" having tested nothing. It refuses to configure instead.
+
+Still unfinished: `Debug::Assert` traps on the first failure, so a run reports one broken thing and
+stops. A runner that records and continues, then reports `N/M` and drives the exit code, is the
+next piece.
 
 ## Conventions
 

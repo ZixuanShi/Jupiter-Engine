@@ -4,6 +4,14 @@
 set(UNIT_TESTS_NAME      "UnitTests")
 set(UNIT_TESTS_BUNDLE_ID "com.jupitertechnologies.unittests")
 
+# Debug::Assert discards its body in Release, so every suite here would log "passed" having tested
+# nothing -- a test that cannot fail. The engine used to strip *Tests out of a Release build for
+# the same reason; now that the suites are a project, refusing the configure is what replaces it.
+if(JUPITER_CONFIG STREQUAL "RELEASE")
+    message(FATAL_ERROR "UnitTests has no meaning in Release: Debug::Assert is compiled out, so "
+                        "every suite passes vacuously. Build it debug or dev.")
+endif()
+
 file(GLOB_RECURSE UNIT_TESTS_SOURCES        CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
 
 # Empty today -- ApplicationUnitTests is plain because JPT_SYNC_APP cannot expand in a module unit --

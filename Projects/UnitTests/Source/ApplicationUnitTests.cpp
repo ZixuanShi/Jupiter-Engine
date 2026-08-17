@@ -6,18 +6,33 @@
 #include "ApplicationUnitTests.h"
 #include "Applications/GetApp.h"
 
-import jpt.Logger;
+import jpt.InputTests;
+import jpt.MathTests;
 
 namespace jpt
 {
+    bool ApplicationUnitTests::PreInit(int argc, char* argv[])
+    {
+        if (!ApplicationBase::PreInit(argc, argv))
+        {
+            return false;
+        }
+
+        RunMathTests();
+
+        // After the base pre-initialised Input, which the suite asserts against. Still before
+        // Init() opens a window, which it deliberately does not need.
+        RunInputTests();
+
+        return true;
+    }
+
     bool ApplicationUnitTests::Init()
     {
         if (!ApplicationBase::Init())
         {
             return false;
         }
-
-        Debug::Info("Hello World UnitTests");
 
         // Nothing but an event ends a run -- SDL_AppIterate always continues -- so the verdict has
         // to leave through one. Window::OnEvent maps this to Status::Succeeded, hence exit 0;
