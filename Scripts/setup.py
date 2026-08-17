@@ -151,21 +151,24 @@ def main():
     config, platform, project = parse_args(sys.argv[1:])
     preset = f"{platform}_{config}"
 
-    SETUP_FILE.parent.mkdir(parents=True, exist_ok=True)
-    SETUP_FILE.write_text(json.dumps({"config": config, "platform": platform, "preset": preset,
-                                      "project": relative_project(project)}, indent=2) + "\n")
-    write_launch_json(preset)
-    print(f"Saved setup: {preset} ({project.name})")
-
+    # Configure first, and record nothing until it succeeds. Writing setup.json up front left
+    # build.py and run.py pointed at a preset whose build tree the failed configure never created,
+    # so the next Build reported a CMake error for a config nobody had chosen.
+    #
     # The preset reads JUPITER_PROJECT_DIR to place the build tree; CMake itself reads the cache
     # variable, so a ninja-triggered reconfigure needs no environment at all.
     environment = {**os.environ, "JUPITER_PROJECT_DIR": str(project)}
     result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev",
                              f"-DJUPITER_PROJECT={project.as_posix()}"], cwd=ROOT, env=environment)
-    if result.returncode == 0:
-        link_compile_commands(preset, project)
+    if result.returncode != 0:
+        sys.exit(result.returncode)
 
-    sys.exit(result.returncode)
+    SETUP_FILE.parent.mkdir(parents=True, exist_ok=True)
+    SETUP_FILE.write_text(json.dumps({"config": config, "platform": platform, "preset": preset,
+                                      "project": relative_project(project)}, indent=2) + "\n")
+    write_launch_json(preset)
+    link_compile_commands(preset, project)
+    print(f"Saved setup: {preset} ({project.name})")
 
 
 if __name__ == "__main__":

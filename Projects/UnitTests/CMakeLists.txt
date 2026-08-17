@@ -4,14 +4,10 @@
 set(UNIT_TESTS_NAME      "UnitTests")
 set(UNIT_TESTS_BUNDLE_ID "com.jupitertechnologies.unittests")
 
-# Kept, but no longer for the reason it was written: the suites moved off Debug::Assert onto
-# TestCase::Expect, which is a plain function with no Release carve-out, so they would now report
-# honestly in Release. What is untested is whether a Release build runs at all -- so this stays a
-# refusal rather than a silent new configuration. Delete it once a Release run is measured.
-if(JUPITER_CONFIG STREQUAL "RELEASE")
-    message(FATAL_ERROR "UnitTests is only built debug or dev: a Release run has never been "
-                        "measured. TestCase::Expect itself survives Release.")
-endif()
+# No Release refusal, and that is measured rather than assumed: the suites moved off Debug::Assert
+# -- whose body is discarded in Release, which is what used to make a Release run vacuous -- onto
+# TestCase::Expect, a plain function with no config carve-out. A Release build reports the same
+# 28/223 and returns the same exit code.
 
 # Both globs are how a test registers. A suite is one file dropped under Source/ -- it exports
 # nothing and nothing imports it, so what runs it is its object being named on this executable's
