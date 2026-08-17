@@ -57,6 +57,10 @@ only produce a build nobody asked for. The binary name is the project directory'
 bundle id is `com.jupitertechnologies.<name lowercased>`; `utils.py` derives both, and
 `Projects/<Name>/CMakeLists.txt` spells the same convention for CMake.
 
+There are two projects — `Blank` and `UnitTests` — and **only one is configured at a time**, since
+`setup.json` and the generated `.vscode/launch.json` each name exactly one. Switching between them
+is a re-run of Setup, not a build flag.
+
 The preset's `binaryDir` reads `$env{JUPITER_PROJECT_DIR}`, which `setup.py` and `build.py` export.
 A hand-run `cmake --preset` without it resolves to a bogus path, so go through the scripts. CMake
 itself reads the `JUPITER_PROJECT` cache variable, so a ninja-triggered reconfigure needs no
@@ -304,7 +308,24 @@ measured, not assumed. It costs nothing: this is a leaf class with one consumer,
 shape as `RendererMetal4.h`, a plain header whose class derives from the `jpt.RendererBase` module.
 Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 
-`Projects/Blank` is the worked example.
+`Projects/Blank` is the worked example. `Projects/UnitTests` is the second, and the one place a
+project ends its own run: nothing but an event stops the app, so `ApplicationUnitTests::Init()`
+pushes `SDL_EVENT_QUIT` for exit 0 and returns `false` for exit 1.
+
+**The suites live there, not in the engine.** `MathTests` and `InputTests` used to be globbed into
+`libJupiterEngine.a` and called from `ApplicationBase::PreInit()`, so every project ran them; they
+are now `Projects/UnitTests/Source/{Core/Math,Input}/` and run from
+`ApplicationUnitTests::PreInit()` — after the base has pre-initialised `Input`, which `InputTests`
+asserts against, and before `Init()` opens a window, which it does not need. Nothing engine-side
+calls a test any more, which is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
+
+That strip had a second job, and `Projects/UnitTests/CMakeLists.txt` now does it with a
+`FATAL_ERROR`: `Debug::Assert` discards its body in Release, so a Release build of this project
+would log "passed" having tested nothing. It refuses to configure instead.
+
+Still unfinished: `Debug::Assert` traps on the first failure, so a run reports one broken thing and
+stops. A runner that records and continues, then reports `N/M` and drives the exit code, is the
+next piece.
 
 ## Conventions
 

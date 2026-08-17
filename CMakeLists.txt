@@ -153,13 +153,8 @@ if(NOT JUPITER_EDITOR)
     list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "/Source/Editor/")
 endif()
 
-# *Tests goes by config, not by editor: they run on any dev build. Their call sites are already
-# #if !IS_CONFIG_RELEASE, but the modules were still compiled and linked -- nm found
-# jpt::RunMathTests in the Release binary -- and InputTests pulls the whole Carbon umbrella in.
-if(JUPITER_CONFIG STREQUAL "RELEASE")
-    list(FILTER JUPITER_SOURCES        EXCLUDE REGEX "Tests\\.cpp$")
-    list(FILTER JUPITER_MODULE_SOURCES EXCLUDE REGEX "Tests\\.cppm$")
-endif()
+# No *Tests filter here any more: the suites live in Projects/UnitTests, so the engine has no test
+# code left to strip out of a Release build.
 
 # --- Engine library ---
 # main() is engine code, but it belongs in the executable's own objects rather than in the archive,

@@ -16,11 +16,6 @@ import jpt.Window;
     import jpt.EditorUI;
 #endif
 
-#if !IS_CONFIG_RELEASE
-    import jpt.InputTests;
-    import jpt.MathTests;
-#endif
-
 namespace jpt
 {
     bool ApplicationBase::PreInit(int argc, char* argv[])
@@ -29,20 +24,12 @@ namespace jpt
         Debug::Info("Jupiter Engine from {}-{}-{}", GetPlatformName(), GetConfigName(), GetAppName());
         m_launchArgs.PreInit(argc, argv);
 
-#if !IS_CONFIG_RELEASE
-        RunMathTests();
-#endif
-
         // Before the window, which starts delivering events.
         if (!m_input.PreInit())
         {
             Debug::Error("Failed to pre-initialize input.");
             return false;
         }
-
-#if !IS_CONFIG_RELEASE
-        RunInputTests();
-#endif
 
         if (!m_window.PreInit())
         {

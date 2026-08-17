@@ -29,8 +29,8 @@ namespace
 
 export namespace jpt
 {
-    /** Runs at startup outside Release. These cannot be static_asserts: Perspective and LookAt
-        reach std::tan and std::sqrt, which are not constexpr before C++26. */
+    /** Driven by ApplicationUnitTests::PreInit. These cannot be static_asserts: Perspective and
+        LookAt reach std::tan and std::sqrt, which are not constexpr before C++26. */
     void RunMathTests()
     {
         // Vector2
