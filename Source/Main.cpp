@@ -16,10 +16,16 @@ SDL_AppResult SDL_AppInit(void** ppAppState, int argc, char* argv[])
 {
     // jpt::GetApp() is reachable from anywhere, so SDL's appstate would say it twice.
     *ppAppState = nullptr;
-    (void)argc; (void)argv;
 
     jpt::ApplicationBase& app = jpt::GetApp();
-    return (app.PreInit() && app.Init()) ? SDL_APP_CONTINUE : SDL_APP_FAILURE;
+    if (app.PreInit(argc, argv) && app.Init())
+    {
+        return SDL_APP_CONTINUE;
+    }
+    else
+    {
+        return SDL_APP_FAILURE;
+    }
 }
 
 // Unconditionally CONTINUE: nothing but an event ends the app, and returning SUCCESS on a paused
