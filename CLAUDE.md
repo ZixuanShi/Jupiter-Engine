@@ -265,15 +265,17 @@ event arriving after `SDL_AppQuit` resurrecting a terminated app. Startup does n
 `PreInit`/`Init` abort by returning false, and `Init()` finishes by setting `Running`, so anything
 asked for before that would be clobbered.
 
-`SDL_AppQuit` runs even when `SDL_AppInit` failed, so `ApplicationBase::Terminate()` guards on its
-own `m_terminated` flag — releasing twice crashes in `ImGui::DestroyContext`. **Folding that flag
-into `m_status` does not work, and was measured:** the status goes terminal when the quit is
-*requested*, but teardown runs later, so a guard reading `Succeeded`/`Failed`/`Canceled` sees the
-verdict already there and returns — `m_renderer.Terminate()` and `m_window.Terminate()` never run,
-and the exit code still looks right because SDL latched it before calling `SDL_AppQuit`. "What is
-the outcome" and "has teardown run" are two facts at two different times. Keeping them apart is
-also what lets `m_status` survive the run as its outcome instead of being overwritten with
-`Succeeded` after a failed startup.
+**`Terminate()` has no re-entry guard, and must not grow one back.** It carried an
+`if (m_status == Status::Succeeded) return;` for a long time, which is a bug the moment `m_status`
+becomes the lifecycle: the status goes terminal when the quit is *requested*, teardown runs later,
+so the guard sees the verdict already there and returns — the renderer and window are never
+released, and nothing looks wrong because SDL latched the exit code before calling `SDL_AppQuit`.
+Measured. Replacing it with a separate `m_terminated` flag works, but measurement said the guard
+has nothing to do: `SDL_AppQuit` fires exactly once per process on every backend — including after
+a failed `SDL_AppInit`, and iOS's two `SDL_QuitMainCallbacks` sites are mutually exclusive and both
+`exit()` — and calling `Terminate()` twice by hand is harmless anyway, since every subsystem nulls
+its own handles and `ImGuiTerminate()` returns early on a null context. The only symptom was a
+duplicated banner. `m_status` therefore survives the run as its outcome, and nothing shadows it.
 
 **Subsystems pull, they do not get pushed.** `Update()` fetches what it needs via `GetApp()`
 (`Applications/GetApp.h`) — see `RendererBase::Update()`. `ApplicationBase::Update()` stays a list

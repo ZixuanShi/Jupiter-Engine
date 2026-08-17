@@ -37,7 +37,6 @@ export namespace jpt
         LaunchArgs m_launchArgs;
 
         Status m_status = Status::Pending;
-        bool m_terminated = false;
 
 #if IS_EDITOR
         EditorUI m_editorUI;
