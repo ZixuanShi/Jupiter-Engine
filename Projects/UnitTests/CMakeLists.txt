@@ -4,18 +4,21 @@
 set(UNIT_TESTS_NAME      "UnitTests")
 set(UNIT_TESTS_BUNDLE_ID "com.jupitertechnologies.unittests")
 
-# Debug::Assert discards its body in Release, so every suite here would log "passed" having tested
-# nothing -- a test that cannot fail. The engine used to strip *Tests out of a Release build for
-# the same reason; now that the suites are a project, refusing the configure is what replaces it.
+# Kept, but no longer for the reason it was written: the suites moved off Debug::Assert onto
+# TestCase::Expect, which is a plain function with no Release carve-out, so they would now report
+# honestly in Release. What is untested is whether a Release build runs at all -- so this stays a
+# refusal rather than a silent new configuration. Delete it once a Release run is measured.
 if(JUPITER_CONFIG STREQUAL "RELEASE")
-    message(FATAL_ERROR "UnitTests has no meaning in Release: Debug::Assert is compiled out, so "
-                        "every suite passes vacuously. Build it debug or dev.")
+    message(FATAL_ERROR "UnitTests is only built debug or dev: a Release run has never been "
+                        "measured. TestCase::Expect itself survives Release.")
 endif()
 
+# Both globs are how a test registers. A suite is one file dropped under Source/ -- it exports
+# nothing and nothing imports it, so what runs it is its object being named on this executable's
+# link line, where its namespace-scope TestCase is constructed during static initialisation. Hence
+# no CMake edit per test, and hence .cpp matters too: SdlEventTests is plain because it reaches
+# GetApp().
 file(GLOB_RECURSE UNIT_TESTS_SOURCES        CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
-
-# Empty today -- ApplicationUnitTests is plain because JPT_SYNC_APP cannot expand in a module unit --
-# but the suites this project grows are free to be modules, and they need no CMake edit to appear.
 file(GLOB_RECURSE UNIT_TESTS_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cppm")
 
 add_executable(${UNIT_TESTS_NAME} ${UNIT_TESTS_SOURCES} ${JUPITER_MAIN_SOURCE})

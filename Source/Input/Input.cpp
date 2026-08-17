@@ -109,26 +109,24 @@ namespace jpt
     }
 
 #if !IS_CONFIG_RELEASE
-    void Input::LogKeyDown(const KeyEvent& event)
+    void Input::LogKeyDown([[maybe_unused]] const KeyEvent&event)
     {
-        Debug::Log("Key down: {}{}", ToString(event.key), event.isRepeat ? " (repeat)" : "");
+        //Debug::Log("Key down: {}{}", ToString(event.key), event.isRepeat ? " (repeat)" : "");
     }
 
-    void Input::LogKeyUp(const KeyEvent& event)
+    void Input::LogKeyUp([[maybe_unused]] const KeyEvent& event)
     {
-        Debug::Log("Key up: {}", ToString(event.key));
+        //Debug::Log("Key up: {}", ToString(event.key));
     }
 
-    void Input::LogMouseButton(const MouseButtonEvent& event)
+    void Input::LogMouseButton([[maybe_unused]] const MouseButtonEvent& event)
     {
-        Debug::Log("Mouse {} {} at ({:.1f}, {:.1f})", ToString(event.button),
-                   event.isDown ? "down" : "up", event.position.x, event.position.y);
+        //Debug::Log("Mouse {} {} at ({:.1f}, {:.1f})", ToString(event.button), event.isDown ? "down" : "up", event.position.x, event.position.y);
     }
 
-    void Input::LogMouseScroll(const MouseScrollEvent& event)
+    void Input::LogMouseScroll([[maybe_unused]] const MouseScrollEvent& event)
     {
-        Debug::Log("Scroll: ({:.3f}, {:.3f}){}", event.delta.x, event.delta.y,
-                   event.isPrecise ? " precise" : "");
+        //Debug::Log("Scroll: ({:.3f}, {:.3f}){}", event.delta.x, event.delta.y, event.isPrecise ? " precise" : "");
     }
 #endif
 }

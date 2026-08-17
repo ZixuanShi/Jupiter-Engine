@@ -334,23 +334,69 @@ shape as `RendererMetal4.h`, a plain header whose class derives from the `jpt.Re
 Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 
 `Projects/Blank` is the worked example. `Projects/UnitTests` is the second, and the one place a
-project ends its own run: `ApplicationUnitTests::Init()` calls
-`SetStatus(Status::Succeeded)` — see Lifecycle. It needs no SDL include to do it.
+project ends its own run: `ApplicationUnitTests::Init()` calls `SetStatus` with the runner's
+verdict — see Lifecycle. It needs no SDL include to do it.
 
-**The suites live there, not in the engine.** `MathTests` and `InputTests` used to be globbed into
-`libJupiterEngine.a` and called from `ApplicationBase::PreInit()`, so every project ran them; they
-are now `Projects/UnitTests/Source/{Core/Math,Input}/` and run from
-`ApplicationUnitTests::PreInit()` — after the base has pre-initialised `Input`, which `InputTests`
-asserts against, and before `Init()` opens a window, which it does not need. Nothing engine-side
-calls a test any more, which is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
+**The suites live there, not in the engine**, and nothing engine-side calls a test any more, which
+is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
 
-That strip had a second job, and `Projects/UnitTests/CMakeLists.txt` now does it with a
-`FATAL_ERROR`: `Debug::Assert` discards its body in Release, so a Release build of this project
-would log "passed" having tested nothing. It refuses to configure instead.
+### Tests register themselves; nothing lists them
 
-Still unfinished: `Debug::Assert` traps on the first failure, so a run reports one broken thing and
-stops. A runner that records and continues, then reports `N/M` and drives the exit code, is the
-next piece.
+`Projects/UnitTests/Source/TestFramework/` is `jpt.TestFramework`, and it is **one class**:
+`TestCase`. A suite is **one file, and no other file changes**:
+
+```cpp
+export module jpt.Coding.TwoSum;        // nothing imports this, and nothing needs to
+import jpt.TestFramework;
+
+namespace jpt::Coding
+{
+    void Test(TestCase& test) { test.Expect(TwoSum({ 2, 7 }, 9) == ..., "first two"); }
+
+    static TestCase s_twoSum("Coding.TwoSum", &Test);   // the declaration *is* the registration
+}
+```
+
+There is deliberately no separate registrar type and no registry class: a `TestCase` at namespace
+scope adds `this` to the static list from its own constructor, so the object you declare is the
+test, and `TestCase::RunAll()` is the one entry point. An empty class whose only job is to run a
+constructor, wrapping a second class whose only member is a vector, was the first version — it
+bought nothing. Nor is the category a field: `"Coding.TwoSum"` is one name, and sorting it groups
+the report for free.
+
+**Spell it `static`, and name it `s_`.** These objects are file-private, and in a `.cppm` an
+unexported namespace-scope variable otherwise has *module* linkage — neither static nor global, so
+a bare `s_` would be a lie and `k` would claim a constant that `Expect` mutates. `static` narrows
+it to internal linkage, which is measured not to stop registration: nothing references the object
+by name, but a constructor with side effects must still run.
+
+What runs it is **linkage, not imports**: the project's globs name every `.cppm`/`.cpp` object
+directly on the executable's link line, so unlike a `libJupiterEngine.a` member it cannot be
+dropped, and the namespace-scope `TestCase` is constructed during static initialisation. Measured,
+not assumed — a suite no file imports does run. Two consequences are load-bearing:
+
+- The list is a **function-local static in the implementation unit** (`TestCase::GetAll()`), so a
+  `TestCase` constructed during static initialisation cannot observe it unconstructed.
+  `JPT_DECLARE_SINGLETON` is deliberately *not* used: its body is inline, and this must be the
+  program's only list. It holds pointers, so the objects must be the namespace-scope ones.
+- Static-init order across TUs is unspecified, so `RunAll()` **sorts by name**. That ordering is
+  the only thing making a run reproducible.
+
+Move a suite into the engine archive and the whole mechanism goes silent. Don't.
+
+**`TestCase::Expect` is `Debug::Assert` without the trap** — same `consteval Debug::Context`
+parameter, so it needs no macro, reports the *call site's* file and line, and checks the format
+string at compile time. It records the failure and returns the condition, so a run reports
+everything broken rather than the first thing, and `RunAll()` returns `Status::Failed` — which
+`Main.cpp` maps to `SDL_APP_FAILURE`, so **a failing check exits 1**. Being a function and not a
+macro, a braced initializer with commas needs no defensive parentheses.
+
+Two placement rules: a test for `Source/<Path>/Foo.cppm` lives at
+`Projects/UnitTests/Source/<Path>/FooTests.cppm` (`Coding/` is the one folder with no engine
+counterpart), and **a suite reaching `GetApp()` must be a plain `.cpp`** — `GetApp.h` in a `.cppm`
+is a module-graph cycle. `Input/SdlEventTests.cpp` is the only one, and it is why the suites run
+from `Init()` rather than `PreInit()`: it drives a live `Window`, and `SetStatus` is ignored until
+`ApplicationBase::Init()` has set `Running`.
 
 ## Conventions
 

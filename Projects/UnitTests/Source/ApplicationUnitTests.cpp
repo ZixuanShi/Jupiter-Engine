@@ -3,8 +3,7 @@
 #include "ApplicationUnitTests.h"
 #include "Applications/GetApp.h"
 
-import jpt.InputTests;
-import jpt.MathTests;
+import jpt.TestFramework;
 import jpt.TypeDefs;
 
 namespace jpt
@@ -16,11 +15,10 @@ namespace jpt
             return false;
         }
 
-        RunMathTests();
-        RunInputTests();
-
-        // The suites have already run and asserted, so there is nothing left to step.
-        SetStatus(Status::Succeeded);
+        // Every suite registered itself during static initialisation, so nothing here names one.
+        // RunAll's verdict is the run's: Main.cpp maps Status::Failed to SDL_APP_FAILURE, hence
+        // exit 1, and the run is over either way -- there is nothing left to step.
+        SetStatus(TestCase::RunAll());
 
         return true;
     }
