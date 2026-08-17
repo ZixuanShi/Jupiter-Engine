@@ -90,13 +90,11 @@ namespace jpt
 
     void ApplicationBase::Terminate()
     {
-        // SDL_AppQuit runs even when SDL_AppInit failed. Measured: a second call does not crash,
-        // since every subsystem nulls its own handles -- this holds the single-banner contract.
-        if (m_status == Status::Succeeded)
+        if (m_terminated)
         {
             return;
         }
-        m_status = Status::Succeeded;
+        m_terminated = true;
 
         m_renderer.Terminate();
         m_window.Terminate();
@@ -127,6 +125,14 @@ namespace jpt
         m_frameTimer.EndFrame();
     }
 
+    void ApplicationBase::SetStatus(Status status) noexcept
+    {
+        if (m_status == Status::Running || m_status == Status::Paused)
+        {
+            m_status = status;
+        }
+    }
+
     bool ApplicationBase::OnSurfaceReady(Renderer::SurfaceHandle surface)
     {
         // The first point at which a mesh can be uploaded, which is why a client hides this.
@@ -137,14 +143,6 @@ namespace jpt
         }
 
         return true;
-    }
-
-    void ApplicationBase::SetPaused(bool paused) noexcept
-    {
-        if (m_status == Status::Running || m_status == Status::Paused)
-        {
-            m_status = paused ? Status::Paused : Status::Running;
-        }
     }
 
     void ApplicationBase::OnResize(uint32 pixelWidth, uint32 pixelHeight)

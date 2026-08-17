@@ -28,14 +28,16 @@ export namespace jpt
         one process-lifetime object is the whole cost. */
     class ApplicationBase
     {
-    private:
+    protected:
         FrameTimer m_frameTimer;
         Window m_window;
         Renderer m_renderer;
         Scene m_scene;
         Input m_input;
         LaunchArgs m_launchArgs;
+
         Status m_status = Status::Pending;
+        bool m_terminated = false;
 
 #if IS_EDITOR
         EditorUI m_editorUI;
@@ -53,16 +55,15 @@ export namespace jpt
     public:
         void OnFrame();
 
+        void SetStatus(Status status) noexcept;
+
         // Virtual because it is where content is uploaded, and content is the App's. On iOS the
         // surface arrives long after Init(), so there is no earlier hook a project could use.
         virtual bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
-        /** iOS background/foreground. Toggles the Running/Paused pair only, so a foreground event
-            arriving after SDL_AppQuit cannot resurrect a terminated app. */
-        void SetPaused(bool paused) noexcept;
-
     public:
+        [[nodiscard]] Status GetStatus() const                noexcept { return m_status; }
         [[nodiscard]] const FrameTimer& GetFrameTimer() const noexcept { return m_frameTimer; }
         [[nodiscard]] Window& GetWindow()                     noexcept { return m_window; }
         [[nodiscard]] Renderer& GetRenderer()                 noexcept { return m_renderer; }

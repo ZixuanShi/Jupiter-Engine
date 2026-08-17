@@ -672,22 +672,22 @@ namespace jpt
                 event.type = SDL_EVENT_KEY_DOWN;
                 event.key.scancode = testCase.scancode;
                 event.key.repeat = false;
-                (void)window.OnEvent(event);
+                window.OnEvent(event);
                 Debug::Assert(received == testCase.expected, "Scancode {} translated to {}, expected {}",
                               static_cast<int32>(testCase.scancode), ToString(received), testCase.what);
 
                 event.type = SDL_EVENT_KEY_UP;
-                (void)window.OnEvent(event);
+                window.OnEvent(event);
             }
 
             // A scancode with no row must land on Unknown rather than a neighbouring key.
             received = KeyCode::A;
             event.type = SDL_EVENT_KEY_DOWN;
             event.key.scancode = SDL_SCANCODE_LANG1;
-            (void)window.OnEvent(event);
+            window.OnEvent(event);
             Debug::Assert(received == KeyCode::Unknown, "An unmapped scancode translated to {}", ToString(received));
             event.type = SDL_EVENT_KEY_UP;
-            (void)window.OnEvent(event);
+            window.OnEvent(event);
 
             input.OnKeyDown().Remove(handle);
 
@@ -695,10 +695,10 @@ namespace jpt
             // Down and up here still mean engaged and disengaged, not physically held.
             event.key.scancode = SDL_SCANCODE_CAPSLOCK;
             event.type = SDL_EVENT_KEY_DOWN;
-            (void)window.OnEvent(event);
+            window.OnEvent(event);
             Debug::Assert(input.IsKeyDown(KeyCode::CapsLock), "CapsLock did not register as engaged");
             event.type = SDL_EVENT_KEY_UP;
-            (void)window.OnEvent(event);
+            window.OnEvent(event);
             Debug::Assert(!input.IsKeyDown(KeyCode::CapsLock), "CapsLock stayed engaged after its key up");
 
             // SDL numbers left 1, middle 2 and right 3 -- the opposite of AppKit, which put right
@@ -722,12 +722,12 @@ namespace jpt
                 event.button.which = 0;
                 event.button.x = 0.0f;
                 event.button.y = 0.0f;
-                (void)window.OnEvent(event);
+                window.OnEvent(event);
                 Debug::Assert(receivedButton == testCase.expected, "Button {} translated to {}, expected {}", testCase.number, ToString(receivedButton), ToString(testCase.expected));
                 Debug::Assert(input.IsMouseButtonDown(testCase.expected), "Button {} did not register as down", testCase.number);
 
                 event.type = SDL_EVENT_MOUSE_BUTTON_UP;
-                (void)window.OnEvent(event);
+                window.OnEvent(event);
                 Debug::Assert(!input.IsMouseButtonDown(testCase.expected), "Button {} stayed down after release", testCase.number);
             }
 

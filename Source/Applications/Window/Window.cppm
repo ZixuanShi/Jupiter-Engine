@@ -56,8 +56,10 @@ export namespace jpt
         void Terminate();
 
     public:
-        /** Running continues the app, Succeeded quits cleanly, Failed quits with an error. */
-        [[nodiscard]] Status OnEvent(const SDL_Event& event);
+        /** Translates one SDL event. Close requests and backgrounding are reported through
+            ApplicationBase::SetStatus rather than returned, so the app's status stays the one
+            thing that decides whether the run continues. */
+        void OnEvent(const SDL_Event& event);
 
         void OnResize(uint32 pixelWidth, uint32 pixelHeight) noexcept;
 

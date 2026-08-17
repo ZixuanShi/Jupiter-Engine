@@ -12,6 +12,27 @@
 import jpt.TypeDefs;
 import jpt.Window;
 
+namespace local
+{
+    /** The app's status is the whole lifecycle; SDL only ever asks whether to keep going. */
+    SDL_AppResult ToAppResult(jpt::Status status)
+    {
+        switch (status)
+        {
+            case jpt::Status::Pending:
+            case jpt::Status::Running:
+            case jpt::Status::Paused:
+                return SDL_APP_CONTINUE;
+
+            case jpt::Status::Failed:
+                return SDL_APP_FAILURE;
+
+            default:
+                return SDL_APP_SUCCESS;
+        }
+    }
+}
+
 SDL_AppResult SDL_AppInit(void** ppAppState, int argc, char* argv[])
 {
     // jpt::GetApp() is reachable from anywhere, so SDL's appstate would say it twice.
@@ -28,22 +49,18 @@ SDL_AppResult SDL_AppInit(void** ppAppState, int argc, char* argv[])
     }
 }
 
-// Unconditionally CONTINUE: nothing but an event ends the app, and returning SUCCESS on a paused
-// iOS app would quit it.
 SDL_AppResult SDL_AppIterate(void*)
 {
-    jpt::GetApp().OnFrame();
-    return SDL_APP_CONTINUE;
+    jpt::ApplicationBase& app = jpt::GetApp();
+    app.OnFrame();
+    return local::ToAppResult(app.GetStatus());
 }
 
 SDL_AppResult SDL_AppEvent(void*, SDL_Event* pEvent)
 {
-    switch (jpt::GetApp().GetWindow().OnEvent(*pEvent))
-    {
-        case jpt::Status::Running: return SDL_APP_CONTINUE;
-        case jpt::Status::Failed:  return SDL_APP_FAILURE;
-        default:                   return SDL_APP_SUCCESS;
-    }
+    jpt::ApplicationBase& app = jpt::GetApp();
+    app.GetWindow().OnEvent(*pEvent);
+    return local::ToAppResult(app.GetStatus());
 }
 
 // Called exactly once, including when SDL_AppInit reported failure.

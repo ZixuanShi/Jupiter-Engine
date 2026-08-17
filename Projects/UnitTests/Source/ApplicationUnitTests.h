@@ -13,7 +13,6 @@ namespace jpt
     class ApplicationUnitTests final : public ApplicationBase
     {
     public:
-        bool PreInit(int argc, char* argv[]) override;
         bool Init() override;
     };
 }

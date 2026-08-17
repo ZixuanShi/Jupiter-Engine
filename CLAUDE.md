@@ -249,8 +249,31 @@ parameterless — SDL owns the entry point, so nothing is handed `argc`/`argv`.
 `SDL_AppInit` → `PreInit()` + `Init()`, `SDL_AppIterate` → `OnFrame()`, `SDL_AppEvent` →
 `Window::OnEvent()`, `SDL_AppQuit` → `Terminate()`. On iOS `SDL_AppIterate` *is* the display-link
 animation callback, which is why frame pacing survived the move off `CADisplayLink`.
-`SDL_AppQuit` runs even when `SDL_AppInit` failed, so `ApplicationBase::Terminate()` guards on
-`m_status` — releasing twice crashes in `ImGui::DestroyContext`.
+
+**`m_status` is the lifecycle, and `SetStatus(Status)` is the only way it moves.** `SDL_AppIterate`
+and `SDL_AppEvent` both return `local::ToAppResult(GetApp().GetStatus())`, so SDL asks the app for a
+verdict instead of being handed one: `Running`/`Paused`/`Pending` continue, `Failed` exits 1,
+anything else exits 0. `Window::OnEvent` returns `void` and reports close requests and iOS
+backgrounding through `SetStatus`, so one field decides the run and there is no second authority to
+disagree with it. **Pausing must map to CONTINUE** — returning SUCCESS for a backgrounded iOS app
+would quit it.
+
+`SetStatus` writes only while the app is `Running` or `Paused`, and that single guard is why
+pausing and quitting are not two functions. It makes a quit first-request-wins — a window close
+arriving after a failure cannot downgrade the exit code — and by the same test stops a foreground
+event arriving after `SDL_AppQuit` resurrecting a terminated app. Startup does not end through it:
+`PreInit`/`Init` abort by returning false, and `Init()` finishes by setting `Running`, so anything
+asked for before that would be clobbered.
+
+`SDL_AppQuit` runs even when `SDL_AppInit` failed, so `ApplicationBase::Terminate()` guards on its
+own `m_terminated` flag — releasing twice crashes in `ImGui::DestroyContext`. **Folding that flag
+into `m_status` does not work, and was measured:** the status goes terminal when the quit is
+*requested*, but teardown runs later, so a guard reading `Succeeded`/`Failed`/`Canceled` sees the
+verdict already there and returns — `m_renderer.Terminate()` and `m_window.Terminate()` never run,
+and the exit code still looks right because SDL latched it before calling `SDL_AppQuit`. "What is
+the outcome" and "has teardown run" are two facts at two different times. Keeping them apart is
+also what lets `m_status` survive the run as its outcome instead of being overwritten with
+`Succeeded` after a failed startup.
 
 **Subsystems pull, they do not get pushed.** `Update()` fetches what it needs via `GetApp()`
 (`Applications/GetApp.h`) — see `RendererBase::Update()`. `ApplicationBase::Update()` stays a list
@@ -309,8 +332,8 @@ shape as `RendererMetal4.h`, a plain header whose class derives from the `jpt.Re
 Anything *else* a project adds may be a `.cppm`; the glob already picks them up.
 
 `Projects/Blank` is the worked example. `Projects/UnitTests` is the second, and the one place a
-project ends its own run: nothing but an event stops the app, so `ApplicationUnitTests::Init()`
-pushes `SDL_EVENT_QUIT` for exit 0 and returns `false` for exit 1.
+project ends its own run: `ApplicationUnitTests::Init()` calls
+`SetStatus(Status::Succeeded)` — see Lifecycle. It needs no SDL include to do it.
 
 **The suites live there, not in the engine.** `MathTests` and `InputTests` used to be globbed into
 `libJupiterEngine.a` and called from `ApplicationBase::PreInit()`, so every project ran them; they

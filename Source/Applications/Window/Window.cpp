@@ -119,7 +119,7 @@ namespace jpt
         SDL_Quit();
     }
 
-    Status Window::OnEvent(const SDL_Event& event)
+    void Window::OnEvent(const SDL_Event& event)
     {
         // Unfiltered: acting on ProcessEvent's return would drop the release half of a press
         // that began outside a panel. Input::Update() is what gates the engine.
@@ -133,16 +133,17 @@ namespace jpt
             case SDL_EVENT_QUIT:
             case SDL_EVENT_TERMINATING:
             case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-                return Status::Succeeded;
+                app.SetStatus(Status::Succeeded);
+                break;
 
             // WILL, not DID: presenting a drawable while backgrounded is what the GPU watchdog
             // kills for, and the OS may give no processing time after DID.
             case SDL_EVENT_WILL_ENTER_BACKGROUND:
-                app.SetPaused(true);
+                app.SetStatus(Status::Paused);
                 break;
 
             case SDL_EVENT_WILL_ENTER_FOREGROUND:
-                app.SetPaused(false);
+                app.SetStatus(Status::Running);
                 break;
 
             case SDL_EVENT_LOW_MEMORY:
@@ -240,8 +241,6 @@ namespace jpt
             default:
                 break;
         }
-
-        return Status::Running;
     }
 
     void Window::OnResize(uint32 pixelWidth, uint32 pixelHeight) noexcept
