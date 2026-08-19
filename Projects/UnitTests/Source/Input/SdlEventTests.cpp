@@ -95,11 +95,13 @@ namespace jpt::local
         MouseButton receivedButton = MouseButton::Left;
         const auto buttonHandle = input.OnMouseButton().Add([&receivedButton](const MouseButtonEvent& event) { receivedButton = event.button; });
 
+        // Right is absent, and cannot be pressed here: Camera answers a right press by capturing
+        // the cursor, and the matching release warps the *physical* pointer to the anchor. A test
+        // that moves the machine's mouse out from under whoever ran it is not one to keep.
         const struct { std::uint8_t number; MouseButton expected; } kButtons[] =
         {
             { SDL_BUTTON_LEFT,   MouseButton::Left },
             { SDL_BUTTON_MIDDLE, MouseButton::Middle },
-            { SDL_BUTTON_RIGHT,  MouseButton::Right },
         };
 
         for (const auto& buttonCase : kButtons)
@@ -119,6 +121,20 @@ namespace jpt::local
             window.OnEvent(event);
             test.Expect(!input.IsMouseButtonDown(buttonCase.expected), "Button {} stayed down after release", buttonCase.number);
         }
+
+        // Number 3 is still checked, through a release alone -- the one direction with no side
+        // effect, since nothing is captured and SetCursorCaptured(false) then takes its
+        // already-false early return. The down/up state above covers what a press adds.
+        receivedButton = MouseButton::Left;
+        event.type = SDL_EVENT_MOUSE_BUTTON_UP;
+        event.button.button = SDL_BUTTON_RIGHT;
+        event.button.which = 0;
+        event.button.x = 0.0f;
+        event.button.y = 0.0f;
+        window.OnEvent(event);
+        test.Expect(receivedButton == MouseButton::Right, "Button {} translated to {}, expected Right",
+                    static_cast<int32>(SDL_BUTTON_RIGHT), ToString(receivedButton));
+        test.Expect(!input.IsMouseButtonDown(MouseButton::Right), "Right registered as down after a release alone");
 
         input.OnMouseButton().Remove(buttonHandle);
     }
