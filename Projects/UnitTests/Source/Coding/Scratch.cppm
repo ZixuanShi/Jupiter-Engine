@@ -9,10 +9,10 @@ import std;
 
 namespace jpt::Coding
 {
-    void Test(TestCase& test)
+    void Test(TestCase&)
     {
-        test.Expect(true, "placeholder");
     }
 
-    static TestCase s_scratch("Coding.Scratch", &Test);
+    // Named to sort last, so scratch output lands at the bottom of the run.
+    static TestCase s_scratch("Scratch.Scratch", &Test);
 }
