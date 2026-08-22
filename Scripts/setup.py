@@ -6,8 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE,
-                   host_platform, artifact_path, output_dir)
+from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE, ANDROID_NDK_VERSION,
+                   android_ndk_root, host_platform, artifact_path, output_dir)
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
 COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
@@ -16,16 +16,16 @@ COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
 def write_launch_json(preset):
     """Write the debugger config pointing at the active preset's artifact.
 
-    iOS gets no configuration: lldb cannot launch a simulator or device .app from the host,
+    iOS and Android get no configuration: lldb cannot launch a device app from the host,
     so F5 would only ever fail. Those targets go through Scripts/run.py, which drives
-    simctl / devicectl instead.    
+    devicectl / adb instead.
     """
     LAUNCH_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    if preset.startswith("ios"):
+    if preset.startswith(("ios", "android")):
         LAUNCH_FILE.write_text(json.dumps({"version": "2.0.0", "configurations": []},
                                           indent=4) + "\n")
-        print("Note: F5 is unavailable for iOS. Use the Run task or py Scripts/run.py")
+        print("Note: F5 is unavailable for this target. Use the Run task or py Scripts/run.py")
         return
 
     # A project outside the repo has no workspace-relative spelling, so it falls back to absolute.
@@ -158,6 +158,14 @@ def main():
     # The preset reads JUPITER_PROJECT_DIR to place the build tree; CMake itself reads the cache
     # variable, so a ninja-triggered reconfigure needs no environment at all.
     environment = {**os.environ, "JUPITER_PROJECT_DIR": str(project)}
+    if platform == "android":
+        ndk = android_ndk_root()
+        if not ndk.is_dir():
+            print(f"NDK not found at '{ndk}'. Install it: "
+                  f'sdkmanager --install "ndk;{ANDROID_NDK_VERSION}"')
+            sys.exit(1)
+        environment["ANDROID_NDK_ROOT"] = str(ndk)
+
     result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev",
                              f"-DJUPITER_PROJECT={project.as_posix()}"], cwd=ROOT, env=environment)
     if result.returncode != 0:
