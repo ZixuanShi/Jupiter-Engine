@@ -14,13 +14,18 @@ rewrite 1500 LF files to CRLF, and keeps them out of diffs. A pinned SHA in a RE
 a committed tree is a fact — and the promise was already broken once, on the second machine.
 
 Only the build tree is vendored — `test/`, `examples/`, `Xcode/`, `VisualC*/` and `android-project/`
-are dropped, which is 30 MB instead of 60. To bump the version, replace those directories from a
-fresh clone of the new tag and commit the result:
+are dropped, which is 30 MB instead of 60. The one piece of `android-project/` the engine does need
+— SDLActivity and the rest of `org/libsdl/app` — lives in `Vendor/SDL3/Android/`, compiled into the
+APK by the gradle project `setup.py` generates. **The java and the C sides ship as one version**:
+SDLActivity calls natives registered by `src/core/android/SDL_android.c`, so skew between them is a
+runtime crash, not a build error. To bump the version, replace all of it from a fresh clone of the
+new tag and commit the result:
 
 ```
 git clone --depth 1 --branch release-3.2.x https://github.com/libsdl-org/SDL.git /tmp/sdl3
 cp /tmp/sdl3/{CMakeLists.txt,LICENSE.txt} Vendor/SDL3/Source/
 cp -R /tmp/sdl3/{src,include,cmake,build-scripts,wayland-protocols} Vendor/SDL3/Source/
+cp /tmp/sdl3/android-project/app/src/main/java/org/libsdl/app/*.java Vendor/SDL3/Android/org/libsdl/app/
 ```
 
 ## Notes

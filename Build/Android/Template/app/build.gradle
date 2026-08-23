@@ -1,0 +1,32 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.jupitertechnologies.jupiter"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "@JUPITER_APPLICATION_ID@"
+        minSdk 29
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // SDL's java is compiled straight out of the vendor tree; CMake writes libmain.so into
+    // src/main/jniLibs and stage_assets.py fills src/main/assets, so gradle only packages.
+    sourceSets {
+        main {
+            java.srcDirs += "@JUPITER_SDL_JAVA_DIR@"
+        }
+    }
+}

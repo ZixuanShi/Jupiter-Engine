@@ -7,10 +7,11 @@ import sys
 from pathlib import Path
 
 from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE, ANDROID_NDK_VERSION,
-                   android_ndk_root, host_platform, artifact_path, output_dir)
+                   android_ndk_root, bundle_id, host_platform, artifact_path, output_dir)
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
 COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
+ANDROID_TEMPLATE = ROOT / "Build" / "Android" / "Template"
 
 
 def write_launch_json(preset):
@@ -51,6 +52,30 @@ def write_launch_json(preset):
         ]
     }
     LAUNCH_FILE.write_text(json.dumps(launch, indent=4) + "\n")
+
+
+def instantiate_android_project(project):
+    """Copy Build/Android/Template over the project's gradle tree and fill in its names.
+
+    Copied over, never wiped: CMake writes libmain.so and stage_assets.py writes assets into
+    app/src/main/, and both must survive a re-run. The tree is generated -- edit the template,
+    not the copy.
+    """
+    destination = project / "_ProjectFiles" / "android"
+    shutil.copytree(ANDROID_TEMPLATE, destination, dirs_exist_ok=True)
+
+    replacements = {
+        "@JUPITER_APP_NAME@": project.name,
+        "@JUPITER_APPLICATION_ID@": bundle_id(),
+        "@JUPITER_SDL_JAVA_DIR@": (ROOT / "Vendor" / "SDL3" / "Android").as_posix(),
+    }
+    for file in (destination / "settings.gradle",
+                 destination / "app" / "build.gradle",
+                 destination / "app" / "src" / "main" / "AndroidManifest.xml"):
+        text = file.read_text()
+        for token, value in replacements.items():
+            text = text.replace(token, value)
+        file.write_text(text)
 
 
 def relative_project(project) -> str:
@@ -176,6 +201,8 @@ def main():
                                       "project": relative_project(project)}, indent=2) + "\n")
     write_launch_json(preset)
     link_compile_commands(preset, project)
+    if platform == "android":
+        instantiate_android_project(project)
     print(f"Saved setup: {preset} ({project.name})")
 
 
