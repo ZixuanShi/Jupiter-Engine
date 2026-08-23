@@ -126,21 +126,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     endif()
 endif()
 
-# --- Android ---
-if(ANDROID)
-    # Bionic declares the fortified stdio wrappers and the ctype helpers static inline, which the
-    # std module cannot re-export. Both fixes scope to the one TU that compiles std.cppm; the
-    # engine keeps _FORTIFY_SOURCE=2. Deferred because CMake synthesizes the target itself --
-    # see Vendor/LibCxxModules/README.md.
-    function(jpt_fix_android_std_module)
-        if(TARGET __cmake_cxx23)
-            target_compile_options(__cmake_cxx23 PRIVATE -U_FORTIFY_SOURCE)
-            target_compile_definitions(__cmake_cxx23 PRIVATE "__BIONIC_CTYPE_INLINE=inline")
-        endif()
-    endfunction()
-    cmake_language(DEFER CALL jpt_fix_android_std_module)
-endif()
-
 # --- Active project ---
 # One project per build tree. It supplies the executable, its own _Output/_ProjectFiles/_Saved,
 # and the jpt::GetApp() that JPT_SYNC_APP defines for the engine.
@@ -246,10 +231,23 @@ target_compile_options(SDL3-static PRIVATE -w)
 # than the archive, and it is the translation unit that includes SDL_main.h.
 target_link_libraries(JupiterEngine PUBLIC SDL3::SDL3-static)
 
+# --- Android ---
 if(ANDROID)
     # Logger.cpp writes through __android_log_write. SDL's interface happens to drag liblog in
     # already, but the engine names its own dependency.
     target_link_libraries(JupiterEngine PRIVATE log)
+
+    # Bionic declares the fortified stdio wrappers and the ctype helpers static inline, which the
+    # std module cannot re-export. Both fixes scope to the one TU that compiles std.cppm; the
+    # engine keeps _FORTIFY_SOURCE=2. Deferred because CMake synthesizes the target itself --
+    # see Vendor/LibCxxModules/README.md.
+    function(jpt_fix_android_std_module)
+        if(TARGET __cmake_cxx23)
+            target_compile_options(__cmake_cxx23 PRIVATE -U_FORTIFY_SOURCE)
+            target_compile_definitions(__cmake_cxx23 PRIVATE "__BIONIC_CTYPE_INLINE=inline")
+        endif()
+    endfunction()
+    cmake_language(DEFER CALL jpt_fix_android_std_module)
 endif()
 
 # --- Apple ---

@@ -28,9 +28,10 @@ namespace jpt::Debug
 #endif
     }
 
-    void Output(Level level, const std::string& line)
+    void Output(Level level, const std::string& contextStr, const std::string& message)
     {
 #if IS_PLATFORM_ANDROID
+        // The priority carries the level, so the line does not repeat it.
         android_LogPriority priority = ANDROID_LOG_INFO;
         switch (level)
         {
@@ -39,10 +40,17 @@ namespace jpt::Debug
             case Level::Warn:    priority = ANDROID_LOG_WARN;    break;
             case Level::Error:   priority = ANDROID_LOG_ERROR;   break;
         }
-        __android_log_write(priority, "Jupiter", line.c_str());
+        __android_log_write(priority, "Jupiter", std::format("{}: {}", contextStr, message).c_str());
 #else
-        (void)level;   // Already spelled inside the line.
-        std::println("{}", line);
+        const char* levelStr = nullptr;
+        switch (level)
+        {
+            case Level::Log:     levelStr = "LOG";     break;
+            case Level::Info:    levelStr = "INFO";    break;
+            case Level::Warn:    levelStr = "WARN";    break;
+            case Level::Error:   levelStr = "ERROR";   break;
+        }
+        std::println("{} [{}]: {}", contextStr, levelStr, message);
 #endif
     }
 }

@@ -22,27 +22,17 @@ namespace jpt::Debug
         Error,
     };
 
-    /** Hands a finished line to the platform's sink -- stdout everywhere but Android, where
-        stdout goes nowhere and lines land in logcat instead. Body in Logger.cpp. */
-    void Output(Level level, const std::string& line);
+    /** Composes the line and hands it to the platform's sink -- stdout everywhere but Android,
+        where stdout goes nowhere and lines land in logcat instead. The one place a Level means
+        anything. Body in Logger.cpp. */
+    void Output(Level level, const std::string& contextStr, const std::string& message);
 
     template<typename... Args>
     void Impl(Context<std::type_identity_t<Args>...> context, Level level, Args&&... args)
     {
         const std::string_view fileName = TrimFileName(context.location.file_name());
-        const std::string contextStr = std::format("{}({})", fileName, context.location.line());
-        const std::string message = std::format(context.format, std::forward<Args>(args)...);
-
-        const char* levelStr = nullptr;
-        switch (level)
-        {
-            case Level::Log:     levelStr = "LOG";     break;
-            case Level::Info:    levelStr = "INFO";    break;
-            case Level::Warn:    levelStr = "WARN";    break;
-            case Level::Error:   levelStr = "ERROR";   break;
-        }
-
-        Output(level, std::format("{} [{}]: {}", contextStr, levelStr, message));
+        Output(level, std::format("{}({})", fileName, context.location.line()),
+               std::format(context.format, std::forward<Args>(args)...));
     }
 
     export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,   std::forward<Args>(args)...); }
