@@ -24,15 +24,14 @@ namespace jpt::Debug
 
     /** Composes the line and hands it to the platform's sink -- stdout everywhere but Android,
         where stdout goes nowhere and lines land in logcat instead. The one place a Level means
-        anything. Body in Logger.cpp. */
-    void Output(Level level, const std::string& contextStr, const std::string& message);
+        anything. Body in Logger.cpp, which keeps everything but the Args-dependent formatting
+        out of the template below. */
+    void Output(Level level, const std::source_location& location, const std::string& message);
 
     template<typename... Args>
     void Impl(Context<std::type_identity_t<Args>...> context, Level level, Args&&... args)
     {
-        const std::string_view fileName = TrimFileName(context.location.file_name());
-        Output(level, std::format("{}({})", fileName, context.location.line()),
-               std::format(context.format, std::forward<Args>(args)...));
+        Output(level, context.location, std::format(context.format, std::forward<Args>(args)...));
     }
 
     export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,   std::forward<Args>(args)...); }

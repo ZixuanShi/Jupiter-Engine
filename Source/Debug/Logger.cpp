@@ -28,7 +28,7 @@ namespace jpt::Debug
 #endif
     }
 
-    void Output(Level level, const std::string& contextStr, const std::string& message)
+    void Output(Level level, const std::source_location& location, const std::string& message)
     {
         const char* levelStr = nullptr;
         switch (level)
@@ -39,7 +39,8 @@ namespace jpt::Debug
             case Level::Error:   levelStr = "ERROR";   break;
         }
 
-        const std::string line = std::format("{} [{}]: {}", contextStr, levelStr, message);
+        const std::string line = std::format("{}({}) [{}]: {}", TrimFileName(location.file_name()),
+                                             location.line(), levelStr, message);
 
 #if IS_PLATFORM_ANDROID
         // One fixed priority: the level lives in the text, the same line every platform prints.
