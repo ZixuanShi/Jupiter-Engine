@@ -128,13 +128,6 @@ endif()
 
 # --- Android ---
 if(ANDROID)
-    # The engine archive's members land in the project's libmain.so.
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-    # SDL's jar target globs java sources from android-project/, which Vendor/SDL3 deliberately
-    # drops; the vendored copy lives in Vendor/SDL3/Android and is compiled by the gradle project.
-    set(SDL_ANDROID_JAR OFF CACHE BOOL "" FORCE)
-
     # Bionic declares the fortified stdio wrappers and the ctype helpers static inline, which the
     # std module cannot re-export. Both fixes scope to the one TU that compiles std.cppm; the
     # engine keeps _FORTIFY_SOURCE=2. Deferred because CMake synthesizes the target itself --

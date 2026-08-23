@@ -23,8 +23,6 @@ namespace jpt::Debug
         // is the only mode it honours, and the cost is one write per line on the platform that
         // draws nothing yet.
         std::setvbuf(stdout, nullptr, _IONBF, 0);
-#elif IS_PLATFORM_ANDROID
-        // Nothing to tune: stdout goes nowhere here, and Output() writes to logcat instead.
 #else
         std::setvbuf(stdout, nullptr, _IOLBF, 0);
 #endif
