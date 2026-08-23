@@ -30,18 +30,6 @@ namespace jpt::Debug
 
     void Output(Level level, const std::string& contextStr, const std::string& message)
     {
-#if IS_PLATFORM_ANDROID
-        // The priority carries the level, so the line does not repeat it.
-        android_LogPriority priority = ANDROID_LOG_INFO;
-        switch (level)
-        {
-            case Level::Log:     priority = ANDROID_LOG_DEBUG;   break;
-            case Level::Info:    priority = ANDROID_LOG_INFO;    break;
-            case Level::Warn:    priority = ANDROID_LOG_WARN;    break;
-            case Level::Error:   priority = ANDROID_LOG_ERROR;   break;
-        }
-        __android_log_write(priority, "Jupiter", std::format("{}: {}", contextStr, message).c_str());
-#else
         const char* levelStr = nullptr;
         switch (level)
         {
@@ -50,7 +38,14 @@ namespace jpt::Debug
             case Level::Warn:    levelStr = "WARN";    break;
             case Level::Error:   levelStr = "ERROR";   break;
         }
-        std::println("{} [{}]: {}", contextStr, levelStr, message);
+
+        const std::string line = std::format("{} [{}]: {}", contextStr, levelStr, message);
+
+#if IS_PLATFORM_ANDROID
+        // One fixed priority: the level lives in the text, the same line every platform prints.
+        __android_log_write(ANDROID_LOG_INFO, "Jupiter", line.c_str());
+#else
+        std::println("{}", line);
 #endif
     }
 }
