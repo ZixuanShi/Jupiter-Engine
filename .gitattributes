@@ -8,3 +8,4 @@
 Vendor/*/Source/** -text -diff linguist-vendored
 Vendor/*/Include/** -text -diff linguist-vendored
 Vendor/LibCxxModules/v1/** -text -diff linguist-vendored
+Vendor/SDL3/Android/** -text -diff linguist-vendored
