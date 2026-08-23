@@ -1,5 +1,9 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
+module;
+
+#include <SDL3/SDL.h>
+
 module jpt.ObjLoader;
 
 import jpt.LinearColor;
@@ -181,15 +185,18 @@ namespace jpt
 
         bool ReadFile(const std::filesystem::path& path, std::string& text)
         {
-            std::ifstream file(path, std::ios::binary | std::ios::ate);
-            if (!file)
+            // SDL, not std::ifstream: on Android a relative path names an APK asset, which SDL's
+            // file IO reads through the asset manager while stdio cannot see it at all.
+            usize size = 0;
+            void* pData = SDL_LoadFile(path.generic_string().c_str(), &size);
+            if (!pData)
             {
                 return false;
             }
 
-            text.resize(static_cast<usize>(file.tellg()));
-            file.seekg(0);
-            return static_cast<bool>(file.read(text.data(), static_cast<std::streamsize>(text.size())));
+            text.assign(static_cast<const char*>(pData), size);
+            SDL_free(pData);
+            return true;
         }
     }
 }

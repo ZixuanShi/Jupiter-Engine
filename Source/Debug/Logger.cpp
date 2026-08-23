@@ -5,7 +5,13 @@ module;
 // `stdout` is a macro, and `import std;` carries no macros.
 #include <cstdio>
 
+#if IS_PLATFORM_ANDROID
+    #include <android/log.h>
+#endif
+
 module jpt.Logger;
+
+import std;
 
 namespace jpt::Debug
 {
@@ -17,8 +23,28 @@ namespace jpt::Debug
         // is the only mode it honours, and the cost is one write per line on the platform that
         // draws nothing yet.
         std::setvbuf(stdout, nullptr, _IONBF, 0);
+#elif IS_PLATFORM_ANDROID
+        // Nothing to tune: stdout goes nowhere here, and Output() writes to logcat instead.
 #else
         std::setvbuf(stdout, nullptr, _IOLBF, 0);
+#endif
+    }
+
+    void Output(Level level, const std::string& line)
+    {
+#if IS_PLATFORM_ANDROID
+        android_LogPriority priority = ANDROID_LOG_INFO;
+        switch (level)
+        {
+            case Level::Log:     priority = ANDROID_LOG_DEBUG;   break;
+            case Level::Info:    priority = ANDROID_LOG_INFO;    break;
+            case Level::Warn:    priority = ANDROID_LOG_WARN;    break;
+            case Level::Error:   priority = ANDROID_LOG_ERROR;   break;
+        }
+        __android_log_write(priority, "Jupiter", line.c_str());
+#else
+        (void)level;   // Already spelled inside the line.
+        std::println("{}", line);
 #endif
     }
 }

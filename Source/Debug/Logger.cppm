@@ -22,6 +22,10 @@ namespace jpt::Debug
         Error,
     };
 
+    /** Hands a finished line to the platform's sink -- stdout everywhere but Android, where
+        stdout goes nowhere and lines land in logcat instead. Body in Logger.cpp. */
+    void Output(Level level, const std::string& line);
+
     template<typename... Args>
     void Impl(Context<std::type_identity_t<Args>...> context, Level level, Args&&... args)
     {
@@ -38,7 +42,7 @@ namespace jpt::Debug
             case Level::Error:   levelStr = "ERROR";   break;
         }
 
-        std::println("{} [{}]: {}", contextStr, levelStr, message);
+        Output(level, std::format("{} [{}]: {}", contextStr, levelStr, message));
     }
 
     export template<typename... Args> void Log  (Context<std::type_identity_t<Args>...> context, Args&&... args) { Impl(context, Level::Log,   std::forward<Args>(args)...); }

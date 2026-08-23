@@ -253,6 +253,12 @@ target_compile_options(SDL3-static PRIVATE -w)
 # than the archive, and it is the translation unit that includes SDL_main.h.
 target_link_libraries(JupiterEngine PUBLIC SDL3::SDL3-static)
 
+if(ANDROID)
+    # Logger.cpp writes through __android_log_write. SDL's interface happens to drag liblog in
+    # already, but the engine names its own dependency.
+    target_link_libraries(JupiterEngine PRIVATE log)
+endif()
+
 # --- Apple ---
 if(APPLE)
     # Everything the two Apple platforms disagree on, in one place.
