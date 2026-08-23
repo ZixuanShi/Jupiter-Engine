@@ -11,6 +11,7 @@ module;
 
 module jpt.Logger;
 
+import jpt.TypeDefs;
 import std;
 
 namespace jpt::Debug
@@ -39,8 +40,9 @@ namespace jpt::Debug
             case Level::Error:   levelStr = "ERROR";   break;
         }
 
-        const std::string line = std::format("{}({}) [{}]: {}", TrimFileName(location.file_name()),
-                                             location.line(), levelStr, message);
+        const std::string_view fileName = TrimFileName(location.file_name());
+        const uint64 fileLine = location.line();
+        const std::string line = std::format("{}({}) [{}]: {}", fileName, fileLine, levelStr, message);
 
 #if IS_PLATFORM_ANDROID
         // One fixed priority: the level lives in the text, the same line every platform prints.
