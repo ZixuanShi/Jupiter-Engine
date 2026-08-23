@@ -17,7 +17,19 @@ set(UNIT_TESTS_BUNDLE_ID "com.jupitertechnologies.unittests")
 file(GLOB_RECURSE UNIT_TESTS_SOURCES        CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE UNIT_TESTS_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cppm")
 
-add_executable(${UNIT_TESTS_NAME} ${UNIT_TESTS_SOURCES} ${JUPITER_MAIN_SOURCE})
+# Android has no native entry point to link an executable around -- SDL_MAIN_EXPORTED makes
+# Main.cpp export SDL_main() for SDLActivity to call, so the app is the libmain.so it loads,
+# built into the gradle project's jniLibs; the APK in _Output is the artifact, not the bare .so.
+if(ANDROID)
+    add_library(${UNIT_TESTS_NAME} SHARED ${UNIT_TESTS_SOURCES} ${JUPITER_MAIN_SOURCE})
+    set_target_properties(${UNIT_TESTS_NAME} PROPERTIES
+        OUTPUT_NAME "main"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_ProjectFiles/android/app/src/main/jniLibs/${ANDROID_ABI}")
+else()
+    add_executable(${UNIT_TESTS_NAME} ${UNIT_TESTS_SOURCES} ${JUPITER_MAIN_SOURCE})
+    set_target_properties(${UNIT_TESTS_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
+endif()
 
 target_sources(${UNIT_TESTS_NAME}
     PRIVATE
@@ -28,9 +40,6 @@ target_sources(${UNIT_TESTS_NAME}
 
 target_link_libraries(${UNIT_TESTS_NAME} PRIVATE JupiterEngine)
 
-set_target_properties(${UNIT_TESTS_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
-
 # --- Assets ---
 # Everything under the engine's Assets/ ships beside the binary in the layout it has in the repo,
 # so one relative string means the same thing to jpt::Path here and at run time. Only the
@@ -39,6 +48,8 @@ if(JUPITER_PLATFORM STREQUAL "MACOS")
     set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${UNIT_TESTS_NAME}>/Resources/Assets")
 elseif(JUPITER_PLATFORM STREQUAL "IOS")
     set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${UNIT_TESTS_NAME}>/Assets")
+elseif(JUPITER_PLATFORM STREQUAL "ANDROID")
+    set(JUPITER_ASSET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/_ProjectFiles/android/app/src/main/assets/Assets")
 else()
     set(JUPITER_ASSET_DIR "$<TARGET_FILE_DIR:${UNIT_TESTS_NAME}>/Assets")
 endif()

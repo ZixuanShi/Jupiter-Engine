@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import os
 import shutil
+import subprocess
 
 from utils import ROOT, PROJECTS
 
@@ -25,6 +27,14 @@ def remove(path):
         print(f"Skipped {label} (not present)")
 
 
+def stop_gradle(project):
+    """Ask the project's gradle daemon to exit, so its file locks do not survive into rmtree."""
+    wrapper = (project / "_ProjectFiles" / "android"
+               / ("gradlew.bat" if os.name == "nt" else "gradlew"))
+    if wrapper.exists():
+        subprocess.run([str(wrapper), "--stop"], cwd=wrapper.parent, capture_output=True)
+
+
 def main():
     remove(ROOT / "_Output")
     remove(ROOT / "_ProjectFiles")
@@ -33,6 +43,7 @@ def main():
     # Every project, not just the configured one: clean has to work when there is no setup.json,
     # and a project built earlier under another preset still has its own directories.
     for project in sorted(p for p in PROJECTS.glob("*") if p.is_dir()):
+        stop_gradle(project)
         for name in ("_Output", "_ProjectFiles", "_Saved"):
             if (project / name).exists():
                 remove(project / name)

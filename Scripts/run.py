@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 
 from utils import (active_preset, artifact_path, bundle_id, connected_device, executable_path,
                    no_device_help)
@@ -14,6 +15,10 @@ from utils import (active_preset, artifact_path, bundle_id, connected_device, ex
 # What the Dev Menu's Capture button needs. Measured on macOS 26: MTLCaptureEnabled in the
 # bundle's Info.plist does not work, even launched through LaunchServices -- only this does.
 CAPTURE_ENV = {"MTL_CAPTURE_ENABLED": "1"}
+
+# Fixed, not per-project: the activity lives in the template's own namespace, and only
+# applicationId varies -- see Build/Android/Template.
+ANDROID_ACTIVITY = "com.jupitertechnologies.jupiter.JupiterActivity"
 
 
 def run_steps(steps, environment) -> int:
@@ -66,6 +71,64 @@ def launch_steps(udid, artifact, environment, app_args) -> list:
     ]
 
 
+def android_device() -> str | None:
+    """Return the serial of the first adb device in state `device`, or None."""
+    result = subprocess.run(["adb", "devices"], capture_output=True, text=True)
+    for line in result.stdout.splitlines()[1:]:
+        parts = line.split()
+        if len(parts) >= 2 and parts[1] == "device":
+            return parts[0]
+    return None
+
+
+def android_help() -> None:
+    """Print how to reach the phone; see Build/Android/README.md for the whole flow."""
+    print("No adb device. Wireless debugging (the OnePlus USB driver never enumerates):")
+    print("  Settings > Developer options > Wireless debugging > Pair device with pairing code")
+    print("  adb pair <ip:pairing-port>     (once; pairing survives reboots)")
+    print("  adb connect <ip:port>          (each session; the port changes)")
+    print("Then: adb devices")
+
+
+def run_android(artifact) -> int:
+    """Install the APK, launch the activity, and stream its logcat until Ctrl+C.
+
+    Launch arguments are not forwarded: `am start` extras only reach an activity that parses
+    them, which SDLActivity does not. Wire getArguments() through the template when needed.
+    """
+    serial = android_device()
+    if serial is None:
+        android_help()
+        return 1
+
+    adb = ["adb", "-s", serial]
+    for step in ([*adb, "install", "-r", str(artifact)],
+                 [*adb, "shell", "am", "start", "-W", "-n", f"{bundle_id()}/{ANDROID_ACTIVITY}"]):
+        code = subprocess.run(step).returncode
+        if code != 0:
+            return code
+
+    # `am start -W` waits for the activity, but the process can lag it by a beat.
+    pid = ""
+    for _ in range(50):
+        pid = subprocess.run([*adb, "shell", "pidof", "-s", bundle_id()],
+                             capture_output=True, text=True).stdout.strip()
+        if pid:
+            break
+        time.sleep(0.1)
+
+    if not pid:
+        print(f"{bundle_id()} started but its process is gone -- crashed on launch?")
+        print("Look at: adb logcat -b crash")
+        return 1
+
+    try:
+        return subprocess.run([*adb, "logcat", "--pid", pid]).returncode
+    except KeyboardInterrupt:
+        print("\nDetached. The app is still running.")
+        return 0
+
+
 def main():
     # Every argument is the app's. This script owns none of them, so what it acts on is exactly
     # what LaunchArgs stores.
@@ -78,6 +141,9 @@ def main():
         print(f"Not built: {executable}")
         print("Run: py Scripts/build.py")
         sys.exit(1)
+
+    if preset.startswith("android"):
+        sys.exit(run_android(artifact_path(preset)))
 
     udid = None
     if preset.startswith("ios-device"):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -17,10 +18,25 @@ SETUP_FILE = ROOT / "_ProjectFiles" / "setup.json"
 PROJECTS = ROOT / "Projects"
 
 CONFIGS = ("debug", "dev", "release")
-PLATFORMS = ("macos", "ios-device", "windows", "linux")
+PLATFORMS = ("macos", "ios-device", "windows", "linux", "android")
 
 USAGE = (f"Usage: py Scripts/setup.py [{'|'.join(CONFIGS)}] [{'|'.join(PLATFORMS)}] "
          f"<project name or path>")
+
+# Pinned, not newest: Vendor/LibCxxModules is generated from this NDK's exact LLVM commit, so the
+# two move together -- see Vendor/LibCxxModules/README.md before bumping either.
+ANDROID_NDK_VERSION = "29.0.14206865"
+
+
+def android_ndk_root() -> Path:
+    """Return the pinned NDK's directory, honoring an explicit ANDROID_NDK_ROOT override."""
+    override = os.environ.get("ANDROID_NDK_ROOT")
+    if override:
+        return Path(override)
+
+    sdk = os.environ.get("ANDROID_HOME") or os.path.join(
+        os.environ.get("LOCALAPPDATA", ""), "Android", "Sdk")
+    return Path(sdk) / "ndk" / ANDROID_NDK_VERSION
 
 
 def host_platform() -> str:
@@ -73,9 +89,10 @@ def artifact_path(preset) -> Path:
     """Return the artifact to launch or install.
 
     macOS nests the executable inside the bundle; iOS bundles are flat and get installed
-    whole, so callers there want the .app itself. Every other platform is a bare binary.    
+    whole, so callers there want the .app itself; Android installs the whole APK. Every
+    other platform is a bare binary.
     """
-    
+
     root = output_dir(preset)
     name = binary_name()
 
@@ -84,7 +101,10 @@ def artifact_path(preset) -> Path:
     if preset.startswith("macos"):
         return root / f"{name}.app" / "Contents" / "MacOS" / name
 
-    ext = ".exe" if sys.platform == "win32" else ""
+    if preset.startswith("android"):
+        return root / f"{name}.apk"
+
+    ext = ".exe" if preset.startswith("windows") else ""
     return root / f"{name}{ext}"
 
 

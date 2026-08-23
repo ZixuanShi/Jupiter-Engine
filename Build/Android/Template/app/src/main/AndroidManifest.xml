@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The full SDL configChanges list, so a rotation reconfigures the surface instead of
+     recreating the activity and tearing the app down mid-frame. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:label="@JUPITER_APP_NAME@"
+                 android:allowBackup="false"
+                 android:hardwareAccelerated="true">
+        <activity android:name="com.jupitertechnologies.jupiter.JupiterActivity"
+                  android:exported="true"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                  android:configChanges="layoutDirection|density|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation|locale|fontScale">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

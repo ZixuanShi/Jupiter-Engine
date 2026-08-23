@@ -5,7 +5,14 @@ module;
 // `stdout` is a macro, and `import std;` carries no macros.
 #include <cstdio>
 
+#if IS_PLATFORM_ANDROID
+    #include <android/log.h>
+#endif
+
 module jpt.Logger;
+
+import jpt.TypeDefs;
+import std;
 
 namespace jpt::Debug
 {
@@ -19,6 +26,29 @@ namespace jpt::Debug
         std::setvbuf(stdout, nullptr, _IONBF, 0);
 #else
         std::setvbuf(stdout, nullptr, _IOLBF, 0);
+#endif
+    }
+
+    void Output(Level level, const std::source_location& location, const std::string& message)
+    {
+        const char* levelStr = nullptr;
+        switch (level)
+        {
+            case Level::Log:     levelStr = "LOG";     break;
+            case Level::Info:    levelStr = "INFO";    break;
+            case Level::Warn:    levelStr = "WARN";    break;
+            case Level::Error:   levelStr = "ERROR";   break;
+        }
+
+        const std::string_view fileName = TrimFileName(location.file_name());
+        const uint64 fileLine = location.line();
+        const std::string line = std::format("{}({}) [{}]: {}", fileName, fileLine, levelStr, message);
+
+#if IS_PLATFORM_ANDROID
+        // One fixed priority: the level lives in the text, the same line every platform prints.
+        __android_log_write(ANDROID_LOG_INFO, "Jupiter", line.c_str());
+#else
+        std::println("{}", line);
 #endif
     }
 }

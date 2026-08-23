@@ -18,6 +18,16 @@ if(APPLE)
     endif()
 endif()
 
+# --- Android toolchain ---
+# Same timing constraint as above. The NDK ships no std module, and CMake's fallback probe runs
+# clang with no --target, so NDK clang answers for its host triple -- measured resolving
+# llvm-mingw's std.cppm from PATH, clang 21 paired with clang 20 sources. Vendor/LibCxxModules is
+# generated from the NDK's own LLVM commit; see its README, which also documents why the android
+# presets carry --target in CMAKE_CXX_FLAGS.
+if(CMAKE_TOOLCHAIN_FILE MATCHES "android\\.toolchain\\.cmake")
+    set(CMAKE_CXX_STDLIB_MODULES_JSON "${CMAKE_SOURCE_DIR}/Vendor/LibCxxModules/libc++.modules.json")
+endif()
+
 # --- Project ---
 # C is SDL3's language on every platform. OBJC/OBJCXX only where Apple sources are compiled --
 # SDL enables OBJC itself, but doing it here is what makes the preset's pinned compiler apply.
@@ -179,10 +189,10 @@ target_sources(JupiterEngine
             ${JUPITER_MODULE_SOURCES}
 )
 
-# Where editor preferences and logs go. Deliberately absent on iOS, whose sandbox forbids any
+# Where editor preferences and logs go. Deliberately absent on mobile, whose sandboxes forbid any
 # path outside the app container, and in Release, which ships to machines that have no repo --
 # GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
-if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM STREQUAL "IOS")
+if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM IN_LIST JUPITER_MOBILE_PLATFORMS)
     target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${JUPITER_PROJECT}/_Saved")
 endif()
 
@@ -220,6 +230,25 @@ target_compile_options(SDL3-static PRIVATE -w)
 # PUBLIC, unlike every other dependency: Source/Main.cpp is compiled into the *app* target rather
 # than the archive, and it is the translation unit that includes SDL_main.h.
 target_link_libraries(JupiterEngine PUBLIC SDL3::SDL3-static)
+
+# --- Android ---
+if(ANDROID)
+    # Logger.cpp writes through __android_log_write. SDL's interface happens to drag liblog in
+    # already, but the engine names its own dependency.
+    target_link_libraries(JupiterEngine PRIVATE log)
+
+    # Bionic declares the fortified stdio wrappers and the ctype helpers static inline, which the
+    # std module cannot re-export. Both fixes scope to the one TU that compiles std.cppm; the
+    # engine keeps _FORTIFY_SOURCE=2. Deferred because CMake synthesizes the target itself --
+    # see Vendor/LibCxxModules/README.md.
+    function(jpt_fix_android_std_module)
+        if(TARGET __cmake_cxx23)
+            target_compile_options(__cmake_cxx23 PRIVATE -U_FORTIFY_SOURCE)
+            target_compile_definitions(__cmake_cxx23 PRIVATE "__BIONIC_CTYPE_INLINE=inline")
+        endif()
+    endfunction()
+    cmake_language(DEFER CALL jpt_fix_android_std_module)
+endif()
 
 # --- Apple ---
 if(APPLE)

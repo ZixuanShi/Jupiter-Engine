@@ -10,7 +10,19 @@ file(GLOB_RECURSE BLANK_SOURCES        CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE
 # but the rest of a project's code is free to be modules, and they need no CMake edit to appear.
 file(GLOB_RECURSE BLANK_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cppm")
 
-add_executable(${BLANK_NAME} ${BLANK_SOURCES} ${JUPITER_MAIN_SOURCE})
+# Android has no native entry point to link an executable around -- SDL_MAIN_EXPORTED makes
+# Main.cpp export SDL_main() for SDLActivity to call, so the app is the libmain.so it loads,
+# built into the gradle project's jniLibs; the APK in _Output is the artifact, not the bare .so.
+if(ANDROID)
+    add_library(${BLANK_NAME} SHARED ${BLANK_SOURCES} ${JUPITER_MAIN_SOURCE})
+    set_target_properties(${BLANK_NAME} PROPERTIES
+        OUTPUT_NAME "main"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_ProjectFiles/android/app/src/main/jniLibs/${ANDROID_ABI}")
+else()
+    add_executable(${BLANK_NAME} ${BLANK_SOURCES} ${JUPITER_MAIN_SOURCE})
+    set_target_properties(${BLANK_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
+endif()
 
 target_sources(${BLANK_NAME}
     PRIVATE
@@ -21,9 +33,6 @@ target_sources(${BLANK_NAME}
 
 target_link_libraries(${BLANK_NAME} PRIVATE JupiterEngine)
 
-set_target_properties(${BLANK_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
-
 # --- Assets ---
 # Everything under the engine's Assets/ ships beside the binary in the layout it has in the repo,
 # so one relative string means the same thing to jpt::Path here and at run time. Only the
@@ -32,6 +41,8 @@ if(JUPITER_PLATFORM STREQUAL "MACOS")
     set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${BLANK_NAME}>/Resources/Assets")
 elseif(JUPITER_PLATFORM STREQUAL "IOS")
     set(JUPITER_ASSET_DIR "$<TARGET_BUNDLE_CONTENT_DIR:${BLANK_NAME}>/Assets")
+elseif(JUPITER_PLATFORM STREQUAL "ANDROID")
+    set(JUPITER_ASSET_DIR "${CMAKE_CURRENT_SOURCE_DIR}/_ProjectFiles/android/app/src/main/assets/Assets")
 else()
     set(JUPITER_ASSET_DIR "$<TARGET_FILE_DIR:${BLANK_NAME}>/Assets")
 endif()

@@ -6,26 +6,27 @@ import subprocess
 import sys
 from pathlib import Path
 
-from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE,
-                   host_platform, artifact_path, output_dir)
+from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE, ANDROID_NDK_VERSION,
+                   android_ndk_root, bundle_id, host_platform, artifact_path, output_dir)
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
 COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
+ANDROID_TEMPLATE = ROOT / "Build" / "Android" / "Template"
 
 
 def write_launch_json(preset):
     """Write the debugger config pointing at the active preset's artifact.
 
-    iOS gets no configuration: lldb cannot launch a simulator or device .app from the host,
+    iOS and Android get no configuration: lldb cannot launch a device app from the host,
     so F5 would only ever fail. Those targets go through Scripts/run.py, which drives
-    simctl / devicectl instead.    
+    devicectl / adb instead.
     """
     LAUNCH_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    if preset.startswith("ios"):
+    if preset.startswith(("ios", "android")):
         LAUNCH_FILE.write_text(json.dumps({"version": "2.0.0", "configurations": []},
                                           indent=4) + "\n")
-        print("Note: F5 is unavailable for iOS. Use the Run task or py Scripts/run.py")
+        print("Note: F5 is unavailable for this target. Use the Run task or py Scripts/run.py")
         return
 
     # A project outside the repo has no workspace-relative spelling, so it falls back to absolute.
@@ -51,6 +52,30 @@ def write_launch_json(preset):
         ]
     }
     LAUNCH_FILE.write_text(json.dumps(launch, indent=4) + "\n")
+
+
+def instantiate_android_project(project):
+    """Copy Build/Android/Template over the project's gradle tree and fill in its names.
+
+    Copied over, never wiped: CMake writes libmain.so and stage_assets.py writes assets into
+    app/src/main/, and both must survive a re-run. The tree is generated -- edit the template,
+    not the copy.
+    """
+    destination = project / "_ProjectFiles" / "android"
+    shutil.copytree(ANDROID_TEMPLATE, destination, dirs_exist_ok=True)
+
+    replacements = {
+        "@JUPITER_APP_NAME@": project.name,
+        "@JUPITER_APPLICATION_ID@": bundle_id(),
+        "@JUPITER_SDL_JAVA_DIR@": (ROOT / "Vendor" / "SDL3" / "Android").as_posix(),
+    }
+    for file in (destination / "settings.gradle",
+                 destination / "app" / "build.gradle",
+                 destination / "app" / "src" / "main" / "AndroidManifest.xml"):
+        text = file.read_text()
+        for token, value in replacements.items():
+            text = text.replace(token, value)
+        file.write_text(text)
 
 
 def relative_project(project) -> str:
@@ -158,6 +183,14 @@ def main():
     # The preset reads JUPITER_PROJECT_DIR to place the build tree; CMake itself reads the cache
     # variable, so a ninja-triggered reconfigure needs no environment at all.
     environment = {**os.environ, "JUPITER_PROJECT_DIR": str(project)}
+    if platform == "android":
+        ndk = android_ndk_root()
+        if not ndk.is_dir():
+            print(f"NDK not found at '{ndk}'. Install it: "
+                  f'sdkmanager --install "ndk;{ANDROID_NDK_VERSION}"')
+            sys.exit(1)
+        environment["ANDROID_NDK_ROOT"] = str(ndk)
+
     result = subprocess.run(["cmake", "--preset", preset, "-Wno-dev",
                              f"-DJUPITER_PROJECT={project.as_posix()}"], cwd=ROOT, env=environment)
     if result.returncode != 0:
@@ -168,6 +201,8 @@ def main():
                                       "project": relative_project(project)}, indent=2) + "\n")
     write_launch_json(preset)
     link_compile_commands(preset, project)
+    if platform == "android":
+        instantiate_android_project(project)
     print(f"Saved setup: {preset} ({project.name})")
 
 

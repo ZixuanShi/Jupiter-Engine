@@ -8,6 +8,8 @@ module;
     #define WIN32_LEAN_AND_MEAN
     #define NOMINMAX
     #include <windows.h>
+#elif IS_PLATFORM_ANDROID
+    #include <SDL3/SDL.h>
 #endif
 
 module jpt.PlatformPaths;
@@ -49,6 +51,11 @@ namespace jpt
         }();
 
         return root;
+#elif IS_PLATFORM_ANDROID
+        // Empty, so a relative asset path stays relative: SDL's file IO routes those through the
+        // APK's asset manager, which has no filesystem path to anchor them to.
+        static const std::filesystem::path root;
+        return root;
 #else
         #error "No Jupiter root for this platform"
 #endif
@@ -74,6 +81,13 @@ namespace jpt
             const char* pLocalAppData = std::getenv("LOCALAPPDATA");
             std::filesystem::path directory(pLocalAppData ? pLocalAppData : ".");
             directory /= "JupiterEngine";
+    #elif IS_PLATFORM_ANDROID
+            // SDL asks the activity for the app's internal files directory. Safe to call here:
+            // this runs lazily after SDL_main starts, so the JNI bridge is already up. The two
+            // names are ignored there -- the package name scopes the path.
+            char* pPref = SDL_GetPrefPath("JupiterTechnologies", "JupiterEngine");
+            std::filesystem::path directory(pPref ? pPref : ".");
+            SDL_free(pPref);
     #else
             #error "No saved directory for this platform"
 
