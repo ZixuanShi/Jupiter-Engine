@@ -359,7 +359,7 @@ is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
 export module jpt.Coding.TwoSum;        // nothing imports this, and nothing needs to
 import jpt.TestFramework;
 
-namespace jpt::Coding
+namespace jpt                           // flat -- the category lives in the module and test names, not here
 {
     void Test(TestCase& test) { test.Expect(TwoSum({ 2, 7 }, 9) == ..., "first two"); }
 

@@ -7,7 +7,7 @@ import jpt.TypeDefs;
 import jpt.Vector2;
 import std;
 
-namespace jpt::Coding
+namespace jpt
 {
     /** Locates objects in a square region while the only question that can be asked is "does this
         square hold anything?" -- subdivide, prune every quadrant that answers no, and report the

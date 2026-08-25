@@ -6,7 +6,7 @@ import jpt.TestFramework;
 import jpt.TypeDefs;
 import std;
 
-namespace jpt::Coding
+namespace jpt
 {
     /** Indices of the two entries summing to target, or empty when there is no such pair.
         One pass: each element looks for the complement an earlier element already recorded. */

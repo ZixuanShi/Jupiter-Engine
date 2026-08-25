@@ -7,7 +7,7 @@ import jpt.TypeDefs;
 import jpt.Logger;
 import std;
 
-namespace jpt::Coding
+namespace jpt
 {
     void Test(TestCase&)
     {

@@ -5,7 +5,7 @@ export module jpt.Coding.DistanceTree;
 import jpt.TestFramework;
 import jpt.TypeDefs;
 
-namespace jpt::Coding
+namespace jpt
 {
     /** A binary tree whose edges carry weights, so a distance is the sum along the path. */
     struct Node

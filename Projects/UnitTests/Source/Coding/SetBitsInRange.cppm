@@ -5,7 +5,7 @@ export module jpt.Coding.SetBitsInRange;
 import jpt.TestFramework;
 import jpt.TypeDefs;
 
-namespace jpt::Coding
+namespace jpt
 {
     /** Read-modify-write of one bit field: original[toBit:fromBit] = value[toBit - fromBit : 0].
 
