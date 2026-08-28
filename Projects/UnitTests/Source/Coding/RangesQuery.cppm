@@ -8,14 +8,10 @@ import std;
 
 namespace jpt
 {
-    /** A collection of closed ranges [start, end], asking only whether a value falls in any of them.
-        Membership is the union of the ranges, and an inverted range (start > end) is empty rather
-        than reversed.
+    /** A collection of ranges with two operations:
 
-        Insert normalises: the ranges are kept sorted by start and pairwise disjoint, so a value has
-        exactly one candidate range and Query is a binary search. Merging is what buys that -- an
-        inserted range absorbs every range it touches, which is why Insert is O(n) for the erase and
-        Query is O(log n). */
+        Insert(start, end): add the closed range [start, end] to the collection.
+        Query(value): true if any range in the collection contains value. */
     class RangesQuery
     {
     private:
