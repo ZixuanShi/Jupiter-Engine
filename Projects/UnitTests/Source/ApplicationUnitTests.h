@@ -6,12 +6,13 @@ import jpt.ApplicationBase;
 
 namespace jpt
 {
-    /** Runs every registered suite and quits, so a run is a verdict rather than a session -- and
-        the verdict is the exit code, since a failed check returns Status::Failed.
+    /** Runs every suite and quits, so a run is a verdict rather than a session -- and the verdict
+        is the exit code, since a failed check returns Status::Failed.
 
-        It names no suite: each registers itself from its own file during static initialisation,
-        so adding one is dropping a file under Source/. They run from Init() rather than PreInit()
-        because SdlEventTests drives a live Window, and because SetStatus is only heeded once
+        Init() names the four categories outright, and nothing else decides what runs: a suite is
+        reached because some list calls it, so opening ApplicationUnitTests.cpp and reading down
+        the tree shows the entire run. They go in Init() rather than PreInit() because
+        UnitTests_SdlEvent drives a live Window, and because SetStatus is only heeded once
         ApplicationBase::Init() has set Running.
 
         A plain header, not a module: JPT_SYNC_APP defines jpt::GetApp(), which a plain header

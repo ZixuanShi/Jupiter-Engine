@@ -7,13 +7,14 @@ set(UNIT_TESTS_BUNDLE_ID "com.jupitertechnologies.unittests")
 # No Release refusal, and that is measured rather than assumed: the suites moved off Debug::Assert
 # -- whose body is discarded in Release, which is what used to make a Release run vacuous -- onto
 # TestCase::Expect, a plain function with no config carve-out. A Release build reports the same
-# 28/223 and returns the same exit code.
+# 33/280 and returns the same exit code.
 
-# Both globs are how a test registers. A suite is one file dropped under Source/ -- it exports
-# nothing and nothing imports it, so what runs it is its object being named on this executable's
-# link line, where its namespace-scope TestCase is constructed during static initialisation. Hence
-# no CMake edit per test, and hence .cpp matters too: SdlEventTests is plain because it reaches
-# GetApp().
+# The globs only compile the suites; they no longer discover them. What runs a suite is its
+# category's aggregator calling its RunUnitTests_ entry, and Source/ApplicationUnitTests.cpp
+# calling the four aggregators -- so adding a file still needs no CMake edit, but it does need
+# one import and one call in the aggregator beside it, or the suite compiles and never runs.
+# The .cpp glob still matters: TestFramework.cpp and UnitTests_SdlEvent.cpp are implementation
+# units, not interfaces, so they are ordinary sources rather than file-set members.
 file(GLOB_RECURSE UNIT_TESTS_SOURCES        CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
 file(GLOB_RECURSE UNIT_TESTS_MODULE_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cppm")
 

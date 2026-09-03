@@ -350,62 +350,83 @@ verdict — see Lifecycle. It needs no SDL include to do it.
 **The suites live there, not in the engine**, and nothing engine-side calls a test any more, which
 is why the root `CMakeLists.txt` no longer strips `*Tests` in Release.
 
-### Tests register themselves; nothing lists them
+### Nothing registers itself; one file lists the run
 
 `Projects/UnitTests/Source/TestFramework/` is `jpt.TestFramework`, and it is **one class**:
-`TestCase`. A suite is **one file, and no other file changes**:
+`TestCase`. Every level of a run is a plain list of calls, so opening
+`Source/ApplicationUnitTests.cpp` and reading downwards reaches every test there is:
+
+```
+ApplicationUnitTests::Init()                        lists the 4 categories
+  └── RunUnitTests_<Category>()                     names and runs that folder's cases
+        └── TestCase::Run("Cat.Name", &RunUnitTests_<Name>)
+```
+
+A case is **two edits**: the function, plus one `import` and one `Run` line in the aggregator
+beside it. That second edit is the point — it is what makes the list, rather than the linker,
+decide what runs, and it is what lets a case be reordered or dropped without touching the case
+itself.
 
 ```cpp
-export module jpt.Coding.TwoSum;        // nothing imports this, and nothing needs to
+export module UnitTests_TwoSum;         // no jpt. prefix: project-local, nothing engine-side imports it
 import jpt.TestFramework;
 
-namespace jpt                           // flat -- the category lives in the module and test names, not here
-{
-    void Test(TestCase& test) { test.Expect(TwoSum({ 2, 7 }, 9) == ..., "first two"); }
+// No namespace, and deliberately so: a test file spells jpt:: where it means the engine, which
+// keeps `TwoSum` here from reading as though it were `jpt::TwoSum`.
+std::vector<int32> TwoSum(...) { ... }
 
-    static TestCase s_twoSum("Coding.TwoSum", &Test);   // the declaration *is* the registration
+// A case is a function taking the TestCase it reports to, and nothing else. There is no
+// per-case wrapper: the display name lives at the aggregator's call site, so one file's cases
+// cost one line each there and nothing here.
+export void RunUnitTests_TwoSum(jpt::TestCase& test)
+{
+    test.Expect(TwoSum({ 2, 7 }, 9) == ..., "first two");
 }
 ```
 
-There is deliberately no separate registrar type and no registry class: a `TestCase` at namespace
-scope adds `this` to the static list from its own constructor, so the object you declare is the
-test, and `TestCase::RunAll()` is the one entry point. An empty class whose only job is to run a
-constructor, wrapping a second class whose only member is a vector, was the first version — it
-bought nothing. Nor is the category a field: `"Coding.TwoSum"` is one name, and sorting it groups
-the report for free.
+A file with several cases exports several such functions, and the aggregator lists them all —
+`UnitTests_Matrix44` exports `RunUnitTests_Matrix44Transform` and `RunUnitTests_Matrix44Rotation`.
+The function name is the registered name with the dot removed, so the two never drift apart. Since
+these are exported into the global namespace, that name must be unique across the whole project.
 
-**Spell it `static`, and name it `s_`.** These objects are file-private, and in a `.cppm` an
-unexported namespace-scope variable otherwise has *module* linkage — neither static nor global, so
-a bare `s_` would be a lie and `k` would claim a constant that `Expect` mutates. `static` narrows
-it to internal linkage, which is measured not to stop registration: nothing references the object
-by name, but a constructor with side effects must still run.
+`TestCase::Run` constructs a case, runs it, prints its `[ PASS ]`/`[ FAIL ]` line and folds its
+checks into the run's totals; the constructor is private, so a case cannot exist outside a run.
+`TestCase::Summarize()` prints the two totals lines and returns the verdict, and
+`ApplicationUnitTests::Init()` calls it once. Note the scalar aliases (`int32`, `usize`,
+`float32`) are **global**, not `jpt::` — only `Status` is in the namespace.
 
-What runs it is **linkage, not imports**: the project's globs name every `.cppm`/`.cpp` object
-directly on the executable's link line, so unlike a `libJupiterEngine.a` member it cannot be
-dropped, and the namespace-scope `TestCase` is constructed during static initialisation. Measured,
-not assumed — a suite no file imports does run. Two consequences are load-bearing:
+**There is no sort.** The old design registered each suite from a namespace-scope constructor and
+sorted by name, because static-init order across TUs is unspecified. Ordering is now the order the
+aggregators list, which is why `UnitTests_Core` runs the vectors before the matrix that composes
+them and the quaternion after, and why `Coding.Scratch` is simply last instead of being named
+`Scratch.Scratch` to sort there.
 
-- The list is a **function-local static in the implementation unit** (`TestCase::GetAll()`), so a
-  `TestCase` constructed during static initialisation cannot observe it unconstructed.
-  `JPT_DECLARE_SINGLETON` is deliberately *not* used: its body is inline, and this must be the
-  program's only list. It holds pointers, so the objects must be the namespace-scope ones.
-- Static-init order across TUs is unspecified, so `RunAll()` **sorts by name**. That ordering is
-  the only thing making a run reproducible.
-
-Move a suite into the engine archive and the whole mechanism goes silent. Don't.
+Aggregators return `void`. The verdict is not threaded back because `TestCase` already tallies
+every check, so `Summarize()` is the single authority and each aggregator stays a pure list with no
+`succeeded &=` noise. The tally is four file-scope `g_` counters in `TestFramework.cpp` — `g_`, not
+`s_`, because a namespace-scope variable in a module unit has *module* linkage, so `static` is not
+what it is. A tally, not a registry: nothing there decides what runs, only records what has run. A
+failing case therefore never stops another; **the whole run always executes.**
 
 **`TestCase::Expect` is `Debug::Assert` without the trap** — same `consteval Debug::Context`
 parameter, so it needs no macro, reports the *call site's* file and line, and checks the format
 string at compile time. It records the failure and returns the condition, so a run reports
-everything broken rather than the first thing, and `RunAll()` returns `Status::Failed` — which
+everything broken rather than the first thing, and `Summarize()` returns `Status::Failed` — which
 `Main.cpp` maps to `SDL_APP_FAILURE`, so **a failing check exits 1**. Being a function and not a
-macro, a braced initializer with commas needs no defensive parentheses.
+macro, a braced initializer with commas needs no defensive parentheses. Measured on 2026-09-02:
+33 suites, 280 checks, exit 0; invert one check and it is 32/33, 279/280, exit 1.
 
-Two placement rules: a test for `Source/<Path>/Foo.cppm` lives at
-`Projects/UnitTests/Source/<Path>/FooTests.cppm` (`Coding/` is the one folder with no engine
-counterpart), and **a suite reaching `GetApp()` must be a plain `.cpp`** — `GetApp.h` in a `.cppm`
-is a module-graph cycle. `Input/SdlEventTests.cpp` is the only one, and it is why the suites run
-from `Init()` rather than `PreInit()`: it drives a live `Window`, and `SetStatus` is ignored until
+Placement: a test for `Source/<Path>/Foo.cppm` lives at
+`Projects/UnitTests/Source/<Path>/UnitTests_Foo.cppm` (`Coding/` is the one folder with no engine
+counterpart), and each top-level folder owns one aggregator, `UnitTests_<Folder>`.
+
+**A suite reaching `GetApp()` splits into an interface and an implementation unit** rather than
+being a plain `.cpp`. `GetApp.h` carries `import jpt.ApplicationBase`, which in a `.cppm`
+interface is a module-graph cycle — but an implementation unit's global module fragment takes it
+fine, exactly as `Source/Graphics/RendererBase.cpp` does. `Input/UnitTests_SdlEvent.{cppm,cpp}` is
+the only one: the `.cppm` declares `RunUnitTests_SdlEvent()` and imports nothing, the `.cpp`
+includes `GetApp.h` and holds the body. It is also why the suites run from `Init()` rather than
+`PreInit()`: it drives a live `Window`, and `SetStatus` is ignored until
 `ApplicationBase::Init()` has set `Running`.
 
 ## Conventions

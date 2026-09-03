@@ -9,12 +9,17 @@ import std;
 
 export namespace jpt
 {
-    /** A test, and the set of every test. Declaring one at namespace scope is the registration:
+    /** One case's checks. A case is a function taking the TestCase it reports to, and nothing else:
 
-            static TestCase s_vector2("Math.Vector2", &Vector2Test);
+            export void RunUnitTests_Vector2(jpt::TestCase& test) { test.Expect(...); }
 
-        Nothing imports a test file, so what runs it is its object being named on the executable's
-        link line -- where this constructor runs during static initialisation. */
+        Its category's aggregator is what names it and runs it, so the name lives at the call site
+        rather than in a wrapper beside every case:
+
+            jpt::TestCase::Run("Math.Vector2", &RunUnitTests_Vector2);
+
+        Nothing registers itself, so a run executes in the order the aggregators list it -- see
+        Source/ApplicationUnitTests.cpp for the top of that list. */
     class TestCase
     {
     public:
@@ -22,27 +27,25 @@ export namespace jpt
 
     private:
         std::string_view m_name;
-        Function m_pFunction = nullptr;
         uint32 m_checks = 0;
         uint32 m_failures = 0;
 
     public:
-        TestCase(std::string_view name, Function pFunction);
+        /** Runs pFunction against a fresh case, prints its [ PASS ] / [ FAIL ] line and folds its
+            checks into the run's totals. Every RunUnitTests_ entry is a list of these. */
+        static void Run(std::string_view name, Function pFunction);
 
         /** Debug::Assert without the trap: logs the failure at the call site and records it, then
             lets the test carry on. @return the condition, so a test can still bail on its own. */
         template<typename... Args>
         bool Expect(bool condition, Debug::Context<std::type_identity_t<Args>...> context, Args&&... args);
 
-        /** Runs every test in name order -- static-init order across translation units is
-            unspecified, so sorting is what makes a run reproducible.
+        /** The run's two totals lines, and its verdict. Called once, by ApplicationUnitTests::Init.
             @return Succeeded, or Failed if any check failed, which drives the exit code. */
-        [[nodiscard]] static Status RunAll();
+        [[nodiscard]] static Status Summarize();
 
     private:
-        /** Function-local static, so a TestCase constructed during static initialisation cannot
-            observe it unconstructed. Holds pointers to objects that outlive the run. */
-        static std::vector<TestCase*>& GetAll();
+        explicit TestCase(std::string_view name);
     };
 
     template<typename... Args>
