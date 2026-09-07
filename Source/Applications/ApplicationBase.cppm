@@ -53,9 +53,7 @@ export namespace jpt
 
     public:
         void OnFrame();
-
         void SetStatus(Status status) noexcept;
-
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
     public:
