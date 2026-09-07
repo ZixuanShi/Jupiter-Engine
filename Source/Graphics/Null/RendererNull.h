@@ -35,9 +35,6 @@ namespace jpt
     public:
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
-        void RequestCapture();
-        void DeleteCaptures();
-
         bool SetMesh(const Mesh& mesh);
         bool SetTexture(const Texture& texture);
     };

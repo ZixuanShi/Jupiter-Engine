@@ -28,8 +28,8 @@ export namespace jpt
         Mat44 m_viewProjection   = Mat44::Identity();
         LinearColor m_clearColor = LinearColor::Black();
         Material m_material;
-        bool m_vsync             = true;
         RenderStats m_stats;
+        bool m_vsync             = true;
 
     public:
         bool PreInit() noexcept;

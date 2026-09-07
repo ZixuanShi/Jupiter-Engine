@@ -11,8 +11,6 @@ namespace jpt
 {
     bool RendererNull::PreInit()
     {
-        // By name, because nothing below ApplicationBase is virtual: the base's clear colour and
-        // stats would otherwise never be set.
         return RendererBase::PreInit();
     }
 
@@ -37,15 +35,7 @@ namespace jpt
     void RendererNull::OnResize([[maybe_unused]] uint32 pixelWidth, [[maybe_unused]] uint32 pixelHeight)
     {
     }
-
-    void RendererNull::RequestCapture()
-    {
-    }
-
-    void RendererNull::DeleteCaptures()
-    {
-    }
-
+    
     bool RendererNull::SetMesh([[maybe_unused]] const Mesh& mesh)
     {
         return true;
