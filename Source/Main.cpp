@@ -12,24 +12,21 @@
 import jpt.TypeDefs;
 import jpt.Window;
 
-namespace local
+/** The app's status is the whole lifecycle; SDL only ever asks whether to keep going. */
+SDL_AppResult ToAppResult(jpt::Status status)
 {
-    /** The app's status is the whole lifecycle; SDL only ever asks whether to keep going. */
-    SDL_AppResult ToAppResult(jpt::Status status)
+    switch (status)
     {
-        switch (status)
-        {
-            case jpt::Status::Pending:
-            case jpt::Status::Running:
-            case jpt::Status::Paused:
-                return SDL_APP_CONTINUE;
+        case jpt::Status::Pending:
+        case jpt::Status::Running:
+        case jpt::Status::Paused:
+            return SDL_APP_CONTINUE;
 
-            case jpt::Status::Failed:
-                return SDL_APP_FAILURE;
+        case jpt::Status::Failed:
+            return SDL_APP_FAILURE;
 
-            default:
-                return SDL_APP_SUCCESS;
-        }
+        default:
+            return SDL_APP_SUCCESS;
     }
 }
 
@@ -53,14 +50,14 @@ SDL_AppResult SDL_AppIterate(void*)
 {
     jpt::ApplicationBase& app = jpt::GetApp();
     app.OnFrame();
-    return local::ToAppResult(app.GetStatus());
+    return ToAppResult(app.GetStatus());
 }
 
 SDL_AppResult SDL_AppEvent(void*, SDL_Event* pEvent)
 {
     jpt::ApplicationBase& app = jpt::GetApp();
     app.GetWindow().OnEvent(*pEvent);
-    return local::ToAppResult(app.GetStatus());
+    return ToAppResult(app.GetStatus());
 }
 
 // Called exactly once, including when SDL_AppInit reported failure.
