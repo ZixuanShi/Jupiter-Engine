@@ -30,6 +30,6 @@ export namespace jpt
         void PreInit(int argc, char* argv[]);
 
     public:
-        [[nodiscard]] bool Has(std::string_view key) const noexcept;
+        [[nodiscard]] bool Contains(std::string_view key) const noexcept;
     };
 }

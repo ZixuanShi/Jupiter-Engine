@@ -8,7 +8,7 @@ import jpt.Logger;
 
 namespace jpt
 {
-    /** Flags only this pass: "-no_window" is stored as "no_window", so Has() is asked for the name
+    /** Flags only this pass: "-no_window" is stored as "no_window", so Contains() is asked for the name
         without its dashes. A key-value pass follows once Data is a real Json-like type. */
     void LaunchArgs::PreInit(int argc, char* argv[])
     {
@@ -37,7 +37,7 @@ namespace jpt
         }
     }
 
-    bool LaunchArgs::Has(std::string_view key) const noexcept
+    bool LaunchArgs::Contains(std::string_view key) const noexcept
     {
         return m_args.contains(key);
     }
