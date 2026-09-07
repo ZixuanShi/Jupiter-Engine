@@ -56,9 +56,6 @@ export namespace jpt
 
         void SetStatus(Status status) noexcept;
 
-        // Virtual because it is where content is uploaded, and content is the App's. On iOS the
-        // surface arrives long after Init(), so there is no earlier hook a project could use.
-        virtual bool OnSurfaceReady(Renderer::SurfaceHandle surface);
         void OnResize(uint32 pixelWidth, uint32 pixelHeight);
 
     public:

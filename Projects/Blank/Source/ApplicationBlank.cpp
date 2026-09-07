@@ -2,6 +2,7 @@
 
 #include "ApplicationBlank.h"
 #include "Applications/GetApp.h"
+#include "Graphics/Renderer.h"
 
 import jpt.Logger;
 import jpt.ObjLoader;
@@ -9,19 +10,11 @@ import jpt.TextureLoader;
 
 namespace jpt
 {
+    // Content is uploaded here rather than in a surface hook: the base's Init() has already
+    // brought the renderer up, and no frame runs until SDL_AppInit returns.
     bool ApplicationBlank::Init()
     {
         if (!ApplicationBase::Init())
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool ApplicationBlank::OnSurfaceReady(Renderer::SurfaceHandle surface)
-    {
-        if (!ApplicationBase::OnSurfaceReady(surface))
         {
             return false;
         }

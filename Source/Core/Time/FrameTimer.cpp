@@ -8,7 +8,7 @@ module jpt.FrameTimer;
 
 namespace jpt
 {
-    void FrameTimer::Update()
+    void FrameTimer::BeginFrame()
     {
         const std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
 
@@ -28,7 +28,7 @@ namespace jpt
 
     void FrameTimer::EndFrame()
     {
-        // m_lastTime is this frame's start, stamped by Update() above.
+        // m_lastTime is this frame's start, stamped by BeginFrame() above.
         m_cpuSeconds = std::chrono::duration<float64>(std::chrono::high_resolution_clock::now() - m_lastTime).count();
     }
 }

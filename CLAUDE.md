@@ -301,10 +301,22 @@ everything *below* it vtable-free: a backend *hides* the base's function and mus
 by name, `RendererBase::PreInit()`. Nothing enforces that; a backend behaving as if its base state
 was never set is the symptom.
 
-`ApplicationBase` is deliberately different. Its five lifecycle functions, its destructor and
-`OnSurfaceReady` are `virtual`, and a project writes `override`.
+`ApplicationBase` is deliberately different. Its five lifecycle functions and its destructor are
+`virtual`, and a project writes `override`. **That list is closed** — a project hooks the lifecycle,
+nothing else.
 
-**Devirtualizing it was tried and reverted.** Without `virtual`, engine code has to name the
+**There was a sixth, `OnSurfaceReady`, and it is gone.** Pre-SDL3, `WindowMac.mm`/`WindowIOS.mm`
+delivered the `CAMetalLayer` from an AppKit/UIKit view callback, so the surface genuinely arrived
+after `Init()` and a project had no other hook for uploading content. SDL3 ended that:
+`Window::Init()` calls `SDL_Metal_CreateView` synchronously, so `ApplicationBase::Init()` was left
+calling the hook itself, one line below the window it came from. A virtual whose only caller is the
+function it was invented to escape is just a renamed `Init()`. `Init()` now calls
+`m_renderer.Init(m_window.GetSurface())` directly, and a project uploads content in its own `Init()`
+after chaining to the base — measured on 2026-09-06, first `OnFrame` logs after the mesh upload,
+because `SDL_AppIterate` cannot run until `SDL_AppInit` returns. Restore the hook only if a backend
+ever loses and recreates its surface mid-run, which is the Android case Vulkan will have to answer.
+
+**Devirtualizing the rest was tried and reverted.** Without `virtual`, engine code has to name the
 project's type to reach it, and a static library cannot -- importing the app target's BMI is a CMake
 cycle. Working around that took a macro of link-time thunks, a concept to catch the mistyped
 "overrides" that hiding makes silent, a second accessor, and splitting `OnFrame` into halves so the

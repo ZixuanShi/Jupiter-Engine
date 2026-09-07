@@ -20,8 +20,8 @@ namespace jpt
     class RendererNull : public RendererBase
     {
     public:
-        // void* rather than a real handle: nothing here dereferences it, and it keeps the
-        // OnSurfaceReady signature that leaks out to project code honest about carrying nothing.
+        // void* rather than a real handle: nothing here dereferences it, and it keeps Init()
+        // honest about being handed nothing.
         using SurfaceHandle = void*;
 
     public:

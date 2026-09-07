@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "Graphics/Renderer.h"
-
 import jpt.ApplicationBase;
 
 namespace jpt
@@ -15,7 +13,5 @@ namespace jpt
     {
     public:
         bool Init() override;
-
-        bool OnSurfaceReady(Renderer::SurfaceHandle surface) override;
     };
 }

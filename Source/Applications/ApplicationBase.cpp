@@ -62,15 +62,16 @@ namespace jpt
 
         // After the window: the renderer overwrites what SDL set on the layer, and the pixel
         // format it picks here is baked into every pipeline.
-        if (!OnSurfaceReady(m_window.GetSurface()))
+        if (!m_renderer.Init(m_window.GetSurface()))
         {
+            Debug::Error("Failed to initialize the renderer.");
             return false;
         }
 
         // After the surface: OnResize is a no-op while the layer is null.
         OnResize(m_window.GetWidth(), m_window.GetHeight());
 
-        // After OnSurfaceReady, where ImGuiInit creates the context this attaches to.
+        // After the renderer, where ImGuiInit creates the context this attaches to.
         ImGuiInitPlatform(m_window.GetNativeHandle());
 
         m_status = Status::Running;
@@ -105,7 +106,7 @@ namespace jpt
             return;
         }
 
-        m_frameTimer.Update();
+        m_frameTimer.BeginFrame();
 
         Update();
         PostUpdate();
@@ -127,18 +128,6 @@ namespace jpt
         {
             m_status = status;
         }
-    }
-
-    bool ApplicationBase::OnSurfaceReady(Renderer::SurfaceHandle surface)
-    {
-        // The first point at which a mesh can be uploaded, which is why a client hides this.
-        if (!m_renderer.Init(surface))
-        {
-            Debug::Error("Failed to initialize the renderer.");
-            return false;
-        }
-
-        return true;
     }
 
     void ApplicationBase::OnResize(uint32 pixelWidth, uint32 pixelHeight)

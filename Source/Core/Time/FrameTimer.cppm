@@ -13,7 +13,7 @@ export namespace jpt
     class FrameTimer
     {
     private:
-        // Delta between the last two Update() calls
+        // Delta between the last two BeginFrame() calls
         std::chrono::high_resolution_clock::time_point m_lastTime = std::chrono::high_resolution_clock::now();
         float64 m_deltaSeconds = 0.0;
 
@@ -25,11 +25,11 @@ export namespace jpt
         uint32 m_frameCount = 0;
         uint32 m_fps = 0;
 
-        // CPU time spent between Update() and EndFrame() 
+        // CPU time spent between BeginFrame() and EndFrame()
         float64 m_cpuSeconds = 0.0;
 
     public:
-        void Update();
+        void BeginFrame();
         void EndFrame();
 
         [[nodiscard]] float32 GetDeltaSeconds() const noexcept { return static_cast<float32>(m_deltaSeconds); }
