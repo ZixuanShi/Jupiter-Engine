@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Gesture;
+export module UnitTests.Gesture;
 
 import jpt.Constants;
 import jpt.GestureRecognizer;
@@ -8,7 +8,7 @@ import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
 import jpt.Math;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector2;
 

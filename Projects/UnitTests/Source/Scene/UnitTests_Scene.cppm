@@ -1,10 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Scene;
+export module UnitTests.Scene;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 
-import UnitTests_Camera;
+import UnitTests.Camera;
 
 export void RunUnitTests_Scene()
 {

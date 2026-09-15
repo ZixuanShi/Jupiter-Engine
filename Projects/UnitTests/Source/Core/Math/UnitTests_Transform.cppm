@@ -1,12 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Transform;
+export module UnitTests.Transform;
 
 import jpt.Constants;
 import jpt.MathTestUtils;
 import jpt.Matrix44;
 import jpt.Quaternion;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.Transform;
 import jpt.TypeDefs;
 import jpt.Vector3;

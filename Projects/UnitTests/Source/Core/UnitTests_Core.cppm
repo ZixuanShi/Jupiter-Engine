@@ -1,20 +1,20 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Core;
+export module UnitTests.Core;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 
-import UnitTests_EventDispatcher;
+import UnitTests.EventDispatcher;
 
 // Math
-import UnitTests_LookAt;
-import UnitTests_Matrix44;
-import UnitTests_Projection;
-import UnitTests_Quaternion;
-import UnitTests_Transform;
-import UnitTests_Vector2;
-import UnitTests_Vector3;
-import UnitTests_Vector4;
+import UnitTests.LookAt;
+import UnitTests.Matrix44;
+import UnitTests.Projection;
+import UnitTests.Quaternion;
+import UnitTests.Transform;
+import UnitTests.Vector2;
+import UnitTests.Vector3;
+import UnitTests.Vector4;
 
 export void RunUnitTests_Core()
 {

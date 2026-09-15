@@ -91,8 +91,6 @@ namespace jpt
 
     void ApplicationBase::Terminate()
     {
-        // No re-entry guard: SDL calls SDL_AppQuit exactly once, including after a failed
-        // SDL_AppInit, and every subsystem nulls its own handles anyway. Both measured.
         m_renderer.Terminate();
         m_window.Terminate();
 

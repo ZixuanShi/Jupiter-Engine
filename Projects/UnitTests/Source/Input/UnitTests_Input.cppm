@@ -1,13 +1,13 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Input;
+export module UnitTests.Input;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 
-import UnitTests_Gesture;
-import UnitTests_InputCodes;
-import UnitTests_InputState;
-import UnitTests_SdlEvent;
+import UnitTests.Gesture;
+import UnitTests.InputCodes;
+import UnitTests.InputState;
+import UnitTests.SdlEvent;
 
 export void RunUnitTests_Input()
 {

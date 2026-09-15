@@ -1,12 +1,12 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Matrix44;
+export module UnitTests.Matrix44;
 
 import jpt.Constants;
 import jpt.Math;
 import jpt.MathTestUtils;
 import jpt.Matrix44;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector3;
 

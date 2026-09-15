@@ -5,8 +5,8 @@
 // global module fragment may carry it -- which is what UnitTests_SdlEvent.cpp does, the same shape
 // as Source/Graphics/RendererBase.cpp.
 
-export module UnitTests_SdlEvent;
+export module UnitTests.SdlEvent;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 
 export void RunUnitTests_SdlEventTranslation(jpt::TestCase& test);

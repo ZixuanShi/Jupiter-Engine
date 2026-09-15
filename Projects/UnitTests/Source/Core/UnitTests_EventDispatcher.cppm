@@ -1,10 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_EventDispatcher;
+export module UnitTests.EventDispatcher;
 
 import jpt.Constants;
 import jpt.EventDispatcher;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 
 /** The fixture EventDispatcher is exercised with, carrying no meaning outside these assertions. */

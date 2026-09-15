@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_QuadTree;
+export module UnitTests.QuadTree;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import std;

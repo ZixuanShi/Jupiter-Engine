@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Camera;
+export module UnitTests.Camera;
 
 import jpt.Camera;
 import jpt.Input;
@@ -8,7 +8,7 @@ import jpt.InputCodes;
 import jpt.Math;
 import jpt.Matrix44;
 import jpt.Quaternion;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Vector3;

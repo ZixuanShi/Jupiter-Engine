@@ -12,7 +12,7 @@ namespace jpt
         Init() names the four categories outright, and nothing else decides what runs: a suite is
         reached because some list calls it, so opening ApplicationUnitTests.cpp and reading down
         the tree shows the entire run. They go in Init() rather than PreInit() because
-        UnitTests_SdlEvent drives a live Window, and because SetStatus is only heeded once
+        UnitTests.SdlEvent drives a live Window, and because SetStatus is only heeded once
         ApplicationBase::Init() has set Running.
 
         A plain header, not a module: JPT_SYNC_APP defines jpt::GetApp(), which a plain header

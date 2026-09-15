@@ -380,8 +380,8 @@ decide what runs, and it is what lets a case be reordered or dropped without tou
 itself.
 
 ```cpp
-export module UnitTests_TwoSum;         // no jpt. prefix: project-local, nothing engine-side imports it
-import jpt.TestFramework;
+export module UnitTests.TwoSum;         // no jpt. prefix: project-local, nothing engine-side imports it
+import UnitTests.TestFramework;
 
 // No namespace, and deliberately so: a test file spells jpt:: where it means the engine, which
 // keeps `TwoSum` here from reading as though it were `jpt::TwoSum`.

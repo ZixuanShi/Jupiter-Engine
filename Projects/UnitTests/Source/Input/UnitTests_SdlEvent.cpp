@@ -8,12 +8,12 @@ module;
 
 #include "Applications/GetApp.h"
 
-module UnitTests_SdlEvent;
+module UnitTests.SdlEvent;
 
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector2;
 import jpt.Window;

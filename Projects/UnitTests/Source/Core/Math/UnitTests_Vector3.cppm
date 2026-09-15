@@ -1,10 +1,10 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Vector3;
+export module UnitTests.Vector3;
 
 import jpt.Math;
 import jpt.MathTestUtils;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector3;
 

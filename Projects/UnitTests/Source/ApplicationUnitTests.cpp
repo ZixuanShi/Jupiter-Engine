@@ -3,13 +3,13 @@
 #include "ApplicationUnitTests.h"
 #include "Applications/GetApp.h"
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 
-import UnitTests_Coding;
-import UnitTests_Core;
-import UnitTests_Input;
-import UnitTests_Scene;
+import UnitTests.Coding;
+import UnitTests.Core;
+import UnitTests.Input;
+import UnitTests.Scene;
 
 namespace jpt
 {

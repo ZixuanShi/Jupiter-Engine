@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_SetBitsInRange;
+export module UnitTests.SetBitsInRange;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 
 /** Read-modify-write of one bit field: original[toBit:fromBit] = value[toBit - fromBit : 0].

@@ -1,8 +1,8 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_DistanceTree;
+export module UnitTests.DistanceTree;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 
 /** A binary tree whose edges carry weights, so a distance is the sum along the path. */

@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-module jpt.TestFramework;
+module UnitTests.TestFramework;
 
 import std;
 

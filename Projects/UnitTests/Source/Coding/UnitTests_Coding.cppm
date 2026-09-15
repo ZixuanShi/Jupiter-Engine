@@ -1,21 +1,22 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_Coding;
+export module UnitTests.Coding;
 
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 
-import UnitTests_DistanceTree;
-import UnitTests_MaxSubArray;
-import UnitTests_QuadTree;
-import UnitTests_RangesQuery;
-import UnitTests_Scratch;
-import UnitTests_SetBitsInRange;
-import UnitTests_TwoSum;
+import UnitTests.FindFiles;
+import UnitTests.DistanceTree;
+import UnitTests.QuadTree;
+import UnitTests.RangesQuery;
+import UnitTests.Scratch;
+import UnitTests.SetBitsInRange;
 
 export void RunUnitTests_Coding()
 {
-    jpt::TestCase::Run("Coding.TwoSum",         &RunUnitTests_TwoSum);
-    jpt::TestCase::Run("Coding.MaxSubArray",    &RunUnitTests_MaxSubArray);
+    // - Return matching files within Directory with different conditions
+    // - Shift n by [a-zA-Z0-9] range
+
+    jpt::TestCase::Run("Coding.FindFiles",      &RunUnitTests_FindFiles);
     jpt::TestCase::Run("Coding.SetBitsInRange", &RunUnitTests_SetBitsInRange);
     jpt::TestCase::Run("Coding.RangesQuery",    &RunUnitTests_RangesQuery);
     jpt::TestCase::Run("Coding.DistanceTree",   &RunUnitTests_DistanceTree);

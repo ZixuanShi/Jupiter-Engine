@@ -1,11 +1,11 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module UnitTests_InputState;
+export module UnitTests.InputState;
 
 import jpt.Input;
 import jpt.InputCodes;
 import jpt.InputEvents;
-import jpt.TestFramework;
+import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import jpt.Vector2;
 

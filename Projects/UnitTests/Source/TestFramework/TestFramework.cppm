@@ -1,6 +1,6 @@
 // Copyright Jupiter Technologies, Inc. All Rights Reserved.
 
-export module jpt.TestFramework;
+export module UnitTests.TestFramework;
 
 import jpt.DebugContext;
 import jpt.Logger;
