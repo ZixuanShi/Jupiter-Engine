@@ -37,8 +37,6 @@ if(APPLE)
     enable_language(OBJCXX)
 endif()
 
-option(JUPITER_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
-
 # Asset staging and iOS signing run through it. `python3` is not a name Windows has.
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
@@ -121,7 +119,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
                         $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Wextra>
                         $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Wpedantic>)
 
-    if(JUPITER_WARNINGS_AS_ERRORS)
+    if(JUPITER_CONFIG STREQUAL "RELEASE")
         add_compile_options($<$<COMPILE_LANGUAGE:CXX,OBJCXX>:-Werror>)
     endif()
 endif()
