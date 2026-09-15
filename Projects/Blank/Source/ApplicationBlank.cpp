@@ -7,7 +7,6 @@
 import jpt.Logger;
 import jpt.ObjLoader;
 import jpt.TextureLoader;
-
 namespace jpt
 {
     // Content is uploaded here rather than in a surface hook: the base's Init() has already

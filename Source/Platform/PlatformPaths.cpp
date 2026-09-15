@@ -33,8 +33,7 @@ namespace jpt
             std::wstring buffer(MAX_PATH, L'\0');
             for (;;)
             {
-                const DWORD written = GetModuleFileNameW(nullptr, buffer.data(),
-                                                         static_cast<DWORD>(buffer.size()));
+                const DWORD written = GetModuleFileNameW(nullptr, buffer.data(), static_cast<DWORD>(buffer.size()));
                 if (written == 0)
                 {
                     return std::filesystem::current_path();
@@ -61,37 +60,58 @@ namespace jpt
 #endif
     }
 
+    const std::filesystem::path& GetEngineDir()
+    {
+#ifdef JUPITER_ENGINE_DIR
+        // make_preferred, because CMake hands these over forward-slashed while GetRoot() comes back
+        // from Win32 with backslashes. One separator per platform, or the two disagree in a log.
+        static const std::filesystem::path dir = std::filesystem::path(JUPITER_ENGINE_DIR).make_preferred();
+#else
+        static const std::filesystem::path dir;
+#endif
+        return dir;
+    }
+
+    const std::filesystem::path& GetProjectDir()
+    {
+#ifdef JUPITER_PROJECT_DIR
+        static const std::filesystem::path dir = std::filesystem::path(JUPITER_PROJECT_DIR).make_preferred();
+#else
+        static const std::filesystem::path dir;
+#endif
+        return dir;
+    }
+
     const std::filesystem::path& GetSavedDir()
     {
         static const std::filesystem::path saved = []
         {
-#ifdef JUPITER_SAVED_DIR
+#ifdef JUPITER_PROJECT_DIR
             // A desktop dev build: the repo's _Saved, so clean.py can wipe it and the files sit
             // somewhere you can actually look at them.
-            std::filesystem::path directory(JUPITER_SAVED_DIR);
-    #elif IS_PLATFORM_MACOS || IS_PLATFORM_IOS
+            std::filesystem::path directory = GetProjectDir() / "_Saved";
+#elif IS_PLATFORM_MACOS || IS_PLATFORM_IOS
             // $HOME, because metal-cpp's Foundation subset does not bind NSFileManager. Same
             // place either way: the home directory, or the app container on iOS.
             const char* pHome = std::getenv("HOME");
             std::filesystem::path directory(pHome ? pHome : ".");
             directory /= "Library/Application Support/JupiterEngine";
-    #elif IS_PLATFORM_WINDOWS
+#elif IS_PLATFORM_WINDOWS
             // %LOCALAPPDATA%, not %APPDATA%: this is a cache of one machine's preferences and
             // logs, and nothing here is worth roaming.
             const char* pLocalAppData = std::getenv("LOCALAPPDATA");
             std::filesystem::path directory(pLocalAppData ? pLocalAppData : ".");
             directory /= "JupiterEngine";
-    #elif IS_PLATFORM_ANDROID
+#elif IS_PLATFORM_ANDROID
             // SDL asks the activity for the app's internal files directory. Safe to call here:
             // this runs lazily after SDL_main starts, so the JNI bridge is already up. The two
             // names are ignored there -- the package name scopes the path.
             char* pPref = SDL_GetPrefPath("JupiterTechnologies", "JupiterEngine");
             std::filesystem::path directory(pPref ? pPref : ".");
             SDL_free(pPref);
-    #else
+#else
             #error "No saved directory for this platform"
-
-#endif // JUPITER_SAVED_DIR
+#endif
 
             std::error_code error;
             std::filesystem::create_directories(directory, error);

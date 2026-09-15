@@ -177,8 +177,12 @@ add_library(JupiterEngine STATIC ${JUPITER_SOURCES} ${JUPITER_OBJCXX_SOURCES})
 # to consumers wrapped in $<LINK_ONLY:>, so the app's link line gets them regardless.
 target_include_directories(JupiterEngine PUBLIC "${CMAKE_SOURCE_DIR}/Source")
 
+# Beside the binary it belongs to, not at the repo root. The archive carries project-specific
+# defines, so one shared path across projects is a trap: ninja finds an archive newer than its own
+# objects, skips the ar step, and links the project you built last into the one you built now.
+# Measured -- a UnitTests build linked Blank's engine, and GetSavedDir() named Blank's _Saved.
 set_target_properties(JupiterEngine PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/_Output/${JUPITER_PRESET}")
+    ARCHIVE_OUTPUT_DIRECTORY "${JUPITER_PROJECT}/_Output/${JUPITER_PRESET}")
 
 target_sources(JupiterEngine
     PUBLIC
@@ -187,11 +191,16 @@ target_sources(JupiterEngine
             ${JUPITER_MODULE_SOURCES}
 )
 
-# Where editor preferences and logs go. Deliberately absent on mobile, whose sandboxes forbid any
-# path outside the app container, and in Release, which ships to machines that have no repo --
-# GetSavedDir() falls back to the platform's own per-user location whenever this is undefined.
+# The source tree, for code that has to reach back into the repo. Deliberately absent on mobile,
+# whose sandboxes forbid any path outside the app container, and in Release, which ships to machines
+# that have no repo -- GetEngineDir()/GetProjectDir() answer an empty path whenever these are
+# undefined, and GetSavedDir(), which is _Saved under the project, falls back to the platform's own
+# per-user location. PRIVATE because only PlatformPaths.cpp reads them: calling the accessors needs
+# the declaration, not the macro, which also keeps a developer's absolute path out of the app.
 if(NOT JUPITER_CONFIG STREQUAL "RELEASE" AND NOT JUPITER_PLATFORM IN_LIST JUPITER_MOBILE_PLATFORMS)
-    target_compile_definitions(JupiterEngine PRIVATE JUPITER_SAVED_DIR="${JUPITER_PROJECT}/_Saved")
+    target_compile_definitions(JupiterEngine PRIVATE
+        JUPITER_ENGINE_DIR="${CMAKE_SOURCE_DIR}"
+        JUPITER_PROJECT_DIR="${JUPITER_PROJECT}")
 endif()
 
 # --- Vendor -- SDL3 ---
