@@ -8,15 +8,12 @@ import jpt.Logger;
 import jpt.PlatformPaths;
 import std;
 
-std::vector<std::string> FindFiles(std::string_view directory, std::string_view keyword)
+std::vector<std::string> FindFiles(std::string_view , std::string_view )
 {
     return {};
 }
 
-export void RunUnitTests_FindFiles(jpt::TestCase& )
+export void RunUnitTests_FindFiles(jpt::TestCase& test)
 {
-    jpt::Debug::Log("jpt::GetRoot(): {}", jpt::GetRoot().string());
-    jpt::Debug::Log("jpt::GetSavedDir(): {}", jpt::GetSavedDir().string());
-    jpt::Debug::Log("jpt::GetEngineDir(): {}", jpt::GetEngineDir().string());
-    jpt::Debug::Log("jpt::GetProjectDir(): {}", jpt::GetProjectDir().string());
+    test.Expect(FindFiles("some/directory", "keyword").empty(), "Expected no files to be found");
 }
