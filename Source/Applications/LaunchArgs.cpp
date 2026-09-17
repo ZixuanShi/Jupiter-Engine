@@ -41,12 +41,9 @@ namespace jpt
     {
         return m_args.contains(key);
     }
+}
 
-    namespace local
-    {
-        usize KeyHash::operator()(std::string_view key) const noexcept
-        {
-            return std::hash<std::string_view>{}(key);
-        }
-    }
+usize KeyHash::operator()(std::string_view key) const noexcept
+{
+    return std::hash<std::string_view>{}(key);
 }

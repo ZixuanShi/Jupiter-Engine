@@ -5,15 +5,11 @@ export module jpt.LaunchArgs;
 import jpt.TypeDefs;
 import std;
 
-namespace jpt::local
+struct KeyHash
 {
-    struct KeyHash
-    {
-        using is_transparent = void;
-
-        [[nodiscard]] usize operator()(std::string_view key) const noexcept;
-    };
-}
+    using is_transparent = void;
+    [[nodiscard]] usize operator()(std::string_view key) const noexcept;
+};
 
 export namespace jpt
 {
@@ -24,7 +20,7 @@ export namespace jpt
         using Data = std::string;
 
     private:
-        std::unordered_map<std::string, Data, local::KeyHash, std::equal_to<>> m_args;
+        std::unordered_map<std::string, Data, KeyHash, std::equal_to<>> m_args;
 
     public:
         void PreInit(int argc, char* argv[]);
