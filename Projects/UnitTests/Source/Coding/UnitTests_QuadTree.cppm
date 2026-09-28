@@ -7,7 +7,8 @@ import jpt.TypeDefs;
 import jpt.Vector2;
 import std;
 
-/** Locates objects in a square region while the only question that can be asked is "does this
+/** 1274. Number of Ships in a Rectangle
+    Locates objects in a square region while the only question that can be asked is "does this
     square hold anything?" -- subdivide, prune every quadrant that answers no, and report the
     centre of each occupied cell at the depth limit. The prune is the whole algorithm: finding a
     lone object costs 17 probes where scanning all 256 leaf cells costs 256.

@@ -11,6 +11,8 @@ import std;
 constexpr std::string_view kAlphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 constexpr int32 kAlphabetSize = static_cast<int32>(kAlphabet.size());
 
+// 848. Shifting Letters
+
 /** @return c's position in kAlphabet, or jpt::kInvalid<usize> if c is not part of it. */
 constexpr int32 ToIndex(char c)
 {

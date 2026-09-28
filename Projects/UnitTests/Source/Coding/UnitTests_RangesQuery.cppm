@@ -6,7 +6,10 @@ import UnitTests.TestFramework;
 import jpt.TypeDefs;
 import std;
 
-/** A collection of ranges with two operations:
+/*
+    715. Range Module (Hard)
+
+    A collection of ranges with two operations:
 
     Insert(start, end): add the closed range [start, end] to the collection.
     Query(value): true if any range in the collection contains value. */
