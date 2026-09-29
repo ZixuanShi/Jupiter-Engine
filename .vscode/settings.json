@@ -3,11 +3,6 @@
         "iostream": "cpp"
     },
     "cmake.useCMakePresets": "always",
-    "C_Cpp.default.compileCommands": "${workspaceFolder}/_ProjectFiles/compile_commands.json",
-    "C_Cpp.default.cppStandard": "c++23",
-    // Keep IntelliSense out of the generated trees. Windows refuses to reopen a file for output
-    // while another process holds a mapped section on it, so an editor that maps a .pcm fails the
-    // build that is rewriting it: "cannot be performed on a file with a user-mapped section open".
     "C_Cpp.files.exclude": {
         "**/_ProjectFiles": true,
         "**/_Output": true,

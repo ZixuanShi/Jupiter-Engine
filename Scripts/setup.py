@@ -10,8 +10,17 @@ from utils import (ROOT, SETUP_FILE, PROJECTS, CONFIGS, PLATFORMS, USAGE, ANDROI
                    android_ndk_root, bundle_id, host_platform, artifact_path, output_dir)
 
 LAUNCH_FILE = ROOT / ".vscode" / "launch.json"
-COMPILE_COMMANDS_LINK = ROOT / "_ProjectFiles" / "compile_commands.json"
+INTELLISENSE_FILE = ROOT / ".vscode" / "c_cpp_properties.json"
 ANDROID_TEMPLATE = ROOT / "Build" / "Android" / "Template"
+
+# The platform half of a preset name, as CMakeLists.txt spells it in IS_PLATFORM_*.
+PLATFORM_NAMES = {"windows": "WINDOWS", "macos": "MACOS", "ios-device": "IOS",
+                  "linux": "LINUX", "android": "ANDROID"}
+
+# cpptools names the target it is emulating, not the host, so android is an arm64 Linux.
+INTELLISENSE_MODES = {"windows": "windows-clang-x64", "macos": "macos-clang-arm64",
+                      "ios-device": "macos-clang-arm64", "linux": "linux-clang-x64",
+                      "android": "linux-clang-arm64"}
 
 
 def write_launch_json(preset):
@@ -90,32 +99,63 @@ def relative_project(project) -> str:
         return project.as_posix()
 
 
-def link_compile_commands(preset, project):
-    """Point a stable path at the active preset's compilation database.
+def cache_value(preset, project, key) -> str:
+    """Return one entry from the cache the configure just wrote, or "" if it holds no such key.
 
-    IntelliSense needs it to see IS_PLATFORM_* and the include paths; the fixed location
-    keeps the preset name -- and now the project -- out of .vscode/settings.json.
+    Read rather than restated: the preset picks Homebrew clang on Apple and the NDK's on android,
+    and carries android's --target. A second copy of those rules here would be one to keep in step.
     """
-    target = project / "_ProjectFiles" / "build" / preset / "compile_commands.json"
+    cache = project / "_ProjectFiles" / "build" / preset / "CMakeCache.txt"
+    for line in cache.read_text().splitlines():
+        name, separator, value = line.partition("=")
+        if separator and name.split(":")[0] == key:
+            return value
+    return ""
 
-    if COMPILE_COMMANDS_LINK.is_symlink() or COMPILE_COMMANDS_LINK.exists():
-        COMPILE_COMMANDS_LINK.unlink()
 
-    try:
-        COMPILE_COMMANDS_LINK.symlink_to(target)
-        return
-    except OSError:
-        # WinError 1314: CreateSymbolicLinkW needs Developer Mode or elevation. A hard link is
-        # no use either -- CMake rewrites the database through a temp file and renames it, which
-        # leaves any extra hard link pointing at the previous contents.
-        pass
+def engine_defines(platform, config, project) -> list:
+    """Return the directory-scoped defines CMakeLists.txt adds, which IntelliSense cannot infer.
 
-    try:
-        shutil.copy2(target, COMPILE_COMMANDS_LINK)
-        print("Copied compile_commands.json (no symlink privilege). Re-run Setup after adding "
-              "or removing a source file.")
-    except OSError as error:
-        print(f"Could not publish compile_commands.json ({error})")
+    Only the fallback matters here: a file in the compilation database is parsed with its real
+    command line, so this is what cpptools has to go on for headers, which are in no database.
+    """
+    active = PLATFORM_NAMES[platform]
+    defines = [f"IS_PLATFORM_{name}={int(name == active)}" for name in PLATFORM_NAMES.values()]
+    defines += [f"IS_CONFIG_{name.upper()}={int(name == config)}" for name in CONFIGS]
+
+    mobile = active in ("IOS", "ANDROID")
+    defines += [f"IS_PC={int(not mobile)}", f"IS_MOBILE={int(mobile)}"]
+
+    # Not `not release`: the editor is the Dear ImGui it draws through, and only Apple has a backend.
+    defines.append(f"IS_EDITOR={int(config != 'release' and active in ('MACOS', 'IOS'))}")
+    defines.append(f'JUPITER_APP_NAME="{project.name}"')
+    return defines
+
+
+def write_intellisense_config(preset, platform, config, project):
+    """Write the cpptools configuration for the active preset.
+
+    Generated for the same reason launch.json is: it names the preset's own compile_commands.json
+    where CMake writes it, so nothing has to be published to a fixed path. Standing in for that
+    symlink without Developer Mode meant copying the database, which then went stale on every
+    source file added or removed. The defines follow the preset for free.
+    """
+    database = project / "_ProjectFiles" / "build" / preset / "compile_commands.json"
+    configuration = {
+        "name": preset,
+        "compileCommands": database.as_posix(),
+        "compilerPath": cache_value(preset, project, "CMAKE_CXX_COMPILER") or "clang++",
+        "compilerArgs": cache_value(preset, project, "CMAKE_CXX_FLAGS").split(),
+        "intelliSenseMode": INTELLISENSE_MODES[platform],
+        "includePath": ["${workspaceFolder}/**"],
+        "defines": engine_defines(platform, config, project),
+        "cStandard": "c17",
+        "cppStandard": "c++23",
+    }
+
+    INTELLISENSE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    INTELLISENSE_FILE.write_text(json.dumps({"version": 4, "configurations": [configuration]},
+                                            indent=4) + "\n")
 
 
 def resolve_project(name) -> Path:
@@ -200,7 +240,7 @@ def main():
     SETUP_FILE.write_text(json.dumps({"config": config, "platform": platform, "preset": preset,
                                       "project": relative_project(project)}, indent=2) + "\n")
     write_launch_json(preset)
-    link_compile_commands(preset, project)
+    write_intellisense_config(preset, platform, config, project)
     if platform == "android":
         instantiate_android_project(project)
     print(f"Saved setup: {preset} ({project.name})")
