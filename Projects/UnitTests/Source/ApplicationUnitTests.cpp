@@ -22,10 +22,10 @@ namespace jpt
 
         // The whole run, in the order it happens. Each of these is itself a list of suites, and
         // each suite a list of cases -- so every test is reachable by reading downwards from here.
-        RunUnitTests_Coding();
         RunUnitTests_Core();
         RunUnitTests_Input();
         RunUnitTests_Scene();
+        RunUnitTests_Coding();
 
         // Summarize's verdict is the run's: Main.cpp maps Status::Failed to SDL_APP_FAILURE, hence
         // exit 1, and the run is over either way -- there is nothing left to step.

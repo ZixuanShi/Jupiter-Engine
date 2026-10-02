@@ -14,7 +14,6 @@ import UnitTests.SetBitsInRange;
 
 export void RunUnitTests_Coding()
 {
-    jpt::TestCase::Run("Coding.FindFiles",      &RunUnitTests_FindFiles);
     jpt::TestCase::Run("Coding.CharShift",      &RunUnitTests_CharShift);
     jpt::TestCase::Run("Coding.SetBitsInRange", &RunUnitTests_SetBitsInRange);
     jpt::TestCase::Run("Coding.RangesQuery",    &RunUnitTests_RangesQuery);
@@ -23,4 +22,5 @@ export void RunUnitTests_Coding()
 
     // Last, so whatever is being scratched on lands at the bottom of the run.
     jpt::TestCase::Run("Coding.Scratch", &RunUnitTests_Scratch);
+    jpt::TestCase::Run("Coding.FindFiles",      &RunUnitTests_FindFiles);
 }
