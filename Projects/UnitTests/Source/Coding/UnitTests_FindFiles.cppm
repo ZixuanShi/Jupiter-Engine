@@ -49,6 +49,8 @@ public:
 
         return filenameStr.contains(m_keyword);
     }
+
+    std::string_view GetKeyword() const { return m_keyword; }
 };
 
 class FilterStrategy_Keyword_Exclude : public FilterStrategy_Keyword_Include
@@ -204,22 +206,13 @@ std::vector<std::filesystem::directory_entry> FindFiles(const std::filesystem::p
             continue;
         }
 
-        bool valid = true;
-
-        for (const Filter& filter : filters)
+        auto matches = [&entry](const Filter& filter)
         {
-            valid &= std::visit([&entry](auto&& arg) -> bool
-            {
-                return arg.Verify(entry);                
-            }, filter);
+            auto visitor = [&entry](const auto& strategy) { return strategy.Verify(entry); };
+            return std::visit(visitor, filter);
+        };
 
-            if (!valid)
-            {
-                break;
-            }
-        }
-
-        if (valid)
+        if (std::ranges::all_of(filters, matches))
         {
             result.emplace_back(entry);
         }
