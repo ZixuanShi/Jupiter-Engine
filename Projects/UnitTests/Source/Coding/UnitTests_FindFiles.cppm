@@ -14,6 +14,14 @@ import std;
 // Min/Max file size
 // Date of last modification
 
+namespace local
+{
+    char ToLower(char c)
+    {
+        return static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+}
+
 class FilterStrategy_Keyword_Include
 {
 protected:
@@ -25,32 +33,25 @@ public:
         : m_keyword(keyword)
         , m_isCaseSensitive(isCaseSensitive)
     {
-        if (!m_isCaseSensitive)
-        {
-            for (char& c : m_keyword) 
-            {
-                c = std::tolower(c);
-            }
-        }
     }
 
     [[nodiscard]] bool Verify(const std::filesystem::directory_entry& entry) const
     {
-        const std::filesystem::path filename = entry.path().filename();
-        std::string filenameStr = filename.string();
-
-        if (!m_isCaseSensitive)
-        {
-            for (char& c : filenameStr) 
-            {
-                c = std::tolower(c);
-            }
-        }
-
-        return filenameStr.contains(m_keyword);
+        return Matches(entry.path().filename().string());
     }
 
     std::string_view GetKeyword() const { return m_keyword; }
+
+protected:
+    [[nodiscard]] bool Matches(std::string_view text) const
+    {
+        if (m_isCaseSensitive)
+        {
+            return text.contains(m_keyword);
+        }
+
+        return !std::ranges::search(text, m_keyword, {}, local::ToLower, local::ToLower).empty();
+    }
 };
 
 class FilterStrategy_Keyword_Exclude : public FilterStrategy_Keyword_Include
@@ -67,23 +68,8 @@ public:
 
     [[nodiscard]] bool Verify(const std::filesystem::directory_entry& entry) const
     {
-        if (m_checkFullPath)
-        {
-            const std::filesystem::path path = entry.path();
-            std::string pathStr = path.string();
-
-            if (!m_isCaseSensitive)
-            {
-               for (char& c : pathStr) 
-               {
-                   c = std::tolower(c);
-               }
-            }
-
-            return !pathStr.contains(m_keyword);
-        }
-
-        return !FilterStrategy_Keyword_Include::Verify(entry);
+        const std::filesystem::path& path = entry.path();
+        return !Matches(m_checkFullPath ? path.string() : path.filename().string());
     }
 };
 
@@ -104,6 +90,18 @@ public:
         kPcm    = (1 << 7),
     };
 
+    static constexpr std::array<std::pair<std::string_view, Type>, 8> kExtensionTypes
+    {{
+        { ".txt",  kTxt    },
+        { ".cppm", kCppm   },
+        { ".cpp",  kCpp    },
+        { ".h",    kHeader },
+        { ".json", kJson   },
+        { ".hpp",  kHpp    },
+        { ".obj",  kObj    },
+        { ".pcm",  kPcm    },
+    }};
+
 private:
     std::uint32_t m_type;
 
@@ -115,51 +113,15 @@ public:
 
     [[nodiscard]] bool Verify(const std::filesystem::directory_entry& entry) const
     {
-        const std::filesystem::path extension = entry.path().extension();
-        const std::string extensionStr = extension.string();
-        const Type type = ToType(extensionStr);
+        const Type type = ToType(entry.path().extension().string());
         return (m_type & type) != 0;
     }
 
 private:
     [[nodiscard]] Type ToType(std::string_view extensionStr) const
     {
-        if (extensionStr == ".txt")
-        {
-            return Type::kTxt;
-        }
-        else if (extensionStr == ".cppm")
-        {
-            return Type::kCppm;
-        }
-        else if (extensionStr == ".cpp")
-        {
-            return Type::kCpp;
-        }
-        else if (extensionStr == ".h")
-        {
-            return Type::kHeader;
-        }
-        else if (extensionStr == ".json")
-        {
-            return Type::kJson;
-        }
-        else if (extensionStr == ".hpp")
-        {
-            return Type::kHpp;
-        }
-        else if (extensionStr == ".obj")
-        {
-            return Type::kObj;
-        }
-        else if (extensionStr == ".pcm")
-        {
-            return Type::kPcm;
-        }
-        else
-        {
-            return Type::kNone;
-        }
+        const auto it = std::ranges::find(kExtensionTypes, extensionStr, &std::pair<std::string_view, Type>::first);
+        return it != kExtensionTypes.end() ? it->second : kNone;
     }
 };
 
@@ -183,9 +145,9 @@ public:
     }
 };
 
-using Filter = std::variant<FilterStrategy_Keyword_Include, 
+using Filter = std::variant<FilterStrategy_Keyword_Include,
                             FilterStrategy_Keyword_Exclude,
-                            FilterStrategy_Extension, 
+                            FilterStrategy_Extension,
                             FilterStrategy_SizeCap
                             >;
 
@@ -197,28 +159,26 @@ std::vector<std::filesystem::directory_entry> FindFiles(const std::filesystem::p
         return {};
     }
 
-    std::vector<std::filesystem::directory_entry> result;
-
-    for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(directory))
+    auto isFile = [](const std::filesystem::directory_entry& entry)
     {
-        if (entry.is_directory())
-        {
-            continue;
-        }
+        return entry.is_regular_file();
+    };
 
+    auto matchesAll = [&filters](const std::filesystem::directory_entry& entry)
+    {
         auto matches = [&entry](const Filter& filter)
         {
             auto visitor = [&entry](const auto& strategy) { return strategy.Verify(entry); };
             return std::visit(visitor, filter);
         };
 
-        if (std::ranges::all_of(filters, matches))
-        {
-            result.emplace_back(entry);
-        }
-    }
+        return std::ranges::all_of(filters, matches);
+    };
 
-    return result;
+    return std::filesystem::recursive_directory_iterator(directory)
+         | std::views::filter(isFile)
+         | std::views::filter(matchesAll)
+         | std::ranges::to<std::vector>();
 }
 
 export void RunUnitTests_FindFiles(jpt::TestCase& )
@@ -229,10 +189,7 @@ export void RunUnitTests_FindFiles(jpt::TestCase& )
                                                                                                                  FilterStrategy_SizeCap(10),
                                                                                                                });
 
-    std::sort(files.begin(), files.end(), [](const std::filesystem::directory_entry& a, const std::filesystem::directory_entry& b) -> bool
-    {
-        return a.last_write_time() < b.last_write_time();
-    });
+    std::ranges::sort(files, {}, [](const std::filesystem::directory_entry& entry) { return entry.last_write_time(); });
 
     for (const std::filesystem::directory_entry& entry : files)
     {
